@@ -16,6 +16,9 @@
     <Filter Include="Window">
       <UniqueIdentifier>{fd395735-80e2-4511-b707-e0ef3fc1cce4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX">
+      <UniqueIdentifier>{f342b7d2-e119-4250-b8d7-9ae9c3925c50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -27,10 +30,22 @@
     <ClCompile Include="WinApp.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="ConvertString.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12.cpp">
+      <Filter>DirectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
       <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertString.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12.h">
+      <Filter>DirectX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

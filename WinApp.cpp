@@ -11,6 +11,11 @@ WinApp::~WinApp() {
 	UnregisterClass(wc.lpszClassName, wc.hInstance);
 }
 
+WinApp* WinApp::GetInstance() {
+    static WinApp instance;
+    return &instance;
+}
+
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {
 	//メッセージに応じてゲームの画面の制御を行う
