@@ -14,8 +14,12 @@ private: // メンバ変数
 	HRESULT hr;
 	IDXGIFactory7* dxgiFactory = nullptr;
 	ID3D12CommandQueue* commandQueue = nullptr;
+	ID3D12CommandAllocator* commandAllocator = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
 	IDXGISwapChain4* swapChain = nullptr;
+	ID3D12DescriptorHeap* rtvDescriptorHeap = nullptr;
+	ID3D12Resource* swapChainResources[2] = { nullptr };
+
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -27,8 +31,28 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize(
-		WinApp* win, int32_t backBufferWidth = WinApp::kWindowWidth,
-		int32_t backBufferHeight = WinApp::kWindowHeight);
+		WinApp* win);
+
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	void PreDraw();
+
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
+	void PostDraw();
+
+	/// <summary>
+	/// レンダーターゲットのクリア
+	/// </summary>
+	void ClearRenderTarget();
+
+	/// <summary>
+	/// デバイスの取得
+	/// </summary>
+	/// <returns>デバイス</returns>
+	ID3D12Device* GetDevice() const { return device; }
 
 	/// <summary>
 	/// 描画コマンドリストの取得
@@ -63,5 +87,10 @@ private: // メンバ関数
 	/// ディスクリプタヒープの生成
 	/// </summary>
 	void CreateDescriptorHeap();
+
+	/// <summary>
+	/// レンダーターゲット生成
+	/// </summary>
+	void CreateFinalRenderTargets();
 };
 

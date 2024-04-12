@@ -12,6 +12,27 @@ DirectX12* DirectX12::GetInstance() {
 	return &instance;
 }
 
+void DirectX12::Initialize(
+	WinApp* win) {
+	// nullptrチェック
+	assert(win);
+	
+
+	winApp_ = win;
+
+	// DXGIデバイス初期化
+	InitializeDXGIDevice();
+
+	// コマンド関連初期化
+	InitializeCommand();
+
+	// スワップチェーンの生成
+	CreateSwapChain();
+
+	// レンダーターゲット生成
+	CreateFinalRenderTargets();
+}
+
 void DirectX12::InitializeDXGIDevice() {
 	//dxgiファクトリーの生成
 	
@@ -37,7 +58,6 @@ void DirectX12::InitializeDXGIDevice() {
 		useAdapter = nullptr;
 	}
 
-	ID3D12Device* device = nullptr;
 	//機能レベルとログ出力用の文字列
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0
@@ -69,7 +89,6 @@ void DirectX12::InitializeCommand() {
 	assert(SUCCEEDED(hr));
 
 	//コマンドアロケータを生成する
-	ID3D12CommandAllocator* commandAllocator = nullptr;
 	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	//コマンドアロケータを生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -100,6 +119,63 @@ void DirectX12::CreateSwapChain() {
 
 void DirectX12::CreateDescriptorHeap() {
 	//ディスクリプタヒープの生成
-	ID3D12DescriptorHeap* rtvDecriptorHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
+	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;//レンダーターゲットビュー用
+	rtvDescriptorHeapDesc.NumDescriptors = 2;//ダブルバッファように２つ
+	hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
+	//ディスクリプタヒープが作れなかったので起動できない
+	assert(SUCCEEDED(hr));
+}
+
+void DirectX12::CreateFinalRenderTargets() {
+	//ディスクリプタの生成
+	CreateDescriptorHeap();
+
+	//swapChainからResourceを引っ張ってくる
+	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
+	//うまくできなければ起動できない
+	assert(SUCCEEDED(hr));
+	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
+	assert(SUCCEEDED(hr));
+
+	//rtvの設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をsrgbに変換して書き込む
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2dテクスチャとして書き込む
+	//ディスクリプタの先頭を取得する
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	//rtvを2筒来るのでディスクリプタを2つ用意
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
+	//まず1つ目
+	rtvHandles[0] = rtvStartHandle;
+	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
+	//2つ目
+	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
+
+	//画面のクリア
+
+	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	//描画先のrtvを設定する
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+	hr = commandList->Close();
+	assert(SUCCEEDED(hr));
+
+	//コマンドリストの実行
+	ID3D12CommandList* commandLists[] = { commandList };
+	commandQueue->ExecuteCommandLists(1, commandLists);
+	//gpuとosに画面の交換を行うように通知
+	swapChain->Present(1, 0);
+	//次のフレーム用のコマンドリストを準備
+	hr = commandAllocator->Reset();
+	assert(SUCCEEDED(hr));
+	hr = commandList->Reset(commandAllocator, nullptr);
+	assert(SUCCEEDED(hr));
+}
+
+void DirectX12::ClearRenderTarget() {
+
 }
