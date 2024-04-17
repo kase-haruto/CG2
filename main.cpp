@@ -9,25 +9,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DirectX12* directX = directX->GetInstance();
 
 	directX->Initialize(win);
-	
-	while (msg.message != WM_QUIT) {
-		if (PeekMessage(&msg,nullptr,0,0,PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		
 
-		/*==========================================================
-				ゲームの処理
-		===========================================================*/
-		else {
-			directX->PreDraw();
+	while (win->ProcessMessage()) {
+
+		//フレームの開始
+		directX->PreDraw();
 
 
 
-			directX->PostDraw();
+		//フレームの終了
+		directX->PostDraw();
 
-		}
+
 	}
 
 	directX->Finalize();

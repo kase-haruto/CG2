@@ -25,7 +25,7 @@ public://メンバ関数
 	//ウィンドウハンドルの取得
 	HWND GetHWND()const { return hwnd; }
 
-
+	bool ProcessMessage();
 private:
 	//ウィンドウの情報を格納する関数
 	WNDCLASSEX wc;

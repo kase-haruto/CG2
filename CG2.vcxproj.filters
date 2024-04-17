@@ -19,6 +19,12 @@
     <Filter Include="DirectX">
       <UniqueIdentifier>{f342b7d2-e119-4250-b8d7-9ae9c3925c50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{a05fc567-36ce-471f-8829-140d8a168c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Shader">
+      <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -36,6 +42,9 @@
     <ClCompile Include="DirectX12.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderCompiler.cpp">
+      <Filter>Game\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -47,5 +56,16 @@
     <ClInclude Include="DirectX12.h">
       <Filter>DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderCompiler.h">
+      <Filter>Game\Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Object3d.VS.hlsl">
+      <Filter>Game\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Object3d.PS.hlsl">
+      <Filter>Game\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
