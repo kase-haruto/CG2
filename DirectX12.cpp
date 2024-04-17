@@ -16,7 +16,7 @@ void DirectX12::Initialize(
 	WinApp* win) {
 	// nullptrチェック
 	assert(win);
-	
+
 
 	winApp_ = win;
 
@@ -44,7 +44,7 @@ void DirectX12::InitializeDXGIDevice() {
 	}
 	#endif // _DEBUG
 
-	
+
 	//dxgiファクトリーの生成
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
@@ -87,7 +87,7 @@ void DirectX12::InitializeDXGIDevice() {
 	//デバイスの生成がうまくいかなかったので起動できない
 	assert(device != nullptr);
 	Log("Complete create D3D12Device!!!\n");// 初期化完了のログを出す
-	
+
 	#ifdef _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
@@ -97,7 +97,7 @@ void DirectX12::InitializeDXGIDevice() {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		//警告時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-		
+
 		//抑制するメッセージのid
 		D3D12_MESSAGE_ID denyIds[] = {
 			//windows11のdxgiデバッグレイヤーとdx12デバッグレイヤーの相互作用バグによるエラーメッセージ
@@ -113,7 +113,7 @@ void DirectX12::InitializeDXGIDevice() {
 		filter.DenyList.pSeverityList = severities;
 		//指定s多メッセージの表示を抑制する
 		infoQueue->PushStorageFilter(&filter);
-		
+
 		//解放
 		infoQueue->Release();
 	}
@@ -124,7 +124,7 @@ void DirectX12::InitializeDXGIDevice() {
 
 void DirectX12::InitializeCommand() {
 	//コマンドキューを生成
-	
+
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	hr = device->CreateCommandQueue(&commandQueueDesc,
 									IID_PPV_ARGS(&commandQueue));
@@ -154,7 +154,7 @@ void DirectX12::CreateSwapChain() {
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;//描画のターゲットとして利用する
 	swapChainDesc.BufferCount = 2;//ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニタに移したら中身を破棄
-	
+
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
@@ -198,6 +198,17 @@ void DirectX12::CreateFinalRenderTargets() {
 
 }
 
+void DirectX12::CreateFence() {
+	//初期値0でFenceを作る
+	fenceValue = 0;
+	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	assert(SUCCEEDED(hr));
+
+	//Fenceのsignalを待つためのイベントを作成する
+	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	assert(fenceEvent != nullptr);
+}
+
 void DirectX12::ClearRenderTarget() {
 
 }
@@ -219,21 +230,70 @@ void DirectX12::PreDraw() {
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース、現行のバッグバッファに対して行う
+	barrier.Transition.pResource = swapChainResources[backBufferIndex];
+	//遷移前(現行)のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//transitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
 	//描画先のrtvを設定する
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-	hr = commandList->Close();
-	assert(SUCCEEDED(hr));
+	
 }
 
 void DirectX12::PostDraw() {
+	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース、現行のバッグバッファに対して行う
+	barrier.Transition.pResource = swapChainResources[backBufferIndex];
+	//遷移前(現行)のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT; 
+	//transitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
+	hr = commandList->Close();
+	assert(SUCCEEDED(hr));
+
 	//コマンドリストの実行
 	ID3D12CommandList* commandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(1, commandLists);
 	//gpuとosに画面の交換を行うように通知
 	swapChain->Present(1, 0);
+
+	//Fenceの値を更新
+	fenceValue++;
+	//GPUがここまでたどり着いたときに,Fenceの値を指定した値に代入するようにSignalを送る
+	commandQueue->Signal(fence, fenceValue);
+
+	//fenceの値が指定したsignalの値にたどり着いてるか確認する
+	//GetCompletedValueの初期値はfence作成時に渡した初期値
+	if (fence->GetCompletedValue()<fenceValue) {
+		//指定したsignalにたどり着いていないので、たどり着くまで待つようにイベントを指定する
+		fence->SetEventOnCompletion(fenceValue, fenceEvent);
+		//イベントを待つ
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
+
 	//次のフレーム用のコマンドリストを準備
 	hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));

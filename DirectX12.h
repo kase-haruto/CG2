@@ -19,7 +19,9 @@ private: // メンバ変数
 	IDXGISwapChain4* swapChain = nullptr;
 	ID3D12DescriptorHeap* rtvDescriptorHeap = nullptr;
 	ID3D12Resource* swapChainResources[2] = { nullptr };
-
+	ID3D12Fence* fence = nullptr;
+	uint64_t fenceValue;
+	HANDLE fenceEvent;
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -92,5 +94,10 @@ private: // メンバ関数
 	/// レンダーターゲット生成
 	/// </summary>
 	void CreateFinalRenderTargets();
+
+	/// <summary>
+	/// フェンス生成
+	/// </summary>
+	void CreateFence();
 };
 
