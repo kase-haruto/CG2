@@ -34,8 +34,18 @@ void DirectX12::Initialize(
 }
 
 void DirectX12::InitializeDXGIDevice() {
-	//dxgiファクトリーの生成
+	#ifdef _DEBUG
+	ID3D12Debug1* debugController = nullptr;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+		//デバッグレイヤーを有効化する
+		debugController->EnableDebugLayer();
+		//さらにGPU側でもチェックを行うようにする
+		debugController->SetEnableGPUBasedValidation(TRUE);
+	}
+	#endif // _DEBUG
+
 	
+	//dxgiファクトリーの生成
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 	//使用するアダプタ用の変数
@@ -77,6 +87,39 @@ void DirectX12::InitializeDXGIDevice() {
 	//デバイスの生成がうまくいかなかったので起動できない
 	assert(device != nullptr);
 	Log("Complete create D3D12Device!!!\n");// 初期化完了のログを出す
+	
+	#ifdef _DEBUG
+	ID3D12InfoQueue* infoQueue = nullptr;
+	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+		//やばいエラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+		//エラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		//警告時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		
+		//抑制するメッセージのid
+		D3D12_MESSAGE_ID denyIds[] = {
+			//windows11のdxgiデバッグレイヤーとdx12デバッグレイヤーの相互作用バグによるエラーメッセージ
+			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+		};
+
+		//抑制するレベル
+		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+		D3D12_INFO_QUEUE_FILTER filter{};
+		filter.DenyList.NumIDs = _countof(denyIds);
+		filter.DenyList.pIDList = denyIds;
+		filter.DenyList.NumSeverities = _countof(severities);
+		filter.DenyList.pSeverityList = severities;
+		//指定s多メッセージの表示を抑制する
+		infoQueue->PushStorageFilter(&filter);
+		
+		//解放
+		infoQueue->Release();
+	}
+	#endif // _DEBUG
+
+
 }
 
 void DirectX12::InitializeCommand() {
@@ -153,28 +196,6 @@ void DirectX12::CreateFinalRenderTargets() {
 	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 
-
-	////画面のクリア
-
-	//UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
-	////描画先のrtvを設定する
-	//commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
-	////指定した色で画面全体をクリアする
-	//float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
-	//commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-	//hr = commandList->Close();
-	//assert(SUCCEEDED(hr));
-
-	////コマンドリストの実行
-	//ID3D12CommandList* commandLists[] = { commandList };
-	//commandQueue->ExecuteCommandLists(1, commandLists);
-	////gpuとosに画面の交換を行うように通知
-	//swapChain->Present(1, 0);
-	////次のフレーム用のコマンドリストを準備
-	//hr = commandAllocator->Reset();
-	//assert(SUCCEEDED(hr));
-	//hr = commandList->Reset(commandAllocator, nullptr);
-	//assert(SUCCEEDED(hr));
 }
 
 void DirectX12::ClearRenderTarget() {
