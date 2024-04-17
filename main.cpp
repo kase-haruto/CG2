@@ -15,13 +15,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		
 
 		/*==========================================================
 				ゲームの処理
 		===========================================================*/
 		else {
+			directX->PreDraw();
 
-
+			directX->PostDraw();
 
 		}
 	}

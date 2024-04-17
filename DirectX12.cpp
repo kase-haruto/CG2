@@ -153,7 +153,49 @@ void DirectX12::CreateFinalRenderTargets() {
 	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 
-	//画面のクリア
+
+	////画面のクリア
+
+	//UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	////描画先のrtvを設定する
+	//commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
+	////指定した色で画面全体をクリアする
+	//float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+	//commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+	//hr = commandList->Close();
+	//assert(SUCCEEDED(hr));
+
+	////コマンドリストの実行
+	//ID3D12CommandList* commandLists[] = { commandList };
+	//commandQueue->ExecuteCommandLists(1, commandLists);
+	////gpuとosに画面の交換を行うように通知
+	//swapChain->Present(1, 0);
+	////次のフレーム用のコマンドリストを準備
+	//hr = commandAllocator->Reset();
+	//assert(SUCCEEDED(hr));
+	//hr = commandList->Reset(commandAllocator, nullptr);
+	//assert(SUCCEEDED(hr));
+}
+
+void DirectX12::ClearRenderTarget() {
+
+}
+
+void DirectX12::PreDraw() {
+	//rtvの設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をsrgbに変換して書き込む
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2dテクスチャとして書き込む
+	//ディスクリプタの先頭を取得する
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	//rtvを2筒来るのでディスクリプタを2つ用意
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
+	//まず1つ目
+	rtvHandles[0] = rtvStartHandle;
+	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
+	//2つ目
+	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 	//描画先のrtvを設定する
@@ -163,7 +205,9 @@ void DirectX12::CreateFinalRenderTargets() {
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
 	hr = commandList->Close();
 	assert(SUCCEEDED(hr));
+}
 
+void DirectX12::PostDraw() {
 	//コマンドリストの実行
 	ID3D12CommandList* commandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(1, commandLists);
@@ -174,8 +218,4 @@ void DirectX12::CreateFinalRenderTargets() {
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
-}
-
-void DirectX12::ClearRenderTarget() {
-
 }
