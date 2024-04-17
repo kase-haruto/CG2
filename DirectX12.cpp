@@ -2,10 +2,13 @@
 #include"ConvertString.h"
 #include<format>
 #include<cassert>
+#include <dxgidebug.h>
+
 
 // DirectX ライブラリのリンカー指示
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib,"dxguid.lib")
 
 DirectX12* DirectX12::GetInstance() {
 	static DirectX12 instance;
@@ -31,11 +34,14 @@ void DirectX12::Initialize(
 
 	// レンダーターゲット生成
 	CreateFinalRenderTargets();
+
+	//フェンスの作成
+	CreateFence();
 }
 
 void DirectX12::InitializeDXGIDevice() {
 	#ifdef _DEBUG
-	ID3D12Debug1* debugController = nullptr;
+	
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		//デバッグレイヤーを有効化する
 		debugController->EnableDebugLayer();
@@ -48,8 +54,6 @@ void DirectX12::InitializeDXGIDevice() {
 	//dxgiファクトリーの生成
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
-	//使用するアダプタ用の変数
-	IDXGIAdapter4* useAdapter = nullptr;
 	//よい順にアダプタをたのむ
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
 		 DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) !=
@@ -89,7 +93,7 @@ void DirectX12::InitializeDXGIDevice() {
 	Log("Complete create D3D12Device!!!\n");// 初期化完了のログを出す
 
 	#ifdef _DEBUG
-	ID3D12InfoQueue* infoQueue = nullptr;
+	infoQueue = nullptr;
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		//やばいエラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -251,7 +255,7 @@ void DirectX12::PreDraw() {
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-	
+
 }
 
 void DirectX12::PostDraw() {
@@ -267,7 +271,7 @@ void DirectX12::PostDraw() {
 	//遷移前(現行)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT; 
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	//transitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
@@ -287,7 +291,7 @@ void DirectX12::PostDraw() {
 
 	//fenceの値が指定したsignalの値にたどり着いてるか確認する
 	//GetCompletedValueの初期値はfence作成時に渡した初期値
-	if (fence->GetCompletedValue()<fenceValue) {
+	if (fence->GetCompletedValue() < fenceValue) {
 		//指定したsignalにたどり着いていないので、たどり着くまで待つようにイベントを指定する
 		fence->SetEventOnCompletion(fenceValue, fenceEvent);
 		//イベントを待つ
@@ -299,4 +303,35 @@ void DirectX12::PostDraw() {
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
+}
+
+void DirectX12::Finalize() {
+	//リソースリークチェック
+	IDXGIDebug* debug;
+	if (SUCCEEDED(DXGIGetDebugInterface1(0,IID_PPV_ARGS(&debug)))) {
+		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug->Release();
+	}
+
+	//警告時に止まる
+	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+	CloseHandle(fenceEvent);
+	fence->Release();
+	rtvDescriptorHeap->Release();
+	swapChainResources[0]->Release();
+	swapChainResources[1]->Release();
+	swapChain->Release();
+	commandList->Release();
+	commandAllocator->Release();
+	commandQueue->Release();
+	device->Release();
+	useAdapter->Release();
+	dxgiFactory->Release();
+	#ifdef _DEBUG
+	debugController->Release();
+	#endif // _DEBUG
+	CloseWindow(winApp_->GetHWND());
 }

@@ -11,6 +11,7 @@ class DirectX12 {
 private: // メンバ変数
 	WinApp* winApp_;
 	ID3D12Device* device = nullptr;
+	IDXGIAdapter4* useAdapter = nullptr;
 	HRESULT hr;
 	IDXGIFactory7* dxgiFactory = nullptr;
 	ID3D12CommandQueue* commandQueue = nullptr;
@@ -22,6 +23,8 @@ private: // メンバ変数
 	ID3D12Fence* fence = nullptr;
 	uint64_t fenceValue;
 	HANDLE fenceEvent;
+	ID3D12Debug1* debugController = nullptr;
+	ID3D12InfoQueue* infoQueue = nullptr;
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -34,6 +37,11 @@ public:
 	/// </summary>
 	void Initialize(
 		WinApp* win);
+
+	/// <summary>
+	/// 解放処理
+	/// </summary>
+	void Finalize();
 
 	/// <summary>
 	/// 描画前処理

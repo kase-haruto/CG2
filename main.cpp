@@ -23,11 +23,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		else {
 			directX->PreDraw();
 
+
+
 			directX->PostDraw();
 
 		}
 	}
 
-
+	directX->Finalize();
 	return 0;
 }
