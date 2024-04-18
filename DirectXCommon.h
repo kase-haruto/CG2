@@ -7,7 +7,7 @@
 #include <wrl.h>
 #include "WinApp.h"
 
-class DirectX12 {
+class DirectXCommon {
 private: // メンバ変数
 	WinApp* winApp_;
 	ID3D12Device* device = nullptr;
@@ -30,7 +30,7 @@ public:
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns></returns>
-	static DirectX12* GetInstance();
+	static DirectXCommon* GetInstance();
 
 	/// <summary>
 	/// 初期化
@@ -72,10 +72,10 @@ public:
 
 
 private: // メンバ関数
-	DirectX12() = default;
-	~DirectX12() = default;
-	DirectX12(const DirectX12&) = delete;
-	const DirectX12& operator=(const DirectX12&) = delete;
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+	DirectXCommon(const DirectXCommon&) = delete;
+	const DirectXCommon& operator=(const DirectXCommon&) = delete;
 
 	/// <summary>
 	/// DXGIデバイス初期化

@@ -22,8 +22,20 @@
     <Filter Include="Game">
       <UniqueIdentifier>{a05fc567-36ce-471f-8829-140d8a168c7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Shader">
+    <Filter Include="Game\Triangle">
+      <UniqueIdentifier>{f0c1f3ac-19e7-401f-bd04-afaf17ac8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\ShaderCompiler">
+      <UniqueIdentifier>{9c49e1e4-16c9-4e1e-9903-00fe25d2c6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Shaders">
       <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\PSO">
+      <UniqueIdentifier>{15482a28-e730-4238-a3b8-ce02d47139e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\DirectXCommon">
+      <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,11 +51,11 @@
     <ClCompile Include="ConvertString.cpp">
       <Filter>リソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderCompiler.cpp">
-      <Filter>Game\Shader</Filter>
+      <Filter>DirectX\ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXCommon.cpp">
+      <Filter>DirectX\DirectXCommon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,19 +65,19 @@
     <ClInclude Include="ConvertString.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderCompiler.h">
-      <Filter>Game\Shader</Filter>
+      <Filter>DirectX\ShaderCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXCommon.h">
+      <Filter>DirectX\DirectXCommon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl">
-      <Filter>Game\Shader</Filter>
+      <Filter>DirectX\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Object3d.PS.hlsl">
-      <Filter>Game\Shader</Filter>
+      <Filter>DirectX\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

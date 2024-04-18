@@ -1,12 +1,12 @@
 ﻿#include<Windows.h>
 #include"WinApp.h"
-#include"DirectX12.h"
+#include"DirectXCommon.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	WinApp* win = win->GetInstance();
 	MSG msg{};
-	DirectX12* directX = directX->GetInstance();
+	DirectXCommon* directX = directX->GetInstance();
 
 	directX->Initialize(win);
 

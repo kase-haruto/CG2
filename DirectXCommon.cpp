@@ -1,4 +1,4 @@
-﻿#include "DirectX12.h"
+﻿#include "DirectXCommon.h"
 #include"ConvertString.h"
 #include<format>
 #include<cassert>
@@ -11,12 +11,12 @@
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
 
-DirectX12* DirectX12::GetInstance() {
-	static DirectX12 instance;
+DirectXCommon* DirectXCommon::GetInstance() {
+	static DirectXCommon instance;
 	return &instance;
 }
 
-void DirectX12::Initialize(
+void DirectXCommon::Initialize(
 	WinApp* win) {
 	// nullptrチェック
 	assert(win);
@@ -40,7 +40,7 @@ void DirectX12::Initialize(
 	CreateFence();
 }
 
-void DirectX12::InitializeDXGIDevice() {
+void DirectXCommon::InitializeDXGIDevice() {
 	#ifdef _DEBUG
 	
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
@@ -127,7 +127,7 @@ void DirectX12::InitializeDXGIDevice() {
 
 }
 
-void DirectX12::InitializeCommand() {
+void DirectXCommon::InitializeCommand() {
 	//コマンドキューを生成
 
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
@@ -149,7 +149,7 @@ void DirectX12::InitializeCommand() {
 
 }
 
-void DirectX12::CreateSwapChain() {
+void DirectXCommon::CreateSwapChain() {
 	//スワップチェーンの作成
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = WinApp::kWindowWidth;//画面の幅。ウィンドウのクライアント領域を同じものにしておく
@@ -165,7 +165,7 @@ void DirectX12::CreateSwapChain() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::CreateDescriptorHeap() {
+void DirectXCommon::CreateDescriptorHeap() {
 	//ディスクリプタヒープの生成
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;//レンダーターゲットビュー用
@@ -175,7 +175,7 @@ void DirectX12::CreateDescriptorHeap() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::CreateFinalRenderTargets() {
+void DirectXCommon::CreateFinalRenderTargets() {
 	//ディスクリプタの生成
 	CreateDescriptorHeap();
 
@@ -203,7 +203,7 @@ void DirectX12::CreateFinalRenderTargets() {
 
 }
 
-void DirectX12::CreateFence() {
+void DirectXCommon::CreateFence() {
 	//初期値0でFenceを作る
 	fenceValue = 0;
 	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
@@ -214,11 +214,11 @@ void DirectX12::CreateFence() {
 	assert(fenceEvent != nullptr);
 }
 
-void DirectX12::ClearRenderTarget() {
+void DirectXCommon::ClearRenderTarget() {
 
 }
 
-void DirectX12::PreDraw() {
+void DirectXCommon::PreDraw() {
 	//rtvの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をsrgbに変換して書き込む
@@ -259,7 +259,7 @@ void DirectX12::PreDraw() {
 
 }
 
-void DirectX12::PostDraw() {
+void DirectXCommon::PostDraw() {
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};
@@ -306,7 +306,7 @@ void DirectX12::PostDraw() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::Finalize() {
+void DirectXCommon::Finalize() {
 	//リソースリークチェック
 	IDXGIDebug* debug;
 	if (SUCCEEDED(DXGIGetDebugInterface1(0,IID_PPV_ARGS(&debug)))) {
