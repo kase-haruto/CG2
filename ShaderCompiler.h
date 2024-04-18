@@ -10,25 +10,21 @@
 
 class ShaderCompiler {
 private:
-	// プライベートなコンストラクタ
-	ShaderCompiler() {}
-
-	// コピーと代入のオペレータを削除
-	ShaderCompiler(const ShaderCompiler&) = delete;
-	ShaderCompiler& operator=(const ShaderCompiler&) = delete;
-
-
-
+	
 public:
-	// デストラクタ
-	~ShaderCompiler() = default;
 
-	// シングルトンインスタンスを取得する静的メソッド
-	static ShaderCompiler* GetInstance();
+	IDxcUtils* GetDxcUtils()const { return dxcUtils; }
+	IDxcCompiler3* GetDxcCompiler()const { return dxcCompiler; }
+	IDxcIncludeHandler* GetIncludeHandler()const { return includeHandle; }
 
 public://メンバ関数
+	ShaderCompiler();
+	~ShaderCompiler();
+	
 	void InitializeDXC();
+	
 	void LoadHLSL(const std::wstring& filePath, const wchar_t* profile);
+	
 	IDxcBlob* CompileShader(
 		//CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
@@ -45,7 +41,8 @@ public://メンバ関数
 				 IDxcIncludeHandler* includeHandler);
 	void CheckNoError();
 
-	IDxcBlob* GetCompileResult();
+	IDxcBlob* GetCompileResult(const std::wstring& filePath,
+							   const wchar_t* profile);
 
 private://メンバ変数
 	IDxcUtils* dxcUtils = nullptr;

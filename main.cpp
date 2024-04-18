@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	MSG msg{};
 	DirectXCommon* directX = directX->GetInstance();
 
-	directX->Initialize(win);
+	directX->Initialize(win,1280,720);
 
 	while (win->ProcessMessage()) {
 
@@ -16,11 +16,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->PreDraw();
 
 
-
+		
 		//フレームの終了
 		directX->PostDraw();
-
-
 	}
 
 	directX->Finalize();

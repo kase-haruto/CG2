@@ -7,7 +7,7 @@
 #include <wrl.h>
 #include "WinApp.h"
 
-class DirectXCommon {
+class DirectXCommon final{
 private: // メンバ変数
 	WinApp* winApp_;
 	ID3D12Device* device = nullptr;
@@ -36,7 +36,7 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize(
-		WinApp* win);
+		WinApp* win,uint32_t width, uint32_t height);
 
 	/// <summary>
 	/// 解放処理
@@ -63,12 +63,21 @@ public:
 	/// </summary>
 	/// <returns>デバイス</returns>
 	ID3D12Device* GetDevice() const { return device; }
+	
+	/// <summary>
+	/// viewPortとscissorのセット
+	/// </summary>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	void SetViewPortAndScissor(uint32_t width, uint32_t height);
+
 
 	/// <summary>
 	/// 描画コマンドリストの取得
 	/// </summary>
 	/// <returns>描画コマンドリスト</returns>
 	//ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
+
 
 
 private: // メンバ関数

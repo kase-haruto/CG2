@@ -17,12 +17,14 @@ DirectXCommon* DirectXCommon::GetInstance() {
 }
 
 void DirectXCommon::Initialize(
-	WinApp* win) {
+	WinApp* win,uint32_t width,uint32_t height) {
 	// nullptrチェック
 	assert(win);
 
-
+	
 	winApp_ = win;
+
+	SetViewPortAndScissor(width, height);
 
 	// DXGIデバイス初期化
 	InitializeDXGIDevice();
@@ -256,7 +258,6 @@ void DirectXCommon::PreDraw() {
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-
 }
 
 void DirectXCommon::PostDraw() {
@@ -304,6 +305,26 @@ void DirectXCommon::PostDraw() {
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
+}
+
+void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height) {
+	//ビューポート
+	D3D12_VIEWPORT viewport{};
+	//クライアント領域サイズと一緒にして画面に表示
+	viewport.Width = float(width);
+	viewport.Height = float(height);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	//シザー矩形
+	D3D12_RECT scissorRect{};
+	//基本的にビューポートと同じ矩形が構成されるようにする
+	scissorRect.left = 0;
+	scissorRect.right = width;
+	scissorRect.top = 0;
+	scissorRect.bottom = height;
 }
 
 void DirectXCommon::Finalize() {

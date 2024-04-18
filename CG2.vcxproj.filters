@@ -37,6 +37,9 @@
     <Filter Include="DirectX\DirectXCommon">
       <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\TriangleRender">
+      <UniqueIdentifier>{cfb31d04-5228-431e-98e4-026bdf1ffcfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -57,6 +60,12 @@
     <ClCompile Include="DirectXCommon.cpp">
       <Filter>DirectX\DirectXCommon</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineStateObject.cpp">
+      <Filter>DirectX\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleRender.cpp">
+      <Filter>DirectX\TriangleRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -70,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="DirectXCommon.h">
       <Filter>DirectX\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineStateObject.h">
+      <Filter>DirectX\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleRender.h">
+      <Filter>DirectX\TriangleRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

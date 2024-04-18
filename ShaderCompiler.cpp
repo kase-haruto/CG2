@@ -3,11 +3,6 @@
 #include<format>
 
 
-ShaderCompiler* ShaderCompiler::GetInstance() {
-	static ShaderCompiler instance;
-	return &instance;
-}
-
 void ShaderCompiler::InitializeDXC() {
 	HRESULT hr = S_FALSE;
 
@@ -56,7 +51,7 @@ IDxcBlob* ShaderCompiler::CompileShader(
 	//警告、エラーが出てないか確認
 	CheckNoError();
 	//compile結果を受け取って返す
-	GetCompileResult();
+	return GetCompileResult(filePath, profile);
 }
 
 
@@ -77,7 +72,6 @@ void ShaderCompiler::Compile(const std::wstring& filePath,
 	};
 
 	//実際にshaderをコンパイルする
-
 	hr = dxcCompiler->Compile(
 		&shaderSourceBuffer,//読み込んだファイル
 		arguments,//コンパイルオプション
@@ -99,17 +93,26 @@ void ShaderCompiler::CheckNoError() {
 	}
 }
 
-IDxcBlob* ShaderCompiler::GetCompileResult() {
+
+
+IDxcBlob* ShaderCompiler::GetCompileResult(const std::wstring& filePath,
+										   const wchar_t* profile) {
 	HRESULT hr = S_FALSE;
 	IDxcBlob* shaderBlob = nullptr;
 	//コンパイル結果から実行用のバイナリ部分を取得
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
-	Log(ConvertString(std::format(L"Compile Succeded,path:{},profile:{}\n")));
+	Log(ConvertString(std::format(L"Compile Succeded,path:{},profile:{}\n",filePath,profile)));
 	//もう使わないリソースを開放
 	shaderSource->Release();
 	shaderResult->Release();
 	//実行用のバイナリ返却
 	return shaderBlob;
+}
+
+ShaderCompiler::~ShaderCompiler() {
+	dxcUtils->Release();
+	dxcCompiler->Release();
+	includeHandle->Release();
 }
