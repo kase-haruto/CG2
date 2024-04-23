@@ -10,12 +10,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	directX->Initialize(win,1280,720);
 
-	while (win->ProcessMessage()) {
+	while (win->ProcessMessage()==0) {
 
 		//フレームの開始
 		directX->PreDraw();
 
-
+		directX->DrawPolygon();
 		
 		//フレームの終了
 		directX->PostDraw();

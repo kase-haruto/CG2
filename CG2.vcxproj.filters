@@ -25,20 +25,11 @@
     <Filter Include="Game\Triangle">
       <UniqueIdentifier>{f0c1f3ac-19e7-401f-bd04-afaf17ac8489}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\ShaderCompiler">
-      <UniqueIdentifier>{9c49e1e4-16c9-4e1e-9903-00fe25d2c6a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX\Shaders">
       <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\PSO">
-      <UniqueIdentifier>{15482a28-e730-4238-a3b8-ce02d47139e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX\DirectXCommon">
       <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\TriangleRender">
-      <UniqueIdentifier>{cfb31d04-5228-431e-98e4-026bdf1ffcfa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,17 +45,8 @@
     <ClCompile Include="ConvertString.cpp">
       <Filter>リソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderCompiler.cpp">
-      <Filter>DirectX\ShaderCompiler</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXCommon.cpp">
       <Filter>DirectX\DirectXCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineStateObject.cpp">
-      <Filter>DirectX\PSO</Filter>
-    </ClCompile>
-    <ClCompile Include="TriangleRender.cpp">
-      <Filter>DirectX\TriangleRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,17 +56,8 @@
     <ClInclude Include="ConvertString.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderCompiler.h">
-      <Filter>DirectX\ShaderCompiler</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXCommon.h">
       <Filter>DirectX\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineStateObject.h">
-      <Filter>DirectX\PSO</Filter>
-    </ClInclude>
-    <ClInclude Include="TriangleRender.h">
-      <Filter>DirectX\TriangleRender</Filter>
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>ヘッダー ファイル</Filter>

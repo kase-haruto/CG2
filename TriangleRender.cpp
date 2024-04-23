@@ -27,8 +27,6 @@ void TriangleRender::CreateVertexResource(ID3D12Device* device) {
 }
 
 void TriangleRender::CreateVertexBufferView() {
-	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ

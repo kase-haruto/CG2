@@ -24,7 +24,11 @@ public://メンバ関数
 	/// </summary>
 	void UploadVertexData();
 
+	ID3D12Resource* GetVertexResource()const { return vertexResource; }
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() { return vertexBufferView; }
 private://メンバ変数
 	ID3D12Resource* vertexResource = nullptr;
+	//頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 };
 

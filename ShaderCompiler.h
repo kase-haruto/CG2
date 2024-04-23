@@ -44,6 +44,7 @@ public://メンバ関数
 	IDxcBlob* GetCompileResult(const std::wstring& filePath,
 							   const wchar_t* profile);
 
+
 private://メンバ変数
 	IDxcUtils* dxcUtils = nullptr;
 	IDxcCompiler3* dxcCompiler = nullptr;

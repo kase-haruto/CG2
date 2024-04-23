@@ -111,6 +111,8 @@ IDxcBlob* ShaderCompiler::GetCompileResult(const std::wstring& filePath,
 	return shaderBlob;
 }
 
+
+
 ShaderCompiler::~ShaderCompiler() {
 	dxcUtils->Release();
 	dxcCompiler->Release();

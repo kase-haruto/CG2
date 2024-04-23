@@ -59,5 +59,7 @@ public://メンバ関数
 	/// </summary>
 	void CreatePSO(ID3D12Device* device);
 
+	void Update();
+
 };
 
