@@ -6,8 +6,6 @@
 #include"Vector4.h"
 
 
-
-
 // DirectX ライブラリのリンカー指示
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -297,6 +295,10 @@ IDxcBlob* DirectXCommon::CompileShader(
 		assert(false); // エラーがあった場合は止める
 	}
 
+	if (shaderError != nullptr){
+		shaderError->Release();
+		shaderError = nullptr;  // nullptrに設定して、二重解放を避ける
+	}
 
 	//==============================
 	//Compile結果を受け取る
@@ -313,6 +315,7 @@ IDxcBlob* DirectXCommon::CompileShader(
 	shaderResult->Release();
 	//実行用のバイナリ返却
 	return shaderBlob;
+
 }
 
 void DirectXCommon::CreateVertexResource() {
@@ -329,7 +332,7 @@ void DirectXCommon::CreateVertexResource() {
 	vertexResourceDesc.Height = 1;
 	vertexResourceDesc.DepthOrArraySize = 1;
 	vertexResourceDesc.MipLevels = 1;
-	vertexResourceDesc.SampleDesc.Quality = 1;
+	vertexResourceDesc.SampleDesc.Count = 1;
 	//バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//実際に頂点リソースを作る
@@ -356,7 +359,7 @@ void DirectXCommon::UploadVertexData() {
 	//上
 	vertexData[1] = { 0.0f,0.5f,0.0f,1.0f };
 	//右下
-	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
+	vertexData[2] = {0.5f,-0.5f,0.0f,1.0f};
 }
 
 
@@ -379,51 +382,28 @@ void DirectXCommon::CreateRootSignature() {
 }
 
 void DirectXCommon::BindInputLayout() {
-	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDesc[1] = {};
-	inputElementDesc[0].SemanticName = "POSITION";
-	inputElementDesc[0].SemanticIndex = 0;
-	inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	inputElementDesc[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputLayoutDesc.pInputElementDescs = inputElementDesc;
-	inputLayoutDesc.NumElements = _countof(inputElementDesc);
+	
 }
 
 void DirectXCommon::CreatePSO() {
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 
-	graphicsPipelineStateDesc.pRootSignature = rootSignature;
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	//vertexShader
-	graphicsPipelineStateDesc.VS = { vertexShaderBlob->GetBufferPointer(),
-	vertexShaderBlob->GetBufferSize() };
-	//PixelShader
-	graphicsPipelineStateDesc.PS = { pixelShaderBlob->GetBufferPointer(),
-	pixelShaderBlob->GetBufferSize() };
-	//blendState
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	//利用するトポロジ｛形状｝のタイプ。三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	//どのように画面を打ち込むかの設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	//実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-											 IID_PPV_ARGS(&graphicsPipelineState));
-	assert(SUCCEEDED(hr));
+	
 }
 
 void DirectXCommon::Pipeline() {
 	//dxcの初期化
 	InitializeDXC();
 	CreateRootSignature();
-	BindInputLayout();
+
+	//InputLayout
+	D3D12_INPUT_ELEMENT_DESC inputElementDesc[1] = {};
+	inputElementDesc[0].SemanticName = "POSITION";
+	inputElementDesc[0].SemanticIndex = 0;
+	inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDesc[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	inputLayoutDesc.pInputElementDescs = inputElementDesc;
+	inputLayoutDesc.NumElements = _countof(inputElementDesc);
 
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -447,7 +427,34 @@ void DirectXCommon::Pipeline() {
 									L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 
-	CreatePSO();
+	//PSOを作成
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
+
+	graphicsPipelineStateDesc.pRootSignature = rootSignature;
+	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
+	//vertexShader
+	graphicsPipelineStateDesc.VS = {vertexShaderBlob->GetBufferPointer(),
+	vertexShaderBlob->GetBufferSize()};
+	//PixelShader
+	graphicsPipelineStateDesc.PS = {pixelShaderBlob->GetBufferPointer(),
+	pixelShaderBlob->GetBufferSize()};
+	//blendState
+	graphicsPipelineStateDesc.BlendState = blendDesc;
+	graphicsPipelineStateDesc.RasterizerState = rasterizeDesc;
+	//書き込むRTVの情報
+	graphicsPipelineStateDesc.NumRenderTargets = 1;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//利用するトポロジ｛形状｝のタイプ。三角形
+	graphicsPipelineStateDesc.PrimitiveTopologyType =
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//どのように画面を打ち込むかの設定
+	graphicsPipelineStateDesc.SampleDesc.Count = 1;
+	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	//実際に生成
+	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+											 IID_PPV_ARGS(&graphicsPipelineState));
+	assert(SUCCEEDED(hr));
+
 	CreateVertexResource();
 	CreateVertexBufferView();
 	UploadVertexData();
@@ -577,17 +584,6 @@ void DirectXCommon::DrawPolygon() {
 }
 
 void DirectXCommon::Finalize() {
-	//リソースリークチェック
-	IDXGIDebug* debug;
-	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		debug->Release();
-	}
-
-	//警告時に止まる
-	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 	CloseHandle(fenceEvent);
 	fence->Release();
@@ -601,16 +597,31 @@ void DirectXCommon::Finalize() {
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	debugController->Release();
-	#endif // _DEBUG
+#endif // _DEBUG
 	CloseWindow(winApp_->GetHWND());
+	vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();
-	if (errorBlob) {
+	if (errorBlob){
 		errorBlob->Release();
 	}
 	rootSignature->Release();
 	pixelShaderBlob->Release();
 	vertexShaderBlob->Release();
+
+	//リソースリークチェック
+	IDXGIDebug1* debug;
+	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug->Release();
+	}
+
+	//警告時に止まる
+	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+	
 }

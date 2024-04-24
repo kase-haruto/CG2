@@ -15,6 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//フレームの開始
 		directX->PreDraw();
 
+		//三角形の描画
 		directX->DrawPolygon();
 		
 		//フレームの終了

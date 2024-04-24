@@ -43,7 +43,6 @@ private: // メンバ変数
 
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	D3D12_BLEND_DESC blendDesc{};
-	D3D12_RASTERIZER_DESC rasterizerDesc{};
 
 	IDxcBlob* vertexShaderBlob;
 	IDxcBlob* pixelShaderBlob;
@@ -51,7 +50,6 @@ private: // メンバ変数
 	ID3D12Resource* vertexResource = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
 	//シザー矩形
@@ -112,6 +110,52 @@ public:
 	/// <returns>描画コマンドリスト</returns>
 	//ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 
+	
+
+	/// <summary>
+	/// 三角形の描画
+	/// </summary>
+	void DrawPolygon();
+
+	
+
+private: // メンバ関数
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+	DirectXCommon(const DirectXCommon&) = delete;
+	const DirectXCommon& operator=(const DirectXCommon&) = delete;
+
+	/// <summary>
+	/// DXGIデバイス初期化
+	/// </summary>
+	void InitializeDXGIDevice();
+
+
+	/// <summary>
+	/// コマンド関連初期化
+	/// </summary>
+	void InitializeCommand();
+
+	/// <summary>
+	/// スワップチェーンの生成
+	/// </summary>
+	void CreateSwapChain();
+
+	/// <summary>
+	/// ディスクリプタヒープの生成
+	/// </summary>
+	void CreateDescriptorHeap();
+
+	/// <summary>
+	/// レンダーターゲット生成
+	/// </summary>
+	void CreateFinalRenderTargets();
+
+	/// <summary>
+	/// フェンス生成
+	/// </summary>
+	void CreateFence();
+
 	////---------------------------------------------------////
 	///				三角形関連
 
@@ -152,7 +196,6 @@ public:
 
 	void Pipeline();
 
-	void DrawPolygon();
 
 	//=============================================
 	//		POS
@@ -160,44 +203,6 @@ public:
 	void CreateRootSignature();
 	void BindInputLayout();
 	void CreatePSO();
-
-private: // メンバ関数
-	DirectXCommon() = default;
-	~DirectXCommon() = default;
-	DirectXCommon(const DirectXCommon&) = delete;
-	const DirectXCommon& operator=(const DirectXCommon&) = delete;
-
-	/// <summary>
-	/// DXGIデバイス初期化
-	/// </summary>
-	void InitializeDXGIDevice();
-
-
-	/// <summary>
-	/// コマンド関連初期化
-	/// </summary>
-	void InitializeCommand();
-
-	/// <summary>
-	/// スワップチェーンの生成
-	/// </summary>
-	void CreateSwapChain();
-
-	/// <summary>
-	/// ディスクリプタヒープの生成
-	/// </summary>
-	void CreateDescriptorHeap();
-
-	/// <summary>
-	/// レンダーターゲット生成
-	/// </summary>
-	void CreateFinalRenderTargets();
-
-	/// <summary>
-	/// フェンス生成
-	/// </summary>
-	void CreateFence();
-
 	
 };
 
