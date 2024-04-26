@@ -18,10 +18,10 @@ DirectXCommon* DirectXCommon::GetInstance() {
 }
 
 void DirectXCommon::Initialize(
-	WinApp* win, uint32_t width, uint32_t height) {
+	WinApp* win, uint32_t width, uint32_t height){
 	// nullptrチェック
 	assert(win);
-
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	winApp_ = win;
 
@@ -123,9 +123,6 @@ void DirectXCommon::InitializeDXGIDevice() {
 		filter.DenyList.pSeverityList = severities;
 		//指定s多メッセージの表示を抑制する
 		infoQueue->PushStorageFilter(&filter);
-
-		//解放
-		infoQueue->Release();
 	}
 	#endif // _DEBUG
 
@@ -315,31 +312,40 @@ IDxcBlob* DirectXCommon::CompileShader(
 	shaderResult->Release();
 	//実行用のバイナリ返却
 	return shaderBlob;
-
 }
 
-void DirectXCommon::CreateVertexResource() {
-
-	//頂点リソース用のヒープの設定
-	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+ID3D12Resource* DirectXCommon::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes){
+	// 頂点リソース用のヒープの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProperties {};
 	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResourceDesc{};
-	//バッファリソース。テクスチャの場合はまた別の設定をする
-	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3;
-	//バッファの場合はこれらは1にする決まり
-	vertexResourceDesc.Height = 1;
-	vertexResourceDesc.DepthOrArraySize = 1;
-	vertexResourceDesc.MipLevels = 1;
-	vertexResourceDesc.SampleDesc.Count = 1;
-	//バッファの場合はこれにする決まり
-	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//実際に頂点リソースを作る
-	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-										 &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
-	assert(SUCCEEDED(hr));
+
+	// 頂点リソースの設定
+	D3D12_RESOURCE_DESC bufferResourceDesc{};
+	// バッファリソース。テクスチャの場合はまた別の設定をする
+	bufferResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	bufferResourceDesc.Width = sizeInBytes; // 指定されたサイズに設定
+	// バッファの場合はこれらは1にする決まり
+	bufferResourceDesc.Height = 1;
+	bufferResourceDesc.DepthOrArraySize = 1;
+	bufferResourceDesc.MipLevels = 1;
+	bufferResourceDesc.SampleDesc.Count = 1;
+	// バッファの場合はこれにする決まり
+	bufferResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 実際にリソースを作る
+	ID3D12Resource* bufferResource = nullptr;
+	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+												 &bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
+	if (FAILED(hr)){
+		if (bufferResource){
+			bufferResource->Release();
+			bufferResource = nullptr;
+		}
+	}
+
+	return bufferResource;
 }
+
 
 void DirectXCommon::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
@@ -367,6 +373,16 @@ void DirectXCommon::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	
+	//RootParamer作成
+	D3D12_ROOT_PARAMETER rootParamenter[1] = {};
+	rootParamenter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
+	rootParamenter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParamenter[0].Descriptor.ShaderRegister = 0;
+	descriptionRootSignature.pParameters = rootParamenter;
+	descriptionRootSignature.NumParameters = _countof(rootParamenter);
+
+
 	//シリアライズしてバイナリする
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 									 D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
@@ -379,15 +395,6 @@ void DirectXCommon::CreateRootSignature() {
 	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
 									 signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(hr));
-}
-
-void DirectXCommon::BindInputLayout() {
-	
-}
-
-void DirectXCommon::CreatePSO() {
-
-	
 }
 
 void DirectXCommon::Pipeline() {
@@ -455,7 +462,17 @@ void DirectXCommon::Pipeline() {
 											 IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-	CreateVertexResource();
+	vertexResource = CreateBufferResource(device,sizeof(Vector4)*3);
+	
+	materialResource = CreateBufferResource(device, sizeof(Vector4));
+	
+	//マテリアルにデータを書き込む
+	Vector4* materialData = nullptr;
+	//書き込むためのアドレスを取得
+	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
+	//今回はあかをかきこむ
+	*materialData = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
 	CreateVertexBufferView();
 	UploadVertexData();
 }
@@ -544,7 +561,7 @@ void DirectXCommon::PostDraw() {
 		//イベントを待つ
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
-
+	
 	//次のフレーム用のコマンドリストを準備
 	hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));
@@ -579,6 +596,8 @@ void DirectXCommon::DrawPolygon() {
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//マテリアルCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(3, 1, 0, 0);
 }
@@ -597,6 +616,9 @@ void DirectXCommon::Finalize() {
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
+	dxcUtils->Release();
+	dxcCompiler->Release();
+	includeHandler->Release();
 #ifdef _DEBUG
 	debugController->Release();
 #endif // _DEBUG
@@ -610,6 +632,7 @@ void DirectXCommon::Finalize() {
 	rootSignature->Release();
 	pixelShaderBlob->Release();
 	vertexShaderBlob->Release();
+	materialResource->Release();
 
 	//リソースリークチェック
 	IDXGIDebug1* debug;
@@ -622,6 +645,4 @@ void DirectXCommon::Finalize() {
 
 	//警告時に止まる
 	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-
-	
 }

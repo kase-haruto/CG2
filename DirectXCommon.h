@@ -55,6 +55,8 @@ private: // メンバ変数
 	//シザー矩形
 	D3D12_RECT scissorRect{};
 
+	ID3D12Resource* materialResource;
+
 	
 
 public:
@@ -176,11 +178,7 @@ private: // メンバ関数
 		IDxcIncludeHandler* includeHandler
 	);
 
-	/// <summary>
-	/// vertexResourceの作成
-	/// </summary>
-	/// <param name="device"></param>
-	void CreateVertexResource();
+	
 
 	/// <summary>
 	/// vertexBufferViewの作成
@@ -192,6 +190,7 @@ private: // メンバ関数
 	/// </summary>
 	void UploadVertexData();
 
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device,size_t sizeInBytes);
 
 
 	void Pipeline();
@@ -201,8 +200,6 @@ private: // メンバ関数
 	//		POS
 
 	void CreateRootSignature();
-	void BindInputLayout();
-	void CreatePSO();
 	
 };
 
