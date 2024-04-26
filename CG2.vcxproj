@@ -101,12 +101,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
     </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="MyFunc.cpp" />
+    <ClCompile Include="ViewProjection.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConvertString.h" />
     <ClInclude Include="DirectXCommon.h" />
+    <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="MyFunc.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
+    <ClInclude Include="ViewProjection.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>

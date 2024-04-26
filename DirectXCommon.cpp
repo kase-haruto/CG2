@@ -5,7 +5,6 @@
 #include <dxgidebug.h>
 #include"Vector4.h"
 
-
 // DirectX ライブラリのリンカー指示
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -43,6 +42,12 @@ void DirectXCommon::Initialize(
 	CreateFence();
 
 	Pipeline();
+
+	//transform変数を作る
+	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
+
+	viewProjection_ = std::make_unique<ViewProjection>();
+	viewProjection_->Initialize();
 }
 
 void DirectXCommon::InitializeDXGIDevice() {
@@ -375,10 +380,12 @@ void DirectXCommon::CreateRootSignature() {
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	
 	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenter[1] = {};
+	D3D12_ROOT_PARAMETER rootParamenter[2] = {};
 	rootParamenter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParamenter[0].Descriptor.ShaderRegister = 0;
+	rootParamenter[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
+	rootParamenter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
 	descriptionRootSignature.pParameters = rootParamenter;
 	descriptionRootSignature.NumParameters = _countof(rootParamenter);
 
@@ -466,12 +473,21 @@ void DirectXCommon::Pipeline() {
 	
 	materialResource = CreateBufferResource(device, sizeof(Vector4));
 	
+
 	//マテリアルにデータを書き込む
 	Vector4* materialData = nullptr;
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	*materialData = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	//WVP用のリソースを作る。matrix4x4 1つ分のサイズを用意する
+	wvpResource = CreateBufferResource(device, sizeof(Matrix4x4));
+	//データを書き込む
+	//書き込むためのアドレスを取得
+	wvpResource->Map(0, nullptr, reinterpret_cast< void** >(&wvpData));
+	//単位行列を書き込んでおく
+	*wvpData = Matrix4x4::MakeIdentity();
 
 	CreateVertexBufferView();
 	UploadVertexData();
@@ -587,6 +603,17 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height) {
 	scissorRect.bottom = height;
 }
 
+void DirectXCommon::UpdatePolygon(){
+	transform.rotate.y += 0.03f;
+	Matrix4x4 worldMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
+														transform.rotate,
+														transform.translate
+	);
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	*wvpData = worldViewProjectionMatrix;
+	
+}
+
 void DirectXCommon::DrawPolygon() {
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
@@ -598,6 +625,8 @@ void DirectXCommon::DrawPolygon() {
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//マテリアルCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
+	//wvp用のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(3, 1, 0, 0);
 }
@@ -633,6 +662,7 @@ void DirectXCommon::Finalize() {
 	pixelShaderBlob->Release();
 	vertexShaderBlob->Release();
 	materialResource->Release();
+	wvpResource->Release();
 
 	//リソースリークチェック
 	IDXGIDebug1* debug;

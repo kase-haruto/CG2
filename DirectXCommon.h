@@ -8,6 +8,9 @@
 #include "WinApp.h"
 #include<dxcapi.h>
 #include"TriangleRender.h"
+#include"Transform.h"
+#include"Matrix4x4.h"
+#include"ViewProjection.h"
 
 class DirectXCommon final{
 private: // メンバ変数
@@ -56,8 +59,12 @@ private: // メンバ変数
 	D3D12_RECT scissorRect{};
 
 	ID3D12Resource* materialResource;
+	Matrix4x4* wvpData = nullptr;
+	ID3D12Resource* wvpResource;
 
+	Transform transform;
 	
+	std::unique_ptr<ViewProjection> viewProjection_;
 
 public:
 	/// <summary>
@@ -113,6 +120,11 @@ public:
 	//ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 
 	
+	/// <summary>
+	/// 三角形の描画
+	/// </summary>
+	void UpdatePolygon();
+
 
 	/// <summary>
 	/// 三角形の描画

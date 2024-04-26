@@ -31,6 +31,15 @@
     <Filter Include="DirectX\DirectXCommon">
       <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{cb36ba32-0ec7-4060-81a5-871b104199ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyFunc">
+      <UniqueIdentifier>{5e32d594-7367-482d-80e9-d1023bbeb3c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{6f3950f8-d3cc-45eb-836b-06d4168f8e4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -42,11 +51,20 @@
     <ClCompile Include="WinApp.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="ConvertString.cpp">
-      <Filter>リソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXCommon.cpp">
       <Filter>DirectX\DirectXCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFunc.cpp">
+      <Filter>MyFunc</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertString.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewProjection.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +78,22 @@
       <Filter>DirectX\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Vector4.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFunc.h">
+      <Filter>MyFunc</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewProjection.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
