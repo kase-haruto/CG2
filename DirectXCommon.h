@@ -23,6 +23,7 @@ private: // メンバ変数
 	ID3D12CommandAllocator* commandAllocator = nullptr;
 	ID3D12GraphicsCommandList* commandList = nullptr;
 	IDXGISwapChain4* swapChain = nullptr;
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc {};
 	ID3D12DescriptorHeap* rtvDescriptorHeap = nullptr;
 	ID3D12Resource* swapChainResources[2] = { nullptr };
 	ID3D12Fence* fence = nullptr;
@@ -30,9 +31,9 @@ private: // メンバ変数
 	HANDLE fenceEvent;
 	ID3D12Debug1* debugController = nullptr;
 	ID3D12InfoQueue* infoQueue = nullptr;
-
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc {};
+	
 	//三角形の描画について
-
 	IDxcUtils* dxcUtils = nullptr;
 	IDxcCompiler3* dxcCompiler = nullptr;
 	IDxcIncludeHandler* includeHandler = nullptr;
@@ -98,12 +99,6 @@ public:
 	/// レンダーターゲットのクリア
 	/// </summary>
 	void ClearRenderTarget();
-
-	/// <summary>
-	/// デバイスの取得
-	/// </summary>
-	/// <returns>デバイス</returns>
-	ID3D12Device* GetDevice() const { return device; }
 	
 	/// <summary>
 	/// viewPortとscissorのセット
@@ -113,11 +108,11 @@ public:
 	void SetViewPortAndScissor(uint32_t width, uint32_t height);
 
 
-	/// <summary>
-	/// 描画コマンドリストの取得
-	/// </summary>
-	/// <returns>描画コマンドリスト</returns>
-	//ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
+	/* <summary>
+	 描画コマンドリストの取得
+	 </summary>
+	 <returns>描画コマンドリスト</returns>*/
+	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
 
 	
 	/// <summary>
@@ -131,7 +126,26 @@ public:
 	/// </summary>
 	void DrawPolygon();
 
+	/// <summary>
+	/// ディスクリプタヒープの生成
+	/// </summary>
+	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device,
+											   D3D12_DESCRIPTOR_HEAP_TYPE heapType,
+											   UINT numDescriptors,
+											   bool shaderVisible);
+
 	
+	//================
+	//アクセッサ
+	//================
+	
+	/// <summary>
+	/// デバイスの取得
+	/// </summary>
+	ID3D12Device* GetDevice()const{ return device; }
+
+	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const{ return swapChainDesc; }
+	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const{ return rtvDesc; }
 
 private: // メンバ関数
 	DirectXCommon() = default;
@@ -155,10 +169,7 @@ private: // メンバ関数
 	/// </summary>
 	void CreateSwapChain();
 
-	/// <summary>
-	/// ディスクリプタヒープの生成
-	/// </summary>
-	void CreateDescriptorHeap();
+	
 
 	/// <summary>
 	/// レンダーターゲット生成

@@ -2,29 +2,56 @@
 #include"WinApp.h"
 #include"DirectXCommon.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+#include"ImGuiManager.h"
+#include<imgui.h>
+
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 	WinApp* win = win->GetInstance();
-	MSG msg{};
-	DirectXCommon* directX = directX->GetInstance();
+	MSG msg {};
+	DirectXCommon* dxCommon = dxCommon->GetInstance();
+	dxCommon->Initialize(win, 1280, 720);
 
-	directX->Initialize(win,1280,720);
+#pragma region 汎用機能初期化
 
-	while (win->ProcessMessage()==0) {
+#ifdef _DEBUG
+	// ImGuiの初期化
+	ImGuiManager* imguiManager = ImGuiManager::GetInstance();
+	imguiManager->Initialize(win, dxCommon);
+#endif // _DEBUG
+
+
+#pragma endregion
+
+
+	while (win->ProcessMessage() == 0){
+
+	
+		// ImGui受付開始
+		imguiManager->Begin();
+		//開発用UIの処理
+		ImGui::ShowDemoWindow();
+		//三角形の更新
+		dxCommon->UpdatePolygon();
+		// ImGui受付終了
+		imguiManager->End();
+
 
 		//フレームの開始
-		directX->PreDraw();
-
-		//三角形の更新
-		directX->UpdatePolygon();
-
+		dxCommon->PreDraw();
 		//三角形の描画
-		directX->DrawPolygon();
-		
+		dxCommon->DrawPolygon();
+		//ImGui描画
+		imguiManager->Draw();
 		//フレームの終了
-		directX->PostDraw();
+		dxCommon->PostDraw();
 	}
 
-	directX->Finalize();
+	// ImGui解放
+	imguiManager->Finalize();
+	dxCommon->Finalize();
+	delete win;
+
 	return 0;
 }

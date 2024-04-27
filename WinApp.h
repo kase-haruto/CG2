@@ -20,6 +20,10 @@ public://静的メンバ関数
 
 	
 public://メンバ関数
+	//コンストラクタ
+	WinApp();
+	//デストラクタ
+	~WinApp();
 	//この関数内でウィンドウを作成する
 	void CreateWnd(void);
 	//ウィンドウハンドルの取得
@@ -35,10 +39,7 @@ private:
 	HWND hwnd;
 
 private:
-	//コンストラクタ
-	WinApp();
-	//デストラクタ
-	~WinApp();
+
 	WinApp(const WinApp&) = delete;
 	const WinApp& operator=(const WinApp&) = delete;
 };

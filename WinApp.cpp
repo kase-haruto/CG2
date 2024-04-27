@@ -1,5 +1,10 @@
 ﻿#include "WinApp.h"
 #include<tchar.h>
+#include"imgui.h"
+#include"imgui_impl_dx12.h"
+#include"imgui_impl_win32.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam);
 
 //コンストラクタ
 WinApp::WinApp() {
@@ -18,7 +23,11 @@ WinApp* WinApp::GetInstance() {
 
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {
-	//メッセージに応じてゲームの画面の制御を行う
+    if (ImGui_ImplWin32_WndProcHandler(hand, msg, wparam, lparam)){
+        return true;
+    }
+    
+    //メッセージに応じてゲームの画面の制御を行う
 	switch (msg) {
 	case WM_DESTROY:
 		//osに対して、アプリの終了を伝える

@@ -40,9 +40,18 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{6f3950f8-d3cc-45eb-836b-06d4168f8e4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{ecef2297-2aba-48b2-ab39-16ad1ec94796}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiManager">
+      <UniqueIdentifier>{29f93c30-b7d3-4250-b719-76b1258b8546}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
+    <Text Include="externals\LICENSE.txt">
+      <Filter>imgui</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +74,30 @@
     </ClCompile>
     <ClCompile Include="ViewProjection.cpp">
       <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>ImGuiManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +127,33 @@
     </ClInclude>
     <ClInclude Include="ViewProjection.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.h">
+      <Filter>ImGuiManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
