@@ -43,8 +43,14 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{ecef2297-2aba-48b2-ab39-16ad1ec94796}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGuiManager">
+    <Filter Include="MyManager">
+      <UniqueIdentifier>{79cacd7a-6944-459e-8975-b1e4f4f219c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyManager\ImGuiManager">
       <UniqueIdentifier>{29f93c30-b7d3-4250-b719-76b1258b8546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyManager\TextureManager">
+      <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +103,10 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiManager.cpp">
-      <Filter>ImGuiManager</Filter>
+      <Filter>MyManager\ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>MyManager\TextureManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +162,10 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiManager.h">
-      <Filter>ImGuiManager</Filter>
+      <Filter>MyManager\ImGuiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>MyManager\TextureManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

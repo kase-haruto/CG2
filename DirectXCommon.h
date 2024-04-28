@@ -11,7 +11,6 @@
 #include"Transform.h"
 #include"Matrix4x4.h"
 #include"ViewProjection.h"
-
 class DirectXCommon final{
 private: // メンバ変数
 	WinApp* winApp_;
@@ -94,7 +93,7 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
-
+	
 	/// <summary>
 	/// レンダーターゲットのクリア
 	/// </summary>
@@ -106,7 +105,6 @@ public:
 	/// <param name="width"></param>
 	/// <param name="height"></param>
 	void SetViewPortAndScissor(uint32_t width, uint32_t height);
-
 
 	/* <summary>
 	 描画コマンドリストの取得
@@ -133,6 +131,9 @@ public:
 											   D3D12_DESCRIPTOR_HEAP_TYPE heapType,
 											   UINT numDescriptors,
 											   bool shaderVisible);
+	
+
+
 
 	
 	//================

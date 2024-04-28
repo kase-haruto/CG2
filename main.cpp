@@ -7,6 +7,8 @@
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
+	//comの初期化
+	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	WinApp* win = win->GetInstance();
 	MSG msg {};
@@ -52,6 +54,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	imguiManager->Finalize();
 	dxCommon->Finalize();
 	delete win;
-
+	CoUninitialize();
 	return 0;
 }
