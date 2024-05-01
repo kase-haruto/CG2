@@ -41,12 +41,16 @@ public:
 	/// </summary>
 	void Draw();
 
+	
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap()const{ return srvHeap_; }
+
 private:
 #ifdef _DEBUG
 	// DirectX基盤インスタンス（借りてくる）
 	DirectXCommon* dxCommon_ = nullptr;
 	// SRV用ヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
+
 #endif // _DEBUG
 
 private:

@@ -4,6 +4,7 @@
 #include<cassert>
 #include <dxgidebug.h>
 #include"Vector4.h"
+#include"TextureManager.h"
 
 
 // DirectX ライブラリのリンカー指示
@@ -351,21 +352,25 @@ void DirectXCommon::CreateVertexBufferView(){
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
 	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void DirectXCommon::UploadVertexData(){
-	Vector4* vertexData = nullptr;
+	VertexData* vertexData = nullptr;
 	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
+	vertexResource->Map(0, nullptr,
+	reinterpret_cast< void** >(&vertexData));
 	//左下
-	vertexData[0] = {-0.5f,-0.5f,0.0f,1.0f};
+	vertexData[0].position = {-0.5f,-0.5f,0.0f,1.0f};
+	vertexData[0].texcoord = {0.0f,1.0f};
 	//上
-	vertexData[1] = {0.0f,0.5f,0.0f,1.0f};
+	vertexData[1].position = {0.0f,0.5f,0.0f,1.0f};
+	vertexData[1].texcoord = {0.5f,0.0f};
 	//右下
-	vertexData[2] = {0.5f,-0.5f,0.0f,1.0f};
+	vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
+	vertexData[2].texcoord = {1.0f,1.0f};
 }
 
 
@@ -374,16 +379,41 @@ void DirectXCommon::CreateRootSignature(){
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+	descriptorRange[0].BaseShaderRegister = 0;//0から始まる
+	descriptorRange[0].NumDescriptors = 1;//数は1つ
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//srvを使用する
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
+	
 	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenter[2] = {};
-	rootParamenter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
-	rootParamenter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	rootParamenter[0].Descriptor.ShaderRegister = 0;
-	rootParamenter[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
-	rootParamenter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
-	descriptionRootSignature.pParameters = rootParamenter;
-	descriptionRootSignature.NumParameters = _countof(rootParamenter);
+	D3D12_ROOT_PARAMETER rootParamenters[3] = {};
+	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
+	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParamenters[0].Descriptor.ShaderRegister = 0;
+	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
+	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
+	rootParamenters[1].Descriptor.ShaderRegister = 0;
+	rootParamenters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
+	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParamenters[2].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
+	rootParamenters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 
+	descriptionRootSignature.pParameters = rootParamenters;
+	descriptionRootSignature.NumParameters = _countof(rootParamenters);
+
+
+	//samplerの設定
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;//バイリニアフィルタ
+	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//0~1の範囲外を利ぴ＝と
+	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのMipmapを使う
+	staticSamplers[0].ShaderRegister = 0;//レジスタ番号0を使う
+	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixelShaderで使う
+	descriptionRootSignature.pStaticSamplers = staticSamplers;
+	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
 	//シリアライズしてバイナリする
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
@@ -405,14 +435,18 @@ void DirectXCommon::Pipeline(){
 	CreateRootSignature();
 
 	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDesc[1] = {};
-	inputElementDesc[0].SemanticName = "POSITION";
-	inputElementDesc[0].SemanticIndex = 0;
-	inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDesc[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputLayoutDesc.pInputElementDescs = inputElementDesc;
-	inputLayoutDesc.NumElements = _countof(inputElementDesc);
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+	inputElementDescs[0].SemanticName = "POSITION";
+	inputElementDescs[0].SemanticIndex = 0;
+	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[1].SemanticName = "TEXCOORD";
+	inputElementDescs[1].SemanticIndex = 0;
+	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
+	inputLayoutDesc.pInputElementDescs = inputElementDescs;
+	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc {};
@@ -464,7 +498,7 @@ void DirectXCommon::Pipeline(){
 											 IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-	vertexResource = CreateBufferResource(device, sizeof(Vector4) * 3);
+	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 3);
 
 	materialResource = CreateBufferResource(device, sizeof(Vector4));
 
@@ -474,7 +508,7 @@ void DirectXCommon::Pipeline(){
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
-	*materialData = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	*materialData = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//WVP用のリソースを作る。matrix4x4 1つ分のサイズを用意する
 	wvpResource = CreateBufferResource(device, sizeof(Matrix4x4));
@@ -600,14 +634,13 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
-	transform.rotate.y += 0.01f;
+	transform.rotate.y += 0.03f;
 	Matrix4x4 worldMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
 														transform.rotate,
 														transform.translate
 	);
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	*wvpData = worldViewProjectionMatrix;
-
 }
 
 void DirectXCommon::DrawPolygon(){
@@ -623,6 +656,8 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
+	//srvのdescriptorTableの先頭を設定。2はrootParamenter[2]
+	commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(3, 1, 0, 0);
 }

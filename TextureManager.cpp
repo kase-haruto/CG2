@@ -1,84 +1,104 @@
-#include "TextureManager.h"
-#include<string>
+ï»¿#include "TextureManager.h"
 #include"ConvertString.h"
-
+#include"ImGuiManager.h"
 TextureManager* TextureManager::GetInstance(){
 	static TextureManager instance;
 	return &instance;
 }
 
-void TextureManager::Initialize(ID3D12Device* device, std::string directoryPath){
+void TextureManager::Initialize(ID3D12Device* device, ImGuiManager* imgui){
 	device_ = device;
+	imgui_ = imgui;
 }
 
-DirectX::ScratchImage TextureManager::LoadTexture(const std::strong_ordering& filePath){
-	//ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚ğ“Ç‚ñ‚ÅƒvƒƒOƒ‰ƒ€‚Åˆµ‚¦‚é‚æ‚¤‚É‚·‚é
+DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã‚“ã§ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã§æ‰±ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 	DirectX::ScratchImage image {};
 	std::wstring filePathW = ConvertString(filePath);
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
 	assert(SUCCEEDED(hr));
 
-	//ƒ~ƒ}ƒbƒv‚Ìì¬
+	//ãƒŸãƒãƒƒãƒ—ã®ä½œæˆ
 	DirectX::ScratchImage mipImages {};
 	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
 	assert(SUCCEEDED(hr));
 
-	//ƒ~ƒbƒvƒ}ƒbƒv•t‚«‚Ìƒf[ƒ^‚ğ•Ô‚·
+	//ãƒŸãƒƒãƒ—ãƒãƒƒãƒ—ä»˜ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™
 	return mipImages;
 }
 
 ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata){
 	/*=============================================================
-		metadata‚ğ‚à‚Æ‚ÉResource‚Ìİ’è
+		metadataã‚’ã‚‚ã¨ã«Resourceã®è¨­å®š
 	==============================================================*/
 	D3D12_RESOURCE_DESC resourceDesc {};
-	resourceDesc.Width = UINT(metadata.width);//texture‚Ì•
-	resourceDesc.Height = UINT(metadata.height);//texture‚Ì‚‚³
-	resourceDesc.MipLevels = UINT16(metadata.mipLevels);//mipmap‚Ì”
-	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);//‰œs‚«
-	resourceDesc.Format = metadata.format;//texture‚Ìformat
-	resourceDesc.SampleDesc.Count = 1;//ƒTƒ“ƒvƒŠƒ“ƒOƒJƒEƒ“ƒg
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);//texture‚ÌŸŒ³”
+	resourceDesc.Width = UINT(metadata.width);//textureã®å¹…
+	resourceDesc.Height = UINT(metadata.height);//textureã®é«˜ã•
+	resourceDesc.MipLevels = UINT16(metadata.mipLevels);//mipmapã®æ•°
+	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);//å¥¥è¡Œã
+	resourceDesc.Format = metadata.format;//textureã®format
+	resourceDesc.SampleDesc.Count = 1;//ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã‚«ã‚¦ãƒ³ãƒˆ
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);//textureã®æ¬¡å…ƒæ•°
 
 	/*=============================================================
-		—˜—p‚·‚éHeap‚Ìİ’è
+		åˆ©ç”¨ã™ã‚‹Heapã®è¨­å®š
 	==============================================================*/
-	//“Áê‚È‰^—p
+	//ç‰¹æ®Šãªé‹ç”¨
 	D3D12_HEAP_PROPERTIES heapProperties {};
-	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;//×‚©‚¢İ’è‚ğs‚¤
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;//WriteBackƒ|ƒŠƒV[‚ÅcpuƒAƒNƒZƒX‰Â”\
-	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;//ƒvƒƒZƒbƒT‚Ì‹ß‚­‚É”z’u
+	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;//ç´°ã‹ã„è¨­å®šã‚’è¡Œã†
+	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;//WriteBackãƒãƒªã‚·ãƒ¼ã§cpuã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½
+	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;//ãƒ—ãƒ­ã‚»ãƒƒã‚µã®è¿‘ãã«é…ç½®
 
 	/*=============================================================
-		Resource‚Ì¶¬
+		Resourceã®ç”Ÿæˆ
 	==============================================================*/
 	ID3D12Resource* resource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(
-		&heapProperties,//Heap‚Ìİ’è
-		D3D12_HEAP_FLAG_NONE,//Heap‚Ì“Áê‚Èİ’è
-		&resourceDesc,//Resource‚Ìİ’è
-		D3D12_RESOURCE_STATE_GENERIC_READ,//‰‰ñ‚ÌResourceStateBTexture‚ÍŠî–{“Ç‚Ş‚¾‚¯
-		nullptr,//clrarÅ“K’l
-		IID_PPV_ARGS(&resource));//ì¬‚·‚éesourceƒ|ƒCƒ“ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		&heapProperties,//Heapã®è¨­å®š
+		D3D12_HEAP_FLAG_NONE,//Heapã®ç‰¹æ®Šãªè¨­å®š
+		&resourceDesc,//Resourceã®è¨­å®š
+		D3D12_RESOURCE_STATE_GENERIC_READ,//åˆå›ã®ResourceStateã€‚Textureã¯åŸºæœ¬èª­ã‚€ã ã‘
+		nullptr,//clraræœ€é©å€¤
+		IID_PPV_ARGS(&resource));//ä½œæˆã™ã‚‹esourceãƒã‚¤ãƒ³ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	assert(SUCCEEDED(hr));
 	return resource;
 }
 
 void TextureManager::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages){
-	//Metaî•ñ‚ğæ“¾
+	//Metaæƒ…å ±ã‚’å–å¾—
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	//‘SMipMap‚É‚Â‚¢‚Ä
+	//å…¨MipMapã«ã¤ã„ã¦
 	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; mipLevel++){
-		//MipMapLevel‚ğw’è‚µ‚ÄŠeimage‚ğæ“¾
+		//MipMapLevelã‚’æŒ‡å®šã—ã¦å„imageã‚’å–å¾—
 		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		//Texture‚É“]‘—
+		//Textureã«è»¢é€
 		HRESULT hr = texture->WriteToSubresource(
 			UINT(mipLevel),
 			nullptr,
-			img->pixels,//Œ³ƒf[ƒ^ƒAƒhƒŒƒX
-			UINT(img->rowPitch),//1ƒ‰ƒCƒ“ƒTƒCƒY
-			UINT(img->slicePitch)//1–‡ƒTƒCƒY
+			img->pixels,//å…ƒãƒ‡ãƒ¼ã‚¿ã‚¢ãƒ‰ãƒ¬ã‚¹
+			UINT(img->rowPitch),//1ãƒ©ã‚¤ãƒ³ã‚µã‚¤ã‚º
+			UINT(img->slicePitch)//1æšã‚µã‚¤ã‚º
 		);
 		assert(SUCCEEDED(hr));
 	}
+}
+
+void TextureManager::CreateShaderResourceView(ID3D12Resource* texture, const DirectX::TexMetadata& metadata){
+	//metaDataã‚’ã‚‚ã¨ã«srvã®è¨­å®š
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc {};
+	srvDesc.Format = metadata.format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2dãƒ†ã‚¯ã‚¹ãƒãƒ£
+	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+
+	//srvã‚’ä½œæˆã™ã‚‹descriptorHeapã®å ´æ‰€ã‚’æ±ºã‚ã‚‹
+	textureSrvHandleCPU = imgui_->GetSrvHeap()->GetCPUDescriptorHandleForHeapStart();
+	textureSrvHandleGPU = imgui_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
+
+	//æˆ¦é—˜ã¯ImGuiãŒä½¿ç”¨ã—ã¦ã„ã‚‹ã®ã§æ¬¡ã®ã‚’ä½¿ã†
+	textureSrvHandleCPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleGPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	//srvã®ç”Ÿæˆ
+	device_->CreateShaderResourceView(texture, &srvDesc, textureSrvHandleCPU);
 }

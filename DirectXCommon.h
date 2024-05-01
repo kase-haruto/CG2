@@ -11,7 +11,12 @@
 #include"Transform.h"
 #include"Matrix4x4.h"
 #include"ViewProjection.h"
+#include"VertexData.h"
+
+class ImGuiManager;
+
 class DirectXCommon final{
+
 private: // メンバ変数
 	WinApp* winApp_;
 	ID3D12Device* device = nullptr;
@@ -44,7 +49,6 @@ private: // メンバ変数
 	ID3DBlob* errorBlob = nullptr;
 	ID3D12RootSignature* rootSignature = nullptr;
 
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	D3D12_BLEND_DESC blendDesc{};
 
 	IDxcBlob* vertexShaderBlob;
@@ -65,6 +69,8 @@ private: // メンバ変数
 	Transform transform;
 	
 	std::unique_ptr<ViewProjection> viewProjection_;
+
+	ImGuiManager* imgui_;
 
 public:
 	/// <summary>
@@ -118,11 +124,11 @@ public:
 	/// </summary>
 	void UpdatePolygon();
 
-
 	/// <summary>
 	/// 三角形の描画
 	/// </summary>
 	void DrawPolygon();
+
 
 	/// <summary>
 	/// ディスクリプタヒープの生成
@@ -147,6 +153,7 @@ public:
 
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const{ return swapChainDesc; }
 	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const{ return rtvDesc; }
+	void SetCommandList(ID3D12GraphicsCommandList* comandList){ commandList = comandList; }
 
 private: // メンバ関数
 	DirectXCommon() = default;

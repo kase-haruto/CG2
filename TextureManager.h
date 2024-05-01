@@ -1,57 +1,71 @@
-#pragma once
+ï»¿#pragma once
 #include<DirectXTex.h>
 #include<d3d12.h>
+#include<string>
+#include <wrl.h>
+
+class ImGuiManager;
+
 class TextureManager{
 public:
 
 	/// <summary>
-	/// ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+	/// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
 	/// </summary>
-	/// <returns>ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX</returns>
+	/// <returns>ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹</returns>
 	static TextureManager* GetInstance();
 
 	/// <summary>
-	/// Textureƒf[ƒ^‚ğ“Ç‚Ş
+	/// Textureãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	static DirectX::ScratchImage LoadTexture(const std::strong_ordering& filePath);
+	static DirectX::ScratchImage LoadTexture(const std::string& filePath);
 
 	/// <summary>
-	/// ƒVƒXƒeƒ€‰Šú‰»
+	/// ã‚·ã‚¹ãƒ†ãƒ åˆæœŸåŒ–
 	/// </summary>
-	/// <param name="device">ƒfƒoƒCƒX</param>
-	void Initialize(ID3D12Device* device, std::string directoryPath = "./Resources/");
-
-
-
-private:
+	/// <param name="device">ãƒ‡ãƒã‚¤ã‚¹</param>
+	void Initialize(ID3D12Device* device, ImGuiManager* imgui);
 
 	/// <summary>
-	/// ƒŠƒ\[ƒX‚ğì¬
+	/// ãƒªã‚½ãƒ¼ã‚¹ã‚’ä½œæˆ
 	/// </summary>
 	/// <param name="device"></param>
 	/// <param name="metadata"></param>
 	/// <returns></returns>
-	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-	
+	static ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 
 	/// <summary>
-	/// textureResource‚Éƒf[ƒ^‚ğ“]‘—‚·‚é
+	/// textureResourceã«ãƒ‡ãƒ¼ã‚¿ã‚’è»¢é€ã™ã‚‹
 	/// </summary>
 	/// <param name="texture"></param>
 	/// <param name="mipImages"></param>
-	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+	static void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+
+	/// <summary>
+	/// shaderResourceViewã®ä½œæˆ
+	/// </summary>
+	/// <param name="texture"></param>
+	/// <param name="metadata"></param>
+	void CreateShaderResourceView(ID3D12Resource* texture, const DirectX::TexMetadata& metadata);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandle()const{ return textureSrvHandleGPU; }
+private:
+
 
 private:
 	TextureManager() = default;
-	~TextureManager() = default;
+	~TextureManager(){ device_->Release(); }
 	TextureManager(const TextureManager&) = delete;
 	TextureManager& operator=(const TextureManager&) = delete;
 
 private:
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	ID3D12Device* device_;
+	ImGuiManager* imgui_;
 
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU;
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
 };
 

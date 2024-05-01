@@ -167,6 +167,12 @@
     <ClInclude Include="TextureManager.h">
       <Filter>MyManager\TextureManager</Filter>
     </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexData.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl">
@@ -175,5 +181,10 @@
     <FxCompile Include="Object3d.PS.hlsl">
       <Filter>DirectX\Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Object3d.hlsli">
+      <Filter>DirectX\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
