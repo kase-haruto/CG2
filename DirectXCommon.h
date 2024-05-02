@@ -18,6 +18,10 @@ class ImGuiManager;
 class DirectXCommon final{
 
 private: // メンバ変数
+
+	uint32_t bufferWidth_;
+	uint32_t bufferHeight_;
+
 	WinApp* winApp_;
 	ID3D12Device* device = nullptr;
 	IDXGIAdapter4* useAdapter = nullptr;
@@ -36,7 +40,10 @@ private: // メンバ変数
 	ID3D12Debug1* debugController = nullptr;
 	ID3D12InfoQueue* infoQueue = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc {};
-	
+
+	ID3D12Resource* depthStencilResource;
+	ID3D12DescriptorHeap* dsvDescriptorHeap;
+
 	//三角形の描画について
 	IDxcUtils* dxcUtils = nullptr;
 	IDxcCompiler3* dxcCompiler = nullptr;
@@ -119,6 +126,11 @@ public:
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
 
 	
+	/// <summary>
+	/// 深度バッファ生成
+	/// </summary>
+	void CreateDepthBuffer();
+
 	/// <summary>
 	/// 三角形の描画
 	/// </summary>

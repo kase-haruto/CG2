@@ -27,7 +27,7 @@ DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
 	return mipImages;
 }
 
-ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata){
+ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device,const DirectX::TexMetadata& metadata){
 	/*=============================================================
 		metadataをもとにResourceの設定
 	==============================================================*/
@@ -53,6 +53,7 @@ ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, cons
 		Resourceの生成
 	==============================================================*/
 	ID3D12Resource* resource = nullptr;
+
 	HRESULT hr = device->CreateCommittedResource(
 		&heapProperties,//Heapの設定
 		D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定
@@ -63,6 +64,10 @@ ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, cons
 	assert(SUCCEEDED(hr));
 	return resource;
 }
+
+
+
+
 
 void TextureManager::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages){
 	//Meta情報を取得

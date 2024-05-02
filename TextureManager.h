@@ -35,6 +35,7 @@ public:
 	/// <param name="metadata"></param>
 	/// <returns></returns>
 	static ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+	
 
 	/// <summary>
 	/// textureResourceにデータを転送する
@@ -62,7 +63,7 @@ private:
 
 private:
 	//デバイス
-	ID3D12Device* device_;
+	ID3D12Device* device_ = nullptr;
 	ImGuiManager* imgui_;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU;

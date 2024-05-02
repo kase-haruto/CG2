@@ -25,6 +25,8 @@ void DirectXCommon::Initialize(
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	winApp_ = win;
+	bufferWidth_ = width;
+	bufferHeight_ = height;
 
 	SetViewPortAndScissor(width, height);
 
@@ -39,6 +41,9 @@ void DirectXCommon::Initialize(
 
 	// レンダーターゲット生成
 	CreateFinalRenderTargets();
+
+	//深度リソースを生成
+	CreateDepthBuffer();
 
 	//フェンスの作成
 	CreateFence();
@@ -216,6 +221,59 @@ void DirectXCommon::CreateFinalRenderTargets(){
 
 }
 
+ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height){
+	//生成するResourceの設定
+	D3D12_RESOURCE_DESC resourceDesc {};
+	resourceDesc.Width = width;//textureの幅
+	resourceDesc.Height = height;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.DepthOrArraySize = 1;//奥行きor配列textureの配列数
+	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	resourceDesc.SampleDesc.Count = 1;//サンプリングカウント。1固定
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//2次元
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;//DepthStencilとして使う通知
+
+	//利用するheapの設定
+	D3D12_HEAP_PROPERTIES heapProperties {};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//VRAM上に作る
+
+	//深度値のClear設定
+	D3D12_CLEAR_VALUE depthClearValue {};
+	depthClearValue.DepthStencil.Depth = 1.0f;//1.0f(最大値)でクリア
+	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//フォーマット。Resourceと合わせる
+
+	//Resourceの生成
+	ID3D12Resource* resource = nullptr;
+	HRESULT hr = device->CreateCommittedResource(
+		&heapProperties,//heapの設定
+		D3D12_HEAP_FLAG_NONE,//heapの特殊な設定特になし。
+		&resourceDesc,//Resourceの設定
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,//深度値を書き込む状態にしておく
+		&depthClearValue,//clear最適値
+		IID_PPV_ARGS(&resource));//作成するResourceポインタへのポインタ
+	assert(SUCCEEDED(hr));
+
+	return resource;
+}
+
+void DirectXCommon::CreateDepthBuffer(){
+	depthStencilResource = CreateDepthStencilTextureResource(device, bufferWidth_, bufferHeight_);
+
+	//DSV用のヒープでディスクリプタの数は1,DSVはShader内で触るものではないのでShaderVisibleはfalse
+	dsvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+
+	//DSVの設定
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc {};
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//format基本的にはresourceに合わせる
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
+	//DSVHeapの先頭にdsvを作る
+	device->CreateDepthStencilView(depthStencilResource,
+								   &dsvDesc,
+								   dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+
+
 void DirectXCommon::CreateFence(){
 	//初期値0でFenceを作る
 	fenceValue = 0;
@@ -303,7 +361,7 @@ IDxcBlob* DirectXCommon::CompileShader(
 		assert(false); // エラーがあった場合は止める
 	}
 
-	
+
 	//==============================
 	//Compile結果を受け取る
 	//==============================
@@ -352,7 +410,7 @@ void DirectXCommon::CreateVertexBufferView(){
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
@@ -361,7 +419,7 @@ void DirectXCommon::UploadVertexData(){
 	VertexData* vertexData = nullptr;
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr,
-	reinterpret_cast< void** >(&vertexData));
+						reinterpret_cast< void** >(&vertexData));
 	//左下
 	vertexData[0].position = {-0.5f,-0.5f,0.0f,1.0f};
 	vertexData[0].texcoord = {0.0f,1.0f};
@@ -371,6 +429,18 @@ void DirectXCommon::UploadVertexData(){
 	//右下
 	vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
 	vertexData[2].texcoord = {1.0f,1.0f};
+
+
+	//左下２
+	vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
+	vertexData[3].texcoord = {0.0f,1.0f};
+	//上２
+	vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
+	vertexData[4].texcoord = {0.5f,0.0f};
+	//右下２
+	vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
+	vertexData[5].texcoord = {1.0f,1.0f};
+
 }
 
 
@@ -384,7 +454,7 @@ void DirectXCommon::CreateRootSignature(){
 	descriptorRange[0].NumDescriptors = 1;//数は1つ
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//srvを使用する
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
-	
+
 	//RootParamer作成
 	D3D12_ROOT_PARAMETER rootParamenters[3] = {};
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
@@ -470,6 +540,15 @@ void DirectXCommon::Pipeline(){
 									L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 
+	//DepthStencilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqualつまり近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+
+
 	//PSOを作成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
 
@@ -493,12 +572,16 @@ void DirectXCommon::Pipeline(){
 	//どのように画面を打ち込むかの設定
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
 	//実際に生成
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 											 IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 3);
+	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 6);
 
 	materialResource = CreateBufferResource(device, sizeof(Vector4));
 
@@ -542,6 +625,9 @@ void DirectXCommon::PreDraw(){
 	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 
 	//TransitionBarrierの設定
@@ -561,10 +647,12 @@ void DirectXCommon::PreDraw(){
 
 	//描画先のrtvを設定する
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
 	//指定した色で画面全体をクリアする
 	float clearColor[] = {0.1f,0.25f,0.5f,1.0f};
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-
+	//指定した深度で画面全体をクリアする
+	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void DirectXCommon::PostDraw(){
@@ -659,7 +747,7 @@ void DirectXCommon::DrawPolygon(){
 	//srvのdescriptorTableの先頭を設定。2はrootParamenter[2]
 	commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
-	commandList->DrawInstanced(3, 1, 0, 0);
+	commandList->DrawInstanced(6, 1, 0, 0);
 }
 
 void DirectXCommon::Finalize(){
@@ -697,6 +785,8 @@ void DirectXCommon::Finalize(){
 
 	materialResource->Release();
 	wvpResource->Release();
+	dsvDescriptorHeap->Release();
+	depthStencilResource->Release();
 
 	//リソースリークチェック
 	IDXGIDebug1* debug;
