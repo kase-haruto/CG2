@@ -12,8 +12,21 @@ struct PixelShaderOutput{
 	float4 color : SV_TARGET0;
 };
 
+ConstantBuffer<FogParmeters>gFogParams:register(b1);
+// フォグのパラメータを定義
+struct FogParameters{
+	float4 fogColor;//霧の色
+	float fogStart;//霧の開始距離
+	float fogEnd;//霧の終了距離
+};
+
+cbuffer CameraBuffer:register(b2){
+	float3 cameraPos;
+};
+
 PixelShaderOutput main(VertexShaderOutput input){
 	PixelShaderOutput output;
+	//テクスチャカラー
 	float4 textureColor = gTexture.Sample(gSampler, input.texcoord);
 	output.color = gMaterial.color*textureColor;
 	return output;

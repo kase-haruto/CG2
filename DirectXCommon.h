@@ -119,10 +119,10 @@ public:
 	/// <param name="height"></param>
 	void SetViewPortAndScissor(uint32_t width, uint32_t height);
 
-	/* <summary>
-	 描画コマンドリストの取得
-	 </summary>
-	 <returns>描画コマンドリスト</returns>*/
+	/// <summary>
+	/// 描画コマンドリストの取得
+	/// </summary>
+	/// <returns>描画コマンドリスト</returns>
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
 
 	

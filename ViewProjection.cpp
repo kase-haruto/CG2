@@ -11,6 +11,14 @@ void ViewProjection::Initialize(uint32_t width, uint32_t height){
 	viewProjection_ = Matrix4x4::Multiply(viewMatrix, projectionMatrix);
 }
 
+void ViewProjection::CreateConstBuffer(){
+
+}
+
+void ViewProjection::Map(){
+
+}
+
 
 
 Matrix4x4 ViewProjection::MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip){

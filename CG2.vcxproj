@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui_draw.cpp" />
     <ClCompile Include="externals\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui_widgets.cpp" />
+    <ClCompile Include="FogEffect.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
@@ -130,6 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imstb_rectpack.h" />
     <ClInclude Include="externals\imstb_textedit.h" />
     <ClInclude Include="externals\imstb_truetype.h" />
+    <ClInclude Include="FogEffect.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="MyFunc.h" />

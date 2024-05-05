@@ -16,6 +16,15 @@ private:
 
 public:
 	void Initialize(uint32_t width = 1280, uint32_t height = 720);
+	/// <summary>
+	/// 定数バッファ生成
+	/// </summary>
+	void CreateConstBuffer();
+	/// <summary>
+	/// マッピングする
+	/// </summary>
+	void Map();
+
 
 	Matrix4x4 GetViewProjection()const{ return viewProjection_; }
 };

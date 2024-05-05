@@ -52,6 +52,9 @@
     <Filter Include="MyManager\TextureManager">
       <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\FogEffect">
+      <UniqueIdentifier>{43cb6fe8-f889-4669-94e2-4beb35684e40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -107,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>MyManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="FogEffect.cpp">
+      <Filter>DirectX\FogEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="VertexData.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FogEffect.h">
+      <Filter>DirectX\FogEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

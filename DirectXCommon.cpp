@@ -456,17 +456,32 @@ void DirectXCommon::CreateRootSignature(){
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
 
 	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenters[3] = {};
+	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
+	
+	//定数バッファをピクセルシェーダで使用
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParamenters[0].Descriptor.ShaderRegister = 0;
+	
+	//定数バッファをバーテックスシェーダで使用
 	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
 	rootParamenters[1].Descriptor.ShaderRegister = 0;
-	rootParamenters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
-	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParamenters[2].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
-	rootParamenters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+	//フォグ定数バッファをピクセルシェーダで使用
+	rootParamenters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamenters[2].Descriptor.ShaderRegister = 1;
+
+	//カメラ定数バッファをピクセルシェーダで使用
+	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamenters[3].Descriptor.ShaderRegister = 2;
+
+	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
+	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParamenters[4].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
+	rootParamenters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 
 	descriptionRootSignature.pParameters = rootParamenters;
 	descriptionRootSignature.NumParameters = _countof(rootParamenters);
