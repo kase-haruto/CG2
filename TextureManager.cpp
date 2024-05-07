@@ -100,7 +100,7 @@ void TextureManager::CreateShaderResourceView(ID3D12Resource* texture, const Dir
 	textureSrvHandleCPU = imgui_->GetSrvHeap()->GetCPUDescriptorHandleForHeapStart();
 	textureSrvHandleGPU = imgui_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
 
-	//戦闘はImGuiが使用しているので次のを使う
+	//先頭はImGuiが使用しているので次のを使う
 	textureSrvHandleCPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	textureSrvHandleGPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 

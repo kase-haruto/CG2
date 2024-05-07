@@ -1,6 +1,8 @@
 #include "ViewProjection.h"
 #include<cmath>
 
+
+
 void ViewProjection::Initialize(uint32_t width, uint32_t height){
 	Matrix4x4 cameraMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
 											   transform.rotate,
@@ -9,10 +11,12 @@ void ViewProjection::Initialize(uint32_t width, uint32_t height){
 	Matrix4x4 viewMatrix = Matrix4x4::Inverse(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(width) / float(height), 0.1f, 100.0f);
 	viewProjection_ = Matrix4x4::Multiply(viewMatrix, projectionMatrix);
+
+
 }
 
 void ViewProjection::CreateConstBuffer(){
-
+	
 }
 
 void ViewProjection::Map(){

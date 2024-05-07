@@ -48,7 +48,6 @@ void DirectXCommon::Initialize(
 	//フェンスの作成
 	CreateFence();
 
-	Pipeline();
 
 	//transform変数を作る
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
@@ -565,7 +564,7 @@ void DirectXCommon::Pipeline(){
 
 
 	//PSOを作成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
+	
 
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
@@ -759,8 +758,8 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。2はrootParamenter[2]
-	commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandle());
+	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
+	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
 }

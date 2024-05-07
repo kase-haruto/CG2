@@ -116,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="MyFunc.cpp" />
+    <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ViewProjection.cpp" />
     <ClCompile Include="WinApp.cpp" />
@@ -135,6 +136,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="MyFunc.h" />
+    <ClInclude Include="Pipeline.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector2.h" />

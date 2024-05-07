@@ -51,6 +51,7 @@ private: // メンバ変数
 	
 
 	//PSO関連
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
 	ID3D12PipelineState* graphicsPipelineState = nullptr;
 	ID3DBlob* signatureBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
@@ -152,7 +153,7 @@ public:
 	
 
 
-
+	void Pipeline();
 	
 	//================
 	//アクセッサ
@@ -166,6 +167,11 @@ public:
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const{ return swapChainDesc; }
 	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const{ return rtvDesc; }
 	void SetCommandList(ID3D12GraphicsCommandList* comandList){ commandList = comandList; }
+
+	uint32_t GetBufferWidth()const{ return bufferWidth_; }
+	uint32_t GetBufferHeight()const{ return bufferHeight_; }
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetGraphicsPSODesc()const { return graphicsPipelineStateDesc; }
 
 private: // メンバ関数
 	DirectXCommon() = default;
@@ -236,7 +242,7 @@ private: // メンバ関数
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device,size_t sizeInBytes);
 
 
-	void Pipeline();
+	
 
 
 	//=============================================

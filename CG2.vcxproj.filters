@@ -55,6 +55,9 @@
     <Filter Include="DirectX\FogEffect">
       <UniqueIdentifier>{43cb6fe8-f889-4669-94e2-4beb35684e40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\Pipeline">
+      <UniqueIdentifier>{ecfba774-feae-4b54-9878-eac455e80956}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="FogEffect.cpp">
       <Filter>DirectX\FogEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline.cpp">
+      <Filter>DirectX\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="FogEffect.h">
       <Filter>DirectX\FogEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline.h">
+      <Filter>DirectX\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

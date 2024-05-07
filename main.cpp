@@ -2,7 +2,7 @@
 #include"WinApp.h"
 #include"DirectXCommon.h"
 #include"TextureManager.h"
-
+#include"FogEffect.h"
 
 #include"ImGuiManager.h"
 #include<imgui.h>
@@ -16,6 +16,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	MSG msg {};
 	DirectXCommon* dxCommon = dxCommon->GetInstance();
 	dxCommon->Initialize(win, 1280, 720);
+
+	FogEffect* fog = new FogEffect(dxCommon);
+	
+	dxCommon->Pipeline();
 
 #pragma region 汎用機能初期化
 
@@ -42,6 +46,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		imguiManager->Begin();
 		//開発用UIの処理
 		ImGui::ShowDemoWindow();
+		fog->Update();
 		//三角形の更新
 		dxCommon->UpdatePolygon();
 		// ImGui受付終了
@@ -63,7 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	// ImGui解放
 	imguiManager->Finalize();
 	dxCommon->Finalize();
-	delete win;
+	delete win,fog;
 	CoUninitialize();
 	return 0;
 }

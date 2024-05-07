@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include"Transform.h"
 #include"Matrix4x4.h"
 #include<stdint.h>
@@ -17,11 +17,11 @@ private:
 public:
 	void Initialize(uint32_t width = 1280, uint32_t height = 720);
 	/// <summary>
-	/// ’è”ƒoƒbƒtƒ@¶¬
+	/// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	/// </summary>
 	void CreateConstBuffer();
 	/// <summary>
-	/// ƒ}ƒbƒsƒ“ƒO‚·‚é
+	/// ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 	/// </summary>
 	void Map();
 
