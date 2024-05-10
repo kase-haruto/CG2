@@ -3,7 +3,7 @@
 #include"DirectXCommon.h"
 #include"TextureManager.h"
 #include"FogEffect.h"
-
+#include"ViewProjection.h"
 #include"ImGuiManager.h"
 #include<imgui.h>
 
@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	dxCommon->Pipeline();
 
 	FogEffect* fog = new FogEffect(dxCommon);
-	
+
 
 #pragma region 汎用機能初期化
 
@@ -29,10 +29,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	imguiManager->Initialize(win, dxCommon);
 #endif // _DEBUG
 
-
 #pragma endregion
 
-	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(),imguiManager);
+	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
 	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	ID3D12Resource* textureResource = TextureManager::CreateTextureResource(dxCommon->GetDevice(), metadata);
@@ -41,11 +40,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 	while (win->ProcessMessage() == 0){
 
-	
 		// ImGui受付開始
 		imguiManager->Begin();
 		//開発用UIの処理
-		
+		dxCommon->ImGui();
 		//三角形の更新
 		dxCommon->UpdatePolygon();
 		// ImGui受付終了
@@ -59,7 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		//ImGui描画
 		imguiManager->Draw();
 		//三角形の描画
-		dxCommon->DrawPolygon();		
+		dxCommon->DrawPolygon();
 		//フレームの終了
 		dxCommon->PostDraw();
 	}
@@ -67,7 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	// ImGui解放
 	imguiManager->Finalize();
 	dxCommon->Finalize();
-	delete win,fog;
+	delete win, fog;
 	CoUninitialize();
 	return 0;
 }

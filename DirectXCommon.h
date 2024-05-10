@@ -158,6 +158,8 @@ public:
 
 
 	void Pipeline();
+
+	void ImGui();
 	
 	//================
 	//アクセッサ

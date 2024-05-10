@@ -1,6 +1,7 @@
 ﻿#include "ViewProjection.h"
 #include<cmath>
 #include"DirectXCommon.h"
+#include<imgui.h>
 
 ViewProjection::ViewProjection(DirectXCommon* dxCommon){
 	dxCommon_ = dxCommon;
@@ -16,10 +17,9 @@ ViewProjection::ViewProjection(DirectXCommon* dxCommon){
 	constBuffer_->Map(0, nullptr, reinterpret_cast< void** >(&camearData_));
 
 	//カメラのパラメータ
-	camearData_.view = matView;
-	camearData_.projection = matProjection;
-	camearData_.cameraPos = transform.translate;
-
+	camearData_->view = matView;
+	camearData_->projection = matProjection;
+	camearData_->cameraPos = transform.translate;
 }
 
 ViewProjection::~ViewProjection(){
@@ -70,7 +70,7 @@ void ViewProjection::Initialize(){
 	viewProjection_ = Matrix4x4::Multiply(matView, matProjection);
 }
 
-void ViewProjection::UpdateMatrix(Matrix4x4 world){
+void ViewProjection::UpdateMatrix(){
 	UpdateViewMatrix();
 }
 
@@ -95,4 +95,11 @@ Matrix4x4 ViewProjection::MakePerspectiveFovMatrix(float fovY, float aspectRatio
 		0,0,-nearClip * farClip / (farClip - nearClip),0
 	};
 	return result;
+}
+
+void ViewProjection::ImGui(){
+	UpdateMatrix();
+	ImGui::Begin("camera");
+	ImGui::DragFloat3("pos", &transform.translate.x, 0.01f);
+	ImGui::End();
 }

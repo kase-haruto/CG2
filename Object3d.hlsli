@@ -28,9 +28,10 @@ struct PixelShaderOutput{
 
 // フォグのパラメータを定義
 cbuffer FogConstants : register(b1){
-	float4 fogColor;  // 霧の色
 	float fogStart;   // 霧の開始距離
 	float fogEnd;     // 霧の終了距離
+	float4 fogColor;  // 霧の色
+
 };
 
 //カメラのパラメータ

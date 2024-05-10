@@ -6,6 +6,7 @@
 #include"Vector4.h"
 #include"TextureManager.h"
 #include"FogEffect.h"
+#include<imgui.h>
 
 
 // DirectX ライブラリのリンカー指示
@@ -56,7 +57,7 @@ void DirectXCommon::Initialize(
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
 
 	viewProjection_ = std::make_unique<ViewProjection>(this);
-	viewProjection_->Initialize();
+	//viewProjection_->Initialize();
 }
 
 void DirectXCommon::InitializeDXGIDevice(){
@@ -434,14 +435,25 @@ void DirectXCommon::UploadVertexData(){
 
 
 	//左下２
-	vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
+	vertexData[3].position = {0.0f,-0.5f,-1.5f,1.0f};
 	vertexData[3].texcoord = {0.0f,1.0f};
 	//上２
-	vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
+	vertexData[4].position = {0.5f,0.5f,-1.5f,1.0f};
 	vertexData[4].texcoord = {0.5f,0.0f};
 	//右下２
-	vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
+	vertexData[5].position = {1.0f,-0.5f,-1.5f,1.0f};
 	vertexData[5].texcoord = {1.0f,1.0f};
+
+
+	////左下２
+	//vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
+	//vertexData[3].texcoord = {0.0f,1.0f};
+	////上２
+	//vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
+	//vertexData[4].texcoord = {0.5f,0.0f};
+	////右下２
+	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
+	//vertexData[5].texcoord = {1.0f,1.0f};
 
 }
 
@@ -537,9 +549,21 @@ void DirectXCommon::Pipeline(){
 
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc {};
-	//すべての色要素を書き込む
-	blendDesc.RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
+
+
+	// normal blend
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+
+	// none blend
+	//blendDesc.RenderTarget[0].RenderTargetWriteMask =
+	//	D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	//RasterizeState
 	D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -663,6 +687,7 @@ void DirectXCommon::PreDraw(){
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
 	//指定した色で画面全体をクリアする
+	//float clearColor[] = {1.0f,1.0f,1.0f,1.0f};
 	float clearColor[] = {0.1f,0.25f,0.5f,1.0f};
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
 	//指定した深度で画面全体をクリアする
@@ -736,12 +761,13 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
-	transform.rotate.y += 0.03f;
+	transform.rotate.y = 0.03f;
+	//transform.translate.z -= 0.03f;
 	Matrix4x4 worldMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
 														transform.rotate,
 														transform.translate
 	);
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	//Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	*wvpData = worldMatrix;
 }
 
@@ -818,4 +844,10 @@ void DirectXCommon::Finalize(){
 
 	//警告時に止まる
 	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+}
+
+void DirectXCommon::ImGui(){
+	ImGui::Begin("porigon");
+	ImGui::DragFloat3("translate", &transform.translate.x, 0.01f);
+	ImGui::End();
 }

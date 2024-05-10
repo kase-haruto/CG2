@@ -18,18 +18,19 @@ FogEffect::FogEffect(DirectXCommon* dxCommon){
 	//定数バッファの生成
 	CreateConstantBuffer();
 
+	//定数バッファをマップ
+	constantBuffer->Map(0, nullptr, reinterpret_cast< void** >(&parameters));
+
 	///================================
 	///	霧のパラメータを設定
 	///================================
 	//霧のスタート地点
-	parameters.fogStart = 10.0f;
+	parameters->fogStart = 1.0f;
 	//霧の終点
-	parameters.fogEnd = 100.0f;
+	parameters->fogEnd = 10.0f;
 	//霧の色
-	parameters.fogColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
-
-	//定数バッファをマップ
-	constantBuffer->Map(0, nullptr, reinterpret_cast< void** >(&parameters));
+	parameters->fogColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // 白色の設定
+	
 }
 
 void FogEffect::CreateConstantBuffer(){

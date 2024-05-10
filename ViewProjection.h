@@ -51,15 +51,18 @@ private:
 	ID3D12Device* device_;
 	ID3D12GraphicsCommandList* commandList_;
 
-	ConstBufferDataViewProjection camearData_;
+	ConstBufferDataViewProjection* camearData_;
 
 private:
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 public:
 
+
 	ViewProjection(DirectXCommon* directX);
 	~ViewProjection();
+
+	void ImGui();
 
 	/// <summary>
 	/// 初期化
@@ -78,7 +81,7 @@ public:
 	/// <summary>
 	/// 行列を更新
 	/// </summary>
-	void UpdateMatrix(Matrix4x4 world);
+	void UpdateMatrix();
 	/// <summary>
 	/// ビュー行列を更新
 	/// </summary>
@@ -92,6 +95,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	ComPtr<ID3D12Resource>GetConstBuffer(){ return constBuffer_; }
+
+	Vector3 GetPos()const{
+		Vector3 pos;
+		pos = transform.translate;
+		return pos;
+	}
 
 
 	Matrix4x4 GetViewProjection()const{ return viewProjection_; }

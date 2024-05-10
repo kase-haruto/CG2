@@ -12,13 +12,14 @@ class DirectXCommon;
 struct FogParameters{
 	float fogStart;
 	float fogEnd;
+	float pad[2];
 	XMFLOAT4 fogColor;
 };
 
 class FogEffect{
 private:
 	//霧のパラメータ
-	FogParameters parameters;
+	FogParameters* parameters;
 	//霧のパラメータを保有する定数バッファ
 	ComPtr<ID3D12Resource> constantBuffer;
 	UINT8* mappedConstantBuffer;
@@ -26,6 +27,7 @@ private:
 
 	ID3D12GraphicsCommandList* commandList_;
 	ID3D12Device* device_;
+
 
 	DirectXCommon* dxCommon_;
 

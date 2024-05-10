@@ -7,7 +7,6 @@ VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;
 
 	output.position = mul(input.position, mul(world,mul(view,projection)));
-	//output.position = mul(input.position,world);
 	output.worldPosition = worldPos;
 	output.texcoord = input.texcoord;
 
