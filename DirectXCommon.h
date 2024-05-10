@@ -14,6 +14,7 @@
 #include"VertexData.h"
 
 class ImGuiManager;
+class FogEffect;
 
 class DirectXCommon final{
 
@@ -79,6 +80,9 @@ private: // メンバ変数
 	std::unique_ptr<ViewProjection> viewProjection_;
 
 	ImGuiManager* imgui_;
+
+	//-------------
+	std::unique_ptr<FogEffect>fog_;
 
 public:
 	/// <summary>

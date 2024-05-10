@@ -17,9 +17,6 @@ FogEffect::FogEffect(DirectXCommon* dxCommon){
 
 	//定数バッファの生成
 	CreateConstantBuffer();
-	//定数バッファをマップ
-	constantBuffer.Get()->Map(0, nullptr, reinterpret_cast< void** >(&parameters));
-
 
 	///================================
 	///	霧のパラメータを設定
@@ -29,11 +26,10 @@ FogEffect::FogEffect(DirectXCommon* dxCommon){
 	//霧の終点
 	parameters.fogEnd = 100.0f;
 	//霧の色
-	parameters.fogColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	parameters.fogColor = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
 
-
-	//ピクセルシェーダに霧の定数バッファをバインド
-	commandList_->SetGraphicsRootConstantBufferView(2, constantBuffer->GetGPUVirtualAddress());
+	//定数バッファをマップ
+	constantBuffer->Map(0, nullptr, reinterpret_cast< void** >(&parameters));
 }
 
 void FogEffect::CreateConstantBuffer(){
@@ -43,7 +39,7 @@ void FogEffect::CreateConstantBuffer(){
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	desc.Alignment = 0;
-	desc.Width = sizeof(FogParameters); // 定数バッファのサイズを設定
+	desc.Width = bufferSize; // 定数バッファのサイズを設定
 	desc.Height = 1; // バッファの高さは1
 	desc.DepthOrArraySize = 1;
 	desc.MipLevels = 1;
@@ -67,32 +63,6 @@ void FogEffect::CreateConstantBuffer(){
 		IID_PPV_ARGS(&constantBuffer));
 }
 
-void FogEffect::Apply(){
-	// ブレンドステートの設定
-	D3D12_BLEND_DESC blendDesc {};
-	blendDesc.AlphaToCoverageEnable = FALSE;
-	blendDesc.IndependentBlendEnable = FALSE;
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-
-
-	// ブレンドステートを含むグラフィックスパイプラインステートオブジェクトの作成
-	
-
-	// グラフィックスパイプラインステートオブジェクトを作成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = dxCommon_->GetGraphicsPSODesc();
-	ID3D12PipelineState* pipelineStateObject;
-	device_->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
-
-	// コマンドリストにグラフィックスパイプラインステートを設定
-	commandList_->SetPipelineState(pipelineStateObject);
-}
 
 
 void FogEffect::Update(){

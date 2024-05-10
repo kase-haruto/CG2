@@ -5,6 +5,7 @@
 #include <dxgidebug.h>
 #include"Vector4.h"
 #include"TextureManager.h"
+#include"FogEffect.h"
 
 
 // DirectX ライブラリのリンカー指示
@@ -48,11 +49,13 @@ void DirectXCommon::Initialize(
 	//フェンスの作成
 	CreateFence();
 
+	fog_ = std::make_unique<FogEffect>(this);
+
 
 	//transform変数を作る
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
 
-	viewProjection_ = std::make_unique<ViewProjection>();
+	viewProjection_ = std::make_unique<ViewProjection>(this);
 	viewProjection_->Initialize();
 }
 
@@ -474,7 +477,7 @@ void DirectXCommon::CreateRootSignature(){
 
 	//カメラ定数バッファをピクセルシェーダで使用
 	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	rootParamenters[3].Descriptor.ShaderRegister = 2;
 
 	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
@@ -562,10 +565,7 @@ void DirectXCommon::Pipeline(){
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
 
-
 	//PSOを作成
-	
-
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
 	//vertexShader
@@ -742,7 +742,7 @@ void DirectXCommon::UpdatePolygon(){
 														transform.translate
 	);
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-	*wvpData = worldViewProjectionMatrix;
+	*wvpData = worldMatrix;
 }
 
 void DirectXCommon::DrawPolygon(){
@@ -758,8 +758,13 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
+	//フォグ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
+	//カメラ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
 	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
+
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
 }

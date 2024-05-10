@@ -43,5 +43,7 @@ public:
 
 	//霧の効果を適用
 	void Apply();
+
+	ComPtr<ID3D12Resource>GetConstantBuffer()const{ return constantBuffer; }
 };
 
