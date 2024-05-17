@@ -41,7 +41,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	TextureManager::GetInstance()->CreateShaderResourceView(textureResource, metadata);
 
 	while (win->ProcessMessage() == 0){
-
+		//フレームの開始
+		dxCommon->PreDraw();
 		// ImGui受付開始
 		imguiManager->Begin();
 		//三角形の更新
@@ -54,8 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 
-		//フレームの開始
-		dxCommon->PreDraw();
+
 		//ImGui描画
 		imguiManager->Draw();
 		//三角形の描画

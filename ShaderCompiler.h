@@ -12,7 +12,6 @@ class ShaderCompiler {
 private:
 	
 public:
-
 	IDxcUtils* GetDxcUtils()const { return dxcUtils; }
 	IDxcCompiler3* GetDxcCompiler()const { return dxcCompiler; }
 	IDxcIncludeHandler* GetIncludeHandler()const { return includeHandle; }
@@ -21,8 +20,7 @@ public://メンバ関数
 	ShaderCompiler();
 	~ShaderCompiler();
 	
-	void InitializeDXC();
-	
+	void InitializeDXC();	
 	void LoadHLSL(const std::wstring& filePath, const wchar_t* profile);
 	
 	IDxcBlob* CompileShader(

@@ -275,8 +275,6 @@ void DirectXCommon::CreateDepthBuffer(){
 								   dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-
-
 void DirectXCommon::CreateFence(){
 	//初期値0でFenceを作る
 	fenceValue = 0;

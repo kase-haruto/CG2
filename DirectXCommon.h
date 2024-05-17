@@ -122,6 +122,11 @@ public:
 	/// <param name="height"></param>
 	void SetViewPortAndScissor(uint32_t width, uint32_t height);
 
+	//ビューポート
+	D3D12_VIEWPORT GetViewport()const{ return viewport; };
+	//シザー矩形
+	D3D12_RECT GetScissorRect()const{ return scissorRect;};
+
 	/// <summary>
 	/// 描画コマンドリストの取得
 	/// </summary>
