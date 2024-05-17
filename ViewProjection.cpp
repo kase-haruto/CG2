@@ -2,6 +2,7 @@
 #include<cmath>
 #include"DirectXCommon.h"
 #include<imgui.h>
+#include"MyFunc.h"
 
 ViewProjection::ViewProjection(DirectXCommon* dxCommon){
 	dxCommon_ = dxCommon;
@@ -61,7 +62,7 @@ void ViewProjection::Map(){
 }
 
 void ViewProjection::Initialize(){
-	Matrix4x4 cameraMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(transform.scale,
 														 transform.rotate,
 														 transform.translate
 	);
@@ -75,7 +76,7 @@ void ViewProjection::UpdateMatrix(){
 }
 
 void ViewProjection::UpdateViewMatrix(){
-	Matrix4x4 cameraMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(transform.scale,
 														 transform.rotate,
 														 transform.translate
 	);

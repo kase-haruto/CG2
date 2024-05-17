@@ -6,7 +6,7 @@
 #include"Vector4.h"
 #include"TextureManager.h"
 #include"FogEffect.h"
-#include<imgui.h>
+#include"MyFunc.h"
 
 
 // DirectX ライブラリのリンカー指示
@@ -53,7 +53,7 @@ void DirectXCommon::Initialize(
 	fog_ = std::make_unique<FogEffect>(this);
 
 
-	//transform変数を作る
+	//三角形のtransform変数を作る
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
 
 	viewProjection_ = std::make_unique<ViewProjection>(this);
@@ -382,33 +382,6 @@ IDxcBlob* DirectXCommon::CompileShader(
 	return shaderBlob;
 }
 
-ID3D12Resource* DirectXCommon::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes){
-	// 頂点リソース用のヒープの設定
-	D3D12_HEAP_PROPERTIES uploadHeapProperties {};
-	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-	// 頂点リソースの設定
-	D3D12_RESOURCE_DESC bufferResourceDesc {};
-	// バッファリソース。テクスチャの場合はまた別の設定をする
-	bufferResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	bufferResourceDesc.Width = sizeInBytes; // 指定されたサイズに設定
-	// バッファの場合はこれらは1にする決まり
-	bufferResourceDesc.Height = 1;
-	bufferResourceDesc.DepthOrArraySize = 1;
-	bufferResourceDesc.MipLevels = 1;
-	bufferResourceDesc.SampleDesc.Count = 1;
-	// バッファの場合はこれにする決まり
-	bufferResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 実際にリソースを作る
-	ID3D12Resource* bufferResource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-												 &bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
-
-	return bufferResource;
-}
-
-
 void DirectXCommon::CreateVertexBufferView(){
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
@@ -433,27 +406,15 @@ void DirectXCommon::UploadVertexData(){
 	vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
 	vertexData[2].texcoord = {1.0f,1.0f};
 
-
 	//左下２
-	vertexData[3].position = {0.0f,-0.5f,-1.5f,1.0f};
+	vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
 	vertexData[3].texcoord = {0.0f,1.0f};
 	//上２
-	vertexData[4].position = {0.5f,0.5f,-1.5f,1.0f};
+	vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
 	vertexData[4].texcoord = {0.5f,0.0f};
 	//右下２
-	vertexData[5].position = {1.0f,-0.5f,-1.5f,1.0f};
+	vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
 	vertexData[5].texcoord = {1.0f,1.0f};
-
-
-	////左下２
-	//vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
-	//vertexData[3].texcoord = {0.0f,1.0f};
-	////上２
-	//vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
-	//vertexData[4].texcoord = {0.5f,0.0f};
-	////右下２
-	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
-	//vertexData[5].texcoord = {1.0f,1.0f};
 
 }
 
@@ -761,14 +722,14 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
-	transform.rotate.y = 0.03f;
-	//transform.translate.z -= 0.03f;
-	Matrix4x4 worldMatrix = Matrix4x4::MakeAffineMatrix(transform.scale,
+	transform.rotate.y += 0.03f;
+	
+	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
 														transform.rotate,
 														transform.translate
 	);
-	//Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-	*wvpData = worldMatrix;
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	*wvpData = worldViewProjectionMatrix;
 }
 
 void DirectXCommon::DrawPolygon(){
@@ -790,7 +751,6 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
 	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
-
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
 }
@@ -844,10 +804,4 @@ void DirectXCommon::Finalize(){
 
 	//警告時に止まる
 	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-}
-
-void DirectXCommon::ImGui(){
-	ImGui::Begin("porigon");
-	ImGui::DragFloat3("translate", &transform.translate.x, 0.01f);
-	ImGui::End();
 }

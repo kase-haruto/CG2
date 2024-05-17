@@ -58,6 +58,12 @@
     <Filter Include="DirectX\Pipeline">
       <UniqueIdentifier>{ecfba774-feae-4b54-9878-eac455e80956}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{66a8a61f-0157-433a-bbb6-2a05f6c0039b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Sprite">
+      <UniqueIdentifier>{7f65aff0-3285-459f-bde6-bc0367f43e9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -119,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="Pipeline.cpp">
       <Filter>DirectX\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>System\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="Pipeline.h">
       <Filter>DirectX\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>System\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

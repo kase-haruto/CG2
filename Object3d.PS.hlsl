@@ -19,7 +19,7 @@ PixelShaderOutput main(VertexShaderOutput input){
 	float4 foggedColor = lerp(textureColor, fogColor, fogFactor);
 
 	// 出力カラーにフォグを適用
-	output.color = gMaterial.color * foggedColor;
+	output.color = gMaterial.color * textureColor;
 
 	return output;
 }

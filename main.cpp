@@ -5,7 +5,8 @@
 #include"FogEffect.h"
 #include"ViewProjection.h"
 #include"ImGuiManager.h"
-#include<imgui.h>
+#include"imgui.h"
+#include"Sprite.h"
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
@@ -19,7 +20,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	dxCommon->Pipeline();
 
 	FogEffect* fog = new FogEffect(dxCommon);
-
+	Sprite* sprite = new Sprite(dxCommon);
+	sprite->Initialize();
 
 #pragma region 汎用機能初期化
 
@@ -42,10 +44,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 		// ImGui受付開始
 		imguiManager->Begin();
-		//開発用UIの処理
-		dxCommon->ImGui();
 		//三角形の更新
 		dxCommon->UpdatePolygon();
+		//スプライト
+		sprite->Update();
 		// ImGui受付終了
 		imguiManager->End();
 
@@ -58,6 +60,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		imguiManager->Draw();
 		//三角形の描画
 		dxCommon->DrawPolygon();
+		//sprite描画
+		sprite->Draw();
 		//フレームの終了
 		dxCommon->PostDraw();
 	}
@@ -65,7 +69,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	// ImGui解放
 	imguiManager->Finalize();
 	dxCommon->Finalize();
-	delete win, fog;
+	delete win, fog,sprite;
 	CoUninitialize();
 	return 0;
 }

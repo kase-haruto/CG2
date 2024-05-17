@@ -79,8 +79,6 @@ private: // メンバ変数
 	
 	std::unique_ptr<ViewProjection> viewProjection_;
 
-	ImGuiManager* imgui_;
-
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
 
@@ -159,7 +157,6 @@ public:
 
 	void Pipeline();
 
-	void ImGui();
 	
 	//================
 	//アクセッサ
@@ -244,12 +241,6 @@ private: // メンバ関数
 	/// Resourceにデータを書き込む
 	/// </summary>
 	void UploadVertexData();
-
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device,size_t sizeInBytes);
-
-
-	
-
 
 	//=============================================
 	//		POS
