@@ -5,6 +5,7 @@
 #include <wrl.h>
 
 class ImGuiManager;
+class DirectXCommon;
 
 class TextureManager{
 public:
@@ -36,7 +37,6 @@ public:
 	/// <returns></returns>
 	static ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 	
-
 	/// <summary>
 	/// textureResourceにデータを転送する
 	/// </summary>
@@ -44,14 +44,20 @@ public:
 	/// <param name="mipImages"></param>
 	static void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
 
+	void TransferTexture();
+
 	/// <summary>
 	/// shaderResourceViewの作成
 	/// </summary>
 	/// <param name="texture"></param>
 	/// <param name="metadata"></param>
-	void CreateShaderResourceView(ID3D12Resource* texture, const DirectX::TexMetadata& metadata);
+	void CreateShaderResourceView(ID3D12Resource* texture, const DirectX::TexMetadata& metadata,const DirectX::TexMetadata& metadata2);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandle()const{ return textureSrvHandleGPU; }
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandle2()const{ return textureSrvHandleGPU2; }
+
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU()const{ return textureSrvHandleGPU; }
+
 private:
 
 
@@ -63,10 +69,15 @@ private:
 
 private:
 	//デバイス
-	ID3D12Device* device_ = nullptr;
+	DirectXCommon* dxCommon_;
+	Microsoft::WRL::ComPtr<ID3D12Device> device_ = nullptr;
 	ImGuiManager* imgui_;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU2;
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU2;
+	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource2;
 };
 

@@ -18,6 +18,13 @@ class FogEffect;
 
 class DirectXCommon final{
 
+	struct RGBa{
+		float R;
+		float G;
+		float B;
+		float a;
+	};
+
 private: // メンバ変数
 
 	uint32_t bufferWidth_;
@@ -72,15 +79,24 @@ private: // メンバ変数
 	D3D12_RECT scissorRect{};
 
 	ID3D12Resource* materialResource;
+	Vector4* materialData = nullptr;
+	RGBa RGBa;
 	Matrix4x4* wvpData = nullptr;
 	ID3D12Resource* wvpResource;
 
 	Transform transform;
+
+	uint32_t descriptorSizeSRV;
+	uint32_t descriptorSizeRTV;
+	uint32_t descriptorSizeDSV;
 	
 	std::unique_ptr<ViewProjection> viewProjection_;
 
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
+
+	bool useMonsterBall = true;
+
 
 public:
 	/// <summary>
@@ -175,6 +191,13 @@ public:
 	uint32_t GetBufferHeight()const{ return bufferHeight_; }
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetGraphicsPSODesc()const { return graphicsPipelineStateDesc; }
+
+	ID3D12DescriptorHeap* GetRtvDescriptorHeap()const{ return rtvDescriptorHeap; }
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap()const{ return dsvDescriptorHeap; }
+
+	uint32_t GetDescriptorSizeSRV()const{ return descriptorSizeSRV; }
+	uint32_t GetDescriptorSizeRTV()const{ return descriptorSizeRTV; }
+	uint32_t GetDescriptorSizeDSV()const{ return descriptorSizeDSV; }
 
 private: // メンバ関数
 	DirectXCommon() = default;

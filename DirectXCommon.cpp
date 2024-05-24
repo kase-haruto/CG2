@@ -7,7 +7,8 @@
 #include"TextureManager.h"
 #include"FogEffect.h"
 #include"MyFunc.h"
-
+#include"imgui.h"
+#include"MyFunc.h"
 
 // DirectX ライブラリのリンカー指示
 #pragma comment(lib,"d3d12.lib")
@@ -55,9 +56,15 @@ void DirectXCommon::Initialize(
 
 	//三角形のtransform変数を作る
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
+	RGBa = {1.0f,1.0f,1.0f,1.0f};
 
 	viewProjection_ = std::make_unique<ViewProjection>(this);
 	//viewProjection_->Initialize();
+
+	// ディスクリプタサイズの取得
+	descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
 
 void DirectXCommon::InitializeDXGIDevice(){
@@ -272,10 +279,8 @@ void DirectXCommon::CreateDepthBuffer(){
 	//DSVHeapの先頭にdsvを作る
 	device->CreateDepthStencilView(depthStencilResource,
 								   &dsvDesc,
-								   dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+								   GetCPUDescriptorHandle(dsvDescriptorHeap,descriptorSizeDSV,0));
 }
-
-
 
 void DirectXCommon::CreateFence(){
 	//初期値0でFenceを作る
@@ -406,18 +411,17 @@ void DirectXCommon::UploadVertexData(){
 	vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
 	vertexData[2].texcoord = {1.0f,1.0f};
 
-	//左下２
-	vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
-	vertexData[3].texcoord = {0.0f,1.0f};
-	//上２
-	vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
-	vertexData[4].texcoord = {0.5f,0.0f};
-	//右下２
-	vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
-	vertexData[5].texcoord = {1.0f,1.0f};
+	////左下２
+	//vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
+	//vertexData[3].texcoord = {0.0f,1.0f};
+	////上２
+	//vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
+	//vertexData[4].texcoord = {0.5f,0.0f};
+	////右下２
+	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
+	//vertexData[5].texcoord = {1.0f,1.0f};
 
 }
-
 
 void DirectXCommon::CreateRootSignature(){
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature {};
@@ -584,17 +588,15 @@ void DirectXCommon::Pipeline(){
 
 	materialResource = CreateBufferResource(device, sizeof(Vector4));
 
-
 	//マテリアルにデータを書き込む
-	Vector4* materialData = nullptr;
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
-	*materialData = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	*materialData = Vector4(RGBa.R,RGBa.G,RGBa.B,RGBa.a);
 
 	//WVP用のリソースを作る。matrix4x4 1つ分のサイズを用意する
 	wvpResource = CreateBufferResource(device, sizeof(Matrix4x4));
-	//データを書き込む
+	//データを書き込む.
 	//書き込むためのアドレスを取得
 	wvpResource->Map(0, nullptr, reinterpret_cast< void** >(&wvpData));
 	//単位行列を書き込んでおく
@@ -722,8 +724,16 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
-	transform.rotate.y += 0.03f;
+	ImGui::Begin("polygon");
+	ImGui::DragFloat3("polyTranslation", &transform.translate.x, 0.01f);
+	ImGui::ColorEdit4("color", &RGBa.R);
+	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
+	ImGui::End();
+
+	//色の更新
+	*materialData = Vector4(RGBa.R, RGBa.G, RGBa.B, RGBa.a);
 	
+	//座標の更新
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
 														transform.rotate,
 														transform.translate
@@ -750,9 +760,13 @@ void DirectXCommon::DrawPolygon(){
 	//カメラ用のCBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
+	commandList->SetGraphicsRootDescriptorTable(4, 
+												useMonsterBall ?
+												TextureManager::GetInstance()->GetTextureSrvHandle2():
+												TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
+
 }
 
 void DirectXCommon::Finalize(){

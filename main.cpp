@@ -33,12 +33,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 #pragma endregion
 
+	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
-	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	ID3D12Resource* textureResource = TextureManager::CreateTextureResource(dxCommon->GetDevice(), metadata);
-	TextureManager::UploadTextureData(textureResource, mipImages);
-	TextureManager::GetInstance()->CreateShaderResourceView(textureResource, metadata);
+	//テクスチャの転送
+	TextureManager::GetInstance()->TransferTexture();
 
 	while (win->ProcessMessage() == 0){
 
@@ -46,8 +44,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		imguiManager->Begin();
 		//三角形の更新
 		dxCommon->UpdatePolygon();
-		//スプライト
-		sprite->Update();
 		// ImGui受付終了
 		imguiManager->End();
 
@@ -60,8 +56,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		imguiManager->Draw();
 		//三角形の描画
 		dxCommon->DrawPolygon();
-		//sprite描画
-		sprite->Draw();
 		//フレームの終了
 		dxCommon->PostDraw();
 	}
