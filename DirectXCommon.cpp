@@ -429,7 +429,7 @@ void DirectXCommon::UploadVertexData(){
 
 	// 緯度の方向に分割 -n/2 ~ n/2
 	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
-		float lat = -XM_PI / 2.0f + kLatEvery * latIndex;
+		float lat = XM_PI / 2.0f + kLatEvery * latIndex;
 		// 経度の方向に分割 0~2π
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
 			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
@@ -475,13 +475,13 @@ void DirectXCommon::UploadVertexData(){
 			//-----------------------------------------------------------
 			//2枚目-------------------------------------------------------
 
-			// b2
-			vertexData[start + 3].position = vertexData[start+1].position;
-			vertexData[start + 3].texcoord = {u0, v1};
-
 			// c2
-			vertexData[start + 4].position = vertexData[start + 2].position;
-			vertexData[start + 4].texcoord = {u1, v0};
+			vertexData[start + 3].position = vertexData[start + 2].position;
+			vertexData[start + 3].texcoord = {u1, v0};
+
+			// b2
+			vertexData[start + 4].position = vertexData[start + 1].position;
+			vertexData[start + 4].texcoord = {u0, v1};
 
 			// d
 			vertexData[start + 5].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
