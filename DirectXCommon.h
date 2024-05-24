@@ -144,6 +144,11 @@ public:
 	/// </summary>
 	void DrawPolygon();
 
+	/// <summary>
+	/// 球体の描画
+	/// </summary>
+	void DrawSphere();
+
 
 	/// <summary>
 	/// ディスクリプタヒープの生成

@@ -7,6 +7,8 @@
 #include"TextureManager.h"
 #include"FogEffect.h"
 #include"MyFunc.h"
+#include"cmath"
+#define _USE_MATH_DEFINES
 
 
 // DirectX ライブラリのリンカー指示
@@ -386,7 +388,8 @@ void DirectXCommon::CreateVertexBufferView(){
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
+	//vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 1536;// 16 * 16 * 6;
 	//1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
@@ -396,26 +399,100 @@ void DirectXCommon::UploadVertexData(){
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr,
 						reinterpret_cast< void** >(&vertexData));
-	//左下
-	vertexData[0].position = {-0.5f,-0.5f,0.0f,1.0f};
-	vertexData[0].texcoord = {0.0f,1.0f};
-	//上
-	vertexData[1].position = {0.0f,0.5f,0.0f,1.0f};
-	vertexData[1].texcoord = {0.5f,0.0f};
-	//右下
-	vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
-	vertexData[2].texcoord = {1.0f,1.0f};
+	////左下
+	//vertexData[0].position = {-0.5f,-0.5f,0.0f,1.0f};
+	//vertexData[0].texcoord = {0.0f,1.0f};
+	////上
+	//vertexData[1].position = {0.0f,0.5f,0.0f,1.0f};
+	//vertexData[1].texcoord = {0.5f,0.0f};
+	////右下
+	//vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
+	//vertexData[2].texcoord = {1.0f,1.0f};
 
-	//左下２
-	vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
-	vertexData[3].texcoord = {0.0f,1.0f};
-	//上２
-	vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
-	vertexData[4].texcoord = {0.5f,0.0f};
-	//右下２
-	vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
-	vertexData[5].texcoord = {1.0f,1.0f};
+	////左下２
+	//vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
+	//vertexData[3].texcoord = {0.0f,1.0f};
+	////上２
+	//vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
+	//vertexData[4].texcoord = {0.5f,0.0f};
+	////右下２
+	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
+	//vertexData[5].texcoord = {1.0f,1.0f};
 
+
+	// 分割数
+	const uint32_t kSubdivision = 16; // 任意の適切な値を設定
+	// 軽度分割1つ分の角度
+	const float kLonEvery = 2 * XM_PI / kSubdivision;
+	// 緯度分割1つ分の角度
+	const float kLatEvery = XM_PI / kSubdivision;
+
+	// 緯度の方向に分割 -n/2 ~ n/2
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
+		float lat = -XM_PI / 2.0f + kLatEvery * latIndex;
+		// 経度の方向に分割 0~2π
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
+			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
+			float lon = lonIndex * kLonEvery;
+
+			//uv座標の計算
+			float u0 = float(lonIndex) / float(kSubdivision);
+			float u1 = float(lonIndex + 1) / float(kSubdivision);
+			float v0 = 1.0f - float(latIndex) / float(kSubdivision);
+			float v1 = 1.0f - float(latIndex + 1) / float(kSubdivision);
+
+			//===========================================================
+			//	三角形二枚重ねて面を作る
+			//===========================================================
+
+			//-----------------------------------------------------------
+			//1枚目-------------------------------------------------------
+
+			// a
+			vertexData[start].position.x = std::cos(lat) * std::cos(lon);
+			vertexData[start].position.y = std::sin(lat);
+			vertexData[start].position.z = std::cos(lat) * std::sin(lon);
+			vertexData[start].position.w = 1.0f;
+			vertexData[start].texcoord = {u0, v0};
+
+			// b
+			vertexData[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
+			vertexData[start + 1].position.y = std::sin(lat + kLatEvery);
+			vertexData[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
+			vertexData[start + 1].position.w = 1.0f;
+			vertexData[start + 1].texcoord = {u0, v1};
+
+			// c
+			vertexData[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
+			vertexData[start + 2].position.y = std::sin(lat);
+			vertexData[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
+			vertexData[start + 2].position.w = 1.0f;
+			vertexData[start + 2].texcoord = {u1, v0};
+
+			//-----------------------------------------------------------
+
+
+			//-----------------------------------------------------------
+			//2枚目-------------------------------------------------------
+
+			// b2
+			vertexData[start + 3].position = vertexData[start+1].position;
+			vertexData[start + 3].texcoord = {u0, v1};
+
+			// c2
+			vertexData[start + 4].position = vertexData[start + 2].position;
+			vertexData[start + 4].texcoord = {u1, v0};
+
+			// d
+			vertexData[start + 5].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
+			vertexData[start + 5].position.y = std::sin(lat + kLatEvery);
+			vertexData[start + 5].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
+			vertexData[start + 5].position.w = 1.0f;
+			vertexData[start + 5].texcoord = {u1, v1};
+
+			//------------------------------------------------------------
+		}
+	}
 }
 
 
@@ -432,12 +509,12 @@ void DirectXCommon::CreateRootSignature(){
 
 	//RootParamer作成
 	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
-	
+
 	//定数バッファをピクセルシェーダで使用
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParamenters[0].Descriptor.ShaderRegister = 0;
-	
+
 	//定数バッファをバーテックスシェーダで使用
 	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
@@ -580,7 +657,7 @@ void DirectXCommon::Pipeline(){
 											 IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 6);
+	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 1536);
 
 	materialResource = CreateBufferResource(device, sizeof(Vector4));
 
@@ -723,10 +800,10 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 
 void DirectXCommon::UpdatePolygon(){
 	transform.rotate.y += 0.03f;
-	
+
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
-														transform.rotate,
-														transform.translate
+											 transform.rotate,
+											 transform.translate
 	);
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	*wvpData = worldViewProjectionMatrix;
@@ -753,6 +830,29 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
+}
+
+void DirectXCommon::DrawSphere(){
+	commandList->RSSetViewports(1, &viewport);
+	commandList->RSSetScissorRects(1, &scissorRect);
+	//rootSignatureを設定psoに設定しているけど別途設定が必要
+	commandList->SetGraphicsRootSignature(rootSignature);
+	commandList->SetPipelineState(graphicsPipelineState);
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//マテリアルCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
+	//wvp用のCBufferの場所を設定
+	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
+	//フォグ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
+	//カメラ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
+	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
+	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
+	//描画　3頂点で1つのインスタンス
+	commandList->DrawInstanced(1536, 1, 0, 0);
 }
 
 void DirectXCommon::Finalize(){

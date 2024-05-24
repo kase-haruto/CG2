@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		//ImGui描画
 		imguiManager->Draw();
 		//三角形の描画
-		dxCommon->DrawPolygon();
+		dxCommon->DrawSphere();
 		//sprite描画
 		sprite->Draw();
 		//フレームの終了
