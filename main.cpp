@@ -33,12 +33,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 #pragma endregion
 
+	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
-	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	ID3D12Resource* textureResource = TextureManager::CreateTextureResource(dxCommon->GetDevice(), metadata);
-	TextureManager::UploadTextureData(textureResource, mipImages);
-	TextureManager::GetInstance()->CreateShaderResourceView(textureResource, metadata);
+	TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	TextureManager::GetInstance()->LoadTexture("./Resources/monsterBall.png");
+	//テクスチャの転送
+	TextureManager::GetInstance()->TransferTexture();
 
 	while (win->ProcessMessage() == 0){
 

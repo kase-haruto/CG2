@@ -8,6 +8,7 @@
 #include"FogEffect.h"
 #include"MyFunc.h"
 #include"cmath"
+#include"imgui.h"
 #define _USE_MATH_DEFINES
 
 
@@ -60,6 +61,11 @@ void DirectXCommon::Initialize(
 
 	viewProjection_ = std::make_unique<ViewProjection>(this);
 	//viewProjection_->Initialize();
+
+	// ディスクリプタサイズの取得
+	descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
 
 void DirectXCommon::InitializeDXGIDevice(){
@@ -799,6 +805,10 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
+	ImGui::Begin("shpere");
+	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
+	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
+	ImGui::End();
 	transform.rotate.y += 0.03f;
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
@@ -850,7 +860,10 @@ void DirectXCommon::DrawSphere(){
 	//カメラ用のCBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
+	commandList->SetGraphicsRootDescriptorTable(4,
+												useMonsterBall ?
+												TextureManager::GetInstance()->GetTextureSrvHandle2() :
+												TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(1536, 1, 0, 0);
 }

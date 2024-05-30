@@ -3,6 +3,7 @@
 #include"MyFunc.h"
 #include"VertexData.h"
 #include"imgui.h"
+#include"TextureManager.h"
 
 Sprite::Sprite(DirectXCommon* dx) :dxCommon_(dx){
 
@@ -33,6 +34,7 @@ void Sprite::Update(){
 }
 
 void Sprite::Draw(){
+	commandList_->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
 	commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
 	commandList_->DrawInstanced(6, 1, 0, 0);

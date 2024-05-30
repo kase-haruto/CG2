@@ -77,10 +77,17 @@ private: // メンバ変数
 
 	Transform transform;
 	
+	uint32_t descriptorSizeSRV;
+	uint32_t descriptorSizeRTV;
+	uint32_t descriptorSizeDSV;
+
+	bool useMonsterBall = true;
+
 	std::unique_ptr<ViewProjection> viewProjection_;
 
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
+
 
 public:
 	/// <summary>
@@ -180,6 +187,13 @@ public:
 	uint32_t GetBufferHeight()const{ return bufferHeight_; }
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetGraphicsPSODesc()const { return graphicsPipelineStateDesc; }
+
+	ID3D12DescriptorHeap* GetRtvDescriptorHeap()const{ return rtvDescriptorHeap; }
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap()const{ return dsvDescriptorHeap; }
+
+	uint32_t GetDescriptorSizeSRV()const{ return descriptorSizeSRV; }
+	uint32_t GetDescriptorSizeRTV()const{ return descriptorSizeRTV; }
+	uint32_t GetDescriptorSizeDSV()const{ return descriptorSizeDSV; }
 
 private: // メンバ関数
 	DirectXCommon() = default;
