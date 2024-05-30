@@ -35,6 +35,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
+	TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	TextureManager::GetInstance()->LoadTexture("./Resources/monsterBall.png");
 	//テクスチャの転送
 	TextureManager::GetInstance()->TransferTexture();
 

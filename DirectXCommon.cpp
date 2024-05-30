@@ -726,6 +726,8 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 void DirectXCommon::UpdatePolygon(){
 	ImGui::Begin("polygon");
 	ImGui::DragFloat3("polyTranslation", &transform.translate.x, 0.01f);
+	ImGui::DragFloat3("polyRotate", &transform.rotate.x, 0.01f);
+	ImGui::DragFloat3("polyScale", &transform.scale.x, 0.01f);
 	ImGui::ColorEdit4("color", &RGBa.R);
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();

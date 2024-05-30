@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<string>
 #include <wrl.h>
+#include<vector>
 
 class ImGuiManager;
 class DirectXCommon;
@@ -68,6 +69,8 @@ private:
 	TextureManager& operator=(const TextureManager&) = delete;
 
 private:
+	static std::vector<std::string>texturePath_;
+
 	//デバイス
 	DirectXCommon* dxCommon_;
 	Microsoft::WRL::ComPtr<ID3D12Device> device_ = nullptr;
