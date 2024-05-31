@@ -12,6 +12,7 @@
 #include"Matrix4x4.h"
 #include"ViewProjection.h"
 #include"VertexData.h"
+#include<vector>
 
 class ImGuiManager;
 class FogEffect;
@@ -23,6 +24,12 @@ class DirectXCommon final{
 		float G;
 		float B;
 		float a;
+	};
+
+	struct Triangle{
+		Transform transform;
+		VertexData vertexData;
+		Vector3 velocity;
 	};
 
 private: // メンバ変数
@@ -85,6 +92,8 @@ private: // メンバ変数
 	ID3D12Resource* wvpResource;
 
 	Transform transform;
+	std::vector<Triangle> triangles_;
+
 
 	uint32_t descriptorSizeSRV;
 	uint32_t descriptorSizeRTV;
@@ -151,10 +160,17 @@ public:
 	void CreateDepthBuffer();
 
 	/// <summary>
+	/// 三角形の初期化
+	/// </summary>
+	void PolygonInit();
+	/// <summary>
 	/// 三角形の描画
 	/// </summary>
 	void UpdatePolygon();
-
+	/// <summary>
+	/// uiの更新
+	/// </summary>
+	void UpdateUI(std::string lavel);
 	/// <summary>
 	/// 三角形の描画
 	/// </summary>

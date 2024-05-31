@@ -22,9 +22,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{a05fc567-36ce-471f-8829-140d8a168c7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Triangle">
-      <UniqueIdentifier>{f0c1f3ac-19e7-401f-bd04-afaf17ac8489}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX\Shaders">
       <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,9 @@
     </Filter>
     <Filter Include="System\Sprite">
       <UniqueIdentifier>{7f65aff0-3285-459f-bde6-bc0367f43e9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Polygon">
+      <UniqueIdentifier>{f0c1f3ac-19e7-401f-bd04-afaf17ac8489}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>System\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>Game\Polygon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>System\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>Game\Polygon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

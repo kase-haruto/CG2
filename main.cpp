@@ -33,6 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 #pragma endregion
 
+
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
 	TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");

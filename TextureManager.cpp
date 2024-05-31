@@ -53,7 +53,6 @@ ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, cons
 	return resource;
 }
 
-
 DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
 	//配列にファイルパスを格納
 	texturePath_.push_back(filePath);
@@ -73,23 +72,20 @@ DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
 	return mipImages;
 }
 
-
-
 void TextureManager::TransferTexture(){
-	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
+	DirectX::ScratchImage mipImages = TextureManager::LoadTexture(texturePath_[0].c_str());
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	textureResource = TextureManager::CreateTextureResource(dxCommon_->GetDevice(), metadata);
 	TextureManager::UploadTextureData(textureResource.Get(), mipImages);
 
 	//2枚目のtextureを読んで転送する
-	DirectX::ScratchImage mipImages2 = LoadTexture("./Resources/uvChecker.png");
+	DirectX::ScratchImage mipImages2 = LoadTexture(texturePath_[1].c_str());
 	const DirectX::TexMetadata& metadata2 = mipImages2.GetMetadata();
 	textureResource2 = CreateTextureResource(dxCommon_->GetDevice(), metadata2);
 	UploadTextureData(textureResource2.Get(), mipImages2);
 
 	TextureManager::GetInstance()->CreateShaderResourceView(textureResource.Get(), metadata, metadata2);
 }
-
 
 void TextureManager::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages){
 	//Meta情報を取得

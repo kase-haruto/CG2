@@ -9,6 +9,8 @@
 #include"MyFunc.h"
 #include"imgui.h"
 #include"MyFunc.h"
+#include<DirectXMath.h>
+#include<random>
 
 // DirectX ライブラリのリンカー指示
 #pragma comment(lib,"d3d12.lib")
@@ -52,14 +54,13 @@ void DirectXCommon::Initialize(
 	CreateFence();
 
 	fog_ = std::make_unique<FogEffect>(this);
-
-
 	//三角形のtransform変数を作る
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 
 	viewProjection_ = std::make_unique<ViewProjection>(this);
 	//viewProjection_->Initialize();
+
 
 	// ディスクリプタサイズの取得
 	descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -279,7 +280,7 @@ void DirectXCommon::CreateDepthBuffer(){
 	//DSVHeapの先頭にdsvを作る
 	device->CreateDepthStencilView(depthStencilResource,
 								   &dsvDesc,
-								   GetCPUDescriptorHandle(dsvDescriptorHeap,descriptorSizeDSV,0));
+								   GetCPUDescriptorHandle(dsvDescriptorHeap, descriptorSizeDSV, 0));
 }
 
 void DirectXCommon::CreateFence(){
@@ -420,7 +421,6 @@ void DirectXCommon::UploadVertexData(){
 	////右下２
 	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
 	//vertexData[5].texcoord = {1.0f,1.0f};
-
 }
 
 void DirectXCommon::CreateRootSignature(){
@@ -436,12 +436,12 @@ void DirectXCommon::CreateRootSignature(){
 
 	//RootParamer作成
 	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
-	
+
 	//定数バッファをピクセルシェーダで使用
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParamenters[0].Descriptor.ShaderRegister = 0;
-	
+
 	//定数バッファをバーテックスシェーダで使用
 	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
 	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
@@ -592,7 +592,7 @@ void DirectXCommon::Pipeline(){
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
-	*materialData = Vector4(RGBa.R,RGBa.G,RGBa.B,RGBa.a);
+	*materialData = Vector4(RGBa.R, RGBa.G, RGBa.B, RGBa.a);
 
 	//WVP用のリソースを作る。matrix4x4 1つ分のサイズを用意する
 	wvpResource = CreateBufferResource(device, sizeof(Matrix4x4));
@@ -603,7 +603,6 @@ void DirectXCommon::Pipeline(){
 	*wvpData = Matrix4x4::MakeIdentity();
 
 	CreateVertexBufferView();
-	UploadVertexData();
 }
 
 void DirectXCommon::ClearRenderTarget(){
@@ -723,6 +722,28 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 	scissorRect.bottom = height;
 }
 
+void DirectXCommon::PolygonInit(){
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> pos(-5, 5);
+	std::uniform_real_distribution<float> velocity(-2, 2);
+
+	const int kMaxTriangle = 60;
+	for (int i = 0; i < kMaxTriangle; i++){
+		Triangle triangle;
+
+		// Transformの初期化
+		float xOffset = static_cast< float >(i) * 0.1f;
+		triangle.transform.translate = {};
+
+		// VertexDataの初期化
+		triangle.vertexData = {};
+
+		// Vectorに追加
+		triangles_.push_back(triangle);
+	}
+}
+
 void DirectXCommon::UpdatePolygon(){
 	ImGui::Begin("polygon");
 	ImGui::DragFloat3("polyTranslation", &transform.translate.x, 0.01f);
@@ -732,13 +753,15 @@ void DirectXCommon::UpdatePolygon(){
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 	ImGui::End();
 
+	UploadVertexData();
+
 	//色の更新
 	*materialData = Vector4(RGBa.R, RGBa.G, RGBa.B, RGBa.a);
-	
+
 	//座標の更新
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
-														transform.rotate,
-														transform.translate
+											 transform.rotate,
+											 transform.translate
 	);
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	*wvpData = worldViewProjectionMatrix;
@@ -762,13 +785,12 @@ void DirectXCommon::DrawPolygon(){
 	//カメラ用のCBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(4, 
+	commandList->SetGraphicsRootDescriptorTable(4,
 												useMonsterBall ?
-												TextureManager::GetInstance()->GetTextureSrvHandle2():
+												TextureManager::GetInstance()->GetTextureSrvHandle2() :
 												TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
-	commandList->DrawInstanced(6, 1, 0, 0);
-
+	commandList->DrawInstanced(3, 1, 0, 0);
 }
 
 void DirectXCommon::Finalize(){
