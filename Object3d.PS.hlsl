@@ -3,7 +3,7 @@
 Texture2D<float4> gTexture:register(t0);
 SamplerState gSampler:register(s0);
 ConstantBuffer<Material>gMaterial : register(b0);
-ConstantBuffer<DirectionalLight>gDirectionalLight:register(b3);
+ConstantBuffer<DirectionalLight>gDirectionalLight:register(b2);
 
 PixelShaderOutput main(VertexShaderOutput input){
 	PixelShaderOutput output;
@@ -23,5 +23,6 @@ PixelShaderOutput main(VertexShaderOutput input){
 	} else{//ライティングしない
 		output.color = gMaterial.color * textureColor;
 	}
+
 	return output;
 }

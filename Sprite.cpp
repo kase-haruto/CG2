@@ -34,7 +34,7 @@ void Sprite::Update(){
 }
 
 void Sprite::Draw(){
-	commandList_->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
+	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
@@ -51,10 +51,8 @@ void Sprite::CreateBuffer(){
 	vertexBufferViewSprite.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
 	vertexBufferViewSprite.StrideInBytes = sizeof(VertexData);
-	
 	//transformtionMatrix用のリソース
-	transformResource_ = CreateBufferResource(device_.Get(), sizeof(Matrix4x4));
-
+	transformResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 	//マテリアル用リソース
 	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }

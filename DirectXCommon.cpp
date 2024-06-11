@@ -9,7 +9,7 @@
 #include"MyFunc.h"
 #include"cmath"
 #include"imgui.h"
-#include"Material.h"
+
 #define _USE_MATH_DEFINES
 
 
@@ -531,7 +531,7 @@ void DirectXCommon::CreateRootSignature(){
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
 
 	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenters[6] = {};
+	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
 
 	//定数バッファをピクセルシェーダで使用
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
@@ -548,20 +548,15 @@ void DirectXCommon::CreateRootSignature(){
 	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParamenters[2].Descriptor.ShaderRegister = 1;
 
-	//カメラ定数バッファをピクセルシェーダで使用
-	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rootParamenters[3].Descriptor.ShaderRegister = 2;
-
-	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
-	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParamenters[4].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
-	rootParamenters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
+	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
+	rootParamenters[3].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
+	rootParamenters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
 
 	//ライト
-	rootParamenters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParamenters[5].Descriptor.ShaderRegister = 3;
+	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamenters[4].Descriptor.ShaderRegister = 2;
 
 	descriptionRootSignature.pParameters = rootParamenters;
 	descriptionRootSignature.NumParameters = _countof(rootParamenters);
@@ -623,18 +618,18 @@ void DirectXCommon::Pipeline(){
 
 
 	// normal blend
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	/*blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;*/
 
 	// none blend
-	//blendDesc.RenderTarget[0].RenderTargetWriteMask =
-	//	D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask =
+		D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	//RasterizeState
 	D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -696,11 +691,11 @@ void DirectXCommon::Pipeline(){
 
 
 	//マテリアルにデータを書き込む
-	Material* materialData = nullptr;
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData->enableLighting = true;
 
 	//WVP用のリソースを作る。
 	wvpResource = CreateBufferResource(device, sizeof(TransformationMatrix));
@@ -833,10 +828,20 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DirectXCommon::UpdatePolygon(){
+
+#ifdef _DEBUG
 	ImGui::Begin("shpere");
 	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
+	ImGui::ColorEdit4("color", &RGBa.x);
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
+	bool enableLighting = (materialData->enableLighting != 0);
+	ImGui::Checkbox("enableLighting", &enableLighting);
+	materialData->enableLighting = enableLighting ? 1 : 0;
 	ImGui::End();
+#endif // _DEBUG
+
+	materialData->color = Vector4 (RGBa.x,RGBa.y,RGBa.z,RGBa.w);
+
 	transform.rotate.y += 0.03f;
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
@@ -863,10 +868,8 @@ void DirectXCommon::DrawPolygon(){
 	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	//フォグ用のCBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
-	//カメラ用のCBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandle());
+	commandList->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandle());
 	//描画　3頂点で1つのインスタンス
 	commandList->DrawInstanced(6, 1, 0, 0);
 }
@@ -886,10 +889,8 @@ void DirectXCommon::DrawSphere(){
 	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	//フォグ用のCBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
-	//カメラ用のCBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(3, viewProjection_->GetConstBuffer()->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(4,
+	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
+	commandList->SetGraphicsRootDescriptorTable(3,
 												useMonsterBall ?
 												TextureManager::GetInstance()->GetTextureSrvHandle2() :
 												TextureManager::GetInstance()->GetTextureSrvHandle());

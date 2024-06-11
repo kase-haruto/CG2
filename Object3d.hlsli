@@ -35,15 +35,15 @@ cbuffer FogConstants : register(b1){
 };
 
 //カメラのパラメータ
-struct CameraConstants{
-	float4x4 view;			//ワールド→ビュー変換行列
-	float4x4 projection;	//ビュー→プロジェクション変換行列
-	float3 cameraPos;		//カメラ座標(ワールド座標)
-};
+//struct CameraConstants{
+//	float4x4 view;			//ワールド→ビュー変換行列
+//	float4x4 projection;	//ビュー→プロジェクション変換行列
+//	float3 cameraPos;		//カメラ座標(ワールド座標)
+//};
 
 //ライト
 struct DirectionalLight{
-	float4 color;
-	float3 direction;
-	float intensity;
+	float4 color;		//ライトの色
+	float3 direction;	//ライトの向き
+	float intensity;	//輝度
 };

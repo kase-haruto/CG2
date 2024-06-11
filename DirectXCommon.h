@@ -13,6 +13,7 @@
 #include"ViewProjection.h"
 #include"VertexData.h"
 #include"TransformationMatrix.h"
+#include"Material.h"
 
 class ImGuiManager;
 class FogEffect;
@@ -73,6 +74,8 @@ private: // メンバ変数
 	D3D12_RECT scissorRect{};
 
 	ID3D12Resource* materialResource;
+	Material* materialData = nullptr;
+
 	TransformationMatrix* matrixData_ = nullptr;
 	ID3D12Resource* wvpResource;
 
@@ -89,7 +92,7 @@ private: // メンバ変数
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
 
-
+	Vector4 RGBa = {1.0f,1.0f,1.0f,1.0f};
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -195,6 +198,8 @@ public:
 	uint32_t GetDescriptorSizeSRV()const{ return descriptorSizeSRV; }
 	uint32_t GetDescriptorSizeRTV()const{ return descriptorSizeRTV; }
 	uint32_t GetDescriptorSizeDSV()const{ return descriptorSizeDSV; }
+
+	ID3D12RootSignature* GetRootSignature()const{ return rootSignature; }
 
 private: // メンバ関数
 	DirectXCommon() = default;
