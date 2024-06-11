@@ -22,8 +22,9 @@ void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 
 void DirectionalLight::Update(){
 	ImGui::Begin("directionalLight");
-	ImGui::DragFloat3("direction",&data_->direction.x,0.01f);
+	ImGui::SliderFloat3("direction",&data_->direction.x,-1.0f,1.0f);
 	ImGui::ColorEdit4("color", &color_.x);
+	ImGui::DragFloat("Intensity", &data_->intensity, 0.01f);
 	ImGui::End();
 
 	data_->color = color_;

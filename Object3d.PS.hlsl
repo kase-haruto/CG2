@@ -17,8 +17,12 @@ PixelShaderOutput main(VertexShaderOutput input){
 	// 元の色とフォグの色をブレンド
 	//float4 foggedColor = lerp(textureColor, fogColor, fogFactor);
 
+	
+
 	if (gMaterial.enableLighting != 0){
-		float cos = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+		//half lambert
+		float NdotL = dot(normalize(input.normal),-gDirectionalLight.direction);
+		float cos = pow(NdotL * 0.5f*0.5f,2.0f);
 		output.color = gMaterial.color * textureColor * gDirectionalLight.color * cos * gDirectionalLight.intensity;
 	} else{//ライティングしない
 		output.color = gMaterial.color * textureColor;

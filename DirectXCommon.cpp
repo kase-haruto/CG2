@@ -877,7 +877,6 @@ void DirectXCommon::DrawPolygon(){
 void DirectXCommon::DrawSphere(){
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
-	//rootSignatureを設定psoに設定しているけど別途設定が必要
 	commandList->SetGraphicsRootSignature(rootSignature);
 	commandList->SetPipelineState(graphicsPipelineState);
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
