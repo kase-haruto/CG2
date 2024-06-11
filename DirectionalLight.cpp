@@ -23,7 +23,10 @@ void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 void DirectionalLight::Update(){
 	ImGui::Begin("directionalLight");
 	ImGui::DragFloat3("direction",&data_->direction.x,0.01f);
+	ImGui::ColorEdit4("color", &color_.x);
 	ImGui::End();
+
+	data_->color = color_;
 }
 
 void DirectionalLight::Render(){
@@ -33,7 +36,6 @@ void DirectionalLight::Render(){
 }
 
 void DirectionalLight::CreateBuffer(){
-
 	resource_ = CreateBufferResource(device_.Get(), sizeof(DirectionalLightData));
 }
 

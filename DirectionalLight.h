@@ -21,6 +21,9 @@ private:
 	
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	DirectionalLightData* data_;
+
+	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+
 public:
 	DirectionalLight();
 	~DirectionalLight();
