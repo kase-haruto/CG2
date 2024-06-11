@@ -64,6 +64,15 @@
     <Filter Include="System\Sprite">
       <UniqueIdentifier>{7f65aff0-3285-459f-bde6-bc0367f43e9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyStruct">
+      <UniqueIdentifier>{23f497cf-bfbf-4778-943d-1b2b6f7f9133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{caeec18f-6e9f-4613-b770-70b9016e9115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light\DirectionalLight">
+      <UniqueIdentifier>{8542c5e3-178b-4c95-bdbd-9b85573a5d06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -129,6 +138,9 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>System\Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Light\DirectionalLight</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -191,9 +203,6 @@
     <ClInclude Include="Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="VertexData.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="FogEffect.h">
       <Filter>DirectX\FogEffect</Filter>
     </ClInclude>
@@ -202,6 +211,18 @@
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>System\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexData.h">
+      <Filter>MyStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>MyStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationMatrix.h">
+      <Filter>MyStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Light\DirectionalLight</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

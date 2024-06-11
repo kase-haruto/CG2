@@ -12,6 +12,7 @@
 #include"Matrix4x4.h"
 #include"ViewProjection.h"
 #include"VertexData.h"
+#include"TransformationMatrix.h"
 
 class ImGuiManager;
 class FogEffect;
@@ -72,7 +73,7 @@ private: // メンバ変数
 	D3D12_RECT scissorRect{};
 
 	ID3D12Resource* materialResource;
-	Matrix4x4* wvpData = nullptr;
+	TransformationMatrix* matrixData_ = nullptr;
 	ID3D12Resource* wvpResource;
 
 	Transform transform;

@@ -3,6 +3,8 @@
 #include<wrl.h>
 #include"Transform.h"
 #include"Matrix4x4.h"
+#include"Material.h"
+
 using namespace Microsoft::WRL;
 
 class DirectXCommon;
@@ -23,6 +25,10 @@ private:
 
 	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	Matrix4x4* transformData = nullptr;
+
+	//マテリアル用のリソース
+	ComPtr<ID3D12Resource> materialResource_;
+	Material* materialData_;
 
 public:
 	Sprite(DirectXCommon* dx);
@@ -50,6 +56,7 @@ public:
 	void Map();
 	void VertexResourceMap();
 	void TransformResourceMap();
+	void MaterialResourceMap();
 
 	/// <summary>
 	/// 定数バッファの取得

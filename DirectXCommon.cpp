@@ -9,6 +9,7 @@
 #include"MyFunc.h"
 #include"cmath"
 #include"imgui.h"
+#include"Material.h"
 #define _USE_MATH_DEFINES
 
 
@@ -283,8 +284,6 @@ void DirectXCommon::CreateDepthBuffer(){
 								   dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-
-
 void DirectXCommon::CreateFence(){
 	//初期値0でFenceを作る
 	fenceValue = 0;
@@ -460,6 +459,9 @@ void DirectXCommon::UploadVertexData(){
 			vertexData[start].position.z = std::cos(lat) * std::sin(lon);
 			vertexData[start].position.w = 1.0f;
 			vertexData[start].texcoord = {u0, v0};
+			vertexData[start].normal.x = vertexData[start].position.x;
+			vertexData[start].normal.y = vertexData[start].position.y;
+			vertexData[start].normal.z = vertexData[start].position.z;
 
 			// b
 			vertexData[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
@@ -467,6 +469,9 @@ void DirectXCommon::UploadVertexData(){
 			vertexData[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
 			vertexData[start + 1].position.w = 1.0f;
 			vertexData[start + 1].texcoord = {u0, v1};
+			vertexData[start + 1].normal.x = vertexData[start + 1].position.x;
+			vertexData[start + 1].normal.y = vertexData[start + 1].position.y;
+			vertexData[start + 1].normal.z = vertexData[start + 1].position.z;
 
 			// c
 			vertexData[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
@@ -474,6 +479,9 @@ void DirectXCommon::UploadVertexData(){
 			vertexData[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
 			vertexData[start + 2].position.w = 1.0f;
 			vertexData[start + 2].texcoord = {u1, v0};
+			vertexData[start + 2].normal.x = vertexData[start + 2].position.x;
+			vertexData[start + 2].normal.y = vertexData[start + 2].position.y;
+			vertexData[start + 2].normal.z = vertexData[start + 2].position.z;
 
 			//-----------------------------------------------------------
 
@@ -484,10 +492,16 @@ void DirectXCommon::UploadVertexData(){
 			// c2
 			vertexData[start + 3].position = vertexData[start + 2].position;
 			vertexData[start + 3].texcoord = {u1, v0};
+			vertexData[start + 3].normal.x = vertexData[start + 3].position.x;
+			vertexData[start + 3].normal.y = vertexData[start + 3].position.y;
+			vertexData[start + 3].normal.z = vertexData[start + 3].position.z;
 
 			// b2
 			vertexData[start + 4].position = vertexData[start + 1].position;
 			vertexData[start + 4].texcoord = {u0, v1};
+			vertexData[start + 4].normal.x = vertexData[start + 4].position.x;
+			vertexData[start + 4].normal.y = vertexData[start + 4].position.y;
+			vertexData[start + 4].normal.z = vertexData[start + 4].position.z;
 
 			// d
 			vertexData[start + 5].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
@@ -495,6 +509,9 @@ void DirectXCommon::UploadVertexData(){
 			vertexData[start + 5].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
 			vertexData[start + 5].position.w = 1.0f;
 			vertexData[start + 5].texcoord = {u1, v1};
+			vertexData[start + 5].normal.x = vertexData[start + 5].position.x;
+			vertexData[start + 5].normal.y = vertexData[start + 5].position.y;
+			vertexData[start + 5].normal.z = vertexData[start + 5].position.z;
 
 			//------------------------------------------------------------
 		}
@@ -514,7 +531,7 @@ void DirectXCommon::CreateRootSignature(){
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
 
 	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
+	D3D12_ROOT_PARAMETER rootParamenters[6] = {};
 
 	//定数バッファをピクセルシェーダで使用
 	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
@@ -540,6 +557,11 @@ void DirectXCommon::CreateRootSignature(){
 	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
 	rootParamenters[4].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
 	rootParamenters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
+
+	//ライト
+	rootParamenters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamenters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamenters[5].Descriptor.ShaderRegister = 3;
 
 	descriptionRootSignature.pParameters = rootParamenters;
 	descriptionRootSignature.NumParameters = _countof(rootParamenters);
@@ -578,7 +600,7 @@ void DirectXCommon::Pipeline(){
 	CreateRootSignature();
 
 	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -587,6 +609,11 @@ void DirectXCommon::Pipeline(){
 	inputElementDescs[1].SemanticIndex = 0;
 	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[2].SemanticName = "NORMAL";
+	inputElementDescs[2].SemanticIndex = 0;
+	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
@@ -665,23 +692,24 @@ void DirectXCommon::Pipeline(){
 
 	vertexResource = CreateBufferResource(device, sizeof(VertexData) * 1536);
 
-	materialResource = CreateBufferResource(device, sizeof(Vector4));
+	materialResource = CreateBufferResource(device, sizeof(Material));
 
 
 	//マテリアルにデータを書き込む
-	Vector4* materialData = nullptr;
+	Material* materialData = nullptr;
 	//書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
-	*materialData = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	//WVP用のリソースを作る。matrix4x4 1つ分のサイズを用意する
-	wvpResource = CreateBufferResource(device, sizeof(Matrix4x4));
+	//WVP用のリソースを作る。
+	wvpResource = CreateBufferResource(device, sizeof(TransformationMatrix));
 	//データを書き込む
 	//書き込むためのアドレスを取得
-	wvpResource->Map(0, nullptr, reinterpret_cast< void** >(&wvpData));
+	wvpResource->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
 	//単位行列を書き込んでおく
-	*wvpData = Matrix4x4::MakeIdentity();
+	matrixData_->WVP = Matrix4x4::MakeIdentity();
+
 
 	CreateVertexBufferView();
 	UploadVertexData();
@@ -816,7 +844,8 @@ void DirectXCommon::UpdatePolygon(){
 											 transform.translate
 	);
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-	*wvpData = worldViewProjectionMatrix;
+	matrixData_->world = worldMatrix;
+	matrixData_->WVP = worldViewProjectionMatrix;
 }
 
 void DirectXCommon::DrawPolygon(){

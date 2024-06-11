@@ -36,6 +36,7 @@ void Sprite::Update(){
 void Sprite::Draw(){
 	commandList_->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
+	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
 	commandList_->DrawInstanced(6, 1, 0, 0);
 }
@@ -53,11 +54,15 @@ void Sprite::CreateBuffer(){
 	
 	//transformtionMatrix用のリソース
 	transformResource_ = CreateBufferResource(device_.Get(), sizeof(Matrix4x4));
+
+	//マテリアル用リソース
+	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }
 
 void Sprite::Map(){
 	VertexResourceMap();
 	TransformResourceMap();
+	MaterialResourceMap();
 }
 
 void Sprite::VertexResourceMap(){
@@ -67,17 +72,24 @@ void Sprite::VertexResourceMap(){
 	//1枚目の三角形
 	vertexData[0].position = {0.0f,360.0f,0.0f,1.0f};//左下
 	vertexData[0].texcoord = {0.0f,1.0f};
+	vertexData[0].normal = {0.0f,0.0f,-1.0f};
 	vertexData[1].position = {0.0f,0.0f,0.0f,1.0f};//左下
 	vertexData[1].texcoord = {0.0f,0.0f};
+	vertexData[1].normal = {0.0f,0.0f,-1.0f};
 	vertexData[2].position = {640.0f,360.0f,0.0f,1.0f};//左下
 	vertexData[2].texcoord = {1.0f,1.0f};
+	vertexData[3].normal = {0.0f,0.0f,-1.0f};
+
 	//2枚目の三角形
 	vertexData[3].position = {0.0f,0.0f,0.0f,1.0f};//左下
 	vertexData[3].texcoord = {0.0f,0.0f};
+	vertexData[3].normal = {0.0f,0.0f,-1.0f};
 	vertexData[4].position = {640.0f,0.0f,0.0f,1.0f};//左下
 	vertexData[4].texcoord = {1.0f,0.0f};
+	vertexData[4].normal = {0.0f,0.0f,-1.0f};
 	vertexData[5].position = {640.0f,360.0f,0.0f,1.0f};//左下
 	vertexData[5].texcoord = {1.0f,1.0f};
+	vertexData[5].normal = {0.0f,0.0f,-1.0f};
 
 }
 
@@ -86,5 +98,12 @@ void Sprite::TransformResourceMap(){
 	//単位行列を書き込んでおく
 	*transformData = Matrix4x4::MakeIdentity();
 }
+
+void Sprite::MaterialResourceMap(){
+	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
+	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
+	materialData_->enableLighting = false;
+}
+
 
 
