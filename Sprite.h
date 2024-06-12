@@ -14,7 +14,10 @@ class DirectXCommon;
 /// </summary>
 class Sprite{
 private:
+	//viewの生成
+	D3D12_INDEX_BUFFER_VIEW indexBufferView {};
 	ComPtr<ID3D12Resource>vertexResource_;
+	ComPtr<ID3D12Resource>indexResource_;
 	ComPtr<ID3D12Resource>transformResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite {};
 
@@ -54,6 +57,7 @@ public:
 	/// マップ
 	/// </summary>
 	void Map();
+	void IndexResourceMap();
 	void VertexResourceMap();
 	void TransformResourceMap();
 	void MaterialResourceMap();
