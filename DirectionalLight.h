@@ -17,9 +17,13 @@ class DirectionalLight{
 private:
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList_;
 	Microsoft::WRL::ComPtr<ID3D12Device>device_;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
 	
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	DirectionalLightData* data_;
+
+	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+
 public:
 	DirectionalLight();
 	~DirectionalLight();

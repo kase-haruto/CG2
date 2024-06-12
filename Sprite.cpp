@@ -4,7 +4,6 @@
 #include"VertexData.h"
 #include"imgui.h"
 #include"TextureManager.h"
-#include<stdint.h>
 
 Sprite::Sprite(DirectXCommon* dx) :dxCommon_(dx){
 
@@ -35,12 +34,11 @@ void Sprite::Update(){
 }
 
 void Sprite::Draw(){
-	commandList_->SetGraphicsRootDescriptorTable(4, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
+	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	commandList_->IASetIndexBuffer(&indexBufferView);//ibvを設定
 	commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
-	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	commandList_->DrawInstanced(6, 1, 0, 0);
 }
 
 void Sprite::CreateBuffer(){
@@ -53,34 +51,16 @@ void Sprite::CreateBuffer(){
 	vertexBufferViewSprite.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
 	vertexBufferViewSprite.StrideInBytes = sizeof(VertexData);
-	
 	//transformtionMatrix用のリソース
-	transformResource_ = CreateBufferResource(device_.Get(), sizeof(Matrix4x4));
-
-	//indexResource
-	indexResource_ = CreateBufferResource(device_.Get(), sizeof(uint32_t) * 6);
-	
-	//リソース先頭のアドレスから使う
-	indexBufferView.BufferLocation = indexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズはインデックス6つ分のサイズ
-	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
-	//インデックスはuint32_tとする
-	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	transformResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	//マテリアル用リソース
+	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }
 
 void Sprite::Map(){
-	IndexResourceMap();
 	VertexResourceMap();
 	TransformResourceMap();
 	MaterialResourceMap();
-}
-
-void Sprite::IndexResourceMap(){
-	//indexResourceにデータを書き込む
-	uint32_t* indexData = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast< void** >(&indexData));
-	indexData[0] = 0; indexData[1] = 1; indexData[2] = 2;
-	indexData[3] = 1; indexData[4] = 3; indexData[5] = 2;
 }
 
 void Sprite::VertexResourceMap(){

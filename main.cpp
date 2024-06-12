@@ -48,6 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		dxCommon->PreDraw();
 		// ImGui受付開始
 		imguiManager->Begin();
+		light->Update();
 		//三角形の更新
 		dxCommon->UpdatePolygon();
 		//スプライト
@@ -57,9 +58,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 
-		light->Render();
 		//ImGui描画
 		imguiManager->Draw();
+		light->Render();
 		//三角形の描画
 		dxCommon->DrawSphere();
 		//sprite描画
