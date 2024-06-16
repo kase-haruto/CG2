@@ -1,9 +1,15 @@
 ﻿#pragma once
 
 #include"Matrix4x4.h"
+#include"Vector2.h"
 #include"Vector3.h"
+#include"Vector4.h"
+#include"ModelData.h"
+#include"VertexData.h"
+
 #include<d3d12.h>
 #include<stdint.h>
+#include<string>
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
@@ -24,3 +30,5 @@ ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);

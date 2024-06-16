@@ -19,20 +19,40 @@ void Sprite::Initialize(){
 	commandList_ = dxCommon_->GetCommandList();
 	device_ = dxCommon_->GetDevice();
 
+	//===============================
+	//	リソースの生成
 	CreateBuffer();
+
+	//===============================
+	//	マップ
 	Map();
 }
 
 void Sprite::Update(){
 	ImGui::Begin("sprite");
 	ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
+	ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
+	ImGui::SliderAngle("UVRotate", &uvTransform.rotate.x);
 	ImGui::End();
 
+	///===================================================
+	///	wvp行列
+	///===================================================
 	Matrix4x4 matWorld = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	Matrix4x4 matView = Matrix4x4::MakeIdentity();
 	Matrix4x4 matProjection = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
 	Matrix4x4 wvpMatrix = Matrix4x4::Multiply(matWorld,Matrix4x4::Multiply(matView,matProjection));
 	*transformData = wvpMatrix;
+
+
+	///===================================================
+	///	UV Transform
+	///===================================================
+	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+	materialData_->uvTransform = uvTransformMatrix;
 }
 
 void Sprite::Draw(){
@@ -116,6 +136,7 @@ void Sprite::MaterialResourceMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
 	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
 	materialData_->enableLighting = false;
+	materialData_->uvTransform = Matrix4x4::MakeIdentity();
 	materialResource_->Unmap(0, nullptr);
 }
 

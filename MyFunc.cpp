@@ -1,5 +1,8 @@
 ﻿#include"MyFunc.h"
 #include<cmath>
+#include<fstream>
+#include<sstream>
+#include<cassert>
 
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
@@ -70,7 +73,6 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return affineMatrix;
 }
 
-
 Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearClip, float farClip){
 	Matrix4x4 result;
 	result = {
@@ -118,4 +120,69 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	handleGPU.ptr += (descriptorSize * index);
 	return handleGPU;
+}
+
+ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
+	ModelData modelData;
+	std::vector<Vector4> positions;
+	std::vector<Vector3> normals;
+	std::vector<Vector2> texcoords;
+	std::string line;
+	
+	//=============================================================
+	//		ファイルを開く
+	std::ifstream file(directoryPath + "/" + filename);
+	assert(file.is_open());
+
+	//=============================================================
+	//		ファイルの読み込み
+	while (std::getline(file,line)){
+		std::string identifier;
+		std::istringstream s(line);
+		s >> identifier;//先頭の識別子を読む
+
+		if (identifier == "v"){//頂点位置
+			Vector4 position;
+			s >> position.x >> position.y >> position.z;
+			position.w = 1.0f;
+			positions.push_back(position);
+		} else if (identifier =="vt"){//頂点テクスチャ
+			Vector2 texcoord;
+			s >> texcoord.x >> texcoord.y;
+			texcoords.push_back(texcoord);
+		} else if (identifier == "vn"){//頂点法線
+			Vector3 normal;
+			s >> normal.x >> normal.y >> normal.z;
+			normals.push_back(normal);
+		} else if (identifier == "f"){//面
+			VertexData triangle[3];
+			// 面は三角形限定 その他は未対応
+			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex){
+				std::string vertexDefinition;
+				s >> vertexDefinition;
+				// 頂点要素へのindexは[位置・UV・法線]で格納されているので分解してindexを取得する
+				std::istringstream v(vertexDefinition);
+				uint32_t elementIndices[3];
+				for (int32_t element = 0; element < 3; ++element){
+					std::string index;
+					std::getline(v, index, '/'); // 区切りでインデックスを挑んでいく
+					elementIndices[element] = std::stoi(index);
+				}
+				// 要素へのindexから、実際の要素の値を取得して、頂点を構築する
+				Vector4 position = positions[elementIndices[0] - 1];
+				Vector2 texcoord = texcoords[elementIndices[1] - 1];
+				Vector3 normal = normals[elementIndices[2] - 1];
+
+				// 右手座標系から左手座標系に変換（X軸を反転）
+				position.x *= -1.0f;
+				normal.x *= -1.0f;
+
+				triangle[faceVertex] = {position,texcoord,normal};
+			}
+			modelData.vertices.push_back(triangle[2]);
+			modelData.vertices.push_back(triangle[1]);
+			modelData.vertices.push_back(triangle[0]);
+		}
+	}
+	return modelData;
 }

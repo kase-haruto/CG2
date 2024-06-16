@@ -9,15 +9,19 @@ PixelShaderOutput main(VertexShaderOutput input){
 	PixelShaderOutput output;
 
 	//テクスチャカラー
-	float4 textureColor = gTexture.Sample(gSampler, input.texcoord);
+	//float4 textureColor = gTexture.Sample(gSampler, input.texcoord);
+	// UV座標を変換
+    float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+
+    // テクスチャサンプルを取得
+    float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+
 
 	//// フォグの密度を計算 霧の中では0霧の外では1
 	//float fogFactor = saturate((distanceToCamera - fogStart) / (fogEnd - fogStart));
 
 	// 元の色とフォグの色をブレンド
 	//float4 foggedColor = lerp(textureColor, fogColor, fogFactor);
-
-	
 
 	if (gMaterial.enableLighting != 0){
 		//half lambert

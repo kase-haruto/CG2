@@ -116,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
     </ClCompile>
     <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyFunc.cpp" />
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -137,8 +138,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imstb_truetype.h" />
     <ClInclude Include="FogEffect.h" />
     <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="Mat3.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelData.h" />
     <ClInclude Include="MyFunc.h" />
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Sprite.h" />

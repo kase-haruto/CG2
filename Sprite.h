@@ -27,7 +27,10 @@ private:
 	DirectXCommon* dxCommon_;
 
 	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	Matrix4x4* transformData = nullptr;
+
+
 
 	//マテリアル用のリソース
 	ComPtr<ID3D12Resource> materialResource_;

@@ -73,6 +73,9 @@
     <Filter Include="Light\DirectionalLight">
       <UniqueIdentifier>{8542c5e3-178b-4c95-bdbd-9b85573a5d06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Model">
+      <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Light\DirectionalLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Game\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="DirectionalLight.h">
       <Filter>Light\DirectionalLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelData.h">
+      <Filter>MyStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Game\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

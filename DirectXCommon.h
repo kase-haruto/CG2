@@ -14,7 +14,7 @@
 #include"VertexData.h"
 #include"TransformationMatrix.h"
 #include"Material.h"
-
+#include"ModelData.h"
 class ImGuiManager;
 class FogEffect;
 
@@ -78,9 +78,12 @@ private: // メンバ変数
 
 	TransformationMatrix* matrixData_ = nullptr;
 	ID3D12Resource* wvpResource;
+	ID3D12Resource* indexResource = nullptr;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView {};
 
 	Transform transform;
-	
+	ModelData modelData;
+
 	uint32_t descriptorSizeSRV;
 	uint32_t descriptorSizeRTV;
 	uint32_t descriptorSizeDSV;

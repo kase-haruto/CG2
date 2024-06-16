@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		//三角形の描画
 		dxCommon->DrawSphere();
 		//sprite描画
-		sprite->Draw();
+		//sprite->Draw();
 		//フレームの終了
 		dxCommon->PostDraw();
 	}
