@@ -723,7 +723,7 @@ void DirectXCommon::Pipeline(){
 	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = true;
+	materialData->enableLighting = false;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 
 	//WVP用のリソースを作る。
@@ -788,6 +788,9 @@ void DirectXCommon::PreDraw(){
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
 	//指定した深度で画面全体をクリアする
 	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+	commandList->RSSetViewports(1, &viewport);
+	commandList->RSSetScissorRects(1, &scissorRect);
 }
 
 void DirectXCommon::PostDraw(){

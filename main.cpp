@@ -8,6 +8,7 @@
 #include"imgui.h"
 #include"Sprite.h"
 #include"DirectionalLight.h"
+#include"Model.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//comの初期化
@@ -19,12 +20,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	dxCommon->Initialize(win, 1280, 720);
 	dxCommon->Pipeline();
 
-	FogEffect* fog = new FogEffect(dxCommon);
 	Sprite* sprite = new Sprite(dxCommon);
 	sprite->Initialize();
 
 	std::unique_ptr<DirectionalLight> light= std::make_unique<DirectionalLight>();
 	light->Initialize(dxCommon);
+
+	std::unique_ptr<Model>model = std::make_unique<Model>();
+	model->Initialize(dxCommon);
 
 #pragma region 汎用機能初期化
 
@@ -50,9 +53,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		imguiManager->Begin();
 		light->Update();
 		//三角形の更新
-		dxCommon->UpdatePolygon();
+		model->Update();
 		//スプライト
-		sprite->Update();
+		//sprite->Update();
 		// ImGui受付終了
 		imguiManager->End();
 
@@ -61,8 +64,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		//ImGui描画
 		imguiManager->Draw();
 		light->Render();
-		//三角形の描画
-		dxCommon->DrawSphere();
+		//モデルの描画
+		model->Draw();
 		//sprite描画
 		//sprite->Draw();
 		//フレームの終了
@@ -72,7 +75,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	// ImGui解放
 	imguiManager->Finalize();
 	dxCommon->Finalize();
-	delete win, fog,sprite;
+	delete win,sprite;
 	CoUninitialize();
 	return 0;
 }

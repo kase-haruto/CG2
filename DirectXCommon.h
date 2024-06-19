@@ -204,6 +204,10 @@ public:
 
 	ID3D12RootSignature* GetRootSignature()const{ return rootSignature; }
 
+	ID3D12PipelineState* GetPipelineState()const{ return graphicsPipelineState; }
+
+	ViewProjection* GetViewProjection()const{ return viewProjection_.get(); }
+
 private: // メンバ関数
 	DirectXCommon() = default;
 	~DirectXCommon() = default;
