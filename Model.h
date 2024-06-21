@@ -39,6 +39,7 @@ private:
 	TransformationMatrix* matrixData;
 
 	ViewProjection* viewProjection;
+
 public:
 	Model();
 	~Model();
@@ -59,16 +60,29 @@ public:
 	/// リソースの生成
 	/// </summary>
 	void CreateBuffer();
+	/// <summary>
+	/// マップする
+	/// </summary>
+	void Map();
+
+	/// <summary>
+	/// モデルデータの取得
+	/// </summary>
+	/// <returns></returns>
+	ModelData GetModelData()const { return modelData; }
+
+private:
+	/// <summary>
+	/// リソースの生成
+	/// </summary>
 	void CreateVertexBuffer();
 	void CreateMaterialBuffer();
 	void CreateMatrixBuffer();
 	/// <summary>
 	/// マップする
 	/// </summary>
-	void Map();
 	void VertexBufferMap();
 	void MaterialBufferMap();
 	void MatrixBufferMap();
-
 };
 

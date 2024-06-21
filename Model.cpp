@@ -20,7 +20,7 @@ void Model::Initialize(DirectXCommon* dxCommon){
 	viewProjection = dxCommon->GetViewProjection();
 
 	//モデルの読み込み
-	modelData = LoadObjFile("Resources", "plane.obj");
+	modelData = LoadObjFile("Resources", "axis.obj");
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 
@@ -71,6 +71,7 @@ void Model::Draw(){
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
 
+
 void Model::CreateBuffer(){
 	CreateVertexBuffer();
 	CreateMaterialBuffer();
@@ -91,6 +92,7 @@ void Model::CreateMaterialBuffer(){
 void Model::CreateMatrixBuffer(){
 	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 }
+
 
 void Model::Map(){
 	//リソースにデータを書き込む

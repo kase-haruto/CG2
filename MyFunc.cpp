@@ -128,7 +128,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 	std::vector<Vector3> normals;
 	std::vector<Vector2> texcoords;
 	std::string line;
-	
+
 	//=============================================================
 	//		ファイルを開く
 	std::ifstream file(directoryPath + "/" + filename);
@@ -136,7 +136,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
 	//=============================================================
 	//		ファイルの読み込み
-	while (std::getline(file,line)){
+	while (std::getline(file, line)){
 		std::string identifier;
 		std::istringstream s(line);
 		s >> identifier;//先頭の識別子を読む
@@ -146,9 +146,10 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 			s >> position.x >> position.y >> position.z;
 			position.w = 1.0f;
 			positions.push_back(position);
-		} else if (identifier =="vt"){//頂点テクスチャ
+		} else if (identifier == "vt"){//頂点テクスチャ
 			Vector2 texcoord;
 			s >> texcoord.x >> texcoord.y;
+			texcoord.y = 1 - texcoord.y;
 			texcoords.push_back(texcoord);
 		} else if (identifier == "vn"){//頂点法線
 			Vector3 normal;
@@ -182,7 +183,35 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 			modelData.vertices.push_back(triangle[2]);
 			modelData.vertices.push_back(triangle[1]);
 			modelData.vertices.push_back(triangle[0]);
+		} else if (identifier == "mtllib"){
+			//materialTemplateLibraryファイルの名前を取得する
+			std::string materialFilename;
+			s >> materialFilename;
+			//基本的にobjファイルと同一階層
+			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+
 		}
 	}
 	return modelData;
+}
+
+MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
+	MaterialData materialData;//構築するmaterialData
+	std::string line;//ファイルから読んだ1行を格納するもの
+	std::ifstream file(directoryPath + "/" + filename);
+	assert(file.is_open());//開かなかったら止める
+
+	while (std::getline(file, line)){
+		std::string identifier; std::istringstream s(line);
+		s >> identifier;
+
+		//identifierに応じた処理
+		if (identifier == "map_Kd"){
+			std::string textureFilename;
+			s >> textureFilename;
+			//連結してファイルパスにする
+			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+		}
+	}
+	return materialData;
 }

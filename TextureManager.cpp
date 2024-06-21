@@ -74,7 +74,6 @@ DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
 }
 
 
-
 void TextureManager::TransferTexture(){
 	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();

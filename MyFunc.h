@@ -6,6 +6,7 @@
 #include"Vector4.h"
 #include"ModelData.h"
 #include"VertexData.h"
+#include"Material.h"
 
 #include<d3d12.h>
 #include<stdint.h>
@@ -32,3 +33,5 @@ D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
+
+MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);

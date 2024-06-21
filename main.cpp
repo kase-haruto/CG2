@@ -52,24 +52,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		// ImGui受付開始
 		imguiManager->Begin();
 		light->Update();
-		//三角形の更新
+		//モデルの更新
 		model->Update();
 		//スプライト
 		//sprite->Update();
-		// ImGui受付終了
-		imguiManager->End();
 
 
 
 		//ImGui描画
 		imguiManager->Draw();
+		//ライトの処理
 		light->Render();
 		//モデルの描画
 		model->Draw();
 		//sprite描画
 		//sprite->Draw();
+
+		//=================================
+		//フレーム終了時の処理
+		//imguiのコマンドを積む
+		imguiManager->End();
 		//フレームの終了
-		dxCommon->PostDraw();
+		dxCommon->PostDraw();		
 	}
 
 	// ImGui解放
