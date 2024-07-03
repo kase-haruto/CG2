@@ -92,3 +92,14 @@ void WinApp::CreateWnd(void) {
     // ウィンドウの表示
     ShowWindow(hwnd, SW_SHOW);
 }
+
+/// <summary>
+/// ゲームウィンドウの破棄
+/// </summary>
+void WinApp::TerminateGameWindow(){
+    // ウィンドウクラスを登録解除
+    UnregisterClass(wc.lpszClassName, wc.hInstance);
+
+    // COM 終了
+    CoUninitialize();
+}

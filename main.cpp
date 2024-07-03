@@ -59,8 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 
-		//ImGui描画
-		imguiManager->Draw();
+
 		//ライトの処理
 		light->Render();
 		//モデルの描画
@@ -70,8 +69,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 		//=================================
 		//フレーム終了時の処理
+		
 		//imguiのコマンドを積む
 		imguiManager->End();
+		//ImGui描画
+		imguiManager->Draw();
 		//フレームの終了
 		dxCommon->PostDraw();		
 	}

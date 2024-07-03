@@ -51,9 +51,6 @@ private:
 	// SRV用ヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-
-
 #endif // _DEBUG
 
 private:

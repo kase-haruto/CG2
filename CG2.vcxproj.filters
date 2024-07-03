@@ -76,6 +76,9 @@
     <Filter Include="Game\Model">
       <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System\MySystem">
+      <UniqueIdentifier>{45b68573-a478-4ced-8933-9be6c8282212}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Game\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>System\MySystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Game\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>System\MySystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,7 +20,6 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 											   128,
 											   true
 	);
-	commandList_ = dxCommon_->GetCommandList();
 
 	//srvの設定
 	IMGUI_CHECKVERSION();
@@ -43,6 +42,8 @@ void ImGuiManager::Finalize(){
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+	srvHeap_.Reset();
 #endif // _DEBUG
 }
 
@@ -57,16 +58,20 @@ void ImGuiManager::Begin(){
 
 void ImGuiManager::End(){
 #ifdef _DEBUG
-	//ImHui内部コマンドを生成
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
+	//描画前準備
+	ImGui::Render();
+
 #endif // _DEBUG
 }
 
 void ImGuiManager::Draw(){
 #ifdef _DEBUG
-	ImGui::Render();
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 	//でスクリプタヒープの配列をセットする
 	ID3D12DescriptorHeap* descriptorHeaps[] = {srvHeap_.Get()};
-	commandList_->SetDescriptorHeaps(1, descriptorHeaps);	
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);	
+	//描画コマンドを発行
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+
 #endif // _DEBUG
 }

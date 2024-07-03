@@ -28,6 +28,10 @@ public://メンバ関数
 	void CreateWnd(void);
 	//ウィンドウハンドルの取得
 	HWND GetHWND()const { return hwnd; }
+	/// <summary>
+	/// ゲームウィンドウの破棄
+	/// </summary>
+	void TerminateGameWindow();
 
 	bool ProcessMessage();
 private:
