@@ -3,7 +3,7 @@
 #include"MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
-#include"RootSignatureManager.h"
+
 #ifdef _DEBUG
 	#include"imgui.h"
 #endif // _DEBUG
@@ -12,11 +12,11 @@ Model::Model(){}
 
 Model::~Model(){}
 
-void Model::Initialize(DirectXCommon* dxCommon, ID3D12PipelineState* pipeline){
+void Model::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature();
-	pipelineState_ = pipeline;
+	rootSignature_ = dxCommon->GetRootSignature();
+	pipelineState_ = dxCommon->GetPipelineState();
 	viewProjection = dxCommon->GetViewProjection();
 
 	//モデルの読み込み

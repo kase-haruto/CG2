@@ -119,7 +119,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyFunc.cpp" />
     <ClCompile Include="Pipeline.cpp" />
-    <ClCompile Include="RootSignatureManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ViewProjection.cpp" />
@@ -146,7 +145,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="ModelData.h" />
     <ClInclude Include="MyFunc.h" />
     <ClInclude Include="Pipeline.h" />
-    <ClInclude Include="RootSignatureManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Transform.h" />

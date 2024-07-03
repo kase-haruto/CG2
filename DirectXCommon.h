@@ -15,7 +15,6 @@
 #include"TransformationMatrix.h"
 #include"Material.h"
 #include"ModelData.h"
-
 class ImGuiManager;
 class FogEffect;
 
@@ -48,6 +47,23 @@ private: // メンバ変数
 	ID3D12Resource* depthStencilResource;
 	ID3D12DescriptorHeap* dsvDescriptorHeap;
 
+	//三角形の描画について
+	IDxcUtils* dxcUtils = nullptr;
+	IDxcCompiler3* dxcCompiler = nullptr;
+	IDxcIncludeHandler* includeHandler = nullptr;
+	
+
+	//PSO関連
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
+	ID3D12PipelineState* graphicsPipelineState = nullptr;
+	ID3DBlob* signatureBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	ID3D12RootSignature* rootSignature = nullptr;
+
+	D3D12_BLEND_DESC blendDesc{};
+
+	IDxcBlob* vertexShaderBlob;
+	IDxcBlob* pixelShaderBlob;
 
 	ID3D12Resource* vertexResource = nullptr;
 	//頂点バッファビューを作成する
@@ -80,7 +96,6 @@ private: // メンバ変数
 	std::unique_ptr<FogEffect>fog_;
 
 	Vector4 RGBa = {1.0f,1.0f,1.0f,1.0f};
-
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -178,6 +193,7 @@ public:
 	uint32_t GetBufferWidth()const{ return bufferWidth_; }
 	uint32_t GetBufferHeight()const{ return bufferHeight_; }
 
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetGraphicsPSODesc()const { return graphicsPipelineStateDesc; }
 
 	ID3D12DescriptorHeap* GetRtvDescriptorHeap()const{ return rtvDescriptorHeap; }
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap()const{ return dsvDescriptorHeap; }
@@ -185,6 +201,10 @@ public:
 	uint32_t GetDescriptorSizeSRV()const{ return descriptorSizeSRV; }
 	uint32_t GetDescriptorSizeRTV()const{ return descriptorSizeRTV; }
 	uint32_t GetDescriptorSizeDSV()const{ return descriptorSizeDSV; }
+
+	ID3D12RootSignature* GetRootSignature()const{ return rootSignature; }
+
+	ID3D12PipelineState* GetPipelineState()const{ return graphicsPipelineState; }
 
 	ViewProjection* GetViewProjection()const{ return viewProjection_.get(); }
 

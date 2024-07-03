@@ -2,7 +2,6 @@
 #include"DirectXCommon.h"
 #include"MyFunc.h"
 #include"imgui.h"
-#include"RootSignatureManager.h"
 
 DirectionalLight::DirectionalLight(){}
 
@@ -11,7 +10,7 @@ DirectionalLight::~DirectionalLight(){}
 void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature();
+	rootSignature_ = dxCommon->GetRootSignature();
 
 	CreateBuffer();
 	Map();

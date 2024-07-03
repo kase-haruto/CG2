@@ -3,9 +3,7 @@
 #include<fstream>
 #include<sstream>
 #include<cassert>
-#include<format>
-#include<wrl.h>
-#include"ConvertString.h"
+
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
 	Matrix4x4 result = {
@@ -216,69 +214,4 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 		}
 	}
 	return materialData;
-}
-
-IDxcBlob* CompileShader(
-	const std::wstring& filePath,
-	const wchar_t* profile,
-	IDxcUtils* dxcUtils,
-	IDxcCompiler3* dxcCompiler,
-	IDxcIncludeHandler* includeHandler){
-
-	HRESULT hr;
-
-	// シェーダコンパイルの開始をログ出力
-	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
-
-	// HLSLファイルの読み込み
-	Microsoft::WRL::ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
-	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
-	assert(SUCCEEDED(hr));  // ファイルが読めない場合は停止
-
-	// シェーダソースバッファの設定
-	DxcBuffer shaderSourceBuffer;
-	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
-	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
-	shaderSourceBuffer.Encoding = DXC_CP_UTF8;  // UTF8エンコーディング
-
-	// コンパイル引数の設定
-	LPCWSTR arguments[] = {
-		filePath.c_str(),      // コンパイル対象のHLSLファイル名
-		L"-E", L"main",        // エントリーポイントの指定
-		L"-T", profile,        // シェーダプロファイルの設定
-		L"-Zi", L"-Qembed_debug", // デバッグ用情報の埋め込み
-		L"-Od",               // 最適化を外す
-		L"-Zpr",              // メモリレイアウトは行優先
-	};
-
-	// シェーダのコンパイル
-	Microsoft::WRL::ComPtr<IDxcResult> shaderResult = nullptr;
-	hr = dxcCompiler->Compile(
-		&shaderSourceBuffer,  // 読み込んだHLSLファイル
-		arguments,            // コンパイルオプション
-		_countof(arguments),  // コンパイルオプションの数
-		includeHandler,       // インクルードハンドラー
-		IID_PPV_ARGS(&shaderResult) // コンパイル結果
-	);
-	assert(SUCCEEDED(hr));  // コンパイルエラー以外の致命的エラーが発生した場合は停止
-
-	// コンパイルエラーの確認
-	Microsoft::WRL::ComPtr<IDxcBlobUtf8> shaderError = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
-
-	if (SUCCEEDED(hr) && shaderError != nullptr && shaderError->GetStringLength() != 0){
-		Log(shaderError->GetStringPointer());
-		assert(false);  // エラーがあった場合は停止
-	}
-
-	// コンパイル結果から実行用のバイナリを取得
-	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
-	assert(SUCCEEDED(hr));
-
-	// コンパイル成功のログを出力
-	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
-
-	// 実行用のバイナリを返却
-	return shaderBlob;
 }
