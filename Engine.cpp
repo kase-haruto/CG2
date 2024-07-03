@@ -1,10 +1,15 @@
-﻿#include "System.h"
+﻿#include "Engine.h"
 
-System::System(){}
+Engine::Engine(){}
 
-System::~System(){}
+Engine::~Engine(){}
 
-void System::Initialize(int32_t clientWidth, int32_t clientHeight){
+Engine* Engine::GetInstance(){
+	static Engine instance;
+	return& instance;
+}
+
+void Engine::Initialize(int32_t clientWidth, int32_t clientHeight){
 	winApp_->GetInstance();
 	dxCommon_->GetInstance();
 	dxCommon_->Initialize(winApp_, 1280, 720);
@@ -16,7 +21,7 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 
 }
 
-void System::Finalize(){
+void Engine::Finalize(){
 	imguiManager_->Finalize();
 	imguiManager_ = nullptr;
 	dxCommon_->Finalize();
@@ -26,5 +31,5 @@ void System::Finalize(){
 	winApp_->TerminateGameWindow();
 }
 
-int System::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
+int Engine::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
 

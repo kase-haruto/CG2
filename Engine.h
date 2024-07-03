@@ -9,15 +9,24 @@
 
 #include<stdint.h>
 
-class System{
+class Engine final{
 public:
-	System();
-	~System();
+	static Engine* GetInstance();
+
+	
 
 	void Initialize(int32_t clientWidth,int32_t clientHeight);
 	void Finalize();
 
 	int ProcessMessage();
+
+private:
+	Engine();
+	~Engine();
+	//コピーコンストラクタの禁止
+	Engine(const Engine&) = delete;
+	Engine& operator=(const Engine&) = delete;
+
 
 private:
 	WinApp* winApp_;

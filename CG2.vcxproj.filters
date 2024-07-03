@@ -49,9 +49,6 @@
     <Filter Include="MyManager\ImGuiManager">
       <UniqueIdentifier>{29f93c30-b7d3-4250-b719-76b1258b8546}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyManager\TextureManager">
-      <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX\FogEffect">
       <UniqueIdentifier>{43cb6fe8-f889-4669-94e2-4beb35684e40}</UniqueIdentifier>
     </Filter>
@@ -76,8 +73,11 @@
     <Filter Include="Game\Model">
       <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System\MySystem">
-      <UniqueIdentifier>{45b68573-a478-4ced-8933-9be6c8282212}</UniqueIdentifier>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{525aa057-75c9-40d7-90d9-c8131d5c0d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\TextureManager">
+      <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +133,7 @@
       <Filter>MyManager\ImGuiManager</Filter>
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
-      <Filter>MyManager\TextureManager</Filter>
+      <Filter>Texture\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="FogEffect.cpp">
       <Filter>DirectX\FogEffect</Filter>
@@ -150,8 +150,8 @@
     <ClCompile Include="Model.cpp">
       <Filter>Game\Model</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>System\MySystem</Filter>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +210,7 @@
       <Filter>MyManager\ImGuiManager</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>MyManager\TextureManager</Filter>
+      <Filter>Texture\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Math</Filter>
@@ -245,8 +245,8 @@
     <ClInclude Include="Model.h">
       <Filter>Game\Model</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>System\MySystem</Filter>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
