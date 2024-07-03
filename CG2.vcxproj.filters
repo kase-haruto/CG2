@@ -76,6 +76,9 @@
     <Filter Include="Game\Model">
       <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\RootSignature">
+      <UniqueIdentifier>{4e0be377-e205-425d-a1e6-1a8a63498207}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Game\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignatureManager.cpp">
+      <Filter>DirectX\RootSignature</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Game\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignatureManager.h">
+      <Filter>DirectX\RootSignature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,8 @@
 #include"Sprite.h"
 #include"DirectionalLight.h"
 #include"Model.h"
+#include"RootSignatureManager.h"
+#include"Pipeline.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//comの初期化
@@ -18,7 +20,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	MSG msg {};
 	DirectXCommon* dxCommon = dxCommon->GetInstance();
 	dxCommon->Initialize(win, 1280, 720);
-	dxCommon->Pipeline();
+	RootSignatureManager::GetInstance()->Initialize(dxCommon);	
+	
+	std::unique_ptr<Pipeline> pipeline = std::make_unique<Pipeline>();
+	pipeline->Initialize(dxCommon);
+	pipeline->CreatePSO();
 
 	Sprite* sprite = new Sprite(dxCommon);
 	sprite->Initialize();
@@ -27,7 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	light->Initialize(dxCommon);
 
 	std::unique_ptr<Model>model = std::make_unique<Model>();
-	model->Initialize(dxCommon);
+	model->Initialize(dxCommon,pipeline->GetPipelineState());
 
 #pragma region 汎用機能初期化
 
@@ -41,8 +47,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice(), imguiManager);
-	TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
-	TextureManager::GetInstance()->LoadTexture("./Resources/monsterBall.png");
 	//テクスチャの転送
 	TextureManager::GetInstance()->TransferTexture();
 

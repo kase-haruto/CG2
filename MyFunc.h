@@ -8,9 +8,16 @@
 #include"VertexData.h"
 #include"Material.h"
 
+
+#include<chrono>
+#include<cstdlib>
 #include<d3d12.h>
+#include<dxgi1_6.h>
+#include<dxcapi.h>
 #include<stdint.h>
 #include<string>
+
+#pragma comment(lib,"dxcompiler.lib")
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
@@ -35,3 +42,14 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+IDxcBlob* CompileShader(
+	//CompilerするShaderファイルへのパス
+	const std::wstring& filePath,
+	//Compilerに使用するProfile
+	const wchar_t* profile,
+	//初期化で生成したものを3つ
+	IDxcUtils* dxcUtils,
+	IDxcCompiler3* dxcompiler,
+	IDxcIncludeHandler* includeHandler);
+
