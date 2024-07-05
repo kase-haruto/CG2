@@ -73,11 +73,20 @@
     <Filter Include="Light\DirectionalLight">
       <UniqueIdentifier>{8542c5e3-178b-4c95-bdbd-9b85573a5d06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Model">
-      <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System\MySystem">
       <UniqueIdentifier>{45b68573-a478-4ced-8933-9be6c8282212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object">
+      <UniqueIdentifier>{880d40c9-15f2-4405-b8f4-55626285e73d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object\Model">
+      <UniqueIdentifier>{99ae7611-8fad-452d-8aff-c9b84f941606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object\Sphere">
+      <UniqueIdentifier>{7e724ba4-ede8-4c4d-8e9b-bba33b91f8e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object\Triangle">
+      <UniqueIdentifier>{2614efa1-2d53-4680-b13c-04475787f742}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,10 +157,16 @@
       <Filter>Light\DirectionalLight</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Game\Model</Filter>
+      <Filter>Game\Object\Model</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
       <Filter>System\MySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Game\Object\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Game\Object\Triangle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,10 +258,16 @@
       <Filter>MyStruct</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Game\Model</Filter>
+      <Filter>Game\Object\Model</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
       <Filter>System\MySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Game\Object\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Game\Object\Triangle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

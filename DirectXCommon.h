@@ -8,13 +8,9 @@
 #include "WinApp.h"
 #include<dxcapi.h>
 #include"TriangleRender.h"
-#include"Transform.h"
 #include"Matrix4x4.h"
 #include"ViewProjection.h"
-#include"VertexData.h"
-#include"TransformationMatrix.h"
-#include"Material.h"
-#include"ModelData.h"
+
 class ImGuiManager;
 class FogEffect;
 
@@ -64,25 +60,12 @@ private: // メンバ変数
 
 	IDxcBlob* vertexShaderBlob;
 	IDxcBlob* pixelShaderBlob;
-
-	ID3D12Resource* vertexResource = nullptr;
-	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
 	//シザー矩形
 	D3D12_RECT scissorRect{};
 
-	ID3D12Resource* materialResource;
-	Material* materialData = nullptr;
-
-	TransformationMatrix* matrixData_ = nullptr;
-	ID3D12Resource* wvpResource;
-	ID3D12Resource* indexResource = nullptr;
-	D3D12_INDEX_BUFFER_VIEW indexBufferView {};
-
-	Transform transform;
-	ModelData modelData;
 
 	uint32_t descriptorSizeSRV;
 	uint32_t descriptorSizeRTV;
@@ -95,7 +78,6 @@ private: // メンバ変数
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
 
-	Vector4 RGBa = {1.0f,1.0f,1.0f,1.0f};
 public:
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -125,11 +107,6 @@ public:
 	void PostDraw();
 	
 	/// <summary>
-	/// レンダーターゲットのクリア
-	/// </summary>
-	void ClearRenderTarget();
-	
-	/// <summary>
 	/// viewPortとscissorのセット
 	/// </summary>
 	/// <param name="width"></param>
@@ -147,22 +124,6 @@ public:
 	/// 深度バッファ生成
 	/// </summary>
 	void CreateDepthBuffer();
-
-	/// <summary>
-	/// 三角形の描画
-	/// </summary>
-	void UpdatePolygon();
-
-	/// <summary>
-	/// 三角形の描画
-	/// </summary>
-	void DrawPolygon();
-
-	/// <summary>
-	/// 球体の描画
-	/// </summary>
-	void DrawSphere();
-
 
 	/// <summary>
 	/// ディスクリプタヒープの生成
@@ -261,18 +222,6 @@ private: // メンバ関数
 		IDxcCompiler3* dxcompiler,
 		IDxcIncludeHandler* includeHandler
 	);
-
-	
-
-	/// <summary>
-	/// vertexBufferViewの作成
-	/// </summary>
-	void CreateVertexBufferView();
-
-	/// <summary>
-	/// Resourceにデータを書き込む
-	/// </summary>
-	void UploadVertexData();
 
 	//=============================================
 	//		POS

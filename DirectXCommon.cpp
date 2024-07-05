@@ -56,10 +56,6 @@ void DirectXCommon::Initialize(
 
 	fog_ = std::make_unique<FogEffect>(this);
 
-
-	//三角形のtransform変数を作る
-	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f,},{0.0f,0.0f,0.0f}};
-
 	viewProjection_ = std::make_unique<ViewProjection>(this);
 	//viewProjection_->Initialize();
 
@@ -389,163 +385,6 @@ IDxcBlob* DirectXCommon::CompileShader(
 	return shaderBlob;
 }
 
-void DirectXCommon::CreateVertexBufferView(){
-	////リソースの先頭のアドレスから使う
-	//vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	////使用するリソースのサイズは頂点3つ分のサイズ
-	////vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
-	//vertexBufferView.SizeInBytes = sizeof(VertexData) * 1536;// 16 * 16 * 6;
-	////1頂点当たりのサイズ
-	//vertexBufferView.StrideInBytes = sizeof(VertexData);
-
-	//モデル用
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	//使用するリソースのサイズ
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
-	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
-}
-
-void DirectXCommon::UploadVertexData(){
-	VertexData* vertexData = nullptr;
-	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr,
-						reinterpret_cast< void** >(&vertexData));
-	//モデル用
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
-
-	////左下
-	//vertexData[0].position = {-0.5f,-0.5f,0.0f,1.0f};
-	//vertexData[0].texcoord = {0.0f,1.0f};
-	////上
-	//vertexData[1].position = {0.0f,0.5f,0.0f,1.0f};
-	//vertexData[1].texcoord = {0.5f,0.0f};
-	////右下
-	//vertexData[2].position = {0.5f,-0.5f,0.0f,1.0f};
-	//vertexData[2].texcoord = {1.0f,1.0f};
-
-	////左下２
-	//vertexData[3].position = {-0.5f,-0.5f,0.5f,1.0f};
-	//vertexData[3].texcoord = {0.0f,1.0f};
-	////上２
-	//vertexData[4].position = {0.0f,0.0f,0.0f,1.0f};
-	//vertexData[4].texcoord = {0.5f,0.0f};
-	////右下２
-	//vertexData[5].position = {0.5f,-0.5f,-0.5f,1.0f};
-	//vertexData[5].texcoord = {1.0f,1.0f};
-
-
-	//// 分割数
-	//const uint32_t kSubdivision = 16; // 任意の適切な値を設定
-	//// 軽度分割1つ分の角度
-	//const float kLonEvery = 2 * XM_PI / kSubdivision;
-	//// 緯度分割1つ分の角度
-	//const float kLatEvery = XM_PI / kSubdivision;
-
-	//// 緯度の方向に分割 -n/2 ~ n/2
-	//for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
-	//	float lat = -XM_PI / 2.0f + kLatEvery * latIndex;
-	//	// 経度の方向に分割 0~2π
-	//	for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
-	//		uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
-	//		float lon = lonIndex * kLonEvery;
-
-	//		//uv座標の計算
-	//		float u0 = float(lonIndex) / float(kSubdivision);
-	//		float u1 = float(lonIndex + 1) / float(kSubdivision);
-	//		float v0 = 1.0f - float(latIndex) / float(kSubdivision);
-	//		float v1 = 1.0f - float(latIndex + 1) / float(kSubdivision);
-
-	//		//===========================================================
-	//		//	三角形二枚重ねて面を作る
-	//		//===========================================================
-
-	//		//-----------------------------------------------------------
-	//		//1枚目-------------------------------------------------------
-
-	//		// a
-	//		vertexData[start].position.x = std::cos(lat) * std::cos(lon);
-	//		vertexData[start].position.y = std::sin(lat);
-	//		vertexData[start].position.z = std::cos(lat) * std::sin(lon);
-	//		vertexData[start].position.w = 1.0f;
-	//		vertexData[start].texcoord = {u0, v0};
-	//		vertexData[start].normal.x = vertexData[start].position.x;
-	//		vertexData[start].normal.y = vertexData[start].position.y;
-	//		vertexData[start].normal.z = vertexData[start].position.z;
-
-	//		// b
-	//		vertexData[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
-	//		vertexData[start + 1].position.y = std::sin(lat + kLatEvery);
-	//		vertexData[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
-	//		vertexData[start + 1].position.w = 1.0f;
-	//		vertexData[start + 1].texcoord = {u0, v1};
-	//		vertexData[start + 1].normal.x = vertexData[start + 1].position.x;
-	//		vertexData[start + 1].normal.y = vertexData[start + 1].position.y;
-	//		vertexData[start + 1].normal.z = vertexData[start + 1].position.z;
-
-	//		// c
-	//		vertexData[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
-	//		vertexData[start + 2].position.y = std::sin(lat);
-	//		vertexData[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
-	//		vertexData[start + 2].position.w = 1.0f;
-	//		vertexData[start + 2].texcoord = {u1, v0};
-	//		vertexData[start + 2].normal.x = vertexData[start + 2].position.x;
-	//		vertexData[start + 2].normal.y = vertexData[start + 2].position.y;
-	//		vertexData[start + 2].normal.z = vertexData[start + 2].position.z;
-
-	//		//-----------------------------------------------------------
-
-
-	//		//-----------------------------------------------------------
-	//		//2枚目-------------------------------------------------------
-
-	//		// c2
-	//		vertexData[start + 3].position = vertexData[start + 2].position;
-	//		vertexData[start + 3].texcoord = {u1, v0};
-	//		vertexData[start + 3].normal.x = vertexData[start + 3].position.x;
-	//		vertexData[start + 3].normal.y = vertexData[start + 3].position.y;
-	//		vertexData[start + 3].normal.z = vertexData[start + 3].position.z;
-
-	//		// b2
-	//		vertexData[start + 4].position = vertexData[start + 1].position;
-	//		vertexData[start + 4].texcoord = {u0, v1};
-	//		vertexData[start + 4].normal.x = vertexData[start + 4].position.x;
-	//		vertexData[start + 4].normal.y = vertexData[start + 4].position.y;
-	//		vertexData[start + 4].normal.z = vertexData[start + 4].position.z;
-
-	//		// d
-	//		vertexData[start + 5].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
-	//		vertexData[start + 5].position.y = std::sin(lat + kLatEvery);
-	//		vertexData[start + 5].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
-	//		vertexData[start + 5].position.w = 1.0f;
-	//		vertexData[start + 5].texcoord = {u1, v1};
-	//		vertexData[start + 5].normal.x = vertexData[start + 5].position.x;
-	//		vertexData[start + 5].normal.y = vertexData[start + 5].position.y;
-	//		vertexData[start + 5].normal.z = vertexData[start + 5].position.z;
-
-	//		//------------------------------------------------------------
-
-	//		//// 緯度の方向に分割 -n/2 ~ n/2
-	//		//for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
-	//		//	// 経度の方向に分割 0~2π
-	//		//	for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
-	//		//		uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
-
-	//		//		indexData[start] = start;
-	//		//		indexData[start + 1] = start + 1;
-	//		//		indexData[start + 2] = start + 2;
-	//		//		indexData[start + 3] = start + 1;
-	//		//		indexData[start + 4] = start + 3;
-	//		//		indexData[start + 5] = start + 2;
-	//		//	}
-	//		//}
-	//	}
-	//}
-	
-
-}
-
-
 void DirectXCommon::CreateRootSignature(){
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature {};
 	descriptionRootSignature.Flags =
@@ -661,7 +500,7 @@ void DirectXCommon::Pipeline(){
 	//RasterizeState
 	D3D12_RASTERIZER_DESC rasterizeDesc {};
 	//表面を(時計回り)表示しない
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
 	//三角形の中を塗りつぶす
 	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
@@ -711,37 +550,8 @@ void DirectXCommon::Pipeline(){
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 											 IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
-
-	modelData = LoadObjFile("Resources", "plane.obj");
-	vertexResource = CreateBufferResource(device, sizeof(VertexData) * modelData.vertices.size());
-
-	materialResource = CreateBufferResource(device, sizeof(Material));
-
-
-	//マテリアルにデータを書き込む
-	//書き込むためのアドレスを取得
-	materialResource->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
-	//今回はあかをかきこむ
-	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = false;
-	materialData->uvTransform = Matrix4x4::MakeIdentity();
-
-	//WVP用のリソースを作る。
-	wvpResource = CreateBufferResource(device, sizeof(TransformationMatrix));
-	//データを書き込む
-	//書き込むためのアドレスを取得
-	wvpResource->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
-	//単位行列を書き込んでおく
-	matrixData_->WVP = Matrix4x4::MakeIdentity();
-
-
-	CreateVertexBufferView();
-	UploadVertexData();
 }
 
-void DirectXCommon::ClearRenderTarget(){
-
-}
 
 void DirectXCommon::PreDraw(){
 	//rtvの設定
@@ -859,78 +669,6 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 	scissorRect.bottom = height;
 }
 
-void DirectXCommon::UpdatePolygon(){
-
-#ifdef _DEBUG
-	ImGui::Begin("shpere");
-	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
-	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.01f);
-	ImGui::ColorEdit4("color", &RGBa.x);
-	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
-	bool enableLighting = (materialData->enableLighting != 0);
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	materialData->enableLighting = enableLighting ? 1 : 0;
-	ImGui::End();
-#endif // _DEBUG
-
-	materialData->color = Vector4 (RGBa.x,RGBa.y,RGBa.z,RGBa.w);
-
-	//transform.rotate.y += 0.03f;
-
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
-											 transform.rotate,
-											 transform.translate
-	);
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-	matrixData_->world = worldMatrix;
-	matrixData_->WVP = worldViewProjectionMatrix;
-}
-
-void DirectXCommon::DrawPolygon(){
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &scissorRect);
-	//rootSignatureを設定psoに設定しているけど別途設定が必要
-	commandList->SetGraphicsRootSignature(rootSignature);
-	commandList->SetPipelineState(graphicsPipelineState);
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//マテリアルCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
-	//フォグ用のCBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。4はrootParamenter[4]
-	commandList->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandle());
-	//描画　3頂点で1つのインスタンス
-	commandList->DrawInstanced(6, 1, 0, 0);
-}
-
-void DirectXCommon::DrawSphere(){
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &scissorRect);
-	commandList->SetGraphicsRootSignature(rootSignature);
-	commandList->SetPipelineState(graphicsPipelineState);
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//マテリアルCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
-	//フォグ用のCBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(2, fog_->GetConstantBuffer()->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList->SetGraphicsRootDescriptorTable(3,
-												useMonsterBall ?
-												TextureManager::GetInstance()->GetTextureSrvHandle2() :
-												TextureManager::GetInstance()->GetTextureSrvHandle());
-	//描画　3頂点で1つのインスタンス
-	//commandList->DrawInstanced(1536, 1, 0, 0);
-	//モデル
-	commandList->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
-}
 
 void DirectXCommon::Finalize(){
 
@@ -951,7 +689,6 @@ void DirectXCommon::Finalize(){
 #endif // _DEBUG
 	CloseWindow(winApp_->GetHWND());
 
-	vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();
 	if (errorBlob != nullptr){
@@ -965,8 +702,6 @@ void DirectXCommon::Finalize(){
 	dxcCompiler->Release();
 	dxcUtils->Release();
 
-	materialResource->Release();
-	wvpResource->Release();
 	dsvDescriptorHeap->Release();
 	depthStencilResource->Release();
 

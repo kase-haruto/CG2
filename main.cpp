@@ -9,6 +9,8 @@
 #include"Sprite.h"
 #include"DirectionalLight.h"
 #include"Model.h"
+#include"Sphere.h"
+#include"Triangle.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//comの初期化
@@ -46,14 +48,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//テクスチャの転送
 	TextureManager::GetInstance()->TransferTexture();
 
+	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
+	sphere->Initialize(dxCommon);
+
+	std::unique_ptr<Triangle>tri = std::make_unique<Triangle>();
+	tri->Initialize(dxCommon);
+
 	while (win->ProcessMessage() == 0){
 		//フレームの開始
 		dxCommon->PreDraw();
 		// ImGui受付開始
 		imguiManager->Begin();
+		//ライトの更新
 		light->Update();
 		//モデルの更新
 		model->Update();
+		//球体の更新
+		sphere->Update();
+		//三角形の更新
+		tri->UpdateImGui("triangle");
+		tri->Update();
+
 		//スプライト
 		//sprite->Update();
 
@@ -64,6 +79,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		light->Render();
 		//モデルの描画
 		model->Draw();
+		//球体の描画
+		sphere->Draw();
+		tri->Draw();
+
 		//sprite描画
 		//sprite->Draw();
 

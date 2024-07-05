@@ -81,7 +81,7 @@ void TextureManager::TransferTexture(){
 	TextureManager::UploadTextureData(textureResource.Get(), mipImages);
 
 	//2枚目のtextureを読んで転送する
-	DirectX::ScratchImage mipImages2 = LoadTexture("./Resources/monsterBall.png");
+	DirectX::ScratchImage mipImages2 = LoadTexture("./Resources/checkerBoard.png");
 	const DirectX::TexMetadata& metadata2 = mipImages2.GetMetadata();
 	textureResource2 = CreateTextureResource(dxCommon_->GetDevice(), metadata2);
 	UploadTextureData(textureResource2.Get(), mipImages2);

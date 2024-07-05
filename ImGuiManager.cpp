@@ -53,6 +53,11 @@ void ImGuiManager::Begin(){
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	//でスクリプタヒープの配列をセットする
+	ID3D12DescriptorHeap* descriptorHeaps[] = {srvHeap_.Get()};
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);
 #endif // _DEBUG
 }
 
@@ -67,9 +72,6 @@ void ImGuiManager::End(){
 void ImGuiManager::Draw(){
 #ifdef _DEBUG
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-	//でスクリプタヒープの配列をセットする
-	ID3D12DescriptorHeap* descriptorHeaps[] = {srvHeap_.Get()};
-	commandList->SetDescriptorHeaps(1, descriptorHeaps);	
 	//描画コマンドを発行
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 
