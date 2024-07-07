@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui_widgets.cpp" />
     <ClCompile Include="FogEffect.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="IScene.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -122,6 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="ViewProjection.cpp" />
@@ -141,6 +143,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imstb_truetype.h" />
     <ClInclude Include="FogEffect.h" />
     <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="IScene.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4x4.h" />
@@ -151,6 +154,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformationMatrix.h" />

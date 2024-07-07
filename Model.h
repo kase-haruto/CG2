@@ -64,12 +64,13 @@ public:
 	/// マップする
 	/// </summary>
 	void Map();
-
 	/// <summary>
 	/// モデルデータの取得
 	/// </summary>
 	/// <returns></returns>
 	ModelData GetModelData()const { return modelData; }
+
+	void SetPos(const Vector3& pos){ transform.translate = pos; }
 
 private:
 	/// <summary>

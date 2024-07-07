@@ -88,6 +88,18 @@
     <Filter Include="Game\Object\Triangle">
       <UniqueIdentifier>{2614efa1-2d53-4680-b13c-04475787f742}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{76aeacc3-ec09-4cd7-bdfd-9782d6d9681f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\IScene">
+      <UniqueIdentifier>{44b22f11-8ffa-42fc-87ba-6a0597f5fdfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\GameScene">
+      <UniqueIdentifier>{96dc5a79-5be8-401a-a75f-32ca43b70ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TestScene">
+      <UniqueIdentifier>{f61e5add-853c-40c6-befc-52b2e2a3a219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -167,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="Triangle.cpp">
       <Filter>Game\Object\Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="IScene.cpp">
+      <Filter>Scene\IScene</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Scene\TestScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>Game\Object\Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="IScene.h">
+      <Filter>Scene\IScene</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Scene\TestScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,15 +2,10 @@
 #include"WinApp.h"
 #include"DirectXCommon.h"
 #include"TextureManager.h"
-#include"FogEffect.h"
 #include"ViewProjection.h"
 #include"ImGuiManager.h"
 #include"imgui.h"
-#include"Sprite.h"
-#include"DirectionalLight.h"
-#include"Model.h"
-#include"Sphere.h"
-#include"Triangle.h"
+#include"TestScene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//comの初期化
@@ -21,15 +16,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	DirectXCommon* dxCommon = dxCommon->GetInstance();
 	dxCommon->Initialize(win, 1280, 720);
 	dxCommon->Pipeline();
-
-	Sprite* sprite = new Sprite(dxCommon);
-	sprite->Initialize();
-
-	std::unique_ptr<DirectionalLight> light= std::make_unique<DirectionalLight>();
-	light->Initialize(dxCommon);
-
-	std::unique_ptr<Model>model = std::make_unique<Model>();
-	model->Initialize(dxCommon);
 
 #pragma region 汎用機能初期化
 
@@ -48,47 +34,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//テクスチャの転送
 	TextureManager::GetInstance()->TransferTexture();
 
-	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
-	sphere->Initialize(dxCommon);
-
-	std::unique_ptr<Triangle>tri = std::make_unique<Triangle>();
-	tri->Initialize(dxCommon);
+	//シーンの初期化
+	std::unique_ptr<TestScene> scene = std::make_unique<TestScene>();
+	scene->Initialize();
 
 	while (win->ProcessMessage() == 0){
 		//フレームの開始
 		dxCommon->PreDraw();
 		// ImGui受付開始
 		imguiManager->Begin();
-		//ライトの更新
-		light->Update();
-		//モデルの更新
-		model->Update();
-		//球体の更新
-		sphere->Update();
-		//三角形の更新
-		tri->UpdateImGui("triangle");
-		tri->Update();
-
-		//スプライト
-		//sprite->Update();
 
 
+		scene->Update();
 
+		scene->Draw();
 
-		//ライトの処理
-		light->Render();
-		//モデルの描画
-		model->Draw();
-		//球体の描画
-		sphere->Draw();
-		tri->Draw();
-
-		//sprite描画
-		//sprite->Draw();
 
 		//=================================
 		//フレーム終了時の処理
-		
 		//imguiのコマンドを積む
 		imguiManager->End();
 		//ImGui描画
@@ -100,7 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	// ImGui解放
 	imguiManager->Finalize();
 	dxCommon->Finalize();
-	delete win,sprite;
+	delete win;
 	CoUninitialize();
 	return 0;
 }
