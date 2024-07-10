@@ -9,12 +9,12 @@
 Triangle::Triangle(){}
 Triangle::~Triangle(){}
 
-void Triangle::Initialize(DirectXCommon* dxCommon){
+void Triangle::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
 	rootSignature_ = dxCommon->GetRootSignature();
 	pipelineState_ = dxCommon->GetPipelineState();
-	viewProjection = dxCommon->GetViewProjection();
+	viewProjection_ = viewProjection;
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -125,7 +125,7 @@ void Triangle::MatrixInitialize(){
 											 transform.translate
 	);
 
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection->GetViewProjection());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;
 }

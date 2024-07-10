@@ -23,7 +23,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -81,6 +81,6 @@ private:
 	Material* materialData;
 	TransformationMatrix* matrixData;
 
-	ViewProjection* viewProjection;
+	ViewProjection* viewProjection_;
 };
 

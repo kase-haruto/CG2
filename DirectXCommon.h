@@ -9,7 +9,6 @@
 #include<dxcapi.h>
 #include"TriangleRender.h"
 #include"Matrix4x4.h"
-#include"ViewProjection.h"
 
 class ImGuiManager;
 class FogEffect;
@@ -73,7 +72,6 @@ private: // メンバ変数
 
 	bool useMonsterBall = true;
 
-	std::unique_ptr<ViewProjection> viewProjection_;
 
 	//-------------
 	std::unique_ptr<FogEffect>fog_;
@@ -166,8 +164,6 @@ public:
 	ID3D12RootSignature* GetRootSignature()const{ return rootSignature; }
 
 	ID3D12PipelineState* GetPipelineState()const{ return graphicsPipelineState; }
-
-	ViewProjection* GetViewProjection()const{ return viewProjection_.get(); }
 
 private: // メンバ関数
 	DirectXCommon() = default;

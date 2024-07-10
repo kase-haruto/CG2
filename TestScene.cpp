@@ -11,6 +11,11 @@ void TestScene::Initialize(){
 	dxCommon_ = DirectXCommon::GetInstance();
 
 	///=========================
+	/// カメラ関連
+	///=========================
+	viewProjection_ = std::make_unique<ViewProjection>(dxCommon_);
+
+	///=========================
 	/// オブジェクト関連
 	///=========================
     //スプライト 
@@ -23,16 +28,16 @@ void TestScene::Initialize(){
 
 	//モデル
 	model_ = std::make_unique<Model>();
-	model_->Initialize(dxCommon_);
+	model_->Initialize(dxCommon_,viewProjection_.get());
 	model_->SetPos({-1.5f,0.0f,0.0f});
 
 	//球体
 	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize(dxCommon_);
+	sphere_->Initialize(dxCommon_,viewProjection_.get());
 
 	//三角
 	triangle_ = std::make_unique<Triangle>();
-	triangle_->Initialize(dxCommon_);
+	triangle_->Initialize(dxCommon_,viewProjection_.get());
 }
 
 void TestScene::Update(){

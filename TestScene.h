@@ -8,6 +8,7 @@
 #include"Model.h"
 #include"Sphere.h"
 #include"Triangle.h"
+#include"ViewProjection.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -49,6 +50,11 @@ private:
     ///=========================
     DirectXCommon* dxCommon_;
 
+    ///=========================
+    /// カメラ関連
+    ///=========================
+    std::unique_ptr<ViewProjection> viewProjection_;
+    
     ///=========================
     /// オブジェクト関連
     ///=========================

@@ -12,12 +12,12 @@ Model::Model(){}
 
 Model::~Model(){}
 
-void Model::Initialize(DirectXCommon* dxCommon){
+void Model::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
 	rootSignature_ = dxCommon->GetRootSignature();
 	pipelineState_ = dxCommon->GetPipelineState();
-	viewProjection = dxCommon->GetViewProjection();
+	viewProjection_ = viewProjection;
 
 	//モデルの読み込み
 	modelData = LoadObjFile("Resources", "teapot.obj");
@@ -50,7 +50,7 @@ void Model::Update(){
 											 transform.translate
 	);
 
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection->GetViewProjection());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;
 }

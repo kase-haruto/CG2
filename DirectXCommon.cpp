@@ -56,9 +56,6 @@ void DirectXCommon::Initialize(
 
 	fog_ = std::make_unique<FogEffect>(this);
 
-	viewProjection_ = std::make_unique<ViewProjection>(this);
-	//viewProjection_->Initialize();
-
 	// ディスクリプタサイズの取得
 	descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
