@@ -177,6 +177,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 				// 右手座標系から左手座標系に変換（X軸を反転）
 				position.x *= -1.0f;
 				normal.x *= -1.0f;
+				texcoord.x *= -1.0f;
 
 				triangle[faceVertex] = {position,texcoord,normal};
 			}

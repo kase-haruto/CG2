@@ -29,7 +29,6 @@ void TestScene::Initialize(){
 	//モデル
 	model_ = std::make_unique<Model>();
 	model_->Initialize(dxCommon_,viewProjection_.get());
-	model_->SetPos({-1.5f,0.0f,0.0f});
 
 	//球体
 	sphere_ = std::make_unique<Sphere>();
@@ -57,10 +56,10 @@ void TestScene::Draw(){
 	light_->Render();
 	//モデルの描画
 	model_->Draw();
-	//球体の描画
-	sphere_->Draw();
-	//三角形の描画
-	triangle_->Draw();
+	////球体の描画
+	//sphere_->Draw();
+	////三角形の描画
+	//triangle_->Draw();
 }
 
 void TestScene::Finalize(){

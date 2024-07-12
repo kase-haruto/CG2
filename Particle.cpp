@@ -1,18 +1,18 @@
-﻿#include "Model.h"
+﻿#include "Particle.h"
 #include"DirectXCommon.h"
 #include"MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
 
 #ifdef _DEBUG
-	#include"imgui.h"
+#include"imgui.h"
 #endif // _DEBUG
 
-Model::Model(){}
+Particle::Particle(){}
 
-Model::~Model(){}
+Particle::~Particle(){}
 
-void Model::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
+void Particle::Initialize(DirectXCommon* dxCommon, ViewProjection* viewProjection){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
 	rootSignature_ = dxCommon->GetRootSignature();
@@ -31,7 +31,7 @@ void Model::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
 	Map();
 }
 
-void Model::Update(){
+void Particle::Update(){
 #ifdef _DEBUG
 	ImGui::Begin("model");
 	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
@@ -55,7 +55,7 @@ void Model::Update(){
 	matrixData->WVP = worldViewProjectionMatrix;
 }
 
-void Model::Draw(){
+void Particle::Draw(){
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList_->SetPipelineState(pipelineState_.Get());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
@@ -66,51 +66,51 @@ void Model::Draw(){
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3,TextureManager::GetInstance()->GetTextureSrvHandle2());
+	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandle2());
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
 
 
-void Model::CreateBuffer(){
+void Particle::CreateBuffer(){
 	CreateVertexBuffer();
 	CreateMaterialBuffer();
 	CreateMatrixBuffer();
 }
 
-void Model::CreateVertexBuffer(){
+void Particle::CreateVertexBuffer(){
 	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
-void Model::CreateMaterialBuffer(){
+void Particle::CreateMaterialBuffer(){
 	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }
 
-void Model::CreateMatrixBuffer(){
+void Particle::CreateMatrixBuffer(){
 	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 }
 
 
-void Model::Map(){
+void Particle::Map(){
 	//リソースにデータを書き込む
 	VertexBufferMap();
 	MaterialBufferMap();
 	MatrixBufferMap();
 }
 
-void Model::VertexBufferMap(){
+void Particle::VertexBufferMap(){
 	VertexData* vertexData = nullptr;
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr,
-						reinterpret_cast< void** >(&vertexData));
+						 reinterpret_cast< void** >(&vertexData));
 	//モデル用
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
 
-void Model::MaterialBufferMap(){
+void Particle::MaterialBufferMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -118,7 +118,7 @@ void Model::MaterialBufferMap(){
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 
-void Model::MatrixBufferMap(){
+void Particle::MatrixBufferMap(){
 	wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData));
 	//単位行列を書き込んでおく
 	matrixData->WVP = Matrix4x4::MakeIdentity();

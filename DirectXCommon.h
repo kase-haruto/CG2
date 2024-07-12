@@ -51,9 +51,14 @@ private: // メンバ変数
 	//PSO関連
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
 	ID3D12PipelineState* graphicsPipelineState = nullptr;
+	
 	ID3DBlob* signatureBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 	ID3D12RootSignature* rootSignature = nullptr;
+
+	Microsoft::WRL::ComPtr<ID3DBlob>instancingSignatureBlob_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob>instancingErrorBlob_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>instancingRootSignature = nullptr;
 
 	D3D12_BLEND_DESC blendDesc{};
 
@@ -223,6 +228,8 @@ private: // メンバ関数
 	//		POS
 
 	void CreateRootSignature();
+
+	void CreateRootSignatureForInstancing();
 	
 };
 

@@ -100,6 +100,9 @@
     <Filter Include="Scene\TestScene">
       <UniqueIdentifier>{f61e5add-853c-40c6-befc-52b2e2a3a219}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Object\Particle">
+      <UniqueIdentifier>{b749c2ba-93c3-4fce-abf3-e1965a77b6e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -185,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="TestScene.cpp">
       <Filter>Scene\TestScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Game\Object\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,6 +299,9 @@
     <ClInclude Include="TestScene.h">
       <Filter>Scene\TestScene</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Game\Object\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl">
@@ -301,9 +310,18 @@
     <FxCompile Include="Object3d.PS.hlsl">
       <Filter>DirectX\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Particle.VS.hlsl">
+      <Filter>DirectX\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Particle.PS.hlsl">
+      <Filter>DirectX\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Object3d.hlsli">
+      <Filter>DirectX\Shaders</Filter>
+    </None>
+    <None Include="Particle.hlsli">
       <Filter>DirectX\Shaders</Filter>
     </None>
   </ItemGroup>
