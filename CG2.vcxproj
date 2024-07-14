@@ -121,6 +121,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="MyFunc.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="RootSignatureManager.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="System.cpp" />
@@ -153,6 +155,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="MyFunc.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="RootSignatureManager.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="System.h" />

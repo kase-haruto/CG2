@@ -103,6 +103,12 @@
     <Filter Include="Game\Object\Particle">
       <UniqueIdentifier>{b749c2ba-93c3-4fce-abf3-e1965a77b6e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\Shaders\ShaderManager">
+      <UniqueIdentifier>{a2f13f7f-531e-485a-b4da-585236029460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Pipeline\SignatureManager">
+      <UniqueIdentifier>{9feb8068-aab8-40b8-9a94-9b97f8def078}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -191,6 +197,12 @@
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>Game\Object\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>DirectX\Shaders\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignatureManager.cpp">
+      <Filter>DirectX\Pipeline\SignatureManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +313,12 @@
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Game\Object\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>DirectX\Shaders\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignatureManager.h">
+      <Filter>DirectX\Pipeline\SignatureManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

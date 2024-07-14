@@ -9,6 +9,7 @@
 #include<dxcapi.h>
 #include"TriangleRender.h"
 #include"Matrix4x4.h"
+#include"ShaderManager.h"
 
 class ImGuiManager;
 class FogEffect;
@@ -55,6 +56,8 @@ private: // メンバ変数
 	ID3DBlob* signatureBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 	ID3D12RootSignature* rootSignature = nullptr;
+
+	ShaderManager* shaderManager = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3DBlob>instancingSignatureBlob_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob>instancingErrorBlob_ = nullptr;
