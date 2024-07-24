@@ -106,9 +106,6 @@
     <Filter Include="DirectX\Shaders\ShaderManager">
       <UniqueIdentifier>{a2f13f7f-531e-485a-b4da-585236029460}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\Pipeline\SignatureManager">
-      <UniqueIdentifier>{9feb8068-aab8-40b8-9a94-9b97f8def078}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -168,9 +165,6 @@
     <ClCompile Include="FogEffect.cpp">
       <Filter>DirectX\FogEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Pipeline.cpp">
-      <Filter>DirectX\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>System\Sprite</Filter>
     </ClCompile>
@@ -201,8 +195,11 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>DirectX\Shaders\ShaderManager</Filter>
     </ClCompile>
-    <ClCompile Include="RootSignatureManager.cpp">
-      <Filter>DirectX\Pipeline\SignatureManager</Filter>
+    <ClCompile Include="PipelineStateManager.cpp">
+      <Filter>DirectX\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineState.cpp">
+      <Filter>DirectX\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +266,6 @@
     <ClInclude Include="FogEffect.h">
       <Filter>DirectX\FogEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Pipeline.h">
-      <Filter>DirectX\Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>System\Sprite</Filter>
     </ClInclude>
@@ -317,8 +311,11 @@
     <ClInclude Include="ShaderManager.h">
       <Filter>DirectX\Shaders\ShaderManager</Filter>
     </ClInclude>
-    <ClInclude Include="RootSignatureManager.h">
-      <Filter>DirectX\Pipeline\SignatureManager</Filter>
+    <ClInclude Include="PipelineStateManager.h">
+      <Filter>DirectX\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>DirectX\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

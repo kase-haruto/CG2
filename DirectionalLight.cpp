@@ -5,12 +5,11 @@
 
 DirectionalLight::DirectionalLight(){}
 
-DirectionalLight::~DirectionalLight(){}
+DirectionalLight::~DirectionalLight(){ resource_.Reset(); rootSignature_.Reset(); }
 
 void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = dxCommon->GetRootSignature();
 
 	CreateBuffer();
 	Map();
@@ -21,16 +20,19 @@ void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 }
 
 void DirectionalLight::Update(){
+	
+}
+
+void DirectionalLight::Render(){
+	assert(rootSignature_);
 	ImGui::Begin("directionalLight");
-	ImGui::SliderFloat3("direction",&data_->direction.x,-1.0f,1.0f);
+	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
 	ImGui::ColorEdit4("color", &color_.x);
 	ImGui::DragFloat("Intensity", &data_->intensity, 0.01f);
 	ImGui::End();
 
 	data_->color = color_;
-}
 
-void DirectionalLight::Render(){
 	// ルートシグネチャをコマンドリストに設定する
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList_->SetGraphicsRootConstantBufferView(4, resource_->GetGPUVirtualAddress());
@@ -43,4 +45,8 @@ void DirectionalLight::CreateBuffer(){
 void DirectionalLight::Map(){
 	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
 	
+}
+
+void DirectionalLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){
+	rootSignature_ = rootSignature;
 }

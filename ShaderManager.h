@@ -9,9 +9,11 @@
 
 using Microsoft::WRL::ComPtr;
 
+
 class ShaderManager{
 public:
     ShaderManager(){}
+    ~ShaderManager(){}
 
     void InitializeDXC();
     IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile);

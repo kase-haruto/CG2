@@ -22,9 +22,7 @@ void TestScene::Initialize(){
 	sprite_ = std::make_unique<Sprite>(dxCommon_);
 	sprite_->Initialize();
 
-	//ライト
-	light_ = std::make_unique<DirectionalLight>();
-	light_->Initialize(dxCommon_);
+	
 
 	//モデル
 	model_ = std::make_unique<Model>();
@@ -40,8 +38,6 @@ void TestScene::Initialize(){
 }
 
 void TestScene::Update(){
-	//ライトの更新
-	light_->Update();
 	//モデルの更新
 	model_->Update();
 	//球体の更新
@@ -52,8 +48,6 @@ void TestScene::Update(){
 }
 
 void TestScene::Draw(){
-	//ライト描画
-	light_->Render();
 	//モデルの描画
 	model_->Draw();
 	////球体の描画

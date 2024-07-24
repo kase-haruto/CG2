@@ -59,7 +59,6 @@ private:
     /// オブジェクト関連
     ///=========================
     std::unique_ptr<Sprite>sprite_;
-    std::unique_ptr<DirectionalLight>light_;
     std::unique_ptr<Model>model_;
     std::unique_ptr<Sphere>sphere_;
     std::unique_ptr<Triangle>triangle_;

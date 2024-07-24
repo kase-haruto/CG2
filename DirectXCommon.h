@@ -42,11 +42,6 @@ private: // メンバ変数
 
 	ID3D12Resource* depthStencilResource;
 	ID3D12DescriptorHeap* dsvDescriptorHeap;
-
-	//三角形の描画について
-	IDxcUtils* dxcUtils = nullptr;
-	IDxcCompiler3* dxcCompiler = nullptr;
-	IDxcIncludeHandler* includeHandler = nullptr;
 	
 
 	//PSO関連
@@ -57,7 +52,8 @@ private: // メンバ変数
 	ID3DBlob* errorBlob = nullptr;
 	ID3D12RootSignature* rootSignature = nullptr;
 
-	ShaderManager* shaderManager = nullptr;
+	//メモリを確保
+	std::unique_ptr<ShaderManager>shaderManager = std::make_unique<ShaderManager>();
 
 	Microsoft::WRL::ComPtr<ID3DBlob>instancingSignatureBlob_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob>instancingErrorBlob_ = nullptr;
@@ -65,8 +61,6 @@ private: // メンバ変数
 
 	D3D12_BLEND_DESC blendDesc{};
 
-	IDxcBlob* vertexShaderBlob;
-	IDxcBlob* pixelShaderBlob;
 	
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
@@ -207,25 +201,6 @@ private: // メンバ関数
 	/// </summary>
 	void CreateFence();
 
-	////---------------------------------------------------////
-	///				三角形関連
-
-	/// <summary>
-	/// DXCの初期化
-	/// </summary>
-	void InitializeDXC();
-
-
-	IDxcBlob* CompileShader(
-		//CompilerするShaderファイルへのパス
-		const std::wstring& filePath,
-		//Compilerに使用するProfile
-		const wchar_t* profile,
-		//初期化で生成したものを3つ
-		IDxcUtils* dxcUtils,
-		IDxcCompiler3* dxcompiler,
-		IDxcIncludeHandler* includeHandler
-	);
 
 	//=============================================
 	//		POS
