@@ -1,8 +1,9 @@
 ﻿#include "Model.h"
-#include"DirectXCommon.h"
 #include"MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
+
+#include"GraphicsGroup.h"
 
 #ifdef _DEBUG
 	#include"imgui.h"
@@ -10,13 +11,19 @@
 
 Model::Model(){}
 
-Model::~Model(){}
+Model::~Model(){ 
+	pipelineState_.Reset();
+	device_.Reset();
+	commandList_.Reset();
+	pipelineState_.Reset();
+	rootSignature_.Reset();
+}
 
-void Model::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = dxCommon->GetRootSignature();
-	pipelineState_ = dxCommon->GetPipelineState();
+void Model::Initialize(ViewProjection* viewProjection){
+	device_ = GraphicsGroup::GetInstance()->GetDevice();
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 	viewProjection_ = viewProjection;
 
 	//モデルの読み込み

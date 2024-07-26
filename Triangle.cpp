@@ -4,16 +4,20 @@
 #include"TextureManager.h"
 #include"imgui.h"
 
+#include"GraphicsGroup.h"
+
 #include<numbers>
 
 Triangle::Triangle(){}
 Triangle::~Triangle(){}
 
-void Triangle::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = dxCommon->GetRootSignature();
-	pipelineState_ = dxCommon->GetPipelineState();
+void Triangle::Initialize(ViewProjection* viewProjection){
+	auto graphics = GraphicsGroup::GetInstance();
+	device_ = graphics->GetDevice();
+	commandList_ = graphics->GetCommandList();
+	rootSignature_ = graphics->GetRootSignature(Object3D);
+	pipelineState_ = graphics->GetPipelineState(Object3D);
+
 	viewProjection_ = viewProjection;
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};

@@ -28,7 +28,13 @@ public:
 	/// システム初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	void Initialize(ID3D12Device* device, ImGuiManager* imgui);
+	void Initialize(ImGuiManager* imgui);
+
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void Finalize();
 
 	/// <summary>
 	/// リソースを作成
@@ -72,7 +78,6 @@ private:
 	static std::vector<std::string>texturePath_;
 
 	//デバイス
-	DirectXCommon* dxCommon_;
 	Microsoft::WRL::ComPtr<ID3D12Device> device_ = nullptr;
 	ImGuiManager* imgui_;
 

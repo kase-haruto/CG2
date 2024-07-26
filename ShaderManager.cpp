@@ -88,31 +88,31 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	return shaderBlob.Detach();
 }
 
-bool ShaderManager::LoadShader(const std::string& name, const std::wstring& vsPath, const std::wstring& psPath){
+bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath){
     ComPtr<IDxcBlob> vertexShader = CompileShader(vsPath, L"vs_6_0");
     ComPtr<IDxcBlob> pixelShader = CompileShader(psPath, L"ps_6_0");
 
-    vertexShaders[name] = vertexShader;
-    pixelShaders[name] = pixelShader;
+    vertexShaders[type] = vertexShader;
+    pixelShaders[type] = pixelShader;
     return true;
 }
 
-const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const std::string& name) const{
-	auto it = vertexShaders.find(name);
+const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const PipelineType& type) const{
+	auto it = vertexShaders.find(type);
 	if (it != vertexShaders.end()){
 		return it->second;
 	}
-	assert(("Vertex shader not found: " + name).c_str());
+	assert("Vertex shader not found: ");
 	static Microsoft::WRL::ComPtr<IDxcBlob> nullShader;
 	return nullShader;
 }
 
-const ComPtr<IDxcBlob>& ShaderManager::GetPixelShader(const std::string& name) const{
-	auto it = pixelShaders.find(name);
+const ComPtr<IDxcBlob>& ShaderManager::GetPixelShader(const PipelineType& type) const{
+	auto it = pixelShaders.find(type);
 	if (it != pixelShaders.end()){
 		return it->second;
 	}
-	assert(("Pixel shader not found: " + name).c_str());
+	assert("Pixel shader not found: ");
 	static Microsoft::WRL::ComPtr<IDxcBlob> nullShader;
 	return nullShader;
 }

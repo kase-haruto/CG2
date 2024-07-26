@@ -5,7 +5,6 @@
 #include <dxgidebug.h>
 #include"Vector4.h"
 #include"TextureManager.h"
-#include"FogEffect.h"
 #include"MyFunc.h"
 #include"cmath"
 #include"imgui.h"
@@ -18,11 +17,6 @@
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
-
-DirectXCommon* DirectXCommon::GetInstance(){
-	static DirectXCommon instance;
-	return &instance;
-}
 
 void DirectXCommon::Initialize(
 	WinApp* win, uint32_t width, uint32_t height){
@@ -54,7 +48,6 @@ void DirectXCommon::Initialize(
 	//フェンスの作成
 	CreateFence();
 
-	fog_ = std::make_unique<FogEffect>(this);
 
 	// ディスクリプタサイズの取得
 	descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -121,9 +114,9 @@ void DirectXCommon::InitializeDXGIDevice(){
 		//やばいエラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		//エラー時に止まる
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		//警告時に止まる
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 		//抑制するメッセージのid
 		D3D12_MESSAGE_ID denyIds[] = {
@@ -161,7 +154,7 @@ void DirectXCommon::InitializeCommand(){
 	assert(SUCCEEDED(hr));
 
 	//コマンドリストを生成する
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr,
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator.Get(), nullptr,
 								   IID_PPV_ARGS(&commandList));
 	//コマンドリストの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -180,16 +173,16 @@ void DirectXCommon::CreateSwapChain(){
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニタに移したら中身を破棄
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast< IDXGISwapChain1** >(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast< IDXGISwapChain1** >(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
 
-ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(ID3D12Device* device,
+ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(ID3D12Device* device,
 														  D3D12_DESCRIPTOR_HEAP_TYPE heapType,
 														  UINT numDescriptors,
 														  bool shaderVisible){
-	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc {};
 	descriptorHeapDesc.Type = heapType;
 	descriptorHeapDesc.NumDescriptors = numDescriptors;
@@ -201,7 +194,7 @@ ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(ID3D12Device* device,
 
 void DirectXCommon::CreateFinalRenderTargets(){
 	//ディスクリプタの生成
-	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+	rtvDescriptorHeap = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 
 	//swapChainからResourceを引っ張ってくる
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
@@ -219,14 +212,14 @@ void DirectXCommon::CreateFinalRenderTargets(){
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
 	//まず1つ目
 	rtvHandles[0] = rtvStartHandle;
-	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
+	device->CreateRenderTargetView(swapChainResources[0].Get(), &rtvDesc, rtvHandles[0]);
 	//2つ目
 	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
+	device->CreateRenderTargetView(swapChainResources[1].Get(), &rtvDesc, rtvHandles[1]);
 
 }
 
-ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height){
+ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height){
 	//生成するResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc {};
 	resourceDesc.Width = width;//textureの幅
@@ -248,7 +241,7 @@ ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t 
 	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//フォーマット。Resourceと合わせる
 
 	//Resourceの生成
-	ID3D12Resource* resource = nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(
 		&heapProperties,//heapの設定
 		D3D12_HEAP_FLAG_NONE,//heapの特殊な設定特になし。
@@ -258,21 +251,21 @@ ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t 
 		IID_PPV_ARGS(&resource));//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
 
-	return resource;
+	return resource.Get();
 }
 
 void DirectXCommon::CreateDepthBuffer(){
-	depthStencilResource = CreateDepthStencilTextureResource(device, bufferWidth_, bufferHeight_);
+	depthStencilResource = CreateDepthStencilTextureResource(device.Get(), bufferWidth_, bufferHeight_);
 
 	//DSV用のヒープでディスクリプタの数は1,DSVはShader内で触るものではないのでShaderVisibleはfalse
-	dsvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+	dsvDescriptorHeap = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	//DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc {};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//format基本的にはresourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
 	//DSVHeapの先頭にdsvを作る
-	device->CreateDepthStencilView(depthStencilResource,
+	device->CreateDepthStencilView(depthStencilResource.Get(),
 								   &dsvDesc,
 								   dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 }
@@ -288,236 +281,6 @@ void DirectXCommon::CreateFence(){
 	assert(fenceEvent != nullptr);
 }
 
-void DirectXCommon::CreateRootSignature(){
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature {};
-	descriptionRootSignature.Flags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;//0から始まる
-	descriptorRange[0].NumDescriptors = 1;//数は1つ
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//srvを使用する
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
-
-	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
-
-	//定数バッファをピクセルシェーダで使用
-	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
-	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	rootParamenters[0].Descriptor.ShaderRegister = 0;
-
-	//定数バッファをバーテックスシェーダで使用
-	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
-	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
-	rootParamenters[1].Descriptor.ShaderRegister = 0;
-
-	//フォグ定数バッファをピクセルシェーダで使用
-	rootParamenters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParamenters[2].Descriptor.ShaderRegister = 1;
-
-	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
-	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParamenters[3].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
-	rootParamenters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
-
-	//ライト
-	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParamenters[4].Descriptor.ShaderRegister = 2;
-
-	descriptionRootSignature.pParameters = rootParamenters;
-	descriptionRootSignature.NumParameters = _countof(rootParamenters);
-
-
-	//samplerの設定
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;//バイリニアフィルタ
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//0~1の範囲外を利ぴ＝と
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのMipmapを使う
-	staticSamplers[0].ShaderRegister = 0;//レジスタ番号0を使う
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixelShaderで使う
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
-
-	//シリアライズしてバイナリする
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
-									 D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)){
-		Log(reinterpret_cast< char* >(errorBlob->GetBufferPointer()));
-		assert(false);
-	}
-
-	//バイナリをもとに生成
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-									 signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	assert(SUCCEEDED(hr));
-}
-
-void DirectXCommon::CreateRootSignatureForInstancing(){
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature {};
-	descriptionRootSignature.Flags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;//0から始まる
-	descriptorRange[0].NumDescriptors = 1;//数は1つ
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//srvを使用する
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//offsetを自動計算
-
-	//RootParamer作成
-	D3D12_ROOT_PARAMETER rootParamenters[5] = {};
-
-	//定数バッファをピクセルシェーダで使用
-	rootParamenters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  //cvbを使う
-	rootParamenters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	rootParamenters[0].Descriptor.ShaderRegister = 0;
-
-	//定数バッファをバーテックスシェーダで使用
-	rootParamenters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;  //cvbを使う
-	rootParamenters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
-	rootParamenters[1].DescriptorTable.pDescriptorRanges = descriptorRange;//tabeleの中身の配列を指定
-	rootParamenters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//tableで使用する数
-
-	//フォグ定数バッファをピクセルシェーダで使用
-	rootParamenters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParamenters[2].Descriptor.ShaderRegister = 1;
-
-	rootParamenters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//descriptorTableを使う
-	rootParamenters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
-	rootParamenters[3].DescriptorTable.pDescriptorRanges = descriptorRange;//tableの中身の配列を指定
-	rootParamenters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);//Tableで利用する数
-
-	//ライト
-	rootParamenters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParamenters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParamenters[4].Descriptor.ShaderRegister = 2;
-
-	descriptionRootSignature.pParameters = rootParamenters;
-	descriptionRootSignature.NumParameters = _countof(rootParamenters);
-
-
-	//samplerの設定
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;//バイリニアフィルタ
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//0~1の範囲外を利ぴ＝と
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのMipmapを使う
-	staticSamplers[0].ShaderRegister = 0;//レジスタ番号0を使う
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixelShaderで使う
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
-
-	//シリアライズしてバイナリする
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
-									 D3D_ROOT_SIGNATURE_VERSION_1, &instancingSignatureBlob_, &instancingErrorBlob_);
-	if (FAILED(hr)){
-		Log(reinterpret_cast< char* >(errorBlob->GetBufferPointer()));
-		assert(false);
-	}
-
-	//バイナリをもとに生成
-	hr = device->CreateRootSignature(0, instancingSignatureBlob_->GetBufferPointer(),
-									 instancingSignatureBlob_->GetBufferSize(), IID_PPV_ARGS(&instancingRootSignature));
-	assert(SUCCEEDED(hr));
-}
-
-void DirectXCommon::Pipeline(){
-	//dxcの初期化
-	shaderManager->InitializeDXC();
-	CreateRootSignature();
-	CreateRootSignatureForInstancing();
-	//InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-	inputElementDescs[0].SemanticName = "POSITION";
-	inputElementDescs[0].SemanticIndex = 0;
-	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[1].SemanticName = "TEXCOORD";
-	inputElementDescs[1].SemanticIndex = 0;
-	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[2].SemanticName = "NORMAL";
-	inputElementDescs[2].SemanticIndex = 0;
-	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-	//BlendStateの設定
-	D3D12_BLEND_DESC blendDesc {};
-	// normal blend
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	blendDesc.RenderTarget[0].BlendEnable = true;
-	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	blendDesc.RenderTarget[0].BlendOpAlpha= D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-
-	// none blend
-	blendDesc.RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
-
-	//RasterizeState
-	D3D12_RASTERIZER_DESC rasterizeDesc {};
-	//表面を(時計回り)表示しない
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-	//三角形の中を塗りつぶす
-	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
-
-
-	shaderManager->LoadShader("Object3D", L"Object3d.VS.hlsl", L"Object3d.PS.hlsl");
-
-	//DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
-	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqualつまり近ければ描画される
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
-
-	//PSOを作成
-	graphicsPipelineStateDesc.pRootSignature = rootSignature;
-	//graphicsPipelineStateDesc.pRootSignature = instancingRootSignature.Get();
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	//vertexShader
-	graphicsPipelineStateDesc.VS = {shaderManager->GetVertexShader("Object3D")->GetBufferPointer(),
-	shaderManager->GetVertexShader("Object3D")->GetBufferSize()};
-	//PixelShader
-	graphicsPipelineStateDesc.PS = {shaderManager->GetPixelShader("Object3D")->GetBufferPointer(),
-	shaderManager->GetPixelShader("Object3D")->GetBufferSize()};
-	//blendState
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizeDesc;
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	//利用するトポロジ｛形状｝のタイプ。三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	//どのように画面を打ち込むかの設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	//実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-											 IID_PPV_ARGS(&graphicsPipelineState));
-	assert(SUCCEEDED(hr));
-}
 
 
 void DirectXCommon::PreDraw(){
@@ -531,10 +294,10 @@ void DirectXCommon::PreDraw(){
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
 	//まず1つ目
 	rtvHandles[0] = rtvStartHandle;
-	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
+	device->CreateRenderTargetView(swapChainResources[0].Get(), &rtvDesc, rtvHandles[0]);
 	//2つ目
 	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
+	device->CreateRenderTargetView(swapChainResources[1].Get(), &rtvDesc, rtvHandles[1]);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -548,7 +311,7 @@ void DirectXCommon::PreDraw(){
 	//noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース、現行のバッグバッファに対して行う
-	barrier.Transition.pResource = swapChainResources[backBufferIndex];
+	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();
 	//遷移前(現行)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	//遷移後のResourceState
@@ -579,7 +342,7 @@ void DirectXCommon::PostDraw(){
 	//noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース、現行のバッグバッファに対して行う
-	barrier.Transition.pResource = swapChainResources[backBufferIndex];
+	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();
 	//遷移前(現行)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//遷移後のResourceState
@@ -591,7 +354,7 @@ void DirectXCommon::PostDraw(){
 	assert(SUCCEEDED(hr));
 
 	//コマンドリストの実行
-	ID3D12CommandList* commandLists[] = {commandList};
+	ID3D12CommandList* commandLists[] = {commandList.Get()};
 	commandQueue->ExecuteCommandLists(1, commandLists);
 
 
@@ -600,7 +363,7 @@ void DirectXCommon::PostDraw(){
 	//Fenceの値を更新
 	fenceValue++;
 	//GPUがここまでたどり着いたときに,Fenceの値を指定した値に代入するようにSignalを送る
-	commandQueue->Signal(fence, fenceValue);
+	commandQueue->Signal(fence.Get(), fenceValue);
 
 	//fenceの値が指定したsignalの値にたどり着いてるか確認する
 	//GetCompletedValueの初期値はfence作成時に渡した初期値
@@ -614,7 +377,7 @@ void DirectXCommon::PostDraw(){
 	//次のフレーム用のコマンドリストを準備
 	hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));
-	hr = commandList->Reset(commandAllocator, nullptr);
+	hr = commandList->Reset(commandAllocator.Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 
@@ -640,37 +403,25 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 void DirectXCommon::Finalize(){
 
 	CloseHandle(fenceEvent);
-	fence->Release();
-	rtvDescriptorHeap->Release();
-	swapChainResources[0]->Release();
-	swapChainResources[1]->Release();
+	fence.Reset();
+	rtvDescriptorHeap.Reset();
+	swapChainResources[0].Reset();
+	swapChainResources[1].Reset();
 	swapChain->Release();
-	commandList->Release();
-	commandAllocator->Release();
-	commandQueue->Release();
-	device->Release();
+	commandList.Reset();
+	commandAllocator.Reset();
+	commandQueue.Reset();
+	device.Reset();
 	useAdapter->Release();
-	dxgiFactory->Release();
+	dxgiFactory.Reset();
 #ifdef _DEBUG
-	debugController->Release();
+	debugController.Reset();
 #endif // _DEBUG
 	CloseWindow(winApp_->GetHWND());
 
-	graphicsPipelineState->Release();
-	signatureBlob->Release();
-	if (errorBlob != nullptr){
-		errorBlob->Release();
-	}
-	rootSignature->Release();
-	instancingErrorBlob_.Reset();
-	instancingRootSignature.Reset();
-	instancingSignatureBlob_.Reset();
 
-
-	dsvDescriptorHeap->Release();
-	depthStencilResource->Release();
-
-	shaderManager.reset();
+	dsvDescriptorHeap.Reset();
+	depthStencilResource.Reset();
 
 	//リソースリークチェック
 	IDXGIDebug1* debug;

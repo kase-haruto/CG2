@@ -3,16 +3,23 @@
 #include"ImGuiManager.h"
 #include"DirectXCommon.h"
 #include"MyFunc.h"
+#include"GraphicsGroup.h"
 
 TextureManager* TextureManager::GetInstance(){
 	static TextureManager instance;
 	return &instance;
 }
 std::vector<std::string> TextureManager::texturePath_;
-void TextureManager::Initialize(ID3D12Device* device, ImGuiManager* imgui){
-	dxCommon_ = DirectXCommon::GetInstance();
-	device_ = device;
+
+void TextureManager::Initialize(ImGuiManager* imgui){
+	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	imgui_ = imgui;
+}
+
+void TextureManager::Finalize(){
+	textureResource.Reset();
+	textureResource2.Reset();
+	device_.Reset();
 }
 
 ID3D12Resource* TextureManager::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata){
@@ -77,13 +84,13 @@ DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath){
 void TextureManager::TransferTexture(){
 	DirectX::ScratchImage mipImages = TextureManager::LoadTexture("./Resources/uvChecker.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	textureResource = TextureManager::CreateTextureResource(dxCommon_->GetDevice(), metadata);
+	textureResource = TextureManager::CreateTextureResource(device_.Get(), metadata);
 	TextureManager::UploadTextureData(textureResource.Get(), mipImages);
 
 	//2枚目のtextureを読んで転送する
 	DirectX::ScratchImage mipImages2 = LoadTexture("./Resources/uvChecker.png");
 	const DirectX::TexMetadata& metadata2 = mipImages2.GetMetadata();
-	textureResource2 = CreateTextureResource(dxCommon_->GetDevice(), metadata2);
+	textureResource2 = CreateTextureResource(device_.Get(), metadata2);
 	UploadTextureData(textureResource2.Get(), mipImages2);
 
 	TextureManager::GetInstance()->CreateShaderResourceView(textureResource.Get(), metadata, metadata2);
@@ -127,9 +134,9 @@ void TextureManager::CreateShaderResourceView(ID3D12Resource* texture,
 	////先頭はImGuiが使用しているので次のを使う
 	//textureSrvHandleCPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//textureSrvHandleGPU.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	textureSrvHandleCPU = GetCPUDescriptorHandle(srvHeap.Get(), dxCommon_->GetDescriptorSizeSRV(), 1);
-	textureSrvHandleGPU = GetGPUDescriptorHandle(srvHeap.Get(), dxCommon_->GetDescriptorSizeSRV(), 1);
+	uint32_t descriptorSizeSrv = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleCPU = GetCPUDescriptorHandle(srvHeap.Get(), descriptorSizeSrv, 1);
+	textureSrvHandleGPU = GetGPUDescriptorHandle(srvHeap.Get(), descriptorSizeSrv, 1);
 
 	//srvの生成
 	device_->CreateShaderResourceView(texture, &srvDesc, textureSrvHandleCPU);
@@ -143,8 +150,8 @@ void TextureManager::CreateShaderResourceView(ID3D12Resource* texture,
 	srvDesc2.Texture2D.MipLevels = UINT(metadata2.mipLevels);
 
 	//srvを生成するdescriptorHeapの場所を決める
-	textureSrvHandleCPU2 = GetCPUDescriptorHandle(srvHeap.Get(), dxCommon_->GetDescriptorSizeSRV(), 2);
-	textureSrvHandleGPU2 = GetGPUDescriptorHandle(srvHeap.Get(), dxCommon_->GetDescriptorSizeSRV(), 2);
+	textureSrvHandleCPU2 = GetCPUDescriptorHandle(srvHeap.Get(), descriptorSizeSrv, 2);
+	textureSrvHandleGPU2 = GetGPUDescriptorHandle(srvHeap.Get(), descriptorSizeSrv, 2);
 
 	device_->CreateShaderResourceView(textureResource2.Get(), &srvDesc2, textureSrvHandleCPU2);
 }

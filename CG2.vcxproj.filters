@@ -16,20 +16,8 @@
     <Filter Include="Window">
       <UniqueIdentifier>{fd395735-80e2-4511-b707-e0ef3fc1cce4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX">
-      <UniqueIdentifier>{f342b7d2-e119-4250-b8d7-9ae9c3925c50}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{a05fc567-36ce-471f-8829-140d8a168c7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Triangle">
-      <UniqueIdentifier>{f0c1f3ac-19e7-401f-bd04-afaf17ac8489}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\Shaders">
-      <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\DirectXCommon">
-      <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{cb36ba32-0ec7-4060-81a5-871b104199ef}</UniqueIdentifier>
@@ -51,12 +39,6 @@
     </Filter>
     <Filter Include="MyManager\TextureManager">
       <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\FogEffect">
-      <UniqueIdentifier>{43cb6fe8-f889-4669-94e2-4beb35684e40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\Pipeline">
-      <UniqueIdentifier>{ecfba774-feae-4b54-9878-eac455e80956}</UniqueIdentifier>
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{66a8a61f-0157-433a-bbb6-2a05f6c0039b}</UniqueIdentifier>
@@ -103,8 +85,26 @@
     <Filter Include="Game\Object\Particle">
       <UniqueIdentifier>{b749c2ba-93c3-4fce-abf3-e1965a77b6e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\Shaders\ShaderManager">
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{d93f4a94-91dc-4bc3-8669-228da656a081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX">
+      <UniqueIdentifier>{f342b7d2-e119-4250-b8d7-9ae9c3925c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX\Shaders">
+      <UniqueIdentifier>{74a156dd-f2da-4e07-9086-0e3f376402e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX\Shaders\ShaderManager">
       <UniqueIdentifier>{a2f13f7f-531e-485a-b4da-585236029460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX\DirectXCommon">
+      <UniqueIdentifier>{35882e8e-e477-4c71-a71a-e0fc1fdd5c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX\FogEffect">
+      <UniqueIdentifier>{43cb6fe8-f889-4669-94e2-4beb35684e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DirectX\Pipeline">
+      <UniqueIdentifier>{ecfba774-feae-4b54-9878-eac455e80956}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,7 +121,7 @@
       <Filter>Window</Filter>
     </ClCompile>
     <ClCompile Include="DirectXCommon.cpp">
-      <Filter>DirectX\DirectXCommon</Filter>
+      <Filter>Graphics\DirectX\DirectXCommon</Filter>
     </ClCompile>
     <ClCompile Include="MyFunc.cpp">
       <Filter>MyFunc</Filter>
@@ -163,7 +163,7 @@
       <Filter>MyManager\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="FogEffect.cpp">
-      <Filter>DirectX\FogEffect</Filter>
+      <Filter>Graphics\DirectX\FogEffect</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>System\Sprite</Filter>
@@ -193,13 +193,19 @@
       <Filter>Game\Object\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
-      <Filter>DirectX\Shaders\ShaderManager</Filter>
+      <Filter>Graphics\DirectX\Shaders\ShaderManager</Filter>
     </ClCompile>
     <ClCompile Include="PipelineStateManager.cpp">
-      <Filter>DirectX\Pipeline</Filter>
+      <Filter>Graphics\DirectX\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="PipelineState.cpp">
-      <Filter>DirectX\Pipeline</Filter>
+      <Filter>Graphics\DirectX\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsGroup.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +216,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectXCommon.h">
-      <Filter>DirectX\DirectXCommon</Filter>
+      <Filter>Graphics\DirectX\DirectXCommon</Filter>
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>Math</Filter>
@@ -264,7 +270,7 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="FogEffect.h">
-      <Filter>DirectX\FogEffect</Filter>
+      <Filter>Graphics\DirectX\FogEffect</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>System\Sprite</Filter>
@@ -309,35 +315,41 @@
       <Filter>Game\Object\Particle</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
-      <Filter>DirectX\Shaders\ShaderManager</Filter>
+      <Filter>Graphics\DirectX\Shaders\ShaderManager</Filter>
     </ClInclude>
     <ClInclude Include="PipelineStateManager.h">
-      <Filter>DirectX\Pipeline</Filter>
+      <Filter>Graphics\DirectX\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="PipelineState.h">
-      <Filter>DirectX\Pipeline</Filter>
+      <Filter>Graphics\DirectX\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsGroup.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Object3d.PS.hlsl">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Particle.VS.hlsl">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Particle.PS.hlsl">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Object3d.hlsli">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </None>
     <None Include="Particle.hlsli">
-      <Filter>DirectX\Shaders</Filter>
+      <Filter>Graphics\DirectX\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

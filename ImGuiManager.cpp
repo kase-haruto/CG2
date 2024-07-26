@@ -15,7 +15,7 @@ ImGuiManager* ImGuiManager::GetInstance(){
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 #ifdef _DEBUG
 	dxCommon_ = dxCommon;
-	srvHeap_ = dxCommon_->CreateDescriptorHeap(dxCommon_->GetDevice(),
+	srvHeap_ = dxCommon_->CreateDescriptorHeap(dxCommon_->GetDevice().Get(),
 											   D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
 											   128,
 											   true
@@ -26,7 +26,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(winApp->GetHWND());
-	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
+	ImGui_ImplDX12_Init(dxCommon_->GetDevice().Get(),
 						dxCommon_->GetSwapChainDesc().BufferCount,
 						dxCommon->GetRtvDesc().Format,
 						srvHeap_.Get(),
@@ -54,7 +54,7 @@ void ImGuiManager::Begin(){
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	//でスクリプタヒープの配列をセットする
 	ID3D12DescriptorHeap* descriptorHeaps[] = {srvHeap_.Get()};
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
@@ -71,9 +71,9 @@ void ImGuiManager::End(){
 
 void ImGuiManager::Draw(){
 #ifdef _DEBUG
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	//描画コマンドを発行
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
 
 #endif // _DEBUG
 }

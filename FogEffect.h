@@ -25,8 +25,8 @@ private:
 	UINT8* mappedConstantBuffer;
 	UINT bufferSize;
 
-	ID3D12GraphicsCommandList* commandList_;
-	ID3D12Device* device_;
+	ComPtr<ID3D12GraphicsCommandList> commandList_;
+	ComPtr<ID3D12Device> device_;
 
 
 	DirectXCommon* dxCommon_;
@@ -37,7 +37,7 @@ public:
 	//デストラクタ
 	~FogEffect();
 
-	//
+
 	void Update();
 
 	//定数バッファの生成

@@ -1,5 +1,6 @@
 ﻿#include "System.h"
 #include"TextureManager.h"
+#include"GraphicsGroup.h"
 
 System::System(){}
 
@@ -7,7 +8,7 @@ System::~System(){}
 
 void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 	winApp_ = WinApp::GetInstance();
-	dxCommon_ = DirectXCommon::GetInstance();
+	dxCommon_ = std::make_unique<DirectXCommon>();
 	dxCommon_->Initialize(winApp_, 1280, 720);
     device_ = dxCommon_->GetDevice();
 
@@ -18,22 +19,23 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 	//パイプラインを設定
 	CreatePipelines();
 
+    GraphicsGroup::GetInstance()->Initialize(dxCommon_.get(), pipelineStateManager_.get());
+
 #ifdef _DEBUG
 	imguiManager_ = ImGuiManager::GetInstance();
-	imguiManager_->Initialize(winApp_, dxCommon_);
+	imguiManager_->Initialize(winApp_, dxCommon_.get());
 #endif // _DEBUG
 
 	//textureManagerの初期化
-	TextureManager::GetInstance()->Initialize(dxCommon_->GetDevice(), imguiManager_);
+	TextureManager::GetInstance()->Initialize(imguiManager_);
 	//テクスチャの転送
 	TextureManager::GetInstance()->TransferTexture();
 
 
     //ライトの初期化
     light_ = std::make_unique<DirectionalLight>();
-    light_->Initialize(dxCommon_);
-    light_->SetRootSignature(pipelineStateManager_->GetRootSignature("Object3D"));
-
+    light_->Initialize(dxCommon_.get());
+    light_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
 }
 
 void System::BeginFrame(){
@@ -56,17 +58,12 @@ void System::EndFrame(){
 
 void System::Finalize(){
 	imguiManager_->Finalize();
-	imguiManager_ = nullptr;
-	dxCommon_->Finalize();
-	dxCommon_ = nullptr;
-	shaderManager_.reset();
-	pipelineStateManager_.reset();
+
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
+    dxCommon_->Finalize();
 }
-
-
 
 void System::CreatePipelines(){
 	  shaderManager_->InitializeDXC();
@@ -113,7 +110,7 @@ void System::CreatePipelines(){
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
     // シェーダの読み込み
-    if (!shaderManager_->LoadShader("Object3D", L"Object3d.VS.hlsl", L"Object3d.PS.hlsl")) {
+    if (!shaderManager_->LoadShader(Object3D, L"Object3d.VS.hlsl", L"Object3d.PS.hlsl")) {
         // シェーダの読み込みに失敗した場合のエラーハンドリング
         return;
     }
@@ -188,8 +185,8 @@ void System::CreatePipelines(){
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.pRootSignature = rootSignature.Get();
     psoDesc.InputLayout = inputLayoutDesc;
-    psoDesc.VS = { shaderManager_->GetVertexShader("Object3D")->GetBufferPointer(), shaderManager_->GetVertexShader("Object3D")->GetBufferSize() };
-    psoDesc.PS = { shaderManager_->GetPixelShader("Object3D")->GetBufferPointer(), shaderManager_->GetPixelShader("Object3D")->GetBufferSize() };
+    psoDesc.VS = { shaderManager_->GetVertexShader(Object3D)->GetBufferPointer(), shaderManager_->GetVertexShader(Object3D)->GetBufferSize() };
+    psoDesc.PS = { shaderManager_->GetPixelShader(Object3D)->GetBufferPointer(), shaderManager_->GetPixelShader(Object3D)->GetBufferSize() };
     psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
@@ -201,7 +198,7 @@ void System::CreatePipelines(){
     psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     // パイプラインステートオブジェクトの作成
-    if (!pipelineStateManager_->CreatePipelineState("Object3D", L"Object3d.VS.hlsl", L"Object3d.PS.hlsl", rootSignatureDesc, psoDesc)){
+    if (!pipelineStateManager_->CreatePipelineState(Object3D, L"Object3d.VS.hlsl", L"Object3d.PS.hlsl", rootSignatureDesc, psoDesc)){
         // エラーハンドリング
         return;
     }

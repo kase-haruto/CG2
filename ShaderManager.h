@@ -9,6 +9,9 @@
 
 using Microsoft::WRL::ComPtr;
 
+enum PipelineType{
+    Object3D,
+};
 
 class ShaderManager{
 public:
@@ -18,13 +21,13 @@ public:
     void InitializeDXC();
     IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile);
 
-    bool LoadShader(const std::string& name, const std::wstring& vsPath, const std::wstring& psPath);
-    const ComPtr<IDxcBlob>& GetVertexShader(const std::string& name) const;
-    const ComPtr<IDxcBlob>& GetPixelShader(const std::string& name) const;
+    bool LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath);
+    const ComPtr<IDxcBlob>& GetVertexShader(const PipelineType& type) const;
+    const ComPtr<IDxcBlob>& GetPixelShader(const PipelineType& type) const;
 
 private:
-    std::unordered_map<std::string, ComPtr<IDxcBlob>> vertexShaders;
-    std::unordered_map<std::string, ComPtr<IDxcBlob>> pixelShaders;
+    std::unordered_map<PipelineType, ComPtr<IDxcBlob>> vertexShaders;
+    std::unordered_map<PipelineType, ComPtr<IDxcBlob>> pixelShaders;
 
     // DXC関連のメンバ変数
     ComPtr<IDxcUtils> dxcUtils;

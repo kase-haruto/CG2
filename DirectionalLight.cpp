@@ -5,7 +5,7 @@
 
 DirectionalLight::DirectionalLight(){}
 
-DirectionalLight::~DirectionalLight(){ resource_.Reset(); rootSignature_.Reset(); }
+DirectionalLight::~DirectionalLight(){  }
 
 void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();

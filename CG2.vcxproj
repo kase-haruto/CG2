@@ -110,6 +110,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui_widgets.cpp" />
     <ClCompile Include="FogEffect.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GraphicsGroup.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="IScene.cpp" />
     <ClCompile Include="main.cpp">
@@ -145,6 +147,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imstb_textedit.h" />
     <ClInclude Include="externals\imstb_truetype.h" />
     <ClInclude Include="FogEffect.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GraphicsGroup.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="Mat3.h" />

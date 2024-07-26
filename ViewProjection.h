@@ -47,9 +47,8 @@ private:
 	ComPtr<ID3D12Resource>constBuffer_;
 
 	//DirectX関連
-	DirectXCommon* dxCommon_;
-	ID3D12Device* device_;
-	ID3D12GraphicsCommandList* commandList_;
+	ComPtr<ID3D12Device> device_;
+	ComPtr<ID3D12GraphicsCommandList> commandList_;
 
 	ConstBufferDataViewProjection* camearData_;
 
@@ -59,7 +58,7 @@ private:
 public:
 
 
-	ViewProjection(DirectXCommon* directX);
+	ViewProjection();
 	~ViewProjection();
 
 	void ImGui();
@@ -70,6 +69,10 @@ public:
 	/// <param name="width"></param>
 	/// <param name="height"></param>
 	void Initialize();
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void Finalize();
 	/// <summary>
 	/// 定数バッファ生成
 	/// </summary>

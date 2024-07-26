@@ -43,7 +43,7 @@ public:
 	/// <summary>
 	/// rootSignatureの設定を行う
 	/// </summary>
-	void SettingRootSignatures();
+	void SettingRootSignatur1es();
 	/// <summary>
 	/// pipelineの設定を行う
 	/// </summary>
@@ -52,9 +52,10 @@ public:
 
 	int ProcessMessage();
 
+
 private:
 	WinApp* winApp_;
-	DirectXCommon* dxCommon_;
+	std::unique_ptr<DirectXCommon> dxCommon_;
 	ComPtr<ID3D12Device> device_;
 #ifdef _DEBUG
 	// ImGuiの初期化

@@ -12,9 +12,10 @@
 #include"ShaderManager.h"
 
 class ImGuiManager;
-class FogEffect;
 
 class DirectXCommon final{
+private:
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private: // メンバ変数
 
@@ -22,42 +23,26 @@ private: // メンバ変数
 	uint32_t bufferHeight_;
 
 	WinApp* winApp_;
-	ID3D12Device* device = nullptr;
+	ComPtr<ID3D12Device> device = nullptr;
 	IDXGIAdapter4* useAdapter = nullptr;
 	HRESULT hr;
-	IDXGIFactory7* dxgiFactory = nullptr;
-	ID3D12CommandQueue* commandQueue = nullptr;
-	ID3D12CommandAllocator* commandAllocator = nullptr;
-	ID3D12GraphicsCommandList* commandList = nullptr;
+	ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
+	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
+	ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
+	ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
 	IDXGISwapChain4* swapChain = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc {};
-	ID3D12DescriptorHeap* rtvDescriptorHeap = nullptr;
-	ID3D12Resource* swapChainResources[2] = { nullptr };
-	ID3D12Fence* fence = nullptr;
+	ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap = nullptr;
+	ComPtr<ID3D12Resource> swapChainResources[2] = { nullptr };
+	ComPtr<ID3D12Fence> fence = nullptr;
 	uint64_t fenceValue;
 	HANDLE fenceEvent;
-	ID3D12Debug1* debugController = nullptr;
-	ID3D12InfoQueue* infoQueue = nullptr;
+	ComPtr<ID3D12Debug1> debugController = nullptr;
+	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc {};
 
-	ID3D12Resource* depthStencilResource;
-	ID3D12DescriptorHeap* dsvDescriptorHeap;
-	
-
-	//PSO関連
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc {};
-	ID3D12PipelineState* graphicsPipelineState = nullptr;
-	
-	ID3DBlob* signatureBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
-	ID3D12RootSignature* rootSignature = nullptr;
-
-	//メモリを確保
-	std::unique_ptr<ShaderManager>shaderManager = std::make_unique<ShaderManager>();
-
-	Microsoft::WRL::ComPtr<ID3DBlob>instancingSignatureBlob_ = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob>instancingErrorBlob_ = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>instancingRootSignature = nullptr;
+	ComPtr<ID3D12Resource> depthStencilResource;
+	ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
 
 	D3D12_BLEND_DESC blendDesc{};
 
@@ -75,15 +60,10 @@ private: // メンバ変数
 	bool useMonsterBall = true;
 
 
-	//-------------
-	std::unique_ptr<FogEffect>fog_;
 
 public:
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static DirectXCommon* GetInstance();
+	DirectXCommon(){}
+	~DirectXCommon(){}
 
 	/// <summary>
 	/// 初期化
@@ -117,7 +97,7 @@ public:
 	/// 描画コマンドリストの取得
 	/// </summary>
 	/// <returns>描画コマンドリスト</returns>
-	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
+	const ComPtr<ID3D12GraphicsCommandList>& GetCommandList() const { return commandList; }
 
 	
 	/// <summary>
@@ -128,15 +108,10 @@ public:
 	/// <summary>
 	/// ディスクリプタヒープの生成
 	/// </summary>
-	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device,
+	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(ID3D12Device* device,
 											   D3D12_DESCRIPTOR_HEAP_TYPE heapType,
 											   UINT numDescriptors,
 											   bool shaderVisible);
-	
-
-
-	void Pipeline();
-
 	
 	//================
 	//アクセッサ
@@ -145,7 +120,7 @@ public:
 	/// <summary>
 	/// デバイスの取得
 	/// </summary>
-	ID3D12Device* GetDevice()const{ return device; }
+	const ComPtr<ID3D12Device>& GetDevice()const{ return device; }
 
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const{ return swapChainDesc; }
 	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const{ return rtvDesc; }
@@ -154,24 +129,17 @@ public:
 	uint32_t GetBufferWidth()const{ return bufferWidth_; }
 	uint32_t GetBufferHeight()const{ return bufferHeight_; }
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetGraphicsPSODesc()const { return graphicsPipelineStateDesc; }
 
-	ID3D12DescriptorHeap* GetRtvDescriptorHeap()const{ return rtvDescriptorHeap; }
-	ID3D12DescriptorHeap* GetSrvDescriptorHeap()const{ return dsvDescriptorHeap; }
+	const ComPtr<ID3D12DescriptorHeap>& GetRtvDescriptorHeap()const{ return rtvDescriptorHeap; }
+	const ComPtr<ID3D12DescriptorHeap>& GetSrvDescriptorHeap()const{ return dsvDescriptorHeap; }
 
 	uint32_t GetDescriptorSizeSRV()const{ return descriptorSizeSRV; }
 	uint32_t GetDescriptorSizeRTV()const{ return descriptorSizeRTV; }
 	uint32_t GetDescriptorSizeDSV()const{ return descriptorSizeDSV; }
 
-	ID3D12RootSignature* GetRootSignature()const{ return rootSignature; }
-
-	ID3D12PipelineState* GetPipelineState()const{ return graphicsPipelineState; }
-
 private: // メンバ関数
-	DirectXCommon() = default;
-	~DirectXCommon() = default;
-	DirectXCommon(const DirectXCommon&) = delete;
-	const DirectXCommon& operator=(const DirectXCommon&) = delete;
+
+
 
 	/// <summary>
 	/// DXGIデバイス初期化
@@ -200,14 +168,5 @@ private: // メンバ関数
 	/// フェンス生成
 	/// </summary>
 	void CreateFence();
-
-
-	//=============================================
-	//		POS
-
-	void CreateRootSignature();
-
-	void CreateRootSignatureForInstancing();
-	
 };
 

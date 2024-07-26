@@ -2,11 +2,8 @@
 #include"DirectXCommon.h"
 
 FogEffect::~FogEffect(){
-	device_->Release();
-	commandList_->Release();
-	if (constantBuffer != nullptr){
-		constantBuffer.Get()->Unmap(0, nullptr);
-	}
+	device_.Reset();
+	commandList_.Reset();
 }
 
 FogEffect::FogEffect(DirectXCommon* dxCommon){

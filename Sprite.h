@@ -24,7 +24,6 @@ private:
 	//directX関連
 	ComPtr<ID3D12Device> device_;
 	ComPtr<ID3D12GraphicsCommandList>commandList_;
-	DirectXCommon* dxCommon_;
 
 	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -37,7 +36,7 @@ private:
 	Material* materialData_;
 
 public:
-	Sprite(DirectXCommon* dx);
+	Sprite();
 	~Sprite();
 
 	/// <summary>

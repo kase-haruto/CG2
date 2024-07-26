@@ -3,6 +3,7 @@
 #include"MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
+#include"GraphicsGroup.h"
 
 #ifdef _DEBUG
 #include"imgui.h"
@@ -12,11 +13,10 @@ Particle::Particle(){}
 
 Particle::~Particle(){}
 
-void Particle::Initialize(DirectXCommon* dxCommon, ViewProjection* viewProjection){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = dxCommon->GetRootSignature();
-	pipelineState_ = dxCommon->GetPipelineState();
+void Particle::Initialize(ViewProjection* viewProjection){
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+	/*rootSignature_ = dxCommon->GetRootSignature();
+	pipelineState_ = dxCommon->GetPipelineState();*/
 	viewProjection_ = viewProjection;
 
 	//モデルの読み込み

@@ -4,16 +4,18 @@
 #include"TextureManager.h"
 #include"imgui.h"
 
+#include"GraphicsGroup.h"
+
 #include<numbers>
 
 Sphere::Sphere(){}
 Sphere::~Sphere(){}
 
-void Sphere::Initialize(DirectXCommon* dxCommon,ViewProjection* viewProjection){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-	rootSignature_ = dxCommon->GetRootSignature();
-	pipelineState_ = dxCommon->GetPipelineState();
+void Sphere::Initialize(ViewProjection* viewProjection){
+	device_ = GraphicsGroup::GetInstance()->GetDevice();
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 	viewProjection_ = viewProjection;
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};

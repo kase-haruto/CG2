@@ -3,11 +3,11 @@
 #include"DirectXCommon.h"
 #include<imgui.h>
 #include"MyFunc.h"
+#include"GraphicsGroup.h"
 
-ViewProjection::ViewProjection(DirectXCommon* dxCommon){
-	dxCommon_ = dxCommon;
-	commandList_ = dxCommon->GetCommandList();
-	device_ = dxCommon->GetDevice();
+ViewProjection::ViewProjection(){
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+	device_ = GraphicsGroup::GetInstance()->GetDevice();
 
 	//定数バッファの生成
 	CreateConstBuffer();
@@ -24,8 +24,9 @@ ViewProjection::ViewProjection(DirectXCommon* dxCommon){
 }
 
 ViewProjection::~ViewProjection(){
-	commandList_->Release();
-	device_->Release();
+	constBuffer_.Reset();
+	commandList_.Reset();
+	device_.Reset();
 }
 
 void ViewProjection::CreateConstBuffer(){

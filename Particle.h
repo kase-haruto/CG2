@@ -47,7 +47,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(DirectXCommon* dxCommon, ViewProjection* viewProjection);
+	void Initialize(ViewProjection* viewProjection);
 	/// <summary>
 	/// 更新
 	/// </summary>

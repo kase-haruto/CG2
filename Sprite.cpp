@@ -5,20 +5,22 @@
 #include"imgui.h"
 #include"TextureManager.h"
 #include"TransformationMatrix.h"
-
+#include"GraphicsGroup.h"
 #include<stdint.h>
 
-Sprite::Sprite(DirectXCommon* dx) :dxCommon_(dx){
-
-}
+Sprite::Sprite(){}
 
 Sprite::~Sprite(){
-
+	vertexResource_.Reset();
+	indexResource_.Reset();
+	transformResource_.Reset();
+	device_.Reset();
+	commandList_.Reset();
 }
 
 void Sprite::Initialize(){
-	commandList_ = dxCommon_->GetCommandList();
-	device_ = dxCommon_->GetDevice();
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+	device_ = GraphicsGroup::GetInstance()->GetDevice();
 
 	//===============================
 	//	リソースの生成
