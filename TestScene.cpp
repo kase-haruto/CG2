@@ -23,20 +23,20 @@ void TestScene::Initialize(){
 	sprite_->Initialize();
 
 	//モデル
-	model_ = std::make_unique<Model>();
-	model_->SetViewProjection(viewProjection_.get());
-	model_->Create("Resources", "suzanne.obj");
-
+	modelBuilder_ = std::make_unique<ModelBuilder>();
+	modelBuilder_->SetViewProjection(viewProjection_.get());
 }
 
 void TestScene::Update(){
+	modelBuilder_->ShowImGuiInterface();
+
 	//モデルの更新
-	model_->Update();
+	modelBuilder_->Update();
 }
 
 void TestScene::Draw(){
 	//モデルの描画
-	model_->Draw();
+	modelBuilder_->Draw();
 	//sprite_->Draw();
 }
 

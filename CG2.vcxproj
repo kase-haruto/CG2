@@ -120,6 +120,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelBuilder.cpp" />
     <ClCompile Include="MyFunc.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PipelineState.cpp" />
@@ -156,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelData.h" />
+    <ClInclude Include="ModelBuilder.h" />
     <ClInclude Include="MyFunc.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="PipelineState.h" />

@@ -207,6 +207,9 @@
     <ClCompile Include="GraphicsGroup.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="ModelBuilder.cpp">
+      <Filter>Game\Object\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="GraphicsGroup.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelBuilder.h">
+      <Filter>Game\Object\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
