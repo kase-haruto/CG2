@@ -42,6 +42,7 @@ public:
 	void Map();
 
 	void UpdateImGui(std::string lavel);
+
 	void MatrixInitialize();
 
 private:

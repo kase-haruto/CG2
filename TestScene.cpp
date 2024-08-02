@@ -24,39 +24,23 @@ void TestScene::Initialize(){
 
 	//モデル
 	model_ = std::make_unique<Model>();
-	model_->Initialize(viewProjection_.get());
+	model_->SetViewProjection(viewProjection_.get());
+	model_->Create("Resources", "suzanne.obj");
 
-	////球体
-	//sphere_ = std::make_unique<Sphere>();
-	//sphere_->Initialize(viewProjection_.get());
-
-	////三角
-	//triangle_ = std::make_unique<Triangle>();
-	//triangle_->Initialize(viewProjection_.get());
 }
 
 void TestScene::Update(){
 	//モデルの更新
 	model_->Update();
-	////球体の更新
-	//sphere_->Update();
-	////三角形の更新
-	//triangle_->UpdateImGui("triangle");
-	//triangle_->Update();
 }
 
 void TestScene::Draw(){
 	//モデルの描画
 	model_->Draw();
-	////球体の描画
-	//sphere_->Draw();
-	////三角形の描画
-	//triangle_->Draw();
+	//sprite_->Draw();
 }
 
 void TestScene::Finalize(){
 	viewProjection_.reset();
 	model_.reset();
-	sprite_.reset();
-	sphere_.reset();
 }

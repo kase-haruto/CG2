@@ -19,15 +19,15 @@ Model::~Model(){
 	rootSignature_.Reset();
 }
 
-void Model::Initialize(ViewProjection* viewProjection){
+void Model::Initialize(bool isUseTexture){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
-	viewProjection_ = viewProjection;
 
-	//モデルの読み込み
-	modelData = LoadObjFile("Resources", "plane.obj");
+	//パイプラインを設定
+	PipelineType pipelineType = isUseTexture ? Object3D : UntexturedModel;
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
+	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
+	
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 
@@ -36,6 +36,12 @@ void Model::Initialize(ViewProjection* viewProjection){
 	///=================================================
 	CreateBuffer();
 	Map();
+}
+
+void Model::Create(const std::string& directoryPath, const std::string& filename, bool isUseTexture){
+	//モデルの読み込み
+	modelData = LoadObjFile(directoryPath.c_str(), filename.c_str());
+	Initialize();
 }
 
 void Model::Update(){
@@ -129,4 +135,8 @@ void Model::MatrixBufferMap(){
 	wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData));
 	//単位行列を書き込んでおく
 	matrixData->WVP = Matrix4x4::MakeIdentity();
+}
+
+void Model::SetViewProjection(ViewProjection* viewPro){
+	viewProjection_ = viewPro;
 }

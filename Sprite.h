@@ -13,6 +13,58 @@ class DirectXCommon;
 /// スプライト
 /// </summary>
 class Sprite{
+public:
+	Sprite();
+	~Sprite();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 行列の更新
+	/// </summary>
+	void UpdateMaterix();
+
+	/// <summary>
+	/// トランスフォームの更新
+	/// </summary>
+	void UpdateTransform();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+	/// <summary>
+	/// 定数バッファの作成
+	/// </summary>
+	void CreateBuffer();
+
+	/// <summary>
+	/// マップ
+	/// </summary>
+	void Map();
+	void IndexResourceMap();
+	void VertexResourceMap();
+	void TransformResourceMap();
+	void MaterialResourceMap();
+
+	/// <summary>
+	/// 定数バッファの取得
+	/// </summary>
+	/// <returns></returns>
+	ComPtr<ID3D12Resource>GetConstBuffer(){ return vertexResource_; }
+
+	void SetRotation(Vector3 rotation){ transform_.rotate = rotation; }
+	void SetTranslation(Vector3 translation){ transform_.translate = translation; }	
+
 private:
 	//viewの生成
 	D3D12_INDEX_BUFFER_VIEW indexBufferView {};
@@ -35,42 +87,5 @@ private:
 	ComPtr<ID3D12Resource> materialResource_;
 	Material* materialData_;
 
-public:
-	Sprite();
-	~Sprite();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-	/// <summary>
-	/// 定数バッファの作成
-	/// </summary>
-	void CreateBuffer();
-	/// <summary>
-	/// マップ
-	/// </summary>
-	void Map();
-	void IndexResourceMap();
-	void VertexResourceMap();
-	void TransformResourceMap();
-	void MaterialResourceMap();
-
-	/// <summary>
-	/// 定数バッファの取得
-	/// </summary>
-	/// <returns></returns>
-	ComPtr<ID3D12Resource>GetConstBuffer(){ return vertexResource_; }
-
-	void SetRotation(Vector3 rotation){ transform_.rotate = rotation; }
-	void SetTranslation(Vector3 translation){ transform_.translate = translation; }	
 };
 

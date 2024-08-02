@@ -29,6 +29,11 @@ void Sprite::Initialize(){
 	//===============================
 	//	マップ
 	Map();
+
+	//================================
+	//	トランスフォームと行列の初期化
+	UpdateMaterix();
+	UpdateTransform();
 }
 
 void Sprite::Update(){
@@ -39,16 +44,23 @@ void Sprite::Update(){
 	ImGui::SliderAngle("UVRotate", &uvTransform.rotate.x);
 	ImGui::End();
 
+	UpdateMaterix();
+
+	UpdateTransform();
+}
+
+void Sprite::UpdateMaterix(){
 	///===================================================
 	///	wvp行列
 	///===================================================
 	Matrix4x4 matWorld = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	Matrix4x4 matView = Matrix4x4::MakeIdentity();
 	Matrix4x4 matProjection = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
-	Matrix4x4 wvpMatrix = Matrix4x4::Multiply(matWorld,Matrix4x4::Multiply(matView,matProjection));
+	Matrix4x4 wvpMatrix = Matrix4x4::Multiply(matWorld, Matrix4x4::Multiply(matView, matProjection));
 	*transformData = wvpMatrix;
+}
 
-
+void Sprite::UpdateTransform(){
 	///===================================================
 	///	UV Transform
 	///===================================================

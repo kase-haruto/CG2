@@ -9,7 +9,13 @@ private:
 public:
 	static GraphicsGroup* GetInstance();
 	~GraphicsGroup(){}
+	/// <summary>
+	/// Graphic関連初期化
+	/// </summary>
+	/// <param name="dxCommon"></param>
+	/// <param name="psManager"></param>
 	void Initialize(DirectXCommon* dxCommon,PipelineStateManager* psManager);
+
 	///=========================================
 	/// pipelineの取得
 	///=========================================

@@ -8,12 +8,13 @@
 
 #include<d3d12.h>
 #include<wrl.h>
+#include<string>
 
 
 /// <summary>
 /// モデル
 /// </summary>
-class Model:public GameObject{
+class Model{
 public:
 	Model();
 	~Model();
@@ -21,15 +22,19 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(ViewProjection* viewProjection)override;
+	void Initialize(bool isUseTexture = true);
+	/// <summary>
+	/// モデルの作成
+	/// </summary>
+	void Create(const std::string& directoryPath, const std::string& filename,bool isUseTexture = true);
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update()override;
+	void Update();
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw()override;
+	void Draw();
 	/// <summary>
 	/// リソースの生成
 	/// </summary>
@@ -43,6 +48,8 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	ModelData GetModelData()const { return modelData; }
+
+	void SetViewProjection(ViewProjection* viewPro);
 
 	void SetPos(const Vector3& pos){ transform.translate = pos; }
 
