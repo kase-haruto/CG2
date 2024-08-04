@@ -37,9 +37,6 @@
     <Filter Include="MyManager\ImGuiManager">
       <UniqueIdentifier>{29f93c30-b7d3-4250-b719-76b1258b8546}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyManager\TextureManager">
-      <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{66a8a61f-0157-433a-bbb6-2a05f6c0039b}</UniqueIdentifier>
     </Filter>
@@ -106,6 +103,9 @@
     <Filter Include="Graphics\DirectX\Pipeline">
       <UniqueIdentifier>{ecfba774-feae-4b54-9878-eac455e80956}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyManager\Texture">
+      <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -160,7 +160,7 @@
       <Filter>MyManager\ImGuiManager</Filter>
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
-      <Filter>MyManager\TextureManager</Filter>
+      <Filter>MyManager\Texture</Filter>
     </ClCompile>
     <ClCompile Include="FogEffect.cpp">
       <Filter>Graphics\DirectX\FogEffect</Filter>
@@ -209,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="ModelBuilder.cpp">
       <Filter>Game\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>MyManager\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,7 +270,7 @@
       <Filter>MyManager\ImGuiManager</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>MyManager\TextureManager</Filter>
+      <Filter>MyManager\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Math</Filter>
@@ -334,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="ModelBuilder.h">
       <Filter>Game\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>MyManager\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

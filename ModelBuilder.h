@@ -7,13 +7,9 @@
 
 #include<string>
 
-enum ModelType{
-	kSphere,
-	kPlane,
-	kFence,
-	kTeapot,
-};
-
+/// <summary>
+/// モデル作成クラス
+/// </summary>
 class ModelBuilder{
 public:
 	ModelBuilder() = default;
