@@ -1,5 +1,6 @@
 #include "ModelBuilder.h"
 #include"imgui.h"
+
 void ModelBuilder::Initialize(){}
 
 void ModelBuilder::Update(){
@@ -38,6 +39,7 @@ void ModelBuilder::ShowImGuiInterface(){
 		AddModel(modelPath);
 	}
 
+
 	for (size_t i = 0; i < models_.size(); ++i){
 		ImGui::PushID(static_cast< int >(i));
 		if (ImGui::Button("Remove Model")){
@@ -57,5 +59,6 @@ std::unique_ptr<Model> ModelBuilder::CreateModel(const std::string& modelPath){
 	model->Create("Resources", modelPath);
 	return model;
 }
+
 
 void ModelBuilder::SetViewProjection(ViewProjection* viewProjection){ viewProjection_ = viewProjection; }

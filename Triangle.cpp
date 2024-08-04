@@ -49,6 +49,10 @@ void Triangle::UpdateImGui(std::string lavel){
 }
 
 void Triangle::Draw(){
+	//デフォルトのテクスチャ -> uvChecker
+	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	commandList_->SetPipelineState(pipelineState_.Get());
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
 	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -57,7 +61,7 @@ void Triangle::Draw(){
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandle());
+	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	//描画　3頂点で1つのインスタンス
 	commandList_->DrawInstanced(3, 1, 0, 0);
 }

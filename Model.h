@@ -84,6 +84,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
+	///=============================================================
+	///	texture
+	///=============================================================
+	D3D12_GPU_DESCRIPTOR_HANDLE handle;
+
 	Vector4 RGBa;
 	Transform transform;
 	ModelData modelData;

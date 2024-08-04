@@ -21,6 +21,11 @@ Sprite::~Sprite(){
 void Sprite::Initialize(){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
+	//パイプラインを設定
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
+
+	handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
 
 	//===============================
 	//	リソースの生成
@@ -71,7 +76,12 @@ void Sprite::UpdateTransform(){
 }
 
 void Sprite::Draw(){
-	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandleGPU());
+
+	commandList_->SetPipelineState(pipelineState_.Get());
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
 	commandList_->IASetIndexBuffer(&indexBufferView);
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());

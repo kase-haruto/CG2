@@ -5,6 +5,7 @@
 #include"Matrix4x4.h"
 #include"Material.h"
 
+
 using namespace Microsoft::WRL;
 
 class DirectXCommon;
@@ -76,6 +77,13 @@ private:
 	//directX関連
 	ComPtr<ID3D12Device> device_;
 	ComPtr<ID3D12GraphicsCommandList>commandList_;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState_;
+
+	///=============================================================
+	///	texture
+	///=============================================================
+	D3D12_GPU_DESCRIPTOR_HANDLE handle;
 
 	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};

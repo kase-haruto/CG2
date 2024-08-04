@@ -10,7 +10,6 @@ void GraphicsGroup::Initialize(DirectXCommon* dxCommon, PipelineStateManager* ps
 	pipelineManager_ = psManager;
 }
 
-
 PipelineStateManager* GraphicsGroup::GetPipelineState()const{ return pipelineManager_; }
 
 const ComPtr<ID3D12PipelineState>& GraphicsGroup::GetPipelineState(const PipelineType& type)const { return pipelineManager_->GetPipelineState(type); }

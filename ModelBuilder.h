@@ -35,7 +35,7 @@ public:
 	/// </summary>
 	/// <param name="modelPath"></param>
 	void AddModel(const std::string& modelPath);
-	
+
 	/// <summary>
 	/// モデル削除
 	/// </summary>

@@ -77,6 +77,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
+	D3D12_GPU_DESCRIPTOR_HANDLE handle;
+
 	Vector4 RGBa;
 	Transform transform;
 	Material* materialData;

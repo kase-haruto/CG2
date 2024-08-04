@@ -27,6 +27,9 @@ void Model::Initialize(bool isUseTexture){
 	PipelineType pipelineType = isUseTexture ? Object3D : UntexturedModel;
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
+
+	//textureを設定
+	handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
 	
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -69,6 +72,7 @@ void Model::Update(){
 }
 
 void Model::Draw(){
+
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList_->SetPipelineState(pipelineState_.Get());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
@@ -79,7 +83,7 @@ void Model::Draw(){
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3,TextureManager::GetInstance()->GetTextureSrvHandle2());
+	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }

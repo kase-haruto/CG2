@@ -28,8 +28,7 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_);
-	//テクスチャの転送
-	TextureManager::GetInstance()->TransferTexture();
+	
 
 
     //ライトの初期化
@@ -40,7 +39,7 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 
 void System::BeginFrame(){
 	//フレームの開始
-	dxCommon_->PreDraw();
+    dxCommon_->PreDraw();
 	// ImGui受付開始
 	imguiManager_->Begin();
     //ライトの処理の更新
@@ -58,7 +57,7 @@ void System::EndFrame(){
 
 void System::Finalize(){
 	imguiManager_->Finalize();
-
+    TextureManager::GetInstance()->Finalize();
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();

@@ -56,6 +56,9 @@ void Particle::Update(){
 }
 
 void Particle::Draw(){
+	//デフォルトのテクスチャ -> uvChecker
+	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList_->SetPipelineState(pipelineState_.Get());
 	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
@@ -66,7 +69,7 @@ void Particle::Draw(){
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureSrvHandle2());
+	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
