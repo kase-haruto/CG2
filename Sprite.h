@@ -16,7 +16,7 @@ class DirectXCommon;
 class Sprite{
 public:
 	Sprite();
-	~Sprite();
+	~Sprite() = default;
 
 	/// <summary>
 	/// 初期化

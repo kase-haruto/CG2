@@ -4,6 +4,7 @@
 #include"VertexData.h"
 #include"TextureManager.h"
 #include"GraphicsGroup.h"
+#include"DirectionalLight.h"
 
 #ifdef _DEBUG
 #include"imgui.h"
@@ -117,7 +118,7 @@ void Particle::MaterialBufferMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = true;
+	materialData->enableLighting = Lambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 

@@ -28,9 +28,6 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{6f3950f8-d3cc-45eb-836b-06d4168f8e4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="imgui">
-      <UniqueIdentifier>{ecef2297-2aba-48b2-ab39-16ad1ec94796}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyManager">
       <UniqueIdentifier>{79cacd7a-6944-459e-8975-b1e4f4f219c4}</UniqueIdentifier>
     </Filter>
@@ -106,12 +103,12 @@
     <Filter Include="MyManager\Texture">
       <UniqueIdentifier>{c22b1f56-d99a-4462-a207-2da044e56325}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyManager\ImGuiManager\ImGui">
+      <UniqueIdentifier>{b01f14ad-0f96-4a18-9ac4-e2e8c5ad75d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
-    <Text Include="externals\LICENSE.txt">
-      <Filter>imgui</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -134,27 +131,6 @@
     </ClCompile>
     <ClCompile Include="ViewProjection.cpp">
       <Filter>Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui_demo.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui_tables.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui_widgets.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
-      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiManager.cpp">
       <Filter>MyManager\ImGuiManager</Filter>
@@ -213,6 +189,27 @@
     <ClCompile Include="Texture.cpp">
       <Filter>MyManager\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="externals\imgui\imgui.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_demo.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_draw.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_tables.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
+      <Filter>MyManager\ImGuiManager\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -241,30 +238,6 @@
     </ClInclude>
     <ClInclude Include="ViewProjection.h">
       <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imconfig.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imstb_rectpack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imstb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imstb_truetype.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
-      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiManager.h">
       <Filter>MyManager\ImGuiManager</Filter>
@@ -341,6 +314,30 @@
     <ClInclude Include="Texture.h">
       <Filter>MyManager\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="externals\imgui\imconfig.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_internal.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_rectpack.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_textedit.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_truetype.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl">
@@ -355,12 +352,21 @@
     <FxCompile Include="Particle.PS.hlsl">
       <Filter>Graphics\DirectX\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="NonTextureObject.VS.hlsl">
+      <Filter>Graphics\DirectX\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="NonTextureObject.PS.hlsl">
+      <Filter>Graphics\DirectX\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Object3d.hlsli">
       <Filter>Graphics\DirectX\Shaders</Filter>
     </None>
     <None Include="Particle.hlsli">
+      <Filter>Graphics\DirectX\Shaders</Filter>
+    </None>
+    <None Include="NonTextureObject.hlsli">
       <Filter>Graphics\DirectX\Shaders</Filter>
     </None>
   </ItemGroup>

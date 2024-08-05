@@ -18,7 +18,7 @@ class DirectXCommon;
 class Sphere{
 public:
 	Sphere();
-	~Sphere();
+	~Sphere() = default;
 
 	/// <summary>
 	/// 初期化
@@ -78,6 +78,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE handle;
+
+	int currentLightingMode =0;
 
 	Vector4 RGBa;
 	Transform transform;

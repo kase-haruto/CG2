@@ -4,7 +4,7 @@
 #include"TextureManager.h"
 
 #include"GraphicsGroup.h"
-
+#include"DirectionalLight.h"
 #ifdef _DEBUG
 	#include"imgui.h"
 #endif // _DEBUG
@@ -24,13 +24,23 @@ void Model::Initialize(bool isUseTexture){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
 	//パイプラインを設定
-	PipelineType pipelineType = isUseTexture ? Object3D : UntexturedModel;
+	PipelineType pipelineType = modelData.material.hasTexture ? Object3D : NonTextureObject;
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
 
-	//textureを設定
-	handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-	
+		
+	if (modelData.material.hasTexture){	//textureがある
+		//textureを設定
+		handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+		rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+		pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
+		handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+	} else{
+		rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(NonTextureObject);
+		pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(NonTextureObject);
+		//handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	}
+
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 
@@ -48,16 +58,6 @@ void Model::Create(const std::string& directoryPath, const std::string& filename
 }
 
 void Model::Update(){
-#ifdef _DEBUG
-	ImGui::Begin("model");
-	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
-	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.01f);
-	ImGui::ColorEdit4("color", &RGBa.x);
-	bool enableLighting = (materialData->enableLighting != 0);
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	materialData->enableLighting = enableLighting ? 1 : 0;
-	ImGui::End();
-#endif // _DEBUG
 
 	materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
 
@@ -71,6 +71,27 @@ void Model::Update(){
 	matrixData->WVP = worldViewProjectionMatrix;
 }
 
+void Model::ShowImGuiInterface(){
+	ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f);
+	ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f);
+	ImGui::ColorEdit4("Color", &RGBa.x);
+		
+	const char* lightingModes[] = {"Half-Lambert", "Lambert", "No Lighting"};
+
+	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode])){
+		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
+			const bool is_selected = (currentLightingMode == n);
+			if (ImGui::Selectable(lightingModes[n], is_selected)){
+				currentLightingMode = n;
+				materialData->enableLighting = currentLightingMode;
+			}
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+}
+
 void Model::Draw(){
 
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
@@ -82,8 +103,11 @@ void Model::Draw(){
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3, handle);
+	if (modelData.material.hasTexture){
+		//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
+		commandList_->SetGraphicsRootDescriptorTable(3, handle);
+	}
+	
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
@@ -131,7 +155,7 @@ void Model::MaterialBufferMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	//今回はあかをかきこむ
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = true;
+	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 

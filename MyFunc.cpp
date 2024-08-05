@@ -183,8 +183,8 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 				Vector3 normal = normals[normalIndex - 1];
 
 				// 右手座標系から左手座標系に変換（X軸を反転）
-				position.x *= -1.0f;
-				normal.x *= -1.0f;
+				position.z *= -1.0f;
+				normal.z *= -1.0f;
 
 				triangle[faceVertex] = {position, texcoord, normal};
 			}
@@ -204,10 +204,11 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
-	MaterialData materialData;//構築するmaterialData
-	std::string line;//ファイルから読んだ1行を格納するもの
+	MaterialData materialData;						//構築するmaterialData
+	materialData.hasTexture = false;				//デフォルトではテクスチャなし
+	std::string line;								//ファイルから読んだ1行を格納するもの
 	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open());//開かなかったら止める
+	assert(file.is_open());							//開かなかったら止める
 
 	while (std::getline(file, line)){
 		std::string identifier; std::istringstream s(line);
@@ -219,6 +220,7 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 			s >> textureFilename;
 			//連結してファイルパスにする
 			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+			materialData.hasTexture = true;
 		}
 	}
 	return materialData;

@@ -23,30 +23,31 @@ PixelShaderOutput main(VertexShaderOutput input){
 	// 元の色とフォグの色をブレンド
 	//float4 foggedColor = lerp(textureColor, fogColor, fogFactor);
 
-	//aが0.5以下の時にpixelを破棄
-	if (textureColor.a <= 0.5){
-		discard;
-	}
+    if (textureColor.a == 0.5){
+        discard;
+    }
 
-	if (gMaterial.enableLighting != 0){
-		//half lambert
-		float NdotL = dot(normalize(input.normal),-gDirectionalLight.direction);
-		float cos = pow(NdotL * 0.5f+0.5f,2.0f);
-		output.color.rgb = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
-		output.color.a = gMaterial.color.a * textureColor.a;
-	} else{//ライティングしない
-		output.color = gMaterial.color * textureColor;
-	}
+    if (gMaterial.enableLighting == 0){
+        // Half-Lambert shading
+        float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
+        float halfLambertTerm = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * halfLambertTerm * gDirectionalLight.intensity;
+        output.color.a = gMaterial.color.a * textureColor.a;
 
-	
-	//putput.colorの値が0の時にpixelを破棄
-	if (output.color.a == 0.0){
-		discard;
-	}
-	//textureのa値が0の時pixelを破棄
-	if (textureColor.a == 0){
-		discard;
-	}
+    } else if (gMaterial.enableLighting == 1){
+        // Lambert shading
+        float lambertTerm = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * lambertTerm * gDirectionalLight.intensity;
+        output.color.a = gMaterial.color.a * textureColor.a;
+    } else{
+        // No lighting
+        output.color = gMaterial.color * textureColor;
+    }
+
+  
+    if (output.color.a == 0.0){
+        discard;
+    }
 
 	return output;
 }

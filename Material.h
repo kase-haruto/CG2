@@ -15,4 +15,5 @@ struct Material{
 
 struct MaterialData{
 	std::string textureFilePath;
+	bool hasTexture;
 };

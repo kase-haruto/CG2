@@ -11,13 +11,13 @@ using Microsoft::WRL::ComPtr;
 
 enum PipelineType{
     Object3D,
-    UntexturedModel
+    NonTextureObject,
 };
 
 class ShaderManager{
 public:
     ShaderManager(){}
-    ~ShaderManager(){}
+    ~ShaderManager() = default;
 
     void InitializeDXC();
     IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile);

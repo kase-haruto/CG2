@@ -59,7 +59,6 @@ private:
     /// オブジェクト関連
     ///=========================
     std::unique_ptr<Sprite>sprite_ = nullptr;
-    std::unique_ptr<Model>model_ = nullptr;
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<Triangle>triangle_ = nullptr;

@@ -7,16 +7,9 @@
 #include"TransformationMatrix.h"
 #include"GraphicsGroup.h"
 #include<stdint.h>
+#include"DirectionalLight.h"
 
 Sprite::Sprite(){}
-
-Sprite::~Sprite(){
-	vertexResource_.Reset();
-	indexResource_.Reset();
-	transformResource_.Reset();
-	device_.Reset();
-	commandList_.Reset();
-}
 
 void Sprite::Initialize(){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
@@ -44,9 +37,10 @@ void Sprite::Initialize(){
 void Sprite::Update(){
 	ImGui::Begin("sprite");
 	ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
+	ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
+	ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
 	ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate", &uvTransform.rotate.x);
 	ImGui::End();
 
 	UpdateMaterix();
@@ -133,17 +127,17 @@ void Sprite::VertexResourceMap(){
 	vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
 
 	//1枚目の三角形
-	vertexData[0].position = {0.0f,360.0f,0.0f,1.0f};//左下
+	vertexData[0].position = {0.0f,180.0f,0.0f,1.0f};//左下
 	vertexData[0].texcoord = {0.0f,1.0f};
 	vertexData[0].normal = {0.0f,0.0f,-1.0f};
 	vertexData[1].position = {0.0f,0.0f,0.0f,1.0f};//左下
 	vertexData[1].texcoord = {0.0f,0.0f};
 	vertexData[1].normal = {0.0f,0.0f,-1.0f};
-	vertexData[2].position = {640.0f,360.0f,0.0f,1.0f};//左下
+	vertexData[2].position = {320.0f,180.0f,0.0f,1.0f};//左下
 	vertexData[2].texcoord = {1.0f,1.0f};
 	vertexData[2].normal = {0.0f,0.0f,-1.0f};
 	
-	vertexData[3].position = {640.0f,0.0f,0.0f,1.0f};//左下
+	vertexData[3].position = {320.0f,0.0f,0.0f,1.0f};//左下
 	vertexData[3].texcoord = {1.0f,0.0f};
 	vertexData[3].normal = {0.0f,0.0f,-1.0f};
 
@@ -160,7 +154,7 @@ void Sprite::TransformResourceMap(){
 void Sprite::MaterialResourceMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
 	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
-	materialData_->enableLighting = false;
+	materialData_->enableLighting = NoLighting;
 	materialData_->uvTransform = Matrix4x4::MakeIdentity();
 	materialResource_->Unmap(0, nullptr);
 }

@@ -3,13 +3,14 @@
 #include"MyFunc.h"
 #include"TextureManager.h"
 #include"imgui.h"
+#include"DirectionalLight.h"
 
 #include"GraphicsGroup.h"
 
 #include<numbers>
 
 Sphere::Sphere(){}
-Sphere::~Sphere(){}
+
 
 void Sphere::Initialize(ViewProjection* viewProjection){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
@@ -43,9 +44,22 @@ void Sphere::UpdateImGui(std::string lavel){
 	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
 	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.01f);
 	ImGui::ColorEdit4("color", &RGBa.x);
-	bool enableLighting = (materialData->enableLighting != 0);
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	materialData->enableLighting = enableLighting ? 1 : 0;
+
+	
+	const char* lightingModes[] = {"Half-Lambert", "Lambert", "No Lighting"};
+
+	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode])){
+		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
+			const bool is_selected = (currentLightingMode == n);
+			if (ImGui::Selectable(lightingModes[n], is_selected)){
+				currentLightingMode = n;
+				materialData->enableLighting = currentLightingMode;
+			}
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
 	ImGui::End();
 #endif // _DEBUG
 }
@@ -211,7 +225,7 @@ void Sphere::VertexBufferMap(){
 void Sphere::MaterialBufferMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = true;
+	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 

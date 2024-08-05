@@ -17,7 +17,7 @@ class DirectXCommon;
 class Triangle{
 public:
 	Triangle();
-	~Triangle();
+	~Triangle() = default;
 
 	/// <summary>
 	/// 初期化

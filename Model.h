@@ -32,6 +32,10 @@ public:
 	/// </summary>
 	void Update();
 	/// <summary>
+	/// imguiの更新
+	/// </summary>
+	void ShowImGuiInterface();
+	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
@@ -94,6 +98,8 @@ private:
 	ModelData modelData;
 	Material* materialData;
 	TransformationMatrix* matrixData;
+
+	int currentLightingMode = 0;
 
 	ViewProjection* viewProjection_;
 };

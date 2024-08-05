@@ -25,6 +25,12 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
+
+	// Docking and Multi-Viewport feature enable
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(dxCommon_->GetDevice().Get(),
 						dxCommon_->GetSwapChainDesc().BufferCount,
@@ -33,6 +39,14 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 						srvHeap_.Get()->GetCPUDescriptorHandleForHeapStart(),
 						srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart()
 	);
+
+	// Customize ImGui style when viewports are enabled
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (style.WindowRounding == 0.0f){
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+	}
 #endif // _DEBUG
 }
 
@@ -66,6 +80,11 @@ void ImGuiManager::End(){
 	//描画前準備
 	ImGui::Render();
 
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
 #endif // _DEBUG
 }
 

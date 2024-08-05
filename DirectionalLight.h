@@ -11,12 +11,20 @@ struct DirectionalLightData{
 	float intensity;	//輝度
 };
 
+// ライティングモードの定義
+enum LightingMode{
+	HalfLambert = 0,
+	Lambert,
+	NoLighting,
+};
+
+
 class DirectXCommon;
 
 class DirectionalLight{
 public:
 	DirectionalLight();
-	~DirectionalLight();
+	~DirectionalLight() = default;
 
 	/// <summary>
 	/// 初期化

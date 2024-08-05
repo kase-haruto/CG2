@@ -3,13 +3,13 @@
 #include"MyFunc.h"
 #include"TextureManager.h"
 #include"imgui.h"
+#include"DirectionalLight.h"
 
 #include"GraphicsGroup.h"
 
 #include<numbers>
 
 Triangle::Triangle(){}
-Triangle::~Triangle(){}
 
 void Triangle::Initialize(ViewProjection* viewProjection){
 	auto graphics = GraphicsGroup::GetInstance();
@@ -117,7 +117,7 @@ void Triangle::VertexBufferMap(){
 void Triangle::MaterialBufferMap(){
 	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = true;
+	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 

@@ -5,7 +5,7 @@
 
 DirectionalLight::DirectionalLight(){}
 
-DirectionalLight::~DirectionalLight(){  }
+
 
 void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();

@@ -23,7 +23,7 @@ public:
 #pragma region ビュー行列の設定
 	Transform transform = {{1.0f,1.0f,1.0f},
 						   {0.0f,0.0f,0.0f},
-						   {0.0f,0.0f,-5.0f}
+						   {0.0f,0.0f,-8.0f}
 	};
 #pragma endregion
 
@@ -59,7 +59,7 @@ public:
 
 
 	ViewProjection();
-	~ViewProjection();
+	~ViewProjection() = default;
 
 	void ImGui();
 

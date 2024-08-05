@@ -23,12 +23,6 @@ ViewProjection::ViewProjection(){
 	camearData_->cameraPos = transform.translate;
 }
 
-ViewProjection::~ViewProjection(){
-	constBuffer_.Reset();
-	commandList_.Reset();
-	device_.Reset();
-}
-
 void ViewProjection::CreateConstBuffer(){
 	//定数バッファの作成
 	D3D12_RESOURCE_DESC desc = {};

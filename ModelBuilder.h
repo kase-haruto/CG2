@@ -13,7 +13,7 @@
 class ModelBuilder{
 public:
 	ModelBuilder() = default;
-	~ModelBuilder() = default;
+	~ModelBuilder();
 
 	/// <summary>
 	/// 初期化
@@ -41,7 +41,7 @@ public:
 	/// </summary>
 	/// <param name="modelPath"></param>
 	/// <param name="index"></param>
-	void RemoveModel(const std::string& modelPath, size_t index);
+	void RemoveModel(size_t index);
 	
 	/// <summary>
 	/// imguiの描画
@@ -54,12 +54,26 @@ public:
 	/// <param name="viewProjection"></param>
 	void SetViewProjection(ViewProjection* viewProjection);
 
+	/// <summary>
+	/// modelファイルを読み込む
+	/// </summary>
+	/// <param name="filePath"></param>
+	void LoadModel(const std::string& filePath);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="directoryPath"></param>
+	void ListAndLoadModelsFromDirectory(const std::string& directoryPath);
+
 private:
 	std::unique_ptr<Model>CreateModel(const std::string& modelPath);
+
 
 private:
 	//作成したモデル
 	std::vector<std::pair<std::string, std::unique_ptr<Model>>> models_;
+	std::vector<std::string> availableModels_;
 	ViewProjection* viewProjection_;
 };
 

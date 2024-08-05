@@ -48,6 +48,8 @@ public:
 	/// pipelineの設定を行う
 	/// </summary>
 	void CreatePipelines();
+	void Object3DPipelines();
+	void NonTexturesObjectPiplines();
 
 
 	int ProcessMessage();

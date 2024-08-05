@@ -26,8 +26,6 @@ void TestScene::Initialize(){
 	modelBuilder_ = std::make_unique<ModelBuilder>();
 	modelBuilder_->SetViewProjection(viewProjection_.get());
 
-	triangle_ = std::make_unique<Triangle>();
-	//triangle_->Initialize(viewProjection_.get());
 
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize(viewProjection_.get());
@@ -36,7 +34,6 @@ void TestScene::Initialize(){
 void TestScene::Update(){
 	modelBuilder_->ShowImGuiInterface();
 	sphere_->UpdateImGui("sphere");
-
 
 	//モデルの更新
 	modelBuilder_->Update();
@@ -57,5 +54,7 @@ void TestScene::Draw(){
 
 void TestScene::Finalize(){
 	viewProjection_.reset();
-	model_.reset();
+	modelBuilder_.reset();
+	sprite_.reset();
+	sphere_.reset();
 }
