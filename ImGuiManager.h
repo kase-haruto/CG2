@@ -12,7 +12,8 @@ class DirectXCommon;
 class ImGuiManager{
 public:
 
-	static ImGuiManager* GetInstance();
+	ImGuiManager() = default;
+	~ImGuiManager() = default;
 
 	/// <summary>
 	/// 初期化
@@ -53,10 +54,5 @@ private:
 
 #endif // _DEBUG
 
-private:
-	ImGuiManager() = default;
-	~ImGuiManager() = default;
-	ImGuiManager(const ImGuiManager&) = default;
-	const ImGuiManager& operator=(const ImGuiManager&) = delete;	
 };
 

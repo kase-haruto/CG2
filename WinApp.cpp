@@ -16,11 +16,6 @@ WinApp::~WinApp() {
 	UnregisterClass(wc.lpszClassName, wc.hInstance);
 }
 
-WinApp* WinApp::GetInstance() {
-    static WinApp instance;
-    return &instance;
-}
-
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {
     if (ImGui_ImplWin32_WndProcHandler(hand, msg, wparam, lparam)){

@@ -9,6 +9,7 @@ private:
 public:
 	static GraphicsGroup* GetInstance();
 	~GraphicsGroup() = default;
+
 	/// <summary>
 	/// Graphic関連初期化
 	/// </summary>

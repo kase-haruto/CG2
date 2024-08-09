@@ -7,9 +7,9 @@ System::System(){}
 System::~System(){}
 
 void System::Initialize(int32_t clientWidth, int32_t clientHeight){
-	winApp_ = WinApp::GetInstance();
+	winApp_ = std::make_unique<WinApp>();
 	dxCommon_ = std::make_unique<DirectXCommon>();
-	dxCommon_->Initialize(winApp_, 1280, 720);
+	dxCommon_->Initialize(winApp_.get(), 1280, 720);
     device_ = dxCommon_->GetDevice();
 
 	//管理クラスの初期化
@@ -22,14 +22,12 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
     GraphicsGroup::GetInstance()->Initialize(dxCommon_.get(), pipelineStateManager_.get());
 
 #ifdef _DEBUG
-	imguiManager_ = ImGuiManager::GetInstance();
-	imguiManager_->Initialize(winApp_, dxCommon_.get());
+    imguiManager_ = std::make_unique<ImGuiManager>();
+	imguiManager_->Initialize(winApp_.get(), dxCommon_.get());
 #endif // _DEBUG
 
 	//textureManagerの初期化
-	TextureManager::GetInstance()->Initialize(imguiManager_);
-	
-
+	TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
     //ライトの初期化
     light_ = std::make_unique<DirectionalLight>();
@@ -59,6 +57,7 @@ void System::Finalize(){
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
+    light_.reset();
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
@@ -69,7 +68,6 @@ void System::CreatePipelines(){
 	  shaderManager_->InitializeDXC();
       Object3DPipelines();
       NonTexturesObjectPiplines();
-    
 }
 
 void System::Object3DPipelines(){

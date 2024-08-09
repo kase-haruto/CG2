@@ -17,7 +17,7 @@
 class Model{
 public:
 	Model();
-	~Model();
+	~Model() = default;
 
 	/// <summary>
 	/// 初期化

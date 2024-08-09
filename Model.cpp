@@ -11,13 +11,6 @@
 
 Model::Model(){}
 
-Model::~Model(){ 
-	pipelineState_.Reset();
-	device_.Reset();
-	commandList_.Reset();
-	pipelineState_.Reset();
-	rootSignature_.Reset();
-}
 
 void Model::Initialize(bool isUseTexture){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();

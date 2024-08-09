@@ -220,6 +220,7 @@ void Sphere::VertexBufferMap(){
 			//}
 		}
 	}
+	vertexResource_->Unmap(0,nullptr);
 }
 
 void Sphere::MaterialBufferMap(){
@@ -227,6 +228,7 @@ void Sphere::MaterialBufferMap(){
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
+	materialResource_->Unmap(0, nullptr);
 }
 
 void Sphere::MatrixBufferMap(){

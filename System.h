@@ -56,12 +56,12 @@ public:
 
 
 private:
-	WinApp* winApp_;
+	std::unique_ptr<WinApp> winApp_;
 	std::unique_ptr<DirectXCommon> dxCommon_;
 	ComPtr<ID3D12Device> device_;
 #ifdef _DEBUG
 	// ImGuiの初期化
-	ImGuiManager* imguiManager_;
+	std::unique_ptr<ImGuiManager> imguiManager_ = nullptr;
 #endif // _DEBUG
 
 	/// <summary>

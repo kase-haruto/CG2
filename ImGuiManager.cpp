@@ -7,10 +7,6 @@
 #include <imgui_impl_win32.h>
 #endif
 
-ImGuiManager* ImGuiManager::GetInstance(){
-	static ImGuiManager instance;
-	return &instance;
-}
 
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 #ifdef _DEBUG

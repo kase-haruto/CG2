@@ -2,8 +2,6 @@
 
 TestScene::TestScene(){}
 
-TestScene::~TestScene(){}
-
 void TestScene::Initialize(){
 	///=========================
 	/// グラフィック関連

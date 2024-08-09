@@ -27,7 +27,7 @@ class TestScene final :
     public IScene{
 public:
     TestScene();
-    ~TestScene() override;
+    ~TestScene() override = default;
 
     /// <summary>
     /// 初期化処理
@@ -61,6 +61,5 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
-    std::unique_ptr<Triangle>triangle_ = nullptr;
 };
 

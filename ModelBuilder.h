@@ -13,7 +13,7 @@
 class ModelBuilder{
 public:
 	ModelBuilder() = default;
-	~ModelBuilder();
+	~ModelBuilder() = default;
 
 	/// <summary>
 	/// 初期化

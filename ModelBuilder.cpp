@@ -1,9 +1,6 @@
 ﻿#include "ModelBuilder.h"
 #include"imgui.h"
 
-ModelBuilder::~ModelBuilder(){
-    models_.clear();
-}
 
 void ModelBuilder::Initialize(){}
 

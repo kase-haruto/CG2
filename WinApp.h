@@ -10,15 +10,8 @@ public://静的メンバ変数
 
 	//ウィンドウプロシージャ
 	static LRESULT WinAppProcedure(HWND hwnd, UINT msg, WPARAM wparm, LPARAM lparam);
-	
-public://静的メンバ関数
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns>シングルトンインスタンス</returns>
-	static WinApp* GetInstance();
 
-	
+
 public://メンバ関数
 	//コンストラクタ
 	WinApp();
@@ -41,10 +34,5 @@ private:
 	RECT wrc = { 0,0,1280,720 };
 	//ウィンドウのハンドル
 	HWND hwnd;
-
-private:
-
-	WinApp(const WinApp&) = delete;
-	const WinApp& operator=(const WinApp&) = delete;
 };
 
