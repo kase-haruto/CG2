@@ -24,19 +24,20 @@ void TestScene::Initialize(){
 	modelBuilder_ = std::make_unique<ModelBuilder>();
 	modelBuilder_->SetViewProjection(viewProjection_.get());
 
+	//パーティクル
+	particle_ = std::make_unique<Particle>();
+	particle_->Initialize(viewProjection_.get());
 
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize(viewProjection_.get());
+
 }
 
 void TestScene::Update(){
 	modelBuilder_->ShowImGuiInterface();
-	sphere_->UpdateImGui("sphere");
 
 	//モデルの更新
 	modelBuilder_->Update();
 
-	sphere_->Update();
+	particle_->Update();
 
 	sprite_->Update();
 }
@@ -45,7 +46,7 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
-	sphere_->Draw();
+	particle_->Draw();
 
 	sprite_->Draw();
 }
@@ -54,5 +55,5 @@ void TestScene::Finalize(){
 	viewProjection_.reset();
 	modelBuilder_.reset();
 	sprite_.reset();
-	sphere_.reset();
+	particle_.reset();
 }

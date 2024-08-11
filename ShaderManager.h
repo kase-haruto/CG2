@@ -12,6 +12,7 @@ using Microsoft::WRL::ComPtr;
 enum PipelineType{
     Object3D,
     NonTextureObject,
+    StructuredObject,
 };
 
 class ShaderManager{

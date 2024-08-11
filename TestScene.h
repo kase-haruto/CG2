@@ -10,6 +10,7 @@
 #include"Triangle.h"
 #include"ViewProjection.h"
 #include"ModelBuilder.h"
+#include"Particle.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -61,5 +62,6 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
+    std::unique_ptr<Particle>particle_ = nullptr;
 };
 

@@ -70,7 +70,6 @@ void Sprite::UpdateTransform(){
 }
 
 void Sprite::Draw(){
-
 	commandList_->SetPipelineState(pipelineState_.Get());
 	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える

@@ -43,7 +43,7 @@ public:
 	void Draw();
 
 	
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap()const{ return srvHeap_; }
+	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap()const{ return srvHeap_; }
 
 private:
 #ifdef _DEBUG

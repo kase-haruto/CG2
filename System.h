@@ -44,12 +44,14 @@ public:
 	/// rootSignatureの設定を行う
 	/// </summary>
 	void SettingRootSignatur1es();
+
 	/// <summary>
 	/// pipelineの設定を行う
 	/// </summary>
 	void CreatePipelines();
 	void Object3DPipelines();
-	void NonTexturesObjectPiplines();
+	void NonTexturesObjectPipelines();
+	void StructuredObjectPipeline();
 
 
 	int ProcessMessage();

@@ -1,6 +1,7 @@
 ﻿#include "Texture.h"
 #include "ConvertString.h"
 #include <cassert>
+#include"SrvLocator.h"
 
 Texture::Texture(const std::string& filePath) : filePath_(filePath){}
 
@@ -85,11 +86,10 @@ void Texture::Upload(ID3D12Device* device){
     }
 }
 
-void Texture::CreateShaderResourceView(ID3D12Device* device, ID3D12DescriptorHeap* srvHeap, UINT descriptorSize, UINT descriptorIndex){
-    srvHandleCPU_ = srvHeap->GetCPUDescriptorHandleForHeapStart();
-    srvHandleGPU_ = srvHeap->GetGPUDescriptorHandleForHeapStart();
-    srvHandleCPU_.ptr += descriptorSize * descriptorIndex;
-    srvHandleGPU_.ptr += descriptorSize * descriptorIndex;
+void Texture::CreateShaderResourceView(ID3D12Device* device){
+    auto srvHandle = SrvLocator::AllocateSrv();
+    srvHandleCPU_ = srvHandle.first;
+    srvHandleGPU_ = srvHandle.second;
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Format = metadata_.format;

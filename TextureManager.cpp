@@ -2,6 +2,8 @@
 #include "GraphicsGroup.h"
 #include "ImGuiManager.h"
 #include <cassert>
+#include"SrvLocator.h"
+#include"SrvLocator.h"
 
 TextureManager* TextureManager::GetInstance(){
     static TextureManager instance;
@@ -33,20 +35,11 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::LoadTexture(const std::string& fileP
     texture.Upload(device_.Get());
 
     // シェーダリソースビューを作成
-    texture.CreateShaderResourceView(device_.Get(), imgui_->GetSrvHeap().Get(), descriptorSizeSrv_, descriptorHeapIndex_);
+    texture.CreateShaderResourceView(device_.Get());
 
-    // SRVハンドルを取得
-    D3D12_GPU_DESCRIPTOR_HANDLE handle = texture.GetSrvHandle();
-
-    // テクスチャをマップに追加
+    // SRVハンドルを取得し、マップに追加
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = texture.GetSrvHandle();
     textures_[filePath] = std::move(texture);
 
-    // ディスクリプタヒープインデックスをインクリメント
-    descriptorHeapIndex_++;
-
-    return handle;
-}
-
-ID3D12DescriptorHeap* TextureManager::GetDescriptorHeap() const{
-    return imgui_->GetSrvHeap().Get();
+    return gpuHandle;
 }

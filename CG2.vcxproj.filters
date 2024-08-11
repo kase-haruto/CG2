@@ -210,6 +210,9 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>MyManager\ImGuiManager\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="SrvLocator.cpp">
+      <Filter>Graphics\DirectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -337,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SrvLocator.h">
+      <Filter>Graphics\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

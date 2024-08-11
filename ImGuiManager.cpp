@@ -7,6 +7,7 @@
 #include <imgui_impl_win32.h>
 #endif
 
+#include"SrvLocator.h"
 
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 #ifdef _DEBUG
@@ -43,6 +44,9 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 	}
+
+	//先頭にimguiが入ったsrvを管理クラスに移す
+	SrvLocator::Provide(srvHeap_,dxCommon_->GetDevice());
 #endif // _DEBUG
 }
 
@@ -66,7 +70,7 @@ void ImGuiManager::Begin(){
 
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	//でスクリプタヒープの配列をセットする
-	ID3D12DescriptorHeap* descriptorHeaps[] = {srvHeap_.Get()};
+	ID3D12DescriptorHeap* descriptorHeaps[] = {SrvLocator::GetSrvHeap().Get()};
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
 #endif // _DEBUG
 }

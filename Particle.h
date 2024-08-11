@@ -1,89 +1,85 @@
 ﻿#pragma once
-#include"ModelData.h"
-#include"Material.h"
-#include"TransformationMatrix.h"
-#include"Transform.h"
-#include"ViewProjection.h"
-#include"Vector4.h"
 
-#include<d3d12.h>
-#include<wrl.h>
+#include "ModelData.h"
+#include "Material.h"
+#include "TransformationMatrix.h"
+#include "Transform.h"
+#include "ViewProjection.h"
+#include "Vector4.h"
+#include <cstdint>
+#include <d3d12.h>
+#include <wrl.h>
 
 class DirectXCommon;
 
-/// <summary>
-/// モデル
-/// </summary>
 class Particle{
-private:
-	///=============================================================
-	///	directX関連
-	///=============================================================
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList_;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState_;
-
-	///=============================================================
-	///	Resources
-	///=============================================================
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
-
-	Vector4 RGBa;
-	Transform transform;
-	ModelData modelData;
-	Material* materialData;
-	TransformationMatrix* matrixData;
-
-	ViewProjection* viewProjection_;
-
 public:
-	Particle();
-	~Particle();
+    Particle();
+    ~Particle();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(ViewProjection* viewProjection);
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-	/// <summary>
-	/// リソースの生成
-	/// </summary>
-	void CreateBuffer();
-	/// <summary>
-	/// マップする
-	/// </summary>
-	void Map();
-	/// <summary>
-	/// モデルデータの取得
-	/// </summary>
-	/// <returns></returns>
-	ModelData GetModelData()const{ return modelData; }
+    // 初期化処理
+    void Initialize(ViewProjection* viewProjection);
+    // 更新処理
+    void Update();
+    // 描画処理
+    void Draw();
+    // バッファの作成
+    void CreateBuffer();
+    // リソースのマッピング
+    void Map();
+    // モデルデータを取得
+    ModelData GetModelData() const{ return modelData; }
 
-	void SetPos(const Vector3& pos){ transform.translate = pos; }
+    // SRVの作成
+    void CreateSRV();
 
 private:
-	/// <summary>
-	/// リソースの生成
-	/// </summary>
-	void CreateVertexBuffer();
-	void CreateMaterialBuffer();
-	void CreateMatrixBuffer();
-	/// <summary>
-	/// マップする
-	/// </summary>
-	void VertexBufferMap();
-	void MaterialBufferMap();
-	void MatrixBufferMap();
-};
+    // バッファ作成メソッド
+    void CreateVertexBuffer();
+    void CreateMaterialBuffer();
+    void CreateMatrixBuffer();
+    // リソースマッピングメソッド
+    void VertexBufferMap();
+    void MaterialBufferMap();
+    void MatrixBufferMap();
 
+private:
+    // DirectX関連
+    Microsoft::WRL::ComPtr<ID3D12Device> device_;
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
+
+    // リソース
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
+    Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
+
+    // 色設定
+    Vector4 RGBa;
+
+    // インスタンス数
+    static constexpr uint32_t kNumInstance = 10;
+
+    // トランスフォーム情報
+    Transform transforms[kNumInstance];
+
+    // モデルデータ
+    ModelData modelData;
+
+    // マテリアルデータ
+    Material* materialData = nullptr;
+
+    // インスタンシングデータ
+    TransformationMatrix* instancingData = nullptr;
+
+    // ビュー・プロジェクション
+    ViewProjection* viewProjection_ = nullptr;
+
+    // テクスチャハンドル
+    D3D12_GPU_DESCRIPTOR_HANDLE handle;
+
+    // インスタンシングSRVのGPUハンドル
+    D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
+};

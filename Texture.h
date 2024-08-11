@@ -20,7 +20,7 @@ public:
 
     void Load(ID3D12Device* device);
     void Upload(ID3D12Device* device);
-    void CreateShaderResourceView(ID3D12Device* device, ID3D12DescriptorHeap* srvHeap, UINT descriptorSize, UINT descriptorIndex);
+    void CreateShaderResourceView(ID3D12Device* device);
 
     D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandle() const{ return srvHandleGPU_; }
 

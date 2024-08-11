@@ -1,129 +1,168 @@
 ﻿#include "Particle.h"
-#include"DirectXCommon.h"
-#include"MyFunc.h"
-#include"VertexData.h"
-#include"TextureManager.h"
-#include"GraphicsGroup.h"
-#include"DirectionalLight.h"
+#include "DirectXCommon.h"
+#include "MyFunc.h"
+#include "VertexData.h"
+#include "TextureManager.h"
+#include "GraphicsGroup.h"
+#include "DirectionalLight.h"
+#include "SrvLocator.h"
 
 #ifdef _DEBUG
-#include"imgui.h"
+#include "imgui.h"
 #endif // _DEBUG
+
+#include<string>
 
 Particle::Particle(){}
 
-Particle::~Particle(){}
+Particle::~Particle(){
+}
 
 void Particle::Initialize(ViewProjection* viewProjection){
-	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-	/*rootSignature_ = dxCommon->GetRootSignature();
-	pipelineState_ = dxCommon->GetPipelineState();*/
-	viewProjection_ = viewProjection;
+    device_ = GraphicsGroup::GetInstance()->GetDevice();
+    commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject);
+    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject);
+    viewProjection_ = viewProjection;
 
-	//モデルの読み込み
-	modelData = LoadObjFile("Resources", "plane.obj");
-	RGBa = {1.0f,1.0f,1.0f,1.0f};
-	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+    modelData = LoadObjFile("Resources", "plane.obj");
+    RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 
-	///=================================================
-	///		リソースの生成と書き込み
-	///=================================================
-	CreateBuffer();
-	Map();
+    for (uint32_t index = 0; index < kNumInstance; ++index){
+        transforms[index].scale = {1.0f, 1.0f, 1.0f};
+        transforms[index].rotate = {0.0f, 0.0f, 0.0f};
+        transforms[index].translate = {index * 0.1f, index * -0.1f, index * 0.1f};
+    }
+
+    handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+    if (!handle.ptr){
+        throw std::runtime_error("Failed to load texture.");
+    }
+
+    CreateBuffer();
+    Map();
+    CreateSRV();
+
+  
+}
+
+void Particle::CreateSRV(){
+    auto [srvHandleCPU, srvHandleGPU] = SrvLocator::AllocateSrv();
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc = {};
+    instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+    instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+    instancingSrvDesc.Buffer.FirstElement = 0;
+    instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+    instancingSrvDesc.Buffer.NumElements = kNumInstance;
+    instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+
+    device_->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, srvHandleCPU);
+    instancingSrvHandleGPU_ = srvHandleGPU;
 }
 
 void Particle::Update(){
 #ifdef _DEBUG
-	ImGui::Begin("model");
-	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
-	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.01f);
-	ImGui::ColorEdit4("color", &RGBa.x);
-	bool enableLighting = (materialData->enableLighting != 0);
-	ImGui::Checkbox("enableLighting", &enableLighting);
-	materialData->enableLighting = enableLighting ? 1 : 0;
-	ImGui::End();
+    ImGui::Begin("particle");
+    ImGui::ColorEdit4("color", &RGBa.x);
+    for (uint32_t index = 0; index < kNumInstance; ++index){
+        std::string label = "Transform[" + std::to_string(index) + "]";
+        ImGui::DragFloat3(label.c_str(), &transforms[index].translate.x, 0.01f);
+    }
+    ImGui::End();
 #endif // _DEBUG
 
-	materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
+    materialData->color = RGBa;
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
-											 transform.rotate,
-											 transform.translate
-	);
-
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-	matrixData->world = worldMatrix;
-	matrixData->WVP = worldViewProjectionMatrix;
+    for (uint32_t index = 0; index < kNumInstance; ++index){
+        Matrix4x4 worldMatrix = MakeAffineMatrix(transforms[index].scale, transforms[index].rotate, transforms[index].translate);
+        Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+        instancingData[index].WVP = worldViewProjectionMatrix;
+        instancingData[index].world = worldMatrix;
+    }
 }
 
 void Particle::Draw(){
-	//デフォルトのテクスチャ -> uvChecker
-	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+    // ルートシグネチャを設定
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList_->SetPipelineState(pipelineState_.Get());
-	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
-	//形状を設定。psoに設定しているものとはまた別。同じものを設定すると考える
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//マテリアルCBufferの場所を設定
-	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-	commandList_->SetGraphicsRootDescriptorTable(3, handle);
-	//モデル
-	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
+    // パイプラインステートを設定
+    commandList_->SetPipelineState(pipelineState_.Get());
+
+    // 頂点バッファを設定
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView);
+
+    // プリミティブトポロジーを設定（ここでは三角形リストを指定）
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // マテリアル用の定数バッファをルートパラメータ0にバインド
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+
+    // インスタンシング用のSRV（Shader Resource View）をルートパラメータ1にバインド
+    commandList_->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+
+    // テクスチャ用のSRVをルートパラメータ2にバインド
+    commandList_->SetGraphicsRootDescriptorTable(2, handle);
+
+    // インスタンシングを用いて、指定された頂点バッファの頂点数分だけ描画を行う
+    commandList_->DrawInstanced(static_cast< UINT >(modelData.vertices.size()), kNumInstance, 0, 0);
+
 }
 
-
 void Particle::CreateBuffer(){
-	CreateVertexBuffer();
-	CreateMaterialBuffer();
-	CreateMatrixBuffer();
+    CreateVertexBuffer();
+    CreateMaterialBuffer();
+    CreateMatrixBuffer();
 }
 
 void Particle::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * modelData.vertices.size());
-	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
+    vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * modelData.vertices.size());
+    vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData.vertices.size());
+    vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Particle::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+    materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }
 
 void Particle::CreateMatrixBuffer(){
-	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+    instancingResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix) * kNumInstance);
 }
 
-
 void Particle::Map(){
-	//リソースにデータを書き込む
-	VertexBufferMap();
-	MaterialBufferMap();
-	MatrixBufferMap();
+    VertexBufferMap();
+    MaterialBufferMap();
+    MatrixBufferMap();
 }
 
 void Particle::VertexBufferMap(){
-	VertexData* vertexData = nullptr;
-	//書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr,
-						 reinterpret_cast< void** >(&vertexData));
-	//モデル用
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
+    VertexData* vertexData = nullptr;
+    HRESULT hr = vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
+    if (FAILED(hr)){
+        throw std::runtime_error("Failed to map vertex buffer.");
+    }
+    std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
 
 void Particle::MaterialBufferMap(){
-	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
-	//今回はあかをかきこむ
-	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = Lambert;
-	materialData->uvTransform = Matrix4x4::MakeIdentity();
+    HRESULT hr = materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
+    if (FAILED(hr)){
+        throw std::runtime_error("Failed to map material buffer.");
+    }
+    materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    materialData->enableLighting = Lambert;
+    materialData->uvTransform = Matrix4x4::MakeIdentity();
 }
 
 void Particle::MatrixBufferMap(){
-	wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData));
-	//単位行列を書き込んでおく
-	matrixData->WVP = Matrix4x4::MakeIdentity();
+    HRESULT hr = instancingResource_->Map(0, nullptr, reinterpret_cast< void** >(&instancingData));
+    if (FAILED(hr)){
+        throw std::runtime_error("Failed to map instance buffer.");
+    }
+    for (uint32_t index = 0; index < kNumInstance; ++index){
+        instancingData[index].WVP = Matrix4x4::MakeIdentity();
+        instancingData[index].world = Matrix4x4::MakeIdentity();
+    }
 }
