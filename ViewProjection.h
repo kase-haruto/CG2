@@ -41,6 +41,7 @@ public:
 	Matrix4x4 viewProjection_;
 	Matrix4x4 matView;
 	Matrix4x4 matProjection;
+	Matrix4x4 cameraMatrix;
 
 private:
 	//定数バッファ
@@ -51,6 +52,7 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> commandList_;
 
 	ConstBufferDataViewProjection* camearData_;
+
 
 private:
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);

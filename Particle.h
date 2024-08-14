@@ -6,23 +6,89 @@
 #include "Transform.h"
 #include "ViewProjection.h"
 #include "Vector4.h"
+#include"ParticleField.h"
+
+#include<list>
 #include <cstdint>
 #include <d3d12.h>
 #include <wrl.h>
 
+#include<random>
+
+
+/// <summary>
+/// パーティクル
+/// </summary>
+struct Particle{
+    Transform transform;
+    Vector3 velocity;
+    Vector4 color;
+    float lifeTime;
+    float currentTime;
+};
+
+/// <summary>
+/// エミッター
+/// </summary>
+struct Emitter{
+    Transform transform;    //エミッタのtransform
+    uint32_t count;         //発生数
+    float frequency;        //発生頻度
+    float frequencyTime;    //頻度用時刻
+};
+
+
+/// <summary>
+/// gpu側
+/// </summary>
+struct ParticleForGPU{
+    Matrix4x4 WVP;
+    Matrix4x4 World;
+    Vector4 color;
+};
+
 class DirectXCommon;
 
-class Particle{
+class ParticleManager{
 public:
-    Particle();
-    ~Particle();
+    ParticleManager(const uint32_t kInstanceNum);
+    ~ParticleManager();
 
-    // 初期化処理
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    /// <param name="viewProjection"></param>
     void Initialize(ViewProjection* viewProjection);
-    // 更新処理
+    
+    /// <summary>
+    /// パーティクルの生成と初期化
+    /// </summary>
+    /// <param name="numInstance"></param>
+    /// <param name="viewProjection"></param>
+    void Create(ViewProjection* viewProjection);
+   
+    /// <summary>
+    /// 新しいパーティクルの生成
+    /// </summary>
+    /// <param name="randomEngine"></param>
+    /// <returns></returns>
+    Particle MakeNewParticle(std::mt19937& randomEngine,const Vector3& translate);
+   
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update();
-    // 描画処理
+   
+    /// <summary>
+    /// 描画
+    /// </summary>
     void Draw();
+
+    /// <summary>
+    /// エミッター関数
+    /// </summary>
+    std::list<Particle> Emit(const Emitter& emitter, std::mt19937& randomEngine);
+   
     // バッファの作成
     void CreateBuffer();
     // リソースのマッピング
@@ -52,18 +118,30 @@ private:
 
     // リソース
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
+    Microsoft::WRL::ComPtr<ID3D12Resource>instancingResource_;
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-    Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 
     // 色設定
     Vector4 RGBa;
 
-    // インスタンス数
-    static constexpr uint32_t kNumInstance = 10;
+    //パーティクルの最大個数
+    const uint32_t kMaxInstance_;
 
-    // トランスフォーム情報
-    Transform transforms[kNumInstance];
+    //描画する個数
+    uint32_t numInstance_;
+
+    //パーティクル
+    std::list<Particle> particle_;
+
+    //エミッター
+    Emitter emitter {};
+
+    //フィールド
+    AccelerationField accelerationField;
+
+    //反対側に回す回転行列
+    Matrix4x4 backToFrontMatrix_;
 
     // モデルデータ
     ModelData modelData;
@@ -72,7 +150,7 @@ private:
     Material* materialData = nullptr;
 
     // インスタンシングデータ
-    TransformationMatrix* instancingData = nullptr;
+    ParticleForGPU* instancingData = nullptr;
 
     // ビュー・プロジェクション
     ViewProjection* viewProjection_ = nullptr;

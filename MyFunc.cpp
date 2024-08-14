@@ -202,7 +202,6 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 	return modelData;
 }
 
-
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
 	MaterialData materialData;						//構築するmaterialData
 	materialData.hasTexture = false;				//デフォルトではテクスチャなし
@@ -224,4 +223,11 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 		}
 	}
 	return materialData;
+}
+
+bool IsCollision(const AABB& aabb, const Vector3& point){
+	// pointがaabbのminとmaxの範囲内にあるかチェック
+	return (point.x >= aabb.min.x && point.x <= aabb.max.x) &&
+		(point.y >= aabb.min.y && point.y <= aabb.max.y) &&
+		(point.z >= aabb.min.z && point.z <= aabb.max.z);
 }

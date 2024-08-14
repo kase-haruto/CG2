@@ -375,15 +375,18 @@ void System::StructuredObjectPipeline(){
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
     // BlendStateの設定
+   // BlendStateの設定
     D3D12_BLEND_DESC blendDesc {};
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
     blendDesc.RenderTarget[0].BlendEnable = true;
     blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE; // 加算ブレンド
+    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD; // カラーの加算
+
     blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE; // アルファ値の加算
+    blendDesc.RenderTarget[0].BlendOpAlpha= D3D12_BLEND_OP_ADD; // アルファブレンドの加算
+
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -393,7 +396,7 @@ void System::StructuredObjectPipeline(){
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
     depthStencilDesc.DepthEnable = true;
-    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
     // シェーダの読み込み

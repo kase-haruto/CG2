@@ -106,6 +106,9 @@
     <Filter Include="MyManager\ImGuiManager\ImGui">
       <UniqueIdentifier>{b01f14ad-0f96-4a18-9ac4-e2e8c5ad75d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Object\AABB">
+      <UniqueIdentifier>{ab2b5911-36b6-4629-bf9f-fcabc3b6d822}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -212,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="SrvLocator.cpp">
       <Filter>Graphics\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Game\Object\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +352,12 @@
     </ClInclude>
     <ClInclude Include="SrvLocator.h">
       <Filter>Graphics\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Game\Object\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleField.h">
+      <Filter>Game\Object\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

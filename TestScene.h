@@ -62,6 +62,6 @@ private:
     std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
-    std::unique_ptr<Particle>particle_ = nullptr;
+    std::unique_ptr<ParticleManager>particle_ = nullptr;
 };
 

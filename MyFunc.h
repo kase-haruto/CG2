@@ -7,10 +7,17 @@
 #include"ModelData.h"
 #include"VertexData.h"
 #include"Material.h"
+#include"Particle.h"
+#include"AABB.h"
 
+#include<list>
 #include<d3d12.h>
 #include<stdint.h>
 #include<string>
+#include<random>
+
+
+const float deltaTime = 1.0f / 60.0f;
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
@@ -35,3 +42,5 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+bool IsCollision(const AABB& aabb, const Vector3& point);

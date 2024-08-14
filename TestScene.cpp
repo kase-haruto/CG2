@@ -25,8 +25,8 @@ void TestScene::Initialize(){
 	modelBuilder_->SetViewProjection(viewProjection_.get());
 
 	//パーティクル
-	particle_ = std::make_unique<Particle>();
-	particle_->Initialize(viewProjection_.get());
+	particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
+	particle_->Create(viewProjection_.get());
 
 
 }

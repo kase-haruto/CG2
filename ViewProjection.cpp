@@ -57,7 +57,7 @@ void ViewProjection::Map(){
 }
 
 void ViewProjection::Initialize(){
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(transform.scale,
+	cameraMatrix = MakeAffineMatrix(transform.scale,
 														 transform.rotate,
 														 transform.translate
 	);
