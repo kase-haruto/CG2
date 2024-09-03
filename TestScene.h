@@ -64,5 +64,6 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<ParticleManager>particle_ = nullptr;
+    std::unique_ptr<Model> modelGround_ = nullptr;
 };
 

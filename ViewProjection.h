@@ -23,8 +23,8 @@ public:
 #pragma region ビュー行列の設定
     Transform transform = {
         {1.0f, 1.0f, 1.0f},
-        {0.35f, 0.0f, 0.0f},
-        {0.0f, 4.0f, -13.0f}
+        {0.0f, 0.0f, 0.0f},
+        {0.0f, 4.0f, -15.0f}
     };
 #pragma endregion
 

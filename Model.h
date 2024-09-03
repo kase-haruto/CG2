@@ -57,6 +57,10 @@ public:
 
 	void SetPos(const Vector3& pos){ transform.translate = pos; }
 
+	void SetSize(const Vector3& size){ transform.scale = size; }
+
+	void SetUvScale(const Vector3& uvScale){ uvTransform.scale = uvScale; }
+
 private:
 	/// <summary>
 	/// リソースの生成
@@ -95,6 +99,7 @@ private:
 
 	Vector4 RGBa;
 	Transform transform;
+	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	ModelData modelData;
 	Material* materialData;
 	TransformationMatrix* matrixData;

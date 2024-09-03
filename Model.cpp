@@ -65,9 +65,17 @@ void Model::Update(){
 }
 
 void Model::ShowImGuiInterface(){
+	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+	materialData->uvTransform = uvTransformMatrix;
+
 	ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f);
 	ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f);
-	ImGui::ColorEdit4("Color", &RGBa.x);
+	ImGui::DragFloat3("size", &transform.scale.x, 0.01f);
+	ImGui::DragFloat3("uvScale", &uvTransform.scale.x, 0.01f);
+
+	
 		
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "No Lighting"};
 
