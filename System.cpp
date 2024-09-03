@@ -29,10 +29,19 @@ void System::Initialize(int32_t clientWidth, int32_t clientHeight){
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
-    //ライトの初期化
-    light_ = std::make_unique<DirectionalLight>();
-    light_->Initialize(dxCommon_.get());
-    light_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
+    //////////////////////////////////////////////////////////////////////
+    ///             ライトの初期化
+    //////////////////////////////////////////////////////////////////////
+
+    //directionalLight
+    directionalLight_ = std::make_unique<DirectionalLight>();
+    directionalLight_->Initialize(dxCommon_.get());
+    directionalLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
+
+    //pointLight
+    pointLight_ = std::make_unique<PointLight>();
+    pointLight_->Initialize(dxCommon_.get());
+    pointLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
 }
 
 void System::BeginFrame(){
@@ -41,7 +50,8 @@ void System::BeginFrame(){
 	// ImGui受付開始
 	imguiManager_->Begin();
     //ライトの処理の更新
-    light_->Render();
+    directionalLight_->Render();
+    pointLight_->Render();
 }
 
 void System::EndFrame(){
@@ -57,7 +67,8 @@ void System::Finalize(){
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
-    light_.reset();
+    directionalLight_.reset();
+    pointLight_.reset();
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
@@ -129,39 +140,54 @@ void System::Object3DPipelines(){
     }
 
     // RootSignatureの設定
-    D3D12_ROOT_PARAMETER rootParameters[5] = {};
+    D3D12_ROOT_PARAMETER rootParameters[7] = {};
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0;
     descriptorRange[0].NumDescriptors = 1;
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+    //マテリアル
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     rootParameters[0].Descriptor.ShaderRegister = 0;
 
+    //wvp/world
     rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
     rootParameters[1].Descriptor.ShaderRegister = 0;
 
+    //フォグ
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     rootParameters[2].Descriptor.ShaderRegister = 1;
 
+    //テクスチャ
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
     rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange;
     rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
+    //DirectionalLight
     rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     rootParameters[4].Descriptor.ShaderRegister = 2;
+
+    //カメラ
+    rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rootParameters[5].Descriptor.ShaderRegister = 3;
+
+    //pointLight
+    rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rootParameters[6].Descriptor.ShaderRegister = 4;
 
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
     rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSignatureDesc.pParameters = rootParameters;
     rootSignatureDesc.NumParameters = _countof(rootParameters);
-
+    
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
     staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
     staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

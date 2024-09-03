@@ -109,6 +109,9 @@
     <Filter Include="Game\Object\AABB">
       <UniqueIdentifier>{ab2b5911-36b6-4629-bf9f-fcabc3b6d822}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light\PointLight">
+      <UniqueIdentifier>{796f10ff-4c60-418e-9bbc-2c502879687d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
@@ -221,6 +224,9 @@
     </ClCompile>
     <ClCompile Include="Vector3.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Light\PointLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="ParticleField.h">
       <Filter>Game\Object\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light\PointLight</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

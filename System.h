@@ -8,6 +8,7 @@
 
 //オブジェクト
 #include"DirectionalLight.h"
+#include"PointLight.h"
 
 #ifdef _DEBUG
 #include"ImGuiManager.h"
@@ -75,6 +76,7 @@ private:
 	/// <summary>
 	/// オブジェクト関連クラス
 	/// </summary>
-	std::unique_ptr<DirectionalLight>light_;
+	std::unique_ptr<DirectionalLight>directionalLight_;
+	std::unique_ptr<PointLight> pointLight_;
 };
 

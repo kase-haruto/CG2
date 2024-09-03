@@ -125,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="PipelineStateManager.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -167,6 +168,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="ParticleField.h" />
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="PipelineStateManager.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />

@@ -3,12 +3,14 @@ struct VertexShaderOutput{
 	float4 position:SV_POSITION;
 	float2 texcoord:TEXCOORD0;
 	float3 normal:NORMAL0;
+	float3 worldPosition:POSITION0;
 };
 
 //ワールド
 struct TransformationMatrix{
 	float4x4 WVP;
 	float4x4 world;
+	float4x4 worldInverseTranspose;
 };
 
 struct VertexShaderInput{
@@ -19,9 +21,10 @@ struct VertexShaderInput{
 
 //マテリアル
 struct Material{
-	float4 color;
-	int enableLighting;
-	float4x4 uvTransform;
+	float4 color;			//色
+	int enableLighting;		//ライティングの種類
+	float4x4 uvTransform;	//uv座標
+	float shiniess;		//光沢度
 };
 
 struct PixelShaderOutput{
@@ -36,15 +39,19 @@ cbuffer FogConstants : register(b1){
 };
 
 //カメラのパラメータ
-//struct CameraConstants{
-//	float4x4 view;			//ワールド→ビュー変換行列
-//	float4x4 projection;	//ビュー→プロジェクション変換行列
-//	float3 cameraPos;		//カメラ座標(ワールド座標)
-//};
+struct Camera{
+	float3 worldPosition;	//カメラのワールド座標
+};
 
 //ライト
 struct DirectionalLight{
 	float4 color;		//ライトの色
 	float3 direction;	//ライトの向き
 	float intensity;	//輝度
+};
+
+struct PointLight{
+	float4 color;		//ライトの色
+	float3 position;	//ライトの位置
+	float intensity;	//光度
 };

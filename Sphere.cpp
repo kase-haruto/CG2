@@ -20,7 +20,7 @@ void Sphere::Initialize(ViewProjection* viewProjection){
 	viewProjection_ = viewProjection;
 
 
-	handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	handle = TextureManager::GetInstance()->LoadTexture("./Resources/MonsterBall.png");
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -44,9 +44,9 @@ void Sphere::UpdateImGui(std::string lavel){
 	ImGui::DragFloat3("translation", &transform.translate.x, 0.01f);
 	ImGui::DragFloat3("rotation", &transform.rotate.x, 0.01f);
 	ImGui::ColorEdit4("color", &RGBa.x);
-
+	ImGui::DragFloat("shininess", &materialData->shininess, 0.01f);
 	
-	const char* lightingModes[] = {"Half-Lambert", "Lambert", "No Lighting"};
+	const char* lightingModes[] = {"Half-Lambert", "Lambert","SpecularReflection", "No Lighting"};
 
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode])){
 		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
@@ -228,6 +228,7 @@ void Sphere::MaterialBufferMap(){
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
+	materialData->shininess = 20.0f;
 	materialResource_->Unmap(0, nullptr);
 }
 

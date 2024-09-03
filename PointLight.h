@@ -1,30 +1,23 @@
 ﻿#pragma once
+
 #include"Vector4.h"
 #include"Vector3.h"
 
 #include<wrl.h>
 #include<d3d12.h>
 
-struct DirectionalLightData{
+struct PointLightData{
 	Vector4 color;		//ライトの色
-	Vector3 direction;	//ライトの向き
-	float intensity;	//輝度
-};
-
-// ライティングモードの定義
-enum LightingMode{
-	HalfLambert = 0,
-	Lambert,
-	specularReflection,
-	NoLighting,
+	Vector3 position;	//ライトの位置
+	float intensity;	//光度
 };
 
 class DirectXCommon;
 
-class DirectionalLight{
+class PointLight{
 public:
-	DirectionalLight();
-	~DirectionalLight() = default;
+	PointLight();
+	~PointLight() = default;
 
 	/// <summary>
 	/// 初期化
@@ -48,8 +41,6 @@ public:
 	/// </summary>
 	void Map();
 
-	void ShowImGuiInterFace();
-
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
 private:
@@ -58,7 +49,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-	DirectionalLightData* data_;
+	PointLightData* data_;
 
 	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
 };
