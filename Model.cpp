@@ -9,7 +9,6 @@
 	#include"imgui.h"
 #endif // _DEBUG
 
-Model::Model(){}
 
 
 void Model::Initialize(bool isUseTexture){
