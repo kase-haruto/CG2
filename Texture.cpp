@@ -2,6 +2,7 @@
 #include "ConvertString.h"
 #include <cassert>
 #include"SrvLocator.h"
+#include"MyFunc.h"
 
 Texture::Texture(const std::string& filePath) : filePath_(filePath){}
 
@@ -37,15 +38,11 @@ Texture& Texture::operator=(Texture&& other) noexcept{
 }
 
 void Texture::Load(ID3D12Device* device){
-    std::wstring filePathW = ConvertString(filePath_);
+    std::wstring filePathW = ConvertString("Resources/textures/" + filePath_);
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image_);
     assert(SUCCEEDED(hr));
 
-    DirectX::ScratchImage mipImages;
-    hr = DirectX::GenerateMipMaps(image_.GetImages(), image_.GetImageCount(), image_.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-    assert(SUCCEEDED(hr));
-
-    image_ = std::move(mipImages);
+    image_ = LoadTextureImage("Resources/textures/" + filePath_);
     metadata_ = image_.GetMetadata();
 }
 

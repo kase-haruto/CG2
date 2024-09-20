@@ -1,4 +1,5 @@
 ﻿#include"MyFunc.h"
+#include"ConvertString.h"
 #include<cmath>
 #include<fstream>
 #include<sstream>
@@ -123,107 +124,209 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 }
 
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
-	ModelData modelData;
-	std::vector<Vector4> positions;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> texcoords;
-	std::string line;
+    // ファイルを開く
+    std::ifstream file(directoryPath + "/" + filename + "/" + filename + ".obj");
+    assert(file.is_open());// 失敗したらアサート
 
-	// ファイルを開く
-	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open());
+    // 開けたら必要な変数を用意
+    ModelData modelData;
+    std::vector<Vector4>positions;
+    std::vector<Vector3>normals;
+    std::vector<Vector2>texcoords;
+    std::string line;
+    int oCount = 0;
 
-	// ファイルの読み込み
-	while (std::getline(file, line)){
-		std::string identifier;
-		std::istringstream s(line);
-		s >> identifier; // 先頭の識別子を読む
+    while (std::getline(file, line)){
 
-		if (identifier == "v"){ // 頂点位置
-			Vector4 position;
-			s >> position.x >> position.y >> position.z;
-			position.w = 1.0f;
-			positions.push_back(position);
-		} else if (identifier == "vt"){ // 頂点テクスチャ
-			Vector2 texcoord;
-			s >> texcoord.x >> texcoord.y;
-			texcoord.y = 1 - texcoord.y;
-			texcoords.push_back(texcoord);
-		} else if (identifier == "vn"){ // 頂点法線
-			Vector3 normal;
-			s >> normal.x >> normal.y >> normal.z;
-			normals.push_back(normal);
-		} else if (identifier == "f"){ // 面
-			VertexData triangle[3];
-			// 面は三角形限定 その他は未対応
-			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex){
-				std::string vertexDefinition;
-				s >> vertexDefinition;
-				// 頂点要素へのindexは[位置・UV・法線]で格納されているので分解してindexを取得する
-				std::istringstream v(vertexDefinition);
-				std::string index;
-				uint32_t positionIndex = 0, texcoordIndex = 0, normalIndex = 0;
+        // まずobjファイルの行の先頭の識別子を読む
+        std::string identifer;
+        std::istringstream s(line);
+        s >> identifer;
 
-				std::getline(v, index, '/');
-				positionIndex = std::stoi(index);
+        // identifer(識別子)に応じた処理を行う
+        if (identifer == "o"){// 新しいメッシュ-----------------------------
 
-				if (std::getline(v, index, '/')){
-					if (!index.empty()){
-						texcoordIndex = std::stoi(index);
-					}
-				}
+            oCount++;
 
-				if (std::getline(v, index, '/')){
-					normalIndex = std::stoi(index);
-				}
+        } else if (identifer == "v"){// 頂点位置-----------------------------
 
-				// 要素へのindexから、実際の要素の値を取得して、頂点を構築する
-				Vector4 position = positions[positionIndex - 1];
-				Vector2 texcoord = texcoordIndex > 0 ? texcoords[texcoordIndex - 1] : Vector2 {1.0f, 1.0f};
-				Vector3 normal = normals[normalIndex - 1];
+            Vector4 position;
+            // x,y,zの順に格納
+            s >> position.x >> position.y >> position.z;
+            // zは1.0固定
+            position.w = 1.0f;
+            // 座標配列末尾にを要素を追加
+            positions.push_back(position);
 
-				// 右手座標系から左手座標系に変換（X軸を反転）
-				position.z *= -1.0f;
-				normal.z *= -1.0f;
 
-				triangle[faceVertex] = {position, texcoord, normal};
-			}
-			modelData.vertices.push_back(triangle[2]);
-			modelData.vertices.push_back(triangle[1]);
-			modelData.vertices.push_back(triangle[0]);
-		} else if (identifier == "mtllib"){
-			// materialTemplateLibraryファイルの名前を取得する
-			std::string materialFilename;
-			s >> materialFilename;
-			// 基本的にobjファイルと同一階層
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
-		}
-	}
-	return modelData;
+        } else if (identifer == "vt"){// 頂点テクスチャ座標------------
+
+            Vector2 texcoord;
+            // x,y,zの順に格納
+            s >> texcoord.x >> texcoord.y;
+            // テクスチャ座標配列末尾にを要素を追加
+            texcoords.push_back(texcoord);
+
+        } else if (identifer == "vn"){// 頂点法線--------------------
+
+            Vector3 normal;
+            // x,y,zの順に格納
+            s >> normal.x >> normal.y >> normal.z;
+            // 座標配列末尾にを要素を追加
+            normals.push_back(normal);
+
+        } else if (identifer == "f"){// 面
+
+            VertexData vertices[3];
+
+            for (int32_t faceVertex = 0; faceVertex < 3; faceVertex++){
+
+                std::string vertexDefinition;
+                s >> vertexDefinition;
+                std::istringstream v(vertexDefinition);
+                uint32_t elementIndices[3];
+
+                for (int32_t element = 0; element < 3; element++){
+                    std::string index;
+                    std::getline(v, index, '/');
+
+                    if (index == ""){
+                        elementIndices[element] = 0;
+                    } else{
+                        elementIndices[element] = std::stoi(index);
+
+                    }
+                }
+
+                Vector4 position;
+                Vector2 texcoord;
+                Vector3 normal;
+
+                // テクスチャありと無しに対応
+                if (elementIndices[1] == 0){
+                    texcoord = {0.0f,0.0f};
+                } else{
+                    texcoord = texcoords[elementIndices[1] - 1];
+                }
+
+                position = positions[elementIndices[0] - 1];
+                normal = normals[elementIndices[2] - 1];
+
+                // 左手座標系に変換
+                position.x *= -1.0f;
+                normal.x *= -1.0f;
+                texcoord.y = 1.0f - texcoord.y;
+
+                vertices[faceVertex] = {position,texcoord,normal};
+            }
+
+            // 反対周りに格納
+            modelData.vertices.push_back(vertices[2]);
+            modelData.vertices.push_back(vertices[1]);
+            modelData.vertices.push_back(vertices[0]);
+
+        } else if (identifer == "mtllib"){// mtlファイルの場所
+
+            std::string materialFilename;
+            // ファイル名を格納
+            s >> materialFilename;
+
+            // mtlファイルを読み込む
+            modelData.material = LoadMaterialTemplateFile(directoryPath + "/" + filename, materialFilename);
+        }
+    }
+
+    return modelData;
 }
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
-	MaterialData materialData;						//構築するmaterialData
-	materialData.hasTexture = false;				//デフォルトではテクスチャなし
-	std::string line;								//ファイルから読んだ1行を格納するもの
-	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open());							//開かなかったら止める
 
-	while (std::getline(file, line)){
-		std::string identifier; std::istringstream s(line);
-		s >> identifier;
+    // ファイルを開く
+    std::ifstream file(directoryPath + "/" + filename);
+    assert(file.is_open());// 失敗したらアサート
 
-		//identifierに応じた処理
-		if (identifier == "map_Kd"){
-			std::string textureFilename;
-			s >> textureFilename;
-			//連結してファイルパスにする
-			materialData.textureFilePath = directoryPath + "/" + textureFilename;
-			materialData.hasTexture = true;
-		}
-	}
-	return materialData;
+    MaterialData materialData;
+    std::string line;
+
+    while (std::getline(file, line)){
+
+        // まずobjファイルの行の先頭の識別子を読む
+        std::string identifer;
+        std::istringstream s(line);
+        s >> identifer;
+
+        if (identifer == "map_Kd"){// ファイル名
+
+            std::string textureFilename;
+            Vector3 scale = {1.0f,1.0f,1.0f};
+            Vector3 offset = {0.0f,0.0f,0.0f};
+            Vector3 translate = {0.0f,0.0f,0.0f};
+
+            // ファイル名を格納
+            while (s >> textureFilename){
+                if (textureFilename[0] == '-'){
+                    std::string option = textureFilename.substr(1);
+                    if (option == "s"){
+                        s >> scale.x >> scale.y >> scale.z;
+                    } else if (option == "o"){
+                        s >> offset.x >> offset.y >> offset.z;
+                    } else if (option == "t"){
+                        s >> translate.x >> translate.y >> translate.z;
+                    }
+                } else{
+                    materialData.textureFilePath = textureFilename;
+                }
+            }
+
+            materialData.uv_scale = scale;
+            materialData.uv_offset = offset;
+            materialData.uv_translate = translate;
+        }
+    }
+
+    // テクスチャなしのモデルの場合
+    if (materialData.textureFilePath == ""){
+        materialData.textureFilePath = "white1x1.png";
+    }
+
+    return materialData;
 }
+
+DirectX::ScratchImage LoadTextureImage(const std::string& filePath){
+
+    DirectX::ScratchImage image {};
+    DirectX::ScratchImage mipImages {};
+
+    std::wstring filePathW = ConvertString(filePath);// wstring型に変換
+    // ファイルを読み込む
+    HRESULT hr = DirectX::LoadFromWICFile(
+        filePathW.c_str(),
+        DirectX::WIC_FLAGS_FORCE_SRGB,
+        nullptr,
+        image
+    );
+    assert(SUCCEEDED(hr));
+
+    // ミップマップの作成
+    if (image.GetMetadata().width > 1 && image.GetMetadata().height > 1){
+        hr = DirectX::GenerateMipMaps(
+            image.GetImages(),
+            image.GetImageCount(),
+            image.GetMetadata(),
+            DirectX::TEX_FILTER_SRGB,
+            0,
+            mipImages
+        );
+    } else{// サイズが1x1のときはここ
+        return image;
+    }
+
+    assert(SUCCEEDED(hr));
+
+    return mipImages;
+}
+
+
 
 bool IsCollision(const AABB& aabb, const Vector3& point){
 	// pointがaabbのminとmaxの範囲内にあるかチェック

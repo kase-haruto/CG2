@@ -17,8 +17,8 @@ void ModelBuilder::Draw(){
 }
 
 void ModelBuilder::AddModel(const std::string& modelPath){
-	auto model = CreateModel(modelPath+".obj");
-	models_.emplace_back(modelPath + ".obj", std::move(model));
+	auto model = CreateModel(modelPath);
+	models_.emplace_back(modelPath, std::move(model));
 }
 
 void ModelBuilder::RemoveModel(size_t index){
@@ -66,7 +66,7 @@ void ModelBuilder::ShowImGuiInterface(){
 std::unique_ptr<Model> ModelBuilder::CreateModel(const std::string& modelPath){
 	auto model = std::make_unique<Model>();
 	model->SetViewProjection(viewProjection_);
-	model->Create("Resources", modelPath);
+	model->Create(modelPath);
 	return model;
 }
 

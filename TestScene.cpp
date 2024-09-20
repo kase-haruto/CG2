@@ -35,7 +35,7 @@ void TestScene::Initialize(){
 
 	////地面
 	modelGround_ = std::make_unique<Model>();
-	modelGround_->Create("Resources", "ground.obj");
+	modelGround_->Create("ground");
 	modelGround_->SetViewProjection(viewProjection_.get());
 	modelGround_->SetSize({100.0f,0.0f,100.0f});
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});

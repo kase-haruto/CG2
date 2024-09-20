@@ -17,6 +17,7 @@
 class Model{
 public:
 	Model() = default;
+	Model(const std::string& fileName);
 	~Model() = default;
 
 	/// <summary>
@@ -26,7 +27,7 @@ public:
 	/// <summary>
 	/// モデルの作成
 	/// </summary>
-	void Create(const std::string& directoryPath, const std::string& filename,bool isUseTexture = true);
+	void Create(const std::string& filename,bool isUseTexture = true);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -107,5 +108,8 @@ private:
 	int currentLightingMode = 0;
 
 	ViewProjection* viewProjection_;
+
+private:
+	static const std::string directoryPath_;
 };
 

@@ -18,7 +18,7 @@ void Sprite::Initialize(){
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 
-	handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
+	handle = TextureManager::GetInstance()->LoadTexture("uvChecker.png");
 
 	//===============================
 	//	リソースの生成

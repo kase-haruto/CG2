@@ -20,7 +20,7 @@ void Sphere::Initialize(ViewProjection* viewProjection){
 	viewProjection_ = viewProjection;
 
 
-	handle = TextureManager::GetInstance()->LoadTexture("./Resources/MonsterBall.png");
+	handle = TextureManager::GetInstance()->LoadTexture("MonsterBall.png");
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};

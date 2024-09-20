@@ -16,5 +16,8 @@ struct Material{
 
 struct MaterialData{
 	std::string textureFilePath;
+	Vector3 uv_scale;
+	Vector3 uv_offset;
+	Vector3 uv_translate;
 	bool hasTexture;
 };

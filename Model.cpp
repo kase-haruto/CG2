@@ -9,7 +9,11 @@
 	#include"imgui.h"
 #endif // _DEBUG
 
+const std::string Model::directoryPath_ = "Resources/models";
 
+Model::Model(const std::string& fileName){
+	Create(fileName);
+}
 
 void Model::Initialize(bool isUseTexture){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
@@ -43,9 +47,9 @@ void Model::Initialize(bool isUseTexture){
 	Map();
 }
 
-void Model::Create(const std::string& directoryPath, const std::string& filename, bool isUseTexture){
+void Model::Create(const std::string& filename, bool isUseTexture){
 	//モデルの読み込み
-	modelData = LoadObjFile(directoryPath.c_str(), filename.c_str());
+	modelData = LoadObjFile(directoryPath_, filename);
 	Initialize();
 }
 

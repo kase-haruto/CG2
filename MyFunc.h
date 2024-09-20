@@ -12,6 +12,10 @@
 
 #include<list>
 #include<d3d12.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
+#include <dxcapi.h>
+#include <DirectXTex.h>
 #include<stdint.h>
 #include<string>
 #include<random>
@@ -42,5 +46,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+DirectX::ScratchImage LoadTextureImage(const std::string& filePath);
 
 bool IsCollision(const AABB& aabb, const Vector3& point);
