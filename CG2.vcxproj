@@ -53,7 +53,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);externals\DirectXTex;externals\imgui;externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/externals/DirectXTex;$(ProjectDir)/externals/imgui;$(ProjectDir)/lib;$(ProjectDir)/lib/myFunc;$(ProjectDir)/lib/myMath;$(ProjectDir)/Engine/core;$(ProjectDir)/Engine/graphics;$(ProjectDir)/Engine/graphics/shaders;$(ProjectDir)/Engine/objects;$(ProjectDir)/Engine/physics;$(ProjectDir)/Engine/scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -96,97 +96,108 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include=".editorconfig.txt" />
-    <Text Include="externals\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConvertString.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="DirectXCommon.cpp" />
-    <ClCompile Include="externals\imgui.cpp" />
+    <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\System.cpp" />
+    <ClCompile Include="Engine\core\WinApp.cpp" />
+    <ClCompile Include="Engine\graphics\FogEffect.cpp" />
+    <ClCompile Include="Engine\graphics\GraphicsGroup.cpp" />
+    <ClCompile Include="Engine\graphics\PipelineState.cpp" />
+    <ClCompile Include="Engine\graphics\PipelineStateManager.cpp" />
+    <ClCompile Include="Engine\graphics\PipelineStateObject.cpp" />
+    <ClCompile Include="Engine\graphics\RootSignatureManager.cpp" />
+    <ClCompile Include="Engine\graphics\ShaderManager.cpp" />
+    <ClCompile Include="Engine\graphics\shaders\ShaderCompiler.cpp" />
+    <ClCompile Include="Engine\graphics\SrvLocator.cpp" />
+    <ClCompile Include="Engine\graphics\ViewProjection.cpp" />
+    <ClCompile Include="Engine\objects\GameObject.cpp" />
+    <ClCompile Include="Engine\objects\Model.cpp" />
+    <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
+    <ClCompile Include="Engine\objects\ObjectBuilder.cpp" />
+    <ClCompile Include="Engine\objects\Particle.cpp" />
+    <ClCompile Include="Engine\objects\Sprite.cpp" />
+    <ClCompile Include="Engine\objects\Texture.cpp" />
+    <ClCompile Include="Engine\objects\TextureManager.cpp" />
+    <ClCompile Include="Engine\physics\AABB.cpp" />
+    <ClCompile Include="Engine\physics\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\physics\PointLight.cpp" />
+    <ClCompile Include="Engine\physics\Sphere.cpp" />
+    <ClCompile Include="Engine\physics\Triangle.cpp" />
+    <ClCompile Include="Engine\scene\IScene.cpp" />
+    <ClCompile Include="Engine\scene\TestScene.cpp" />
+    <ClCompile Include="externals\imgui\imgui.cpp" />
+    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
     <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="externals\imgui_demo.cpp" />
-    <ClCompile Include="externals\imgui_draw.cpp" />
-    <ClCompile Include="externals\imgui_tables.cpp" />
-    <ClCompile Include="externals\imgui_widgets.cpp" />
-    <ClCompile Include="FogEffect.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
-    <ClCompile Include="IScene.cpp" />
+    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="lib\ImGuiManager.cpp" />
+    <ClCompile Include="lib\myFunc\ConvertString.cpp" />
+    <ClCompile Include="lib\myFunc\MyFunc.cpp" />
+    <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
+    <ClCompile Include="lib\myMath\Vector3.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
     </ClCompile>
-    <ClCompile Include="Matrix4x4.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="MyFunc.cpp" />
-    <ClCompile Include="Pipeline.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="ViewProjection.cpp" />
-    <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConvertString.h" />
-    <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="DirectXCommon.h" />
-    <ClInclude Include="externals\imconfig.h" />
-    <ClInclude Include="externals\imgui.h" />
+    <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\System.h" />
+    <ClInclude Include="Engine\core\WinApp.h" />
+    <ClInclude Include="Engine\graphics\FogEffect.h" />
+    <ClInclude Include="Engine\graphics\GraphicsGroup.h" />
+    <ClInclude Include="Engine\graphics\Material.h" />
+    <ClInclude Include="Engine\graphics\PipelineState.h" />
+    <ClInclude Include="Engine\graphics\PipelineStateManager.h" />
+    <ClInclude Include="Engine\graphics\PipelineStateObject.h" />
+    <ClInclude Include="Engine\graphics\RootSignatureManager.h" />
+    <ClInclude Include="Engine\graphics\ShaderManager.h" />
+    <ClInclude Include="Engine\graphics\shaders\ShaderCompiler.h" />
+    <ClInclude Include="Engine\graphics\SrvLocator.h" />
+    <ClInclude Include="Engine\graphics\VertexData.h" />
+    <ClInclude Include="Engine\graphics\ViewProjection.h" />
+    <ClInclude Include="Engine\objects\GameObject.h" />
+    <ClInclude Include="Engine\objects\Model.h" />
+    <ClInclude Include="Engine\objects\ModelBuilder.h" />
+    <ClInclude Include="Engine\objects\ModelData.h" />
+    <ClInclude Include="Engine\objects\ObjectBuilder.h" />
+    <ClInclude Include="Engine\objects\Particle.h" />
+    <ClInclude Include="Engine\objects\Sprite.h" />
+    <ClInclude Include="Engine\objects\Texture.h" />
+    <ClInclude Include="Engine\objects\TextureManager.h" />
+    <ClInclude Include="Engine\objects\Transform.h" />
+    <ClInclude Include="Engine\objects\TransformationMatrix.h" />
+    <ClInclude Include="Engine\physics\AABB.h" />
+    <ClInclude Include="Engine\physics\DirectionalLight.h" />
+    <ClInclude Include="Engine\physics\PointLight.h" />
+    <ClInclude Include="Engine\physics\Sphere.h" />
+    <ClInclude Include="Engine\physics\Triangle.h" />
+    <ClInclude Include="Engine\scene\IScene.h" />
+    <ClInclude Include="Engine\scene\TestScene.h" />
+    <ClInclude Include="externals\imgui\imconfig.h" />
+    <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
     <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="externals\imgui_internal.h" />
-    <ClInclude Include="externals\imstb_rectpack.h" />
-    <ClInclude Include="externals\imstb_textedit.h" />
-    <ClInclude Include="externals\imstb_truetype.h" />
-    <ClInclude Include="FogEffect.h" />
-    <ClInclude Include="ImGuiManager.h" />
-    <ClInclude Include="IScene.h" />
-    <ClInclude Include="Mat3.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelData.h" />
-    <ClInclude Include="MyFunc.h" />
-    <ClInclude Include="Pipeline.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="TestScene.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="TransformationMatrix.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
-    <ClInclude Include="Vector4.h" />
-    <ClInclude Include="VertexData.h" />
-    <ClInclude Include="ViewProjection.h" />
-    <ClInclude Include="WinApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Object3d.PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Object3d.VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
+    <ClInclude Include="externals\imgui\imgui_internal.h" />
+    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="lib\ImGuiManager.h" />
+    <ClInclude Include="lib\myFunc\ConvertString.h" />
+    <ClInclude Include="lib\myFunc\MyFunc.h" />
+    <ClInclude Include="lib\myMath\Mat3.h" />
+    <ClInclude Include="lib\myMath\Matrix4x4.h" />
+    <ClInclude Include="lib\myMath\Vector2.h" />
+    <ClInclude Include="lib\myMath\Vector3.h" />
+    <ClInclude Include="lib\myMath\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Object3d.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
