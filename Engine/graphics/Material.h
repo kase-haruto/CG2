@@ -19,5 +19,4 @@ struct MaterialData{
 	Vector3 uv_scale;
 	Vector3 uv_offset;
 	Vector3 uv_translate;
-	bool hasTexture;
 };

@@ -20,22 +20,11 @@ void Model::Initialize(bool isUseTexture){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
 	//パイプラインを設定
-	PipelineType pipelineType = modelData.material.hasTexture ? Object3D : NonTextureObject;
-	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
-	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
-
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
+	handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
 		
-	if (modelData.material.hasTexture){	//textureがある
-		//textureを設定
-		handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-		rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-		pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
-		handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-	} else{
-		rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(NonTextureObject);
-		pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(NonTextureObject);
-		//handle = TextureManager::GetInstance()->LoadTexture("./Resources/uvChecker.png");
-	}
+
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -107,10 +96,8 @@ void Model::Draw(){
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	if (modelData.material.hasTexture){
 		//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
 		commandList_->SetGraphicsRootDescriptorTable(3, handle);
-	}
 	
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
