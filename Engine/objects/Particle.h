@@ -6,7 +6,6 @@
 #include "Transform.h"
 #include "ViewProjection.h"
 #include "Vector4.h"
-#include"ParticleField.h"
 
 #include<list>
 #include <cstdint>
@@ -15,6 +14,17 @@
 
 #include<random>
 
+#pragma once
+#include"AABB.h"
+
+/// <summary>
+/// フィールド
+/// </summary>
+struct AccelerationField{
+    Vector3 acceleration;
+    AABB area;
+    bool isUpdate;
+};
 
 /// <summary>
 /// パーティクル

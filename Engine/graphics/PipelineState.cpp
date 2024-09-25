@@ -8,8 +8,8 @@ PipelineState::PipelineState(ComPtr<ID3D12Device>device, std::shared_ptr<ShaderM
 bool PipelineState::Initialize(const std::wstring& vsPath, const std::wstring& psPath,
                                const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
                                const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc){
-    vertexShader_ = shaderManager_->CompileShader(vsPath, L"vs_6_0");
-    pixelShader_ = shaderManager_->CompileShader(psPath, L"ps_6_0");
+    vertexShader_ = shaderManager_->CompileShader(L"Engine/graphics/shaders/" + vsPath, L"vs_6_0");
+    pixelShader_ = shaderManager_->CompileShader(L"Engine/graphics/shaders/" + psPath, L"ps_6_0");
     if (!vertexShader_ || !pixelShader_){
         Log("Failed to compile shaders.");
         return false;

@@ -17,6 +17,7 @@ void ShaderManager::InitializeDXC(){
 
 IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	CompileShader(const std::wstring& filePath, const wchar_t* profile){
+
 	HRESULT hr;
 	//==============================
 	//HLSLファイルの読み込み
@@ -24,7 +25,7 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	//これからシェーダをコンパイルする旨をログに出す
 	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
-	ComPtr<IDxcBlobEncoding>shaderSource = nullptr;
+	ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
 	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
 	//読めなければ止める
 	assert(SUCCEEDED(hr));
@@ -40,12 +41,12 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	//Compileする
 	//==============================
 	LPCWSTR arguments[] = {
-		filePath.c_str(),//コンパイル対象のhlslファイル名
-		L"-E",L"main",//エントリーポイントの指定。基本的にmain以外には市内
-		L"-T",profile,//ShaderProfileの設定
-		L"-Zi",L"-Qembed_debug",//デバッグ用の情報を埋め込む
-		L"-Od",//最適化を外しておく
-		L"-Zpr",//メモリレイアウトは行優先
+		filePath.c_str(),			//コンパイル対象のhlslファイル名
+		L"-E",L"main",				//エントリーポイントの指定。基本的にmain以外には市内
+		L"-T",profile,				//ShaderProfileの設定
+		L"-Zi",L"-Qembed_debug",	//デバッグ用の情報を埋め込む
+		L"-Od",						//最適化を外しておく
+		L"-Zpr",					//メモリレイアウトは行優先
 	};
 
 	ComPtr<IDxcResult> shaderResult = nullptr;
@@ -89,8 +90,9 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 }
 
 bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath){
-    ComPtr<IDxcBlob> vertexShader = CompileShader(vsPath, L"vs_6_0");
-    ComPtr<IDxcBlob> pixelShader = CompileShader(psPath, L"ps_6_0");
+	//ファイルパスをワイド文字列として結合
+    ComPtr<IDxcBlob> vertexShader = CompileShader(L"Engine/graphics/shaders/" + vsPath, L"vs_6_0");
+    ComPtr<IDxcBlob> pixelShader = CompileShader(L"Engine/graphics/shaders/" + psPath, L"ps_6_0");
 
     vertexShaders[type] = vertexShader;
     pixelShaders[type] = pixelShader;

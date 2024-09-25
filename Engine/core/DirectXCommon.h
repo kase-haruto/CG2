@@ -7,7 +7,6 @@
 #include <wrl.h>
 #include "WinApp.h"
 #include<dxcapi.h>
-#include"TriangleRender.h"
 #include"Matrix4x4.h"
 #include"ShaderManager.h"
 

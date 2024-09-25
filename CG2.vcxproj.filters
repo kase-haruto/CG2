@@ -120,81 +120,6 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="WinApp.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXCommon.cpp">
-      <Filter>Graphics\DirectX\DirectXCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="MyFunc.cpp">
-      <Filter>MyFunc</Filter>
-    </ClCompile>
-    <ClCompile Include="ConvertString.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix4x4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewProjection.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
-      <Filter>MyManager\ImGuiManager</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>MyManager\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="FogEffect.cpp">
-      <Filter>Graphics\DirectX\FogEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>System\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Light\DirectionalLight</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Game\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>System\MySystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Game\Object\Sphere</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Game\Object\Triangle</Filter>
-    </ClCompile>
-    <ClCompile Include="IScene.cpp">
-      <Filter>Scene\IScene</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScene.cpp">
-      <Filter>Scene\TestScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Game\Object\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderManager.cpp">
-      <Filter>Graphics\DirectX\Shaders\ShaderManager</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineStateManager.cpp">
-      <Filter>Graphics\DirectX\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineState.cpp">
-      <Filter>Graphics\DirectX\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Game\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsGroup.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelBuilder.cpp">
-      <Filter>Game\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>MyManager\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
       <Filter>MyManager\ImGuiManager\ImGui</Filter>
     </ClCompile>
@@ -216,122 +141,107 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>MyManager\ImGuiManager\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="SrvLocator.cpp">
-      <Filter>Graphics\DirectX</Filter>
+    <ClCompile Include="lib\myFunc\ConvertString.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Game\Object\AABB</Filter>
+    <ClCompile Include="lib\myFunc\MyFunc.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Math</Filter>
+    <ClCompile Include="lib\myMath\Matrix4x4.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Light\PointLight</Filter>
+    <ClCompile Include="lib\myMath\Vector3.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\ImGuiManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\core\DirectXCommon.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\core\System.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\core\WinApp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\FogEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\GraphicsGroup.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\PipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\PipelineStateManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\PipelineStateObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\RootSignatureManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\ShaderManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\SrvLocator.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\ViewProjection.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\GameObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\Model.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\ModelBuilder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\ObjectBuilder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\Particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\Sprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\objects\TextureManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\physics\AABB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\physics\DirectionalLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\physics\PointLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\physics\Sphere.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\physics\Triangle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\IScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\scene\TestScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\graphics\shaders\ShaderCompiler.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WinApp.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="ConvertString.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXCommon.h">
-      <Filter>Graphics\DirectX\DirectXCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4x4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="MyFunc.h">
-      <Filter>MyFunc</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewProjection.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
-      <Filter>MyManager\ImGuiManager</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>MyManager\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="FogEffect.h">
-      <Filter>Graphics\DirectX\FogEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>System\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexData.h">
-      <Filter>MyStruct</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>MyStruct</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformationMatrix.h">
-      <Filter>MyStruct</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>Light\DirectionalLight</Filter>
-    </ClInclude>
-    <ClInclude Include="Mat3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelData.h">
-      <Filter>MyStruct</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Game\Object\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>System\MySystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Game\Object\Sphere</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>Game\Object\Triangle</Filter>
-    </ClInclude>
-    <ClInclude Include="IScene.h">
-      <Filter>Scene\IScene</Filter>
-    </ClInclude>
-    <ClInclude Include="TestScene.h">
-      <Filter>Scene\TestScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>Game\Object\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>Graphics\DirectX\Shaders\ShaderManager</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineStateManager.h">
-      <Filter>Graphics\DirectX\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState.h">
-      <Filter>Graphics\DirectX\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Game\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsGroup.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelBuilder.h">
-      <Filter>Game\Object\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>MyManager\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -356,48 +266,128 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SrvLocator.h">
-      <Filter>Graphics\DirectX</Filter>
+    <ClInclude Include="lib\myFunc\ConvertString.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Game\Object\AABB</Filter>
+    <ClInclude Include="lib\myFunc\MyFunc.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleField.h">
-      <Filter>Game\Object\Particle</Filter>
+    <ClInclude Include="lib\myMath\Mat3.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>Light\PointLight</Filter>
+    <ClInclude Include="lib\myMath\Matrix4x4.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Object3d.VS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Object3d.PS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Particle.VS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Particle.PS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="NonTextureObject.VS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="NonTextureObject.PS.hlsl">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Object3d.hlsli">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </None>
-    <None Include="Particle.hlsli">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </None>
-    <None Include="NonTextureObject.hlsli">
-      <Filter>Graphics\DirectX\Shaders</Filter>
-    </None>
+    <ClInclude Include="lib\myMath\Vector2.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\myMath\Vector3.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\myMath\Vector4.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ImGuiManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\core\DirectXCommon.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\core\System.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\core\WinApp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\FogEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\GraphicsGroup.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\Material.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\PipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\PipelineStateManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\PipelineStateObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\RootSignatureManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\ShaderManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\SrvLocator.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\VertexData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\ViewProjection.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\GameObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\Model.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\ModelBuilder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\ModelData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\ObjectBuilder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\Particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\Sprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\TextureManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\Transform.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\objects\TransformationMatrix.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\physics\AABB.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\physics\DirectionalLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\physics\PointLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\physics\Sphere.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\physics\Triangle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\IScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\scene\TestScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\graphics\shaders\ShaderCompiler.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

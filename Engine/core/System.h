@@ -78,5 +78,6 @@ private:
 	/// </summary>
 	std::unique_ptr<DirectionalLight>directionalLight_;
 	std::unique_ptr<PointLight> pointLight_;
+
 };
 
