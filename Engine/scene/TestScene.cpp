@@ -34,15 +34,13 @@ void TestScene::Initialize(){
 	sphere_->Initialize(viewProjection_.get());
 
 	////地面
-	modelGround_ = std::make_unique<Model>();
-	modelGround_->Create("ground");
+	modelGround_ = std::make_unique<Model>("ground");
 	modelGround_->SetViewProjection(viewProjection_.get());
 	modelGround_->SetSize({100.0f,0.0f,100.0f});
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});
 
-	//modelField_ = std::make_unique<Model>();
-	//modelField_->Create("Resources", "terrain.obj");
-	//modelField_->SetViewProjection(viewProjection_.get());
+	modelField_ = std::make_unique<Model>("terrain");
+	modelField_->SetViewProjection(viewProjection_.get());
 
 }
 
@@ -60,7 +58,7 @@ void TestScene::Update(){
 	//モデルの更新
 	modelBuilder_->Update();
 
-	/*modelField_->Update();*/
+	modelField_->Update();
 
 	modelGround_->Update();
 
@@ -80,9 +78,9 @@ void TestScene::Draw(){
 
 	sphere_->Draw();
 
-	modelGround_->Draw();
+	//modelGround_->Draw();
 
-	/*modelField_->Draw();*/
+	modelField_->Draw();
 
 	sprite_->Draw();
 }
@@ -93,6 +91,6 @@ void TestScene::Finalize(){
 	sprite_.reset();
 	sphere_.reset();
 	modelGround_.reset();
-	/*modelField_.reset();*/
+	modelField_.reset();
 	//particle_.reset();
 }

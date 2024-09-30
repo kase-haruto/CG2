@@ -12,7 +12,7 @@ using namespace Microsoft::WRL;
 __declspec(align(16))
 struct CameraForGPU{
     Vector3 worldPosition;
-    float padding;  // 16バイトアライメントを確保するためのパディング
+    float padding;
 };
 
 class DirectXCommon;

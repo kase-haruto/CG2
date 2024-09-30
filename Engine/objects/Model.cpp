@@ -66,10 +66,10 @@ void Model::ShowImGuiInterface(){
 	ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f);
 	ImGui::DragFloat3("size", &transform.scale.x, 0.01f);
 	ImGui::DragFloat3("uvScale", &uvTransform.scale.x, 0.01f);
-
+	ImGui::DragFloat("shininess", &materialData->shininess, 0.01f);
 	
 		
-	const char* lightingModes[] = {"Half-Lambert", "Lambert", "No Lighting"};
+	const char* lightingModes[] = {"Half-Lambert", "Lambert","SpecularReflection", "No Lighting"};
 
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode])){
 		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
@@ -96,8 +96,8 @@ void Model::Draw(){
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-		//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
-		commandList_->SetGraphicsRootDescriptorTable(3, handle);
+	//srvのdescriptorTableの先頭を設定。3はrootParamenter[3]
+	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	
 	//モデル
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
@@ -148,6 +148,8 @@ void Model::MaterialBufferMap(){
 	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData->enableLighting = HalfLambert;
 	materialData->uvTransform = Matrix4x4::MakeIdentity();
+	materialData->shininess = 20.0f;
+	materialResource_->Unmap(0, nullptr);
 }
 
 void Model::MatrixBufferMap(){

@@ -71,6 +71,8 @@ void ViewProjection::ImGui(){
     ImGui::DragFloat3("pos", &transform.translate.x, 0.01f);
     ImGui::DragFloat3("rotate", &transform.rotate.x, 0.01f);
     ImGui::End();
+    cameraData_->worldPosition = transform.translate;
+
 }
 
 void ViewProjection::Finalize(){
