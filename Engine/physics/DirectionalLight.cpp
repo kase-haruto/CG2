@@ -14,9 +14,7 @@ void DirectionalLight::Initialize(DirectXCommon* dxCommon){
 	CreateBuffer();
 	Map();
 
-	data_->color = {1.0f,1.0f,1.0f,1.0f};
-	data_->direction = {0.0f,-1.0f,0.0f};
-	data_->intensity = 1.0f;
+	
 }
 
 void DirectionalLight::Update(){
@@ -43,6 +41,10 @@ void DirectionalLight::CreateBuffer(){
 
 void DirectionalLight::Map(){
 	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
+	data_->color = {1.0f,1.0f,1.0f,1.0f};
+	data_->direction = {0.0f,-1.0f,0.0f};
+	data_->intensity = 1.0f;
+	resource_->Unmap(0, nullptr);
 	
 }
 
