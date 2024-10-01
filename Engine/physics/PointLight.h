@@ -20,7 +20,7 @@ class DirectXCommon;
 class PointLight{
 public:
 	PointLight();
-	~PointLight() = default;
+	~PointLight();
 
 	/// <summary>
 	/// 初期化

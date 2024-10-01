@@ -13,7 +13,7 @@ using Microsoft::WRL::ComPtr;
 class PipelineState{
 public:
 	PipelineState(ComPtr<ID3D12Device>device, std::shared_ptr<ShaderManager> shaderManager);
-	~PipelineState() = default;
+	~PipelineState();
 
 	bool Initialize(const std::wstring& vsPath, const std::wstring& psPath,
 					const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
