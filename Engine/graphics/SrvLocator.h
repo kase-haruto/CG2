@@ -18,6 +18,8 @@ public:
     // SRVヒープを取得するメソッド
     static ComPtr<ID3D12DescriptorHeap> GetSrvHeap();
 
+    static void Finalize();
+
 private:
     static ComPtr<ID3D12DescriptorHeap> srvHeap_;
     static uint32_t descriptorSizeSrv_;

@@ -76,8 +76,6 @@ void ViewProjection::ImGui(){
 }
 
 void ViewProjection::Finalize(){
-    if (constBuffer_){
-        constBuffer_->Release();
-        constBuffer_ = nullptr;
-    }
+    constBuffer_->Release();
+    device_.Reset();
 }

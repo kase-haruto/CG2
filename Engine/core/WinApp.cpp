@@ -11,10 +11,7 @@ WinApp::WinApp() {
 	CreateWnd();
 }
 //デストラクタ
-WinApp::~WinApp() {
-	//ウィンドウの開放
-	UnregisterClass(wc.lpszClassName, wc.hInstance);
-}
+WinApp::~WinApp() {}
 
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {

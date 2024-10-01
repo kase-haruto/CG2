@@ -1,6 +1,7 @@
 ﻿#include "System.h"
 #include"TextureManager.h"
 #include"GraphicsGroup.h"
+#include"SrvLocator.h"
 
 System::System(){}
 
@@ -64,11 +65,13 @@ void System::EndFrame(){
 }
 
 void System::Finalize(){
+    device_.Reset();
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
     directionalLight_.reset();
     pointLight_.reset();
+    SrvLocator::Finalize();
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();

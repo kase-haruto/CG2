@@ -15,6 +15,13 @@ Model::Model(const std::string& fileName){
 	Create(fileName);
 }
 
+Model::~Model(){
+	device_.Reset();
+	vertexResource_->Release();
+	materialResource_->Release();
+	wvpResource_->Release();
+}
+
 void Model::Initialize(bool isUseTexture){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
@@ -23,7 +30,6 @@ void Model::Initialize(bool isUseTexture){
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 	handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-		
 
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
@@ -103,7 +109,6 @@ void Model::Draw(){
 	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
 
-
 void Model::CreateBuffer(){
 	CreateVertexBuffer();
 	CreateMaterialBuffer();
@@ -124,7 +129,6 @@ void Model::CreateMaterialBuffer(){
 void Model::CreateMatrixBuffer(){
 	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 }
-
 
 void Model::Map(){
 	//リソースにデータを書き込む

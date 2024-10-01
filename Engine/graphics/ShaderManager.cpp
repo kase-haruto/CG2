@@ -3,6 +3,12 @@
 
 #include<format>
 
+ShaderManager::~ShaderManager(){
+	dxcUtils.Reset();
+	dxcCompiler.Reset();
+	includeHandler.Reset();
+}
+
 void ShaderManager::InitializeDXC(){
     // DXC Compilerを初期化
     HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));

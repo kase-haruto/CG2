@@ -10,7 +10,7 @@ using Microsoft::WRL::ComPtr;
 class RootSignatureManager{
 public:
 	RootSignatureManager(ID3D12Device* device) :device_(device){}
-	~RootSignatureManager(){}
+	~RootSignatureManager(){ device_.Reset(); }
 
 	bool CreateRootSignatrue(const std::string& name, const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc);
 
