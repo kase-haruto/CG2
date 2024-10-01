@@ -7,6 +7,7 @@
 
 ViewProjection::ViewProjection(){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
+    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 }
 
@@ -48,6 +49,8 @@ void ViewProjection::UpdateViewMatrix(){
                                               transform.translate
     );
     matView = Matrix4x4::Inverse(cameraMatrix);
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList_->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
 }
 
 void ViewProjection::UpdateProjectionMatrix(){
@@ -78,4 +81,6 @@ void ViewProjection::ImGui(){
 void ViewProjection::Finalize(){
     constBuffer_->Release();
     device_.Reset();
+    rootSignature_.Reset();
+    commandList_.Reset();
 }
