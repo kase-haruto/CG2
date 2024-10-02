@@ -53,7 +53,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(ProjectDir)Engine;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
