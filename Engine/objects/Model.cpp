@@ -41,7 +41,6 @@ void Model::Initialize(bool isUseTexture){
 	CreateBuffer();
 	Map();
 
-	Update();
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){

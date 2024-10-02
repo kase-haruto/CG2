@@ -18,6 +18,7 @@ void GameScene::Initialize(){
 	/// Editor関連
 	///=========================
 	railEditor_ = std::make_unique<RailEditor>();
+	railEditor_->SetViewProjection(viewProjection_.get());
 	railEditor_->Initialize();
 
 }

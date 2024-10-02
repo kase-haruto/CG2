@@ -36,6 +36,15 @@ private:
 	/// </summary>
 	void AddCtrlPoint(const Vector3& preCtrlPoint);
 
+	/// <summary>
+	/// 制御点をjsonに保存
+	/// </summary>
+	void SaveControlPointToJson();
+
+	/// <summary>
+	/// 制御点をjsonから読み込む
+	/// </summary>
+	void LoadControlPointFromJson();
 
 
 private:
@@ -44,6 +53,8 @@ private:
 	//		メンバ変数
 	/////////////////////////////////////////////////////////
 	std::vector<Vector3>ctrlPoints_;
+	// 選択された制御点のインデックス
+	int selectedCtrlPoint_ = -1;
 
 	//////////////////////////////////////////////////////////
 	//		debug用
