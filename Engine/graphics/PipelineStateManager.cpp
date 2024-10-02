@@ -1,5 +1,8 @@
 ﻿#include "PipelineStateManager.h"
 
+
+PipelineStateManager::~PipelineStateManager(){}
+
 bool PipelineStateManager::CreatePipelineState(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath,
 											   const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
 											   const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc){

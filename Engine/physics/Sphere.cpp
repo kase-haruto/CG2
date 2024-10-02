@@ -11,6 +11,13 @@
 
 Sphere::Sphere(){}
 
+Sphere::~Sphere(){
+	device_.Reset();
+	vertexResource_->Release();
+	materialResource_->Release();
+	wvpResource_->Release();
+}
+
 
 void Sphere::Initialize(ViewProjection* viewProjection){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();

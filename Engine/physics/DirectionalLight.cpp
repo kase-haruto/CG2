@@ -5,6 +5,11 @@
 
 DirectionalLight::DirectionalLight(){}
 
+DirectionalLight::~DirectionalLight(){
+	device_.Reset();
+	resource_->Release();
+}
+
 
 
 void DirectionalLight::Initialize(DirectXCommon* dxCommon){

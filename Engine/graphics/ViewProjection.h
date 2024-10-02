@@ -9,7 +9,6 @@
 using namespace Microsoft::WRL;
 
 // 定数バッファ用data構造体
-__declspec(align(16))
 struct CameraForGPU{
     Vector3 worldPosition;
     float padding;
@@ -51,6 +50,7 @@ private:
     // DirectX関連
     ComPtr<ID3D12Device> device_;
     ComPtr<ID3D12GraphicsCommandList> commandList_;
+    ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
     CameraForGPU* cameraData_;
 

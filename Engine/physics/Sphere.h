@@ -18,7 +18,7 @@ class DirectXCommon;
 class Sphere{
 public:
 	Sphere();
-	~Sphere() = default;
+	~Sphere();
 
 	/// <summary>
 	/// 初期化

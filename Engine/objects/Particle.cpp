@@ -17,7 +17,14 @@
 
 ParticleManager::ParticleManager(const uint32_t kInstanceNum) :kMaxInstance_(kInstanceNum){}
 
-ParticleManager::~ParticleManager(){}
+ParticleManager::~ParticleManager(){
+	device_.Reset();
+	instancingResource_.Reset();
+	vertexResource_.Reset();
+	materialResource_.Reset();
+	vertexResource_->Release();
+	
+}
 
 void ParticleManager::Initialize(ViewProjection* viewProjection){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();

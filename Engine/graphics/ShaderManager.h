@@ -18,7 +18,7 @@ enum PipelineType{
 class ShaderManager{
 public:
     ShaderManager(){}
-    ~ShaderManager() = default;
+    ~ShaderManager();
 
     void InitializeDXC();
     IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile);

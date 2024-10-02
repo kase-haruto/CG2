@@ -5,6 +5,11 @@
 
 PointLight::PointLight(){}
 
+PointLight::~PointLight(){
+	device_.Reset();
+	resource_->Release();
+}
+
 void PointLight::Initialize(DirectXCommon* dxCommon){
 	device_ = dxCommon->GetDevice();
 	commandList_ = dxCommon->GetCommandList();

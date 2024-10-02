@@ -24,7 +24,7 @@ class DirectXCommon;
 class DirectionalLight{
 public:
 	DirectionalLight();
-	~DirectionalLight() = default;
+	~DirectionalLight();
 
 	/// <summary>
 	/// 初期化

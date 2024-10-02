@@ -18,7 +18,7 @@ class Model{
 public:
 	Model() = default;
 	Model(const std::string& fileName);
-	~Model() = default;
+	~Model();
 
 	/// <summary>
 	/// 初期化

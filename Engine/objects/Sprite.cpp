@@ -11,6 +11,14 @@
 
 Sprite::Sprite(){}
 
+Sprite::~Sprite(){
+	device_.Reset();
+	vertexResource_->Release();
+	transformResource_->Release();
+	materialResource_->Release();
+	indexResource_->Release();
+}
+
 void Sprite::Initialize(){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
