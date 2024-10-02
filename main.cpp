@@ -1,7 +1,7 @@
 ﻿#include<Windows.h>
 #include"WinApp.h"
 #include"System.h"
-#include"TestScene.h"
+#include"GameScene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	//comの初期化
@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	system->Initialize(1280, 720);
 
 	//シーンの初期化
-	std::unique_ptr<TestScene> scene = std::make_unique<TestScene>();
+	std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
 	scene->Initialize();
 	
 

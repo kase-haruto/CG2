@@ -124,6 +124,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\physics\PointLight.cpp" />
     <ClCompile Include="Engine\physics\Sphere.cpp" />
     <ClCompile Include="Engine\physics\Triangle.cpp" />
+    <ClCompile Include="Engine\scene\GameScene.cpp" />
     <ClCompile Include="Engine\scene\IScene.cpp" />
     <ClCompile Include="Engine\scene\TestScene.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -175,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\physics\PointLight.h" />
     <ClInclude Include="Engine\physics\Sphere.h" />
     <ClInclude Include="Engine\physics\Triangle.h" />
+    <ClInclude Include="Engine\scene\GameScene.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\TestScene.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
