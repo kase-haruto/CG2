@@ -53,13 +53,15 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/externals/DirectXTex;$(ProjectDir)/externals/imgui;$(ProjectDir)/lib;$(ProjectDir)/lib/myFunc;$(ProjectDir)/lib/myMath;$(ProjectDir)/Engine/core;$(ProjectDir)/Engine/graphics;$(ProjectDir)/Engine/graphics/shaders;$(ProjectDir)/Engine/objects;$(ProjectDir)/Engine/physics;$(ProjectDir)/Engine/scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myMath;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Debug</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -79,7 +81,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir);DirectXTex;externals;externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\imgui;$(SolutionDir)Engine\core;$(SolutionDir)Engine\objects;$(SolutionDir)Engine\graphics;$(SolutionDir)Engine\scene;$(SolutionDir)Engine\physics;$(SolutionDir)lib;$(SolutionDir)lib\myMath;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -87,6 +89,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>assimp-vc-143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -134,8 +138,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Game\Rail\RailEditor.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
+    <ClCompile Include="lib\myFunc\LocalFunc.cpp" />
+    <ClCompile Include="lib\myFunc\MathFunc.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
@@ -187,8 +194,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Game\Rail\RailEditor.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
+    <ClInclude Include="lib\myFunc\LocalFunc.h" />
+    <ClInclude Include="lib\myFunc\MathFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
     <ClInclude Include="lib\myMath\Matrix4x4.h" />

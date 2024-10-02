@@ -4,6 +4,9 @@
 #include<fstream>
 #include<sstream>
 #include<cassert>
+#include<assimp/Importer.hpp>
+#include<assimp/scene.h>
+#include<assimp/postprocess.h>
 
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
@@ -124,10 +127,12 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 }
 
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
+    Assimp::Importer importer;
     // ファイルを開く
     std::ifstream file(directoryPath + "/" + filename + "/" + filename + ".obj");
+ //   const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
     assert(file.is_open());// 失敗したらアサート
-
+  //  assert(scene->HasMeshes());
     // 開けたら必要な変数を用意
     ModelData modelData;
     std::vector<Vector4>positions;
@@ -143,8 +148,8 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
         std::istringstream s(line);
         s >> identifer;
 
-        // identifer(識別子)に応じた処理を行う
-        if (identifer == "o"){// 新しいメッシュ-----------------------------
+        // 識別子に応じた処理
+        if (identifer == "o"){
 
             oCount++;
 

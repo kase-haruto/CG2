@@ -1,6 +1,6 @@
 ﻿#include "PointLight.h"
 #include"DirectXCommon.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include"imgui.h"
 
 PointLight::PointLight(){}
@@ -12,9 +12,7 @@ void PointLight::Initialize(DirectXCommon* dxCommon){
 	CreateBuffer();
 	Map();
 
-	data_->color = {1.0f,1.0f,1.0f,1.0f};
-	data_->position = {0.0f,-1.0f,0.0f};
-	data_->intensity = 1.0f;
+	
 }
 
 void PointLight::Update(){
@@ -26,7 +24,9 @@ void PointLight::Render(){
 	ImGui::Begin("PointLight");
 	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::DragFloat("Intensity", &data_->intensity, 0.01f);
+	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
+	ImGui::DragFloat("radius", &data_->radius, 0.01f);
+	ImGui::DragFloat("decay", &data_->decay, 0.01f);
 	ImGui::End();
 
 	// ルートシグネチャをコマンドリストに設定する
@@ -40,7 +40,12 @@ void PointLight::CreateBuffer(){
 
 void PointLight::Map(){
 	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
-
+	data_->color = {1.0f,1.0f,1.0f,1.0f};
+	data_->position = {0.0f,2.0f,0.0f};
+	data_->intensity = 1.0f;
+	data_->radius = 4.0f;
+	data_->decay = 1.0f;
+	resource_->Unmap(0, nullptr);
 }
 
 void PointLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){

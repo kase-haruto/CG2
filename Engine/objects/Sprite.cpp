@@ -1,6 +1,6 @@
 ﻿#include "Sprite.h"
 #include"DirectXCommon.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include"VertexData.h"
 #include"imgui.h"
 #include"TextureManager.h"

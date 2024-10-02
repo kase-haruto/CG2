@@ -54,7 +54,7 @@ public:
 	/// <returns></returns>
 	ModelData GetModelData()const { return modelData; }
 
-	void SetViewProjection(ViewProjection* viewPro);
+	void SetViewProjection(const ViewProjection* viewPro);
 
 	void SetPos(const Vector3& pos){ transform.translate = pos; }
 
@@ -107,7 +107,7 @@ private:
 
 	int currentLightingMode = 0;
 
-	ViewProjection* viewProjection_;
+	const ViewProjection* viewProjection_;
 
 private:
 	static const std::string directoryPath_;

@@ -1,8 +1,8 @@
 ﻿#include "Texture.h"
-#include "ConvertString.h"
+#include "myFunc/ConvertString.h"
 #include <cassert>
 #include"SrvLocator.h"
-#include"MyFunc.h"
+#include"myFunc/MyFunc.h"
 
 Texture::Texture(const std::string& filePath) : filePath_(filePath){}
 

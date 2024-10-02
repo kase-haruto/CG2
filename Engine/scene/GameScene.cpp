@@ -1,9 +1,36 @@
 #include "GameScene.h"
 
-void GameScene::Initialize(){}
+void GameScene::Initialize(){
 
-void GameScene::Update(){}
+	///=========================
+	/// カメラ関連
+	///=========================
+	viewProjection_ = std::make_unique<ViewProjection>();
+	viewProjection_->Initialize();
+	
 
-void GameScene::Draw(){}
+	///=========================
+	/// Editor関連
+	///=========================
+	railEditor_ = std::make_unique<RailEditor>();
+	railEditor_->Initialize();
+}
 
-void GameScene::Finalize(){}
+void GameScene::Update(){
+
+#ifdef _DEBUG
+	viewProjection_->ImGui();
+#endif // _DEBUG
+
+	railEditor_->Update();
+
+}
+
+void GameScene::Draw(){
+	railEditor_->Draw();
+}
+
+void GameScene::Finalize(){
+	viewProjection_.reset();
+	railEditor_.reset();
+}

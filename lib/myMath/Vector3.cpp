@@ -1,7 +1,7 @@
 ﻿#include"Vector3.h"
 #include<cmath>
 #include"Matrix4x4.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include <algorithm>
 
 float Vector3::Length()const{

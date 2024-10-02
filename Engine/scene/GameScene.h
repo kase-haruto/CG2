@@ -3,6 +3,7 @@
 #include"IScene.h"
 
 #include"ViewProjection.h"
+#include"Rail/RailEditor.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -43,6 +44,11 @@ private:
 	///=========================
 	/// カメラ関連
 	///=========================
-	std::unique_ptr<ViewProjection> viewProjection_;
+	std::unique_ptr<ViewProjection> viewProjection_ = nullptr;
 
+
+	///=========================
+	/// Editor関連
+	///======================
+	std::unique_ptr<RailEditor> railEditor_ = nullptr;
 };

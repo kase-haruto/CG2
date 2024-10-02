@@ -1,6 +1,6 @@
 ﻿#include "Triangle.h"
 #include"DirectXCommon.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include"TextureManager.h"
 #include"imgui.h"
 #include"DirectionalLight.h"
