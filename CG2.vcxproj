@@ -53,7 +53,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\imgui;$(SolutionDir)Engine\core;$(SolutionDir)Engine\objects;$(SolutionDir)Engine\graphics;$(SolutionDir)Engine\scene;$(SolutionDir)Engine\physics;$(SolutionDir)lib;$(SolutionDir)lib\myMath;$(SolutionDir)lib\myFunc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)externals;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\imgui;$(SolutionDir)Engine\core;$(SolutionDir)Engine\objects;$(SolutionDir)Engine\graphics;$(SolutionDir)Engine\scene;$(SolutionDir)Engine\physics;$(SolutionDir)lib;$(SolutionDir)lib\myMath;$(SolutionDir)lib\myFunc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,6 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\physics\Triangle.cpp" />
     <ClCompile Include="Engine\scene\IScene.cpp" />
     <ClCompile Include="Engine\scene\TestScene.cpp" />
+    <ClCompile Include="externals\GlobalVariable\GlobalVariables.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -181,6 +182,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\physics\Triangle.h" />
     <ClInclude Include="Engine\scene\IScene.h" />
     <ClInclude Include="Engine\scene\TestScene.h" />
+    <ClInclude Include="externals\GlobalVariable\GlobalVariables.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
