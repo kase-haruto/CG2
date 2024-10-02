@@ -17,7 +17,7 @@
 class GameScene final
 	:public IScene{
 public:
-	GameScene() = default;
+	GameScene();
 	~GameScene()override = default;
 
 	/// <summary>
@@ -51,4 +51,6 @@ private:
 	/// Editor関連
 	///======================
 	std::unique_ptr<RailEditor> railEditor_ = nullptr;
+
+	
 };

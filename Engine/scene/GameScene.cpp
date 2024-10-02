@@ -1,4 +1,9 @@
 #include "GameScene.h"
+#include"GlobalVariable/GlobalVariables.h"
+
+GameScene::GameScene(){
+	GlobalVariables::GetInstance()->Initialize();
+}
 
 void GameScene::Initialize(){
 
@@ -14,12 +19,14 @@ void GameScene::Initialize(){
 	///=========================
 	railEditor_ = std::make_unique<RailEditor>();
 	railEditor_->Initialize();
+
 }
 
 void GameScene::Update(){
 
 #ifdef _DEBUG
 	viewProjection_->ImGui();
+	GlobalVariables::GetInstance()->Update();
 #endif // _DEBUG
 
 	railEditor_->Update();
