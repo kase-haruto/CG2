@@ -12,11 +12,14 @@
 Sprite::Sprite(){}
 
 Sprite::~Sprite(){
-	device_.Reset();
 	vertexResource_->Release();
-	transformResource_->Release();
-	materialResource_->Release();
+	vertexResource_ = nullptr;
 	indexResource_->Release();
+	indexResource_ = nullptr;
+	transformResource_->Release();
+	transformResource_ = nullptr;
+	materialResource_->Release();
+	materialResource_ = nullptr;
 }
 
 void Sprite::Initialize(){

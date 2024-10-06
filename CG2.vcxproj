@@ -103,6 +103,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\Input.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
     <ClCompile Include="Engine\graphics\FogEffect.cpp" />
@@ -141,6 +142,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
+    <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
     <ClCompile Include="main.cpp">
@@ -150,6 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\Input.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />
@@ -194,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
+    <ClInclude Include="lib\myFunc\PrimitiveDrawer.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
     <ClInclude Include="lib\myMath\Matrix4x4.h" />
     <ClInclude Include="lib\myMath\Vector2.h" />

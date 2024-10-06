@@ -3,11 +3,7 @@
 PipelineState::PipelineState(ComPtr<ID3D12Device>device, std::shared_ptr<ShaderManager> shaderManager)
     : device_(device), shaderManager_(shaderManager){}
 
-PipelineState::~PipelineState(){
-    device_.Reset();
-    rootSignature_.Reset();
-    pipelineState_.Reset();
-}
+PipelineState::~PipelineState(){}
 
 
 

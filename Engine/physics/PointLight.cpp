@@ -6,7 +6,6 @@
 PointLight::PointLight(){}
 
 PointLight::~PointLight(){
-	device_.Reset();
 	resource_->Release();
 }
 
