@@ -82,10 +82,13 @@ private:
 	int currentLightingMode =0;
 
 	Vector4 RGBa;
-	Transform transform;
+	
 	Material* materialData;
 	TransformationMatrix* matrixData;
 
 	ViewProjection* viewProjection_;
+
+public:
+	Transform transform;
 };
 

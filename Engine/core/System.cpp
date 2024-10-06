@@ -2,16 +2,26 @@
 #include"TextureManager.h"
 #include"GraphicsGroup.h"
 #include"SrvLocator.h"
+#include"core/Input.h"
+
+HINSTANCE System::hInstance_ = nullptr;
+HWND System::hwnd_ = nullptr;
 
 System::System(){}
 
 System::~System(){}
 
-void System::Initialize(int32_t clientWidth, int32_t clientHeight){
-	winApp_ = std::make_unique<WinApp>();
+void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight){
+    winApp_ = std::make_unique<WinApp>();
+    hInstance_ = hInstance;
+    hwnd_ = winApp_->GetHWND();
+
 	dxCommon_ = std::make_unique<DirectXCommon>();
 	dxCommon_->Initialize(winApp_.get(), 1280, 720);
     device_ = dxCommon_->GetDevice();
+
+    ////インプットの初期化
+    Input::Initialize();
 
 	//管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
@@ -50,6 +60,8 @@ void System::BeginFrame(){
     dxCommon_->PreDraw();
 	// ImGui受付開始
 	imguiManager_->Begin();
+    //インプットの更新
+    Input::Update();
     //ライトの処理の更新
     directionalLight_->Render();
     pointLight_->Render();
@@ -72,6 +84,8 @@ void System::Finalize(){
     directionalLight_.reset();
     pointLight_.reset();
     SrvLocator::Finalize();
+    Input::Finalize();
+
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
@@ -91,6 +105,7 @@ void System::CreatePipelines(){
 	  shaderManager_->InitializeDXC();
       Object3DPipelines();
       StructuredObjectPipeline();
+      LinePipeline();
 }
 
 void System::Object3DPipelines(){
@@ -381,4 +396,100 @@ void System::StructuredObjectPipeline(){
     }
 }
 
+void System::LinePipeline(){
+    // InputLayoutの設定
+    D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+    inputElementDescs[0].SemanticName = "POSITION";
+    inputElementDescs[0].SemanticIndex = 0;
+    inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+    inputElementDescs[1].SemanticName = "COLOR";
+    inputElementDescs[1].SemanticIndex = 0;
+    inputElementDescs[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
+    inputLayoutDesc.pInputElementDescs = inputElementDescs;
+    inputLayoutDesc.NumElements = _countof(inputElementDescs);
+
+    // BlendStateの設定
+    D3D12_BLEND_DESC blendDesc {};
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    blendDesc.RenderTarget[0].BlendEnable = true;
+    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+
+    // RasterizerStateの設定
+    D3D12_RASTERIZER_DESC rasterizeDesc {};
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE; // カリングを無効化
+    rasterizeDesc.FillMode = D3D12_FILL_MODE_WIREFRAME; // 線描画の場合はこちら
+    rasterizeDesc.FrontCounterClockwise = FALSE;
+    rasterizeDesc.DepthClipEnable = TRUE;
+
+    // DepthStencilStateの設定
+    D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
+    depthStencilDesc.DepthEnable = false; // 線を常に描画する場合はこれを使用
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+    // シェーダの読み込み
+    if (!shaderManager_->LoadShader(Line, L"Fragment.VS.hlsl", L"Fragment.PS.hlsl")){
+        return;
+    }
+
+    // RootSignatureの設定
+    D3D12_ROOT_PARAMETER rootParameters[1] = {};
+
+    //wvp/world
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+    rootParameters[0].Descriptor.ShaderRegister = 0;
+
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootSignatureDesc.pParameters = rootParameters;
+    rootSignatureDesc.NumParameters = _countof(rootParameters);
+
+    // RootSignatureの作成
+    ComPtr<ID3DBlob> signatureBlob;
+    ComPtr<ID3DBlob> errorBlob;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+    if (FAILED(hr)){
+        if (errorBlob){
+            OutputDebugStringA(( char* ) errorBlob->GetBufferPointer());
+        }
+        return;
+    }
+
+    ComPtr<ID3D12RootSignature> rootSignature;
+    hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+    if (FAILED(hr)){
+        return;
+    }
+
+    // PSOの設定
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.pRootSignature = rootSignature.Get();
+    psoDesc.InputLayout = inputLayoutDesc;
+    psoDesc.VS = {shaderManager_->GetVertexShader(Line)->GetBufferPointer(), shaderManager_->GetVertexShader(Line)->GetBufferSize()};
+    psoDesc.PS = {shaderManager_->GetPixelShader(Line)->GetBufferPointer(), shaderManager_->GetPixelShader(Line)->GetBufferSize()};
+    psoDesc.BlendState = blendDesc;
+    psoDesc.RasterizerState = rasterizeDesc;
+    psoDesc.DepthStencilState = depthStencilDesc;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE; // 線描画用に設定
+    psoDesc.SampleDesc.Count = 1;
+    psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+    psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+    // パイプラインステートオブジェクトの作成
+    if (!pipelineStateManager_->CreatePipelineState(Line, L"Fragment.VS.hlsl", L"Fragment.PS.hlsl", rootSignatureDesc, psoDesc)){
+        return;
+    }
+}

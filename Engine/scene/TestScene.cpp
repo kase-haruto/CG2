@@ -1,5 +1,7 @@
 ﻿#include "TestScene.h"
 
+#include "Input.h"
+
 TestScene::TestScene(){}
 
 void TestScene::Initialize(){
@@ -17,6 +19,11 @@ void TestScene::Initialize(){
 	///=========================
 	/// オブジェクト関連
 	///=========================
+	//線
+	primitiveDrawer_ = std::make_unique<PrimitiveDrawer>();
+	primitiveDrawer_->SetViewProjection(viewProjection_.get());
+	primitiveDrawer_->Initialize();
+	
     //スプライト 
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize();
@@ -53,6 +60,28 @@ void TestScene::Update(){
 	//modelField_->ShowImGuiInterface();
 #endif // _DEBUG
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//		カメラの更新
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+	if (Input::PushKey(DIK_A)){
+		viewProjection_->transform.translate.x -= 0.1f;
+	} else if (Input::PushKey(DIK_D)){
+		viewProjection_->transform.translate.x += 0.1f;
+	}
+
+	if (Input::PushKey(DIK_W)){
+		viewProjection_->transform.translate.z += 0.1f;
+	} else if (Input::PushKey(DIK_S)){
+		viewProjection_->transform.translate.z -= 0.1f;
+	}
+
+	if (Input::PushKey(DIK_RIGHT)){
+		viewProjection_->transform.rotate.y += 0.05f;
+	} else if (Input::PushKey(DIK_LEFT)){
+		viewProjection_->transform.rotate.y -= 0.05f;
+	}
+
 
 	//モデルの更新
 	modelBuilder_->Update();
@@ -82,6 +111,12 @@ void TestScene::Draw(){
 	modelField_->Draw();
 
 	sprite_->Draw();
+
+
+	primitiveDrawer_->DrawLine3d(Vector3 {0.0f,5.0f,0.0f}, Vector3 {2.0f,1.0f,0.0f}, Vector4 {1.0f,0.0f,0.0f,1.0f});
+
+	primitiveDrawer_->Render();
+
 }
 
 void TestScene::Finalize(){
@@ -90,6 +125,7 @@ void TestScene::Finalize(){
 	sprite_.reset();
 	sphere_.reset();
 	/*modelGround_.reset();*/
+	primitiveDrawer_.reset();
 	modelField_.reset();
 	//particle_.reset();
 }
