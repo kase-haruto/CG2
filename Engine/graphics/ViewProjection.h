@@ -59,7 +59,7 @@ private:
 
 public:
     ViewProjection();
-    virtual ~ViewProjection() = default;
+    virtual ~ViewProjection();
 
     void ImGui();
 

@@ -22,14 +22,21 @@ void PrimitiveDrawer::Initialize(){
 }
 
 void PrimitiveDrawer::Finalize(){
-    line_->indexBuff->Release();
-    line_->indexBuff = nullptr;
-    line_->vertBuff->Release();
-    line_->vertBuff = nullptr;
-    device_.Reset();
-    commandList_.Reset();
-    rootSignature_.Reset();
-    pipelineState_.Reset();
+    if (line_->indexBuff){
+        line_->indexBuff->Release();
+        line_->indexBuff = nullptr;
+    }
+    if (line_->vertBuff){
+        line_->vertBuff->Release();
+        line_->vertBuff = nullptr;
+    }
+
+    // wvpResourceの解放
+    if (wvpResource_){
+        wvpResource_->Release();
+        wvpResource_ = nullptr;
+    }
+
 }
 
 void PrimitiveDrawer::CreateMeshes(){
