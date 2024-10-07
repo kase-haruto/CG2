@@ -15,7 +15,7 @@ public:
     /// <param name="hInstance"></param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    void Initialize(HINSTANCE hInstance, int width, int height);
+    void Initialize(HINSTANCE hInstance);
 
     /// <summary>
     /// 更新

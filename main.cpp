@@ -1,10 +1,9 @@
-﻿#include<Windows.h>
-#include "core/EngineController.h"
+﻿#include "core/EngineController.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int){
 	EngineController EngineController;
 
-	EngineController.Initialize(hInstance, 1280, 720);
+	EngineController.Initialize(hInstance);
 	EngineController.Run();
 	EngineController.Finalize();
 

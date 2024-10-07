@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="clientWidth"></param>
 	/// <param name="clientHeight"></param>
-	void Initialize(HINSTANCE hInstance, int32_t clientWidth,int32_t clientHeight);
+	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle);
 	/// <summary>
 	/// メモリの開放など
 	/// </summary>

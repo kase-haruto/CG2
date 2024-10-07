@@ -1,5 +1,6 @@
 ﻿#include "WinApp.h"
 #include<tchar.h>
+#include "myFunc/ConvertString.h"
 #include"imgui.h"
 #include"imgui_impl_dx12.h"
 #include"imgui_impl_win32.h"
@@ -7,7 +8,11 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam);
 
 //コンストラクタ
-WinApp::WinApp() {
+WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName) {
+    wrc.right = wWidth;
+    wrc.bottom = wHeight;
+    windowName_ = windowName;
+
 	CreateWnd();
 }
 //デストラクタ
@@ -60,16 +65,13 @@ void WinApp::CreateWnd(void) {
     // ウィンドウクラスの登録
     RegisterClassEx(&wc);
 
-    // ウィンドウのサイズの初期化
-    wrc = { 0, 0, 1280, 720 };
-
     // サイズの補正
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
     // ウィンドウの作成
     hwnd = CreateWindow(
         wc.lpszClassName,
-        _T("CG2"),
+        ConvertString(windowName_).c_str(),
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -80,7 +82,6 @@ void WinApp::CreateWnd(void) {
         wc.hInstance,
         nullptr
     );
-
     // ウィンドウの表示
     ShowWindow(hwnd, SW_SHOW);
 }

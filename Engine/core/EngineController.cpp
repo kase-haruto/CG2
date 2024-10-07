@@ -1,12 +1,13 @@
 ﻿#include "core/EngineController.h"
+#include "core/Enviroment.h"
 
-void EngineController::Initialize(HINSTANCE hInstance, int width, int height){
+void EngineController::Initialize(HINSTANCE hInstance){
     // comの初期化
     CoInitializeEx(0, COINIT_MULTITHREADED);
 
     // engineの初期化
     system_ = std::make_unique<System>();
-    system_->Initialize(hInstance, width, height);
+    system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
     // sceneの初期化
     scene_ = std::make_unique<TestScene>();

@@ -11,8 +11,8 @@ System::System(){}
 
 System::~System(){}
 
-void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight){
-    winApp_ = std::make_unique<WinApp>();
+void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle){
+    winApp_ = std::make_unique<WinApp>(clientWidth,clientHeight, windowTitle);
     hInstance_ = hInstance;
     hwnd_ = winApp_->GetHWND();
 

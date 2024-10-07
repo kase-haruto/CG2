@@ -154,6 +154,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
     <ClInclude Include="Engine\core\EngineController.h" />
+    <ClInclude Include="Engine\core\Enviroment.h" />
     <ClInclude Include="Engine\core\Input.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
