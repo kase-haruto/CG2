@@ -2,7 +2,6 @@
 #include"WinApp.h"
 
 //グラフィック関係
-#include"DirectXCommon.h"
 #include"core/DirectX/DxCore.h"
 #include"ShaderManager.h"
 #include"PipelineStateManager.h"
@@ -76,10 +75,8 @@ private:
 	static HINSTANCE hInstance_;
 	static HWND hwnd_;
 
-	std::unique_ptr<DirectXCommon> dxCommon_;
 	std::unique_ptr<DxCore> dxCore_ = nullptr;
 
-	ComPtr<ID3D12Device> device_;
 #ifdef _DEBUG
 	// ImGuiの初期化
 	std::unique_ptr<ImGuiManager> imguiManager_ = nullptr;

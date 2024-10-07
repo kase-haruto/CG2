@@ -5,6 +5,8 @@
 #include <array>
 #include <cassert>
 
+#include"core/DirectX/DxSwapChain.h"
+
 class RenderTarget{
     template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -14,7 +16,7 @@ public:
     /// </summary>
     /// <param name="device"></param>
     /// <param name="swapChain"></param>
-    void Initialize(ComPtr<ID3D12Device> device, ComPtr<IDXGISwapChain4> swapChain);
+    void Initialize(ComPtr<ID3D12Device> device, DxSwapChain& swapChain);
 
     /// <summary>
     /// 深度バッファの生成
@@ -33,10 +35,11 @@ public:
 
     ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
-private:
+public:
     ///////////////////////////////////////////////////
     //              リソース
     ///////////////////////////////////////////////////
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_ {};
     ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
     ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
     ComPtr<ID3D12Resource> depthStencilResource_ = nullptr;

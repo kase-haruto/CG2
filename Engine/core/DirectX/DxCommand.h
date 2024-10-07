@@ -12,7 +12,7 @@ public:
     /// 初期化
     /// </summary>
     /// <param name="device"></param>
-    void Initialize(ComPtr<ID3D12Device> device);
+    void Initialize(const ComPtr<ID3D12Device>& device);
     /// <summary>
     /// リセット
     /// </summary>
@@ -21,8 +21,8 @@ public:
     /////////////////////////////////////////////////////////////////////////////////////////
     //              アクセッサ
     /////////////////////////////////////////////////////////////////////////////////////////    ComPtr<ID3D12GraphicsCommandList> GetCommandList() const{ return commandList_; }
-    ComPtr<ID3D12GraphicsCommandList> GetCommandList() const{ return commandList_; }
-    ComPtr<ID3D12CommandQueue> GetCommandQueue() const{ return commandQueue_; }
+    const ComPtr<ID3D12GraphicsCommandList>& GetCommandList() const{ return commandList_; }
+    const ComPtr<ID3D12CommandQueue>& GetCommandQueue() const{ return commandQueue_; }
 
 private:
     ///////////////////////////////////////////////////

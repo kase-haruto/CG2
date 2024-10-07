@@ -6,7 +6,7 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-class DirectXCommon;
+class DxCore;
 
 //霧のパラメータを表す構造体
 struct FogParameters{
@@ -25,15 +25,13 @@ private:
 	UINT8* mappedConstantBuffer;
 	UINT bufferSize;
 
-	ComPtr<ID3D12GraphicsCommandList> commandList_;
-	ComPtr<ID3D12Device> device_;
 
 
-	DirectXCommon* dxCommon_;
+	const DxCore* pDxCore_;
 
 public:
 	//コンストラクタ
-	FogEffect(DirectXCommon* dxCommon);
+	FogEffect(const DxCore* dxCommon);
 	//デストラクタ
 	~FogEffect();
 

@@ -11,7 +11,6 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="dxCommon"></param>
 	/// <param name="viewProjection"></param>
 	/// <param name="psManager"></param>
 	virtual void Initialize(ViewProjection* viewProjection) = 0;

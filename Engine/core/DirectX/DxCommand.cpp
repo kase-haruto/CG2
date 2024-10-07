@@ -1,6 +1,6 @@
 #include"core/DirectX/DxCommand.h"
 
-void DxCommand::Initialize(ComPtr<ID3D12Device> device){
+void DxCommand::Initialize(const ComPtr<ID3D12Device>& device){
 	HRESULT hr;
 	//コマンドキューを生成
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc {};

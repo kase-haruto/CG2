@@ -1,17 +1,12 @@
 ﻿#include "FogEffect.h"
-#include"DirectXCommon.h"
+#include "core/DirectX/DxCore.h"
 
-FogEffect::~FogEffect(){
-	device_.Reset();
-	commandList_.Reset();
+FogEffect::~FogEffect(){ 
+	constantBuffer->Release();
+	constantBuffer = nullptr;
 }
 
-FogEffect::FogEffect(DirectXCommon* dxCommon){
-
-	dxCommon_ = dxCommon;
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-
+FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	//定数バッファの生成
 	CreateConstantBuffer();
 
@@ -50,9 +45,10 @@ void FogEffect::CreateConstantBuffer(){
 	D3D12_HEAP_PROPERTIES heapProps = {};
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
+	ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
 
 	// リソースの作成
-	HRESULT hr = device_->CreateCommittedResource(
+	HRESULT hr = device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
