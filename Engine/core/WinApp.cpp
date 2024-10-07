@@ -15,8 +15,11 @@ WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName
 
 	CreateWnd();
 }
+
 //デストラクタ
-WinApp::~WinApp() {}
+WinApp::~WinApp() {
+    CloseWindow(hwnd);
+}
 
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {

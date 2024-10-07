@@ -469,11 +469,6 @@ void DirectXCommon::Finalize(){
 	}
 
 #endif // _DEBUG
-
-	// ウィンドウのクローズ
-	if (winApp_ != nullptr){
-		CloseWindow(winApp_->GetHWND());
-	}
 }
 
 
