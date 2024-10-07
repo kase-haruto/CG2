@@ -16,7 +16,6 @@ Model::Model(const std::string& fileName){
 }
 
 Model::~Model(){
-	device_.Reset();
 	vertexResource_->Release();
 	materialResource_->Release();
 	wvpResource_->Release();
@@ -145,6 +144,7 @@ void Model::VertexBufferMap(){
 						reinterpret_cast< void** >(&vertexData));
 	//モデル用
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
+	vertexResource_->Unmap(0, nullptr);
 }
 
 void Model::MaterialBufferMap(){
@@ -161,6 +161,7 @@ void Model::MatrixBufferMap(){
 	wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData));
 	//単位行列を書き込んでおく
 	matrixData->WVP = Matrix4x4::MakeIdentity();
+	wvpResource_->Unmap(0, nullptr);
 }
 
 void Model::SetViewProjection(const ViewProjection* viewPro){

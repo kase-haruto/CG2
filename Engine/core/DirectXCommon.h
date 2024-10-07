@@ -37,7 +37,6 @@ private: // メンバ変数
 	uint64_t fenceValue;
 	HANDLE fenceEvent;
 	ComPtr<ID3D12Debug1> debugController = nullptr;
-	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc {};
 
 	ComPtr<ID3D12Resource> depthStencilResource;
@@ -62,7 +61,7 @@ private: // メンバ変数
 
 public:
 	DirectXCommon(){}
-	~DirectXCommon(){}
+	~DirectXCommon();
 
 	/// <summary>
 	/// 初期化

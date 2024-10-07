@@ -11,6 +11,10 @@ ViewProjection::ViewProjection(){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 }
 
+ViewProjection::~ViewProjection(){
+    constBuffer_->Release();
+}
+
 void ViewProjection::CreateConstBuffer(){
     constBuffer_ = CreateBufferResource(device_.Get(), sizeof(CameraForGPU));
 }
@@ -78,9 +82,4 @@ void ViewProjection::ImGui(){
 
 }
 
-void ViewProjection::Finalize(){
-    constBuffer_->Release();
-    device_.Reset();
-    rootSignature_.Reset();
-    commandList_.Reset();
-}
+void ViewProjection::Finalize(){}

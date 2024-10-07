@@ -6,7 +6,6 @@
 DirectionalLight::DirectionalLight(){}
 
 DirectionalLight::~DirectionalLight(){
-	device_.Reset();
 	resource_->Release();
 }
 

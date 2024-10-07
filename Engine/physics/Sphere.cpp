@@ -12,7 +12,6 @@
 Sphere::Sphere(){}
 
 Sphere::~Sphere(){
-	device_.Reset();
 	vertexResource_->Release();
 	materialResource_->Release();
 	wvpResource_->Release();

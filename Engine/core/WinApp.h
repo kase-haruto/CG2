@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include<Windows.h>
 #include<cstdint>
+#include<string>
 
 class WinApp {
 public://静的メンバ変数
@@ -14,7 +15,7 @@ public://静的メンバ変数
 
 public://メンバ関数
 	//コンストラクタ
-	WinApp();
+	WinApp(const int wWidth,const int wHeight,const std::string windowName);
 	//デストラクタ
 	~WinApp();
 	//この関数内でウィンドウを作成する
@@ -34,5 +35,7 @@ private:
 	RECT wrc = { 0,0,1280,720 };
 	//ウィンドウのハンドル
 	HWND hwnd;
+	//ウィンドウタイトル
+	std::string windowName_ {};
 };
 

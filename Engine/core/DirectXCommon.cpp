@@ -18,6 +18,17 @@
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
 
+DirectXCommon::~DirectXCommon(){
+	//リソースリークチェック
+	ComPtr<IDXGIDebug1>debug;
+	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))){
+		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+	//	debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+	//	debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug->Release();
+	}
+}
+
 void DirectXCommon::Initialize(
 	WinApp* win, uint32_t width, uint32_t height){
 	// nullptrチェック
@@ -109,7 +120,7 @@ void DirectXCommon::InitializeDXGIDevice(){
 	Log("Complete create D3D12Device!!!\n");// 初期化完了のログを出す
 
 #ifdef _DEBUG
-	infoQueue = nullptr;
+	ID3D12InfoQueue* infoQueue = nullptr;
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))){
 		//やばいエラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -399,39 +410,65 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 	scissorRect.bottom = height;
 }
 
-
 void DirectXCommon::Finalize(){
-
-	CloseHandle(fenceEvent);
-	fence.Reset();
-	rtvDescriptorHeap.Reset();
-	swapChainResources[0].Reset();
-	swapChainResources[1].Reset();
-	swapChain->Release();
-	commandList.Reset();
-	commandAllocator.Reset();
-	commandQueue.Reset();
-	device.Reset();
-	useAdapter->Release();
-	dxgiFactory.Reset();
-#ifdef _DEBUG
-	debugController.Reset();
-#endif // _DEBUG
-	CloseWindow(winApp_->GetHWND());
-
-
-	dsvDescriptorHeap.Reset();
-	depthStencilResource.Reset();
-
-	//リソースリークチェック
-	ComPtr<IDXGIDebug1>debug;
-	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))){
-		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		debug->Release();
+	// フェンスイベントのクローズ
+	if (fenceEvent != nullptr){
+		CloseHandle(fenceEvent);
+		fenceEvent = nullptr;
 	}
 
-	//警告時に止まる
-	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+	// スワップチェーンのリソースを解放
+	for (auto& resource : swapChainResources){
+		resource.Reset();
+	}
+
+	// スワップチェーンの解放
+	if (swapChain){
+		swapChain->Release();
+		swapChain = nullptr;
+	}
+
+	// コマンドアロケーターの解放
+	commandAllocator.Reset();
+
+	// コマンドリストの解放
+	commandList.Reset();
+
+	// コマンドキューの解放
+	commandQueue.Reset();
+
+	if (device){
+		// デバイスの解放
+		device->Release();
+		device = nullptr;
+	}
+	
+
+	// 使用しているアダプタの解放
+	if (useAdapter){
+		useAdapter->Release();
+		useAdapter = nullptr;
+	}
+
+	// DXGIファクトリの解放
+	dxgiFactory.Reset();
+
+	// デスクリプタヒープの解放
+	rtvDescriptorHeap.Reset();
+	dsvDescriptorHeap.Reset();
+
+	// 深度ステンシルリソースの解放
+	depthStencilResource.Reset();
+
+	fence.Reset();
+
+	// デバッグコントローラの解放 (デバッグビルドのみ)
+#ifdef _DEBUG
+	if (debugController){
+		debugController.Reset();
+	}
+
+#endif // _DEBUG
 }
+
+

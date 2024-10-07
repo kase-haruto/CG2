@@ -53,7 +53,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externals;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\imgui;$(ProjectDir)lib;$(ProjectDir)lib\myFunc;$(ProjectDir)lib\myMath;$(SolutionDir)Engine;$(ProjectDir)Engine\core;$(ProjectDir)Engine\graphics;$(ProjectDir)Engine\graphics\shaders;$(ProjectDir)Engine\objects;$(ProjectDir)Engine\physics;$(ProjectDir)Engine\scene;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)externals;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\imgui;$(SolutionDir)Engine\core;$(SolutionDir)Engine\objects;$(SolutionDir)Engine\graphics;$(SolutionDir)Engine\scene;$(SolutionDir)Engine\physics;$(SolutionDir)lib;$(SolutionDir)lib\myMath;$(SolutionDir)lib\myFunc;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)externals;$(SolutionDir)externals\assimp;$(SolutionDir)externals\DirectXTex;$(SolutionDir)externals\imgui;$(SolutionDir)Engine;$(SolutionDir)Engine\core;$(SolutionDir)Engine\objects;$(SolutionDir)Engine\graphics;$(SolutionDir)Engine\scene;$(SolutionDir)Engine\physics;$(SolutionDir)lib;$(SolutionDir)lib\myMath;$(SolutionDir)lib\myFunc;$(ProjectDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,6 +103,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\EngineController.cpp" />
+    <ClCompile Include="Engine\core\Input.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
     <ClCompile Include="Engine\graphics\FogEffect.cpp" />
@@ -145,6 +147,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myFunc\LocalFunc.cpp" />
     <ClCompile Include="lib\myFunc\MathFunc.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
+    <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
     <ClCompile Include="main.cpp">
@@ -154,6 +157,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\EngineController.h" />
+    <ClInclude Include="Engine\core\Enviroment.h" />
+    <ClInclude Include="Engine\core\Input.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />
@@ -202,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myFunc\LocalFunc.h" />
     <ClInclude Include="lib\myFunc\MathFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
+    <ClInclude Include="lib\myFunc\PrimitiveDrawer.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
     <ClInclude Include="lib\myMath\Matrix4x4.h" />
     <ClInclude Include="lib\myMath\Vector2.h" />

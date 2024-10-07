@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="clientWidth"></param>
 	/// <param name="clientHeight"></param>
-	void Initialize(int32_t clientWidth,int32_t clientHeight);
+	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle);
 	/// <summary>
 	/// メモリの開放など
 	/// </summary>
@@ -51,15 +51,27 @@ public:
 	/// </summary>
 	void CreatePipelines();
 	void Object3DPipelines();
-	void NonTexturesObjectPipelines();
 	void StructuredObjectPipeline();
+	void LinePipeline();
 
 
 	int ProcessMessage();
 
 
+	////////////////////////////////////////////////////////////
+	//		アクセッサ
+	///////////////////////////////////////////////////////////
+	static HINSTANCE GetHinstance(){ return hInstance_; }
+	static HWND GetHWND(){ return hwnd_; }
+
 private:
+
+
+	/*window*/
 	std::unique_ptr<WinApp> winApp_;
+	static HINSTANCE hInstance_;
+	static HWND hwnd_;
+
 	std::unique_ptr<DirectXCommon> dxCommon_;
 	ComPtr<ID3D12Device> device_;
 #ifdef _DEBUG
