@@ -105,6 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
     <ClCompile Include="Engine\core\EngineController.cpp" />
     <ClCompile Include="Engine\core\Input.cpp" />
+    <ClCompile Include="Engine\core\LeakChecker.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
     <ClCompile Include="Engine\graphics\FogEffect.cpp" />
@@ -156,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\EngineController.h" />
     <ClInclude Include="Engine\core\Enviroment.h" />
     <ClInclude Include="Engine\core\Input.h" />
+    <ClInclude Include="Engine\core\LeakChecker.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />

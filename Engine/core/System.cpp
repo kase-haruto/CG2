@@ -9,7 +9,6 @@ HWND System::hwnd_ = nullptr;
 
 System::System(){}
 
-System::~System(){}
 
 void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle){
     winApp_ = std::make_unique<WinApp>(clientWidth,clientHeight, windowTitle);
@@ -77,19 +76,15 @@ void System::EndFrame(){
 }
 
 void System::Finalize(){
-    device_.Reset();
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
-    directionalLight_.reset();
-    pointLight_.reset();
     SrvLocator::Finalize();
     Input::Finalize();
 
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
-    dxCommon_->Finalize();
 }
 
 

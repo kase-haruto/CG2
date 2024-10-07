@@ -14,13 +14,16 @@
 #include"ImGuiManager.h"
 #endif // _DEBUG
 
+//リークチェック
+#include "LeakChecker.h"
+
 
 #include<stdint.h>
 
 class System{
 public:
 	System();
-	~System();
+	~System() = default;
 
 	/// <summary>
 	/// 初期化
@@ -65,7 +68,7 @@ public:
 	static HWND GetHWND(){ return hwnd_; }
 
 private:
-
+	LeakChecker leakChecker_;
 
 	/*window*/
 	std::unique_ptr<WinApp> winApp_;

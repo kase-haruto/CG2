@@ -10,6 +10,8 @@
 #include"Matrix4x4.h"
 #include"ShaderManager.h"
 
+#include<array>
+
 class ImGuiManager;
 
 class DirectXCommon final{
@@ -23,16 +25,16 @@ private: // メンバ変数
 
 	WinApp* winApp_;
 	ComPtr<ID3D12Device> device = nullptr;
-	IDXGIAdapter4* useAdapter = nullptr;
+	ComPtr<IDXGIAdapter4> useAdapter = nullptr;
 	HRESULT hr;
 	ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
 	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
 	ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
 	ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
-	IDXGISwapChain4* swapChain = nullptr;
+	ComPtr<IDXGISwapChain4>swapChain = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc {};
 	ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap = nullptr;
-	ComPtr<ID3D12Resource> swapChainResources[2] = { nullptr };
+	std::array<ComPtr<ID3D12Resource>, 2>swapChainResources;
 	ComPtr<ID3D12Fence> fence = nullptr;
 	uint64_t fenceValue;
 	HANDLE fenceEvent;
@@ -68,11 +70,6 @@ public:
 	/// </summary>
 	void Initialize(
 		WinApp* win,uint32_t width, uint32_t height);
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
 
 	/// <summary>
 	/// 描画前処理
