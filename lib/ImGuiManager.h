@@ -1,13 +1,16 @@
 ﻿#pragma once
 
 #ifdef _DEBUG
-#include<d3d12.h>
 #include<imgui.h>
-#include <wrl.h>
 #endif // _DEBUG
 
+#include<d3d12.h>
+#include <wrl.h>
+
+
+
 class WinApp;
-class DirectXCommon;
+class DxCore;
 
 class ImGuiManager{
 public:
@@ -19,8 +22,8 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="winApp"></param>
-	/// <param name="dxCommon"></param>
-	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+	/// <param name="dxCore"></param>
+	void Initialize(WinApp* winApp, const DxCore* dxCore);
 
 	/// <summary>
 	/// 終了
@@ -48,7 +51,8 @@ public:
 private:
 #ifdef _DEBUG
 	// DirectX基盤インスタンス（借りてくる）
-	DirectXCommon* dxCommon_ = nullptr;
+	const DxCore* pDxCore_ = nullptr;
+
 	// SRV用ヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 

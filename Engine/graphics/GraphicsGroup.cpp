@@ -5,8 +5,8 @@ GraphicsGroup* GraphicsGroup::GetInstance(){
 	return& instance;
 }
 
-void GraphicsGroup::Initialize(DirectXCommon* dxCommon, PipelineStateManager* psManager){
-	dxCommon_ = dxCommon;
+void GraphicsGroup::Initialize(const DxCore* dxCore, PipelineStateManager* psManager){
+	pDxCore_ = dxCore;
 	pipelineManager_ = psManager;
 }
 
@@ -16,6 +16,6 @@ const ComPtr<ID3D12PipelineState>& GraphicsGroup::GetPipelineState(const Pipelin
 
 const ComPtr<ID3D12RootSignature>& GraphicsGroup::GetRootSignature(const PipelineType& type)const{ return pipelineManager_->GetRootSignature(type); }
 
-const ComPtr<ID3D12Device>& GraphicsGroup::GetDevice()const{ return dxCommon_->GetDevice(); }
+ComPtr<ID3D12Device> GraphicsGroup::GetDevice() const{ return pDxCore_->GetDevice(); }
 
-const ComPtr<ID3D12GraphicsCommandList>& GraphicsGroup::GetCommandList()const{ return dxCommon_->GetCommandList(); }
+ComPtr<ID3D12GraphicsCommandList> GraphicsGroup::GetCommandList() const{ return pDxCore_->GetCommandList(); }

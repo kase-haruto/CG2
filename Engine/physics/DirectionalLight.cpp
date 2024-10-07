@@ -1,7 +1,11 @@
 ﻿#include "DirectionalLight.h"
-#include"DirectXCommon.h"
 #include"MyFunc.h"
+#include "core/DirectX/DxCore.h"
+
+#ifdef _DEBUG
 #include"imgui.h"
+#endif // _DEBUG
+
 
 DirectionalLight::DirectionalLight(){}
 
@@ -11,15 +15,13 @@ DirectionalLight::~DirectionalLight(){
 
 
 
-void DirectionalLight::Initialize(DirectXCommon* dxCommon){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
+void DirectionalLight::Initialize(const DxCore* dxCore){
+	pDxCore_ = dxCore;
 
 	CreateBuffer();
 	Map();
-
-	
 }
+
 
 void DirectionalLight::Update(){
 	
@@ -33,14 +35,18 @@ void DirectionalLight::Render(){
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
 	ImGui::End();
 
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
+
 	// ルートシグネチャをコマンドリストに設定する
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList_->SetGraphicsRootConstantBufferView(4, resource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList->SetGraphicsRootConstantBufferView(4, resource_->GetGPUVirtualAddress());
 }
 
 
 void DirectionalLight::CreateBuffer(){
-	resource_ = CreateBufferResource(device_.Get(), sizeof(DirectionalLightData));
+	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
+
+	resource_ = CreateBufferResource(device.Get(), sizeof(DirectionalLightData));
 }
 
 void DirectionalLight::Map(){

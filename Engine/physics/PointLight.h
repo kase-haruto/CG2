@@ -15,7 +15,7 @@ struct PointLightData{
 	float pad[2];
 };
 
-class DirectXCommon;
+class DxCore;
 
 class PointLight{
 public:
@@ -25,8 +25,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="dxCommon"></param>
-	void Initialize(DirectXCommon* dxCommon);
+	/// <param name="dxCore"></param>
+	void Initialize(const DxCore* dxCore);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -47,8 +47,8 @@ public:
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList_ = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Device>device_ = nullptr;
+	const DxCore* pDxCore_ = nullptr;
+
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
