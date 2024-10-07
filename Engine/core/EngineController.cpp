@@ -1,39 +1,39 @@
-#include "core/EngineController.h"
+ï»¿#include "core/EngineController.h"
 
 void EngineController::Initialize(HINSTANCE hInstance, int width, int height){
-    // com‚Ì‰Šú‰»
+    // comã®åˆæœŸåŒ–
     CoInitializeEx(0, COINIT_MULTITHREADED);
 
-    // engine‚Ì‰Šú‰»
+    // engineã®åˆæœŸåŒ–
     system_ = std::make_unique<System>();
     system_->Initialize(hInstance, width, height);
 
-    // scene‚Ì‰Šú‰»
+    // sceneã®åˆæœŸåŒ–
     scene_ = std::make_unique<TestScene>();
     scene_->Initialize();
 }
 
 void EngineController::Run(){
-    // ƒƒCƒ“ƒ‹[ƒv
+    // ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—
     while (!system_->ProcessMessage()){
 
-        //•`‰æ‘Oˆ—
+        //æç”»å‰å‡¦ç†
         system_->BeginFrame();
 
-        //ƒV[ƒ“‚ÌXV
+        //ã‚·ãƒ¼ãƒ³ã®æ›´æ–°
         scene_->Update();
 
-        //ƒV[ƒ“‚Ì•`‰æ
+        //ã‚·ãƒ¼ãƒ³ã®æç”»
         scene_->Draw();
 
-        //•`‰æŒãˆ—
+        //æç”»å¾Œå‡¦ç†
         system_->EndFrame();
 
     }
 }
 
 void EngineController::Finalize(){
-    //I—¹ˆ—
+    //çµ‚äº†å‡¦ç†
     scene_->Finalize();
     system_->Finalize();
 }

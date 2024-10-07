@@ -1,4 +1,4 @@
-#pragma
+ï»¿#pragma
 #include <Windows.h>
 #include "WinApp.h"
 #include "System.h"
@@ -10,7 +10,7 @@ public:
     ~EngineController() = default;
 
     /// <summary>
-    /// ‰Šú‰»
+    /// åˆæœŸåŒ–
     /// </summary>
     /// <param name="hInstance"></param>
     /// <param name="width"></param>
@@ -18,12 +18,12 @@ public:
     void Initialize(HINSTANCE hInstance, int width, int height);
 
     /// <summary>
-    /// XV
+    /// æ›´æ–°
     /// </summary>
     void Run();
 
     /// <summary>
-    /// I—¹ˆ—
+    /// çµ‚äº†å‡¦ç†
     /// </summary>
     void Finalize();
 
