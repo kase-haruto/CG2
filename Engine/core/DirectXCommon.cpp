@@ -1,4 +1,4 @@
-﻿#include "DirectXCommon.h"
+#include "DirectXCommon.h"
 #include"ConvertString.h"
 #include<format>
 #include<cassert>

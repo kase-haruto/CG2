@@ -17,6 +17,10 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	dxCommon_ = std::make_unique<DirectXCommon>();
 	dxCommon_->Initialize(winApp_.get(), 1280, 720);
+    //dxCore_ = std::make_unique<DxCore>();
+    //dxCore_->Initialize(winApp_.get(), clientWidth, clientHeight);
+
+    //ComPtr<ID3D12Device> device = dxCore_->GetDevice();
     device_ = dxCommon_->GetDevice();
 
     ////インプットの初期化

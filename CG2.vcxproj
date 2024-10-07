@@ -103,6 +103,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxCommand.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxCore.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxDevice.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxFence.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget.cpp" />
     <ClCompile Include="Engine\core\EngineController.cpp" />
     <ClCompile Include="Engine\core\Input.cpp" />
     <ClCompile Include="Engine\core\LeakChecker.cpp" />
@@ -143,6 +149,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
+    <ClCompile Include="lib\myFunc\DxFunc.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
     <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
@@ -154,6 +161,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\DirectX\DxCommand.h" />
+    <ClInclude Include="Engine\core\DirectX\DxCore.h" />
+    <ClInclude Include="Engine\core\DirectX\DxDevice.h" />
+    <ClInclude Include="Engine\core\DirectX\DxFence.h" />
+    <ClInclude Include="Engine\core\DirectX\DxSwapChain.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget.h" />
     <ClInclude Include="Engine\core\EngineController.h" />
     <ClInclude Include="Engine\core\Enviroment.h" />
     <ClInclude Include="Engine\core\Input.h" />
@@ -201,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
+    <ClInclude Include="lib\myFunc\DxFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
     <ClInclude Include="lib\myFunc\PrimitiveDrawer.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
