@@ -103,6 +103,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\EngineController.cpp" />
     <ClCompile Include="Engine\core\Input.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
@@ -152,6 +153,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\EngineController.h" />
     <ClInclude Include="Engine\core\Input.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
