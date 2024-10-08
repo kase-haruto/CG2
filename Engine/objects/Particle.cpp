@@ -28,14 +28,14 @@ void ParticleManager::Initialize(ViewProjection* viewProjection){
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
-	modelData = LoadObjFile("Resources", "plane.obj");
+	modelData = LoadObjFile("Resources", "plane");
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 
 
 
 	handle = TextureManager::GetInstance()->LoadTexture("./Resources/particle.png");
 	if (!handle.ptr){
-		throw std::runtime_error("Failed to load texture.");
+		handle = TextureManager::GetInstance()->LoadTexture("./Resources/white1x1.png");
 	}
 
 	CreateBuffer();
