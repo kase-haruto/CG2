@@ -40,6 +40,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
+    //フォグの初期化
+    fog = std::make_unique<FogEffect>(dxCore_.get());
+
     //////////////////////////////////////////////////////////////////////
     ///             ライトの初期化
     //////////////////////////////////////////////////////////////////////
@@ -173,7 +176,7 @@ void System::Object3DPipelines(){
     //フォグ
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    rootParameters[2].Descriptor.ShaderRegister = 1;
+    rootParameters[2].Descriptor.ShaderRegister = 5;
 
     //テクスチャ
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;

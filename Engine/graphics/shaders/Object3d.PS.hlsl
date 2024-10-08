@@ -4,10 +4,10 @@
 //                      Material
 /////////////////////////////////////////////////////////////////////////
 struct Material{
-    float4 color; // 色
-    int enableLighting; // ライティングの種類
+    float4 color;         // 色
+    int enableLighting;   // ライティングの種類
     float4x4 uvTransform; // UV座標の変換行列
-    float shiniess; // 光沢度
+    float shiniess;      // 光沢度
 };
 
 /////////////////////////////////////////////////////////////////////////
@@ -21,20 +21,29 @@ struct Camera{
 //                      DirectionalLight
 /////////////////////////////////////////////////////////////////////////
 struct DirectionalLight{
-    float4 color; // ライトの色
-    float3 direction; // ライトの方向
-    float intensity; // 光度
+    float4 color;       // ライトの色
+    float3 direction;   // ライトの方向
+    float intensity;    // 光度
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      PointLight
 /////////////////////////////////////////////////////////////////////////
 struct PointLight{
-    float4 color; // ライトの色
-    float3 position; // ライトの位置
-    float intensity; // 光度
-    float radius; // ライトの届く最大距離
-    float decay; // 減衰率
+    float4 color;       // ライトの色
+    float3 position;    // ライトの位置
+    float intensity;    // 光度
+    float radius;       // ライトの届く最大距離
+    float decay;        // 減衰率
+};
+
+/////////////////////////////////////////////////////////////////////////
+//                     Fogeffect
+/////////////////////////////////////////////////////////////////////////
+struct Fog{
+    float start;    //開始位置
+    float end;      //終了位置
+    float4 color;   //色
 };
 
 // マテリアル
@@ -104,22 +113,18 @@ PixelShaderOutput main(VertexShaderOutput input){
     float3 directionalSpecular = float3(0.0f, 0.0f, 0.0f);
 
     // ライトの設定: Half-Lambert, Lambert, or No Lighting
-    if (gMaterial.enableLighting == 0)
-    {
+    if (gMaterial.enableLighting == 0) {
         // Half-Lambert shading
         NdotL = saturate(dot(normal, -gDirectionalLight.direction));
         halfLambertTerm = pow(NdotL * 0.5f + 0.5f, 2.0f);
         directionalDiffuse = textureColor.rgb * gDirectionalLight.color.rgb * halfLambertTerm * gDirectionalLight.intensity;
         directionalSpecular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * DirectionalSpecularPow * float3(1.0f, 1.0f, 1.0f);
     }
-    else if (gMaterial.enableLighting == 1)
-    {
+    else if (gMaterial.enableLighting == 1) {
         // Lambert shading
         NdotL = saturate(dot(normal, -gDirectionalLight.direction));
         directionalDiffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * NdotL * gDirectionalLight.intensity;
-    }
-    else
-    {
+    }else{
         // ライティングなし
         output.color = gMaterial.color * textureColor;
     }
@@ -149,13 +154,28 @@ PixelShaderOutput main(VertexShaderOutput input){
     // 拡散反射と鏡面反射を既存の出力カラーに追加
     float3 diffuse = directionalDiffuse + pointLightDiffuse;
     float3 specular = directionalSpecular + pointLightSpecular;
-
-    output.color.rgb = diffuse + specular;
-    output.color.a = gMaterial.color.a * textureColor.a;
-
+    
+    
+    ////////////////////////////////////////////////////////////////////
+    //          fog
+    ////////////////////////////////////////////////////////////////////
+    float4 baseColor;
+    baseColor.rgb = diffuse + specular;
+    baseColor.a = gMaterial.color.a * textureColor.a;
+    
+    //カメラからの距離
+    float distanceToCamera = length(input.worldPosition.xyz - gCamera.worldPosition);
+    
+    //フォグの密度を計算(霧の中では0外では1)
+    float fogFactor = saturate((distanceToCamera - fogStart) / (fogEnd - fogStart));
+    
+    //フォグの色をブレンド
+    float4 foggedColor = lerp(baseColor, fogColor, fogFactor);
+    
+    output.color = baseColor;
+    
     // アルファ値が0の場合、ピクセルを破棄
-    if (output.color.a == 0.0)
-    {
+    if (output.color.a == 0.0){
         discard;
     }
 
