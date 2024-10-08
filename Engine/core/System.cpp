@@ -57,7 +57,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 void System::BeginFrame(){
 	//フレームの開始
-    //dxCommon_->PreDraw();
     dxCore_->PreDraw();
 	// ImGui受付開始
 	imguiManager_->Begin();
@@ -74,7 +73,6 @@ void System::EndFrame(){
 	//ImGui描画
 	imguiManager_->Draw();
 	//フレームの終了
-	//dxCommon_->PostDraw();
     dxCore_->PostDraw();
 }
 

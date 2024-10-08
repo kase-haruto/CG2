@@ -22,6 +22,8 @@ FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	parameters->fogEnd = 10.0f;
 	//霧の色
 	parameters->fogColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // 白色の設定
+
+	constantBuffer->Unmap(0, nullptr);
 	
 }
 
