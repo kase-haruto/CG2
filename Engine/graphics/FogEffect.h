@@ -31,7 +31,7 @@ private:
 
 public:
 	//コンストラクタ
-	FogEffect(const DxCore* dxCommon);
+	FogEffect(const DxCore* dxCore);
 	//デストラクタ
 	~FogEffect();
 

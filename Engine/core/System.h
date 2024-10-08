@@ -5,6 +5,7 @@
 #include"core/DirectX/DxCore.h"
 #include"ShaderManager.h"
 #include"PipelineStateManager.h"
+#include"graphics/FogEffect.h"
 
 //オブジェクト
 #include"DirectionalLight.h"
@@ -69,13 +70,14 @@ public:
 
 private:
 	LeakChecker leakChecker_;
+	std::unique_ptr<DxCore> dxCore_ = nullptr;
 
 	/*window*/
 	std::unique_ptr<WinApp> winApp_;
 	static HINSTANCE hInstance_;
 	static HWND hwnd_;
 
-	std::unique_ptr<DxCore> dxCore_ = nullptr;
+	std::unique_ptr<FogEffect>fog = nullptr;
 
 #ifdef _DEBUG
 	// ImGuiの初期化

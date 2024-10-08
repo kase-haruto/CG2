@@ -40,6 +40,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
+    //フォグの初期化
+    fog = std::make_unique<FogEffect>(dxCore_.get());
+
     //////////////////////////////////////////////////////////////////////
     ///             ライトの初期化
     //////////////////////////////////////////////////////////////////////
@@ -57,12 +60,13 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 void System::BeginFrame(){
 	//フレームの開始
-    //dxCommon_->PreDraw();
     dxCore_->PreDraw();
 	// ImGui受付開始
 	imguiManager_->Begin();
     //インプットの更新
     Input::Update();
+    //フォグの更新
+    fog->Update();
     //ライトの処理の更新
     directionalLight_->Render();
     pointLight_->Render();
@@ -74,7 +78,6 @@ void System::EndFrame(){
 	//ImGui描画
 	imguiManager_->Draw();
 	//フレームの終了
-	//dxCommon_->PostDraw();
     dxCore_->PostDraw();
 }
 
@@ -175,7 +178,7 @@ void System::Object3DPipelines(){
     //フォグ
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    rootParameters[2].Descriptor.ShaderRegister = 1;
+    rootParameters[2].Descriptor.ShaderRegister = 5;
 
     //テクスチャ
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
@@ -312,7 +315,7 @@ void System::StructuredObjectPipeline(){
     }
 
     // RootSignatureの設定
-    D3D12_ROOT_PARAMETER rootParameters[4] = {};
+    D3D12_ROOT_PARAMETER rootParameters[3] = {};
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0;
     descriptorRange[0].NumDescriptors = 1;
