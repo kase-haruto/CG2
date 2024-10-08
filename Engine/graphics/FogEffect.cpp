@@ -1,5 +1,11 @@
 ﻿#include "FogEffect.h"
 #include "core/DirectX/DxCore.h"
+#include "graphics/GraphicsGroup.h"
+
+#ifdef _DEBUG
+#include<imgui.h>
+#endif // _DEBUG
+
 
 FogEffect::~FogEffect(){ 
 	constantBuffer->Release();
@@ -17,9 +23,9 @@ FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	///	霧のパラメータを設定
 	///================================
 	//霧のスタート地点
-	parameters->fogStart = 1.0f;
+	parameters->fogStart = 30.0f;
 	//霧の終点
-	parameters->fogEnd = 10.0f;
+	parameters->fogEnd = 1000.0f;
 	//霧の色
 	parameters->fogColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // 白色の設定
 
@@ -62,6 +68,17 @@ void FogEffect::CreateConstantBuffer(){
 
 
 void FogEffect::Update(){
-	memcpy(mappedConstantBuffer, &parameters, sizeof(FogParameters));
+#ifdef _DEBUG
+	ImGui::Begin("fogEffect");
+	ImGui::SliderFloat("fogStart", &parameters->fogStart,10.0f,50.0f);
+	ImGui::SliderFloat("fogEnd", &parameters->fogEnd,500.0f,1000.0f);
+	ImGui::End();
+#endif // _DEBUG
+
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = pDxCore_->GetCommandList();
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	commandList->SetGraphicsRootSignature(rootSignature.Get());
+	//フォグ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(2, constantBuffer->GetGPUVirtualAddress());
 }
 

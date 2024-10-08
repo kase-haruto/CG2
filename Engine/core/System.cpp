@@ -65,6 +65,8 @@ void System::BeginFrame(){
 	imguiManager_->Begin();
     //インプットの更新
     Input::Update();
+    //フォグの更新
+    fog->Update();
     //ライトの処理の更新
     directionalLight_->Render();
     pointLight_->Render();
