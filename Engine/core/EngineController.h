@@ -3,6 +3,7 @@
 #include "WinApp.h"
 #include "System.h"
 #include "TestScene.h"
+#include "GameScene.h"
 
 class EngineController{
 public:
@@ -29,5 +30,5 @@ public:
 
 private:
     std::unique_ptr<System> system_;
-    std::unique_ptr<TestScene> scene_;
+    std::unique_ptr<GameScene> scene_;
 };

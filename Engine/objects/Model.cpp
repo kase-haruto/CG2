@@ -1,5 +1,5 @@
 ﻿#include "Model.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
 
@@ -39,6 +39,7 @@ void Model::Initialize(bool isUseTexture){
 	///=================================================
 	CreateBuffer();
 	Map();
+
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){
@@ -163,6 +164,6 @@ void Model::MatrixBufferMap(){
 	wvpResource_->Unmap(0, nullptr);
 }
 
-void Model::SetViewProjection(ViewProjection* viewPro){
+void Model::SetViewProjection(const ViewProjection* viewPro){
 	viewProjection_ = viewPro;
 }

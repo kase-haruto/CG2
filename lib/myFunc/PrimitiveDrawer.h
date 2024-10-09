@@ -15,7 +15,6 @@ class PrimitiveDrawer{
 private:
     template<class T> using ComPtr = ComPtr<T>;
 
-    // コンストラクタをプライベートにしてシングルトンにする
     PrimitiveDrawer();
 
 public:

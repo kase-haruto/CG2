@@ -1,11 +1,11 @@
 #include "DirectXCommon.h"
-#include"ConvertString.h"
+#include"myFunc/ConvertString.h"
 #include<format>
 #include<cassert>
 #include <dxgidebug.h>
 #include"Vector4.h"
 #include"TextureManager.h"
-#include"MyFunc.h"
+#include"myFunc/MyFunc.h"
 #include"cmath"
 #include"imgui.h"
 

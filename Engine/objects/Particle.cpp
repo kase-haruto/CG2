@@ -1,6 +1,6 @@
 ﻿#include "Particle.h"
 #include "DirectXCommon.h"
-#include "MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include "VertexData.h"
 #include "TextureManager.h"
 #include "GraphicsGroup.h"

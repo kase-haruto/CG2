@@ -2,7 +2,7 @@
 #include <cmath>
 #include "DirectXCommon.h"
 #include <imgui.h>
-#include "MyFunc.h"
+#include "myFunc/MyFunc.h"
 #include "GraphicsGroup.h"
 
 ViewProjection::ViewProjection(){
