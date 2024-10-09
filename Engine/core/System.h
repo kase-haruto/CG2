@@ -2,9 +2,10 @@
 #include"WinApp.h"
 
 //グラフィック関係
-#include"DirectXCommon.h"
+#include"core/DirectX/DxCore.h"
 #include"ShaderManager.h"
 #include"PipelineStateManager.h"
+#include"graphics/FogEffect.h"
 
 //オブジェクト
 #include"DirectionalLight.h"
@@ -14,13 +15,16 @@
 #include"ImGuiManager.h"
 #endif // _DEBUG
 
+//リークチェック
+#include "LeakChecker.h"
+
 
 #include<stdint.h>
 
 class System{
 public:
 	System();
-	~System();
+	~System() = default;
 
 	/// <summary>
 	/// 初期化
@@ -65,15 +69,16 @@ public:
 	static HWND GetHWND(){ return hwnd_; }
 
 private:
-
+	LeakChecker leakChecker_;
+	std::unique_ptr<DxCore> dxCore_ = nullptr;
 
 	/*window*/
 	std::unique_ptr<WinApp> winApp_;
 	static HINSTANCE hInstance_;
 	static HWND hwnd_;
 
-	std::unique_ptr<DirectXCommon> dxCommon_;
-	ComPtr<ID3D12Device> device_;
+	std::unique_ptr<FogEffect>fog = nullptr;
+
 #ifdef _DEBUG
 	// ImGuiの初期化
 	std::unique_ptr<ImGuiManager> imguiManager_ = nullptr;

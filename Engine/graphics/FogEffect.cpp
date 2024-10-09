@@ -1,17 +1,18 @@
 ﻿#include "FogEffect.h"
-#include"DirectXCommon.h"
+#include "core/DirectX/DxCore.h"
+#include "graphics/GraphicsGroup.h"
 
-FogEffect::~FogEffect(){
-	device_.Reset();
-	commandList_.Reset();
+#ifdef _DEBUG
+#include<imgui.h>
+#endif // _DEBUG
+
+
+FogEffect::~FogEffect(){ 
+	constantBuffer->Release();
+	constantBuffer = nullptr;
 }
 
-FogEffect::FogEffect(DirectXCommon* dxCommon){
-
-	dxCommon_ = dxCommon;
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-
+FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	//定数バッファの生成
 	CreateConstantBuffer();
 
@@ -22,11 +23,13 @@ FogEffect::FogEffect(DirectXCommon* dxCommon){
 	///	霧のパラメータを設定
 	///================================
 	//霧のスタート地点
-	parameters->fogStart = 1.0f;
+	parameters->fogStart = 30.0f;
 	//霧の終点
-	parameters->fogEnd = 10.0f;
+	parameters->fogEnd = 1000.0f;
 	//霧の色
 	parameters->fogColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // 白色の設定
+
+	constantBuffer->Unmap(0, nullptr);
 	
 }
 
@@ -50,9 +53,10 @@ void FogEffect::CreateConstantBuffer(){
 	D3D12_HEAP_PROPERTIES heapProps = {};
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
+	ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
 
 	// リソースの作成
-	HRESULT hr = device_->CreateCommittedResource(
+	HRESULT hr = device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
@@ -64,6 +68,17 @@ void FogEffect::CreateConstantBuffer(){
 
 
 void FogEffect::Update(){
-	memcpy(mappedConstantBuffer, &parameters, sizeof(FogParameters));
+#ifdef _DEBUG
+	ImGui::Begin("fogEffect");
+	ImGui::SliderFloat("fogStart", &parameters->fogStart,10.0f,50.0f);
+	ImGui::SliderFloat("fogEnd", &parameters->fogEnd,500.0f,1000.0f);
+	ImGui::End();
+#endif // _DEBUG
+
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = pDxCore_->GetCommandList();
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
+	commandList->SetGraphicsRootSignature(rootSignature.Get());
+	//フォグ用のCBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(2, constantBuffer->GetGPUVirtualAddress());
 }
 

@@ -118,7 +118,7 @@ void PrimitiveDrawer::Render(){
     // ラインを描画
     commandList_->DrawInstanced(indexLine_ * 2, 1, 0, 0);
 
-    // `indexLine_`をリセット
+    //indexLine_をリセット
     indexLine_ = 0;
 }
 

@@ -19,7 +19,7 @@ enum LightingMode{
 	NoLighting,
 };
 
-class DirectXCommon;
+class DxCore;
 
 class DirectionalLight{
 public:
@@ -29,8 +29,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="dxCommon"></param>
-	void Initialize(DirectXCommon* dxCommon);
+	/// <param name="dxCore"></param>
+	void Initialize(const DxCore* dxCore);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -53,13 +53,13 @@ public:
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList_ = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Device>device_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	DirectionalLightData* data_;
 
 	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+
+	const DxCore* pDxCore_ = nullptr;
 };
 

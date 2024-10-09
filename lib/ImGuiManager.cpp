@@ -1,22 +1,27 @@
 ﻿#include "ImGuiManager.h"
 
-#ifdef _DEBUG
-#include "DirectXCommon.h"
+#include "core/DirectX/DxCore.h"
 #include "WinApp.h"
+#include "myFunc/DxFunc.h"
+
+#ifdef _DEBUG
+
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #endif
 
 #include"SrvLocator.h"
 
-void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
+void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 #ifdef _DEBUG
-	dxCommon_ = dxCommon;
-	srvHeap_ = dxCommon_->CreateDescriptorHeap(dxCommon_->GetDevice().Get(),
-											   D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-											   128,
-											   true
+	pDxCore_ = dxCore;
+
+	srvHeap_ = CreateDescriptorHeap(pDxCore_->GetDevice().Get(),
+									D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+									128,
+									true
 	);
+	
 
 	//srvの設定
 	IMGUI_CHECKVERSION();
@@ -29,9 +34,9 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	ImGui_ImplWin32_Init(winApp->GetHWND());
-	ImGui_ImplDX12_Init(dxCommon_->GetDevice().Get(),
-						dxCommon_->GetSwapChainDesc().BufferCount,
-						dxCommon->GetRtvDesc().Format,
+	ImGui_ImplDX12_Init(pDxCore_->GetDevice().Get(),
+						pDxCore_->GetSwapChain().GetSwapChainDesc().BufferCount,
+						pDxCore_->GetRenderTarget().rtvDesc_.Format,
 						srvHeap_.Get(),
 						srvHeap_.Get()->GetCPUDescriptorHandleForHeapStart(),
 						srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart()
@@ -46,7 +51,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon){
 	}
 
 	//先頭にimguiが入ったsrvを管理クラスに移す
-	SrvLocator::Provide(srvHeap_,dxCommon_->GetDevice());
+	SrvLocator::Provide(srvHeap_, pDxCore_->GetDevice());
 #endif // _DEBUG
 }
 
@@ -68,7 +73,7 @@ void ImGuiManager::Begin(){
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
+	ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 	//でスクリプタヒープの配列をセットする
 	ID3D12DescriptorHeap* descriptorHeaps[] = {SrvLocator::GetSrvHeap().Get()};
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
@@ -90,7 +95,7 @@ void ImGuiManager::End(){
 
 void ImGuiManager::Draw(){
 #ifdef _DEBUG
-	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
+	ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 	//描画コマンドを発行
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
 

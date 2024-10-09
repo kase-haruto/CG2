@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include"PipelineStateManager.h"
-#include"DirectXCommon.h"
+#include"core/DirectX/DxCore.h"
 
 class GraphicsGroup{
 private:
@@ -13,9 +13,9 @@ public:
 	/// <summary>
 	/// Graphic関連初期化
 	/// </summary>
-	/// <param name="dxCommon"></param>
+	/// <param name="dxCore"></param>
 	/// <param name="psManager"></param>
-	void Initialize(DirectXCommon* dxCommon,PipelineStateManager* psManager);
+	void Initialize(const DxCore* dxCore,PipelineStateManager* psManager);
 
 	///=========================================
 	/// pipelineの取得
@@ -27,16 +27,16 @@ public:
 	///=========================================
 	/// device/commandListの取得
 	///=========================================
-	const ComPtr<ID3D12Device>& GetDevice()const;
-	const ComPtr<ID3D12GraphicsCommandList>& GetCommandList()const;
+	ComPtr<ID3D12Device> GetDevice()const;
+	ComPtr<ID3D12GraphicsCommandList> GetCommandList()const;
 
 private:
-	GraphicsGroup() :dxCommon_(nullptr), pipelineManager_(nullptr){}
+	GraphicsGroup() :pDxCore_(nullptr), pipelineManager_(nullptr){}
 	GraphicsGroup(const GraphicsGroup&) = delete;
 	GraphicsGroup& operator = (const GraphicsGroup*) = delete;
 
 private:
-	DirectXCommon* dxCommon_;
+	const DxCore* pDxCore_;
 	PipelineStateManager* pipelineManager_;
 };
 

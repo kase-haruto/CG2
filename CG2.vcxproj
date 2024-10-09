@@ -103,8 +103,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxCommand.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxCore.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxDevice.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxFence.cpp" />
+    <ClCompile Include="Engine\core\DirectX\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget.cpp" />
     <ClCompile Include="Engine\core\EngineController.cpp" />
     <ClCompile Include="Engine\core\Input.cpp" />
+    <ClCompile Include="Engine\core\LeakChecker.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
     <ClCompile Include="Engine\graphics\FogEffect.cpp" />
@@ -144,6 +151,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Rail\RailEditor.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
+    <ClCompile Include="lib\myFunc\DxFunc.cpp" />
     <ClCompile Include="lib\myFunc\LocalFunc.cpp" />
     <ClCompile Include="lib\myFunc\MathFunc.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
@@ -157,9 +165,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectXCommon.h" />
+    <ClInclude Include="Engine\core\DirectX\DxCommand.h" />
+    <ClInclude Include="Engine\core\DirectX\DxCore.h" />
+    <ClInclude Include="Engine\core\DirectX\DxDevice.h" />
+    <ClInclude Include="Engine\core\DirectX\DxFence.h" />
+    <ClInclude Include="Engine\core\DirectX\DxSwapChain.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget.h" />
     <ClInclude Include="Engine\core\EngineController.h" />
     <ClInclude Include="Engine\core\Enviroment.h" />
     <ClInclude Include="Engine\core\Input.h" />
+    <ClInclude Include="Engine\core\LeakChecker.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />
@@ -205,6 +220,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Rail\RailEditor.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
+    <ClInclude Include="lib\myFunc\DxFunc.h" />
     <ClInclude Include="lib\myFunc\LocalFunc.h" />
     <ClInclude Include="lib\myFunc\MathFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />

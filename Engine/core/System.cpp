@@ -9,36 +9,39 @@ HWND System::hwnd_ = nullptr;
 
 System::System(){}
 
-System::~System(){}
 
 void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle){
     winApp_ = std::make_unique<WinApp>(clientWidth,clientHeight, windowTitle);
     hInstance_ = hInstance;
     hwnd_ = winApp_->GetHWND();
 
-	dxCommon_ = std::make_unique<DirectXCommon>();
-	dxCommon_->Initialize(winApp_.get(), 1280, 720);
-    device_ = dxCommon_->GetDevice();
+    dxCore_ = std::make_unique<DxCore>();
+    dxCore_->Initialize(winApp_.get(), clientWidth, clientHeight);
 
-    ////インプットの初期化
+    ComPtr<ID3D12Device> device = dxCore_->GetDevice();
+
+    //インプットの初期化
     Input::Initialize();
 
 	//管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
-	pipelineStateManager_ = std::make_unique<PipelineStateManager>(device_,shaderManager_);
+	pipelineStateManager_ = std::make_unique<PipelineStateManager>(device,shaderManager_);
 
 	//パイプラインを設定
 	CreatePipelines();
 
-    GraphicsGroup::GetInstance()->Initialize(dxCommon_.get(), pipelineStateManager_.get());
+    GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
 #ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
-	imguiManager_->Initialize(winApp_.get(), dxCommon_.get());
+	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
 #endif // _DEBUG
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
+
+    //フォグの初期化
+    fog = std::make_unique<FogEffect>(dxCore_.get());
 
     //////////////////////////////////////////////////////////////////////
     ///             ライトの初期化
@@ -46,22 +49,24 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     //directionalLight
     directionalLight_ = std::make_unique<DirectionalLight>();
-    directionalLight_->Initialize(dxCommon_.get());
+    directionalLight_->Initialize(dxCore_.get());
     directionalLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
 
     //pointLight
     pointLight_ = std::make_unique<PointLight>();
-    pointLight_->Initialize(dxCommon_.get());
+    pointLight_->Initialize(dxCore_.get());
     pointLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
 }
 
 void System::BeginFrame(){
 	//フレームの開始
-    dxCommon_->PreDraw();
+    dxCore_->PreDraw();
 	// ImGui受付開始
 	imguiManager_->Begin();
     //インプットの更新
     Input::Update();
+    //フォグの更新
+    fog->Update();
     //ライトの処理の更新
     directionalLight_->Render();
     pointLight_->Render();
@@ -73,23 +78,19 @@ void System::EndFrame(){
 	//ImGui描画
 	imguiManager_->Draw();
 	//フレームの終了
-	dxCommon_->PostDraw();
+    dxCore_->PostDraw();
 }
 
 void System::Finalize(){
-    device_.Reset();
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
-    directionalLight_.reset();
-    pointLight_.reset();
     SrvLocator::Finalize();
     Input::Finalize();
 
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
-    dxCommon_->Finalize();
 }
 
 
@@ -177,7 +178,7 @@ void System::Object3DPipelines(){
     //フォグ
     rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    rootParameters[2].Descriptor.ShaderRegister = 1;
+    rootParameters[2].Descriptor.ShaderRegister = 5;
 
     //テクスチャ
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
@@ -231,7 +232,8 @@ void System::Object3DPipelines(){
     }
 
     ComPtr<ID3D12RootSignature> rootSignature;
-    hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+    ComPtr<ID3D12Device> device = dxCore_->GetDevice();
+    hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
     if (FAILED(hr)){
         // RootSignatureの作成に失敗した場合のエラーハンドリング
         return;
@@ -313,7 +315,7 @@ void System::StructuredObjectPipeline(){
     }
 
     // RootSignatureの設定
-    D3D12_ROOT_PARAMETER rootParameters[4] = {};
+    D3D12_ROOT_PARAMETER rootParameters[3] = {};
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0;
     descriptorRange[0].NumDescriptors = 1;
@@ -367,7 +369,8 @@ void System::StructuredObjectPipeline(){
     }
 
     ComPtr<ID3D12RootSignature> rootSignature;
-    hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+    ComPtr<ID3D12Device> device = dxCore_->GetDevice();
+    hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
     if (FAILED(hr)){
         // RootSignatureの作成に失敗した場合のエラーハンドリング
         return;
@@ -467,7 +470,8 @@ void System::LinePipeline(){
     }
 
     ComPtr<ID3D12RootSignature> rootSignature;
-    hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+    ComPtr<ID3D12Device> device = dxCore_->GetDevice();
+    hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
     if (FAILED(hr)){
         return;
     }

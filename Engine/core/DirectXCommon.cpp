@@ -1,4 +1,4 @@
-﻿#include "DirectXCommon.h"
+#include "DirectXCommon.h"
 #include"myFunc/ConvertString.h"
 #include<format>
 #include<cassert>
@@ -19,15 +19,19 @@
 #pragma comment(lib,"dxcompiler.lib")
 
 DirectXCommon::~DirectXCommon(){
-	//リソースリークチェック
-	ComPtr<IDXGIDebug1>debug;
-	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))){
-		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-	//	debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-	//	debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		debug->Release();
+	// フェンスイベントのクローズ
+	if (fenceEvent != nullptr){
+		CloseHandle(fenceEvent);
+		fenceEvent = nullptr;
+	}
+
+	if (device){
+		// デバイスの解放
+		device->Release();
+		device = nullptr;
 	}
 }
+
 
 void DirectXCommon::Initialize(
 	WinApp* win, uint32_t width, uint32_t height){
@@ -107,7 +111,7 @@ void DirectXCommon::InitializeDXGIDevice(){
 	//高い順に生成できるか試していく
 	for (size_t i = 0; i < _countof(featureLevels); ++i){
 		//採用したアダプタでデバイスを生成
-		hr = D3D12CreateDevice(useAdapter, featureLevels[i], IID_PPV_ARGS(&device));
+		hr = D3D12CreateDevice(useAdapter.Get(), featureLevels[i], IID_PPV_ARGS(&device));
 		//指定した機能レベルでデバイスが生成できたかを確認
 		if (SUCCEEDED(hr)){
 			//生成できたのでログ出力を行ってループを抜ける
@@ -184,15 +188,15 @@ void DirectXCommon::CreateSwapChain(){
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニタに移したら中身を破棄
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast< IDXGISwapChain1** >(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), winApp_->GetHWND(), &swapChainDesc, nullptr, nullptr, reinterpret_cast< IDXGISwapChain1** >(swapChain.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 }
 
 
 ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(ID3D12Device* device,
-														  D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-														  UINT numDescriptors,
-														  bool shaderVisible){
+																 D3D12_DESCRIPTOR_HEAP_TYPE heapType,
+																 UINT numDescriptors,
+																 bool shaderVisible){
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc {};
 	descriptorHeapDesc.Type = heapType;
@@ -409,66 +413,3 @@ void DirectXCommon::SetViewPortAndScissor(uint32_t width, uint32_t height){
 	scissorRect.top = 0;
 	scissorRect.bottom = height;
 }
-
-void DirectXCommon::Finalize(){
-	// フェンスイベントのクローズ
-	if (fenceEvent != nullptr){
-		CloseHandle(fenceEvent);
-		fenceEvent = nullptr;
-	}
-
-	// スワップチェーンのリソースを解放
-	for (auto& resource : swapChainResources){
-		resource.Reset();
-	}
-
-	// スワップチェーンの解放
-	if (swapChain){
-		swapChain->Release();
-		swapChain = nullptr;
-	}
-
-	// コマンドアロケーターの解放
-	commandAllocator.Reset();
-
-	// コマンドリストの解放
-	commandList.Reset();
-
-	// コマンドキューの解放
-	commandQueue.Reset();
-
-	if (device){
-		// デバイスの解放
-		device->Release();
-		device = nullptr;
-	}
-	
-
-	// 使用しているアダプタの解放
-	if (useAdapter){
-		useAdapter->Release();
-		useAdapter = nullptr;
-	}
-
-	// DXGIファクトリの解放
-	dxgiFactory.Reset();
-
-	// デスクリプタヒープの解放
-	rtvDescriptorHeap.Reset();
-	dsvDescriptorHeap.Reset();
-
-	// 深度ステンシルリソースの解放
-	depthStencilResource.Reset();
-
-	fence.Reset();
-
-	// デバッグコントローラの解放 (デバッグビルドのみ)
-#ifdef _DEBUG
-	if (debugController){
-		debugController.Reset();
-	}
-
-#endif // _DEBUG
-}
-
-

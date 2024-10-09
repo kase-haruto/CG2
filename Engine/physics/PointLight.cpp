@@ -1,7 +1,11 @@
 ﻿#include "PointLight.h"
-#include"DirectXCommon.h"
-#include"myfunc/MyFunc.h"
+#include"MyFunc.h"
+#include "core/DirectX/DxCore.h"
+
+#ifdef _DEBUG
 #include"imgui.h"
+#endif // _DEBUG
+
 
 PointLight::PointLight(){}
 
@@ -9,10 +13,8 @@ PointLight::~PointLight(){
 	resource_->Release();
 }
 
-void PointLight::Initialize(DirectXCommon* dxCommon){
-	device_ = dxCommon->GetDevice();
-	commandList_ = dxCommon->GetCommandList();
-
+void PointLight::Initialize(const DxCore* dxCore){
+	pDxCore_ = dxCore;
 	CreateBuffer();
 	Map();
 
@@ -33,13 +35,17 @@ void PointLight::Render(){
 	ImGui::DragFloat("decay", &data_->decay, 0.01f);
 	ImGui::End();
 
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
+
 	// ルートシグネチャをコマンドリストに設定する
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList_->SetGraphicsRootConstantBufferView(6, resource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList->SetGraphicsRootConstantBufferView(6, resource_->GetGPUVirtualAddress());
 }
 
 void PointLight::CreateBuffer(){
-	resource_ = CreateBufferResource(device_.Get(), sizeof(PointLightData));
+	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
+
+	resource_ = CreateBufferResource(device.Get(), sizeof(PointLightData));
 }
 
 void PointLight::Map(){
