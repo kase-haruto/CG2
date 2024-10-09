@@ -11,9 +11,7 @@ PrimitiveDrawer::PrimitiveDrawer(){
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Line);
 }
 
-PrimitiveDrawer::~PrimitiveDrawer(){
-    Finalize();
-}
+PrimitiveDrawer::~PrimitiveDrawer(){}
 
 void PrimitiveDrawer::Initialize(){
     // 描画用のメッシュを作成
@@ -36,6 +34,11 @@ void PrimitiveDrawer::Finalize(){
         wvpResource_->Release();
         wvpResource_ = nullptr;
     }
+
+    device_.Reset();
+    commandList_.Reset();
+    pipelineState_.Reset();
+    rootSignature_.Reset();
 
 }
 
