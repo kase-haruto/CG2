@@ -30,5 +30,5 @@ public:
 
 private:
     std::unique_ptr<System> system_;
-    std::unique_ptr<GameScene> scene_;
+    std::unique_ptr<TestScene> scene_;
 };
