@@ -37,6 +37,11 @@ void PrimitiveDrawer::Finalize(){
         wvpResource_ = nullptr;
     }
 
+    device_.Reset();
+    commandList_.Reset();
+    pipelineState_.Reset();
+    rootSignature_.Reset();
+
 }
 
 void PrimitiveDrawer::CreateMeshes(){
