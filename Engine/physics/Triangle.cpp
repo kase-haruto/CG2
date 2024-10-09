@@ -73,18 +73,18 @@ void Triangle::CreateBuffer(){
 }
 
 void Triangle::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * 3);
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * 3);
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * 3);
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Triangle::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(device_, sizeof(Material));
 }
 
 void Triangle::CreateMatrixBuffer(){
-	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	wvpResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 }
 
 

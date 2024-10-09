@@ -88,7 +88,7 @@ Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearC
 	return result;
 }
 
-ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes){
+Microsoft::WRL::ComPtr<ID3D12Resource>CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes){
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties {};
 	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -107,7 +107,7 @@ ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes){
 	bufferResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 実際にリソースを作る
-	ID3D12Resource* bufferResource = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource> bufferResource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
 												 &bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
 

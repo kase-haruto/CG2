@@ -11,16 +11,7 @@
 
 Sprite::Sprite(){}
 
-Sprite::~Sprite(){
-	vertexResource_->Release();
-	vertexResource_ = nullptr;
-	indexResource_->Release();
-	indexResource_ = nullptr;
-	transformResource_->Release();
-	transformResource_ = nullptr;
-	materialResource_->Release();
-	materialResource_ = nullptr;
-}
+Sprite::~Sprite(){}
 
 void Sprite::Initialize(){
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
@@ -95,7 +86,7 @@ void Sprite::Draw(){
 
 void Sprite::CreateBuffer(){
 	//頂点用リソース
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * 4);
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * 4);
 	//頂点バッファビューを作成	
 	//リソースの先頭アドレスから使用する
 	vertexBufferViewSprite.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -105,12 +96,12 @@ void Sprite::CreateBuffer(){
 	vertexBufferViewSprite.StrideInBytes = sizeof(VertexData);
 	
 	//transformtionMatrix用のリソース
-	transformResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	transformResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 	//マテリアル用リソース
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(device_, sizeof(Material));
 
 	//index用リソース
-	indexResource_ = CreateBufferResource(device_.Get(), sizeof(uint32_t) * 6);
+	indexResource_ = CreateBufferResource(device_, sizeof(uint32_t) * 6);
 	//リソースの先頭アドレスから使う
 	indexBufferView.BufferLocation = indexResource_->GetGPUVirtualAddress();
 	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;

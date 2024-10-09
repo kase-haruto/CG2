@@ -15,11 +15,7 @@ Model::Model(const std::string& fileName){
 	Create(fileName);
 }
 
-Model::~Model(){
-	vertexResource_->Release();
-	materialResource_->Release();
-	wvpResource_->Release();
-}
+Model::~Model(){}
 
 void Model::Initialize(bool isUseTexture){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
@@ -116,18 +112,18 @@ void Model::CreateBuffer(){
 }
 
 void Model::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * modelData.vertices.size());
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Model::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(device_, sizeof(Material));
 }
 
 void Model::CreateMatrixBuffer(){
-	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	wvpResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 }
 
 void Model::Map(){

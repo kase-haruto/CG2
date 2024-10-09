@@ -9,9 +9,7 @@
 
 PointLight::PointLight(){}
 
-PointLight::~PointLight(){
-	resource_->Release();
-}
+PointLight::~PointLight(){}
 
 void PointLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
@@ -45,7 +43,7 @@ void PointLight::Render(){
 void PointLight::CreateBuffer(){
 	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
 
-	resource_ = CreateBufferResource(device.Get(), sizeof(PointLightData));
+	resource_ = CreateBufferResource(device, sizeof(PointLightData));
 }
 
 void PointLight::Map(){
