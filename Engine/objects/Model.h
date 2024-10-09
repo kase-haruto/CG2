@@ -62,6 +62,8 @@ public:
 
 	void SetUvScale(const Vector3& uvScale){ uvTransform.scale = uvScale; }
 
+	void SetColor(const Vector4& color){ RGBa = color; }
+
 private:
 	/// <summary>
 	/// リソースの生成
