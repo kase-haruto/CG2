@@ -68,6 +68,5 @@ private:
     std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-    std::unique_ptr<PrimitiveDrawer> primitiveDrawer_ = nullptr;
 };
 
