@@ -12,7 +12,6 @@
 #include"ModelBuilder.h"
 #include"Particle.h"
 
-#include"PrimitiveDrawer.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -68,6 +67,5 @@ private:
     std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-    std::unique_ptr<PrimitiveDrawer> primitiveDrawer_ = nullptr;
 };
 

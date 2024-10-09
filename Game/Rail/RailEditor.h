@@ -26,6 +26,11 @@ public:
 	void Draw();
 
 	/// <summary>
+	/// Railの線を描画
+	/// </summary>
+	void DrawLine();
+
+	/// <summary>
 	/// ポインタを借りてくる
 	/// </summary>
 	void SetViewProjection(const ViewProjection* viewProjection);
@@ -34,7 +39,7 @@ private:
 	/// <summary>
 	/// 制御点の追加
 	/// </summary>
-	void AddCtrlPoint(const Vector3& preCtrlPoint);
+	void AddCtrlPoint(const Vector3& preCtrlPoint, size_t insertIndex);
 
 	/// <summary>
 	/// 制御点をjsonに保存

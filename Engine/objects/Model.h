@@ -27,7 +27,7 @@ public:
 	/// <summary>
 	/// モデルの作成
 	/// </summary>
-	void Create(const std::string& filename,bool isUseTexture = true);
+	void Create(const std::string& filename, bool isUseTexture = true);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -52,7 +52,7 @@ public:
 	/// モデルデータの取得
 	/// </summary>
 	/// <returns></returns>
-	ModelData GetModelData()const { return modelData; }
+	ModelData GetModelData()const{ return modelData; }
 
 	void SetViewProjection(const ViewProjection* viewPro);
 
@@ -61,6 +61,8 @@ public:
 	void SetSize(const Vector3& size){ transform.scale = size; }
 
 	void SetUvScale(const Vector3& uvScale){ uvTransform.scale = uvScale; }
+
+	void SetColor(const Vector4& color){ RGBa = color; }
 
 private:
 	/// <summary>
@@ -112,4 +114,3 @@ private:
 private:
 	static const std::string directoryPath_;
 };
-

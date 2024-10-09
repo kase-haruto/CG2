@@ -1,6 +1,7 @@
 ﻿#include "TestScene.h"
 
 #include "Input.h"
+#include "myFunc/PrimitiveDrawer.h"
 
 TestScene::TestScene(){}
 
@@ -20,9 +21,8 @@ void TestScene::Initialize(){
 	/// オブジェクト関連
 	///=========================
 	//線
-	primitiveDrawer_ = std::make_unique<PrimitiveDrawer>();
-	primitiveDrawer_->SetViewProjection(viewProjection_.get());
-	primitiveDrawer_->Initialize();
+	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
+	PrimitiveDrawer::GetInstance()->Initialize();
 	
     //スプライト 
 	sprite_ = std::make_unique<Sprite>();
@@ -113,9 +113,9 @@ void TestScene::Draw(){
 	sprite_->Draw();
 
 
-	primitiveDrawer_->DrawLine3d(Vector3 {0.0f,5.0f,0.0f}, Vector3 {2.0f,1.0f,0.0f}, Vector4 {1.0f,0.0f,0.0f,1.0f});
+	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3 {0.0f,5.0f,0.0f}, Vector3 {2.0f,1.0f,0.0f}, Vector4 {1.0f,0.0f,0.0f,1.0f});
 
-	primitiveDrawer_->Render();
+	PrimitiveDrawer::GetInstance()->Render();
 
 }
 
@@ -125,7 +125,7 @@ void TestScene::Finalize(){
 	sprite_.reset();
 	sphere_.reset();
 	/*modelGround_.reset();*/
-	primitiveDrawer_.reset();
+	PrimitiveDrawer::GetInstance()->Finalize();
 	modelField_.reset();
 	//particle_.reset();
 }
