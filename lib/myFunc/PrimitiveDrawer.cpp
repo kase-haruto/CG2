@@ -11,9 +11,7 @@ PrimitiveDrawer::PrimitiveDrawer(){
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Line);
 }
 
-PrimitiveDrawer::~PrimitiveDrawer(){
-    Finalize();
-}
+PrimitiveDrawer::~PrimitiveDrawer(){}
 
 void PrimitiveDrawer::Initialize(){
     // 描画用のメッシュを作成
