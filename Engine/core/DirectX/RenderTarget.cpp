@@ -37,6 +37,48 @@ void RenderTarget::Initialize(ComPtr<ID3D12Device> device, DxSwapChain& swapChai
     device->CreateRenderTargetView(swapChain.GetBackBuffer(1).Get(), &rtvDesc_, rtvHandles[1]);
 }
 
+void RenderTarget::InitializeOffscreen(ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, const Vector4& color){
+    // Offscreen render target resource creation
+    D3D12_RESOURCE_DESC textureDesc = {};
+    textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    textureDesc.Width = width;
+    textureDesc.Height = height;
+    textureDesc.MipLevels = 1;
+    textureDesc.DepthOrArraySize = 1;
+    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+    // Render target clear value
+    D3D12_CLEAR_VALUE clearValue = {};
+    clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    clearValue.Color[0] = color.x;
+    clearValue.Color[1] = color.y;
+    clearValue.Color[2] = color.z;
+    clearValue.Color[3] = color.w;
+
+    // Heap properties
+    D3D12_HEAP_PROPERTIES heapProps = {};
+    heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+    // Create offscreen render target resource
+    HRESULT hr = device->CreateCommittedResource(
+        &heapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &textureDesc,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        &clearValue,
+        IID_PPV_ARGS(&offscreenRenderTarget_));
+    assert(SUCCEEDED(hr));
+
+    // Create RTV heap
+    rtvHeap_ = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1, false);
+
+    // Create RTV for the offscreen render target
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+    device->CreateRenderTargetView(offscreenRenderTarget_.Get(), &rtvDesc_, rtvHandle);
+}
+
 void RenderTarget::CreateDepthBuffer(ComPtr<ID3D12Device> device, uint32_t width, uint32_t height){
     depthStencilResource_ = CreateDepthStencilTextureResource(device.Get(), width, height);
 
@@ -44,12 +86,12 @@ void RenderTarget::CreateDepthBuffer(ComPtr<ID3D12Device> device, uint32_t width
     dsvHeap_ = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
     // DSVの設定
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-    dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // ResourceのFormatに合わせる
-    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2D Texture
+    
+    dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // ResourceのFormatに合わせる
+    dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2D Texture
 
     // DSV Heapの先頭にDSVを作成
-    device->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+    device->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 }
 
 void RenderTarget::ClearRenderTarget(ComPtr<ID3D12GraphicsCommandList> commandList, UINT backBufferIndex){
@@ -63,11 +105,9 @@ void RenderTarget::ClearRenderTarget(ComPtr<ID3D12GraphicsCommandList> commandLi
     // 描画先のRTVとDSVを設定
     commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
-    // クリアカラーの設定
-    float clearColor[] = {0.1f, 0.25f, 0.5f, 1.0f};
 
     // レンダーターゲットのクリア
-    commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    //commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
     // 深度バッファのクリア
     commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);

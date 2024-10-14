@@ -27,9 +27,14 @@ public:
     void Initialize(WinApp* winApp, uint32_t width, uint32_t height);
 
     /// <summary>
-    /// 描画前処理
+    /// オフスクリーン描画の前処理
     /// </summary>
-    void PreDraw();
+    void PreDrawOffscreen();
+
+    /// <summary>
+    /// ImGuiの描画
+    /// </summary>
+    void RenderImgui();
 
     /// <summary>
     /// 描画後処理
@@ -43,7 +48,6 @@ private:
     /// <param name="width"></param>
     /// <param name="height"></param>
     void SetViewPortAndScissor(uint32_t width, uint32_t height);
-
 
     /////////////////////////////////////////////////////////////////////////////////////////
     /*                                           アクセッサ                                  */
@@ -70,4 +74,6 @@ private:
     std::unique_ptr<DxSwapChain> dxSwapChain_;
     std::unique_ptr<RenderTarget> renderTarget_;
     std::unique_ptr<DxFence> dxFence_;
+
+    Vector4 clearColor {1.0f,0.0f,0.0f,1.0f};
 };

@@ -59,25 +59,31 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 }
 
 void System::BeginFrame(){
-	//フレームの開始
-    dxCore_->PreDraw();
-	// ImGui受付開始
-	imguiManager_->Begin();
-    //インプットの更新
+    // フレームの開始
+    dxCore_->PreDrawOffscreen();
+    // ImGui受付開始
+    imguiManager_->Begin();
+    // インプットの更新
     Input::Update();
-    //フォグの更新
+    // フォグの更新
     fog->Update();
-    //ライトの処理の更新
+    // ライトの処理の更新
     directionalLight_->Render();
     pointLight_->Render();
 }
 
 void System::EndFrame(){
-	//imguiのコマンドを積む
-	imguiManager_->End();
-	//ImGui描画
-	imguiManager_->Draw();
-	//フレームの終了
+
+    // ImGuiのコマンドを積む
+    imguiManager_->End();
+
+    // ImGuiの描画の前にバックバッファを設定
+    dxCore_->RenderImgui();
+
+    // ImGui描画
+    imguiManager_->Draw();
+
+    // フレームの終了
     dxCore_->PostDraw();
 }
 

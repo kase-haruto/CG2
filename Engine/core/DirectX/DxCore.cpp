@@ -12,6 +12,7 @@
 DxCore::~DxCore(){}
 
 void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
+    // DirectXの初期化処理を行う
     winApp_ = winApp;
     clientWidth_ = width;
     clientHeight_ = height;
@@ -34,37 +35,71 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
     // renderTarget初期化
     renderTarget_->Initialize(dxDevice_->GetDevice(), *dxSwapChain_);
     renderTarget_->CreateDepthBuffer(dxDevice_->GetDevice(), width, height);
+    renderTarget_->InitializeOffscreen(dxDevice_->GetDevice(), width, height, {0.1f, 0.25f, 0.5f, 1.0f});
     // fenceの生成
     dxFence_->Initialize(dxDevice_->GetDevice());
 }
 
 
-void DxCore::PreDraw(){
-    // バックバッファのインデックスを取得
-    UINT backBufferIndex = dxSwapChain_->GetCurrentBackBufferIndex();
-
-    // コマンドリストを取得
+void DxCore::PreDrawOffscreen(){
+    // オフスクリーン描画の前処理。レンダーターゲットの状態を変更し、クリアを行う
+    // オフスクリーン描画用のコマンドリストを取得
     ComPtr<ID3D12GraphicsCommandList> commandList = dxCommand_->GetCommandList();
 
-    // バックバッファの状態を PRESENT から RENDER TARGET に変更
+    // オフスクリーンレンダーターゲットを描画対象に変更
     D3D12_RESOURCE_BARRIER barrier = {};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = dxSwapChain_->GetBackBuffer(backBufferIndex).Get();
-    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.pResource = renderTarget_->GetOffscreenRenderTarget().Get();
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    // 現在のリソースの状態を確認し、適切にStateBeforeを設定
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
     commandList->ResourceBarrier(1, &barrier);
 
-    // RenderTarget クラスを使用してクリア処理
-    renderTarget_->ClearRenderTarget(commandList, backBufferIndex);
+    // オフスクリーンのRTV設定
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = renderTarget_->GetOffscreenRTVHandle();
+    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = renderTarget_->GetDSVHandle();
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+    // オフスクリーンレンダーターゲットをクリア
+    float clearColor[] = {0.1f, 0.25f, 0.5f, 1.0f};
+    commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     // ビューポートとシザー矩形の設定
     commandList->RSSetViewports(1, &viewport_);
     commandList->RSSetScissorRects(1, &scissorRect_);
 }
 
+void DxCore::RenderImgui(){
+    // ImGuiの描画を行う前処理。バックバッファの設定およびクリアを行う
+    // コマンドリスト取得
+    ComPtr<ID3D12GraphicsCommandList> commandList = dxCommand_->GetCommandList();
+
+    // バックバッファのインデックス取得
+    UINT backBufferIndex = dxSwapChain_->GetCurrentBackBufferIndex();
+
+    // オフスクリーンレンダーターゲットの状態をPIXEL_SHADER_RESOURCEに変更
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Transition.pResource = dxSwapChain_->GetBackBuffer(backBufferIndex).Get();
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    commandList->ResourceBarrier(1, &barrier);
+
+    // バックバッファをレンダーターゲットに設定
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = renderTarget_->GetSwapChainRTVHandle(backBufferIndex);
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+    // バックバッファのクリア
+    float clearColor[] = {0.1f, 0.25f, 0.5f, 1.0f};
+    commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+}
+
 void DxCore::PostDraw(){
+    // 描画後の処理を行う。バックバッファの状態変更、コマンドリストの実行、フレームの同期を行う
     HRESULT hr;
     // バックバッファのインデックスを取得
     UINT backBufferIndex = dxSwapChain_->GetCurrentBackBufferIndex();
@@ -77,9 +112,9 @@ void DxCore::PostDraw(){
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
     barrier.Transition.pResource = dxSwapChain_->GetBackBuffer(backBufferIndex).Get();
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     commandList->ResourceBarrier(1, &barrier);
 
     // コマンドリストを閉じる
@@ -100,6 +135,7 @@ void DxCore::PostDraw(){
     // 次のフレーム用のコマンドリストを準備
     dxCommand_->Reset();
 }
+
 
 
 void DxCore::SetViewPortAndScissor(uint32_t width, uint32_t height){
