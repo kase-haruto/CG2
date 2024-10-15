@@ -52,9 +52,9 @@ void Model::Update(){
 
 	materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,
-											 transform.rotate,
-											 transform.translate
+	worldMatrix = MakeAffineMatrix(transform.scale,
+									transform.rotate,
+									transform.translate
 	);
 
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());

@@ -35,6 +35,12 @@ public:
 	/// </summary>
 	void SetViewProjection(const ViewProjection* viewProjection);
 
+	/// <summary>
+	/// レールの取得
+	/// </summary>
+	/// <returns></returns>
+	const std::vector<Vector3>& GetControlPoint()const{ return ctrlPoints_; }
+
 private:
 	/// <summary>
 	/// 制御点の追加

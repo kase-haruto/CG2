@@ -111,6 +111,9 @@ private:
 
 	const ViewProjection* viewProjection_;
 
+public:
+	Matrix4x4 worldMatrix;
+
 private:
 	static const std::string directoryPath_;
 };

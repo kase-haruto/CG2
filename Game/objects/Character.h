@@ -9,23 +9,23 @@ public:
 	virtual ~Character() = default;
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	virtual void Initialize(Model* model);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	virtual void Update();
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	virtual void Draw();
 	
 	void SetViewProjection(const ViewProjection* viewProjection);
 
-private:
-	//•`‰æƒ‚ƒfƒ‹
+protected:
+	//æç”»ãƒ¢ãƒ‡ãƒ«
 	Model* model_ = nullptr;
 };

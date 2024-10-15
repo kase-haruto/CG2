@@ -28,6 +28,20 @@ void GameScene::Initialize(){
 	railEditor_->SetViewProjection(viewProjection_.get());
 	railEditor_->Initialize();
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//				レール
+	/////////////////////////////////////////////////////////////////////////////////////////
+	rail_.SetCtrlPoints(railEditor_->GetControlPoint());
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//				プレイヤー
+	/////////////////////////////////////////////////////////////////////////////////////////
+	playerModel_ = std::make_unique<Model>("debugCube");
+
+	player_ = std::make_unique<Player>();
+	player_->Initialize(playerModel_.get());
+	player_->SetViewProjection(viewProjection_.get());
 }
 
 void GameScene::Update(){
@@ -35,6 +49,9 @@ void GameScene::Update(){
 #ifdef _DEBUG
 	viewProjection_->ImGui();
 	GlobalVariables::GetInstance()->Update();
+
+	railEditor_->Update();
+	rail_.SetCtrlPoints(railEditor_->GetControlPoint());
 #endif // _DEBUG
 
 
@@ -67,12 +84,18 @@ void GameScene::Update(){
 	}
 
 
-	railEditor_->Update();
 
+
+
+	//playerの更新
+	player_->Update();
 }
 
 void GameScene::Draw(){
 	railEditor_->Draw();
+
+	//playerの描画
+	player_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 }
@@ -80,6 +103,8 @@ void GameScene::Draw(){
 void GameScene::Finalize(){
 	viewProjection_.reset();
 	railEditor_.reset();
+	player_.reset();
+	playerModel_.reset();
 
 	PrimitiveDrawer::GetInstance()->Finalize();
 }

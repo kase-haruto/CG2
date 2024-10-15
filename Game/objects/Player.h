@@ -10,21 +10,26 @@ public:
 
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="model"></param>
 	void Initialize(Model* model)override;
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	void Update()override;
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw()override;
 
-private:
 
+	void SetParent(const Transform* parent){ parentTransform_ = parent; }
+
+private:
+	//è¦ªã®ãƒˆãƒ©ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
+	const Transform* parentTransform_ = nullptr;
+	Matrix4x4 parentWorldMat_ {};
 };

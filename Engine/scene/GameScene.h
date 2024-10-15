@@ -4,7 +4,9 @@
 
 #include"ViewProjection.h"
 #include"Rail/RailEditor.h"
+#include "Rail/Rail.h"
 #include "objects/Player.h"
+
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -62,5 +64,5 @@ private:
 	/// 3dObject
 	///=========================
 	std::unique_ptr<Player> player_ = nullptr;
-	
+	Rail rail_;
 };
