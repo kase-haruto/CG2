@@ -436,7 +436,7 @@ void System::LinePipeline(){
 
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
-    depthStencilDesc.DepthEnable = false; // 線を常に描画する場合はこれを使用
+    depthStencilDesc.DepthEnable = true; // 線を常に描画する場合はこれを使用
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
