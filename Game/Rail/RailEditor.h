@@ -8,7 +8,7 @@
 class RailEditor{
 public:
 	RailEditor();
-	~RailEditor() = default;
+	~RailEditor();
 
 	/// <summary>
 	/// 初期化
@@ -57,6 +57,11 @@ private:
 	/// </summary>
 	void LoadControlPointFromJson();
 
+	/// <summary>
+	/// Railのモデルを追加
+	/// </summary>
+	void AddNewRailModel(const Vector3& spawnPos);
+
 
 private:
 
@@ -64,6 +69,7 @@ private:
 	//		メンバ変数
 	/////////////////////////////////////////////////////////
 	std::vector<Vector3>ctrlPoints_;
+	std::vector<std::unique_ptr<Model>> railModels_;
 	// 選択された制御点のインデックス
 	int selectedCtrlPoint_ = -1;
 

@@ -4,6 +4,8 @@
 #include "myFunc/MathFunc.h"
 #include "Vector3.h"
 
+#include "Matrix4x4.h"
+
 #include <vector>
 
 class RailCamera{
@@ -20,6 +22,8 @@ public:
 
 	const Transform& GetTransform()const{ return transform_; }
 
+	const Matrix4x4& GetWorldMat()const{ return worldMat_; }
+
 private:
 	//////////////////////////////////////////////////////////
 	//		メンバ変数
@@ -27,6 +31,8 @@ private:
 	std::vector<Vector3>ctrlPoints_;
 
 	Transform transform_;
+
+	Matrix4x4 worldMat_;
 
 	float t_;
 };

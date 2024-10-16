@@ -7,6 +7,9 @@ GameScene::GameScene(){
 	GlobalVariables::GetInstance()->Initialize();
 }
 
+static Vector3 originPos;
+static Vector3 originRotate;
+
 void GameScene::Initialize(){
 
 	///=========================
@@ -14,6 +17,8 @@ void GameScene::Initialize(){
 	///=========================
 	viewProjection_ = std::make_unique<ViewProjection>();
 	viewProjection_->Initialize();
+	originPos = viewProjection_->transform.translate;
+	originRotate = viewProjection_->transform.rotate;
 
 	///=========================
 	/// 線の描画
@@ -41,7 +46,7 @@ void GameScene::Initialize(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//				プレイヤー
 	/////////////////////////////////////////////////////////////////////////////////////////
-	playerModel_ = std::make_unique<Model>("debugCube");
+	playerModel_ = std::make_unique<Model>("suzanne");
 
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModel_.get());
@@ -65,35 +70,41 @@ void GameScene::Update(){
 	// ボタンが押されたらフラグを反転させる
 	if (ImGui::Button("camera")){
 		isRail_ = !isRail_;
+		player_->SetIsRail(isRail_);
 	}
 
 	ImGui::End();
 #endif // _DEBUG
-		viewProjection_->transform.translate = player_->GetTransform().translate;
-		viewProjection_->transform.rotate = player_->GetTransform().rotate;
+	if (isRail_){
+		viewProjection_->transform.translate = railCamera_->GetTransform().translate;
+		viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
+	} else{
+		viewProjection_->transform.translate = originPos;
+		viewProjection_->transform.rotate = originRotate;
 
-	
+	}
+		
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	if (Input::PushKey(DIK_A)){
-		viewProjection_->transform.translate.x -= 0.1f;
+		originPos.x -= 0.1f;
 	} else if (Input::PushKey(DIK_D)){
-		viewProjection_->transform.translate.x += 0.1f;
+		originPos.x += 0.1f;
 	}
 
 	if (Input::PushKey(DIK_SPACE)){
-		viewProjection_->transform.translate.y += 0.1f;
+		originPos.y += 0.1f;
 	} else if (Input::PushKey(DIK_LSHIFT)){
-		viewProjection_->transform.translate.y -= 0.1f;
+		originPos.y -= 0.1f;
 	}
 
 	if (Input::PushKey(DIK_W)){
-		viewProjection_->transform.translate.z += 0.1f;
+		originPos.z += 0.1f;
 	} else if (Input::PushKey(DIK_S)){
-		viewProjection_->transform.translate.z -= 0.1f;
+		originPos.z -= 0.1f;
 	}
 
 	if (Input::PushKey(DIK_L)){

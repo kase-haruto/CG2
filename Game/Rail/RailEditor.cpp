@@ -12,6 +12,10 @@
 
 RailEditor::RailEditor(){}
 
+RailEditor::~RailEditor(){
+
+}
+
 
 void RailEditor::Initialize(){
 	// 仮のポイントをうつ
@@ -98,29 +102,48 @@ void RailEditor::Update(){
 		debugModels_[i]->SetPos(ctrlPoints_[i]);
 		debugModels_[i]->Update();
 	}
+
+
 }
 
 void RailEditor::Draw(){
 	DrawLine();
+
 	for (auto& model : debugModels_){
+		model->Draw();
+	}
+
+	for (auto& model : railModels_){
 		model->Draw();
 	}
 }
 
 void RailEditor::DrawLine(){
-	std::vector<Vector3> pointsDrawing;
-	const size_t segmentCount = 100;
+	 std::vector<Vector3> pointsDrawing;
+    const size_t segmentCount = 100;
 
-	// Catmull-Romスプラインのポイントを計算
-	for (size_t i = 0; i < segmentCount + 1; i++){
-		float t = 1.0f / segmentCount * i;
-		Vector3 pos = CatmullRomPosition(ctrlPoints_, t);
-		pointsDrawing.push_back(pos);
-	}
+    // Catmull-Romスプラインのポイントを計算
+    for (size_t i = 0; i < segmentCount + 1; i++) {
+        float t = 1.0f / segmentCount * i;
+        Vector3 pos = CatmullRomPosition(ctrlPoints_, t);
+        pointsDrawing.push_back(pos);
+    }
 
-	// ライン描画
-	for (size_t i = 0; i < segmentCount; i++){
-		PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
+    // ライン描画
+    for (size_t i = 0; i < segmentCount; i++) {
+        PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
+    }
+
+    // 各分割ごとにモデルを配置
+    // 既に存在するモデルを削除
+    railModels_.clear();
+
+    for (size_t i = 0; i < pointsDrawing.size(); i++) {
+        AddNewRailModel(pointsDrawing[i]);
+    }
+
+	for (auto& model : railModels_){
+		model->Update();
 	}
 }
 
@@ -201,4 +224,14 @@ void RailEditor::LoadControlPointFromJson(){
 		model->SetPos(ctrlPoint);
 		debugModels_.emplace_back(std::move(model));
 	}
+}
+
+void RailEditor::AddNewRailModel(const Vector3& spawnPos){
+	auto newModel = std::make_unique<Model>("plane");
+	newModel->SetViewProjection(pViewProjection_);
+	newModel->Initialize();
+
+	// スポーン位置を設定
+	newModel->SetPos(spawnPos);
+	railModels_.emplace_back(std::move(newModel));
 }

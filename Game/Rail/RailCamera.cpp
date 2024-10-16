@@ -34,4 +34,5 @@ void RailCamera::Update(){
 	transform_.rotate.x = std::atan2(-forward.y, horizontalDistance);
 	transform_.rotate.y = std::atan2(forward.x, forward.z);
 
+	//worldMat_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 }

@@ -32,6 +32,10 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	//行列の更新
+	void UpdateMatrix();
+
 	/// <summary>
 	/// imguiの更新
 	/// </summary>

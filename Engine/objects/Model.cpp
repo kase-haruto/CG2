@@ -57,6 +57,10 @@ void Model::Update(){
 									transform.translate
 	);
 
+	UpdateMatrix();
+}
+
+void Model::UpdateMatrix(){
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;

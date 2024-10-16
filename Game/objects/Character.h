@@ -23,8 +23,16 @@ public:
 	/// </summary>
 	virtual void Draw();
 	
+	/// <summary>
+	/// viewProjectionをセット
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void SetViewProjection(const ViewProjection* viewProjection);
 
+	/// <summary>
+	/// トランスフォームを取得
+	/// </summary>
+	/// <returns></returns>
 	const Transform& GetTransform()const{ return model_->transform; }
 
 protected:
