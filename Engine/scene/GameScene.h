@@ -6,6 +6,7 @@
 #include"Rail/RailEditor.h"
 #include "Rail/Rail.h"
 #include "objects/Player.h"
+#include "Rail/RailCamera.h"
 
 
 ///デバッグ関連///
@@ -48,7 +49,7 @@ private:
 	/// カメラ関連
 	///=========================
 	std::unique_ptr<ViewProjection> viewProjection_ = nullptr;
-
+	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 
 	///=========================
 	/// Editor関連
@@ -65,4 +66,6 @@ private:
 	///=========================
 	std::unique_ptr<Player> player_ = nullptr;
 	Rail rail_;
+
+	bool isRail_ = false;
 };

@@ -25,11 +25,17 @@ public:
 	/// </summary>
 	void Draw()override;
 
-
+	void SetCtrlPoints(const std::vector<Vector3>& controlPoint){ ctrlPoints_ = controlPoint; }
 	void SetParent(const Transform* parent){ parentTransform_ = parent; }
 
+	void SetIsRail(const bool isRail){ isRail_ = isRail; }
+
 private:
+	std::vector<Vector3>ctrlPoints_;
+	float t_;
 	//親のトラスフォーム
 	const Transform* parentTransform_ = nullptr;
 	Matrix4x4 parentWorldMat_ {};
+
+	bool isRail_ = false;
 };

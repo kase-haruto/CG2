@@ -25,6 +25,8 @@ public:
 	
 	void SetViewProjection(const ViewProjection* viewProjection);
 
+	const Transform& GetTransform()const{ return model_->transform; }
+
 protected:
 	//描画モデル
 	Model* model_ = nullptr;

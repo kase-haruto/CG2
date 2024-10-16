@@ -18,6 +18,8 @@ public:
 	void SetCtrlPoints(const std::vector<Vector3>& controlPoint){ ctrlPoints_ = controlPoint; }
 	const std::vector<Vector3>& GetControlPoint()const{ return ctrlPoints_; }
 
+	const Transform& GetTransform()const{ return transform_; }
+
 private:
 	//////////////////////////////////////////////////////////
 	//		メンバ変数

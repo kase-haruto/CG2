@@ -28,11 +28,15 @@ void GameScene::Initialize(){
 	railEditor_->SetViewProjection(viewProjection_.get());
 	railEditor_->Initialize();
 
+	
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//				レール
 	/////////////////////////////////////////////////////////////////////////////////////////
 	rail_.SetCtrlPoints(railEditor_->GetControlPoint());
+
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->SetCtrlPoints(railEditor_->GetControlPoint());
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//				プレイヤー
@@ -42,6 +46,9 @@ void GameScene::Initialize(){
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModel_.get());
 	player_->SetViewProjection(viewProjection_.get());
+	player_->SetCtrlPoints(railEditor_->GetControlPoint());
+
+	player_->SetParent(&railCamera_->GetTransform());
 }
 
 void GameScene::Update(){
@@ -52,8 +59,20 @@ void GameScene::Update(){
 
 	railEditor_->Update();
 	rail_.SetCtrlPoints(railEditor_->GetControlPoint());
-#endif // _DEBUG
 
+	ImGui::Begin("rail");
+
+	// ボタンが押されたらフラグを反転させる
+	if (ImGui::Button("camera")){
+		isRail_ = !isRail_;
+	}
+
+	ImGui::End();
+#endif // _DEBUG
+		viewProjection_->transform.translate = player_->GetTransform().translate;
+		viewProjection_->transform.rotate = player_->GetTransform().rotate;
+
+	
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
@@ -85,7 +104,7 @@ void GameScene::Update(){
 
 
 
-
+	railCamera_->Update();
 
 	//playerの更新
 	player_->Update();

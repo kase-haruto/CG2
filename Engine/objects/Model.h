@@ -101,7 +101,6 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE handle;
 
 	Vector4 RGBa;
-	Transform transform;
 	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	ModelData modelData;
 	Material* materialData;
@@ -113,6 +112,8 @@ private:
 
 public:
 	Matrix4x4 worldMatrix;
+	Transform transform;
+
 
 private:
 	static const std::string directoryPath_;
