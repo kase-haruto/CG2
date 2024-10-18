@@ -3,6 +3,7 @@
 #include"GraphicsGroup.h"
 #include"SrvLocator.h"
 #include"core/Input.h"
+#include "objects/ModelManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -36,6 +37,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     imguiManager_ = std::make_unique<ImGuiManager>();
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
 #endif // _DEBUG
+
+    //モデル管理クラスの初期化(インスタンス生成)
+    ModelManager::Initialize();
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
@@ -84,6 +88,8 @@ void System::EndFrame(){
 void System::Finalize(){
 	imguiManager_->Finalize();
     TextureManager::GetInstance()->Finalize();
+    //モデルマネージャーの開放
+    ModelManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
     SrvLocator::Finalize();
     Input::Finalize();

@@ -2,14 +2,13 @@
 #include"myfunc/MyFunc.h"
 #include"VertexData.h"
 #include"TextureManager.h"
-
+#include "objects/ModelManager.h"
 #include"GraphicsGroup.h"
 #include"DirectionalLight.h"
 #ifdef _DEBUG
 	#include"imgui.h"
 #endif // _DEBUG
 
-const std::string Model::directoryPath_ = "Resources/models";
 
 Model::Model(const std::string& fileName){
 	Create(fileName);
@@ -24,7 +23,7 @@ void Model::Initialize(bool isUseTexture){
 	//パイプラインを設定
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
-	handle = TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+	handle = TextureManager::GetInstance()->LoadTexture(modelData->material.textureFilePath);
 
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
@@ -39,8 +38,8 @@ void Model::Initialize(bool isUseTexture){
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){
-	//モデルの読み込み
-	modelData = LoadObjFile(directoryPath_, filename);
+	// モデルの読み込み
+	modelData = ModelManager::GetInstance()->LoadModel(filename);
 	Initialize();
 }
 
@@ -102,7 +101,7 @@ void Model::Draw(){
 	commandList_->SetGraphicsRootDescriptorTable(3, handle);
 	
 	//モデル
-	commandList_->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
+	commandList_->DrawInstanced(UINT(modelData->vertices.size()), 1, 0, 0);
 }
 
 void Model::CreateBuffer(){
@@ -112,9 +111,9 @@ void Model::CreateBuffer(){
 }
 
 void Model::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData.vertices.size());
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData->vertices.size());
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
+	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData->vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
@@ -139,7 +138,7 @@ void Model::VertexBufferMap(){
 	vertexResource_->Map(0, nullptr,
 						reinterpret_cast< void** >(&vertexData));
 	//モデル用
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
+	std::memcpy(vertexData, modelData->vertices.data(), sizeof(VertexData) * modelData->vertices.size());
 	vertexResource_->Unmap(0, nullptr);
 }
 
