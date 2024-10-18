@@ -7,10 +7,10 @@ void Player::Initialize(Model* model){
 
 void Player::Update(){
 
-	//s—ñ‚ÌXV
+	//è¡Œåˆ—ã®æ›´æ–°
 	Character::Update();
 }
 
 void Player::Draw(){
-	Character::Initialize();
+	Character::Draw();
 }

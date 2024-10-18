@@ -5,12 +5,12 @@ void Character::Initialize(Model* model){
 }
 
 void Character::Update(){
-	//s—ñ‚ÌXV‚È‚Ç
+	//è¡Œåˆ—ã®æ›´æ–°ãªã©
 	model_->Update();
 }
 
 void Character::Draw(){
-	//ƒ‚ƒfƒ‹•`‰æ
+	//ãƒ¢ãƒ‡ãƒ«æç”»
 	model_->Draw();
 }
 
