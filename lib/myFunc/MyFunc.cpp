@@ -143,6 +143,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
     std::vector<Vector2> texcoords;
 
     std::string line;
+    uint32_t vertexIndex = 0;
     while (std::getline(file, line)){
         std::string identifier;
         std::istringstream s(line);
@@ -165,7 +166,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
             normals.push_back(normal);
 
         } else if (identifier == "f"){
-            VertexData vertices[3];
+            uint32_t faceIndices[3];
             for (int32_t faceVertex = 0; faceVertex < 3; faceVertex++){
                 std::string vertexDefinition;
                 s >> vertexDefinition;
@@ -190,13 +191,16 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
                 normal.x *= -1.0f;
                 texcoord.y = 1.0f - texcoord.y;
 
-                vertices[faceVertex] = {position, texcoord, normal};
+                // 頂点データを格納
+                VertexData vertex {position, texcoord, normal};
+                modelData.vertices.push_back(vertex);
+                faceIndices[faceVertex] = vertexIndex++;
             }
 
             // 面を反時計回りで格納
-            modelData.vertices.push_back(vertices[2]);
-            modelData.vertices.push_back(vertices[1]);
-            modelData.vertices.push_back(vertices[0]);
+            modelData.indices.push_back(faceIndices[2]);
+            modelData.indices.push_back(faceIndices[1]);
+            modelData.indices.push_back(faceIndices[0]);
         } else if (identifier == "mtllib"){
             std::string materialFilename;
             s >> materialFilename;
@@ -208,6 +212,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
     return modelData;
 }
+
 
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){

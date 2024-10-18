@@ -32,6 +32,9 @@ public:
     /// 更新
     /// </summary>
     void Update();
+    
+    void Map();
+
     /// <summary>
     /// imguiの更新
     /// </summary>
@@ -40,14 +43,6 @@ public:
     /// 描画
     /// </summary>
     void Draw();
-    /// <summary>
-    /// リソースの生成
-    /// </summary>
-    void CreateBuffer();
-    /// <summary>
-    /// マップする
-    /// </summary>
-    void Map();
 
     void SetViewProjection(const ViewProjection* viewPro);
 
@@ -60,11 +55,9 @@ public:
     void SetColor(const Vector4& color){ RGBa = color; }
 
 private:
-    void CreateVertexBuffer();
     void CreateMaterialBuffer();
     void CreateMatrixBuffer();
 
-    void VertexBufferMap();
     void MaterialBufferMap();
     void MatrixBufferMap();
 
@@ -77,7 +70,7 @@ private:
 
     /// Resources
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
+    D3D12_INDEX_BUFFER_VIEW indexBufferView {};
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
     Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 

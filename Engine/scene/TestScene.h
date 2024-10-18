@@ -14,6 +14,8 @@
 
 #include"PrimitiveDrawer.h"
 
+#include <vector>
+
 ///デバッグ関連///
 #ifdef _DEBUG
 #include"ImGuiManager.h"
@@ -57,7 +59,7 @@ private:
     /// カメラ関連
     ///=========================
     std::unique_ptr<ViewProjection> viewProjection_;
-    
+
     ///=========================
     /// オブジェクト関連
     ///=========================

@@ -45,9 +45,9 @@ void TestScene::Initialize(){
 	modelGround_->SetSize({100.0f,0.0f,100.0f});
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
 
-	modelField_ = std::make_unique<Model>();
-	modelField_->Create("terrain");
+	modelField_ = std::make_unique<Model>("terrain");
 	modelField_->SetViewProjection(viewProjection_.get());
+
 }
 
 void TestScene::Update(){
@@ -98,6 +98,7 @@ void TestScene::Update(){
 }
 
 void TestScene::Draw(){
+
 	//モデルの描画
 	modelBuilder_->Draw();
 

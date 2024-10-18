@@ -6,8 +6,7 @@
 #include "myFunc/MyFunc.h"
 
 // lib
-#include "d3d12.h"
-
+#include <d3d12.h>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -15,23 +14,28 @@
 
 class ModelManager{
 public:
-    // Singleton インスタンスの取得
     static ModelManager* GetInstance();
-
     static void Initialize();
 
     /// <summary>
     /// モデルデータ取得
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <returns></returns>
     static std::shared_ptr<ModelData> GetModelData(const std::string& fileName);
 
     /// <summary>
     /// モデルの読み込み
     /// </summary>
-    /// <param name="fileName"></param>
-    static std::shared_ptr<ModelData> LoadModel(const std::string& fileName);
+    static std::shared_ptr<ModelData> LoadModel(Microsoft::WRL::ComPtr<ID3D12Device> device, const std::string& fileName);
+
+    /// <summary>
+    /// 頂点リソースの取得
+    /// </summary>
+    static Microsoft::WRL::ComPtr<ID3D12Resource> GetVertexResource(const std::string& fileName);
+
+    /// <summary>
+    /// インデックスリソースの取得
+    /// </summary>
+    static Microsoft::WRL::ComPtr<ID3D12Resource> GetIndexResource(const std::string& fileName);
 
     /// <summary>
     /// 解放処理
@@ -39,19 +43,15 @@ public:
     void Finalize();
 
 private:
-    /// <summary>
-    /// コンストラクタ/デストラクタ
-    /// </summary>
     ModelManager() = default;
     ~ModelManager() = default;
 
 private:
-    // staticにするためのインスタンス
     static ModelManager* instance_;
-
-    // ディレクトリパス
     static const std::string directoryPath_;
-
-    // モデルデータ
     std::unordered_map<std::string, std::shared_ptr<ModelData>> modelDatas_;
+
+    // 頂点・インデックスバッファを保存するマップ
+    std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>> vertexBuffers_;
+    std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>> indexBuffers_;
 };
