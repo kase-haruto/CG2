@@ -128,112 +128,81 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
     Assimp::Importer importer;
+
+    // ファイルパスを作成
+    std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
+
     // ファイルを開く
-    std::ifstream file(directoryPath + "/" + filename + "/" + filename + ".obj");
- //   const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
-    assert(file.is_open());// 失敗したらアサート
-  //  assert(scene->HasMeshes());
-    // 開けたら必要な変数を用意
+    std::ifstream file(filePath);
+    assert(file.is_open()); // ファイルが開けなければアサート
+
+    // モデルデータの初期化
     ModelData modelData;
-    std::vector<Vector4>positions;
-    std::vector<Vector3>normals;
-    std::vector<Vector2>texcoords;
+    std::vector<Vector4> positions;
+    std::vector<Vector3> normals;
+    std::vector<Vector2> texcoords;
+
     std::string line;
-    int oCount = 0;
-
+    uint32_t vertexIndex = 0;
     while (std::getline(file, line)){
-
-        // まずobjファイルの行の先頭の識別子を読む
-        std::string identifer;
+        std::string identifier;
         std::istringstream s(line);
-        s >> identifer;
+        s >> identifier;
 
-        // 識別子に応じた処理
-        if (identifer == "o"){
-
-            oCount++;
-
-        } else if (identifer == "v"){// 頂点位置-----------------------------
-
+        if (identifier == "v"){
             Vector4 position;
-            // x,y,zの順に格納
             s >> position.x >> position.y >> position.z;
-            // zは1.0固定
             position.w = 1.0f;
-            // 座標配列末尾にを要素を追加
             positions.push_back(position);
 
-
-        } else if (identifer == "vt"){// 頂点テクスチャ座標------------
-
+        } else if (identifier == "vt"){
             Vector2 texcoord;
-            // x,y,zの順に格納
             s >> texcoord.x >> texcoord.y;
-            // テクスチャ座標配列末尾にを要素を追加
             texcoords.push_back(texcoord);
 
-        } else if (identifer == "vn"){// 頂点法線--------------------
-
+        } else if (identifier == "vn"){
             Vector3 normal;
-            // x,y,zの順に格納
             s >> normal.x >> normal.y >> normal.z;
-            // 座標配列末尾にを要素を追加
             normals.push_back(normal);
 
-        } else if (identifer == "f"){// 面
-
-            VertexData vertices[3];
-
+        } else if (identifier == "f"){
+            uint32_t faceIndices[3];
             for (int32_t faceVertex = 0; faceVertex < 3; faceVertex++){
-
                 std::string vertexDefinition;
                 s >> vertexDefinition;
+
                 std::istringstream v(vertexDefinition);
-                uint32_t elementIndices[3];
+                uint32_t elementIndices[3] = {0, 0, 0};
 
                 for (int32_t element = 0; element < 3; element++){
                     std::string index;
                     std::getline(v, index, '/');
-
-                    if (index == ""){
-                        elementIndices[element] = 0;
-                    } else{
+                    if (!index.empty()){
                         elementIndices[element] = std::stoi(index);
-
                     }
                 }
 
-                Vector4 position;
-                Vector2 texcoord;
-                Vector3 normal;
-
-                // テクスチャありと無しに対応
-                if (elementIndices[1] == 0){
-                    texcoord = {0.0f,0.0f};
-                } else{
-                    texcoord = texcoords[elementIndices[1] - 1];
-                }
-
-                position = positions[elementIndices[0] - 1];
-                normal = normals[elementIndices[2] - 1];
+                Vector4 position = positions[elementIndices[0] - 1];
+                Vector2 texcoord = (elementIndices[1] != 0) ? texcoords[elementIndices[1] - 1] : Vector2 {0.0f, 0.0f};
+                Vector3 normal = normals[elementIndices[2] - 1];
 
                 // 左手座標系に変換
                 position.x *= -1.0f;
                 normal.x *= -1.0f;
                 texcoord.y = 1.0f - texcoord.y;
 
-                vertices[faceVertex] = {position,texcoord,normal};
+                // 頂点データを格納
+                VertexData vertex {position, texcoord, normal};
+                modelData.vertices.push_back(vertex);
+                faceIndices[faceVertex] = vertexIndex++;
             }
 
-            // 反対周りに格納
-            modelData.vertices.push_back(vertices[2]);
-            modelData.vertices.push_back(vertices[1]);
-            modelData.vertices.push_back(vertices[0]);
-
-        } else if (identifer == "mtllib"){// mtlファイルの場所
-
+            // 面を反時計回りで格納
+            modelData.indices.push_back(faceIndices[2]);
+            modelData.indices.push_back(faceIndices[1]);
+            modelData.indices.push_back(faceIndices[0]);
+        } else if (identifier == "mtllib"){
             std::string materialFilename;
-            // ファイル名を格納
             s >> materialFilename;
 
             // mtlファイルを読み込む

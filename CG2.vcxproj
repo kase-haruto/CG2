@@ -127,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\GameObject.cpp" />
     <ClCompile Include="Engine\objects\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
+    <ClCompile Include="Engine\objects\ModelManager.cpp" />
     <ClCompile Include="Engine\objects\ObjectBuilder.cpp" />
     <ClCompile Include="Engine\objects\Particle.cpp" />
     <ClCompile Include="Engine\objects\Sprite.cpp" />
@@ -196,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Model.h" />
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />
+    <ClInclude Include="Engine\objects\ModelManager.h" />
     <ClInclude Include="Engine\objects\ObjectBuilder.h" />
     <ClInclude Include="Engine\objects\Particle.h" />
     <ClInclude Include="Engine\objects\Sprite.h" />

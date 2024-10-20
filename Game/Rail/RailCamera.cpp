@@ -6,7 +6,7 @@
 void RailCamera::Initialize(){
 	transform_.scale = {1.0f,1.0f,1.0f};
 	transform_.rotate = {0.0f,0.0f,0.0f};
-	transform_.translate = {0.0f,0.0f,0.0f};
+	transform_.translate = {0.0f,2.0f,0.0f};
 }
 
 void RailCamera::Update(){
@@ -29,7 +29,7 @@ void RailCamera::Update(){
 	forward = forward.Normalize();
 
 	// トランスフォームの更新
-	transform_.translate = eye;
+	transform_.translate = {eye.x,eye.y+2.0f,eye.z};
 	float horizontalDistance = sqrtf(forward.x * forward.x + forward.z * forward.z);
 	transform_.rotate.x = std::atan2(-forward.y, horizontalDistance);
 	transform_.rotate.y = std::atan2(forward.x, forward.z);

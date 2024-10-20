@@ -29,7 +29,7 @@ public:
 	/// Railの線を描画
 	/// </summary>
 	void DrawLine();
-
+	
 	/// <summary>
 	/// ポインタを借りてくる
 	/// </summary>
