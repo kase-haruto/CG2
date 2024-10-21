@@ -10,7 +10,6 @@
 //オブジェクト
 #include"DirectionalLight.h"
 #include"PointLight.h"
-#include "objects/SpriteBase.h"
 
 #ifdef _DEBUG
 #include"ImGuiManager.h"
@@ -96,8 +95,6 @@ private:
 	/// </summary>
 	std::unique_ptr<DirectionalLight>directionalLight_;
 	std::unique_ptr<PointLight> pointLight_;
-
-	std::unique_ptr<SpriteBase> spriteBase_ = nullptr;
 
 };
 

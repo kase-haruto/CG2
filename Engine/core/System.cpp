@@ -12,34 +12,17 @@ System::System(){}
 
 
 void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight, const std::string windowTitle){
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /*                                  windowの初期化                                      */
-    /////////////////////////////////////////////////////////////////////////////////////////
-    
     winApp_ = std::make_unique<WinApp>(clientWidth, clientHeight, windowTitle);
     hInstance_ = hInstance;
     hwnd_ = winApp_->GetHWND();
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-   /*                                  directXの初期化                                      */
-   /////////////////////////////////////////////////////////////////////////////////////////
 
     dxCore_ = std::make_unique<DxCore>();
     dxCore_->Initialize(winApp_.get(), clientWidth, clientHeight);
 
     ComPtr<ID3D12Device> device = dxCore_->GetDevice();
 
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /*                              入力デバイスの初期化                                     */
-   /////////////////////////////////////////////////////////////////////////////////////////
     //インプットの初期化
     Input::Initialize();
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /*                            グラフィクス関連の初期化                                     */
-   /////////////////////////////////////////////////////////////////////////////////////////
 
     //管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
@@ -50,26 +33,19 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
-    //フォグの初期化
-    fog = std::make_unique<FogEffect>(dxCore_.get());
-
 #ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
     imguiManager_->Initialize(winApp_.get(), dxCore_.get());
 #endif // _DEBUG
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /*                                  管理クラスの初期化                                     */
-    /////////////////////////////////////////////////////////////////////////////////////////
-
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
 
     //textureManagerの初期化
-    TextureManager::GetInstance()->Initialize(imguiManager_.get());  
+    TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
-    spriteBase_ = std::make_unique<SpriteBase>();
-    spriteBase_->Initialize();
+    //フォグの初期化
+    fog = std::make_unique<FogEffect>(dxCore_.get());
 
     //////////////////////////////////////////////////////////////////////
     ///             ライトの初期化
