@@ -8,7 +8,7 @@
 class RailEditor{
 public:
 	RailEditor();
-	~RailEditor() = default;
+	~RailEditor();
 
 	/// <summary>
 	/// 初期化
@@ -29,11 +29,17 @@ public:
 	/// Railの線を描画
 	/// </summary>
 	void DrawLine();
-
+	
 	/// <summary>
 	/// ポインタを借りてくる
 	/// </summary>
 	void SetViewProjection(const ViewProjection* viewProjection);
+
+	/// <summary>
+	/// レールの取得
+	/// </summary>
+	/// <returns></returns>
+	const std::vector<Vector3>& GetControlPoint()const{ return ctrlPoints_; }
 
 private:
 	/// <summary>
@@ -51,6 +57,11 @@ private:
 	/// </summary>
 	void LoadControlPointFromJson();
 
+	/// <summary>
+	/// Railのモデルを追加
+	/// </summary>
+	void AddNewRailModel(const Vector3& spawnPos);
+
 
 private:
 
@@ -58,6 +69,7 @@ private:
 	//		メンバ変数
 	/////////////////////////////////////////////////////////
 	std::vector<Vector3>ctrlPoints_;
+	std::vector<std::unique_ptr<Model>> railModels_;
 	// 選択された制御点のインデックス
 	int selectedCtrlPoint_ = -1;
 

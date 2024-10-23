@@ -122,61 +122,61 @@ void ParticleManager::Update(){
 	ImGui::End();
 #endif // _DEBUG
 
-	materialData->color = RGBa;
-	numInstance_ = 0;
-	for (auto it = particle_.begin(); it != particle_.end(); ){
+	//materialData->color = RGBa;
+	//numInstance_ = 0;
+	//for (auto it = particle_.begin(); it != particle_.end(); ){
 
-		if (numInstance_ < kMaxInstance_){
+	//	if (numInstance_ < kMaxInstance_){
 
-			if (it->lifeTime <= it->currentTime){ // 生存時間を過ぎた場合
-				it = particle_.erase(it); // パーティクルを削除し、次のイテレータに進む
-				continue;
-			}
+	//		if (it->lifeTime <= it->currentTime){ // 生存時間を過ぎた場合
+	//			it = particle_.erase(it); // パーティクルを削除し、次のイテレータに進む
+	//			continue;
+	//		}
 
-			Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, viewProjection_->cameraMatrix);
-			billboardMatrix.m[3][0] = 0.0f;
-			billboardMatrix.m[3][1] = 0.0f;
-			billboardMatrix.m[3][2] = 0.0f;
+	//		Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, viewProjection_->cameraMatrix);
+	//		billboardMatrix.m[3][0] = 0.0f;
+	//		billboardMatrix.m[3][1] = 0.0f;
+	//		billboardMatrix.m[3][2] = 0.0f;
 
-			Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
-			Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
-			Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
-			Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	//		Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
+	//		Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
+	//		Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
+	//		Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
 
-			instancingData[numInstance_].WVP = worldViewProjectionMatrix;
-			instancingData[numInstance_].World = worldMatrix;
-			instancingData[numInstance_].color = it->color;
-			float alpha = 1.0f - (it->currentTime / it->lifeTime);
-			instancingData[numInstance_].color.w = alpha;
+	//		instancingData[numInstance_].WVP = worldViewProjectionMatrix;
+	//		instancingData[numInstance_].World = worldMatrix;
+	//		instancingData[numInstance_].color = it->color;
+	//		float alpha = 1.0f - (it->currentTime / it->lifeTime);
+	//		instancingData[numInstance_].color.w = alpha;
 
-			//フィールドの更新処理
-			if (accelerationField.isUpdate){
-				if (IsCollision(accelerationField.area, it->transform.translate)){
-					it->velocity += accelerationField.acceleration * deltaTime;
-				}
-			}
-			
+	//		//フィールドの更新処理
+	//		if (accelerationField.isUpdate){
+	//			if (IsCollision(accelerationField.area, it->transform.translate)){
+	//				it->velocity += accelerationField.acceleration * deltaTime;
+	//			}
+	//		}
+	//		
 
-			// 座標の更新
-			it->transform.translate.x += it->velocity.x * deltaTime;
-			it->transform.translate.y += it->velocity.y * deltaTime;
-			it->transform.translate.z += it->velocity.z * deltaTime;
-			it->currentTime += deltaTime; // 経過時間を増やす
+	//		// 座標の更新
+	//		it->transform.translate.x += it->velocity.x * deltaTime;
+	//		it->transform.translate.y += it->velocity.y * deltaTime;
+	//		it->transform.translate.z += it->velocity.z * deltaTime;
+	//		it->currentTime += deltaTime; // 経過時間を増やす
 
-			++numInstance_; // パーティクルのカウントを増やす
-		}
+	//		++numInstance_; // パーティクルのカウントを増やす
+	//	}
 
 
 
-		++it; // 次のパーティクルへ進む
-	}
+	//	++it; // 次のパーティクルへ進む
+	//}
 
-	//エミッターの更新処理
-	emitter.frequencyTime += deltaTime;	//時刻を決める
-	if (emitter.frequency<= emitter.frequencyTime){
-		particle_.splice(particle_.end(), Emit(emitter, randomEngine));
-		emitter.frequencyTime -= emitter.frequency;
-	}
+	////エミッターの更新処理
+	//emitter.frequencyTime += deltaTime;	//時刻を決める
+	//if (emitter.frequency<= emitter.frequencyTime){
+	//	particle_.splice(particle_.end(), Emit(emitter, randomEngine));
+	//	emitter.frequencyTime -= emitter.frequency;
+	//}
 
 	
 }

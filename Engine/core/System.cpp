@@ -3,6 +3,7 @@
 #include"GraphicsGroup.h"
 #include"SrvLocator.h"
 #include"core/Input.h"
+#include "objects/ModelManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -10,8 +11,8 @@ HWND System::hwnd_ = nullptr;
 System::System(){}
 
 
-void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle){
-    winApp_ = std::make_unique<WinApp>(clientWidth,clientHeight, windowTitle);
+void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight, const std::string windowTitle){
+    winApp_ = std::make_unique<WinApp>(clientWidth, clientHeight, windowTitle);
     hInstance_ = hInstance;
     hwnd_ = winApp_->GetHWND();
 
@@ -23,22 +24,23 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     //インプットの初期化
     Input::Initialize();
 
-	//管理クラスの初期化
+    //管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
-	pipelineStateManager_ = std::make_unique<PipelineStateManager>(device,shaderManager_);
+    pipelineStateManager_ = std::make_unique<PipelineStateManager>(device, shaderManager_);
 
-	//パイプラインを設定
-	CreatePipelines();
+    //パイプラインを設定
+    CreatePipelines();
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
-#ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
-	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
-#endif // _DEBUG
+    imguiManager_->Initialize(winApp_.get(), dxCore_.get());
 
-	//textureManagerの初期化
-	TextureManager::GetInstance()->Initialize(imguiManager_.get());
+    //モデル管理クラスの初期化(インスタンス生成)
+    ModelManager::Initialize();
+
+    //textureManagerの初期化
+    TextureManager::GetInstance()->Initialize(imguiManager_.get());
 
     //フォグの初期化
     fog = std::make_unique<FogEffect>(dxCore_.get());
@@ -59,10 +61,14 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 }
 
 void System::BeginFrame(){
-	//フレームの開始
+    //フレームの開始
     dxCore_->PreDraw();
-	// ImGui受付開始
-	imguiManager_->Begin();
+
+#ifdef _DEBUG
+    // ImGui受付開始
+    imguiManager_->Begin();
+#endif // _DEBUG
+  
     //インプットの更新
     Input::Update();
     //フォグの更新
@@ -73,24 +79,32 @@ void System::BeginFrame(){
 }
 
 void System::EndFrame(){
-	//imguiのコマンドを積む
-	imguiManager_->End();
-	//ImGui描画
-	imguiManager_->Draw();
-	//フレームの終了
+#ifdef _DEBUG
+    //imguiのコマンドを積む
+    imguiManager_->End();
+    //ImGui描画
+    imguiManager_->Draw();
+#endif // _DEBUG
+
+    //フレームの終了
     dxCore_->PostDraw();
 }
 
 void System::Finalize(){
-	imguiManager_->Finalize();
+#ifdef _DEBUG
+    imguiManager_->Finalize();
+#endif // _DEBUG
+
     TextureManager::GetInstance()->Finalize();
+    //モデルマネージャーの開放
+    ModelManager::GetInstance()->Finalize();
     pipelineStateManager_->Finalize();
     SrvLocator::Finalize();
     Input::Finalize();
 
 
-	//ウィンドウの破棄
-	winApp_->TerminateGameWindow();
+    //ウィンドウの破棄
+    winApp_->TerminateGameWindow();
 }
 
 
@@ -103,10 +117,10 @@ int System::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 
 void System::CreatePipelines(){
-	  shaderManager_->InitializeDXC();
-      Object3DPipelines();
-      StructuredObjectPipeline();
-      LinePipeline();
+    shaderManager_->InitializeDXC();
+    Object3DPipelines();
+    StructuredObjectPipeline();
+    LinePipeline();
 }
 
 void System::Object3DPipelines(){
@@ -142,8 +156,11 @@ void System::Object3DPipelines(){
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-    rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;  // 裏面カリング
+    rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID; // ソリッドフィル
+    rasterizeDesc.FrontCounterClockwise = FALSE;    // 時計回りが前面
+    rasterizeDesc.DepthClipEnable = TRUE;           // 深度クリップを有効
+
 
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
@@ -205,7 +222,7 @@ void System::Object3DPipelines(){
     rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     rootSignatureDesc.pParameters = rootParameters;
     rootSignatureDesc.NumParameters = _countof(rootParameters);
-    
+
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
     staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
     staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -294,13 +311,16 @@ void System::StructuredObjectPipeline(){
 
     blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
     blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE; // アルファ値の加算
-    blendDesc.RenderTarget[0].BlendOpAlpha= D3D12_BLEND_OP_ADD; // アルファブレンドの加算
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD; // アルファブレンドの加算
 
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-    rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;  // 裏面カリング
+    rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID; // ソリッドフィル
+    rasterizeDesc.FrontCounterClockwise = FALSE;    // 時計回りが前面
+    rasterizeDesc.DepthClipEnable = TRUE;           // 深度クリップを有効
+
 
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
@@ -429,14 +449,14 @@ void System::LinePipeline(){
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE; // カリングを無効化
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_FRONT; // カリングを無効化
     rasterizeDesc.FillMode = D3D12_FILL_MODE_WIREFRAME; // 線描画の場合はこちら
     rasterizeDesc.FrontCounterClockwise = FALSE;
     rasterizeDesc.DepthClipEnable = TRUE;
 
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
-    depthStencilDesc.DepthEnable = true; // 線を常に描画する場合はこれを使用
+    depthStencilDesc.DepthEnable = true;
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
