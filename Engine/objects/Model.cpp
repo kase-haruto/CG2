@@ -48,6 +48,7 @@ void Model::ShowImGuiInterface(){
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
     materialData->uvTransform = uvTransformMatrix;
 
+#ifdef _DEBUG
     ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f);
     ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f);
     ImGui::DragFloat3("size", &transform.scale.x, 0.01f);
@@ -69,6 +70,10 @@ void Model::ShowImGuiInterface(){
         }
         ImGui::EndCombo();
     }
+#endif // _DEBUG
+
+
+   
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){

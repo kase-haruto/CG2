@@ -33,10 +33,8 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
-#ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
     imguiManager_->Initialize(winApp_.get(), dxCore_.get());
-#endif // _DEBUG
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
@@ -65,8 +63,12 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 void System::BeginFrame(){
     //フレームの開始
     dxCore_->PreDraw();
+
+#ifdef _DEBUG
     // ImGui受付開始
     imguiManager_->Begin();
+#endif // _DEBUG
+  
     //インプットの更新
     Input::Update();
     //フォグの更新
@@ -77,16 +79,22 @@ void System::BeginFrame(){
 }
 
 void System::EndFrame(){
+#ifdef _DEBUG
     //imguiのコマンドを積む
     imguiManager_->End();
     //ImGui描画
     imguiManager_->Draw();
+#endif // _DEBUG
+
     //フレームの終了
     dxCore_->PostDraw();
 }
 
 void System::Finalize(){
+#ifdef _DEBUG
     imguiManager_->Finalize();
+#endif // _DEBUG
+
     TextureManager::GetInstance()->Finalize();
     //モデルマネージャーの開放
     ModelManager::GetInstance()->Finalize();

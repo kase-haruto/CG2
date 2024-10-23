@@ -1,8 +1,6 @@
 ﻿#pragma once
 
-#ifdef _DEBUG
 #include<imgui.h>
-#endif // _DEBUG
 
 #include<d3d12.h>
 #include <wrl.h>
@@ -49,14 +47,12 @@ public:
 	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap()const{ return srvHeap_; }
 
 private:
-#ifdef _DEBUG
 	// DirectX基盤インスタンス（借りてくる）
 	const DxCore* pDxCore_ = nullptr;
 
 	// SRV用ヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
-#endif // _DEBUG
 
 };
 

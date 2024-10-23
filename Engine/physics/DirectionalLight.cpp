@@ -1,5 +1,5 @@
 ﻿#include "DirectionalLight.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include "core/DirectX/DxCore.h"
 
 #ifdef _DEBUG
@@ -29,11 +29,15 @@ void DirectionalLight::Update(){
 
 void DirectionalLight::Render(){
 	assert(rootSignature_);
+#ifdef _DEBUG
 	ImGui::Begin("directionalLight");
 	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
+	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
 	ImGui::End();
+#endif // _DEBUG
+
+	
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 

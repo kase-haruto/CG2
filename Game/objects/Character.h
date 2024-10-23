@@ -38,4 +38,7 @@ public:
 protected:
 	//描画モデル
 	Model* model_ = nullptr;
+
+	const ViewProjection* pViewProjection_;
+
 };

@@ -11,9 +11,7 @@
 #include"DirectionalLight.h"
 #include"PointLight.h"
 
-#ifdef _DEBUG
 #include"ImGuiManager.h"
-#endif // _DEBUG
 
 //リークチェック
 #include "LeakChecker.h"
@@ -79,10 +77,8 @@ private:
 
 	std::unique_ptr<FogEffect>fog = nullptr;
 
-#ifdef _DEBUG
 	// ImGuiの初期化
 	std::unique_ptr<ImGuiManager> imguiManager_ = nullptr;
-#endif // _DEBUG
 
 	/// <summary>
 	/// グラフィック関連管理クラス

@@ -78,9 +78,35 @@ void GameScene::Update(){
 	if (isRail_){
 		viewProjection_->transform.translate = railCamera_->GetTransform().translate;
 		viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
+
+		if (Input::PushKey(DIK_A)){
+			originPos.x -= 0.1f;
+		} else if (Input::PushKey(DIK_D)){
+			originPos.x += 0.1f;
+		}
+
+		/*if (Input::PushKey(DIK_SPACE)){
+			originPos.y += 0.1f;
+		} else */if (Input::PushKey(DIK_LSHIFT)){
+			originPos.y -= 0.1f;
+		}
+
+		if (Input::PushKey(DIK_W)){
+			originPos.z += 0.1f;
+		} else if (Input::PushKey(DIK_S)){
+			originPos.z -= 0.1f;
+		}
+
+		if (Input::PushKey(DIK_L)){
+			viewProjection_->transform.rotate.y += 0.02f;
+		} else if (Input::PushKey(DIK_J)){
+			viewProjection_->transform.rotate.y -= 0.02f;
+		}
 	} else{
 		viewProjection_->transform.translate = originPos;
 		viewProjection_->transform.rotate = originRotate;
+
+		
 
 	}
 		
@@ -89,29 +115,7 @@ void GameScene::Update(){
 	//		カメラの更新
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	if (Input::PushKey(DIK_A)){
-		originPos.x -= 0.1f;
-	} else if (Input::PushKey(DIK_D)){
-		originPos.x += 0.1f;
-	}
 
-	if (Input::PushKey(DIK_SPACE)){
-		originPos.y += 0.1f;
-	} else if (Input::PushKey(DIK_LSHIFT)){
-		originPos.y -= 0.1f;
-	}
-
-	if (Input::PushKey(DIK_W)){
-		originPos.z += 0.1f;
-	} else if (Input::PushKey(DIK_S)){
-		originPos.z -= 0.1f;
-	}
-
-	if (Input::PushKey(DIK_L)){
-		viewProjection_->transform.rotate.y += 0.02f;
-	} else if (Input::PushKey(DIK_J)){
-		viewProjection_->transform.rotate.y -= 0.02f;
-	}
 
 
 
@@ -135,6 +139,6 @@ void GameScene::Finalize(){
 	railEditor_.reset();
 	player_.reset();
 	playerModel_.reset();
-
+	railCamera_.reset();
 	PrimitiveDrawer::GetInstance()->Finalize();
 }

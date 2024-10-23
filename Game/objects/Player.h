@@ -2,6 +2,10 @@
 
 #include "objects/Character.h"
 
+#include "objects/Bullet.h"
+
+#include <list>
+
 class Player
 	:public Character{
 public:
@@ -30,12 +34,32 @@ public:
 
 	void SetIsRail(const bool isRail){ isRail_ = isRail; }
 
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition()const{
+		Vector3 wPos;
+		// ワールド行列の平行移動成分を取得
+		wPos.x = model_->worldMatrix.m[3][0];
+		wPos.y = model_->worldMatrix.m[3][1];
+		wPos.z = model_->worldMatrix.m[3][2];
+
+		return wPos; // 値をコピーして返す
+	}
+
+private:
+	void Shoot();
+
 private:
 	std::vector<Vector3>ctrlPoints_;
 	float t_;
 	//親のトラスフォーム
 	const Transform* parentTransform_ = nullptr;
+
 	Matrix4x4 parentWorldMat_ {};
 
 	bool isRail_ = false;
+
+	std::list<std::unique_ptr<Bullet>>bullets_;
+
 };

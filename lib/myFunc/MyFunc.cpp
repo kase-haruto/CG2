@@ -126,87 +126,152 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 	return handleGPU;
 }
 
+//ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
+//    Assimp::Importer importer;
+//
+//    // ファイルパスを作成
+//    std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
+//
+//    // ファイルを開く
+//    std::ifstream file(filePath);
+//    assert(file.is_open()); // ファイルが開けなければアサート
+//
+//    // モデルデータの初期化
+//    ModelData modelData;
+//    std::vector<Vector4> positions;
+//    std::vector<Vector3> normals;
+//    std::vector<Vector2> texcoords;
+//
+//    std::string line;
+//    uint32_t vertexIndex = 0;
+//    while (std::getline(file, line)){
+//        std::string identifier;
+//        std::istringstream s(line);
+//        s >> identifier;
+//
+//        if (identifier == "v"){
+//            Vector4 position;
+//            s >> position.x >> position.y >> position.z;
+//            position.w = 1.0f;
+//            positions.push_back(position);
+//
+//        } else if (identifier == "vt"){
+//            Vector2 texcoord;
+//            s >> texcoord.x >> texcoord.y;
+//            texcoords.push_back(texcoord);
+//
+//        } else if (identifier == "vn"){
+//            Vector3 normal;
+//            s >> normal.x >> normal.y >> normal.z;
+//            normals.push_back(normal);
+//
+//        } else if (identifier == "f"){
+//            uint32_t faceIndices[3];
+//            for (int32_t faceVertex = 0; faceVertex < 3; faceVertex++){
+//                std::string vertexDefinition;
+//                s >> vertexDefinition;
+//
+//                std::istringstream v(vertexDefinition);
+//                uint32_t elementIndices[3] = {0, 0, 0};
+//
+//                for (int32_t element = 0; element < 3; element++){
+//                    std::string index;
+//                    std::getline(v, index, '/');
+//                    if (!index.empty()){
+//                        elementIndices[element] = std::stoi(index);
+//                    }
+//                }
+//
+//                Vector4 position = positions[elementIndices[0] - 1];
+//                Vector2 texcoord = (elementIndices[1] != 0) ? texcoords[elementIndices[1] - 1] : Vector2 {0.0f, 0.0f};
+//                Vector3 normal = normals[elementIndices[2] - 1];
+//
+//                // 左手座標系に変換
+//                position.x *= -1.0f;
+//                normal.x *= -1.0f;
+//                texcoord.y = 1.0f - texcoord.y;
+//
+//                // 頂点データを格納
+//                VertexData vertex {position, texcoord, normal};
+//                modelData.vertices.push_back(vertex);
+//                faceIndices[faceVertex] = vertexIndex++;
+//            }
+//
+//            // 面を反時計回りで格納
+//            modelData.indices.push_back(faceIndices[2]);
+//            modelData.indices.push_back(faceIndices[1]);
+//            modelData.indices.push_back(faceIndices[0]);
+//        } else if (identifier == "mtllib"){
+//            std::string materialFilename;
+//            s >> materialFilename;
+//
+//            // mtlファイルを読み込む
+//            modelData.material = LoadMaterialTemplateFile(directoryPath + "/" + filename, materialFilename);
+//        }
+//    }
+//
+//    return modelData;
+//}
+
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
     Assimp::Importer importer;
 
     // ファイルパスを作成
     std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
+    
+    // Assimpによるシーンの読み込み
+    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    assert(scene && scene->HasMeshes()); // 読み込みエラーやメッシュの有無を確認
 
-    // ファイルを開く
-    std::ifstream file(filePath);
-    assert(file.is_open()); // ファイルが開けなければアサート
-
-    // モデルデータの初期化
     ModelData modelData;
-    std::vector<Vector4> positions;
-    std::vector<Vector3> normals;
-    std::vector<Vector2> texcoords;
+    const aiMesh* mesh = scene->mMeshes[0]; // 最初のメッシュを取得
 
-    std::string line;
-    uint32_t vertexIndex = 0;
-    while (std::getline(file, line)){
-        std::string identifier;
-        std::istringstream s(line);
-        s >> identifier;
+    // 頂点データの読み込み
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++){
+        VertexData vertex;
 
-        if (identifier == "v"){
-            Vector4 position;
-            s >> position.x >> position.y >> position.z;
-            position.w = 1.0f;
-            positions.push_back(position);
+        // 位置データの取得
+        vertex.position.x = mesh->mVertices[i].x;
+        vertex.position.y = mesh->mVertices[i].y;
+        vertex.position.z = mesh->mVertices[i].z;
+        vertex.position.w = 1.0f;
 
-        } else if (identifier == "vt"){
-            Vector2 texcoord;
-            s >> texcoord.x >> texcoord.y;
-            texcoords.push_back(texcoord);
+        // 法線データの取得
+        if (mesh->HasNormals()){
+            vertex.normal.x = mesh->mNormals[i].x;
+            vertex.normal.y = mesh->mNormals[i].y;
+            vertex.normal.z = mesh->mNormals[i].z;
+        }
 
-        } else if (identifier == "vn"){
-            Vector3 normal;
-            s >> normal.x >> normal.y >> normal.z;
-            normals.push_back(normal);
+        // テクスチャ座標の取得
+        if (mesh->HasTextureCoords(0)){
+            vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
+            vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
+        } else{
+            vertex.texcoord = {0.0f, 0.0f};
+        }
 
-        } else if (identifier == "f"){
-            uint32_t faceIndices[3];
-            for (int32_t faceVertex = 0; faceVertex < 3; faceVertex++){
-                std::string vertexDefinition;
-                s >> vertexDefinition;
+        modelData.vertices.push_back(vertex);
+    }
 
-                std::istringstream v(vertexDefinition);
-                uint32_t elementIndices[3] = {0, 0, 0};
+    // インデックスデータの読み込み
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++){
+        const aiFace& face = mesh->mFaces[i];
+        assert(face.mNumIndices == 3); // 三角形のみを想定
 
-                for (int32_t element = 0; element < 3; element++){
-                    std::string index;
-                    std::getline(v, index, '/');
-                    if (!index.empty()){
-                        elementIndices[element] = std::stoi(index);
-                    }
-                }
+        modelData.indices.push_back(face.mIndices[0]);
+        modelData.indices.push_back(face.mIndices[1]);
+        modelData.indices.push_back(face.mIndices[2]);
+    }
 
-                Vector4 position = positions[elementIndices[0] - 1];
-                Vector2 texcoord = (elementIndices[1] != 0) ? texcoords[elementIndices[1] - 1] : Vector2 {0.0f, 0.0f};
-                Vector3 normal = normals[elementIndices[2] - 1];
-
-                // 左手座標系に変換
-                position.x *= -1.0f;
-                normal.x *= -1.0f;
-                texcoord.y = 1.0f - texcoord.y;
-
-                // 頂点データを格納
-                VertexData vertex {position, texcoord, normal};
-                modelData.vertices.push_back(vertex);
-                faceIndices[faceVertex] = vertexIndex++;
-            }
-
-            // 面を反時計回りで格納
-            modelData.indices.push_back(faceIndices[2]);
-            modelData.indices.push_back(faceIndices[1]);
-            modelData.indices.push_back(faceIndices[0]);
-        } else if (identifier == "mtllib"){
-            std::string materialFilename;
-            s >> materialFilename;
-
-            // mtlファイルを読み込む
-            modelData.material = LoadMaterialTemplateFile(directoryPath + "/" + filename, materialFilename);
+    // マテリアルの読み込み
+    if (scene->HasMaterials()){
+        const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiString texturePath;
+        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS){
+            modelData.material.textureFilePath = texturePath.C_Str();
+        } else{
+            modelData.material.textureFilePath = "white1x1.png";
         }
     }
 

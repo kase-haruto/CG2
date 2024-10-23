@@ -16,7 +16,7 @@ void RailCamera::Update(){
 	// スプライン上の現在のカメラ位置を計算
 	Vector3 eye = CatmullRomPosition(ctrlPoints_, t_);
 
-	float t_2 = t_ + 0.01f;
+	float t_2 = t_ + 0.03f;
 	t_2 = std::clamp(t_2, 0.0f, 1.0f);
 
 	// 注視点を求める

@@ -18,5 +18,7 @@ void Character::SetViewProjection(const ViewProjection* viewProjection){
 	if (!model_){
 		return;
 	}
+	pViewProjection_ = viewProjection;
+
 	model_->SetViewProjection(viewProjection);
 }

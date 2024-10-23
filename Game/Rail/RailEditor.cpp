@@ -138,12 +138,16 @@ void RailEditor::DrawLine(){
         // 位置の更新
         railModels_[i]->SetPos(pointsDrawing[i]);
 
-        // 方向ベクトルを計算
+        // 前後の点を使って方向ベクトルを計算
         Vector3 forward;
-        if (i < segmentCount){
-            forward = pointsDrawing[i + 1] - pointsDrawing[i]; // 次の点との方向ベクトル
+        if (i == 0){
+            forward = pointsDrawing[i + 1] - pointsDrawing[i]; // 最初の点は次の点との方向ベクトル
+        } else if (i == segmentCount){
+            forward = pointsDrawing[i] - pointsDrawing[i - 1]; // 最後の点は前の点との方向ベクトル
         } else{
-            forward = pointsDrawing[i] - pointsDrawing[i - 1]; // 最後の点の場合、前の点との方向ベクトル
+            Vector3 forwardPrev = pointsDrawing[i] - pointsDrawing[i - 1];
+            Vector3 forwardNext = pointsDrawing[i + 1] - pointsDrawing[i];
+            forward = (forwardPrev + forwardNext) * 0.5f; // 前後の方向ベクトルの平均
         }
 
         // 方向ベクトルを正規化
@@ -169,6 +173,7 @@ void RailEditor::DrawLine(){
         PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
     }
 }
+
 
 
 void RailEditor::SetViewProjection(const ViewProjection* viewProjection){

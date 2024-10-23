@@ -1,5 +1,5 @@
 ﻿#include "PointLight.h"
-#include"MyFunc.h"
+#include"myfunc/MyFunc.h"
 #include "core/DirectX/DxCore.h"
 
 #ifdef _DEBUG
@@ -27,13 +27,17 @@ void PointLight::Update(){
 
 void PointLight::Render(){
 	assert(rootSignature_);
+#ifdef _DEBUG
 	ImGui::Begin("PointLight");
 	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
+	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
 	ImGui::DragFloat("radius", &data_->radius, 0.01f);
 	ImGui::DragFloat("decay", &data_->decay, 0.01f);
 	ImGui::End();
+#endif // _DEBUG
+
+
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 

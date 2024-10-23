@@ -31,22 +31,36 @@ std::shared_ptr<ModelData> ModelManager::LoadModel(Microsoft::WRL::ComPtr<ID3D12
     std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(LoadObjFile(instance_->directoryPath_, fileName));
     instance_->modelDatas_[fileName] = newModel;
 
-    // 頂点バッファとインデックスバッファの作成
+    // バッファサイズの確認
     size_t vertexBufferSize = sizeof(VertexData) * newModel->vertices.size();
-    instance_->vertexBuffers_[fileName] = CreateBufferResource(device.Get(), vertexBufferSize);
-
     size_t indexBufferSize = sizeof(uint32_t) * newModel->indices.size();
+
+    if (vertexBufferSize == 0 || indexBufferSize == 0){
+        // エラーハンドリング
+        return nullptr;
+    }
+
+    // 頂点バッファとインデックスバッファの作成
+    instance_->vertexBuffers_[fileName] = CreateBufferResource(device.Get(), vertexBufferSize);
     instance_->indexBuffers_[fileName] = CreateBufferResource(device.Get(), indexBufferSize);
 
     // 頂点バッファへのデータマップ
     VertexData* vertexData = nullptr;
-    instance_->vertexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
+    HRESULT hr = instance_->vertexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
+    if (FAILED(hr) || vertexData == nullptr){
+        // エラーハンドリング
+        return nullptr;
+    }
     std::memcpy(vertexData, newModel->vertices.data(), vertexBufferSize);
     instance_->vertexBuffers_[fileName]->Unmap(0, nullptr);
 
     // インデックスバッファへのデータマップ
     uint32_t* indexData = nullptr;
-    instance_->indexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&indexData));
+    hr = instance_->indexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&indexData));
+    if (FAILED(hr) || indexData == nullptr){
+        // エラーハンドリング
+        return nullptr;
+    }
     std::memcpy(indexData, newModel->indices.data(), indexBufferSize);
     instance_->indexBuffers_[fileName]->Unmap(0, nullptr);
 
