@@ -1,10 +1,15 @@
 ﻿#pragma once
-#include "ModelData.h"
-#include "Material.h"
-#include "TransformationMatrix.h"
-#include "Transform.h"
-#include "Vector4.h"
-#include "GameObject.h"
+
+#include"ModelData.h"
+#include"Material.h"
+#include"TransformationMatrix.h"
+#include"Transform.h"
+#include"Vector4.h"
+#include "ViewProjection.h"
+
+#include<d3d12.h>
+#include<wrl.h>
+#include<string>
 
 #include <d3d12.h>
 #include <wrl.h>
