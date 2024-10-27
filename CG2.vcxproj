@@ -152,9 +152,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Game\Collision\CollisionManager.cpp" />
     <ClCompile Include="Game\objects\Bullet.cpp" />
     <ClCompile Include="Game\objects\Character.cpp" />
+    <ClCompile Include="Game\objects\Collider.cpp" />
+    <ClCompile Include="Game\objects\Enemy.cpp" />
     <ClCompile Include="Game\objects\Player.cpp" />
+    <ClCompile Include="Game\objects\SphereCollider.cpp" />
     <ClCompile Include="Game\Rail\RailCamera.cpp" />
     <ClCompile Include="Game\Rail\RailEditor.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
@@ -226,9 +230,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Game\Collision\CollisionManager.h" />
     <ClInclude Include="Game\objects\Bullet.h" />
     <ClInclude Include="Game\objects\Character.h" />
+    <ClInclude Include="Game\objects\Collider.h" />
+    <ClInclude Include="Game\objects\Enemy.h" />
     <ClInclude Include="Game\objects\Player.h" />
+    <ClInclude Include="Game\objects\SphereCollider.h" />
     <ClInclude Include="Game\Rail\Rail.h" />
     <ClInclude Include="Game\Rail\RailCamera.h" />
     <ClInclude Include="Game\Rail\RailEditor.h" />
