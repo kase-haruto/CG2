@@ -11,6 +11,7 @@ using Microsoft::WRL::ComPtr;
 
 enum PipelineType{
     Object3D,
+    Object2D,
     StructuredObject,
     Line,
 };

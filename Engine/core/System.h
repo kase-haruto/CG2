@@ -55,6 +55,7 @@ public:
 	/// </summary>
 	void CreatePipelines();
 	void Object3DPipelines();
+	void Object2DPipelines();
 	void StructuredObjectPipeline();
 	void LinePipeline();
 

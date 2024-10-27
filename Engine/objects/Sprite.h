@@ -28,6 +28,8 @@ public:
 	/// </summary>
 	void Update();
 
+	void UpdateMatrix();
+
 	/// <summary>
 	/// 行列の更新
 	/// </summary>
@@ -64,7 +66,7 @@ public:
 	ComPtr<ID3D12Resource>GetConstBuffer(){ return vertexResource_; }
 
 	void SetRotation(Vector3 rotation){ transform_.rotate = rotation; }
-	void SetTranslation(Vector3 translation){ transform_.translate = translation; }	
+	void SetTranslation(Vector3 translation){ transform_.translate = translation; }
 
 private:
 	//viewの生成
@@ -93,7 +95,6 @@ private:
 
 	//マテリアル用のリソース
 	ComPtr<ID3D12Resource> materialResource_;
-	Material* materialData_;
+	Material2D* materialData_;
 
 };
-

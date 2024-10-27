@@ -495,4 +495,20 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\graphics\shaders\Fragment.hlsli" />
+    <None Include="Engine\graphics\shaders\Object3d.hlsli" />
+    <None Include="Engine\graphics\shaders\Particle.hlsli" />
+    <None Include="Engine\graphics\shaders\Object2d.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Fragment.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object2d.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Particle.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Particle.VS.hlsl" />
+  </ItemGroup>
 </Project>

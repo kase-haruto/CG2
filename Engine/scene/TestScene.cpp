@@ -23,9 +23,6 @@ void TestScene::Initialize(){
 	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
 	PrimitiveDrawer::GetInstance()->Initialize();
 	
-    //スプライト 
-	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize();
 
 	//モデル
 	modelBuilder_ = std::make_unique<ModelBuilder>();
@@ -93,8 +90,6 @@ void TestScene::Update(){
 
 	sphere_->Update();
 
-
-	sprite_->Update();
 }
 
 void TestScene::Draw(){
@@ -110,10 +105,6 @@ void TestScene::Draw(){
 
 	modelField_->Draw();
 
-	sprite_->Draw();
-
-
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3 {0.0f,5.0f,0.0f}, Vector3 {2.0f,1.0f,0.0f}, Vector4 {1.0f,0.0f,0.0f,1.0f});
 
 	PrimitiveDrawer::GetInstance()->Render();
 
@@ -122,7 +113,6 @@ void TestScene::Draw(){
 void TestScene::Finalize(){
 	viewProjection_.reset();
 	modelBuilder_.reset();
-	sprite_.reset();
 	sphere_.reset();
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();

@@ -2,6 +2,7 @@
 #include"Vector4.h"
 #include"Mat3.h"
 #include"Matrix4x4.h"
+#include"mat3.h"
 
 #include<stdint.h>
 #include<string>
@@ -12,6 +13,11 @@ struct Material{
 	float pad[3];
 	Matrix4x4 uvTransform;
 	float shininess;
+};
+
+struct Material2D{
+	Vector4 color;
+	Matrix4x4 uvTransform;
 };
 
 struct MaterialData{

@@ -25,7 +25,7 @@ public:
     /// <summary>
     /// モデルの読み込み
     /// </summary>
-    static std::shared_ptr<ModelData> LoadModel(Microsoft::WRL::ComPtr<ID3D12Device> device, const std::string& fileName);
+    static std::shared_ptr<ModelData> LoadModel(const std::string& fileName);
 
     /// <summary>
     /// 頂点リソースの取得
