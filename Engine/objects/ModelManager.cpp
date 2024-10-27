@@ -22,7 +22,7 @@ std::shared_ptr<ModelData> ModelManager::GetModelData(const std::string& fileNam
     return nullptr; // ロードされていない場合はnullptrを返す
 }
 
-std::shared_ptr<ModelData> ModelManager::LoadModel(Microsoft::WRL::ComPtr<ID3D12Device> device, const std::string& fileName){
+std::shared_ptr<ModelData> ModelManager::LoadModel(const std::string& fileName){
     if (instance_->modelDatas_.find(fileName) != instance_->modelDatas_.end()){
         return instance_->modelDatas_[fileName];
     }
@@ -40,9 +40,11 @@ std::shared_ptr<ModelData> ModelManager::LoadModel(Microsoft::WRL::ComPtr<ID3D12
         return nullptr;
     }
 
+    Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
+
     // 頂点バッファとインデックスバッファの作成
-    instance_->vertexBuffers_[fileName] = CreateBufferResource(device.Get(), vertexBufferSize);
-    instance_->indexBuffers_[fileName] = CreateBufferResource(device.Get(), indexBufferSize);
+    instance_->vertexBuffers_[fileName] = CreateBufferResource(device, vertexBufferSize);
+    instance_->indexBuffers_[fileName] = CreateBufferResource(device, indexBufferSize);
 
     // 頂点バッファへのデータマップ
     VertexData* vertexData = nullptr;

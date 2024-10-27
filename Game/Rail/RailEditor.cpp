@@ -32,7 +32,6 @@ void RailEditor::Initialize(){
     for (size_t i = 0; i <= segmentCount; ++i){
         auto model = std::make_unique<Model>("rail");
         model->SetViewProjection(pViewProjection_);
-        model->Initialize(); // 初期化は一度だけ
         railModels_.emplace_back(std::move(model));
     }
 }

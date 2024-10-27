@@ -10,6 +10,13 @@
 #endif // _DEBUG
 
 Model::Model(const std::string& fileName){
+   
+    Create(fileName);
+}
+
+Model::~Model(){}
+
+void Model::Initialize(bool isUseTexture){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
@@ -25,15 +32,7 @@ Model::Model(const std::string& fileName){
     CreateMatrixBuffer();
     Map();
 
-    Create(fileName);
     handle = TextureManager::GetInstance()->LoadTexture(modelData->material.textureFilePath);
-
-}
-
-Model::~Model(){}
-
-void Model::Initialize(bool isUseTexture){
-
 }
 
 void Model::UpdateMatrix(){
@@ -78,7 +77,7 @@ void Model::ShowImGuiInterface(){
 
 void Model::Create(const std::string& filename, bool isUseTexture){
     // モデルの読み込み（既に存在すればロードしない）
-    modelData = ModelManager::LoadModel(device_, filename);
+    modelData = ModelManager::LoadModel(filename);
 
     // 頂点バッファとインデックスバッファを取得してビューを作成
     auto vertexResource = ModelManager::GetVertexResource(filename);
