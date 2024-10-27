@@ -530,6 +530,19 @@
     <ClInclude Include="Engine\objects\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="lib\myMath\matrix3x3.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\graphics\shaders\Object2d.PV.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\graphics\shaders\Object3d.hlsli" />
+    <None Include="Engine\graphics\shaders\Object2d.hlsli" />
     <ClInclude Include="Game\objects\Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

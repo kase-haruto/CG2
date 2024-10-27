@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Vector3.h"
 
-/// <summary>
+/// <summary>3
 /// 4x4行列
 /// </summary>
 struct Matrix4x4 final{

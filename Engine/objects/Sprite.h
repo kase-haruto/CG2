@@ -28,6 +28,8 @@ public:
 	/// </summary>
 	void Update();
 
+	void UpdateMatrix();
+
 	/// <summary>
 	/// 行列の更新
 	/// </summary>
@@ -93,7 +95,7 @@ private:
 
 	//マテリアル用のリソース
 	ComPtr<ID3D12Resource> materialResource_;
-	Material* materialData_;
+	Material2D* materialData_;
 
 };
 

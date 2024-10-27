@@ -4,8 +4,8 @@
 class Enemy { 
 public: 
     /// <summary>
-    /// コンストラクタ/
-    /// デストラクタ
+    /// 繧ｳ繝ｳ繧ｹ繝医Λ繧ｯ繧ｿ/
+    /// 繝�繧ｹ繝医Λ繧ｯ繧ｿ
     /// </summary>
     Enemy(); 
     ~Enemy(); 
