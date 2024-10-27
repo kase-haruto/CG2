@@ -22,7 +22,7 @@ std::shared_ptr<ModelData> ModelManager::GetModelData(const std::string& fileNam
     return nullptr; // ロードされていない場合はnullptrを返す
 }
 
-std::shared_ptr<ModelData> ModelManager::LoadModel(Microsoft::WRL::ComPtr<ID3D12Device> device, const std::string& fileName){
+std::shared_ptr<ModelData> ModelManager::LoadModel(const std::string& fileName){
     if (instance_->modelDatas_.find(fileName) != instance_->modelDatas_.end()){
         return instance_->modelDatas_[fileName];
     }
@@ -30,6 +30,8 @@ std::shared_ptr<ModelData> ModelManager::LoadModel(Microsoft::WRL::ComPtr<ID3D12
     // モデルデータをロード
     std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(LoadObjFile(instance_->directoryPath_, fileName));
     instance_->modelDatas_[fileName] = newModel;
+
+    Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
     // 頂点バッファとインデックスバッファの作成
     size_t vertexBufferSize = sizeof(VertexData) * newModel->vertices.size();
