@@ -20,8 +20,9 @@ PSOutput main(VSOutput input)
     PSOutput output;
 
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+    float2 clampedUV = frac(transformedUV.xy); // UVÀ•W‚ğ0?1‚Ì”ÍˆÍ‚Éû‚ß‚é
 
-    float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+    float4 textureColor = gTexture.Sample(gSampler, clampedUV);
 
     output.color = gMaterial.color * textureColor;
     

@@ -11,16 +11,7 @@
 
 Sprite::Sprite(){}
 
-Sprite::~Sprite(){
-    vertexResource_->Release();
-    vertexResource_ = nullptr;
-    indexResource_->Release();
-    indexResource_ = nullptr;
-    transformResource_->Release();
-    transformResource_ = nullptr;
-    materialResource_->Release();
-    materialResource_ = nullptr;
-}
+Sprite::~Sprite(){}
 
 void Sprite::Initialize(){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
