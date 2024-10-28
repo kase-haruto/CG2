@@ -49,12 +49,69 @@ void TestScene::Initialize(){
 
 void TestScene::Update(){
 #ifdef _DEBUG
-	modelBuilder_->ShowImGuiInterface();
-	sphere_->UpdateImGui("sphere");
+	static int selectedObjectIndex = -1;
+	static int selectedEditorIndex = -1;
+
+	// オブジェクト名のリスト
+	std::vector<const char*> objectNames = {"sphere"};
+
+	// 複数のエディタのリスト（BaseEditor*で管理）
+	std::vector<BaseEditor*> editors = {modelBuilder_.get()};
+
+	// メインウィンドウ
+	ImGui::Begin("Main GUI");
+
+	// Objectセクション
+	if (ImGui::CollapsingHeader("Object Settings")){
+		ImGui::Text("Select an object to edit its properties:");
+
+		// オブジェクトのリスト表示（リストボックス形式）
+		if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(),  static_cast< int >(objectNames.size()))){
+			// オブジェクト選択時の処理はここで必要なら行う
+		}
+
+		// 選択されたオブジェクトの設定表示
+		if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
+			ImGui::Separator();
+			ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
+
+			// 各オブジェクトの設定表示
+			if (selectedObjectIndex == 0 && sphere_){ // sphereの場合
+				ImGui::Text("sphere Settings:");
+				sphere_->UpdateImGui("sphere");
+			}
+		}
+	}
+
+	// Editorセクション
+	if (ImGui::CollapsingHeader("Editor Settings")){
+		ImGui::Text("Select an editor to configure:");
+
+		// エディタのリスト表示（リストボックス形式）
+		if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
+			auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
+			*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
+			return true;
+			}, &editors, static_cast< int >(editors.size()))){ // size_t から int へキャスト
+			// エディタ選択時の処理はここで必要なら行う
+		}
+
+		// 選択されたエディタの設定表示
+		if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
+			ImGui::Separator();
+			ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
+
+			// 選択されたエディタのUIを表示
+			editors[selectedEditorIndex]->ShowImGuiInterface();
+		}
+
+	}
+
+	ImGui::End();
 	viewProjection_->ImGui();
-	//modelGround_->ShowImGuiInterface();
-	//modelField_->ShowImGuiInterface();
 #endif // _DEBUG
+
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
