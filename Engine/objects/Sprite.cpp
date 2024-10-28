@@ -13,7 +13,7 @@ Sprite::Sprite(){}
 
 Sprite::~Sprite(){}
 
-void Sprite::Initialize(){
+void Sprite::Initialize(const std::string& filePath){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 
@@ -21,10 +21,12 @@ void Sprite::Initialize(){
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
 
-    handle = TextureManager::GetInstance()->LoadTexture("monsterBall.png");
+    handle = TextureManager::GetInstance()->LoadTexture(filePath+".png");
 
 
     transform_ = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+
+    path = filePath+".png";
 
     // リソースの生成
     CreateBuffer();
@@ -45,6 +47,24 @@ void Sprite::Update(){
     ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
     ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
     ImGui::End();
+
+    transform_.translate = {position.x,position.y,0.0f};
+    transform_.rotate = {0.0f,0.0f,rotate};
+    transform_.scale = {size.x,size.y,1.0f};
+
+    //アンカーポイントの反映
+    float left = 0.0f - anchorPoint.x;
+    float right = 1.0f - anchorPoint.x;
+    float top = 0.0f - anchorPoint.y;
+    float bottom = 1.0f - anchorPoint.y;
+
+    vertexData[0].position = {left,bottom,0.0f,1.0f};   //左下
+    vertexData[1].position = {left,top,0.0f,1.0f};      //左上
+    vertexData[2].position = {right,bottom,0.0f,1.0f};  //右下
+    vertexData[3].position = {right,top,0.0f,1.0f};     //右上
+
+    //const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(path);
+
 
     UpdateMatrix();
     UpdateTransform();
@@ -129,24 +149,24 @@ void Sprite::IndexResourceMap(){
 }
 
 void Sprite::VertexResourceMap(){
-    VertexData* vertexData = nullptr;
     vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
 
-    // 頂点データの設定
-    vertexData[0].position = {0.0f, 180.0f, 0.0f, 1.0f};
+    // 1ピクセル単位での頂点データの設定
+    vertexData[0].position = {0.0f, 1.0f, 0.0f, 1.0f}; // 左下の頂点
     vertexData[0].texcoord = {0.0f, 1.0f};
 
-    vertexData[1].position = {320.0f, 180.0f, 0.0f, 1.0f};
+    vertexData[1].position = {320.0f, 1.0f, 0.0f, 1.0f}; // 右下の頂点
     vertexData[1].texcoord = {1.0f, 1.0f};
 
-    vertexData[2].position = {0.0f, 0.0f, 0.0f, 1.0f};
+    vertexData[2].position = {0.0f, 0.0f, 0.0f, 1.0f}; // 左上の頂点
     vertexData[2].texcoord = {0.0f, 0.0f};
 
-    vertexData[3].position = {320.0f, 0.0f, 0.0f, 1.0f};
+    vertexData[3].position = {320.0f, 0.0f, 0.0f, 1.0f}; // 右上の頂点
     vertexData[3].texcoord = {1.0f, 0.0f};
 
     vertexResource_->Unmap(0, nullptr);
 }
+
 
 void Sprite::TransformResourceMap(){
     transformResource_->Map(0, nullptr, reinterpret_cast< void** >(&transformData));

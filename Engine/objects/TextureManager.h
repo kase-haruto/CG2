@@ -18,6 +18,8 @@ public:
     D3D12_GPU_DESCRIPTOR_HANDLE LoadTexture(const std::string& filePath);
     ID3D12DescriptorHeap* GetDescriptorHeap() const;
 
+    const DirectX::TexMetadata& GetMetaData(const std::string& filePath){ textures_.find(filePath)->second.GetMetaData(); }
+
 private:
     TextureManager() = default;
     ~TextureManager() = default;
