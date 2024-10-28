@@ -179,6 +179,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\LeakChecker.h" />
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
+    <ClInclude Include="Engine\Editor\BaseEditor.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />
     <ClInclude Include="Engine\graphics\GraphicsGroup.h" />
     <ClInclude Include="Engine\graphics\Material.h" />
