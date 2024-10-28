@@ -96,3 +96,7 @@ void Texture::CreateShaderResourceView(ID3D12Device* device){
 
     device->CreateShaderResourceView(resource_.Get(), &srvDesc, srvHandleCPU_);
 }
+
+const DirectX::TexMetadata& Texture::GetMetaData(){
+    return metadata_;
+}
