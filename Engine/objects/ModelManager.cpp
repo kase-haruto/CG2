@@ -10,6 +10,22 @@ ModelManager* ModelManager::GetInstance(){
     return instance_;
 }
 
+void ModelManager::StartUpLoad(){
+    LoadModel("suzanne");
+    //LoadModel("axis");
+    LoadModel("bunny");
+    LoadModel("debugCube");
+    LoadModel("fence");
+    LoadModel("ground");
+    LoadModel("multiMaterial");
+    LoadModel("multiMesh");
+    LoadModel("plane");
+    LoadModel("suzanne");
+    LoadModel("teapot");
+    LoadModel("terrain");
+}
+
+
 void ModelManager::Initialize(){
     GetInstance();
 }
@@ -31,38 +47,26 @@ std::shared_ptr<ModelData> ModelManager::LoadModel(const std::string& fileName){
     std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(LoadObjFile(instance_->directoryPath_, fileName));
     instance_->modelDatas_[fileName] = newModel;
 
-    // バッファサイズの確認
-    size_t vertexBufferSize = sizeof(VertexData) * newModel->vertices.size();
-    size_t indexBufferSize = sizeof(uint32_t) * newModel->indices.size();
 
-    if (vertexBufferSize == 0 || indexBufferSize == 0){
-        // エラーハンドリング
-        return nullptr;
-    }
 
     Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
     // 頂点バッファとインデックスバッファの作成
+    size_t vertexBufferSize = sizeof(VertexData) * newModel->vertices.size();
     instance_->vertexBuffers_[fileName] = CreateBufferResource(device, vertexBufferSize);
+
+    size_t indexBufferSize = sizeof(uint32_t) * newModel->indices.size();
     instance_->indexBuffers_[fileName] = CreateBufferResource(device, indexBufferSize);
 
     // 頂点バッファへのデータマップ
     VertexData* vertexData = nullptr;
-    HRESULT hr = instance_->vertexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
-    if (FAILED(hr) || vertexData == nullptr){
-        // エラーハンドリング
-        return nullptr;
-    }
+    instance_->vertexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
     std::memcpy(vertexData, newModel->vertices.data(), vertexBufferSize);
     instance_->vertexBuffers_[fileName]->Unmap(0, nullptr);
 
     // インデックスバッファへのデータマップ
     uint32_t* indexData = nullptr;
-    hr = instance_->indexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&indexData));
-    if (FAILED(hr) || indexData == nullptr){
-        // エラーハンドリング
-        return nullptr;
-    }
+    instance_->indexBuffers_[fileName]->Map(0, nullptr, reinterpret_cast< void** >(&indexData));
     std::memcpy(indexData, newModel->indices.data(), indexBufferSize);
     instance_->indexBuffers_[fileName]->Unmap(0, nullptr);
 
@@ -84,6 +88,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ModelManager::GetIndexResource(const std:
     }
     return nullptr; // 存在しない場合はnullptrを返す
 }
+
 
 void ModelManager::Finalize(){
     if (instance_){

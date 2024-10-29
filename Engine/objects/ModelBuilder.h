@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include"Model.h"
 #include"ViewProjection.h"
+#include "Editor/BaseEditor.h"
 
 #include<unordered_map>
 #include<memory>
@@ -10,10 +11,11 @@
 /// <summary>
 /// モデル作成クラス
 /// </summary>
-class ModelBuilder{
+class ModelBuilder:
+public BaseEditor{
 public:
 	ModelBuilder() = default;
-	~ModelBuilder() = default;
+	~ModelBuilder()override = default;
 
 	/// <summary>
 	/// 初期化
@@ -46,7 +48,7 @@ public:
 	/// <summary>
 	/// imguiの描画
 	/// </summary>
-	void ShowImGuiInterface();
+	void ShowImGuiInterface()override;
 	
 	/// <summary>
 	/// viewProjectionのセット
@@ -65,6 +67,11 @@ public:
 	/// </summary>
 	/// <param name="directoryPath"></param>
 	void ListAndLoadModelsFromDirectory(const std::string& directoryPath);
+
+
+	const char* GetEditorName() const override{
+		return "ModelBuilder";
+	}
 
 private:
 	std::unique_ptr<Model>CreateModel(const std::string& modelPath);

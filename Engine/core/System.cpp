@@ -38,11 +38,14 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
 #endif // _DEBUG
 
-	//モデル管理クラスの初期化(インスタンス生成)
-	ModelManager::Initialize();
+    //モデル管理クラスの初期化(インスタンス生成)
+    ModelManager::Initialize();
+    ModelManager::StartUpLoad();
 
-    //textureManagerの初期化
-    TextureManager::GetInstance()->Initialize(imguiManager_.get());
+	//textureManagerの初期化
+	TextureManager::GetInstance()->Initialize(imguiManager_.get());
+    //スタート時に読み込み
+    TextureManager::GetInstance()->StartUpLoad();
 
 	//フォグの初期化
 	fog = std::make_unique<FogEffect>(dxCore_.get());
@@ -119,11 +122,11 @@ int System::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 
 void System::CreatePipelines(){
-	shaderManager_->InitializeDXC();
-	Object3DPipelines();
-	Object2DPipelines();
-	StructuredObjectPipeline();
-	LinePipeline();
+	  shaderManager_->InitializeDXC();
+      Object3DPipelines();
+      Object2DPipelines();
+      StructuredObjectPipeline();
+      LinePipeline();
 }
 
 void System::Object2DPipelines(){
@@ -588,11 +591,11 @@ void System::LinePipeline(){
     rasterizeDesc.FrontCounterClockwise = FALSE;
     rasterizeDesc.DepthClipEnable = TRUE;
 
-	// DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
-	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+    // DepthStencilStateの設定
+    D3D12_DEPTH_STENCIL_DESC depthStencilDesc {};
+    depthStencilDesc.DepthEnable = true;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
 	// シェーダの読み込み
 	if (!shaderManager_->LoadShader(Line, L"Fragment.VS.hlsl", L"Fragment.PS.hlsl")){

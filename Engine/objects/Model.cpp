@@ -10,8 +10,8 @@
 #endif // _DEBUG
 
 Model::Model(const std::string& fileName){
-   
     Create(fileName);
+
 }
 
 Model::~Model(){}
@@ -32,13 +32,6 @@ void Model::Initialize(bool isUseTexture){
     CreateMatrixBuffer();
     Map();
 
-    handle = TextureManager::GetInstance()->LoadTexture(modelData->material.textureFilePath);
-}
-
-void Model::UpdateMatrix(){
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
-    matrixData->world = worldMatrix;
-    matrixData->WVP = worldViewProjectionMatrix;
 }
 
 void Model::ShowImGuiInterface(){
@@ -47,7 +40,6 @@ void Model::ShowImGuiInterface(){
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
     materialData->uvTransform = uvTransformMatrix;
 
-#ifdef _DEBUG
     ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f);
     ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f);
     ImGui::DragFloat3("size", &transform.scale.x, 0.01f);
@@ -69,13 +61,11 @@ void Model::ShowImGuiInterface(){
         }
         ImGui::EndCombo();
     }
-#endif // _DEBUG
-
-
-   
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){
+    Initialize();
+
     // モデルの読み込み（既に存在すればロードしない）
     modelData = ModelManager::LoadModel(filename);
 
@@ -91,13 +81,19 @@ void Model::Create(const std::string& filename, bool isUseTexture){
     indexBufferView.SizeInBytes = static_cast< UINT >(sizeof(uint32_t) * modelData->indices.size());
     indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 
-    Initialize();
+    handle = TextureManager::GetInstance()->LoadTexture(modelData->material.textureFilePath);
 }
 
 void Model::Update(){
     materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
 
-    Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+    matrixData->world = worldMatrix;
+    matrixData->WVP = worldViewProjectionMatrix;
+}
+
+void Model::UpdateMatrix(){
     Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
     matrixData->world = worldMatrix;
     matrixData->WVP = worldViewProjectionMatrix;

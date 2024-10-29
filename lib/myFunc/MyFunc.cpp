@@ -88,7 +88,7 @@ Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearC
 	return result;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes){
+Microsoft::WRL::ComPtr<ID3D12Resource>CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes){
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties {};
 	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -218,7 +218,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
     // ファイルパスを作成
     std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
-    
+
     // Assimpによるシーンの読み込み
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     assert(scene && scene->HasMeshes()); // 読み込みエラーやメッシュの有無を確認
@@ -277,6 +277,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
     return modelData;
 }
+
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
 

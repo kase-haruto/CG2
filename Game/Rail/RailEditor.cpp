@@ -161,7 +161,7 @@ void RailEditor::DrawLine(){
         Vector3 rotation(pitch, yaw, roll);
 
         // 回転角をモデルに適用
-        railModels_[i]->SetRotate(rotation);
+        railModels_[i]->transform.rotate = rotation;
 
         // モデルの更新
         railModels_[i]->Update();

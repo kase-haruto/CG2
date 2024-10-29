@@ -11,11 +11,7 @@
 
 Sphere::Sphere(){}
 
-Sphere::~Sphere(){
-	vertexResource_->Release();
-	materialResource_->Release();
-	wvpResource_->Release();
-}
+Sphere::~Sphere(){}
 
 
 void Sphere::Initialize(ViewProjection* viewProjection){
@@ -93,18 +89,18 @@ void Sphere::CreateBuffer(){
 }
 
 void Sphere::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * 1536);
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * 1536);
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * 1536);
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Sphere::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(device_, sizeof(Material));
 }
 
 void Sphere::CreateMatrixBuffer(){
-	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	wvpResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 }
 
 

@@ -109,11 +109,11 @@ void Input::KeyboardUpdate(){
 	}
 }
 
-bool Input::PushKey(uint32_t keyNum) {
+bool Input::PushKey(uint32_t keyNum){
 	return instance_->key_[keyNum];
 }
 
-bool Input::TriggerKey(uint32_t keyNum) {
+bool Input::TriggerKey(uint32_t keyNum){
 	return instance_->key_[keyNum] && !instance_->keyPre_[keyNum];
 }
 
@@ -155,4 +155,3 @@ Vector2 Input::GetMousePosition(){
 float Input::GetMouseWheel(){
 	return instance_->mouseWheel_;
 }
-

@@ -24,6 +24,8 @@ public:
 
     D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandle() const{ return srvHandleGPU_; }
 
+    const DirectX::TexMetadata& GetMetaData();
+
 private:
     std::string filePath_;
     DirectX::ScratchImage image_;
@@ -33,6 +35,7 @@ private:
     D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_ = {0};
     D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_ = {0};
 
+private:
     // コピーコンストラクタとコピー代入演算子を削除
     Texture(const Texture&) = delete;
     Texture& operator=(const Texture&) = delete;

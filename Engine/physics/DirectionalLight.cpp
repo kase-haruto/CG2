@@ -9,9 +9,7 @@
 
 DirectionalLight::DirectionalLight(){}
 
-DirectionalLight::~DirectionalLight(){
-	resource_->Release();
-}
+DirectionalLight::~DirectionalLight(){}
 
 
 
@@ -50,7 +48,7 @@ void DirectionalLight::Render(){
 void DirectionalLight::CreateBuffer(){
 	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
 
-	resource_ = CreateBufferResource(device.Get(), sizeof(DirectionalLightData));
+	resource_ = CreateBufferResource(device, sizeof(DirectionalLightData));
 }
 
 void DirectionalLight::Map(){

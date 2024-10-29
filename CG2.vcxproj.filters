@@ -315,6 +315,12 @@
     <ClCompile Include="Game\Collision\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\objects\ModelManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\UiEditor.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -558,5 +564,30 @@
     <ClInclude Include="Game\Collision\CollisionManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\objects\ModelManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\BaseEditor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\UiEditor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\graphics\shaders\Fragment.hlsli" />
+    <None Include="Engine\graphics\shaders\Object3d.hlsli" />
+    <None Include="Engine\graphics\shaders\Particle.hlsli" />
+    <None Include="Engine\graphics\shaders\Object2d.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Fragment.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object2d.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Object3d.VS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Particle.PS.hlsl" />
+    <FxCompile Include="Engine\graphics\shaders\Particle.VS.hlsl" />
   </ItemGroup>
 </Project>

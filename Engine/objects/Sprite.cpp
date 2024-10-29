@@ -9,20 +9,7 @@
 #include <stdint.h>
 #include "DirectionalLight.h"
 
-Sprite::Sprite(){}
-
-Sprite::~Sprite(){
-	vertexResource_->Release();
-	vertexResource_ = nullptr;
-	indexResource_->Release();
-	indexResource_ = nullptr;
-	transformResource_->Release();
-	transformResource_ = nullptr;
-	materialResource_->Release();
-	materialResource_ = nullptr;
-}
-
-void Sprite::Initialize(){
+Sprite::Sprite(const std::string& filePath){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 
@@ -30,10 +17,12 @@ void Sprite::Initialize(){
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
 
-    handle = TextureManager::GetInstance()->LoadTexture("monsterBall.png");
+    handle = TextureManager::GetInstance()->LoadTexture(filePath);
 
 
     transform_ = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+
+    path = filePath;
 
     // リソースの生成
     CreateBuffer();
@@ -46,23 +35,54 @@ void Sprite::Initialize(){
     UpdateTransform();
 }
 
+Sprite::~Sprite(){}
+
+void Sprite::Initialize(const Vector2& position, const Vector2& size){
+    this->position = position;
+    transform_.translate.x = position.x;
+    transform_.translate.y = position.y;
+
+    this->size = size;
+    transform_.scale.x = size.x;
+    transform_.scale.y = size.y;
+}
+
 void Sprite::Update(){
-    ImGui::Begin("sprite");
-    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
-    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
-    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
-    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
-    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-    ImGui::End();
+//#ifdef DEBUG
+//    ImGui::Begin("sprite");
+//    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
+//    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
+//    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
+//    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
+//    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
+//    ImGui::End();
+//#endif // DEBUG
+
+    
+
+    transform_.translate = {position.x, position.y, 0.0f};
+    transform_.rotate = {0.0f, 0.0f, rotate};
+    transform_.scale = {size.x, size.y, 1.0f};
+
+    // アンカーポイントの反映
+    float left = 0.0f - anchorPoint.x;
+    float right = 1.0f - anchorPoint.x;
+    float top = 0.0f - anchorPoint.y;
+    float bottom = 1.0f - anchorPoint.y;
+
+    vertexData[0].position = {left, bottom, 0.0f, 1.0f};   // 左下
+    vertexData[1].position = {left, top, 0.0f, 1.0f};      // 左上
+    vertexData[2].position = {right, bottom, 0.0f, 1.0f};  // 右下
+    vertexData[3].position = {right, top, 0.0f, 1.0f};     // 右上
+
+    //const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(path);
+
 
     UpdateMatrix();
     UpdateTransform();
 }
 
 void Sprite::UpdateMatrix(){
-    ///===================================================
-    /// wvp行列
-    ///===================================================
     Matrix4x4 matWorld = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 matView = Matrix4x4::MakeIdentity();
     Matrix4x4 matProjection = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
@@ -138,20 +158,19 @@ void Sprite::IndexResourceMap(){
 }
 
 void Sprite::VertexResourceMap(){
-    VertexData* vertexData = nullptr;
     vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
 
-    // 頂点データの設定
-    vertexData[0].position = {0.0f, 180.0f, 0.0f, 1.0f};
+    // 1ピクセル単位での頂点データの設定
+    vertexData[0].position = {0.0f, 1.0f, 0.0f, 1.0f}; // 左下の頂点
     vertexData[0].texcoord = {0.0f, 1.0f};
 
-    vertexData[1].position = {320.0f, 180.0f, 0.0f, 1.0f};
+    vertexData[1].position = {320.0f, 1.0f, 0.0f, 1.0f}; // 右下の頂点
     vertexData[1].texcoord = {1.0f, 1.0f};
 
-    vertexData[2].position = {0.0f, 0.0f, 0.0f, 1.0f};
+    vertexData[2].position = {0.0f, 0.0f, 0.0f, 1.0f}; // 左上の頂点
     vertexData[2].texcoord = {0.0f, 0.0f};
 
-    vertexData[3].position = {320.0f, 0.0f, 0.0f, 1.0f};
+    vertexData[3].position = {320.0f, 0.0f, 0.0f, 1.0f}; // 右上の頂点
     vertexData[3].texcoord = {1.0f, 0.0f};
 
     vertexResource_->Unmap(0, nullptr);
@@ -167,3 +186,8 @@ void Sprite::MaterialResourceMap(){
     materialData_->color = {1.0f, 1.0f, 1.0f, 1.0f};
     materialData_->uvTransform = Matrix4x4::MakeIdentity();
 }
+
+const void Sprite::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle){
+    handle = newHandle;
+}
+

@@ -214,18 +214,18 @@ void ParticleManager::CreateBuffer(){
 }
 
 void ParticleManager::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_.Get(), sizeof(VertexData) * modelData.vertices.size());
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void ParticleManager::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(device_, sizeof(Material));
 }
 
 void ParticleManager::CreateMatrixBuffer(){
-	instancingResource_ = CreateBufferResource(device_.Get(), sizeof(ParticleForGPU) * kMaxInstance_);
+	instancingResource_ = CreateBufferResource(device_, sizeof(ParticleForGPU) * kMaxInstance_);
 }
 
 void ParticleManager::Map(){

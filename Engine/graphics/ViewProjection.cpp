@@ -11,12 +11,10 @@ ViewProjection::ViewProjection(){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 }
 
-ViewProjection::~ViewProjection(){
-    constBuffer_->Release();
-}
+ViewProjection::~ViewProjection(){}
 
 void ViewProjection::CreateConstBuffer(){
-    constBuffer_ = CreateBufferResource(device_.Get(), sizeof(CameraForGPU));
+    constBuffer_ = CreateBufferResource(device_, sizeof(CameraForGPU));
 }
 
 void ViewProjection::Map(){

@@ -1,15 +1,10 @@
 ﻿#pragma once
-
-#include"ModelData.h"
-#include"Material.h"
-#include"TransformationMatrix.h"
-#include"Transform.h"
-#include"Vector4.h"
-#include "ViewProjection.h"
-
-#include<d3d12.h>
-#include<wrl.h>
-#include<string>
+#include "ModelData.h"
+#include "Material.h"
+#include "TransformationMatrix.h"
+#include "Transform.h"
+#include "Vector4.h"
+#include "GameObject.h"
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -29,7 +24,6 @@ public:
     /// 初期化
     /// </summary>
     void Initialize(bool isUseTexture = true);
-    void UpdateMatrix();
     /// <summary>
     /// モデルの作成
     /// </summary>
@@ -39,6 +33,8 @@ public:
     /// </summary>
     void Update();
 
+    void UpdateMatrix();
+    
     void Map();
 
     /// <summary>
@@ -53,8 +49,6 @@ public:
     void SetViewProjection(const ViewProjection* viewPro);
 
     void SetPos(const Vector3& pos){ transform.translate = pos; }
-
-    void SetRotate(const Vector3& rotate){ transform.rotate = rotate; }
 
     void SetSize(const Vector3& size){ transform.scale = size; }
 
@@ -97,6 +91,7 @@ private:
 
 public:
     Transform transform;
+
     Matrix4x4 worldMatrix;
 private:
     static const std::string directoryPath_;

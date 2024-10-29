@@ -11,7 +11,10 @@
 #include"ViewProjection.h"
 #include"ModelBuilder.h"
 #include"Particle.h"
+#include "Editor/UiEditor.h"
 
+
+#include <vector>
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -56,16 +59,21 @@ private:
     /// カメラ関連
     ///=========================
     std::unique_ptr<ViewProjection> viewProjection_;
-    
+
     ///=========================
     /// オブジェクト関連
     ///=========================
-    std::unique_ptr<Sprite>sprite_ = nullptr;
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
+    std::unique_ptr<UIEditor> uiEditor_ = nullptr;
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
+
+
+
+    // 各ウィンドウの表示フラグ
+    bool showObjectWindow = false;
 
 };
 
