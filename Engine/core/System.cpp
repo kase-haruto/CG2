@@ -89,10 +89,13 @@ void System::EndFrame(){
 }
 
 void System::Finalize(){
+    //imgui終了処理
 	imguiManager_->Finalize();
+    //textureの終了処理
     TextureManager::GetInstance()->Finalize();
     //モデルマネージャーの開放
     ModelManager::GetInstance()->Finalize();
+    //pipelineの終了処理
     pipelineStateManager_->Finalize();
     SrvLocator::Finalize();
     Input::Finalize();

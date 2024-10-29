@@ -1,5 +1,6 @@
 #include "core/DirectX/DxCore.h"
 
+/* lib */
 #include <cassert>
 #include <dxgidebug.h>
 
@@ -37,7 +38,6 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
     // fenceの生成
     dxFence_->Initialize(dxDevice_->GetDevice());
 }
-
 
 void DxCore::PreDraw(){
     // バックバッファのインデックスを取得
@@ -100,7 +100,6 @@ void DxCore::PostDraw(){
     // 次のフレーム用のコマンドリストを準備
     dxCommand_->Reset();
 }
-
 
 void DxCore::SetViewPortAndScissor(uint32_t width, uint32_t height){
     //クライアント領域サイズと一緒にして画面に表示

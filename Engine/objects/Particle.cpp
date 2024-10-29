@@ -6,6 +6,7 @@
 #include "GraphicsGroup.h"
 #include "DirectionalLight.h"
 #include "SrvLocator.h"
+#include "objects/ModelManager.h"
 
 #ifdef _DEBUG
 #include "imgui.h"
@@ -28,14 +29,14 @@ void ParticleManager::Initialize(ViewProjection* viewProjection){
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
-	modelData = LoadObjFile("Resources", "plane");
+	modelData = ModelManager::LoadModel("plane");
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 
 
 
-	handle = TextureManager::GetInstance()->LoadTexture("./Resources/particle.png");
+	handle = TextureManager::GetInstance()->LoadTexture("particle.png");
 	if (!handle.ptr){
-		handle = TextureManager::GetInstance()->LoadTexture("./Resources/white1x1.png");
+		handle = TextureManager::GetInstance()->LoadTexture("white1x1.png");
 	}
 
 	CreateBuffer();
@@ -204,7 +205,7 @@ void ParticleManager::Draw(){
 	commandList_->SetGraphicsRootDescriptorTable(2, handle);
 
 	// インスタンシングを用いて、指定された頂点バッファの頂点数分だけ描画を行う
-	commandList_->DrawInstanced(static_cast< UINT >(modelData.vertices.size()), numInstance_, 0, 0);
+	commandList_->DrawInstanced(static_cast< UINT >(modelData->vertices.size()), numInstance_, 0, 0);
 }
 
 void ParticleManager::CreateBuffer(){
@@ -214,9 +215,9 @@ void ParticleManager::CreateBuffer(){
 }
 
 void ParticleManager::CreateVertexBuffer(){
-	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData.vertices.size());
+	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData->vertices.size());
 	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData.vertices.size());
+	vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData->vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
@@ -240,7 +241,7 @@ void ParticleManager::VertexBufferMap(){
 	if (FAILED(hr)){
 		throw std::runtime_error("Failed to map vertex buffer.");
 	}
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
+	std::memcpy(vertexData, modelData->vertices.data(), sizeof(VertexData) * modelData->vertices.size());
 }
 
 void ParticleManager::MaterialBufferMap(){

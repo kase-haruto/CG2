@@ -23,9 +23,9 @@ void TestScene::Initialize(){
 	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
 	PrimitiveDrawer::GetInstance()->Initialize();
 
-	////パーティクル
-	//particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
-	//particle_->Create(viewProjection_.get());
+	//パーティクル
+	particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
+	particle_->Create(viewProjection_.get());
 
 	//球体
 	sphere_ = std::make_unique<Sphere>();
@@ -149,20 +149,21 @@ void TestScene::Update(){
 
 	/*modelGround_->Update();*/
 
-	//particle_->Update();
+	particle_->Update();
 
 	sphere_->Update();
 
 }
 
 void TestScene::Draw(){
-	//モデルの描画
-	modelBuilder_->Draw();
+	particle_->Draw();
 
 	//uiの描画
 	uiEditor_->Draw();
 
-	//particle_->Draw();
+	//モデルの描画
+	modelBuilder_->Draw();
+
 
 	sphere_->Draw();
 
@@ -172,7 +173,6 @@ void TestScene::Draw(){
 
 
 	PrimitiveDrawer::GetInstance()->Render();
-
 }
 
 void TestScene::Finalize(){
@@ -183,5 +183,5 @@ void TestScene::Finalize(){
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();
 	modelField_.reset();
-	//particle_.reset();
+	particle_.reset();
 }

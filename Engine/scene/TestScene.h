@@ -12,6 +12,7 @@
 #include"ModelBuilder.h"
 #include"Particle.h"
 #include "Editor/UiEditor.h"
+#include "objects/Particle.h"
 
 #include"PrimitiveDrawer.h"
 
@@ -68,11 +69,13 @@ private:
     std::unique_ptr<UIEditor> uiEditor_ = nullptr;
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
-    std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-
-
+    ///=========================
+    /// particle
+    ///=========================
+    std::unique_ptr<ParticleManager>particle_ = nullptr;
+    
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;
 

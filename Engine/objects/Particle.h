@@ -104,7 +104,7 @@ public:
     // リソースのマッピング
     void Map();
     // モデルデータを取得
-    ModelData GetModelData() const{ return modelData; }
+    std::shared_ptr<ModelData> GetModelData() const{ return modelData; }
 
     // SRVの作成
     void CreateSRV();
@@ -154,7 +154,7 @@ private:
     Matrix4x4 backToFrontMatrix_;
 
     // モデルデータ
-    ModelData modelData;
+    std::shared_ptr<ModelData> modelData;
 
     // マテリアルデータ
     Material* materialData = nullptr;
