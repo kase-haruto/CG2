@@ -17,13 +17,13 @@ class DirectXCommon;
 /// </summary>
 class Sprite{
 public:
-	Sprite();
+	Sprite(const std::string& filePath);
 	~Sprite();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const std::string& filePath);
+	void Initialize(const Vector2& position,const Vector2& size);
 
 	/// <summary>
 	/// 更新
@@ -109,7 +109,14 @@ public:
 	const Vector2& GetLeftTop()const{ return textureLeftTop; }
 	void SetLeftTop(const Vector2& leftTop){ this->textureLeftTop = leftTop; }
 
+	const 
+
+	// テクスチャハンドルを設定する関数
+	void SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle);
+
 private:
+	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 	//座標
 	Vector2 position {0.0f,0.0f};
 	//回転
@@ -146,8 +153,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState_;
 
-	Transform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
-	Transform uvTransform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+	
 	Matrix4x4* transformData = nullptr;
 
 	//マテリアル用のリソース

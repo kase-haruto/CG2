@@ -22,11 +22,6 @@ void TestScene::Initialize(){
 	//線
 	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
 	PrimitiveDrawer::GetInstance()->Initialize();
-	
-
-	//モデル
-	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->SetViewProjection(viewProjection_.get());
 
 	////パーティクル
 	//particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
@@ -45,6 +40,16 @@ void TestScene::Initialize(){
 	modelField_ = std::make_unique<Model>("terrain");
 	modelField_->SetViewProjection(viewProjection_.get());
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//							editor
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//モデル
+	modelBuilder_ = std::make_unique<ModelBuilder>();
+	modelBuilder_->SetViewProjection(viewProjection_.get());
+
+	//sprite
+	uiEditor_ = std::make_unique<UIEditor>();
 }
 
 void TestScene::Update(){
@@ -56,7 +61,7 @@ void TestScene::Update(){
 	std::vector<const char*> objectNames = {"sphere"};
 
 	// 複数のエディタのリスト（BaseEditor*で管理）
-	std::vector<BaseEditor*> editors = {modelBuilder_.get()};
+	std::vector<BaseEditor*> editors = {modelBuilder_.get(),uiEditor_.get()};
 
 	// メインウィンドウ
 	ImGui::Begin("Main GUI");
@@ -111,7 +116,8 @@ void TestScene::Update(){
 	viewProjection_->ImGui();
 #endif // _DEBUG
 
-
+	//uiの更新
+	uiEditor_->Update();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
@@ -150,9 +156,11 @@ void TestScene::Update(){
 }
 
 void TestScene::Draw(){
-
 	//モデルの描画
 	modelBuilder_->Draw();
+
+	//uiの描画
+	uiEditor_->Draw();
 
 	//particle_->Draw();
 
@@ -170,6 +178,7 @@ void TestScene::Draw(){
 void TestScene::Finalize(){
 	viewProjection_.reset();
 	modelBuilder_.reset();
+	uiEditor_.reset();
 	sphere_.reset();
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();

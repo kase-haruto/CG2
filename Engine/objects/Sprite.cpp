@@ -9,11 +9,7 @@
 #include <stdint.h>
 #include "DirectionalLight.h"
 
-Sprite::Sprite(){}
-
-Sprite::~Sprite(){}
-
-void Sprite::Initialize(const std::string& filePath){
+Sprite::Sprite(const std::string& filePath){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 
@@ -21,12 +17,12 @@ void Sprite::Initialize(const std::string& filePath){
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
 
-    handle = TextureManager::GetInstance()->LoadTexture(filePath+".png");
+    handle = TextureManager::GetInstance()->LoadTexture(filePath);
 
 
     transform_ = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
 
-    path = filePath+".png";
+    path = filePath;
 
     // リソースの生成
     CreateBuffer();
@@ -39,29 +35,45 @@ void Sprite::Initialize(const std::string& filePath){
     UpdateTransform();
 }
 
+Sprite::~Sprite(){}
+
+void Sprite::Initialize(const Vector2& position, const Vector2& size){
+    this->position = position;
+    transform_.translate.x = position.x;
+    transform_.translate.y = position.y;
+
+    this->size = size;
+    transform_.scale.x = size.x;
+    transform_.scale.y = size.y;
+}
+
 void Sprite::Update(){
-    ImGui::Begin("sprite");
-    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
-    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
-    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
-    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
-    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-    ImGui::End();
+//#ifdef DEBUG
+//    ImGui::Begin("sprite");
+//    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
+//    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
+//    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
+//    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
+//    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
+//    ImGui::End();
+//#endif // DEBUG
 
-    transform_.translate = {position.x,position.y,0.0f};
-    transform_.rotate = {0.0f,0.0f,rotate};
-    transform_.scale = {size.x,size.y,1.0f};
+    
 
-    //アンカーポイントの反映
+    transform_.translate = {position.x, position.y, 0.0f};
+    transform_.rotate = {0.0f, 0.0f, rotate};
+    transform_.scale = {size.x, size.y, 1.0f};
+
+    // アンカーポイントの反映
     float left = 0.0f - anchorPoint.x;
     float right = 1.0f - anchorPoint.x;
     float top = 0.0f - anchorPoint.y;
     float bottom = 1.0f - anchorPoint.y;
 
-    vertexData[0].position = {left,bottom,0.0f,1.0f};   //左下
-    vertexData[1].position = {left,top,0.0f,1.0f};      //左上
-    vertexData[2].position = {right,bottom,0.0f,1.0f};  //右下
-    vertexData[3].position = {right,top,0.0f,1.0f};     //右上
+    vertexData[0].position = {left, bottom, 0.0f, 1.0f};   // 左下
+    vertexData[1].position = {left, top, 0.0f, 1.0f};      // 左上
+    vertexData[2].position = {right, bottom, 0.0f, 1.0f};  // 右下
+    vertexData[3].position = {right, top, 0.0f, 1.0f};     // 右上
 
     //const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(path);
 
@@ -71,9 +83,6 @@ void Sprite::Update(){
 }
 
 void Sprite::UpdateMatrix(){
-    ///===================================================
-    /// wvp行列
-    ///===================================================
     Matrix4x4 matWorld = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 matView = Matrix4x4::MakeIdentity();
     Matrix4x4 matProjection = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
@@ -167,7 +176,6 @@ void Sprite::VertexResourceMap(){
     vertexResource_->Unmap(0, nullptr);
 }
 
-
 void Sprite::TransformResourceMap(){
     transformResource_->Map(0, nullptr, reinterpret_cast< void** >(&transformData));
     *transformData = Matrix4x4::MakeIdentity();  // 初期値は単位行列
@@ -178,3 +186,8 @@ void Sprite::MaterialResourceMap(){
     materialData_->color = {1.0f, 1.0f, 1.0f, 1.0f};
     materialData_->uvTransform = Matrix4x4::MakeIdentity();
 }
+
+const void Sprite::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle){
+    handle = newHandle;
+}
+

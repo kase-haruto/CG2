@@ -10,6 +10,22 @@ ModelManager* ModelManager::GetInstance(){
     return instance_;
 }
 
+void ModelManager::StartUpLoad(){
+    LoadModel("suzanne");
+    //LoadModel("axis");
+    LoadModel("bunny");
+    LoadModel("debugCube");
+    LoadModel("fence");
+    LoadModel("ground");
+    LoadModel("multiMaterial");
+    LoadModel("multiMesh");
+    LoadModel("plane");
+    LoadModel("suzanne");
+    LoadModel("teapot");
+    LoadModel("terrain");
+}
+
+
 void ModelManager::Initialize(){
     GetInstance();
 }
@@ -70,6 +86,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ModelManager::GetIndexResource(const std:
     }
     return nullptr; // 存在しない場合はnullptrを返す
 }
+
 
 void ModelManager::Finalize(){
     if (instance_){
