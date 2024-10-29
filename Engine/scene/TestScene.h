@@ -71,7 +71,6 @@ private:
     std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-    std::unique_ptr<Sprite> test_ = nullptr;
 
 
     // 各ウィンドウの表示フラグ

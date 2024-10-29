@@ -40,9 +40,6 @@ void TestScene::Initialize(){
 	modelField_ = std::make_unique<Model>("terrain");
 	modelField_->SetViewProjection(viewProjection_.get());
 
-	//test
-	test_ = std::make_unique<Sprite>("uvChecker.png");
-	test_->Initialize({400.0f,0.0f},{124.0f,124.0f});
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -56,7 +53,6 @@ void TestScene::Initialize(){
 }
 
 void TestScene::Update(){
-	test_->Update();
 #ifdef _DEBUG
 	static int selectedObjectIndex = -1;
 	static int selectedEditorIndex = -1;
@@ -160,7 +156,6 @@ void TestScene::Update(){
 }
 
 void TestScene::Draw(){
-	//test_->Draw();
 	//モデルの描画
 	modelBuilder_->Draw();
 
