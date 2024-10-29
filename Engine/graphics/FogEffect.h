@@ -35,6 +35,8 @@ public:
 	//デストラクタ
 	~FogEffect();
 
+	void ShowImGuiInterface();
+
 
 	void Update();
 

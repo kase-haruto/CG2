@@ -44,6 +44,8 @@ public:
 	/// </summary>
 	void Map();
 
+	void ShowImGuiInterface();
+
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
 private:

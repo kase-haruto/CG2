@@ -2,6 +2,7 @@
 
 /* engine */
 #include "Editor/BaseEditor.h"
+#include "Vector2.h"
 
 /* lib */
 #include <vector>
@@ -24,6 +25,7 @@ public:
     // UIの描画
     void ShowImGuiInterface()override;
 
+
     // 更新処理
     void Update();
 
@@ -35,8 +37,7 @@ public:
     }
 
 private:
-    // スプライトを追加する
-    void AddSprite(const std::string& textureName);
+    void AddSprite(const std::string& textureName, const Vector2& position, const Vector2& size);
 
 private:
     // テクスチャマネージャーのインスタンス

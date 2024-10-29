@@ -12,7 +12,14 @@
 #include"ModelBuilder.h"
 #include"Particle.h"
 #include "Editor/UiEditor.h"
+#include "objects/Particle.h"
 
+/* graphics */
+#include"DirectionalLight.h"
+#include"PointLight.h"
+#include"graphics/FogEffect.h"
+
+/* object */
 #include"PrimitiveDrawer.h"
 
 #include <vector>
@@ -33,6 +40,7 @@ class TestScene final :
     public IScene{
 public:
     TestScene();
+    TestScene(DxCore* dxCore);
     ~TestScene() override = default;
 
     /// <summary>
@@ -44,6 +52,10 @@ public:
     /// </summary>
     void Update()override;
     /// <summary>
+    /// デバッグ用ui
+    /// </summary>
+    void UpdateDebugUI();
+    /// <summary>
     /// 描画処理
     /// </summary>
     void Draw()override;
@@ -51,10 +63,18 @@ public:
     /// 解放処理
     /// </summary>
     void Finalize()override;
+
+    /// <summary>
+    /// モデル描画前処理
+    /// </summary>
+    void ModelPreDraw();
 private:
     ///=========================
     /// グラフィック関連
     ///=========================
+    std::unique_ptr<DirectionalLight>directionalLight_ = nullptr;
+    std::unique_ptr<PointLight> pointLight_ = nullptr;
+    std::unique_ptr<FogEffect>fog_ = nullptr;
 
     ///=========================
     /// カメラ関連
@@ -68,11 +88,13 @@ private:
     std::unique_ptr<UIEditor> uiEditor_ = nullptr;
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
-    std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-
-
+    ///=========================
+    /// particle
+    ///=========================
+    std::unique_ptr<ParticleManager>particle_ = nullptr;
+    
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;
 

@@ -10,7 +10,7 @@ void EngineController::Initialize(HINSTANCE hInstance){
     system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
     // sceneの初期化
-    scene_ = std::make_unique<TestScene>();
+    scene_ = std::make_unique<TestScene>(system_->GetDxCore());
     scene_->Initialize();
 }
 

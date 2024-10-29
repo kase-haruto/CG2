@@ -5,11 +5,6 @@
 #include"core/DirectX/DxCore.h"
 #include"ShaderManager.h"
 #include"PipelineStateManager.h"
-#include"graphics/FogEffect.h"
-
-//オブジェクト
-#include"DirectionalLight.h"
-#include"PointLight.h"
 
 #ifdef _DEBUG
 #include"ImGuiManager.h"
@@ -69,6 +64,8 @@ public:
 	static HINSTANCE GetHinstance(){ return hInstance_; }
 	static HWND GetHWND(){ return hwnd_; }
 
+	DxCore* GetDxCore()const{ return dxCore_.get(); }
+
 private:
 	LeakChecker leakChecker_;
 	std::unique_ptr<DxCore> dxCore_ = nullptr;
@@ -77,8 +74,6 @@ private:
 	std::unique_ptr<WinApp> winApp_;
 	static HINSTANCE hInstance_;
 	static HWND hwnd_;
-
-	std::unique_ptr<FogEffect>fog = nullptr;
 
 #ifdef _DEBUG
 	// ImGuiの初期化
@@ -90,12 +85,6 @@ private:
 	/// </summary>
 	std::shared_ptr<ShaderManager>shaderManager_;
 	std::unique_ptr<PipelineStateManager>pipelineStateManager_;
-
-	/// <summary>
-	/// オブジェクト関連クラス
-	/// </summary>
-	std::unique_ptr<DirectionalLight>directionalLight_;
-	std::unique_ptr<PointLight> pointLight_;
 
 };
 

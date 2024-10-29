@@ -1,6 +1,9 @@
 ﻿#include "DirectionalLight.h"
+
+/* engine */
 #include"MyFunc.h"
 #include "core/DirectX/DxCore.h"
+#include "graphics/GraphicsGroup.h"
 
 #ifdef _DEBUG
 #include"imgui.h"
@@ -15,7 +18,7 @@ DirectionalLight::~DirectionalLight(){}
 
 void DirectionalLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
-
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	CreateBuffer();
 	Map();
 }
@@ -27,11 +30,7 @@ void DirectionalLight::Update(){
 
 void DirectionalLight::Render(){
 	assert(rootSignature_);
-	ImGui::Begin("directionalLight");
-	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
-	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
-	ImGui::End();
+	
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 
@@ -54,6 +53,17 @@ void DirectionalLight::Map(){
 	data_->intensity = 1.0f;
 	resource_->Unmap(0, nullptr);
 	
+}
+
+void DirectionalLight::ShowImGuiInterFace(){
+#ifdef _DEBUG
+	ImGui::Begin("directionalLight");
+	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
+	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
+	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
+	ImGui::End();
+#endif // _DEBUG
+
 }
 
 void DirectionalLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){
