@@ -38,6 +38,11 @@ public:
     static Microsoft::WRL::ComPtr<ID3D12Resource> GetIndexResource(const std::string& fileName);
 
     /// <summary>
+    /// 初期化時読み込み
+    /// </summary>
+    static void StartUpLoad();
+
+    /// <summary>
     /// 解放処理
     /// </summary>
     void Finalize();

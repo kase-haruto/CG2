@@ -115,6 +115,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\LeakChecker.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
+    <ClCompile Include="Engine\Editor\UiEditor.cpp" />
     <ClCompile Include="Engine\graphics\FogEffect.cpp" />
     <ClCompile Include="Engine\graphics\GraphicsGroup.cpp" />
     <ClCompile Include="Engine\graphics\PipelineState.cpp" />
@@ -180,6 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\System.h" />
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\Editor\BaseEditor.h" />
+    <ClInclude Include="Engine\Editor\UiEditor.h" />
     <ClInclude Include="Engine\graphics\FogEffect.h" />
     <ClInclude Include="Engine\graphics\GraphicsGroup.h" />
     <ClInclude Include="Engine\graphics\Material.h" />

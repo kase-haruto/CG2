@@ -10,6 +10,24 @@ TextureManager* TextureManager::GetInstance(){
     return &instance;
 }
 
+
+void TextureManager::StartUpLoad(){
+    LoadTexture("uvChecker.png");
+    LoadTexture("MonsterBall.png");
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{
+    auto it = textures_.find(textureName);
+    if (it != textures_.end()){
+        return it->second.GetSrvHandle();
+    }
+    return {};
+}
+
+const std::unordered_map<std::string, Texture>& TextureManager::GetLoadedTextures() const{
+    return textures_;
+}
+
 void TextureManager::Initialize(ImGuiManager* imgui){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     imgui_ = imgui;
@@ -43,3 +61,4 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::LoadTexture(const std::string& fileP
 
     return gpuHandle;
 }
+

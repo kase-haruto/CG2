@@ -40,9 +40,12 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
+    ModelManager::StartUpLoad();
 
 	//textureManagerの初期化
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
+    //スタート時に読み込み
+    TextureManager::GetInstance()->StartUpLoad();
 
     //フォグの初期化
     fog = std::make_unique<FogEffect>(dxCore_.get());

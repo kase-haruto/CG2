@@ -5,20 +5,20 @@
 void ModelBuilder::Initialize(){}
 
 void ModelBuilder::Update(){
-	for (auto& pair : models_){
-		pair.second->Update();
-	}
+    for (auto& pair : models_){
+        pair.second->Update();
+    }
 }
 
 void ModelBuilder::Draw(){
-	for (auto& pair : models_){
-		pair.second->Draw();
-	}
+    for (auto& pair : models_){
+        pair.second->Draw();
+    }
 }
 
 void ModelBuilder::AddModel(const std::string& modelPath){
-	auto model = CreateModel(modelPath);
-	models_.emplace_back(modelPath, std::move(model));
+    auto model = CreateModel(modelPath);
+    models_.emplace_back(modelPath, std::move(model));
 }
 
 void ModelBuilder::RemoveModel(size_t index){
@@ -64,10 +64,10 @@ void ModelBuilder::ShowImGuiInterface(){
 }
 
 std::unique_ptr<Model> ModelBuilder::CreateModel(const std::string& modelPath){
-	auto model = std::make_unique<Model>();
-	model->SetViewProjection(viewProjection_);
-	model->Create(modelPath);
-	return model;
+    auto model = std::make_unique<Model>();
+    model->SetViewProjection(viewProjection_);
+    model->Create(modelPath);
+    return model;
 }
 
 

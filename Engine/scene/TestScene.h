@@ -11,6 +11,7 @@
 #include"ViewProjection.h"
 #include"ModelBuilder.h"
 #include"Particle.h"
+#include "Editor/UiEditor.h"
 
 #include"PrimitiveDrawer.h"
 
@@ -64,10 +65,13 @@ private:
     /// オブジェクト関連
     ///=========================
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
+    std::unique_ptr<UIEditor> uiEditor_ = nullptr;
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<ParticleManager>particle_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
+
+    std::unique_ptr<Sprite> test_ = nullptr;
 
 
     // 各ウィンドウの表示フラグ
