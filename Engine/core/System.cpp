@@ -46,23 +46,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
     //スタート時に読み込み
     TextureManager::GetInstance()->StartUpLoad();
-
-    //フォグの初期化
-    fog = std::make_unique<FogEffect>(dxCore_.get());
-
-    //////////////////////////////////////////////////////////////////////
-    ///             ライトの初期化
-    //////////////////////////////////////////////////////////////////////
-
-    //directionalLight
-    directionalLight_ = std::make_unique<DirectionalLight>();
-    directionalLight_->Initialize(dxCore_.get());
-    directionalLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
-
-    //pointLight
-    pointLight_ = std::make_unique<PointLight>();
-    pointLight_->Initialize(dxCore_.get());
-    pointLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
 }
 
 void System::BeginFrame(){
@@ -72,11 +55,6 @@ void System::BeginFrame(){
 	imguiManager_->Begin();
     //インプットの更新
     Input::Update();
-    //フォグの更新
-    fog->Update();
-    //ライトの処理の更新
-    directionalLight_->Render();
-    pointLight_->Render();
 }
 
 void System::EndFrame(){

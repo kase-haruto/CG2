@@ -1,12 +1,17 @@
 ﻿#pragma once
 
+/* engine */
+
+
+class DxCore;
 
 /// <summary>
 /// シーンの基底クラス
 /// </summary>
 class IScene{
 public:
-	IScene();
+	IScene(){}
+	IScene(DxCore* dxCore);
 	virtual ~IScene();
 
 	/// <summary>
@@ -26,5 +31,12 @@ public:
 	/// </summary>
 	virtual void Finalize() = 0;
 
+	/// <summary>
+	/// モデルの描画前処理
+	/// </summary>
+	virtual void ModelPreDraw(){}
+
+protected:
+	DxCore* pDxCore_;
 };
 

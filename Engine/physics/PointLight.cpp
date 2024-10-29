@@ -1,6 +1,9 @@
 ﻿#include "PointLight.h"
+
+/* engine */
 #include"MyFunc.h"
 #include "core/DirectX/DxCore.h"
+#include "graphics/GraphicsGroup.h"
 
 #ifdef _DEBUG
 #include"imgui.h"
@@ -13,6 +16,7 @@ PointLight::~PointLight(){}
 
 void PointLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
+	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	CreateBuffer();
 	Map();
 
@@ -25,13 +29,7 @@ void PointLight::Update(){
 
 void PointLight::Render(){
 	assert(rootSignature_);
-	ImGui::Begin("PointLight");
-	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
-	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f,1.0f);
-	ImGui::DragFloat("radius", &data_->radius, 0.01f);
-	ImGui::DragFloat("decay", &data_->decay, 0.01f);
-	ImGui::End();
+	
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 
@@ -54,6 +52,18 @@ void PointLight::Map(){
 	data_->radius = 4.0f;
 	data_->decay = 1.0f;
 	resource_->Unmap(0, nullptr);
+}
+
+void PointLight::ShowImGuiInterface(){
+#ifdef _DEBUG
+	ImGui::Begin("PointLight");
+	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
+	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
+	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
+	ImGui::DragFloat("radius", &data_->radius, 0.01f);
+	ImGui::DragFloat("decay", &data_->decay, 0.01f);
+	ImGui::End();
+#endif // _DEBUG
 }
 
 void PointLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){

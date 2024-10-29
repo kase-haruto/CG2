@@ -14,6 +14,12 @@
 #include "Editor/UiEditor.h"
 #include "objects/Particle.h"
 
+/* graphics */
+#include"DirectionalLight.h"
+#include"PointLight.h"
+#include"graphics/FogEffect.h"
+
+/* object */
 #include"PrimitiveDrawer.h"
 
 #include <vector>
@@ -34,6 +40,7 @@ class TestScene final :
     public IScene{
 public:
     TestScene();
+    TestScene(DxCore* dxCore);
     ~TestScene() override = default;
 
     /// <summary>
@@ -45,6 +52,10 @@ public:
     /// </summary>
     void Update()override;
     /// <summary>
+    /// デバッグ用ui
+    /// </summary>
+    void UpdateDebugUI();
+    /// <summary>
     /// 描画処理
     /// </summary>
     void Draw()override;
@@ -52,10 +63,18 @@ public:
     /// 解放処理
     /// </summary>
     void Finalize()override;
+
+    /// <summary>
+    /// モデル描画前処理
+    /// </summary>
+    void ModelPreDraw();
 private:
     ///=========================
     /// グラフィック関連
     ///=========================
+    std::unique_ptr<DirectionalLight>directionalLight_ = nullptr;
+    std::unique_ptr<PointLight> pointLight_ = nullptr;
+    std::unique_ptr<FogEffect>fog_ = nullptr;
 
     ///=========================
     /// カメラ関連

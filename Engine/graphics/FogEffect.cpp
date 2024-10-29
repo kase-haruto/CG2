@@ -12,6 +12,15 @@ FogEffect::~FogEffect(){
 	constantBuffer = nullptr;
 }
 
+void FogEffect::ShowImGuiInterface(){
+#ifdef _DEBUG
+	ImGui::Begin("fogEffect");
+	ImGui::SliderFloat("fogStart", &parameters->fogStart, 10.0f, 50.0f);
+	ImGui::SliderFloat("fogEnd", &parameters->fogEnd, 500.0f, 1000.0f);
+	ImGui::End();
+#endif // _DEBUG
+}
+
 FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	//定数バッファの生成
 	CreateConstantBuffer();
@@ -65,16 +74,7 @@ void FogEffect::CreateConstantBuffer(){
 		IID_PPV_ARGS(&constantBuffer));
 }
 
-
-
 void FogEffect::Update(){
-#ifdef _DEBUG
-	ImGui::Begin("fogEffect");
-	ImGui::SliderFloat("fogStart", &parameters->fogStart,10.0f,50.0f);
-	ImGui::SliderFloat("fogEnd", &parameters->fogEnd,500.0f,1000.0f);
-	ImGui::End();
-#endif // _DEBUG
-
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = pDxCore_->GetCommandList();
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	commandList->SetGraphicsRootSignature(rootSignature.Get());
