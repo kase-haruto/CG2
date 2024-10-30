@@ -2,8 +2,11 @@
 #include"GlobalVariable/GlobalVariables.h"
 #include "myFunc/PrimitiveDrawer.h"
 #include "core/Input.h"
+#include "objects/TextureManager.h"
 
 #include "Collision/CollisionManager.h"
+
+uint32_t GameScene::newScore_ = 0;
 
 GameScene::GameScene(){
 	GlobalVariables::GetInstance()->Initialize();
@@ -13,6 +16,8 @@ static Vector3 originPos;
 static Vector3 originRotate;
 
 void GameScene::Initialize(){
+	//スコアのリセット
+	score_ = 0;
 
 	///=========================
 	/// カメラ関連
@@ -70,6 +75,23 @@ void GameScene::Initialize(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetViewProjection(viewProjection_.get());
+
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//				スコア
+	/////////////////////////////////////////////////////////////////////////////////////////
+	scoreSprites_.resize(5);
+	for (size_t i = 0; i < 5; ++i){
+		// 指定されたテクスチャ名でテクスチャをロード
+		auto sprite = std::make_shared<Sprite>("0.png");  // 初期化時は "0" を使用
+		Vector2 digitPosition = {600.0f + i * 64.0f, 600.0f};  // 桁ごとの位置を設定
+		sprite->Initialize(digitPosition, {64.0f, 64.0f});
+
+		scoreSprites_[i] = sprite;
+	}
+	test_ = std::make_unique<Sprite>("0.png");
+	test_->Initialize({400.0f,0.0f}, {64.0f,64.0f});
 }
 
 void GameScene::Update(){
@@ -92,7 +114,8 @@ void GameScene::Update(){
 	ImGui::End();
 
 #endif // _DEBUG
-
+	UpdateScore();
+	test_->Update();
 	//fieldの更新
 	skydome_->Update();
 
@@ -165,6 +188,10 @@ void GameScene::Draw(){
 	//敵の描画
 	enemyManager_->Draw();
 
+	DrawScore();
+	test_->Draw();
+
+
 	PrimitiveDrawer::GetInstance()->Render();
 }
 
@@ -176,4 +203,36 @@ void GameScene::Finalize(){
 	playerModel_.reset();
 	railCamera_.reset();
 	PrimitiveDrawer::GetInstance()->Finalize();
+}
+
+void GameScene::UpdateScore(){
+	// スコアが変わった場合にのみ更新
+	if (score_ != newScore_){
+		score_ = newScore_;
+		std::string scoreString = std::to_string(score_);
+
+		// 桁数を揃える（最大桁数に足りない場合は先頭に"0"を埋めるなどの処理も可能）
+		for (size_t i = 0; i < scoreSprites_.size(); ++i){
+			if (i < scoreString.size()){
+				// 現在の桁の数字に対応するテクスチャを設定
+				std::string textureFileName = std::string(1, scoreString[i]) + ".png";
+				// 指定されたテクスチャ名でテクスチャをロード
+				D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = TextureManager::GetInstance()->LoadTexture(textureFileName);
+
+				scoreSprites_[i]->SetTextureHandle(textureHandle);
+			} else{
+				// 桁がスコアの桁数より多い場合は"0"などの表示にする（もしくは非表示にする）
+				// 指定されたテクスチャ名でテクスチャをロード
+				D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = TextureManager::GetInstance()->LoadTexture("0.png");
+				scoreSprites_[i]->SetTextureHandle(textureHandle);
+			}
+		}
+	}
+}
+
+void GameScene::DrawScore(){
+	// すべてのスプライトを描画
+	for (const auto& sprite : scoreSprites_){
+		sprite->Draw();
+	}
 }

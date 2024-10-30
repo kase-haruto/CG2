@@ -8,7 +8,7 @@
 #include "objects/Player.h"
 #include "Rail/RailCamera.h"
 #include "objects/EnemyManager.h"
-
+#include "objects/Sprite.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -46,6 +46,12 @@ public:
 	void Finalize()override;
 
 private:
+	//スコアのスプライトの更新
+	void UpdateScore();
+	//スコアのスプライトの表示
+	void DrawScore();
+
+private:
 	///=========================
 	/// カメラ関連
 	///=========================
@@ -80,4 +86,12 @@ private:
 	//敵のスポーンタイマー
 	uint32_t spawnTime_ = 0;
 	const uint32_t spawnTimeLimit_ = 300;
+
+public:
+	uint32_t score_;
+	static uint32_t newScore_;
+
+	//表示用スコア
+	std::vector<std::shared_ptr<Sprite>> scoreSprites_;
+	std::unique_ptr<Sprite> test_;
 };
