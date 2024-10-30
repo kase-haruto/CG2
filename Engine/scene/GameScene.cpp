@@ -26,6 +26,15 @@ void GameScene::Initialize(){
 	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
 	PrimitiveDrawer::GetInstance()->Initialize();
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//				天球
+	/////////////////////////////////////////////////////////////////////////////////////////
+	skydome_ = std::make_unique<Model>("skydome");
+	skydome_->Initialize();
+	skydome_->SetViewProjection(viewProjection_.get());
+	skydome_->transform.scale = {100.0f,100.0f,100.0f};
+
 	///=========================
 	/// Editor関連
 	///=========================
@@ -54,6 +63,12 @@ void GameScene::Initialize(){
 	player_->SetCtrlPoints(railEditor_->GetControlPoint());
 
 	player_->SetParent(&railCamera_->GetTransform());
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//				敵
+	/////////////////////////////////////////////////////////////////////////////////////////
+	enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_->SetViewProjection(viewProjection_.get());
 }
 
 void GameScene::Update(){
@@ -74,7 +89,12 @@ void GameScene::Update(){
 	}
 
 	ImGui::End();
+
 #endif // _DEBUG
+
+	//fieldの更新
+	skydome_->Update();
+
 	if (isRail_){
 		viewProjection_->transform.translate = railCamera_->GetTransform().translate;
 		viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
@@ -105,9 +125,6 @@ void GameScene::Update(){
 	} else{
 		viewProjection_->transform.translate = originPos;
 		viewProjection_->transform.rotate = originRotate;
-
-		
-
 	}
 		
 
@@ -115,21 +132,36 @@ void GameScene::Update(){
 	//		カメラの更新
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
 	railCamera_->Update();
 
 	//playerの更新
 	player_->Update();
+
+	// スポーンタイマーをカウント
+	spawnTime_++;
+	if (spawnTime_ >= spawnTimeLimit_){
+		// プレイヤーの情報を利用して敵を追加(プレイヤーの向いている方向の少し先)
+		//プレイヤーの前方ベクトル
+		Vector3 forwardVector = player_->GetForwardVector();
+		enemyManager_->AddEnemy(player_->GetWorldPosition(),forwardVector,15.0f);
+
+		// タイマーをリセット
+		spawnTime_ = 0;
+	}
+
+	//敵の更新
+	enemyManager_->Update();
 }
 
 void GameScene::Draw(){
+	skydome_->Draw();
+
 	railEditor_->Draw();
 
 	//playerの描画
 	player_->Draw();
+	//敵の描画
+	enemyManager_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 }
@@ -138,6 +170,7 @@ void GameScene::Finalize(){
 	viewProjection_.reset();
 	railEditor_.reset();
 	player_.reset();
+	enemyManager_.reset();
 	playerModel_.reset();
 	railCamera_.reset();
 	PrimitiveDrawer::GetInstance()->Finalize();

@@ -11,4 +11,8 @@ struct Matrix4x4 final{
 	static Matrix4x4 MakeIdentity();
 	// 逆行列
 	static Matrix4x4 Inverse(const Matrix4x4& m);
+
+	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
+	static Matrix4x4 MakeViewportMatrix(float l, float t, float w, float h, float minDepth, float maxDepth);
 };

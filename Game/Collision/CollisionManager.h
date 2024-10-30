@@ -1,7 +1,7 @@
 #pragma once 
 class CollisionManager { 
 public: 
-    CollisionManager(); 
-    ~CollisionManager(); 
+    CollisionManager();
+    ~CollisionManager();
 private: 
 }; 

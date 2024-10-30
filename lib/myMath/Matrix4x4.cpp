@@ -1,6 +1,7 @@
 ﻿#include"Matrix4x4.h"
 #include<cmath>
 #include"Vector4.h"
+#include <cassert>
 
 float cot(float angle){
 	return 1 / std::tan(angle);
@@ -220,3 +221,30 @@ Matrix4x4 Matrix4x4::Inverse(const Matrix4x4& mat){
 	return result;
 }
 
+// 座標系変換
+Vector3 Matrix4x4::Transform(const Vector3& vector, const Matrix4x4& matrix){
+	Vector3 result = {0, 0, 0};
+
+	// 同次座標系への変換
+	// 変換行列を適用
+	Vector4 homogeneousCoordinate(
+		vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0],
+		vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1],
+		vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2],
+		vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3]);
+
+	// 同次座標系から3次元座標系に戻す
+	float w = homogeneousCoordinate.w;
+	assert(w != 0.0f); // wが0でないことを確認
+	result.x = homogeneousCoordinate.x / w;
+	result.y = homogeneousCoordinate.y / w;
+	result.z = homogeneousCoordinate.z / w;
+
+	return result;
+}
+
+Matrix4x4 Matrix4x4::MakeViewportMatrix(float l, float t, float w, float h, float minDepth, float maxDepth){
+	Matrix4x4 result;
+	result = {w / 2, 0, 0, 0, 0, -h / 2, 0, 0, 0, 0, maxDepth - minDepth, 0, l + (w / 2), t + (h / 2), minDepth, 1};
+	return result;
+}

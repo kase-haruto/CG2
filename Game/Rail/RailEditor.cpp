@@ -109,12 +109,6 @@ void RailEditor::Update(){
 
 void RailEditor::Draw(){
     DrawLine();
-
-    // デバッグモデルの描画
-    for (auto& model : debugModels_){
-        model->Draw();
-    }
-
     // レールモデルの描画
     for (auto& model : railModels_){
         model->Draw();

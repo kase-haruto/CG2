@@ -7,6 +7,7 @@
 #include "Rail/Rail.h"
 #include "objects/Player.h"
 #include "Rail/RailCamera.h"
+#include "objects/EnemyManager.h"
 
 
 ///デバッグ関連///
@@ -64,8 +65,19 @@ private:
 	///=========================
 	/// 3dObject
 	///=========================
+	//*skydome
+	std::unique_ptr<Model>skydome_ = nullptr;
+
+	/// ingameObject
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+
+	//Rail
 	Rail rail_;
 
 	bool isRail_ = false;
+
+	//敵のスポーンタイマー
+	uint32_t spawnTime_ = 0;
+	const uint32_t spawnTimeLimit_ = 300;
 };

@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <wrl.h>
+#include "Vector2.h"
 
 using namespace Microsoft::WRL;
 
@@ -96,6 +97,9 @@ public:
     /// </summary>
     /// <returns></returns>
     ComPtr<ID3D12Resource> GetConstBuffer(){ return constBuffer_; }
+
+    Vector3 Unproject(const Vector2& screenPos) const;
+
 
     Vector3 GetPos() const{
         return transform.translate;

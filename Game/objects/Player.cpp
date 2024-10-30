@@ -18,7 +18,7 @@ void Player::Update(){
 					   });
 
 	//===============================
-
+	ReticleUpdate();
 	Shoot();
 
 	// 弾の更新
@@ -43,6 +43,31 @@ void Player::Update(){
 
 }
 
+void Player::ReticleUpdate(){
+	// マウス座標を取得
+	Vector2 mousePos = Input::GetMousePosition();
+
+	// ビュープロジェクションビューポート合成行列
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	Matrix4x4 matVPV = Matrix4x4::Multiply(Matrix4x4::Multiply(pViewProjection_->matView, pViewProjection_->matProjection), matViewport);
+	Matrix4x4 matInverseVPV = Matrix4x4::Inverse(matVPV);
+
+	// スクリーン座標
+	Vector3 posNear = Vector3(mousePos.x, mousePos.y, 0);
+	Vector3 posFar = Vector3(mousePos.x, mousePos.y, 1);
+
+	// スクリーン座標系からワールド座標系
+	posNear = Matrix4x4::Transform(posNear, matInverseVPV);
+	posFar = Matrix4x4::Transform(posFar, matInverseVPV);
+
+	// マウスレイの方向
+	Vector3 mouseDirection = posFar - posNear;
+	mouseDirection.Normalize();
+	// カメラから参照オブジェクトの距離
+	const float kDistanceTestObject = 70.0f;
+	reticlePos_ = posNear + (mouseDirection * kDistanceTestObject);
+}
+
 
 
 void Player::Draw(){
@@ -55,31 +80,36 @@ void Player::Draw(){
 	}
 }
 
+const Vector3 Player::GetForwardVector() const{
+	return Vector3 {
+		model_->worldMatrix.m[2][0], // 3列目（Z軸）のX成分
+		model_->worldMatrix.m[2][1], // 3列目（Z軸）のY成分
+		model_->worldMatrix.m[2][2]  // 3列目（Z軸）のZ成分
+	}.Normalize();
+}
+
 void Player::Shoot(){
 	if (Input::TriggerKey(DIK_SPACE)){
-		//弾の速度
+		// 弾の速度（必要に応じて調整可能）
 		const float kBulletSpeed = 1.0f;
-		Vector3 bulletVal = {0.0f,0.0f,kBulletSpeed};
 
-		// ワールド行列から前方ベクトルを取得するラムダ式
-		auto getForwardVector = [] (const Matrix4x4& worldMatrix) -> Vector3{
-			return Vector3 {
-				worldMatrix.m[2][0], // 3列目（Z軸）のX成分
-				worldMatrix.m[2][1], // 3列目（Z軸）のY成分
-				worldMatrix.m[2][2]  // 3列目（Z軸）のZ成分
-			}.Normalize();
-			};
+		// プレイヤーのワールド位置を取得（もしくは銃口の位置）
+		Vector3 playerPosition = this->GetWorldPosition(); // プレイヤーのワールド位置を取得
 
-		//前方に弾を飛ばす
-		bulletVal = getForwardVector(model_->worldMatrix).Normalize();
+		// プレイヤー位置からレティクル位置への方向ベクトルを計算
+		Vector3 directionToReticle = reticlePos_ - playerPosition;
+		directionToReticle = directionToReticle.Normalize(); // 方向ベクトルを正規化
+
+		// 方向に速度を掛ける
+		Vector3 bulletVelocity = directionToReticle * kBulletSpeed;
 
 		// 弾を生成してユニークポインタにラップ
 		Model* model = new Model("debugCube");
 		std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
 		model->SetViewProjection(pViewProjection_);
 
-		newBullet->Initialize(std::move(model), this->GetWorldPosition(), bulletVal);
-
+		// 弾の初期化（位置と速度を設定）
+		newBullet->Initialize(std::move(model), playerPosition, bulletVelocity);
 
 		// 弾を登録
 		bullets_.push_back(std::move(newBullet));

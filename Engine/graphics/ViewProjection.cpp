@@ -59,6 +59,42 @@ void ViewProjection::UpdateProjectionMatrix(){
     matProjection = MakePerspectiveFovMatrix(fovAngleY, aspectRatio, nearZ, farZ);
 }
 
+Vector3 ViewProjection::Unproject(const Vector2& screenPos) const{
+    // ビューポート行列の作成
+    Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0.0f, 1.0f);
+
+    // ビュープロジェクション行列の合成
+    Matrix4x4 matVP = Matrix4x4::Multiply(matView, matProjection);
+
+    // 合成行列の逆行列を取得
+    Matrix4x4 matInverseVP = Matrix4x4::Inverse(matVP);
+
+    // 2Dスクリーン座標の正規化（[0, 1] → [-1, 1]）
+    float normalizedX = (2.0f * screenPos.x / 1280.0f) - 1.0f;
+    float normalizedY = 1.0f - (2.0f * screenPos.y / 720.0f); // DirectXではY軸が反転
+
+    // 射影面上のZ値を取得（0.0f から 1.0f で指定可能）
+    Vector3 posNear = {normalizedX, normalizedY, 0.0f}; // 近くの平面
+    Vector3 posFar = {normalizedX, normalizedY, 1.0f};  // 遠くの平面
+
+    // 近くの平面と遠くの平面をワールド座標系に変換
+    posNear = Matrix4x4::Transform(posNear, matInverseVP);
+    posFar = Matrix4x4::Transform(posFar, matInverseVP);
+
+    // 近くの点と遠くの点から方向を計算
+    Vector3 direction = posFar - posNear;
+    direction.Normalize();
+
+    // カメラからのレイを計算し、射影面での交点を取得
+    float distanceToProjectionPlane = -posNear.z / direction.z;
+    Vector3 intersectionPoint = posNear + (direction * distanceToProjectionPlane);
+
+    return intersectionPoint;
+}
+
+
+
+
 Matrix4x4 ViewProjection::MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip){
     Matrix4x4 result;
     result = {

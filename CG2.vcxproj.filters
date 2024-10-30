@@ -321,6 +321,9 @@
     <ClCompile Include="Engine\Editor\UiEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Game\objects\EnemyManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -539,9 +542,11 @@
     <ClInclude Include="lib\myMath\matrix3x3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Game\objects\EnemyManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\graphics\shaders\Object2d.PV.hlsl" />
     <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />
     <FxCompile Include="Engine\graphics\shaders\Object3d.PS.hlsl" />
     <FxCompile Include="Engine\graphics\shaders\Object3d.VS.hlsl" />

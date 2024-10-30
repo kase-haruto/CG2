@@ -27,6 +27,8 @@ void Input::Initialize(){
 void Input::Update(){
 	//キーボード更新
 	instance_->KeyboardUpdate();
+
+	instance_->MouseUpdate();
 }
 
 void Input::Finalize(){
@@ -122,7 +124,10 @@ bool Input::TriggerKey(uint32_t keyNum){
 /////////////////////////////////////////////////////////////////////////////////////////
 
 void Input::MouseUpdate(){
+	// 現在のマウスの状態を前回の状態として保存
 	mouseStatePre_ = mouseState_;
+
+	// DirectInputのマウスの状態を取得
 	HRESULT hr = mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 	if (FAILED(hr)){
 		hr = mouse_->Acquire();
@@ -131,13 +136,23 @@ void Input::MouseUpdate(){
 		}
 	}
 
-	// マウスの座標更新（画面座標にマッピングする処理）
+	// マウスの相対移動量を加算
 	mousePos_.x += mouseState_.lX;
 	mousePos_.y += mouseState_.lY;
 
-	// ホイール量をfloatで更新
-	mouseWheel_ = static_cast< float >(mouseState_.lZ) / 120.0f; // 1段階のホイール移動を1.0fにする
+	// Windows APIを使って絶対的なスクリーン座標を取得
+	POINT cursorPos;
+	GetCursorPos(&cursorPos);
+	ScreenToClient(System::GetHWND(), &cursorPos);
+
+	// マウスの座標を更新
+	mousePos_.x = static_cast< float >(cursorPos.x);
+	mousePos_.y = static_cast< float >(cursorPos.y);
+
+	// ホイール量の更新
+	mouseWheel_ = static_cast< float >(mouseState_.lZ) / 120.0f;
 }
+
 
 bool Input::PushMouseButton(int button){
 	return instance_->mouseState_.rgbButtons[button] & 0x80;

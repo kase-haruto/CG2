@@ -24,6 +24,9 @@ public:
 	/// </summary>
 	void Update()override;
 
+	//レティクルの更新
+	void ReticleUpdate();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -47,6 +50,9 @@ public:
 		return wPos; // 値をコピーして返す
 	}
 
+	//前方ベクトルの取得
+	const Vector3 GetForwardVector()const;
+
 private:
 	void Shoot();
 
@@ -59,6 +65,8 @@ private:
 	Matrix4x4 parentWorldMat_ {};
 
 	bool isRail_ = false;
+
+	Vector3 reticlePos_;
 
 	std::list<std::unique_ptr<Bullet>>bullets_;
 

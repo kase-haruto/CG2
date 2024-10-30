@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\objects\Character.cpp" />
     <ClCompile Include="Game\objects\Collider.cpp" />
     <ClCompile Include="Game\objects\Enemy.cpp" />
+    <ClCompile Include="Game\objects\EnemyManager.cpp" />
     <ClCompile Include="Game\objects\Player.cpp" />
     <ClCompile Include="Game\objects\SphereCollider.cpp" />
     <ClCompile Include="Game\Rail\RailCamera.cpp" />
@@ -239,6 +240,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\objects\Character.h" />
     <ClInclude Include="Game\objects\Collider.h" />
     <ClInclude Include="Game\objects\Enemy.h" />
+    <ClInclude Include="Game\objects\EnemyManager.h" />
     <ClInclude Include="Game\objects\Player.h" />
     <ClInclude Include="Game\objects\SphereCollider.h" />
     <ClInclude Include="Game\Rail\Rail.h" />
