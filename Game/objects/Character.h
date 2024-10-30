@@ -1,12 +1,15 @@
 #pragma once
 
+/* engine */
+#include "objects/Collider.h"
 #include "objects/Model.h"
 #include "graphics/ViewProjection.h"
 
-class Character{
+class Character :
+	public Collider{
 public:
 	Character() = default;
-	virtual ~Character() = default;
+	virtual ~Character()override = default;
 
 	/// <summary>
 	/// 初期化
@@ -22,7 +25,7 @@ public:
 	/// 描画
 	/// </summary>
 	virtual void Draw();
-	
+
 	/// <summary>
 	/// viewProjectionをセット
 	/// </summary>
@@ -34,6 +37,13 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const Transform& GetTransform()const{ return model_->transform; }
+
+	virtual void OnCollision(Collider* other)override{};
+	virtual const Vector3 GetCenterPos()const override{
+		const Vector3 offset = {0.0f,1.5f,0.0f};
+		Vector3 worldPos = Matrix4x4::Transform(offset, model_->worldMatrix);
+		return worldPos;
+	};
 
 protected:
 	//描画モデル

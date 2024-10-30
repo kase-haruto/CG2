@@ -30,6 +30,12 @@ public:
 	/// </summary>
 	void Draw()override;
 
+	void OnCollision(Collider* other);
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			アクセッサ
+	/////////////////////////////////////////////////////////////////////////////////////////
+
 	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
@@ -42,6 +48,8 @@ public:
 
 		return wPos; // 値をコピーして返す
 	}
+
+	const Vector3 GetCenterPos()const;
 
 	//座標を入れる
 	void SetPos(const Vector3& pos){ model_->transform.translate = pos; }

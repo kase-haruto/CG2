@@ -3,6 +3,8 @@
 #include "myFunc/PrimitiveDrawer.h"
 #include "core/Input.h"
 
+#include "Collision/CollisionManager.h"
+
 GameScene::GameScene(){
 	GlobalVariables::GetInstance()->Initialize();
 }
@@ -60,7 +62,6 @@ void GameScene::Initialize(){
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModel_.get());
 	player_->SetViewProjection(viewProjection_.get());
-	player_->SetCtrlPoints(railEditor_->GetControlPoint());
 
 	player_->SetParent(&railCamera_->GetTransform());
 
@@ -127,6 +128,7 @@ void GameScene::Update(){
 		viewProjection_->transform.rotate = originRotate;
 	}
 		
+	CollisionManager::GetInstance()->CheckAllCollidion();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新

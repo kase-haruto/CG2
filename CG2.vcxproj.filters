@@ -545,6 +545,9 @@
     <ClInclude Include="Game\objects\EnemyManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionTypeIdDef.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />

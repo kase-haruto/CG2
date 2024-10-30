@@ -2,6 +2,7 @@
 #include "myFunc/MyFunc.h"
 #include "myFunc/MathFunc.h"
 #include "core/Input.h"
+#include "Collision/CollisionManager.h"
 
 void Player::Initialize(Model* model){
 	Character::Initialize(model);
@@ -12,6 +13,7 @@ void Player::Update(){
 	//古い球の削除
 	bullets_.remove_if([] (const std::unique_ptr<Bullet>& bullet){
 		if (!bullet->GetIsActive()){
+			CollisionManager::GetInstance()->RemoveCollider(bullet.get());
 			return true;
 		}
 		return false;
@@ -80,13 +82,7 @@ void Player::Draw(){
 	}
 }
 
-const Vector3 Player::GetForwardVector() const{
-	return Vector3 {
-		model_->worldMatrix.m[2][0], // 3列目（Z軸）のX成分
-		model_->worldMatrix.m[2][1], // 3列目（Z軸）のY成分
-		model_->worldMatrix.m[2][2]  // 3列目（Z軸）のZ成分
-	}.Normalize();
-}
+
 
 void Player::Shoot(){
 	if (Input::TriggerKey(DIK_SPACE)){
@@ -114,4 +110,23 @@ void Player::Shoot(){
 		// 弾を登録
 		bullets_.push_back(std::move(newBullet));
 	}
+}
+
+
+void Player::OnCollision(Collider* other){
+
+}
+
+const Vector3 Player::GetCenterPos() const{
+	const Vector3 offset = {0.0f,1.5f,0.0f};
+	Vector3 worldPos = Matrix4x4::Transform(offset, model_->worldMatrix);
+	return worldPos;
+}
+
+const Vector3 Player::GetForwardVector() const{
+	return Vector3 {
+		model_->worldMatrix.m[2][0], // 3列目（Z軸）のX成分
+		model_->worldMatrix.m[2][1], // 3列目（Z軸）のY成分
+		model_->worldMatrix.m[2][2]  // 3列目（Z軸）のZ成分
+	}.Normalize();
 }

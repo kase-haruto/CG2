@@ -1,4 +1,6 @@
-#include "objects//EnemyManager.h" 
+#include "objects/EnemyManager.h" 
+#include "Collision/CollisionManager.h"
+
 EnemyManager::EnemyManager() { 
 	enemies_.clear();
 } 
@@ -13,6 +15,7 @@ void EnemyManager::Initialize(){}
 void EnemyManager::Update(){
 	enemies_.remove_if([] (const std::unique_ptr<Enemy>& enemy){
 		if (!enemy->GetIsAlive()){
+			CollisionManager::GetInstance()->RemoveCollider(enemy.get());
 			return true;
 		}
 		return false;

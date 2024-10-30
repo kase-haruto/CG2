@@ -1,10 +1,13 @@
 #pragma once
 
+/* engine */
+#include "objects/Collider.h"
 #include "Model.h"
 
-class Bullet{
+class Bullet:
+	public Collider{
 public:
-	Bullet() = default;
+	Bullet();
 	~Bullet();
 
 	/// <summary>
@@ -23,10 +26,14 @@ public:
 	/// </summary>
 	void Draw();
 
+	void OnCollision(Collider* other) override;
+
 	/// viewProjectionをセット
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void SetViewProjection(const ViewProjection* viewProjection);
+
+	const Vector3 GetCenterPos()const override;
 
 	/// <summary>
 	/// トランスフォームを取得
@@ -47,6 +54,7 @@ public:
 
 		return wPos; // 値をコピーして返す
 	}
+
 
 	/// <summary>
 	/// 速度を取得

@@ -32,10 +32,19 @@ public:
 	/// </summary>
 	void Draw()override;
 
-	void SetCtrlPoints(const std::vector<Vector3>& controlPoint){ ctrlPoints_ = controlPoint; }
+	void OnCollision(Collider* other)override;
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			アクセッサ
+	/////////////////////////////////////////////////////////////////////////////////////////
+
 	void SetParent(const Transform* parent){ parentTransform_ = parent; }
 
 	void SetIsRail(const bool isRail){ isRail_ = isRail; }
+
+	const Vector3 GetCenterPos()const override;
+
 
 	/// ワールド座標の取得
 	/// </summary>
@@ -57,8 +66,6 @@ private:
 	void Shoot();
 
 private:
-	std::vector<Vector3>ctrlPoints_;
-	float t_;
 	//親のトラスフォーム
 	const Transform* parentTransform_ = nullptr;
 
