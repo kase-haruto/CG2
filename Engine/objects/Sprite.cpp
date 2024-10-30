@@ -48,17 +48,17 @@ void Sprite::Initialize(const Vector2& position, const Vector2& size){
 }
 
 void Sprite::Update(){
-//#ifdef DEBUG
-//    ImGui::Begin("sprite");
-//    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
-//    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
-//    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
-//    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
-//    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-//    ImGui::End();
-//#endif // DEBUG
+    //#ifdef DEBUG
+    //    ImGui::Begin("sprite");
+    //    ImGui::SliderFloat3("translate", &transform_.translate.x, 0.0f, 1280.0f);
+    //    ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
+    //    ImGui::DragFloat3("scale", &transform_.scale.x, 0.01f);
+    //    ImGui::DragFloat2("UVTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
+    //    ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
+    //    ImGui::End();
+    //#endif // DEBUG
 
-    
+
 
     transform_.translate = {position.x, position.y, 0.0f};
     transform_.rotate = {0.0f, 0.0f, rotate};
@@ -160,18 +160,22 @@ void Sprite::IndexResourceMap(){
 void Sprite::VertexResourceMap(){
     vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
 
-    // 1ピクセル単位での頂点データの設定
-    vertexData[0].position = {0.0f, 1.0f, 0.0f, 1.0f}; // 左下の頂点
-    vertexData[0].texcoord = {0.0f, 1.0f};
+    // UV座標の設定
+    vertexData[0].texcoord = {0.0f, 1.0f}; // 左下
+    vertexData[1].texcoord = {0.0f, 0.0f}; // 左上
+    vertexData[2].texcoord = {1.0f, 1.0f}; // 右下
+    vertexData[3].texcoord = {1.0f, 0.0f}; // 右上
 
-    vertexData[1].position = {320.0f, 1.0f, 0.0f, 1.0f}; // 右下の頂点
-    vertexData[1].texcoord = {1.0f, 1.0f};
+    // アンカーポイントの反映
+    float left = 0.0f - anchorPoint.x;
+    float right = 1.0f - anchorPoint.x;
+    float top = 0.0f - anchorPoint.y;
+    float bottom = 1.0f - anchorPoint.y;
 
-    vertexData[2].position = {0.0f, 0.0f, 0.0f, 1.0f}; // 左上の頂点
-    vertexData[2].texcoord = {0.0f, 0.0f};
-
-    vertexData[3].position = {320.0f, 0.0f, 0.0f, 1.0f}; // 右上の頂点
-    vertexData[3].texcoord = {1.0f, 0.0f};
+    vertexData[0].position = {left, bottom, 0.0f, 1.0f};   // 左下
+    vertexData[1].position = {left, top, 0.0f, 1.0f};      // 左上
+    vertexData[2].position = {right, bottom, 0.0f, 1.0f};  // 右下
+    vertexData[3].position = {right, top, 0.0f, 1.0f};     // 右上
 
     vertexResource_->Unmap(0, nullptr);
 }
@@ -190,4 +194,3 @@ void Sprite::MaterialResourceMap(){
 const void Sprite::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle){
     handle = newHandle;
 }
-
