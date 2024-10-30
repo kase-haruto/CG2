@@ -19,6 +19,8 @@ Vector3 CatmullRomInterpolation(
 
 Vector3 CatmullRomPosition(const std::vector<Vector3>& points, float t);
 
+Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
 
 //// ビューポート変換行列
 //Matrix4x4 MakeViewportMatrix(float l, float t, float w, float h, float minDepth, float maxDepth){

@@ -8,6 +8,10 @@ float Vector3::Length()const{
 	return sqrtf(x * x + y * y + z * z);
 }
 
+float Vector3::Dot(const Vector3& v){
+	return x * v.x + y * v.y + z * v.z;
+}
+
 Vector3 Vector3::Normalize()const{
 	float length = Length();
 	return Vector3(x / length, y / length, z / length);

@@ -9,6 +9,7 @@ struct Vector3 final{
     float z;
 
     float Length()const;
+    float Dot(const Vector3& v);
     Vector3 Normalize()const;
 
     Vector3 operator*(const float& scalar) const;

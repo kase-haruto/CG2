@@ -1,11 +1,58 @@
 ﻿#include"Matrix4x4.h"
-#include<cmath>
 #include"Vector4.h"
+
+/*lib*/
 #include <cassert>
+#include <numbers>
+#include<cmath>
 
 float cot(float angle){
 	return 1 / std::tan(angle);
 }
+
+Matrix4x4 Matrix4x4::CreateRotationMatrix(const Vector3& right, const Vector3& up, const Vector3& forward){
+	Matrix4x4 mat;
+	mat.m[0][0] = right.x;
+	mat.m[1][0] = right.y;
+	mat.m[2][0] = right.z;
+
+	mat.m[0][1] = up.x;
+	mat.m[1][1] = up.y;
+	mat.m[2][1] = up.z;
+
+	mat.m[0][2] = forward.x;
+	mat.m[1][2] = forward.y;
+	mat.m[2][2] = forward.z;
+
+	// 同時に平行移動成分やスケール成分も設定できますが、ここでは回転行列のみの構築とします。
+	return mat;
+}
+
+
+
+Vector3 Matrix4x4::MatrixToEuler(const Matrix4x4& mat){
+	Vector3 euler;
+
+	// ここではXYZの回転順を仮定しています。
+	if (mat.m[0][2] < 1){
+		if (mat.m[0][2] > -1){
+			euler.y = asin(mat.m[0][2]);
+			euler.x = atan2(-mat.m[1][2], mat.m[2][2]);
+			euler.z = atan2(-mat.m[0][1], mat.m[0][0]);
+		} else{
+			euler.y = float(-std::numbers::pi) / 2;
+			euler.x = -atan2(mat.m[1][0], mat.m[1][1]);
+			euler.z = 0;
+		}
+	} else{
+		euler.y = float(std::numbers::pi) / 2;
+		euler.x = atan2(mat.m[1][0], mat.m[1][1]);
+		euler.z = 0;
+	}
+
+	return euler;
+}
+
 
 Matrix4x4 Matrix4x4::Multiply(const Matrix4x4& m1, const Matrix4x4& m2){
 	Matrix4x4 result;

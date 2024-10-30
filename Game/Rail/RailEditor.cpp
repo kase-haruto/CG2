@@ -138,9 +138,7 @@ void RailEditor::DrawLine(){
         } else if (i == segmentCount){
             forward = pointsDrawing[i] - pointsDrawing[i - 1]; // 最後の点は前の点との方向ベクトル
         } else{
-            Vector3 forwardPrev = pointsDrawing[i] - pointsDrawing[i - 1];
-            Vector3 forwardNext = pointsDrawing[i + 1] - pointsDrawing[i];
-            forward = (forwardPrev + forwardNext) * 0.5f; // 前後の方向ベクトルの平均
+            forward = pointsDrawing[i + 1] - pointsDrawing[i];
         }
 
         // 方向ベクトルを正規化

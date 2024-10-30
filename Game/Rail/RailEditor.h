@@ -80,4 +80,5 @@ private:
 	std::vector < std::unique_ptr<Model>>debugModels_;
 	//モデル表示用カメラ
 	const ViewProjection* pViewProjection_ = nullptr;
+	// 初期の上方向ベクトルを設定
 };
