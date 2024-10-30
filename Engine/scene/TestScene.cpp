@@ -191,10 +191,12 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
+	//球体の描画
 	sphere_->Draw();
 
 	/*modelGround_->Draw();*/
 
+	//地面の描画
 	modelField_->Draw();
 
 #pragma endregion
