@@ -85,13 +85,13 @@ void GameScene::Initialize(){
 	for (size_t i = 0; i < 5; ++i){
 		// 指定されたテクスチャ名でテクスチャをロード
 		auto sprite = std::make_shared<Sprite>("0.png");  // 初期化時は "0" を使用
-		Vector2 digitPosition = {600.0f + i * 64.0f, 600.0f};  // 桁ごとの位置を設定
+		Vector2 digitPosition = {-1000.0f, -1000.0f};  // 桁ごとの位置を設定
 		sprite->Initialize(digitPosition, {64.0f, 64.0f});
 
 		scoreSprites_[i] = sprite;
 	}
-	test_ = std::make_unique<Sprite>("0.png");
-	test_->Initialize({400.0f,0.0f}, {64.0f,64.0f});
+
+	editor_ = std::make_unique<UIEditor>();
 }
 
 void GameScene::Update(){
@@ -110,12 +110,13 @@ void GameScene::Update(){
 		isRail_ = !isRail_;
 		player_->SetIsRail(isRail_);
 	}
+	editor_->ShowImGuiInterface();
 
 	ImGui::End();
 
 #endif // _DEBUG
 	UpdateScore();
-	test_->Update();
+	editor_->Update();
 	//fieldの更新
 	skydome_->Update();
 
@@ -189,8 +190,7 @@ void GameScene::Draw(){
 	enemyManager_->Draw();
 
 	DrawScore();
-	test_->Draw();
-
+	editor_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 }
@@ -209,9 +209,10 @@ void GameScene::UpdateScore(){
 	// スコアが変わった場合にのみ更新
 	if (score_ != newScore_){
 		score_ = newScore_;
-		std::string scoreString = std::to_string(score_);
+		// スコアが 0 の場合は特別に "0" を設定
+		std::string scoreString = (score_ == 0) ? "0" : std::to_string(score_);
 
-		// 桁数を揃える（最大桁数に足りない場合は先頭に"0"を埋めるなどの処理も可能）
+		// 桁数をスコアの桁数に合わせて設定
 		for (size_t i = 0; i < scoreSprites_.size(); ++i){
 			if (i < scoreString.size()){
 				// 現在の桁の数字に対応するテクスチャを設定
@@ -220,19 +221,33 @@ void GameScene::UpdateScore(){
 				D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = TextureManager::GetInstance()->LoadTexture(textureFileName);
 
 				scoreSprites_[i]->SetTextureHandle(textureHandle);
+
+				// スプライトの位置を更新（表示される桁のみ）
+				Vector2 digitPosition = {1000.0f + i * 32.0f, 600.0f};
+				scoreSprites_[i]->SetPosition(digitPosition);
 			} else{
-				// 桁がスコアの桁数より多い場合は"0"などの表示にする（もしくは非表示にする）
-				// 指定されたテクスチャ名でテクスチャをロード
-				D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = TextureManager::GetInstance()->LoadTexture("0.png");
-				scoreSprites_[i]->SetTextureHandle(textureHandle);
+				// スコアの桁数より多い場合は、非表示状態にする
+				scoreSprites_[i]->SetPosition({-1000.0f, -1000.0f});  // 画面外に移動
 			}
+		}
+	}
+
+	// スプライトの更新
+	for (const auto& sprite : scoreSprites_){
+		if (sprite){
+			sprite->Update();
 		}
 	}
 }
 
+
+
 void GameScene::DrawScore(){
 	// すべてのスプライトを描画
 	for (const auto& sprite : scoreSprites_){
-		sprite->Draw();
+		if (sprite){
+			sprite->Draw();
+		}
 	}
 }
+
