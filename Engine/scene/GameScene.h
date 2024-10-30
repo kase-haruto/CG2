@@ -9,6 +9,7 @@
 #include "Rail/RailCamera.h"
 #include "objects/EnemyManager.h"
 #include "objects/Sprite.h"
+#include "Editor/UiEditor.h"
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -90,6 +91,8 @@ private:
 public:
 	uint32_t score_;
 	static uint32_t newScore_;
+
+	std::unique_ptr<UIEditor>editor_ = nullptr;
 
 	//表示用スコア
 	std::vector<std::shared_ptr<Sprite>> scoreSprites_;
