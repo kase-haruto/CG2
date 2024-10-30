@@ -1,5 +1,6 @@
 #include "objects/Enemy.h" 
 #include "Collision/CollisionManager.h"
+#include "GameScene.h"
 
 Enemy::Enemy() {
 	//衝突判定のid設定
@@ -38,8 +39,11 @@ void Enemy::OnCollision(Collider* other){
 
 	//弾と当たったら死ぬ
 	if (typeID == static_cast< uint32_t >(CollisionTypeIdDef::kBullet)){
+		GameScene::newScore_ += score_;
 		isAlive_ = false;
 	}
+
+	
 }
 
 const Vector3 Enemy::GetCenterPos() const{

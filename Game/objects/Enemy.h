@@ -65,4 +65,7 @@ private:
 
 	//生存フラグ
 	bool isAlive_ = true;
+
+	//倒した時に得られるスコア
+	uint32_t score_ = 40;
 }; 

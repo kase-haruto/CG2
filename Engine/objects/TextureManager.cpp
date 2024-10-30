@@ -14,6 +14,18 @@ TextureManager* TextureManager::GetInstance(){
 void TextureManager::StartUpLoad(){
     LoadTexture("uvChecker.png");
     LoadTexture("MonsterBall.png");
+
+    //local
+    LoadTexture("0.png");
+    LoadTexture("1.png");
+    LoadTexture("2.png");
+    LoadTexture("3.png");
+    LoadTexture("4.png");
+    LoadTexture("5.png");
+    LoadTexture("6.png");
+    LoadTexture("7.png");
+    LoadTexture("8.png");
+    LoadTexture("9.png");
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{
