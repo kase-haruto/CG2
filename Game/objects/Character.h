@@ -9,7 +9,7 @@ class Character :
 	public Collider{
 public:
 	Character() = default;
-	virtual ~Character()override = default;
+	virtual ~Character()override;
 
 	/// <summary>
 	/// 初期化

@@ -1,5 +1,8 @@
 #include "objects/Character.h"
 
+Character::~Character(){
+}
+
 void Character::Initialize(Model* model){
 	model_ = model;
 }

@@ -40,13 +40,16 @@ void EnemyManager::AddEnemy(const Vector3& pos, const Vector3& forwardVector, fl
 	// プレイヤーの前方ベクトルに基づいて敵の位置を決定
 	Vector3 spawnPos = pos + forwardVector * distanceAhead;
 
-	Model* enemyModel = new Model("teapot");
+	// unique_ptrでModelを作成
+	auto enemyModel = std::make_unique<Model>("teapot");
 	enemyModel->SetViewProjection(pViewProjection_);
 
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
-	enemy->Initialize(std::move(enemyModel), spawnPos);
-
+	// Enemyオブジェクトを作成し、生ポインタを渡して初期化
+	auto enemy = std::make_unique<Enemy>();
+	enemy->Initialize(enemyModel.get(), spawnPos); // 生ポインタを渡す
 
 	enemies_.emplace_back(std::move(enemy));
-}
 
+	// enemies_がモデルの所有権を持たない場合、unique_ptrの解放を避けるためreleaseを使用
+	enemyModel.release();
+}

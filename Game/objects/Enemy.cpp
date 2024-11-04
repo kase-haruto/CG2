@@ -6,7 +6,11 @@ Enemy::Enemy() {
 	//衝突判定のid設定
 	Collider::SetTypeID(static_cast< uint32_t >(CollisionTypeIdDef::kEnemy));
 	CollisionManager::GetInstance()->AddCollider(this);
-} 
+}
+Enemy::~Enemy(){
+	delete model_;
+}
+
 
 void Enemy::Initialize(Model* model){
 	assert(!model);
@@ -22,6 +26,12 @@ void Enemy::Initialize(Model* model, const Vector3& pos){
 }
 
 void Enemy::Update(){
+	//生存時間を過ぎたら削除
+	lifeTime_--;
+	if (lifeTime_<= 0){
+		isAlive_ = false;
+	}
+
 
 	Character::Update();
 }

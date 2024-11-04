@@ -10,7 +10,7 @@ public:
     /// デストラクタ
     /// </summary>
     Enemy(); 
-    ~Enemy() = default;
+    ~Enemy()override;
 
 	/// <summary>
 	/// 初期化
@@ -68,4 +68,7 @@ private:
 
 	//倒した時に得られるスコア
 	uint32_t score_ = 40;
+
+	//生存時間
+	uint32_t lifeTime_ = 600; //* 仮として10秒
 }; 
