@@ -10,9 +10,6 @@
 #include "DirectionalLight.h"
 
 Sprite::Sprite(const std::string& filePath){
-    commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-    device_ = GraphicsGroup::GetInstance()->GetDevice();
-
     // パイプラインとルートシグネチャの設定
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
@@ -106,37 +103,46 @@ void Sprite::Draw(){
         return;
     }
 
-    commandList_->SetPipelineState(pipelineState_.Get());
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+    if (vertexBufferViewSprite.BufferLocation == 0){
+        OutputDebugStringA("頂点バッファの GPU アドレスが無効です");
+        return;
+    }
 
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList_->SetGraphicsRootDescriptorTable(2, handle);
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
-    commandList_->IASetIndexBuffer(&indexBufferView);
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
+    auto commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
-    commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
+    commandList->SetPipelineState(pipelineState_.Get());
+    commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetIndexBuffer(&indexBufferView);
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootDescriptorTable(2, handle);
+
+    commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::CreateBuffer(){
+    auto device = GraphicsGroup::GetInstance()->GetDevice();
+
     // 頂点用リソース
-    vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * 4);
+    vertexResource_ = CreateBufferResource(device, sizeof(VertexData) * 4);
 
     vertexBufferViewSprite.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vertexBufferViewSprite.SizeInBytes = sizeof(VertexData) * 4;
-    vertexBufferViewSprite.StrideInBytes = sizeof(VertexData);
+    vertexBufferViewSprite.SizeInBytes = static_cast < UINT >(sizeof(VertexData)) * 4;
+    vertexBufferViewSprite.StrideInBytes = static_cast < UINT >(sizeof(VertexData));
 
     // トランスフォーム用リソース
-    transformResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
+    transformResource_ = CreateBufferResource(device, sizeof(TransformationMatrix));
 
     // マテリアル用リソース
-    materialResource_ = CreateBufferResource(device_, sizeof(Material2D));
+    materialResource_ = CreateBufferResource(device, sizeof(Material2D));
 
     // インデックス用リソース
-    indexResource_ = CreateBufferResource(device_, sizeof(uint32_t) * 6);
+    indexResource_ = CreateBufferResource(device, sizeof(uint32_t) * 6);
     indexBufferView.BufferLocation = indexResource_->GetGPUVirtualAddress();
-    indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
+    indexBufferView.SizeInBytes = static_cast < UINT >(sizeof(uint32_t)) * 6;
     indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 }
 
@@ -191,7 +197,7 @@ void Sprite::MaterialResourceMap(){
     materialData_->uvTransform = Matrix4x4::MakeIdentity();
 }
 
-const void Sprite::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle){
+void Sprite::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle){
     handle = newHandle;
 }
 

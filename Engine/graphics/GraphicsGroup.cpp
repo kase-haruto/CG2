@@ -16,6 +16,6 @@ const ComPtr<ID3D12PipelineState>& GraphicsGroup::GetPipelineState(const Pipelin
 
 const ComPtr<ID3D12RootSignature>& GraphicsGroup::GetRootSignature(const PipelineType& type)const{ return pipelineManager_->GetRootSignature(type); }
 
-ComPtr<ID3D12Device> GraphicsGroup::GetDevice() const{ return pDxCore_->GetDevice(); }
+const ComPtr<ID3D12Device>& GraphicsGroup::GetDevice() const{ return pDxCore_->GetDevice(); }
 
-ComPtr<ID3D12GraphicsCommandList> GraphicsGroup::GetCommandList() const{ return pDxCore_->GetCommandList(); }
+const ComPtr<ID3D12GraphicsCommandList>& GraphicsGroup::GetCommandList() const{ return pDxCore_->GetCommandList(); }

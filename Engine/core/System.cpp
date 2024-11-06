@@ -19,24 +19,21 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	dxCore_ = std::make_unique<DxCore>();
 	dxCore_->Initialize(winApp_.get(), clientWidth, clientHeight);
 
-	ComPtr<ID3D12Device> device = dxCore_->GetDevice();
 
 	//インプットの初期化
 	Input::Initialize();
 
 	//管理クラスの初期化
 	shaderManager_ = std::make_shared<ShaderManager>();
-	pipelineStateManager_ = std::make_unique<PipelineStateManager>(device, shaderManager_);
+	pipelineStateManager_ = std::make_unique<PipelineStateManager>(dxCore_->GetDevice(), shaderManager_);
 
     //パイプラインを設定
     CreatePipelines();
 
 	GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
-#ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
-#endif // _DEBUG
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
@@ -69,10 +66,8 @@ void System::BeginFrame(){
     //フレームの開始
     dxCore_->PreDraw();
 
-#ifdef _DEBUG
     // ImGui受付開始
     imguiManager_->Begin();
-#endif // _DEBUG
   
     //インプットの更新
     Input::Update();
@@ -84,21 +79,17 @@ void System::BeginFrame(){
 }
 
 void System::EndFrame(){
-#ifdef _DEBUG
     //imguiのコマンドを積む
     imguiManager_->End();
     //ImGui描画
     imguiManager_->Draw();
-#endif // _DEBUG
 
     //フレームの終了
     dxCore_->PostDraw();
 }
 
 void System::Finalize(){
-#ifdef _DEBUG
     imguiManager_->Finalize();
-#endif // _DEBUG
 
     TextureManager::GetInstance()->Finalize();
     //モデルマネージャーの開放

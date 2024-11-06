@@ -109,8 +109,6 @@ public:
 	const Vector2& GetLeftTop()const{ return textureLeftTop; }
 	void SetLeftTop(const Vector2& leftTop){ this->textureLeftTop = leftTop; }
 
-	const 
-
 	// テクスチャハンドルを設定する関数
 	void SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle);
 
@@ -148,8 +146,6 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite {};
 
 	//directX関連
-	ComPtr<ID3D12Device> device_;
-	ComPtr<ID3D12GraphicsCommandList>commandList_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState_;
 

@@ -82,7 +82,7 @@ private:
 	//Rail
 	Rail rail_;
 
-	bool isRail_ = false;
+	bool isRail_ = true;
 
 	//敵のスポーンタイマー
 	uint32_t spawnTime_ = 0;

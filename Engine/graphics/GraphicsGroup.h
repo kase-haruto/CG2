@@ -27,8 +27,8 @@ public:
 	///=========================================
 	/// device/commandListの取得
 	///=========================================
-	ComPtr<ID3D12Device> GetDevice()const;
-	ComPtr<ID3D12GraphicsCommandList> GetCommandList()const;
+	const ComPtr<ID3D12Device>& GetDevice()const;
+	const ComPtr<ID3D12GraphicsCommandList>& GetCommandList()const;
 
 private:
 	GraphicsGroup() :pDxCore_(nullptr), pipelineManager_(nullptr){}

@@ -107,7 +107,6 @@ Matrix4x4 ViewProjection::MakePerspectiveFovMatrix(float fovY, float aspectRatio
 }
 
 void ViewProjection::ImGui(){
-    UpdateMatrix();
     ImGui::Begin("camera");
     ImGui::DragFloat3("pos", &transform.translate.x, 0.01f);
     ImGui::DragFloat3("rotate", &transform.rotate.x, 0.01f);

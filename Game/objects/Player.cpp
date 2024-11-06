@@ -76,10 +76,6 @@ void Player::Draw(){
 	for (auto& bullet : bullets_){
 		bullet->Draw();
 	}
-
-	if (!isRail_){
-		Character::Draw();
-	}
 }
 
 

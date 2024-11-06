@@ -9,7 +9,6 @@ EnemyManager::~EnemyManager() {
 	
 }
 
-
 void EnemyManager::Initialize(){}
 
 void EnemyManager::Update(){

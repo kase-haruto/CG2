@@ -41,8 +41,6 @@ public:
 
 	void SetParent(const Transform* parent){ parentTransform_ = parent; }
 
-	void SetIsRail(const bool isRail){ isRail_ = isRail; }
-
 	const Vector3 GetCenterPos()const override;
 
 
@@ -70,8 +68,6 @@ private:
 	const Transform* parentTransform_ = nullptr;
 
 	Matrix4x4 parentWorldMat_ {};
-
-	bool isRail_ = false;
 
 	Vector3 reticlePos_;
 

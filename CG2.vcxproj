@@ -207,6 +207,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\VertexData.h" />
     <ClInclude Include="Engine\graphics\ViewProjection.h" />
     <ClInclude Include="Engine\objects\GameObject.h" />
+    <ClInclude Include="Engine\objects\Mesh.h" />
     <ClInclude Include="Engine\objects\Model.h" />
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />

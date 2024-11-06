@@ -105,52 +105,21 @@ void GameScene::Update(){
 
 	ImGui::Begin("rail");
 
-	// ボタンが押されたらフラグを反転させる
-	if (ImGui::Button("camera")){
-		isRail_ = !isRail_;
-		player_->SetIsRail(isRail_);
-	}
 	editor_->ShowImGuiInterface();
 
 	ImGui::End();
 
 #endif // _DEBUG
+	//カメラの更新
+	viewProjection_->transform.translate = railCamera_->GetTransform().translate;
+	viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
+	viewProjection_->UpdateMatrix();
+
 	UpdateScore();
 	editor_->Update();
 	//fieldの更新
 	skydome_->Update();
 
-	if (isRail_){
-		viewProjection_->transform.translate = railCamera_->GetTransform().translate;
-		viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
-
-		if (Input::PushKey(DIK_A)){
-			originPos.x -= 0.1f;
-		} else if (Input::PushKey(DIK_D)){
-			originPos.x += 0.1f;
-		}
-
-		/*if (Input::PushKey(DIK_SPACE)){
-			originPos.y += 0.1f;
-		} else */if (Input::PushKey(DIK_LSHIFT)){
-			originPos.y -= 0.1f;
-		}
-
-		if (Input::PushKey(DIK_W)){
-			originPos.z += 0.1f;
-		} else if (Input::PushKey(DIK_S)){
-			originPos.z -= 0.1f;
-		}
-
-		if (Input::PushKey(DIK_L)){
-			viewProjection_->transform.rotate.y += 0.02f;
-		} else if (Input::PushKey(DIK_J)){
-			viewProjection_->transform.rotate.y -= 0.02f;
-		}
-	} else{
-		viewProjection_->transform.translate = originPos;
-		viewProjection_->transform.rotate = originRotate;
-	}
 		
 	CollisionManager::GetInstance()->CheckAllCollidion();
 
