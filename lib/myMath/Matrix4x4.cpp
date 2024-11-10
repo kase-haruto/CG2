@@ -10,6 +10,32 @@ float cot(float angle){
 	return 1 / std::tan(angle);
 }
 
+Matrix4x4 Matrix4x4::FromBasis(const Vector3& right, const Vector3& up, const Vector3& forward){
+	Matrix4x4 matrix;
+
+	matrix.m[0][0] = right.x;
+	matrix.m[1][0] = right.y;
+	matrix.m[2][0] = right.z;
+	matrix.m[3][0] = 0.0f;
+
+	matrix.m[0][1] = up.x;
+	matrix.m[1][1] = up.y;
+	matrix.m[2][1] = up.z;
+	matrix.m[3][1] = 0.0f;
+
+	matrix.m[0][2] = forward.x;
+	matrix.m[1][2] = forward.y;
+	matrix.m[2][2] = forward.z;
+	matrix.m[3][2] = 0.0f;
+
+	matrix.m[0][3] = 0.0f;
+	matrix.m[1][3] = 0.0f;
+	matrix.m[2][3] = 0.0f;
+	matrix.m[3][3] = 1.0f;
+
+	return matrix;
+}
+
 Matrix4x4 Matrix4x4::CreateRotationMatrix(const Vector3& right, const Vector3& up, const Vector3& forward){
 	Matrix4x4 mat;
 	mat.m[0][0] = right.x;

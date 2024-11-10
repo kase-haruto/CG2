@@ -53,6 +53,7 @@ public:
 	/// </summary>
 	void CreatePipelines();
 	void Object3DPipelines();
+	void NonDepthObject3D();
 	void Object2DPipelines();
 	void StructuredObjectPipeline();
 	void LinePipeline();

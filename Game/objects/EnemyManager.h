@@ -23,7 +23,7 @@ public:
     void Draw();
 
     //リストに敵を追加
-    void AddEnemy(const Vector3& pos, const Vector3& forwardVector, float distanceAhead);
+    void AddEnemy(const Vector3& pos);
 
 public:
     void SetViewProjection(const ViewProjection* viewProjection){ pViewProjection_ = viewProjection; }

@@ -13,7 +13,7 @@ void EnemyManager::Initialize(){}
 
 void EnemyManager::Update(){
 	enemies_.remove_if([] (const std::unique_ptr<Enemy>& enemy){
-		if (!enemy->GetIsAlive()){
+		if (enemy->GetIsRemove()){
 			CollisionManager::GetInstance()->RemoveCollider(enemy.get());
 			return true;
 		}
@@ -35,17 +35,18 @@ void EnemyManager::Draw(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		リストに敵の追加
 /////////////////////////////////////////////////////////////////////////////////////////
-void EnemyManager::AddEnemy(const Vector3& pos, const Vector3& forwardVector, float distanceAhead){
+void EnemyManager::AddEnemy(const Vector3& pos){
+
 	// プレイヤーの前方ベクトルに基づいて敵の位置を決定
-	Vector3 spawnPos = pos + forwardVector * distanceAhead;
+	Vector3 spawnPos = pos;
 
 	// unique_ptrでModelを作成
 	auto enemyModel = std::make_unique<Model>("teapot");
-	enemyModel->SetViewProjection(pViewProjection_);
 
 	// Enemyオブジェクトを作成し、生ポインタを渡して初期化
 	auto enemy = std::make_unique<Enemy>();
 	enemy->Initialize(enemyModel.get(), spawnPos); // 生ポインタを渡す
+	enemy->SetViewProjection(pViewProjection_);
 
 	enemies_.emplace_back(std::move(enemy));
 

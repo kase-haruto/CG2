@@ -41,6 +41,8 @@ struct Matrix4x4 final{
         m[3][index] = 0.0f; // 通常、3x3の回転行列部分ではこの値は0になる
     }
 
+    static Matrix4x4 FromBasis(const Vector3& right, const Vector3& up, const Vector3& forward);
+
     static Matrix4x4 CreateRotationMatrix(const Vector3& right, const Vector3& up, const Vector3& forward);
 
     // オイラー角を取得（ピッチ、ヨー、ロール）

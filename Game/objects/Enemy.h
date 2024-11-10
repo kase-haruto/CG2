@@ -57,18 +57,33 @@ public:
 	//生存フラグの取得
 	bool GetIsAlive()const{ return isAlive_; }
 
+	bool GetIsRemove()const{ return isRemove_; }
+
 private: 
 	void Move();
 
 private:
+	//移動速度
 	Vector3 velocity_ {};
 
 	//生存フラグ
 	bool isAlive_ = true;
 
+	//解放フラグ
+	bool isRemove_ = false;
+
+	//倒したときに表示されるモデルのview座標
+	Vector3 deadViewPos {};
+
+	//スクリーン座標に表示される時間(1秒)
+	uint32_t viewTime_ = 60;
+
 	//倒した時に得られるスコア
 	uint32_t score_ = 40;
 
 	//生存時間
-	uint32_t lifeTime_ = 600; //* 仮として10秒
+	uint32_t lifeTime_ = 1200; //* 仮として20秒
+
+	// カメラから一定距離に固定
+	float fixedDistance = 40.0f;
 }; 

@@ -64,10 +64,9 @@ void Player::ReticleUpdate(){
 
 	// マウスレイの方向
 	Vector3 mouseDirection = posFar - posNear;
-	mouseDirection.Normalize();
 	// カメラから参照オブジェクトの距離
 	const float kDistanceTestObject = 70.0f;
-	reticlePos_ = posNear + (mouseDirection * kDistanceTestObject);
+	reticlePos_ = posNear + (mouseDirection.Normalize() * kDistanceTestObject);
 }
 
 
@@ -125,4 +124,12 @@ const Vector3 Player::GetForwardVector() const{
 		model_->worldMatrix.m[2][1], // 3列目（Z軸）のY成分
 		model_->worldMatrix.m[2][2]  // 3列目（Z軸）のZ成分
 	}.Normalize();
+}
+
+const Vector3 Player::GetRightVector() const {
+    return Vector3 {
+        model_->worldMatrix.m[0][0], // 1列目（X軸）のX成分
+        model_->worldMatrix.m[0][1], // 1列目（X軸）のY成分
+        model_->worldMatrix.m[0][2]  // 1列目（X軸）のZ成分
+    }.Normalize();
 }

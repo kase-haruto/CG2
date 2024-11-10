@@ -135,10 +135,29 @@ void GameScene::Update(){
 	// スポーンタイマーをカウント
 	spawnTime_++;
 	if (spawnTime_ >= spawnTimeLimit_){
-		// プレイヤーの情報を利用して敵を追加(プレイヤーの向いている方向の少し先)
-		//プレイヤーの前方ベクトル
+		// AABB空間の範囲設定
+		Vector3 playerPosition = player_->GetWorldPosition();
+		float spawnRange = 15.0f; // AABBの半径
+
+		// プレイヤーの前方ベクトルを取得
 		Vector3 forwardVector = player_->GetForwardVector();
-		enemyManager_->AddEnemy(player_->GetWorldPosition(),forwardVector,15.0f);
+		forwardVector.Normalize(); // 正規化して方向ベクトルとする
+
+		// AABB内のランダムな位置を生成
+		float randomX = (rand() / static_cast< float >(RAND_MAX)) * 2 * spawnRange - spawnRange;
+		float randomY = (rand() / static_cast< float >(RAND_MAX)) * 2 * spawnRange - spawnRange;
+		float randomZ = (rand() / static_cast< float >(RAND_MAX)) * 2 * spawnRange - spawnRange;
+
+		Vector3 spawnPosition = playerPosition + Vector3(randomX, randomY, randomZ);
+
+		// スポーン位置が前方でない場合は、前方ベクトルを加えて前方に位置を補正
+		if ((spawnPosition - playerPosition).Dot(forwardVector) < 0){
+			// 後方ならば前方に移動させる
+			spawnPosition = playerPosition + forwardVector * spawnRange;
+		}
+
+		// 敵を追加
+		enemyManager_->AddEnemy(spawnPosition);
 
 		// タイマーをリセット
 		spawnTime_ = 0;

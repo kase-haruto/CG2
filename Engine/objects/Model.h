@@ -56,6 +56,8 @@ public:
 
     void SetColor(const Vector4& color){ RGBa = color; }
 
+    void IsNotDepth(){ pipelineType = NoneDepth; }
+
 private:
     void CreateMaterialBuffer();
     void CreateMatrixBuffer();
@@ -93,6 +95,8 @@ public:
     Transform transform;
 
     Matrix4x4 worldMatrix;
+
+    PipelineType pipelineType = Object3D;
 private:
     static const std::string directoryPath_;
 };

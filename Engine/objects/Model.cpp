@@ -16,13 +16,13 @@ Model::Model(const std::string& fileName){
 
 Model::~Model(){}
 
-void Model::Initialize(bool isUseTexture){
+void Model::Initialize(bool isDepth){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
     // パイプラインを設定
-    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
+    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
+    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
 
     RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     transform = {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -105,7 +105,8 @@ void Model::UpdateMatrix(){
 }
 
 void Model::Draw(){
-
+     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
+    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(pipelineType);
     commandList_->SetGraphicsRootSignature(rootSignature_.Get());
     commandList_->SetPipelineState(pipelineState_.Get());
 

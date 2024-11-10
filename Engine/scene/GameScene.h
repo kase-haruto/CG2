@@ -86,7 +86,7 @@ private:
 
 	//敵のスポーンタイマー
 	uint32_t spawnTime_ = 0;
-	const uint32_t spawnTimeLimit_ = 300;
+	const uint32_t spawnTimeLimit_ = 100;
 
 public:
 	uint32_t score_;

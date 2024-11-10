@@ -37,9 +37,10 @@ public:
     float nearZ = 0.1f;
     // 深度限界（奥側）
     float farZ = 1000.0f;
+
 #pragma endregion
-   
     Matrix4x4 viewProjection_;
+
     Matrix4x4 matView;
     Matrix4x4 matProjection;
     Matrix4x4 cameraMatrix;
@@ -54,6 +55,9 @@ private:
     ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
     CameraForGPU* cameraData_;
+
+public:
+    Vector3 direction_ {0.0f,0.0f,0.1f};
 
 private:
     Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);

@@ -60,6 +60,8 @@ public:
 	//前方ベクトルの取得
 	const Vector3 GetForwardVector()const;
 
+	const Vector3 GetRightVector() const;
+
 private:
 	void Shoot();
 

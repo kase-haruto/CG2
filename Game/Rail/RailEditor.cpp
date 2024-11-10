@@ -115,6 +115,13 @@ void RailEditor::Draw(){
     }
 }
 
+// upベクトルを指定された軸と角度で回転させる関数
+Vector3 RotateVectorAroundAxis( Vector3 vector, const Vector3& axis, float angle){
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    return vector * cosAngle + Cross(axis, vector) * sinAngle + axis * vector.Dot(axis) * (1.0f - cosAngle);
+}
+
 void RailEditor::DrawLine(){
     std::vector<Vector3> pointsDrawing;
     const size_t segmentCount = 100;
@@ -126,37 +133,38 @@ void RailEditor::DrawLine(){
         pointsDrawing.push_back(pos);
     }
 
+    // 初期のforwardとupベクトルを設定
+    Vector3 forward = (pointsDrawing[1] - pointsDrawing[0]).Normalize();
+    Vector3 up = {0, 1, 0}; // 初期の上方向を設定
+
     // 各分割点に既存のモデルを配置
     for (size_t i = 0; i <= segmentCount; ++i){
-        // 位置の更新
         railModels_[i]->SetPos(pointsDrawing[i]);
 
-        // 前後の点を使って方向ベクトルを計算
-        Vector3 forward;
-        if (i == 0){
-            forward = pointsDrawing[i + 1] - pointsDrawing[i]; // 最初の点は次の点との方向ベクトル
-        } else if (i == segmentCount){
-            forward = pointsDrawing[i] - pointsDrawing[i - 1]; // 最後の点は前の点との方向ベクトル
+        // 次の方向ベクトルを計算（最後のセグメントの場合は直前を使用）
+        Vector3 nextForward;
+        if (i < segmentCount){
+            nextForward = (pointsDrawing[i + 1] - pointsDrawing[i]).Normalize();
         } else{
-            forward = pointsDrawing[i + 1] - pointsDrawing[i];
+            nextForward = forward;
         }
 
-        // 方向ベクトルを正規化
-        forward.Normalize();
+        // 回転軸と角度を求めて平行輸送
+        Vector3 rotationAxis = Cross(forward, nextForward);
+        float angle = acos(forward.Dot(nextForward));
 
-        // オイラー角の計算（ピッチ、ヨー）
-        float yaw = atan2f(forward.x, forward.z);   // 左右の回転 (ヨー)
-        float pitch = asinf(-forward.y);            // 上下の回転 (ピッチ)
-        float roll = 0.0f;                          // 回転 (ロール) は不要
+        if (rotationAxis.Length() > 0.0001f){
+            up = RotateVectorAroundAxis(up, rotationAxis.Normalize(), angle);
+        }
 
-        // Vector3に回転角を設定
-        Vector3 rotation(pitch, yaw, roll);
-
-        // 回転角をモデルに適用
+        // 基底ベクトルを用いて回転行列を作成
+        Vector3 right = Cross(up, nextForward).Normalize();
+        Matrix4x4 rotationMatrix = Matrix4x4::FromBasis(right, up, nextForward);
+        Vector3 rotation = Matrix4x4::MatrixToEuler(rotationMatrix);
         railModels_[i]->transform.rotate = rotation;
 
-        // モデルの更新
         railModels_[i]->Update();
+        forward = nextForward;
     }
 
     // ラインを描画
@@ -164,6 +172,9 @@ void RailEditor::DrawLine(){
         PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
     }
 }
+
+
+
 
 
 

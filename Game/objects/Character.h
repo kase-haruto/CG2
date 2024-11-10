@@ -49,6 +49,8 @@ protected:
 	//描画モデル
 	Model* model_ = nullptr;
 
+	Vector3 velocity_ = {0.0f,0.0f,0.0f};
+
 	const ViewProjection* pViewProjection_;
 
 };

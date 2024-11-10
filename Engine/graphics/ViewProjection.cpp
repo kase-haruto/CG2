@@ -42,6 +42,9 @@ void ViewProjection::Initialize(){
 void ViewProjection::UpdateMatrix(){
     UpdateViewMatrix();
     UpdateProjectionMatrix();
+    // ビュー行列で方向ベクトルを変換
+    direction_ = TransformNormal(direction_, matView);
+    direction_.Normalize(); // 単位ベクトルに正規化
     viewProjection_ = Matrix4x4::Multiply(matView, matProjection);
 }
 
@@ -60,8 +63,8 @@ void ViewProjection::UpdateProjectionMatrix(){
 }
 
 Vector3 ViewProjection::Unproject(const Vector2& screenPos) const{
-    // ビューポート行列の作成
-    Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0.0f, 1.0f);
+    // ビューポート行列の作成（このコードでは使用しない）
+    // Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0.0f, 1.0f);
 
     // ビュープロジェクション行列の合成
     Matrix4x4 matVP = Matrix4x4::Multiply(matView, matProjection);
@@ -73,7 +76,7 @@ Vector3 ViewProjection::Unproject(const Vector2& screenPos) const{
     float normalizedX = (2.0f * screenPos.x / 1280.0f) - 1.0f;
     float normalizedY = 1.0f - (2.0f * screenPos.y / 720.0f); // DirectXではY軸が反転
 
-    // 射影面上のZ値を取得（0.0f から 1.0f で指定可能）
+    // 近くの平面と遠くの平面の座標を設定
     Vector3 posNear = {normalizedX, normalizedY, 0.0f}; // 近くの平面
     Vector3 posFar = {normalizedX, normalizedY, 1.0f};  // 遠くの平面
 
@@ -81,16 +84,17 @@ Vector3 ViewProjection::Unproject(const Vector2& screenPos) const{
     posNear = Matrix4x4::Transform(posNear, matInverseVP);
     posFar = Matrix4x4::Transform(posFar, matInverseVP);
 
-    // 近くの点と遠くの点から方向を計算
+    // 方向ベクトルの計算と正規化
     Vector3 direction = posFar - posNear;
     direction.Normalize();
 
-    // カメラからのレイを計算し、射影面での交点を取得
+    // レイと射影面の交点を計算
     float distanceToProjectionPlane = -posNear.z / direction.z;
     Vector3 intersectionPoint = posNear + (direction * distanceToProjectionPlane);
 
     return intersectionPoint;
 }
+
 
 
 
