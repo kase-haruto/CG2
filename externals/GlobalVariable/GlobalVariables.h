@@ -1,11 +1,11 @@
 #pragma once
-#include "Vector3.h"
+#include "lib/myMath/Vector3.h"
 
 #ifdef _DEBUG
-#include <imgui.h>
+#include <externals/imgui/imgui.h>
 #endif // _DEBUG
 
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 #include <map>
 #include <string>
 #include <variant>
