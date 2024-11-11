@@ -3,6 +3,7 @@
 #include "objects/Character.h"
 
 #include "objects/Bullet.h"
+#include "Line.h"
 
 #include <list>
 
@@ -23,6 +24,8 @@ public:
 	/// 更新
 	/// </summary>
 	void Update()override;
+
+	void BeamUpdate();
 
 	//レティクルの更新
 	void ReticleUpdate();
@@ -62,6 +65,8 @@ public:
 
 	const Vector3 GetRightVector() const;
 
+	const Segment& GetLine()const{ return line_; }
+
 private:
 	void Shoot();
 
@@ -85,5 +90,11 @@ private:
 	Vector3 reticlePos_;
 
 	std::list<std::unique_ptr<Bullet>>bullets_;
+
+	//ビーム衝突用
+	Segment line_;
+
+	//ビーム描画用
+	std::unique_ptr<Model>beam_ = nullptr;
 
 };

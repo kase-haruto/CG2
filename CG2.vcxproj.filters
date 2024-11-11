@@ -557,6 +557,9 @@
     <ClInclude Include="Game\objects\Coaster.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\physics\Line.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />

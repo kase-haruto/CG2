@@ -12,6 +12,12 @@ struct Vector3 final{
     float Dot(const Vector3& v);
     Vector3 Normalize()const;
 
+    static Vector3 Cross(const Vector3& v1, const Vector3& v2){
+        return {v1.y * v2.z - v1.z * v2.y,
+                v1.z * v2.x - v1.x * v2.z,
+                v1.x * v2.y - v1.y * v2.x};
+    }
+
     Vector3 operator*(const float& scalar) const;
     Vector3 operator*=(const float& scalar);
     Vector3 operator*(const Vector3& other) const;

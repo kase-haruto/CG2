@@ -2,7 +2,7 @@
 
 #include"objects/Collider.h"
 #include "Vector3.h"
-
+#include "Line.h"
 /* lib */
 #include<list>
 #include<memory>
@@ -13,6 +13,8 @@ public:
     /// 二つのコライダーの衝突時の応答
     /// </summary>
     void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+
+    void CheckCollisionSphereToLine(const Segment& line, Collider* collider);
 
     /// <summary>
     /// 総当たりの衝突判定

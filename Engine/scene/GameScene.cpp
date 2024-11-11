@@ -120,8 +120,10 @@ void GameScene::Update(){
 	//fieldの更新
 	skydome_->Update();
 
-		
-	CollisionManager::GetInstance()->CheckAllCollidion();
+
+	for (auto& enemy:enemyManager_->GetEnemies()){
+		CollisionManager::GetInstance()->CheckCollisionSphereToLine(player_->GetLine(), enemy.get());
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新

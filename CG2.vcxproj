@@ -222,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\TransformationMatrix.h" />
     <ClInclude Include="Engine\physics\AABB.h" />
     <ClInclude Include="Engine\physics\DirectionalLight.h" />
+    <ClInclude Include="Engine\physics\Line.h" />
     <ClInclude Include="Engine\physics\PointLight.h" />
     <ClInclude Include="Engine\physics\Sphere.h" />
     <ClInclude Include="Engine\physics\Triangle.h" />
