@@ -50,7 +50,7 @@ void Enemy::Update(){
 	}
 
 	// 死亡している場合の処理
-	if (isAlive_){
+	if (!isAlive_){
 		// デプスなしに変更
 		model_->IsNotDepth();
 
