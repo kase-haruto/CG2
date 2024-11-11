@@ -157,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Collision\CollisionManager.cpp" />
     <ClCompile Include="Game\objects\Bullet.cpp" />
     <ClCompile Include="Game\objects\Character.cpp" />
+    <ClCompile Include="Game\objects\Coaster.cpp" />
     <ClCompile Include="Game\objects\Collider.cpp" />
     <ClCompile Include="Game\objects\Enemy.cpp" />
     <ClCompile Include="Game\objects\EnemyManager.cpp" />
@@ -221,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\TransformationMatrix.h" />
     <ClInclude Include="Engine\physics\AABB.h" />
     <ClInclude Include="Engine\physics\DirectionalLight.h" />
+    <ClInclude Include="Engine\physics\Line.h" />
     <ClInclude Include="Engine\physics\PointLight.h" />
     <ClInclude Include="Engine\physics\Sphere.h" />
     <ClInclude Include="Engine\physics\Triangle.h" />
@@ -240,6 +242,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Collision\CollisionTypeIdDef.h" />
     <ClInclude Include="Game\objects\Bullet.h" />
     <ClInclude Include="Game\objects\Character.h" />
+    <ClInclude Include="Game\objects\Coaster.h" />
     <ClInclude Include="Game\objects\Collider.h" />
     <ClInclude Include="Game\objects\Enemy.h" />
     <ClInclude Include="Game\objects\EnemyManager.h" />

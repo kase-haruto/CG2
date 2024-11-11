@@ -56,5 +56,8 @@ struct Matrix4x4 final{
 
 	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
+    // LookAtDirection関数の実装
+    static Vector3 LookAtDirection(const Vector3& position, const Vector3& target);
+
 	static Matrix4x4 MakeViewportMatrix(float l, float t, float w, float h, float minDepth, float maxDepth);
 };

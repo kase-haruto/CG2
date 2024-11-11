@@ -316,6 +316,19 @@ Vector3 Matrix4x4::Transform(const Vector3& vector, const Matrix4x4& matrix){
 	return result;
 }
 
+Vector3 Matrix4x4::LookAtDirection(const Vector3& position, const Vector3& target){
+	Vector3 forward = (target - position).Normalize();
+
+	// ヨー (Y 軸の回転) とピッチ (X 軸の回転) を計算
+	float yaw = std::atan2(forward.x, forward.z);
+	float pitch = std::atan2(-forward.y, std::sqrt(forward.x * forward.x + forward.z * forward.z));
+
+	// ロールはここでは 0 に設定（通常の LookAt では使わないため）
+	float roll = 0.0f;
+
+	return {pitch, yaw, roll};
+}
+
 Matrix4x4 Matrix4x4::MakeViewportMatrix(float l, float t, float w, float h, float minDepth, float maxDepth){
 	Matrix4x4 result;
 	result = {w / 2, 0, 0, 0, 0, -h / 2, 0, 0, 0, 0, maxDepth - minDepth, 0, l + (w / 2), t + (h / 2), minDepth, 1};

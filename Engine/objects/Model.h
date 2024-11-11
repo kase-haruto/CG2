@@ -89,7 +89,6 @@ private:
     TransformationMatrix* matrixData;
 
     int currentLightingMode = 0;
-    const ViewProjection* viewProjection_;
 
 public:
     Transform transform;
@@ -99,4 +98,7 @@ public:
     PipelineType pipelineType = Object3D;
 private:
     static const std::string directoryPath_;
+
+public:
+    const ViewProjection* viewProjection_;
 };

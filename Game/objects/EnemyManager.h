@@ -25,6 +25,11 @@ public:
     //リストに敵を追加
     void AddEnemy(const Vector3& pos);
 
+    // enemies_のゲッター
+    const std::list<std::unique_ptr<Enemy>>& GetEnemies() const{
+        return enemies_;
+    }
+
 public:
     void SetViewProjection(const ViewProjection* viewProjection){ pViewProjection_ = viewProjection; }
 
