@@ -1,14 +1,14 @@
-﻿#include "ImGuiManager.h"
+﻿#include "lib/ImGuiManager.h"
 
-#include "core/DirectX/DxCore.h"
-#include "WinApp.h"
-#include "myFunc/DxFunc.h"
+#include "engine/core/DirectX/DxCore.h"
+#include "../Engine/core/WinApp.h"
+#include "lib/myFunc/DxFunc.h"
 
 
-#include <imgui_impl_dx12.h>
-#include <imgui_impl_win32.h>
+#include <externals/imgui/imgui_impl_dx12.h>
+#include <externals/imgui/imgui_impl_win32.h>
 
-#include"SrvLocator.h"
+#include"engine/graphics/SrvLocator.h"
 
 void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	pDxCore_ = dxCore;

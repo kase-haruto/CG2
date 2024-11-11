@@ -1,11 +1,11 @@
 ﻿#pragma once
-#include"Model.h"
-#include"ViewProjection.h"
-#include "Editor/BaseEditor.h"
+#include "../objects/Model.h"
+#include "../graphics/ViewProjection.h"
+#include "../Editor/BaseEditor.h"
 
+/* c++ */
 #include<unordered_map>
 #include<memory>
-
 #include<string>
 
 /// <summary>

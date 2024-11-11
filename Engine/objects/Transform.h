@@ -1,5 +1,5 @@
 #pragma once
-#include"Vector3.h"
+#include"lib/myMath/Vector3.h"
 
 struct Transform{
 	Vector3 scale;

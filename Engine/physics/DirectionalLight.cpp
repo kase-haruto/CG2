@@ -1,10 +1,11 @@
-﻿#include "DirectionalLight.h"
+﻿#include "engine/physics/DirectionalLight.h"
 
 /* engine */
-#include"MyFunc.h"
-#include "core/DirectX/DxCore.h"
-#include "graphics/GraphicsGroup.h"
+#include "lib/myFunc/MyFunc.h"
+#include "engine/core/DirectX/DxCore.h"
+#include "engine/graphics/GraphicsGroup.h"
 
+/* externals */
 #ifdef _DEBUG
 #include"imgui.h"
 #endif // _DEBUG
@@ -13,8 +14,6 @@
 DirectionalLight::DirectionalLight(){}
 
 DirectionalLight::~DirectionalLight(){}
-
-
 
 void DirectionalLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;

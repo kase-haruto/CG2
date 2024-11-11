@@ -1,11 +1,11 @@
-#include "Editor/UiEditor.h"
+#include "engine/Editor/UiEditor.h"
 
 /* engine */
-#include "objects/Sprite.h"
-#include "objects/TextureManager.h"
+#include "engine/objects/Sprite.h"
+#include "engine/objects/TextureManager.h"
 
 #ifdef _DEBUG
-#include "imgui.h"
+#include "externals/imgui/imgui.h"
 #endif // _DEBUG
 
 /* lib */

@@ -2,16 +2,16 @@
 #include"WinApp.h"
 
 //グラフィック関係
-#include"core/DirectX/DxCore.h"
-#include"ShaderManager.h"
-#include"PipelineStateManager.h"
+#include "engine/core/DirectX/DxCore.h"
+#include "../graphics/ShaderManager.h"
+#include "../graphics/PipelineStateManager.h"
 
-#include"ImGuiManager.h"
+#include "lib/ImGuiManager.h"
 
 //リークチェック
 #include "LeakChecker.h"
 
-
+/* c++ */
 #include<stdint.h>
 
 class System{

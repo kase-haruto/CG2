@@ -1,9 +1,9 @@
 #pragma once
 
 // engine
-#include "ModelData.h"
-#include "graphics/GraphicsGroup.h"
-#include "myFunc/MyFunc.h"
+#include "../objects/ModelData.h"
+#include "engine/graphics/GraphicsGroup.h"
+#include "lib/myFunc/MyFunc.h"
 
 // lib
 #include <d3d12.h>

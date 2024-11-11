@@ -1,9 +1,11 @@
 #pragma once
-#include"Vector4.h"
-#include"Mat3.h"
-#include"Matrix4x4.h"
-#include"mat3.h"
+#include"lib/myMath/Vector2.h"
+#include"lib/myMath/Vector3.h"
+#include"lib/myMath/Vector4.h"
+#include"lib/myMath/Mat3.h"
+#include"lib/myMath/Matrix4x4.h"
 
+/* c++ */
 #include<stdint.h>
 #include<string>
 

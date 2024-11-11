@@ -2,8 +2,8 @@
 #include <Windows.h>
 #include "WinApp.h"
 #include "System.h"
-#include "TestScene.h"
-#include "GameScene.h"
+#include "../scene/GameScene.h"
+#include "../scene/TestScene.h"
 
 class EngineController{
 public:

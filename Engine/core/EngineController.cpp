@@ -1,5 +1,5 @@
-﻿#include "core/EngineController.h"
-#include "core/Enviroment.h"
+﻿#include "engine/core/EngineController.h"
+#include "engine/core/Enviroment.h"
 
 void EngineController::Initialize(HINSTANCE hInstance){
     // comの初期化

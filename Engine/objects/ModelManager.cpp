@@ -1,4 +1,4 @@
-#include "objects/ModelManager.h"
+#include "../objects/ModelManager.h"
 
 ModelManager* ModelManager::instance_ = nullptr;
 const std::string ModelManager::directoryPath_ = "Resources/models";

@@ -1,6 +1,10 @@
 ﻿#pragma once
-#include "Transform.h"
-#include "Matrix4x4.h"
+#include "../objects/Transform.h"
+
+/* math */
+#include "lib/myMath/Matrix4x4.h"
+
+/* c++ */
 #include <stdint.h>
 #include <d3d12.h>
 #include <DirectXMath.h>

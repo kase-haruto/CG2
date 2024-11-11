@@ -1,5 +1,5 @@
-#include "core/Input.h"
-#include "System.h"
+#include "engine/core/Input.h"
+#include "engine/core/System.h"
 
 
 // static変数初期化

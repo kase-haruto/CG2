@@ -1,9 +1,11 @@
 ﻿#pragma once
+
+/* c++ */
 #include <wrl.h>
 #include <d3d12.h>
 #include <cstdint>
 #include <mutex>
-#include <utility>  // std::move を使用するために必要
+#include <utility>
 
 using Microsoft::WRL::ComPtr;
 

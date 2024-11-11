@@ -1,6 +1,6 @@
-﻿#include "TestScene.h"
+﻿#include "../scene/TestScene.h"
 
-#include "Input.h"
+#include "../core/Input.h"
 
 TestScene::TestScene(){}
 

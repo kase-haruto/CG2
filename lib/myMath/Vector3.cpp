@@ -1,8 +1,10 @@
-﻿#include"Vector3.h"
-#include<cmath>
-#include"Matrix4x4.h"
-#include"myfunc/MyFunc.h"
+﻿#include "lib/myMath/Vector3.h"
+#include "lib/myMath/Matrix4x4.h"
+#include "lib/myfunc/MyFunc.h"
+
+/* c++ */
 #include <algorithm>
+#include <cmath>
 
 float Vector3::Length()const{
 	return sqrtf(x * x + y * y + z * z);

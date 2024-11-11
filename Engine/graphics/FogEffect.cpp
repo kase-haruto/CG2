@@ -1,6 +1,6 @@
 ﻿#include "FogEffect.h"
-#include "core/DirectX/DxCore.h"
-#include "graphics/GraphicsGroup.h"
+#include "../core/DirectX/DxCore.h"
+#include "../graphics/GraphicsGroup.h"
 
 #ifdef _DEBUG
 #include<imgui.h>

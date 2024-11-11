@@ -1,8 +1,8 @@
 #pragma once
 
 /* engine */
-#include "Editor/BaseEditor.h"
-#include "Vector2.h"
+#include "engine/Editor/BaseEditor.h"
+#include "lib/myMath/Vector2.h"
 
 /* lib */
 #include <vector>

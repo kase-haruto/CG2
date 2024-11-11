@@ -1,9 +1,9 @@
-﻿#include "System.h"
-#include"TextureManager.h"
-#include"GraphicsGroup.h"
-#include"SrvLocator.h"
-#include"core/Input.h"
-#include "objects/ModelManager.h"
+﻿#include "../core/System.h"
+#include "../objects/TextureManager.h"
+#include "../graphics/GraphicsGroup.h"
+#include "../graphics/SrvLocator.h"
+#include "../core/Input.h"
+#include "../objects/ModelManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;

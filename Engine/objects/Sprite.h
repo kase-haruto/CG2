@@ -1,12 +1,16 @@
 ﻿#pragma once
-#include<d3d12.h>
-#include<wrl.h>
-#include"Transform.h"
-#include"Matrix4x4.h"
-#include"Material.h"
-#include "Vector2.h"
-#include "Vector4.h"
-#include "VertexData.h"
+
+/* engine */
+#include "engine/objects/Transform.h"
+#include "lib/myMath/Matrix4x4.h"
+#include "lib/myMath/Vector2.h"
+#include "lib/myMath/Vector4.h"
+#include "../graphics/Material.h"
+#include "../graphics/VertexData.h"
+
+/* c++ */
+#include <d3d12.h>
+#include <wrl.h>
 
 using namespace Microsoft::WRL;
 

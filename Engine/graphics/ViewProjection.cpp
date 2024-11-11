@@ -1,8 +1,14 @@
 ﻿#include "ViewProjection.h"
+
+/* engine */
+#include "lib/myFunc/MyFunc.h"
+#include "engine/graphics/GraphicsGroup.h"
+
+/* c++ */
 #include <cmath>
-#include <imgui.h>
-#include "myFunc/MyFunc.h"
-#include "GraphicsGroup.h"
+
+/* externals */
+#include <externals/imgui/imgui.h>
 
 ViewProjection::ViewProjection(){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();

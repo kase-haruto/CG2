@@ -1,10 +1,8 @@
 ﻿#pragma once
+#include "../objects/Texture.h"
 
-#include <d3d12.h>
-#include <wrl.h>
+/* c++ */
 #include <unordered_map>
-#include <string>
-#include "Texture.h"
 
 class ImGuiManager;
 
