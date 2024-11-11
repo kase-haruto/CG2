@@ -6,8 +6,11 @@
 #ifdef _DEBUG
 #include "imgui.h"
 #endif // _DEBUG
+
+/* c++ lib */
 #include <iostream>
 #include <fstream>
+#include <numbers>
 
 RailEditor::RailEditor(){}
 
@@ -26,7 +29,7 @@ void RailEditor::Initialize(){
     LoadControlPointFromJson();
 
     // レールモデルを分割数に合わせて初期化
-    const size_t segmentCount = 100;
+    const size_t segmentCount = 150;
     railModels_.reserve(segmentCount + 1); // 必要なモデル数を事前に確保
 
     for (size_t i = 0; i <= segmentCount; ++i){
@@ -124,7 +127,7 @@ Vector3 RotateVectorAroundAxis( Vector3 vector, const Vector3& axis, float angle
 
 void RailEditor::DrawLine(){
     std::vector<Vector3> pointsDrawing;
-    const size_t segmentCount = 100;
+    const size_t segmentCount = 150;
 
     // Catmull-Romスプラインの分割点を計算
     for (size_t i = 0; i <= segmentCount; i++){
@@ -133,38 +136,40 @@ void RailEditor::DrawLine(){
         pointsDrawing.push_back(pos);
     }
 
-    // 初期のforwardとupベクトルを設定
-    Vector3 forward = (pointsDrawing[1] - pointsDrawing[0]).Normalize();
-    Vector3 up = {0, 1, 0}; // 初期の上方向を設定
-
     // 各分割点に既存のモデルを配置
     for (size_t i = 0; i <= segmentCount; ++i){
+        // 位置の更新
         railModels_[i]->SetPos(pointsDrawing[i]);
 
-        // 次の方向ベクトルを計算（最後のセグメントの場合は直前を使用）
-        Vector3 nextForward;
-        if (i < segmentCount){
-            nextForward = (pointsDrawing[i + 1] - pointsDrawing[i]).Normalize();
+        // 前後の点を使って方向ベクトルを計算
+        Vector3 forward;
+        if (i == 0){
+            forward = pointsDrawing[i + 1] - pointsDrawing[i]; // 最初の点は次の点との方向ベクトル
+        } else if (i == segmentCount){
+            forward = pointsDrawing[i] - pointsDrawing[i - 1]; // 最後の点は前の点との方向ベクトル
         } else{
-            nextForward = forward;
+            forward = pointsDrawing[i + 1] - pointsDrawing[i];
         }
 
-        // 回転軸と角度を求めて平行輸送
-        Vector3 rotationAxis = Cross(forward, nextForward);
-        float angle = acos(forward.Dot(nextForward));
+        // 方向ベクトルを正規化
+        forward.Normalize();
 
-        if (rotationAxis.Length() > 0.0001f){
-            up = RotateVectorAroundAxis(up, rotationAxis.Normalize(), angle);
-        }
+        // オイラー角の計算（ピッチ、ヨー）
+        float yaw = atan2f(forward.x, forward.z);   // 左右の回転 (ヨー)
+        float pitch = asinf(-forward.y);            // 上下の回転 (ピッチ)
+        float roll = 0.0f;                          // 回転 (ロール) は不要
 
-        // 基底ベクトルを用いて回転行列を作成
-        Vector3 right = Cross(up, nextForward).Normalize();
-        Matrix4x4 rotationMatrix = Matrix4x4::FromBasis(right, up, nextForward);
-        Vector3 rotation = Matrix4x4::MatrixToEuler(rotationMatrix);
+        // 手前に少し倒すためのピッチ角を追加
+        pitch += -4.0f * (float(std::numbers::pi) / 180.0f); // 5度をラジアンに変換して追加
+
+        // Vector3に回転角を設定
+        Vector3 rotation(pitch, yaw, roll);
+
+        // 回転角をモデルに適用
         railModels_[i]->transform.rotate = rotation;
 
+        // モデルの更新
         railModels_[i]->Update();
-        forward = nextForward;
     }
 
     // ラインを描画
@@ -172,10 +177,6 @@ void RailEditor::DrawLine(){
         PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
     }
 }
-
-
-
-
 
 
 void RailEditor::SetViewProjection(const ViewProjection* viewProjection){
