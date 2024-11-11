@@ -23,7 +23,7 @@ FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	///	霧のパラメータを設定
 	///================================
 	//霧のスタート地点
-	parameters->fogStart = 100.0f;
+	parameters->fogStart = 1000.0f;
 	//霧の終点
 	parameters->fogEnd = 1000.0f;
 	//霧の色

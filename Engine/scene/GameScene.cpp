@@ -40,7 +40,7 @@ void GameScene::Initialize(){
 	skydome_ = std::make_unique<Model>("skydome");
 	skydome_->Initialize();
 	skydome_->SetViewProjection(viewProjection_.get());
-	skydome_->transform.scale = {100.0f,100.0f,100.0f};
+	skydome_->transform.scale = {500.0f,500.0f,500.0f};
 
 	///=========================
 	/// Editor関連
