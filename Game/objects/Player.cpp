@@ -80,32 +80,49 @@ void Player::Draw(){
 
 
 void Player::Shoot(){
-	if (Input::TriggerKey(DIK_SPACE)){
-		// 弾の速度（必要に応じて調整可能）
-		const float kBulletSpeed = 1.0f;
+	// 弾制限に引っかからなければ撃てる
+	if (remainingBullets_ > 0 && remainingBullets_ <= bulletLimit_){
 
-		// プレイヤーのワールド位置を取得（もしくは銃口の位置）
-		Vector3 playerPosition = this->GetWorldPosition(); // プレイヤーのワールド位置を取得
+		// スペースキーが押されているかチェックし、クールタイムが終了した場合のみ発射
+		if (Input::PushKey(DIK_SPACE) && coolTime_ <= 0){
+			// 弾の速度（必要に応じて調整可能）
+			const float kBulletSpeed = 1.0f;
 
-		// プレイヤー位置からレティクル位置への方向ベクトルを計算
-		Vector3 directionToReticle = reticlePos_ - playerPosition;
-		directionToReticle = directionToReticle.Normalize(); // 方向ベクトルを正規化
+			// プレイヤーのワールド位置を取得（もしくは銃口の位置）
+			Vector3 playerPosition = this->GetWorldPosition(); // プレイヤーのワールド位置を取得
 
-		// 方向に速度を掛ける
-		Vector3 bulletVelocity = directionToReticle * kBulletSpeed;
+			// プレイヤー位置からレティクル位置への方向ベクトルを計算
+			Vector3 directionToReticle = reticlePos_ - playerPosition;
+			directionToReticle = directionToReticle.Normalize(); // 方向ベクトルを正規化
 
-		// 弾を生成してユニークポインタにラップ
-		Model* model = new Model("debugCube");
-		std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
-		model->SetViewProjection(pViewProjection_);
+			// 方向に速度を掛ける
+			Vector3 bulletVelocity = directionToReticle * kBulletSpeed;
 
-		// 弾の初期化（位置と速度を設定）
-		newBullet->Initialize(std::move(model), playerPosition, bulletVelocity);
+			// 弾を生成してユニークポインタにラップ
+			Model* model = new Model("debugCube");
+			std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
+			model->SetViewProjection(pViewProjection_);
 
-		// 弾を登録
-		bullets_.push_back(std::move(newBullet));
+			// 弾の初期化（位置と速度を設定）
+			newBullet->Initialize(std::move(model), playerPosition, bulletVelocity);
+
+			// 弾を登録
+			bullets_.push_back(std::move(newBullet));
+
+			// 残弾を減らす
+			remainingBullets_--;
+
+			// クールタイムをリセット
+			coolTime_ = 30;
+		}
+
+		// クールタイムを減少
+		if (coolTime_ > 0){
+			coolTime_--;
+		}
 	}
 }
+
 
 
 void Player::OnCollision(Collider* other){
@@ -126,10 +143,10 @@ const Vector3 Player::GetForwardVector() const{
 	}.Normalize();
 }
 
-const Vector3 Player::GetRightVector() const {
-    return Vector3 {
-        model_->worldMatrix.m[0][0], // 1列目（X軸）のX成分
-        model_->worldMatrix.m[0][1], // 1列目（X軸）のY成分
-        model_->worldMatrix.m[0][2]  // 1列目（X軸）のZ成分
-    }.Normalize();
+const Vector3 Player::GetRightVector() const{
+	return Vector3 {
+		model_->worldMatrix.m[0][0], // 1列目（X軸）のX成分
+		model_->worldMatrix.m[0][1], // 1列目（X軸）のY成分
+		model_->worldMatrix.m[0][2]  // 1列目（X軸）のZ成分
+	}.Normalize();
 }

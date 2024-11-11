@@ -54,7 +54,7 @@ void Enemy::Update(){
 		// デプスなしに変更
 		model_->IsNotDepth();
 
-		Vector2 screenPos(1100.0f, 500.0f);
+		Vector2 screenPos(1000.0f, 500.0f);
 
 		// ビューポート行列を作成
 		Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -72,7 +72,6 @@ void Enemy::Update(){
 		posNear = Matrix4x4::Transform(posNear, matInverseVPV);
 		posFar = Matrix4x4::Transform(posFar, matInverseVPV);
 
-		// マウス方向ベクトルを計算
 		Vector3 direction = posFar - posNear;
 		deadViewPos = posNear + (direction.Normalize() * fixedDistance);
 

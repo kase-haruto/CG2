@@ -66,6 +66,16 @@ private:
 	void Shoot();
 
 private:
+
+	//弾数制限
+	const uint32_t bulletLimit_ = 15;
+
+	//残弾
+	uint32_t remainingBullets_ = bulletLimit_;
+
+	//クールタイム
+	int coolTime_ = 30;//(0.5秒)
+
 	//親のトラスフォーム
 	const Transform* parentTransform_ = nullptr;
 

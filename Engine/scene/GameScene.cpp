@@ -168,6 +168,8 @@ void GameScene::Update(){
 }
 
 void GameScene::Draw(){
+	
+
 	skydome_->Draw();
 
 	railEditor_->Draw();
@@ -177,10 +179,14 @@ void GameScene::Draw(){
 	//敵の描画
 	enemyManager_->Draw();
 
+	//線の描画
+	PrimitiveDrawer::GetInstance()->Render();
+
 	DrawScore();
+
+	//spriteの描画
 	editor_->Draw();
 
-	PrimitiveDrawer::GetInstance()->Render();
 }
 
 void GameScene::Finalize(){
