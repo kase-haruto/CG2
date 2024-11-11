@@ -66,6 +66,7 @@ private:
 	void Shoot();
 
 private:
+	bool isShoot_ = false;
 
 	//弾数制限
 	const uint32_t bulletLimit_ = 15;

@@ -3,6 +3,7 @@
 #include "myFunc/MathFunc.h"
 #include "core/Input.h"
 #include "Collision/CollisionManager.h"
+#include "lib/myFunc/PrimitiveDrawer.h"
 
 void Player::Initialize(Model* model){
 	Character::Initialize(model);
@@ -22,12 +23,6 @@ void Player::Update(){
 	//===============================
 	ReticleUpdate();
 	Shoot();
-
-	// 弾の更新
-	for (auto& bullet : bullets_){
-		bullet->Update();
-	}
-
 
 	//行列の更新
 	model_->worldMatrix = MakeAffineMatrix(model_->transform.scale,
@@ -65,65 +60,25 @@ void Player::ReticleUpdate(){
 	// マウスレイの方向
 	Vector3 mouseDirection = posFar - posNear;
 	// カメラから参照オブジェクトの距離
-	const float kDistanceTestObject = 70.0f;
+	const float kDistanceTestObject = 100.0f;
 	reticlePos_ = posNear + (mouseDirection.Normalize() * kDistanceTestObject);
 }
 
 
 
 void Player::Draw(){
-	for (auto& bullet : bullets_){
-		bullet->Draw();
+	if (isShoot_){
+		PrimitiveDrawer::GetInstance()->DrawLine3d(pViewProjection_->transform.translate, reticlePos_, {1.0f,0.0f,0.0f,1.0f});
 	}
 }
-
-
 
 void Player::Shoot(){
-	// 弾制限に引っかからなければ撃てる
-	if (remainingBullets_ > 0 && remainingBullets_ <= bulletLimit_){
-
-		// スペースキーが押されているかチェックし、クールタイムが終了した場合のみ発射
-		if (Input::PushKey(DIK_SPACE) && coolTime_ <= 0){
-			// 弾の速度（必要に応じて調整可能）
-			const float kBulletSpeed = 1.0f;
-
-			// プレイヤーのワールド位置を取得（もしくは銃口の位置）
-			Vector3 playerPosition = this->GetWorldPosition(); // プレイヤーのワールド位置を取得
-
-			// プレイヤー位置からレティクル位置への方向ベクトルを計算
-			Vector3 directionToReticle = reticlePos_ - playerPosition;
-			directionToReticle = directionToReticle.Normalize(); // 方向ベクトルを正規化
-
-			// 方向に速度を掛ける
-			Vector3 bulletVelocity = directionToReticle * kBulletSpeed;
-
-			// 弾を生成してユニークポインタにラップ
-			Model* model = new Model("debugCube");
-			std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
-			model->SetViewProjection(pViewProjection_);
-
-			// 弾の初期化（位置と速度を設定）
-			newBullet->Initialize(std::move(model), playerPosition, bulletVelocity);
-
-			// 弾を登録
-			bullets_.push_back(std::move(newBullet));
-
-			// 残弾を減らす
-			remainingBullets_--;
-
-			// クールタイムをリセット
-			coolTime_ = 30;
-		}
-
-		// クールタイムを減少
-		if (coolTime_ > 0){
-			coolTime_--;
-		}
+	isShoot_ = false;
+	// スペースキーが押されているかチェックし、クールタイムが終了した場合のみ発射
+	if (Input::PushKey(DIK_SPACE)){
+		isShoot_ = true;
 	}
 }
-
-
 
 void Player::OnCollision(Collider* other){
 
