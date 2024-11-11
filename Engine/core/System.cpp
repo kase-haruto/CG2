@@ -33,10 +33,8 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
-#ifdef _DEBUG
     imguiManager_ = std::make_unique<ImGuiManager>();
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
-#endif // _DEBUG
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();

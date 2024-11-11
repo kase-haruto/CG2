@@ -105,6 +105,7 @@ void TestScene::Update(){
 }
 
 void TestScene::UpdateDebugUI(){
+#ifdef _DEBUG
 	static int selectedObjectIndex = -1;
 	static int selectedEditorIndex = -1;
 
@@ -178,6 +179,7 @@ void TestScene::UpdateDebugUI(){
 	ImGui::End();
 
 	viewProjection_->ImGui();
+#endif // _DEBUG
 }
 
 void TestScene::Draw(){

@@ -4,7 +4,6 @@
 ///オブジェクト関連///
 #include"Sprite.h"
 #include"DirectionalLight.h"
-#include"DirectXCommon.h"
 #include"Model.h"
 #include"Sphere.h"
 #include"Triangle.h"

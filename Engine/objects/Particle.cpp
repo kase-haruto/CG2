@@ -1,5 +1,4 @@
 ﻿#include "Particle.h"
-#include "DirectXCommon.h"
 #include"myfunc/MyFunc.h"
 #include "VertexData.h"
 #include "TextureManager.h"
@@ -111,10 +110,11 @@ void ParticleManager::CreateSRV(){
 }
 
 void ParticleManager::Update(){
-#ifdef _DEBUG
-	ImGui::Begin("ParticleManager");
 	std::random_device rd;
 	std::mt19937 randomEngine(rd());
+#ifdef _DEBUG
+	ImGui::Begin("ParticleManager");
+
 	if (ImGui::Button("Add particle")){
 		particle_.splice(particle_.end(), Emit(emitter, randomEngine));
 	}

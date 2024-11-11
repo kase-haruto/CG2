@@ -1,8 +1,10 @@
 ﻿#pragma once
+#include "graphics/shaders/ShaderCompiler.h"
+
+/* lib */
 #include <d3dcompiler.h>
-#include<d3d12.h>
+#include <d3d12.h>
 #include <wrl.h>
-#include"ShaderCompiler.h"
 
 using Microsoft::WRL::ComPtr;
 
