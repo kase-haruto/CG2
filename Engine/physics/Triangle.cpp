@@ -1,5 +1,4 @@
 ﻿#include "Triangle.h"
-#include"DirectXCommon.h"
 #include"myfunc/MyFunc.h"
 #include"TextureManager.h"
 #include"imgui.h"

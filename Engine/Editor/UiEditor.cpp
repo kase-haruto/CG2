@@ -17,6 +17,9 @@ UIEditor::UIEditor(){
 }
 
 void UIEditor::ShowImGuiInterface(){
+#ifdef _DEBUG
+
+
 	ImGui::Begin("Textures");
 
 	// テクスチャリストの表示
@@ -93,6 +96,7 @@ void UIEditor::ShowImGuiInterface(){
 
 
 	ImGui::End();
+#endif // _DEBUG
 }
 
 void UIEditor::AddSprite(const std::string& textureName, const Vector2& position, const Vector2& size){

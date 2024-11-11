@@ -1,5 +1,4 @@
 ﻿#include "Sprite.h"
-#include "DirectXCommon.h"
 #include "myfunc/MyFunc.h"
 #include "VertexData.h"
 #include "imgui.h"

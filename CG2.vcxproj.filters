@@ -306,9 +306,6 @@
     <ClCompile Include="Engine\core\DirectX\RenderTarget.cpp">
       <Filter>Engine\project\base\directX\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectXCommon.cpp">
-      <Filter>Engine\project\base\directX\core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\core\DirectX\DxCommand.cpp">
       <Filter>Engine\project\base\directX\command</Filter>
     </ClCompile>
@@ -458,9 +455,6 @@
     </ClInclude>
     <ClInclude Include="Engine\core\DirectX\DxCommand.h">
       <Filter>Engine\project\base\directX\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\core\DirectXCommon.h">
-      <Filter>Engine\project\base\directX\core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\core\DirectX\RenderTarget.h">
       <Filter>Engine\project\base\directX\renderer</Filter>

@@ -1,6 +1,5 @@
 ﻿#include "ViewProjection.h"
 #include <cmath>
-#include "DirectXCommon.h"
 #include <imgui.h>
 #include "myFunc/MyFunc.h"
 #include "GraphicsGroup.h"
@@ -71,12 +70,13 @@ Matrix4x4 ViewProjection::MakePerspectiveFovMatrix(float fovY, float aspectRatio
 }
 
 void ViewProjection::ImGui(){
+#ifdef _DEBUG
     ImGui::Begin("camera");
     ImGui::DragFloat3("pos", &transform.translate.x, 0.01f);
     ImGui::DragFloat3("rotate", &transform.rotate.x, 0.01f);
     ImGui::End();
     cameraData_->worldPosition = transform.translate;
-
+#endif // _DEBUG
 }
 
 void ViewProjection::Finalize(){}
