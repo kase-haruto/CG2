@@ -1,9 +1,12 @@
 ﻿#include "TextureManager.h"
-#include "GraphicsGroup.h"
-#include "ImGuiManager.h"
+
+/* engine */
+#include "../graphics/GraphicsGroup.h"
+#include "engine/graphics/SrvLocator.h"
+#include "lib/ImGuiManager.h"
+
+/* c++ */
 #include <cassert>
-#include"SrvLocator.h"
-#include"SrvLocator.h"
 
 TextureManager* TextureManager::GetInstance(){
     static TextureManager instance;

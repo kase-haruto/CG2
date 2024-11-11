@@ -1,5 +1,6 @@
-#include"myFunc/MathFunc.h"
+#include"lib/myFunc/MathFunc.h"
 
+/* c++ */
 #include<cassert>
 #include<cmath>
 #include<algorithm>

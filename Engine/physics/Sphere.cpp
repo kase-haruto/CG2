@@ -1,11 +1,12 @@
 ﻿#include "Sphere.h"
-#include"myfunc/MyFunc.h"
-#include"TextureManager.h"
-#include"imgui.h"
-#include"DirectionalLight.h"
+#include "lib/myfunc/MyFunc.h"
+#include "engine/objects/TextureManager.h"
+#include "externals/imgui/imgui.h"
+#include "../physics/DirectionalLight.h"
 
-#include"GraphicsGroup.h"
+#include "../graphics/GraphicsGroup.h"
 
+/* c++ */
 #include<numbers>
 
 Sphere::Sphere(){}

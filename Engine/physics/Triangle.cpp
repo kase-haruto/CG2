@@ -1,12 +1,14 @@
 ﻿#include "Triangle.h"
-#include"myfunc/MyFunc.h"
-#include"TextureManager.h"
-#include"imgui.h"
-#include"DirectionalLight.h"
+#include "engine/objects/TextureManager.h"
+#include "externals/imgui/imgui.h"
+#include "engine/physics/DirectionalLight.h"
+		 
+/* math */
+#include "lib/myfunc/MyFunc.h"
+#include "engine/graphics/GraphicsGroup.h"
 
-#include"GraphicsGroup.h"
-
-#include<numbers>
+/* c++ */
+#include <numbers>
 
 Triangle::Triangle(){}
 

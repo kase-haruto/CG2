@@ -2,35 +2,36 @@
 #include "IScene.h"
 
 ///オブジェクト関連///
-#include"Sprite.h"
-#include"DirectionalLight.h"
-#include"Model.h"
-#include"Sphere.h"
-#include"Triangle.h"
-#include"ViewProjection.h"
-#include"ModelBuilder.h"
-#include"Particle.h"
-#include "Editor/UiEditor.h"
-#include "objects/Particle.h"
+#include "engine/objects/Sprite.h"
+#include "engine/physics/DirectionalLight.h"
+#include "engine/objects/Model.h"
+#include "engine/physics/Sphere.h"
+#include "engine/physics/Triangle.h"
+#include "engine/graphics/ViewProjection.h"
+#include "engine/objects/ModelBuilder.h"
+#include "engine/objects/Particle.h"
+#include "engine/Editor/UiEditor.h"
+#include "engine/objects/Particle.h"
 
 /* graphics */
-#include"DirectionalLight.h"
-#include"PointLight.h"
-#include"graphics/FogEffect.h"
+#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/PointLight.h"
+#include "engine/graphics/FogEffect.h"
 
 /* object */
-#include"PrimitiveDrawer.h"
+#include "lib/myFunc/PrimitiveDrawer.h"
 
+/* c++ */
 #include <vector>
+#include <memory>
 
 ///デバッグ関連///
 #ifdef _DEBUG
-#include"ImGuiManager.h"
-#include"imgui.h"
+#include"lib/ImGuiManager.h"
+#include"externals/imgui/imgui.h"
 #endif // _DEBUG
 
 
-#include<memory>
 
 /// <summary>
 /// テストシーン

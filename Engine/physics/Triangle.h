@@ -1,10 +1,13 @@
 ﻿#pragma once
-#include"Material.h"
-#include"TransformationMatrix.h"
-#include"Transform.h"
-#include"ViewProjection.h"
-#include"Vector4.h"
 
+#include "engine/graphics/Material.h"
+#include "engine/objects/TransformationMatrix.h"
+#include "engine/objects/Transform.h"
+#include "engine/graphics/ViewProjection.h"
+
+#include "lib/myMath/Vector4.h"
+
+/* c++ */
 #include<string>
 #include<d3d12.h>
 #include<wrl.h>

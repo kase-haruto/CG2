@@ -1,14 +1,14 @@
 #pragma once
-#include "Vector3.h"
-#include "Vector4.h"
-#include "ViewProjection.h"
+#include "lib/myMath/Vector3.h"
+#include "lib/myMath/Vector4.h"
+#include "engine/graphics/ViewProjection.h"
 #include "Engine/objects/TransformationMatrix.h"
+
+/* c++ */
 #include <array>
 #include <cstdint>
-#include <d3d12.h>
 #include <memory>
 #include <string>
-#include <wrl.h>
 
 // 基本プリミティブ描画
 class PrimitiveDrawer{

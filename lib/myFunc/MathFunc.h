@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Vector3.h"
+#include"lib/myMath/Vector3.h"
 
 #include<vector>
 

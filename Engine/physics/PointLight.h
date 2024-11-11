@@ -1,10 +1,12 @@
 ﻿#pragma once
 
-#include"Vector4.h"
-#include"Vector3.h"
+/* math */
+#include "lib/myMath/Vector3.h"
+#include "lib/myMath/Vector4.h"
 
-#include<wrl.h>
-#include<d3d12.h>
+/* lib */
+#include <wrl.h>
+#include <d3d12.h>
 
 struct PointLightData{
 	Vector4 color;		//ライトの色

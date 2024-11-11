@@ -1,25 +1,29 @@
 ﻿#pragma once
 
-#include"Matrix4x4.h"
-#include"Vector2.h"
-#include"Vector3.h"
-#include"Vector4.h"
-#include"ModelData.h"
-#include"VertexData.h"
-#include"Material.h"
-#include"Particle.h"
-#include"AABB.h"
+/* math */
+#include"lib/myMath/Matrix4x4.h"
+#include"lib/myMath/Vector2.h"
+#include"lib/myMath/Vector3.h"
+#include"lib/myMath/Vector4.h"
 
-#include<list>
-#include<d3d12.h>
+/* engine */
+#include"engine/objects/ModelData.h"
+#include"engine/graphics/VertexData.h"
+#include"engine/graphics/Material.h"
+#include"engine/objects/Particle.h"
+#include"engine/physics/AABB.h"
+
+/* c++ */
+#include <list>
+#include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxgidebug.h>
 #include <dxcapi.h>
 #include <DirectXTex.h>
-#include<stdint.h>
-#include<string>
-#include<random>
-#include<memory>
+#include <stdint.h>
+#include <string>
+#include <random>
+#include <memory>
 
 
 const float deltaTime = 1.0f / 60.0f;

@@ -1,12 +1,18 @@
-﻿#include "Sprite.h"
-#include "myfunc/MyFunc.h"
-#include "VertexData.h"
-#include "imgui.h"
-#include "TextureManager.h"
-#include "TransformationMatrix.h"
-#include "GraphicsGroup.h"
+﻿#include "engine/objects/Sprite.h"
+#include "engine/graphics/VertexData.h"
+#include "engine/objects/TextureManager.h"
+#include "engine/objects/TransformationMatrix.h"
+#include "engine/graphics/GraphicsGroup.h"
+#include "engine/physics/DirectionalLight.h"
+
+/* math */
+#include "lib/myfunc/MyFunc.h"
+
+/* c++ */
 #include <stdint.h>
-#include "DirectionalLight.h"
+
+/* externals */
+#include "externals/imgui/imgui.h"
 
 Sprite::Sprite(const std::string& filePath){
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();

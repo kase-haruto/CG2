@@ -1,21 +1,22 @@
 ﻿#pragma once
 
-#include "ModelData.h"
-#include "Material.h"
-#include "TransformationMatrix.h"
-#include "Transform.h"
-#include "ViewProjection.h"
-#include "Vector4.h"
+#include "engine/objects/ModelData.h"
+#include "engine/graphics/Material.h"
+#include "engine/objects/TransformationMatrix.h"
+#include "engine/objects/Transform.h"
+#include "engine/graphics/ViewProjection.h"
 
-#include<list>
+/* math */
+#include "lib/myMath/Vector4.h"
+#include "engine/physics/AABB.h"
+
+/* c++ */
+#include <list>
 #include <cstdint>
 #include <d3d12.h>
 #include <wrl.h>
+#include <random>
 
-#include<random>
-
-#pragma once
-#include"AABB.h"
 
 /// <summary>
 /// フィールド

@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include"PipelineStateManager.h"
-#include"core/DirectX/DxCore.h"
+#include "../graphics/PipelineStateManager.h"
+#include "engine/core/DirectX/DxCore.h"
 
 class GraphicsGroup{
 private:

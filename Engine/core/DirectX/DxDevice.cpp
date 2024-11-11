@@ -1,8 +1,9 @@
-#include"core/DirectX/DxDevice.h"
+#include "engine/core/DirectX/DxDevice.h"
 
-#include "myFunc/MyFunc.h"
-#include "myFunc/ConvertString.h"
+#include "lib/myFunc/MyFunc.h"
+#include "lib/myFunc/ConvertString.h"
 
+/* c++ */
 #include <dxgidebug.h>
 #include <format>
 

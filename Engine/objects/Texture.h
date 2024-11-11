@@ -1,6 +1,9 @@
 ﻿#pragma once
 
-#include <DirectXTex.h>
+
+#include <../DirectXTex/DirectXTex.h>
+
+/* c++ */
 #include <d3d12.h>
 #include <wrl.h>
 #include <string>

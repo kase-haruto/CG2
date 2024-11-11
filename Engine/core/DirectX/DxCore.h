@@ -1,14 +1,15 @@
 #pragma once
 
-#include "WinApp.h"
+#include "engine/core/WinApp.h"
 
 /*-- dx関連 --*/
-#include "core/DirectX/DxDevice.h"
-#include "core/DirectX/DxCommand.h"
-#include "core/DirectX/DxFence.h"
-#include "core/DirectX/DxSwapChain.h"
-#include "core/DirectX/RenderTarget.h"
+#include "engine/core/DirectX/DxDevice.h"
+#include "engine/core/DirectX/DxCommand.h"
+#include "engine/core/DirectX/DxFence.h"
+#include "engine/core/DirectX/DxSwapChain.h"
+#include "engine/core/DirectX/RenderTarget.h"
 
+/*-- c++ --*/
 #include <memory>
 
 using Microsoft::WRL::ComPtr;

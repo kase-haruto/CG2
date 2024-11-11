@@ -1,6 +1,11 @@
-﻿#include"Matrix4x4.h"
+﻿#include "Matrix4x4.h"
+
+#include "lib/myMath/Vector4.h"
+#include "lib/myMath/Vector3.h"
+
+/* lib */
 #include<cmath>
-#include"Vector4.h"
+
 
 float cot(float angle){
 	return 1 / std::tan(angle);

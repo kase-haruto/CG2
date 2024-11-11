@@ -1,4 +1,4 @@
-#include "core/DirectX/DxFence.h"
+#include "engine/core/DirectX/DxFence.h"
 
 DxFence::~DxFence(){
 	if (fenceEvent_ != nullptr){

@@ -1,6 +1,6 @@
-#include "myFunc/PrimitiveDrawer.h"
-#include "GraphicsGroup.h"
-#include "myFunc/MyFunc.h"
+#include "lib/myFunc/PrimitiveDrawer.h"
+#include "engine/graphics/GraphicsGroup.h"
+#include "lib/myFunc/MyFunc.h"
 
 
 PrimitiveDrawer::PrimitiveDrawer(){

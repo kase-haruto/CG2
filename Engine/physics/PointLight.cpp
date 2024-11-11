@@ -1,9 +1,9 @@
 ﻿#include "PointLight.h"
 
 /* engine */
-#include"MyFunc.h"
-#include "core/DirectX/DxCore.h"
-#include "graphics/GraphicsGroup.h"
+#include "lib/myFunc/MyFunc.h"
+#include "engine/core/DirectX/DxCore.h"
+#include "engine/graphics/GraphicsGroup.h"
 
 #ifdef _DEBUG
 #include"imgui.h"

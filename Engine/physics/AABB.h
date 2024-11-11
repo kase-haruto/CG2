@@ -1,7 +1,8 @@
 ﻿#pragma once 
-#include"Vector3.h"
-#include"ViewProjection.h"
+#include"lib/myMath/Vector3.h"
+#include"engine/graphics/ViewProjection.h"
 
+/* c++ */
 #include<stdint.h>
 #include<string>
 

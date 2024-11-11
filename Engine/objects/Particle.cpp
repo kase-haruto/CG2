@@ -1,16 +1,20 @@
 ﻿#include "Particle.h"
-#include"myfunc/MyFunc.h"
-#include "VertexData.h"
-#include "TextureManager.h"
-#include "GraphicsGroup.h"
-#include "DirectionalLight.h"
-#include "SrvLocator.h"
-#include "objects/ModelManager.h"
+#include "../graphics/VertexData.h"
+#include "../objects/TextureManager.h"
+#include "../graphics/GraphicsGroup.h"
+#include "../physics/DirectionalLight.h"
+#include "../graphics/SrvLocator.h"
+#include "../objects/ModelManager.h"
 
+/* math */
+#include "lib/myfunc/MyFunc.h"
+
+/* externals */
 #ifdef _DEBUG
 #include "imgui.h"
 #endif // _DEBUG
 
+/* c++ */
 #include<string>
 #include<numbers>
 

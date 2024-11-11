@@ -1,11 +1,13 @@
 #pragma once
+#include "engine/core/DirectX/DxSwapChain.h"
+
+/* c++ */
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
 #include <array>
 #include <cassert>
 
-#include"core/DirectX/DxSwapChain.h"
 
 class RenderTarget{
     template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;

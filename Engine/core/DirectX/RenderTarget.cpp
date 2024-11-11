@@ -1,5 +1,5 @@
-#include "core/DirectX/RenderTarget.h"
-#include "myFunc/DxFunc.h"
+#include "engine/core/DirectX/RenderTarget.h"
+#include "lib/myFunc/DxFunc.h"
 
 void RenderTarget::Initialize(ComPtr<ID3D12Device> device, DxSwapChain& swapChain){
     HRESULT hr;

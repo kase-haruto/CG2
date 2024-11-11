@@ -1,6 +1,7 @@
-﻿#include "ShaderManager.h"
-#include"myFUnc/ConvertString.h"
+﻿#include "../graphics/ShaderManager.h"
+#include "lib/myFunc/ConvertString.h"
 
+/* c++ */
 #include<format>
 
 ShaderManager::~ShaderManager(){
