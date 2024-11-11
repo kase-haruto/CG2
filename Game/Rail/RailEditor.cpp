@@ -29,12 +29,13 @@ void RailEditor::Initialize(){
     LoadControlPointFromJson();
 
     // レールモデルを分割数に合わせて初期化
-    const size_t segmentCount = 300;
+    const size_t segmentCount = 500;
     railModels_.reserve(segmentCount + 1); // 必要なモデル数を事前に確保
 
     for (size_t i = 0; i <= segmentCount; ++i){
         auto model = std::make_unique<Model>("rail");
         model->SetViewProjection(pViewProjection_);
+        model->materialParameter.shininess = 100;
         railModels_.emplace_back(std::move(model));
     }
 }
@@ -127,7 +128,7 @@ Vector3 RotateVectorAroundAxis( Vector3 vector, const Vector3& axis, float angle
 
 void RailEditor::DrawLine(){
     std::vector<Vector3> pointsDrawing;
-    const size_t segmentCount = 300;
+    const size_t segmentCount = 500;
 
     // Catmull-Romスプラインの分割点を計算
     for (size_t i = 0; i <= segmentCount; i++){
@@ -160,7 +161,7 @@ void RailEditor::DrawLine(){
         float roll = 0.0f;                          // 回転 (ロール) は不要
 
         // 手前に少し倒すためのピッチ角を追加
-        pitch += -4.0f * (float(std::numbers::pi) / 180.0f); // 5度をラジアンに変換して追加
+       // pitch += -4.0f * (float(std::numbers::pi) / 180.0f); // 5度をラジアンに変換して追加
 
         // Vector3に回転角を設定
         Vector3 rotation(pitch, yaw, roll);

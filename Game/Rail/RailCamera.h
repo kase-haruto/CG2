@@ -35,4 +35,10 @@ private:
 	Matrix4x4 worldMat_;
 
 	float t_;
+
+	bool isPaused_ = false;       // 停止状態フラグ
+	bool pauseComplete_ = false;
+	float pauseTimer_ = 0.0f;     // 停止時間のカウント
+	const float pauseDuration_ = 5.0f; // 停止時間（5秒）
+
 };

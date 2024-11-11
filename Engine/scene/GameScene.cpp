@@ -120,8 +120,10 @@ void GameScene::Update(){
 	//fieldの更新
 	skydome_->Update();
 
-		
-	CollisionManager::GetInstance()->CheckAllCollidion();
+
+	for (auto& enemy:enemyManager_->GetEnemies()){
+		CollisionManager::GetInstance()->CheckCollisionSphereToLine(player_->GetLine(), enemy.get());
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
@@ -168,6 +170,8 @@ void GameScene::Update(){
 }
 
 void GameScene::Draw(){
+	
+
 	skydome_->Draw();
 
 	railEditor_->Draw();
@@ -177,10 +181,14 @@ void GameScene::Draw(){
 	//敵の描画
 	enemyManager_->Draw();
 
+	//線の描画
+	PrimitiveDrawer::GetInstance()->Render();
+
 	DrawScore();
+
+	//spriteの描画
 	editor_->Draw();
 
-	PrimitiveDrawer::GetInstance()->Render();
 }
 
 void GameScene::Finalize(){

@@ -82,7 +82,7 @@ private:
 	uint32_t score_ = 40;
 
 	//生存時間
-	uint32_t lifeTime_ = 1200; //* 仮として20秒
+	uint32_t lifeTime_ = 700; //* 仮として12秒
 
 	// カメラから一定距離に固定
 	float fixedDistance = 40.0f;

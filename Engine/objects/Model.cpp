@@ -27,6 +27,8 @@ void Model::Initialize(bool isDepth){
     RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     transform = {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
+    materialParameter.shininess = 20;
+
     // マテリアルと行列用リソースを生成
     CreateMaterialBuffer();
     CreateMatrixBuffer();
@@ -91,6 +93,8 @@ void Model::Create(const std::string& filename, bool isUseTexture){
 
 void Model::Update(){
     materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
+    materialData->shininess = materialParameter.shininess;
+    materialData->enableLighting = materialParameter.enableLighting;
 
     worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
     Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());

@@ -60,6 +60,8 @@ public:
         uint16_t* indexMap = nullptr;
     };
 
+
+
     std::unique_ptr<Mesh> CreateMesh(UINT vertexCount, UINT indexCount);
     void Initialize();
     void Finalize();

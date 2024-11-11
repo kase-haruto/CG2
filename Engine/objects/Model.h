@@ -86,17 +86,24 @@ private:
 
     std::shared_ptr<ModelData> modelData;
     Material* materialData;
+
     TransformationMatrix* matrixData;
 
     int currentLightingMode = 0;
-    const ViewProjection* viewProjection_;
 
 public:
+    Material materialParameter;
+
     Transform transform;
 
     Matrix4x4 worldMatrix;
 
     PipelineType pipelineType = Object3D;
+
 private:
     static const std::string directoryPath_;
+
+public:
+    const ViewProjection* viewProjection_;
+
 };

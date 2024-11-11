@@ -54,7 +54,7 @@ void Enemy::Update(){
 		// デプスなしに変更
 		model_->IsNotDepth();
 
-		Vector2 screenPos(1100.0f, 500.0f);
+		Vector2 screenPos(1050.0f, 530.0f);
 
 		// ビューポート行列を作成
 		Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -72,7 +72,6 @@ void Enemy::Update(){
 		posNear = Matrix4x4::Transform(posNear, matInverseVPV);
 		posFar = Matrix4x4::Transform(posFar, matInverseVPV);
 
-		// マウス方向ベクトルを計算
 		Vector3 direction = posFar - posNear;
 		deadViewPos = posNear + (direction.Normalize() * fixedDistance);
 
@@ -115,23 +114,23 @@ void Enemy::Draw(){
 }
 
 void Enemy::OnCollision(Collider* other){
-	// 衝突相手の種別IDを取得
-	uint32_t typeID = other->GetTypeID();
-	if (typeID == static_cast< uint32_t >(CollisionTypeIdDef::kEnemy)){
-		return;//早期リターン
-	}
+	//// 衝突相手の種別IDを取得
+	//uint32_t typeID = other->GetTypeID();
+	//if (typeID == static_cast< uint32_t >(CollisionTypeIdDef::kEnemy)){
+	//	return;//早期リターン
+	//}
 
-	//弾と当たったら死ぬ
-	if (typeID == static_cast< uint32_t >(CollisionTypeIdDef::kBullet)){
+	////弾と当たったら死ぬ
+	//if (typeID == static_cast< uint32_t >(CollisionTypeIdDef::kBullet)){
 		GameScene::newScore_ += score_;
 		isAlive_ = false;
-	}
+	//}
 
 	
 }
 
 const Vector3 Enemy::GetCenterPos() const{
-	const Vector3 offset = {0.0f,1.5f,0.0f};
+	const Vector3 offset = {0.0f,0.0f,0.0f};
 	Vector3 worldPos = Matrix4x4::Transform(offset, model_->worldMatrix);
 	return worldPos;
 }
