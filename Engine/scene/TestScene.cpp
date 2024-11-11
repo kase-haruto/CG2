@@ -199,6 +199,7 @@ void TestScene::Draw(){
 	//地面の描画
 	modelField_->Draw();
 
+	PrimitiveDrawer::GetInstance()->Render();
 #pragma endregion
 
 
@@ -211,7 +212,6 @@ void TestScene::Draw(){
 
 	particle_->Draw();
 
-	PrimitiveDrawer::GetInstance()->Render();
 #pragma endregion
 }
 

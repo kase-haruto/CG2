@@ -4,7 +4,7 @@
 #include "TransformationMatrix.h"
 #include "Transform.h"
 #include "Vector4.h"
-#include "GameObject.h"
+#include "graphics/ViewProjection.h"
 
 #include <d3d12.h>
 #include <wrl.h>
