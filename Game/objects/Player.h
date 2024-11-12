@@ -5,7 +5,10 @@
 #include "objects/Bullet.h"
 #include "Line.h"
 
+#include "objects/Sprite.h"
+
 #include <list>
+#include <memory>
 
 class Player
 	:public Character{
@@ -24,6 +27,7 @@ public:
 	/// 更新
 	/// </summary>
 	void Update()override;
+	void UpdateUI();
 
 	void BeamUpdate();
 
@@ -34,6 +38,7 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw()override;
+	void DrawUi();
 
 	void OnCollision(Collider* other)override;
 
@@ -73,15 +78,6 @@ private:
 private:
 	bool isShoot_ = false;
 
-	//弾数制限
-	const uint32_t bulletLimit_ = 15;
-
-	//残弾
-	uint32_t remainingBullets_ = bulletLimit_;
-
-	//クールタイム
-	int coolTime_ = 30;//(0.5秒)
-
 	//親のトラスフォーム
 	const Transform* parentTransform_ = nullptr;
 
@@ -97,4 +93,11 @@ private:
 	//ビーム描画用
 	std::unique_ptr<Model>beam_ = nullptr;
 
+	float shootTimer_ = 5.0f;            // ビーム発射可能な最大時間
+	const float maxShootTime_ = 5.0f;    // 最大時間（5秒）
+	const float recoveryRate_ = 0.1f;    // shootTimerの回復速度
+	bool isFullyRecovered_ = true;		 // タイマーが完全に回復したかどうかのフラグ
+
+	std::unique_ptr<Sprite>hpSprite_ = nullptr;
+	std::unique_ptr<Sprite>reticleSprite_ = nullptr;
 };

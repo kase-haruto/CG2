@@ -55,6 +55,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	directionalLight_ = std::make_unique<DirectionalLight>();
 	directionalLight_->Initialize(dxCore_.get());
 	directionalLight_->SetRootSignature(pipelineStateManager_->GetRootSignature(Object3D));
+	directionalLight_->parameter_.intensity = 0.5f;
 
 	//pointLight
 	pointLight_ = std::make_unique<PointLight>();
@@ -285,7 +286,7 @@ void System::Object3DPipelines(){
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;  // 裏面カリング
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;  // 裏面カリング
     rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID; // ソリッドフィル
     rasterizeDesc.FrontCounterClockwise = FALSE;    // 時計回りが前面
     rasterizeDesc.DepthClipEnable = TRUE;           // 深度クリップを有効

@@ -25,6 +25,9 @@ public:
     //リストに敵を追加
     void AddEnemy(const Vector3& pos);
 
+    //リストの初期化
+    void Reset();
+
     // enemies_のゲッター
     const std::list<std::unique_ptr<Enemy>>& GetEnemies() const{
         return enemies_;

@@ -14,6 +14,8 @@ void RailCamera::Initialize(){
     t_ = 0.0f;
     isPaused_ = false;
     pauseTimer_ = 0.0f;
+
+    Update();
 }
 
 void RailCamera::Update(){
@@ -62,12 +64,13 @@ void RailCamera::Update(){
     if (t_ > 1.0f){
         t_ -= 1.0f;
         pauseComplete_ = false;  // ループ後に再び停止可能にする
+        isFinishedRail_ = true;
     }
 
     // カメラの位置と注視点の更新
     Vector3 eye = CatmullRomPosition(ctrlPoints_, t_);
 
-    float t_2 = t_ + 0.03f;
+    float t_2 = t_ + 0.02f;
     t_2 = std::clamp(t_2, 0.0f, 1.0f);
 
     Vector3 target = CatmullRomPosition(ctrlPoints_, t_2);

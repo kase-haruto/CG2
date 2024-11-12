@@ -327,6 +327,9 @@
     <ClCompile Include="Game\objects\Coaster.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Game\objects\Boss.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -560,6 +563,9 @@
     <ClInclude Include="Engine\physics\Line.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Game\objects\Boss.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Object2d.VS.hlsl" />
@@ -568,7 +574,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Object3d.hlsli" />
-    <None Include="Engine\graphics\shaders\Object2d.hlsli" />
     <ClInclude Include="Game\objects\Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -593,6 +598,7 @@
     <ClInclude Include="Engine\Editor\UiEditor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <None Include="Engine\graphics\shaders\Object2d.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli" />

@@ -27,7 +27,7 @@ public:
 	uint32_t GetTypeID()const{ return typeID_; }
 	void SetTypeID(uint32_t typeID){ typeID_ = typeID; }
 
-private:
+protected:
 	//衝突識別番号
 	uint32_t typeID_ = 0u;
 

@@ -23,7 +23,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update()override;
+	virtual void Update()override;
 
 	/// <summary>
 	/// 描画
@@ -62,7 +62,7 @@ public:
 private: 
 	void Move();
 
-private:
+protected:
 	//移動速度
 	Vector3 velocity_ {};
 

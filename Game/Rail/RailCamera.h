@@ -24,6 +24,12 @@ public:
 
 	const Matrix4x4& GetWorldMat()const{ return worldMat_; }
 
+	bool GetIsFinished()const{ return isFinishedRail_; }
+
+	void SetIsFinished(const bool frag){ isFinishedRail_ = frag; }
+
+	bool GetIsPaused()const{ return isPaused_; }
+
 private:
 	//////////////////////////////////////////////////////////
 	//		メンバ変数
@@ -39,6 +45,8 @@ private:
 	bool isPaused_ = false;       // 停止状態フラグ
 	bool pauseComplete_ = false;
 	float pauseTimer_ = 0.0f;     // 停止時間のカウント
-	const float pauseDuration_ = 5.0f; // 停止時間（5秒）
+	const float pauseDuration_ = 5.0f; // 停止時間（8秒）
+
+	bool isFinishedRail_ = false;
 
 };

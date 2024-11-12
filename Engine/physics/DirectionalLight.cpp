@@ -35,7 +35,7 @@ void DirectionalLight::Render(){
 	ImGui::End();
 #endif // _DEBUG
 
-	
+	data_->intensity = parameter_.intensity;
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 

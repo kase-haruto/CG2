@@ -7,11 +7,24 @@
 
 #include "imgui.h"
 
+#include <algorithm>
+#undef min
+
 void Player::Initialize(Model* model){
 	Character::Initialize(model);
 
 	beam_ = std::make_unique<Model>("beam");
     beam_->transform.scale = {0.5f,0.5f,50.0f};
+
+    hpSprite_ = std::make_unique<Sprite>("white1x1.png");
+    // スプライトの初期化
+    hpSprite_->Initialize({120.0f,500.0f}, {64.0f,256.0f});
+    hpSprite_->SetAnchorPoint({0.0f,1.0f});
+
+    reticleSprite_ = std::make_unique<Sprite>("reticle.png");
+    Vector2 mousePos = Input::GetMousePosition();
+    reticleSprite_->Initialize(mousePos, {64.0f,64.0f});
+    reticleSprite_->SetAnchorPoint({0.5f,0.5f});
 
 	line_.color = {1.0f,0.0f,0.0f,1.0f};
 
@@ -20,16 +33,18 @@ void Player::Initialize(Model* model){
 void Player::Update(){
 #ifdef _DEBUG
     ImGui::Begin("player");
-    ImGui::DragFloat3("beamPos",&beam_->transform.translate.x,0.01f);
+    ImGui::DragFloat3("beamPos", &beam_->transform.translate.x, 0.01f);
+    ImGui::Text("Shoot Timer: %.2f", shootTimer_);
+    ImGui::Text("Fully Recovered: %s", isFullyRecovered_ ? "Yes" : "No");
     ImGui::End();
 #endif // _DEBUG
+    UpdateUI();
 
     if (!beam_->viewProjection_){
         beam_->SetViewProjection(pViewProjection_);
     }
 
-    ///==============================
-    //古い球の削除
+    // 古い球の削除
     bullets_.remove_if([] (const std::unique_ptr<Bullet>& bullet){
         if (!bullet->GetIsActive()){
             CollisionManager::GetInstance()->RemoveCollider(bullet.get());
@@ -38,27 +53,91 @@ void Player::Update(){
         return false;
                        });
 
-    //===============================
     ReticleUpdate();
     Shoot();
 
-    //行列の更新
+    // 行列の更新
     model_->worldMatrix = MakeAffineMatrix(model_->transform.scale,
                                            model_->transform.rotate,
                                            model_->transform.translate);
 
-    //親がいたらそれも計算
     if (parentTransform_){
-        parentWorldMat_ = MakeAffineMatrix({1.0f,1.0f,1.0f},
+        parentWorldMat_ = MakeAffineMatrix({1.0f, 1.0f, 1.0f},
                                            parentTransform_->rotate,
                                            parentTransform_->translate);
         model_->worldMatrix = Matrix4x4::Multiply(parentWorldMat_, model_->worldMatrix);
     }
 
     model_->UpdateMatrix();
-
     BeamUpdate();
 }
+
+void Player::UpdateUI(){
+    float maxSpriteHeight = 256.0f;
+    float minSpriteHeight = 0.0f;
+    float spriteHeight = std::lerp(minSpriteHeight, maxSpriteHeight, shootTimer_ / maxShootTime_);
+
+    // スプライトのサイズを更新
+    hpSprite_->SetSize({64.0f, spriteHeight});
+
+    // 残り時間の割合を計算
+    float percentage = shootTimer_ / maxShootTime_;
+    Vector4 color;
+
+    // 割合に応じて色を設定
+    if (percentage <= 0.2f){
+        // 0〜20%：赤色
+        color = {1.0f, percentage / 0.2f, 0.0f, 1.0f}; // 赤からオレンジへの遷移
+    } else if (percentage <= 0.5f){
+        // 20〜50%：オレンジから黄色への遷移
+        float t = (percentage - 0.2f) / 0.3f;
+        color = {1.0f, std::lerp(percentage / 0.5f, 1.0f, t), 0.0f, 1.0f};
+    } else{
+        // 50〜100%：黄色から緑への遷移
+        float t = (percentage - 0.5f) / 0.5f;
+        color = {std::lerp(1.0f, 0.0f, t), 1.0f, 0.0f, 1.0f};
+    }
+
+    // スプライトの色を設定
+    hpSprite_->SetColor(color);
+
+    hpSprite_->Update();
+}
+
+void Player::Shoot(){
+    // 初期化
+    isShoot_ = false;
+
+    // タイマーが完全回復していない場合は発射不可
+    if (!isFullyRecovered_){
+        // タイマーが完全回復したらフラグをリセット
+        shootTimer_ = std::min(shootTimer_ + recoveryRate_, maxShootTime_);
+        if (shootTimer_ >= maxShootTime_){
+            isFullyRecovered_ = true;
+        }
+        return;
+    }
+
+    // スペースキーが押されていて、かつshootTimer_が0以上で発射可能
+    if (Input::PushKey(DIK_SPACE) && shootTimer_ > 0.0f){
+        isShoot_ = true;
+        shootTimer_ -= 0.1f;  // 発射中はタイマーを減少
+
+        // shootTimer_が0以下になったら発射不可に設定
+        if (shootTimer_ <= 0.0f){
+            shootTimer_ = 0.0f;
+            isFullyRecovered_ = false;
+        }
+    } else{
+        // 発射していない場合はタイマーを回復
+        shootTimer_ = std::min(shootTimer_ + recoveryRate_, maxShootTime_);
+        if (shootTimer_ >= maxShootTime_){
+            isFullyRecovered_ = true;
+        }
+    }
+}
+
+
 
 void Player::BeamUpdate(){
     // ビームの衝突用座標の更新
@@ -120,23 +199,22 @@ void Player::ReticleUpdate(){
 	// カメラから参照オブジェクトの距離
 	const float kDistanceTestObject = 100.0f;
 	reticlePos_ = posNear + (mouseDirection.Normalize() * kDistanceTestObject);
+
+    reticleSprite_->SetPosition(mousePos);
+    reticleSprite_->Update();
 }
 
 
 
 void Player::Draw(){
 	if (isShoot_){
-		PrimitiveDrawer::GetInstance()->DrawLine3d(line_.startPos, line_.endPos,line_.color);
 		beam_->Draw();
 	}
 }
 
-void Player::Shoot(){
-	isShoot_ = false;
-	// スペースキーが押されているかチェックし、クールタイムが終了した場合のみ発射
-	if (Input::PushKey(DIK_SPACE)){
-		isShoot_ = true;
-	}
+void Player::DrawUi(){
+    hpSprite_->Draw();
+    reticleSprite_->Draw();
 }
 
 void Player::OnCollision(Collider* other){

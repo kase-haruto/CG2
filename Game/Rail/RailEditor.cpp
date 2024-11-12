@@ -174,9 +174,9 @@ void RailEditor::DrawLine(){
     }
 
     // ラインを描画
-    for (size_t i = 0; i < segmentCount; i++){
-        PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
-    }
+   // for (size_t i = 0; i < segmentCount; i++){
+   ////     PrimitiveDrawer::GetInstance()->DrawLine3d(pointsDrawing[i], pointsDrawing[i + 1], {1.0f, 1.0f, 1.0f, 1.0f});
+   // }
 }
 
 

@@ -2,7 +2,7 @@
 
 /* engine */
 #include "Editor/BaseEditor.h"
-
+#include "Engine/objects/Sprite.h"
 /* lib */
 #include <vector>
 #include <string>

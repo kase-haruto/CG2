@@ -18,9 +18,7 @@ Enemy::~Enemy(){
 void Enemy::Initialize(Model* model){
 	assert(!model);
 	Character::Initialize(model_);
-	model_->UpdateMatrix();
-
-	
+	model_->UpdateMatrix();	
 }
 
 void Enemy::Initialize(Model* model, const Vector3& pos){
