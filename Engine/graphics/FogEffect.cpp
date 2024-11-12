@@ -3,7 +3,7 @@
 #include "../graphics/GraphicsGroup.h"
 
 #ifdef _DEBUG
-#include<imgui.h>
+#include<externals/imgui/imgui.h>
 #endif // _DEBUG
 
 

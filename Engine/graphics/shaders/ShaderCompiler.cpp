@@ -1,5 +1,5 @@
-﻿#include "ShaderCompiler.h"
-#include "myFunc/ConvertString.h"
+﻿#include "engine/graphics/shaders/ShaderCompiler.h"
+#include "lib/myFunc/ConvertString.h"
 #include <format>
 
 void ShaderCompiler::InitializeDXC(){
