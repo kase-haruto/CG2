@@ -4,12 +4,12 @@
 #include <algorithm>
 #undef max
 
-Boss::~Boss(){ delete model_; }
+Boss::~Boss(){ }
 
 void Boss::Initialize(Model* model,const Vector3& position){
 	score_ = 1000;
 	Enemy::Initialize(model,position);
-
+    viewTime_ = 400;
 	radius_ = 3.0f;
 }
 
@@ -126,7 +126,7 @@ void Boss::Move(){
 }
 
 void Boss::Draw(){
-    if (isSpawn_&&isAlive_  ){
+    if (isSpawn_){
         Character::Draw();
     }
 }

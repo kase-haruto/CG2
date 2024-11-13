@@ -86,6 +86,7 @@ void GameScene::Initialize(){
 	}
 
 	// scoreSprites_とresultScoreSprites_の初期化
+	scoreSprites_.resize(5);
 	for (size_t i = 0; i < scoreSprites_.size(); ++i){
 		auto sprite = std::make_shared<Sprite>("0.png");
 		if (sprite){
@@ -94,6 +95,7 @@ void GameScene::Initialize(){
 		}
 	}
 
+	resultScoreSprites_.resize(5);
 	for (size_t i = 0; i < resultScoreSprites_.size(); ++i){
 		auto sprite = std::make_shared<Sprite>("0.png");
 		if (sprite){
