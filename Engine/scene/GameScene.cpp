@@ -12,7 +12,7 @@ GameScene::GameScene(){
 	GlobalVariables::GetInstance()->Initialize();
 }
 
-GameScene::~GameScene(){ }
+GameScene::~GameScene(){ boss_.release(); }
 
 static Vector3 originPos;
 static Vector3 originRotate;

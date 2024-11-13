@@ -4,7 +4,9 @@
 #include <algorithm>
 #undef max
 
-Boss::~Boss(){ }
+Boss::~Boss(){ 
+    score_ = 0;
+}
 
 void Boss::Initialize(Model* model,const Vector3& position){
 	score_ = 1000;

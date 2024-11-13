@@ -19,9 +19,6 @@ void RailCamera::Initialize(){
 }
 
 void RailCamera::Update(){
-#ifdef _DEBUG
-    ImGui::Text("time: %f", t_);
-#endif // _DEBUG
 
     // 停止状態の処理
     if (isPaused_){
