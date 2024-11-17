@@ -10,6 +10,7 @@
 #include "objects/EnemyManager.h"
 #include "objects/Sprite.h"
 #include "Editor/UiEditor.h"
+#include "objects/ModelBuilder.h"
 
 #include "Game/objects/Boss.h"
 
@@ -97,7 +98,8 @@ private:
 	///=========================
 	std::unique_ptr<Model> playerModel_ = nullptr;
 	std::unique_ptr<Model> bossModel_ = nullptr;
-
+	std::unique_ptr<Model> coaster_ = nullptr;
+	std::unique_ptr<ModelBuilder> modelBuilder_ = nullptr;
 	///=========================
 	/// 3dObject
 	///=========================

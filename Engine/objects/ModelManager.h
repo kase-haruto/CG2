@@ -47,6 +47,9 @@ public:
     /// </summary>
     void Finalize();
 
+    // ロードされたモデル名のリストを取得
+    std::vector<std::string> GetLoadedModelNames() const;
+
 private:
     ModelManager() = default;
     ~ModelManager() = default;

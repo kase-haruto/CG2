@@ -23,7 +23,7 @@ private:
 	void Move();
 
 private:
-	int life_ = 80;
+	int life_ = 150;
 
 	bool isSpawn_ = false;
 };

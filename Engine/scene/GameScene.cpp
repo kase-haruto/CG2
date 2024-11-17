@@ -21,6 +21,9 @@ void GameScene::Initialize(){
 	// スコアのリセット
 	score_ = 0;
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			カメラ
+	/////////////////////////////////////////////////////////////////////////////////////////
 	// カメラ関連
 	viewProjection_ = std::make_unique<ViewProjection>();
 	if (viewProjection_){
@@ -36,22 +39,29 @@ void GameScene::Initialize(){
 		primitiveDrawer->Initialize();
 	}
 
-	// 天球
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			天球
+	/////////////////////////////////////////////////////////////////////////////////////////
 	skydome_ = std::make_unique<Model>("skydome");
 	if (skydome_ && viewProjection_){
 		skydome_->SetViewProjection(viewProjection_.get());
-		skydome_->transform.scale = {800.0f, 800.0f, 800.0f};
+		skydome_->transform.scale = {900.0f, 900.0f, 900.0f};
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			地面
+	/////////////////////////////////////////////////////////////////////////////////////////
 	ground_ = std::make_unique<Model>("ground");
 	if (ground_ && viewProjection_){
 		ground_->materialParameter.shininess = 50.0f;
 		ground_->SetViewProjection(viewProjection_.get());
-		ground_->transform.scale = {800.0f, 400.0f, 800.0f};
-		ground_->transform.translate = {0.0f, -200.0f, 0.0f};
+		ground_->transform.scale = {400.0f, 200.0f, 400.0f};
+		ground_->transform.translate = {0.0f, -80.0f, 0.0f};
 	}
 
-	// 他の初期化部分にも同様にnullptrチェックを追加
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			レール
+	/////////////////////////////////////////////////////////////////////////////////////////
 	railEditor_ = std::make_unique<RailEditor>();
 	if (railEditor_ && viewProjection_){
 		railEditor_->SetViewProjection(viewProjection_.get());
@@ -64,6 +74,9 @@ void GameScene::Initialize(){
 		railCamera_->Update();
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			プレイヤー
+	/////////////////////////////////////////////////////////////////////////////////////////
 	playerModel_ = std::make_unique<Model>("suzanne");
 	player_ = std::make_unique<Player>();
 	if (player_ && playerModel_ && viewProjection_){
@@ -72,6 +85,13 @@ void GameScene::Initialize(){
 		player_->SetParent(&railCamera_->GetTransform());
 	}
 
+	coaster_ = std::make_unique<Model>("coaster");
+	coaster_->SetViewProjection(viewProjection_.get());
+	coaster_->SetColor({1.0f,0.0f,0.3f,1.0f});
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			敵
+	/////////////////////////////////////////////////////////////////////////////////////////
 	enemyManager_ = std::make_unique<EnemyManager>();
 	if (enemyManager_ && viewProjection_){
 		enemyManager_->SetViewProjection(viewProjection_.get());
@@ -85,7 +105,9 @@ void GameScene::Initialize(){
 		boss_->Update();
 	}
 
-	// scoreSprites_とresultScoreSprites_の初期化
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			スプライト
+	/////////////////////////////////////////////////////////////////////////////////////////
 	scoreSprites_.resize(5);
 	for (size_t i = 0; i < scoreSprites_.size(); ++i){
 		auto sprite = std::make_shared<Sprite>("0.png");
@@ -123,7 +145,14 @@ void GameScene::Initialize(){
 		space_->SetAnchorPoint({0.5f, 0.5f});
 	}
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//			エディタ
+	/////////////////////////////////////////////////////////////////////////////////////////
 	editor_ = std::make_unique<UIEditor>();
+	modelBuilder_ = std::make_unique<ModelBuilder>();
+	modelBuilder_->SetViewProjection(viewProjection_.get());
+	modelBuilder_->Initialize();
 }
 
 void GameScene::Update(){
@@ -140,8 +169,15 @@ void GameScene::Update(){
 	editor_->ShowImGuiInterface();
 
 	ImGui::End();
-
+	modelBuilder_->ShowImGuiInterface();
 #endif // _DEBUG
+
+	modelBuilder_->Update();
+	
+	Vector3 offset {0.0f,-0.7f,0.0f};
+	coaster_->transform.translate = viewProjection_->transform.translate + offset;
+	coaster_->transform.rotate = viewProjection_->transform.rotate;
+	coaster_->Update();
 
 	editor_->Update();
 	//fieldの更新
@@ -162,8 +198,6 @@ void GameScene::Update(){
 			ResultUpdate();
 			break;
 	}
-
-	
 }
 
 void GameScene::Draw(){
@@ -172,6 +206,9 @@ void GameScene::Draw(){
 	ground_->Draw();
 	railEditor_->Draw();
 
+	coaster_->Draw();
+
+	modelBuilder_->Draw();
 
 	//現在の状態のシーンの描画
 	switch (gameState_){
@@ -260,6 +297,7 @@ void GameScene::StartUpdate(){
 
 	title_->Update();
 
+
 	space_->Update();
 
 	if (Input::TriggerKey(DIK_SPACE)){
@@ -269,9 +307,35 @@ void GameScene::StartUpdate(){
 
 void GameScene::PlayUpdate(){
 	//カメラの更新
+	if (Input::PushKey(DIK_A)){
+		viewProjection_->transform.translate.x -= 0.1f;
+	} else if (Input::PushKey(DIK_D)){
+		viewProjection_->transform.translate.x += 0.1f;
+	}
+
+	if (Input::PushKey(DIK_W)){
+		viewProjection_->transform.translate.z += 0.1f;
+	} else if (Input::PushKey(DIK_S)){
+		viewProjection_->transform.translate.z -= 0.1f;
+	}
+
+	if (Input::PushKey(DIK_SPACE)){
+		viewProjection_->transform.translate.y += 0.05f;
+	} else if (Input::PushKey(DIK_LSHIFT)){
+		viewProjection_->transform.translate.y -= 0.05f;
+	}
+
+	if (Input::PushKey(DIK_RIGHT)){
+		viewProjection_->transform.rotate.y += 0.05f;
+	} else if (Input::PushKey(DIK_LEFT)){
+		viewProjection_->transform.rotate.y -= 0.05f;
+	}
+
 	viewProjection_->transform.translate = railCamera_->GetTransform().translate;
 	viewProjection_->transform.rotate = railCamera_->GetTransform().rotate;
 	viewProjection_->UpdateMatrix();
+
+	
 
 	UpdateScore();
 
@@ -368,6 +432,7 @@ void GameScene::StartDraw(){
 
 	title_->Draw();
 
+
 	// フレームカウンターを用いたちらつき効果
 	static int frameCounter = 0; // フレームカウンター
 	frameCounter++;
@@ -393,11 +458,11 @@ void GameScene::PlayDraw(){
 	enemyManager_->Draw();
 
 	DrawScore();
-
 	player_->DrawUi();
 }
 
 void GameScene::ResultDraw(){
+
 	// スコアを画面中央に大きく表示
 	std::string scoreString = std::to_string(newScore_);
 	while (scoreString.size() < 5){

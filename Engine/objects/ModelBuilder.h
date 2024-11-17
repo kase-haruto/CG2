@@ -7,6 +7,7 @@
 #include<memory>
 
 #include<string>
+#include<map>
 
 /// <summary>
 /// モデル作成クラス
@@ -14,7 +15,7 @@
 class ModelBuilder:
 public BaseEditor{
 public:
-	ModelBuilder() = default;
+	ModelBuilder();
 	~ModelBuilder()override = default;
 
 	/// <summary>
@@ -74,13 +75,24 @@ public:
 	}
 
 private:
+	// モデルの保存と読み込み
+	void SaveModels(const std::string& filePath);
+	void LoadModels(const std::string& filePath);
+
+private:
 	std::unique_ptr<Model>CreateModel(const std::string& modelPath);
 
 
 private:
-	//作成したモデル
-	std::vector<std::pair<std::string, std::unique_ptr<Model>>> models_;
+	// モデル名（ユニーク）とモデルオブジェクトのペア
+	std::map<std::string, std::pair<std::string, std::unique_ptr<Model>>> models_;
+	// キー: ユニーク名 (unique_key)
+	// 値: <オリジナル名, モデルオブジェクト>
+
 	std::vector<std::string> availableModels_;
 	ViewProjection* viewProjection_;
+
+	// モデル選択用
+	std::string selectedModelName_;
 };
 

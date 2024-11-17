@@ -13,7 +13,7 @@ ModelManager* ModelManager::GetInstance(){
 void ModelManager::StartUpLoad(){
     LoadModel("suzanne");
     //LoadModel("axis");
-    LoadModel("bunny");
+    //LoadModel("bunny");
     LoadModel("debugCube");
     LoadModel("fence");
     LoadModel("ground");
@@ -23,6 +23,9 @@ void ModelManager::StartUpLoad(){
     LoadModel("suzanne");
     LoadModel("teapot");
     LoadModel("terrain");
+    LoadModel("scaffold");
+    LoadModel("coaster");
+    LoadModel("station");
 }
 
 
@@ -95,4 +98,12 @@ void ModelManager::Finalize(){
         delete instance_;
         instance_ = nullptr;
     }
+}
+
+std::vector<std::string> ModelManager::GetLoadedModelNames() const{
+    std::vector<std::string> modelNames;
+    for (const auto& pair : modelDatas_){
+        modelNames.push_back(pair.first);
+    }
+    return modelNames;
 }
