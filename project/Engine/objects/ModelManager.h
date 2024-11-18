@@ -1,7 +1,7 @@
 #pragma once
 
 // engine
-#include "../objects/ModelData.h"
+#include "engine/objects/ModelData.h"
 #include "engine/graphics/GraphicsGroup.h"
 #include "lib/myFunc/MyFunc.h"
 
@@ -46,6 +46,9 @@ public:
     /// 解放処理
     /// </summary>
     void Finalize();
+
+    // ロードされたモデル名のリストを取得
+    std::vector<std::string> GetLoadedModelNames() const;
 
 private:
     ModelManager() = default;

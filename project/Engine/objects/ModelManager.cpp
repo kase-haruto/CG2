@@ -94,3 +94,12 @@ void ModelManager::Finalize(){
         instance_ = nullptr;
     }
 }
+
+
+std::vector<std::string> ModelManager::GetLoadedModelNames() const{
+    std::vector<std::string> modelNames;
+    for (const auto& pair : modelDatas_){
+        modelNames.push_back(pair.first);
+    }
+    return modelNames;
+}
