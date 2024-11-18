@@ -55,6 +55,7 @@ void TestScene::Initialize(){
 	//モデル
 	modelBuilder_ = std::make_unique<ModelBuilder>();
 	modelBuilder_->SetViewProjection(viewProjection_.get());
+	modelBuilder_->Initialize();
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();

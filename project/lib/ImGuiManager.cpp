@@ -43,7 +43,7 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (style.WindowRounding == 0.0f){
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 0.9f;
 		}
 	}
 
