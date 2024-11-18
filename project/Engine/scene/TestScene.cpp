@@ -2,6 +2,8 @@
 
 #include "../core/Input.h"
 
+#include "../graphics/camera/CameraManager.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
@@ -21,23 +23,21 @@ void TestScene::Initialize(){
 	///=========================
 	/// カメラ関連
 	///=========================
-	viewProjection_ = std::make_unique<ViewProjection>();
-	viewProjection_->Initialize();
+	CameraManager::Initialize();
 
 	///=========================
 	/// オブジェクト関連
 	///=========================
 	//線
-	PrimitiveDrawer::GetInstance()->SetViewProjection(viewProjection_.get());
 	PrimitiveDrawer::GetInstance()->Initialize();
 
 	//パーティクル
 	particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
-	particle_->Create(viewProjection_.get());
+	particle_->Initialize();
 
 	//球体
 	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize(viewProjection_.get());
+	sphere_->Initialize();
 
 	////地面
 	/*modelGround_ = std::make_unique<Model>("ground");
@@ -46,7 +46,6 @@ void TestScene::Initialize(){
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
 
 	modelField_ = std::make_unique<Model>("terrain");
-	modelField_->SetViewProjection(viewProjection_.get());
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +53,6 @@ void TestScene::Initialize(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//モデル
 	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->SetViewProjection(viewProjection_.get());
 	modelBuilder_->Initialize();
 
 	//sprite
@@ -66,31 +64,14 @@ void TestScene::Update(){
 	UpdateDebugUI();
 #endif // _DEBUG
 
+	CameraManager::Update();
+
 	//uiの更新
 	uiEditor_->Update();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//		カメラの更新
 	/////////////////////////////////////////////////////////////////////////////////////////
-
-	if (Input::PushKey(DIK_A)){
-		viewProjection_->transform.translate.x -= 0.1f;
-	} else if (Input::PushKey(DIK_D)){
-		viewProjection_->transform.translate.x += 0.1f;
-	}
-
-	if (Input::PushKey(DIK_W)){
-		viewProjection_->transform.translate.z += 0.1f;
-	} else if (Input::PushKey(DIK_S)){
-		viewProjection_->transform.translate.z -= 0.1f;
-	}
-
-	if (Input::PushKey(DIK_RIGHT)){
-		viewProjection_->transform.rotate.y += 0.05f;
-	} else if (Input::PushKey(DIK_LEFT)){
-		viewProjection_->transform.rotate.y -= 0.05f;
-	}
-
 
 	//モデルの更新
 	modelBuilder_->Update();
@@ -179,7 +160,6 @@ void TestScene::UpdateDebugUI(){
 
 	ImGui::End();
 
-	viewProjection_->ImGui();
 #endif // _DEBUG
 }
 
@@ -219,7 +199,6 @@ void TestScene::Draw(){
 }
 
 void TestScene::Finalize(){
-	viewProjection_.reset();
 	modelBuilder_.reset();
 	uiEditor_.reset();
 	sphere_.reset();
@@ -233,5 +212,4 @@ void TestScene::ModelPreDraw(){
 	pointLight_->Render();
 	directionalLight_->Render();
 	fog_->Update();
-	viewProjection_->UpdateMatrix();
 }

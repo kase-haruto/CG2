@@ -2,6 +2,7 @@
 #include "engine/objects/TextureManager.h"
 #include "externals/imgui/imgui.h"
 #include "engine/physics/DirectionalLight.h"
+#include "Engine/graphics/camera/CameraManager.h"
 		 
 /* math */
 #include "lib/myfunc/MyFunc.h"
@@ -12,14 +13,12 @@
 
 Triangle::Triangle(){}
 
-void Triangle::Initialize(ViewProjection* viewProjection){
+void Triangle::Initialize(){
 	auto graphics = GraphicsGroup::GetInstance();
 	device_ = graphics->GetDevice();
 	commandList_ = graphics->GetCommandList();
 	rootSignature_ = graphics->GetRootSignature(Object3D);
 	pipelineState_ = graphics->GetPipelineState(Object3D);
-
-	viewProjection_ = viewProjection;
 
 	RGBa = {1.0f,1.0f,1.0f,1.0f};
 	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -134,7 +133,7 @@ void Triangle::MatrixInitialize(){
 											 transform.translate
 	);
 
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;
 }

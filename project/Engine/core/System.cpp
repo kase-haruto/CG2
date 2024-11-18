@@ -4,6 +4,7 @@
 #include "../graphics/SrvLocator.h"
 #include "../core/Input.h"
 #include "../objects/ModelManager.h"
+#include "../graphics/camera/CameraManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -35,6 +36,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     imguiManager_ = std::make_unique<ImGuiManager>();
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
+
+    // カメラの生成
+    CameraManager::Initialize();
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
@@ -71,6 +75,8 @@ void System::Finalize(){
     TextureManager::GetInstance()->Finalize();
     //モデルマネージャーの開放
     ModelManager::GetInstance()->Finalize();
+    //カメラの開放
+    CameraManager::Finalize();
     //pipelineの終了処理
     pipelineStateManager_->Finalize();
     SrvLocator::Finalize();

@@ -5,6 +5,7 @@
 #include "../physics/DirectionalLight.h"
 #include "../graphics/SrvLocator.h"
 #include "../objects/ModelManager.h"
+#include "../graphics/camera/CameraManager.h"
 
 /* math */
 #include "lib/myfunc/MyFunc.h"
@@ -21,14 +22,14 @@
 
 ParticleManager::ParticleManager(const uint32_t kInstanceNum) :kMaxInstance_(kInstanceNum){}
 
+
 ParticleManager::~ParticleManager(){}
 
-void ParticleManager::Initialize(ViewProjection* viewProjection){
+void ParticleManager::Initialize(){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject);
-	viewProjection_ = viewProjection;
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
@@ -81,7 +82,7 @@ Particle ParticleManager::MakeNewParticle(std::mt19937& randomEngine,const Vecto
 	return newParticle;
 }
 
-void ParticleManager::Create(ViewProjection* viewProjection){
+void ParticleManager::Create(){
 	// ランダム生成器の初期化
 	std::random_device rd;
 	std::mt19937 randomEngine(rd());
@@ -93,7 +94,7 @@ void ParticleManager::Create(ViewProjection* viewProjection){
 	}
 
 	// 初期化
-	Initialize(viewProjection);
+	Initialize();
 }
 
 
@@ -138,7 +139,7 @@ void ParticleManager::Update(){
 				continue;
 			}
 
-			Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, viewProjection_->cameraMatrix);
+			Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
 			billboardMatrix.m[3][0] = 0.0f;
 			billboardMatrix.m[3][1] = 0.0f;
 			billboardMatrix.m[3][2] = 0.0f;
@@ -146,7 +147,7 @@ void ParticleManager::Update(){
 			Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
 			Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
 			Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
-			Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+			Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 
 			instancingData[numInstance_].WVP = worldViewProjectionMatrix;
 			instancingData[numInstance_].World = worldMatrix;

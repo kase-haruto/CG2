@@ -358,6 +358,8 @@
       <Filter>Engine\project\3d\graphics\srv</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\graphics\camera\Camera3d.cpp" />
+    <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -552,6 +554,8 @@
     <ClInclude Include="Engine\graphics\SrvLocator.h">
       <Filter>Engine\project\3d\graphics\srv</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\graphics\camera\Camera3d.h" />
+    <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

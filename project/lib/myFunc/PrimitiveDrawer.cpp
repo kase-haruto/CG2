@@ -1,5 +1,6 @@
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "engine/graphics/GraphicsGroup.h"
+#include "Engine/graphics/camera/CameraManager.h"
 #include "lib/myFunc/MyFunc.h"
 
 
@@ -120,11 +121,9 @@ void PrimitiveDrawer::CreateMatrixBuffer(){
 }
 
 void PrimitiveDrawer::UpdateMatrixBuffer(){
-	if (!viewProjection_) return;
-
 	// ワールド行列（必要に応じて設定）
 	Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 
 	// 定数バッファの更新
 	matrixData_->world = worldMatrix;

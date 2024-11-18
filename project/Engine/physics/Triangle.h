@@ -3,7 +3,6 @@
 #include "engine/graphics/Material.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
-#include "engine/graphics/ViewProjection.h"
 
 #include "lib/myMath/Vector4.h"
 
@@ -25,7 +24,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(ViewProjection* viewProjection);
+	void Initialize();
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -83,6 +82,5 @@ private:
 	Material* materialData;
 	TransformationMatrix* matrixData;
 
-	ViewProjection* viewProjection_;
 };
 
