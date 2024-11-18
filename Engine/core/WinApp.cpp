@@ -15,7 +15,7 @@ WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName
 
 	CreateWnd();
 
-   // ShowCursor(false);
+   ShowCursor(false);
 }
 
 //デストラクタ
