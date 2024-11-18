@@ -1,14 +1,11 @@
 ﻿#pragma once
-#include "../objects/ModelData.h"
-#include "../graphics/Material.h"
-#include "../objects/TransformationMatrix.h"
-#include "../objects/Transform.h"
-#include "../graphics/ViewProjection.h"
-
-/* math */
+#include "engine/objects/ModelData.h"
+#include "engine/graphics/Material.h"
+#include "engine/objects/TransformationMatrix.h"
+#include "engine/objects/Transform.h"
 #include "lib/myMath/Vector4.h"
+#include "Engine/graphics/ViewProjection.h"
 
-/* c++ */
 #include <d3d12.h>
 #include <wrl.h>
 #include <string>
@@ -35,7 +32,9 @@ public:
     /// 更新
     /// </summary>
     void Update();
-    
+
+    void UpdateMatrix();
+
     void Map();
 
     /// <summary>
@@ -81,16 +80,26 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE handle;
 
     Vector4 RGBa;
-    Transform transform;
     Transform uvTransform {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
     std::shared_ptr<ModelData> modelData;
     Material* materialData;
+
     TransformationMatrix* matrixData;
 
     int currentLightingMode = 0;
-    const ViewProjection* viewProjection_;
+
+public:
+    Material materialParameter;
+
+    Transform transform;
+
+    Matrix4x4 worldMatrix;
 
 private:
     static const std::string directoryPath_;
+
+public:
+    const ViewProjection* viewProjection_;
+
 };

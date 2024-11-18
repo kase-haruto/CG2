@@ -1,18 +1,13 @@
-﻿#include "Model.h"
-
-/* engine */
-#include "../graphics/VertexData.h"
-#include "../objects/TextureManager.h"
-#include "../objects/ModelManager.h"
-#include "../graphics/GraphicsGroup.h"
-#include "../physics/DirectionalLight.h"
-
-/* math */
+﻿#include "engine/objects/Model.h"
 #include "lib/myfunc/MyFunc.h"
+#include "engine/graphics/VertexData.h"
+#include "engine/objects/TextureManager.h"
+#include "engine/objects/ModelManager.h"
+#include "engine/graphics/GraphicsGroup.h"
+#include "engine/physics/DirectionalLight.h"
 
-/* externals */
 #ifdef _DEBUG
-#include<externals/imgui/imgui.h>
+#include "externals/imgui/imgui.h"
 #endif // _DEBUG
 
 Model::Model(const std::string& fileName){
@@ -22,7 +17,7 @@ Model::Model(const std::string& fileName){
 
 Model::~Model(){}
 
-void Model::Initialize(bool isUseTexture){
+void Model::Initialize(bool isDepth){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
@@ -32,6 +27,8 @@ void Model::Initialize(bool isUseTexture){
 
     RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     transform = {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+
+    materialParameter.shininess = 20;
 
     // マテリアルと行列用リソースを生成
     CreateMaterialBuffer();
@@ -47,7 +44,6 @@ void Model::ShowImGuiInterface(){
     materialData->uvTransform = uvTransformMatrix;
 
 #ifdef _DEBUG
-
 
 
     ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f);
@@ -71,7 +67,8 @@ void Model::ShowImGuiInterface(){
         }
         ImGui::EndCombo();
     }
-#endif // _DEBUG
+#endif // DEBUG
+
 }
 
 void Model::Create(const std::string& filename, bool isUseTexture){
@@ -97,8 +94,16 @@ void Model::Create(const std::string& filename, bool isUseTexture){
 
 void Model::Update(){
     materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
+    materialData->shininess = materialParameter.shininess;
+    materialData->enableLighting = materialParameter.enableLighting;
 
-    Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+    matrixData->world = worldMatrix;
+    matrixData->WVP = worldViewProjectionMatrix;
+}
+
+void Model::UpdateMatrix(){
     Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
     matrixData->world = worldMatrix;
     matrixData->WVP = worldViewProjectionMatrix;
