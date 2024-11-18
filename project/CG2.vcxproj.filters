@@ -324,9 +324,6 @@
     <ClCompile Include="Engine\graphics\PipelineStateObject.cpp">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\Particle.cpp">
-      <Filter>Engine\project\3d\objects\particle</Filter>
-    </ClCompile>
     <ClCompile Include="lib\myFunc\MathFunc.cpp">
       <Filter>Engine\project\math\function</Filter>
     </ClCompile>
@@ -360,6 +357,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\graphics\camera\Camera3d.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
+    <ClCompile Include="Engine\objects\ParticleSystem\ParticleManager.cpp" />
+    <ClCompile Include="Engine\objects\ParticleSystem\Particle.cpp" />
+    <ClCompile Include="Engine\objects\ParticleSystem\ParticleBehavior.cpp" />
+    <ClCompile Include="Engine\objects\ParticleSystem\Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -488,9 +489,6 @@
     <ClInclude Include="Engine\graphics\PipelineStateObject.h">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\Particle.h">
-      <Filter>Engine\project\3d\objects\particle</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>Engine\externals\ImGui</Filter>
     </ClInclude>
@@ -556,6 +554,10 @@
     </ClInclude>
     <ClInclude Include="Engine\graphics\camera\Camera3d.h" />
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
+    <ClInclude Include="Engine\objects\ParticleSystem\ParticleManager.h" />
+    <ClInclude Include="Engine\objects\ParticleSystem\Particle.h" />
+    <ClInclude Include="Engine\objects\ParticleSystem\ParticleBehavior.h" />
+    <ClInclude Include="Engine\objects\ParticleSystem\Emitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
