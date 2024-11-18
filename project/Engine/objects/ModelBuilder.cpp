@@ -55,7 +55,7 @@ void ModelBuilder::ShowImGuiInterface(){
 
     // 保存ボタン
     if (ImGui::Button("Save Models")){
-        SaveModels("models.json");
+        SaveModels("Resources/json/models.json");
     }
     ImGui::Separator();
 
