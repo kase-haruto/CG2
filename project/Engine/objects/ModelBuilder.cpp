@@ -125,13 +125,9 @@ void ModelBuilder::AddModel(const std::string& modelName){
 }
 std::unique_ptr<Model> ModelBuilder::CreateModel(const std::string& modelName){
     auto model = std::make_unique<Model>(modelName);
-    model->SetViewProjection(viewProjection_);
     return model;
 }
 
-void ModelBuilder::SetViewProjection(ViewProjection* viewProjection){
-    viewProjection_ = viewProjection;
-}
 /////////////////////////////////////////////////////////////////////////////////////////
 //                          json
 /////////////////////////////////////////////////////////////////////////////////////////

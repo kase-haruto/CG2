@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Engine/objects/Model.h"
-#include "Engine/graphics/ViewProjection.h"
 #include "Engine/Editor/BaseEditor.h"
 
 //* c++ *//
@@ -88,7 +87,6 @@ private:
 	// キー: ユニーク名 (unique_key)
 	// 値: <オリジナル名, モデルオブジェクト>
 	std::vector<std::string> availableModels_;
-	ViewProjection* viewProjection_;
 	// モデル選択用
 	std::string selectedModelName_;
 };

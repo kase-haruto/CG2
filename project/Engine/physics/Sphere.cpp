@@ -1,10 +1,14 @@
 ﻿#include "Sphere.h"
+
+#include "../physics/DirectionalLight.h"
+#include "../graphics/GraphicsGroup.h"
+#include "../graphics/camera/CameraManager.h"
+
 #include "lib/myfunc/MyFunc.h"
+
+//* externals *//
 #include "engine/objects/TextureManager.h"
 #include "externals/imgui/imgui.h"
-#include "../physics/DirectionalLight.h"
-
-#include "../graphics/GraphicsGroup.h"
 
 /* c++ */
 #include<numbers>
@@ -14,13 +18,11 @@ Sphere::Sphere(){}
 Sphere::~Sphere(){}
 
 
-void Sphere::Initialize(ViewProjection* viewProjection){
+void Sphere::Initialize(){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
-	viewProjection_ = viewProjection;
-
 
 	handle = TextureManager::GetInstance()->LoadTexture("MonsterBall.png");
 
@@ -246,7 +248,7 @@ void Sphere::MatrixInitialize(){
 											 transform.translate
 	);
 
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;
 }

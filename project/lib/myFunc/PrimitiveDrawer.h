@@ -71,16 +71,11 @@ public:
     void CreateMatrixBuffer();
     void UpdateMatrixBuffer();
 
-    void SetViewProjection(const ViewProjection* viewProjection){
-        viewProjection_ = viewProjection;
-    }
-
 private:
     void CreateMeshes();
 
     std::unique_ptr<Mesh> line_;
     uint32_t indexLine_ = 0;
-    const ViewProjection* viewProjection_ = nullptr;
 
     ComPtr<ID3D12Device> device_ = nullptr;
     ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;

@@ -5,6 +5,7 @@
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/GraphicsGroup.h"
 #include "engine/physics/DirectionalLight.h"
+#include "Engine/graphics/camera/CameraManager.h"
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
@@ -98,13 +99,13 @@ void Model::Update(){
     materialData->enableLighting = materialParameter.enableLighting;
 
     worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
     matrixData->world = worldMatrix;
     matrixData->WVP = worldViewProjectionMatrix;
 }
 
 void Model::UpdateMatrix(){
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, viewProjection_->GetViewProjection());
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
     matrixData->world = worldMatrix;
     matrixData->WVP = worldViewProjectionMatrix;
 }

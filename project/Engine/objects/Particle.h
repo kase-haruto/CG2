@@ -4,7 +4,6 @@
 #include "engine/graphics/Material.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
-#include "engine/graphics/ViewProjection.h"
 
 /* math */
 #include "lib/myMath/Vector4.h"
@@ -63,20 +62,21 @@ class DirectXCommon;
 class ParticleManager{
 public:
     ParticleManager(const uint32_t kInstanceNum);
+    ParticleManager() = default;
     ~ParticleManager();
 
     /// <summary>
     /// 初期化
     /// </summary>
     /// <param name="viewProjection"></param>
-    void Initialize(ViewProjection* viewProjection);
+    void Initialize();
     
     /// <summary>
     /// パーティクルの生成と初期化
     /// </summary>
     /// <param name="numInstance"></param>
     /// <param name="viewProjection"></param>
-    void Create(ViewProjection* viewProjection);
+    void Create();
    
     /// <summary>
     /// 新しいパーティクルの生成
@@ -162,9 +162,6 @@ private:
 
     // インスタンシングデータ
     ParticleForGPU* instancingData = nullptr;
-
-    // ビュー・プロジェクション
-    ViewProjection* viewProjection_ = nullptr;
 
     // テクスチャハンドル
     D3D12_GPU_DESCRIPTOR_HANDLE handle;

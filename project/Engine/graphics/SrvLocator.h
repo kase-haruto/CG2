@@ -12,7 +12,7 @@ using Microsoft::WRL::ComPtr;
 class SrvLocator{
 public:
     // サービスを提供するための初期化メソッド
-    static void Provide(ComPtr<ID3D12DescriptorHeap> srvHeap, ComPtr<ID3D12Device> device);
+    static void Provide(const ComPtr<ID3D12DescriptorHeap>& srvHeap, const ComPtr<ID3D12Device>& device);
 
     // SRVを割り当てるメソッド
     static std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> AllocateSrv();
