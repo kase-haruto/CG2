@@ -142,10 +142,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
     <ClCompile Include="Engine\objects\ModelManager.cpp" />
-    <ClCompile Include="Engine\objects\ParticleSystem\Emitter.cpp" />
-    <ClCompile Include="Engine\objects\ParticleSystem\Particle.cpp" />
-    <ClCompile Include="Engine\objects\ParticleSystem\ParticleBehavior.cpp" />
-    <ClCompile Include="Engine\objects\ParticleSystem\ParticleManager.cpp" />
+    <ClCompile Include="Engine\objects\Particle.cpp" />
     <ClCompile Include="Engine\objects\Sprite.cpp" />
     <ClCompile Include="Engine\objects\Texture.cpp" />
     <ClCompile Include="Engine\objects\TextureManager.cpp" />
@@ -212,10 +209,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />
     <ClInclude Include="Engine\objects\ModelManager.h" />
-    <ClInclude Include="Engine\objects\ParticleSystem\Emitter.h" />
-    <ClInclude Include="Engine\objects\ParticleSystem\Particle.h" />
-    <ClInclude Include="Engine\objects\ParticleSystem\ParticleBehavior.h" />
-    <ClInclude Include="Engine\objects\ParticleSystem\ParticleManager.h" />
+    <ClInclude Include="Engine\objects\Particle.h" />
     <ClInclude Include="Engine\objects\Sprite.h" />
     <ClInclude Include="Engine\objects\Texture.h" />
     <ClInclude Include="Engine\objects\TextureManager.h" />
