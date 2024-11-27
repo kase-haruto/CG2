@@ -7,6 +7,8 @@
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
 
+#include "lib/myFunc/Random.h"
+
 /* math */
 #include "lib/myfunc/MyFunc.h"
 
@@ -63,34 +65,26 @@ void ParticleManager::Initialize(){
 	accelerationField.isUpdate = false;
 }
 
-Particle ParticleManager::MakeNewParticle(std::mt19937& randomEngine,const Vector3& translate){
+Particle ParticleManager::MakeNewParticle(const Vector3& translate){
 	Particle newParticle;
-	std::uniform_real_distribution<float>distribution(-1.0, 1.0f);
-	std::uniform_real_distribution<float>distColor(0.0f, 1.0f);
-	std::uniform_real_distribution<float>distTIme(1.0f, 3.0f);
-
 	/*  transform,velocity,color,lifetime,currentTime の初期化  */
-	Vector3 randomTranslate {distribution(randomEngine),distribution(randomEngine),distribution(randomEngine)};
+	Vector3 randomTranslate {Random::Generate(-1.0f,1.0f),Random::Generate(-1.0f,1.0f),Random::Generate(-1.0f,1.0f)};
 	newParticle.transform.translate = {translate.x + randomTranslate.x,translate.y + randomTranslate.y,translate.z + randomTranslate.z};
 	newParticle.transform.scale = {1.0f,1.0f,1.0f};
 	newParticle.transform.rotate = {0.0f, 0.0f, 0.0f};
-	newParticle.velocity = {distribution(randomEngine),distribution(randomEngine),distribution(randomEngine)};
-	newParticle.color = {distColor(randomEngine),distColor(randomEngine),distColor(randomEngine),1.0f};
-	newParticle.lifeTime = distTIme(randomEngine);
+	newParticle.velocity = {Random::Generate(-1.0f,1.0f),Random::Generate(-1.0f,1.0f),Random::Generate(-1.0f,1.0f)};
+	newParticle.color = {Random::Generate(0.0f, 1.0f),Random::Generate(0.0f, 1.0f),Random::Generate(0.0f, 1.0f)};
+	newParticle.lifeTime = Random::Generate(1.0f, 3.0f);
 	newParticle.currentTime = 0;
 
 	return newParticle;
 }
 
 void ParticleManager::Create(){
-	// ランダム生成器の初期化
-	std::random_device rd;
-	std::mt19937 randomEngine(rd());
-	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
 
 	// kMaxInstance_ 分のパーティクルをリストに追加
 	for (uint32_t index = 0; index < kMaxInstance_; ++index){
-		particle_.emplace_back(MakeNewParticle(randomEngine,emitter.transform.translate));
+		particle_.emplace_back(MakeNewParticle(emitter.transform.translate));
 	}
 
 	// 初期化
@@ -115,13 +109,11 @@ void ParticleManager::CreateSRV(){
 }
 
 void ParticleManager::Update(){
-	std::random_device rd;
-	std::mt19937 randomEngine(rd());
 #ifdef _DEBUG
 	ImGui::Begin("ParticleManager");
 
 	if (ImGui::Button("Add particle")){
-		particle_.splice(particle_.end(), Emit(emitter, randomEngine));
+		particle_.splice(particle_.end(), Emit(emitter));
 	}
 	ImGui::Checkbox("isFieldUpdate", &accelerationField.isUpdate);
 	ImGui::DragFloat3("EmitterTranslate", &emitter.transform.translate.x, 0.01f, -100.0f, 100.0f);
@@ -180,7 +172,7 @@ void ParticleManager::Update(){
 	//エミッターの更新処理
 	emitter.frequencyTime += deltaTime;	//時刻を決める
 	if (emitter.frequency<= emitter.frequencyTime){
-		particle_.splice(particle_.end(), Emit(emitter, randomEngine));
+		particle_.splice(particle_.end(), Emit(emitter));
 		emitter.frequencyTime -= emitter.frequency;
 	}
 
@@ -273,10 +265,10 @@ void ParticleManager::MatrixBufferMap(){
 	}
 }
 
-std::list<Particle> ParticleManager::Emit(const Emitter& emitter, std::mt19937& randomEngine){
+std::list<Particle> ParticleManager::Emit(const Emitter& emitter){
 	std::list<Particle> particles;
 	for (uint32_t count = 0; count < emitter.count; ++count){
-		particles.push_back(MakeNewParticle(randomEngine,emitter.transform.translate));
+		particles.push_back(MakeNewParticle(emitter.transform.translate));
 	}
 	return particles;
 }

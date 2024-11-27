@@ -238,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myFunc\MathFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
     <ClInclude Include="lib\myFunc\PrimitiveDrawer.h" />
+    <ClInclude Include="lib\myFunc\Random.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
     <ClInclude Include="lib\myMath\Matrix4x4.h" />
     <ClInclude Include="lib\myMath\Vector2.h" />

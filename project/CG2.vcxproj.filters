@@ -556,6 +556,7 @@
     </ClInclude>
     <ClInclude Include="Engine\graphics\camera\Camera3d.h" />
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
+    <ClInclude Include="lib\myFunc\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
