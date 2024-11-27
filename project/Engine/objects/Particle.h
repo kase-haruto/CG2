@@ -14,7 +14,7 @@
 #include <cstdint>
 #include <d3d12.h>
 #include <wrl.h>
-#include <random>
+#include <memory>
 
 
 /// <summary>
@@ -83,7 +83,7 @@ public:
     /// </summary>
     /// <param name="randomEngine"></param>
     /// <returns></returns>
-    Particle MakeNewParticle(std::mt19937& randomEngine,const Vector3& translate);
+    Particle MakeNewParticle(const Vector3& translate);
    
     /// <summary>
     /// 更新処理
@@ -98,7 +98,7 @@ public:
     /// <summary>
     /// エミッター関数
     /// </summary>
-    std::list<Particle> Emit(const Emitter& emitter, std::mt19937& randomEngine);
+    std::list<Particle> Emit(const Emitter& emitter);
    
     // バッファの作成
     void CreateBuffer();
