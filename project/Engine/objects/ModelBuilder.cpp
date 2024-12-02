@@ -3,7 +3,7 @@
 #include "Engine/objects/ModelManager.h"
 
 #include <fstream>
-#include <nlohmann/json.hpp> // JSONライブラリ
+#include <externals/nlohmann/json.hpp> // JSONライブラリ
 
 using json = nlohmann::json;
 ModelBuilder::ModelBuilder(){}
