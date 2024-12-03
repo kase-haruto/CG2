@@ -4,6 +4,8 @@
 
 #include "../graphics/camera/CameraManager.h"
 
+#include "Engine/objects/particle/ParticleManager.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
@@ -51,7 +53,7 @@ void TestScene::Initialize(){
 	//							particle
 	/////////////////////////////////////////////////////////////////////////////////////////
 	demoParticle_ = std::make_unique<DemoParticle>();
-	demoParticle_->Initialize("plane",54);
+	demoParticle_->Initialize("plane");
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +192,7 @@ void TestScene::Draw(){
 	//地面の描画
 	modelField_->Draw();
 
-	demoParticle_->Draw();
+	ParticleManager::GetInstance()->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 
@@ -216,8 +218,8 @@ void TestScene::Finalize(){
 	sphere_.reset();
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();
+	ParticleManager::GetInstance()->Finalize();
 	modelField_.reset();
-	particle_.reset();
 }
 
 void TestScene::ModelPreDraw(){

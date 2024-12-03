@@ -85,22 +85,9 @@ void BaseParticle::Update(){
 void BaseParticle::Draw(){
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject);
-	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject);
-
-
-	// ルートシグネチャを設定
-	commandList->SetGraphicsRootSignature(rootSignature.Get());
-
-	// パイプラインステートを設定
-	commandList->SetPipelineState(pipelineState.Get());
 
 	// 頂点バッファを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-
-	// プリミティブトポロジーを設定（ここでは三角形リストを指定）
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 
 	// マテリアル用定数バッファ
 	commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -199,7 +186,7 @@ void BaseParticle::CreateSRV(){
 	instancingSrvDesc.Buffer.FirstElement = 0;
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = instanceNum_;
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
+	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleData::ParticleForGPU);
 
 	device->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, srvHandleCPU);
 	instancingSrvHandleGPU_ = srvHandleGPU;

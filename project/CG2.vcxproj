@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -81,7 +81,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
@@ -144,7 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
     <ClCompile Include="Engine\objects\ModelManager.cpp" />
-    <ClCompile Include="Engine\objects\Particle.cpp" />
+    <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\objects\Sprite.cpp" />
     <ClCompile Include="Engine\objects\Texture.cpp" />
     <ClCompile Include="Engine\objects\TextureManager.cpp" />
@@ -179,6 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
+    <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
@@ -215,7 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />
     <ClInclude Include="Engine\objects\ModelManager.h" />
-    <ClInclude Include="Engine\objects\Particle.h" />
+    <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
     <ClInclude Include="Engine\objects\Sprite.h" />
     <ClInclude Include="Engine\objects\Texture.h" />
     <ClInclude Include="Engine\objects\TextureManager.h" />
@@ -252,6 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myMath\Vector4.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
+    <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

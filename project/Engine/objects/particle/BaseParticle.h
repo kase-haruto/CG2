@@ -58,9 +58,9 @@ public:
     virtual void Initialize(const std::string& modelName, const uint32_t count);
     virtual ~BaseParticle() = default;
     virtual void Update();
-    void Draw();
+    virtual void Draw();
 
-    void Emit(uint32_t count);
+    virtual void Emit(uint32_t count);
 
 
 private:

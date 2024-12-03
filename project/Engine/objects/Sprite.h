@@ -82,7 +82,7 @@ public:
 	/// 座標
 	/// </summary>
 	/// <param name="position"></param>
-	void SetPosition(const Vector2& position){ this->position = position; }
+	void SetPosition(const Vector2& newPosition){ this->position = newPosition; }
 	const Vector2& GetPosition()const{ return position; }
 
 	/// <summary>
@@ -90,28 +90,28 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const Vector4& GetColor()const{ return materialData_->color; }
-	void SetColor(const Vector4& color){ materialData_->color = color; }
+	void SetColor(const Vector4& newColor){ materialData_->color = newColor; }
 
 	/// <summary>
 	/// サイズ
 	/// </summary>
 	/// <returns></returns>
 	const Vector2& GetSize()const{ return size; }
-	void SetSize(const Vector2& size){ this->size = size; }
+	void SetSize(const Vector2& newSize){ this->size = newSize; }
 
 	/// <summary>
 	/// アンカーポイント
 	/// </summary>
 	/// <returns></returns>
 	const Vector2& GetAnchorPoint()const{ return anchorPoint; }
-	void SetAnchorPoint(const Vector2& anchorPoint){ this->anchorPoint = anchorPoint; }
+	void SetAnchorPoint(const Vector2& newAnchorPoint){ this->anchorPoint = newAnchorPoint; }
 
 	/// <summary>
 	/// 左上座標
 	/// </summary>
 	/// <returns></returns>
 	const Vector2& GetLeftTop()const{ return textureLeftTop; }
-	void SetLeftTop(const Vector2& leftTop){ this->textureLeftTop = leftTop; }
+	void SetLeftTop(const Vector2& LTop){ this->textureLeftTop = LTop; }
 
 	const 
 

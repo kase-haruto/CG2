@@ -10,7 +10,6 @@
 #include"engine/objects/ModelData.h"
 #include"engine/graphics/VertexData.h"
 #include"engine/graphics/Material.h"
-#include"engine/objects/Particle.h"
 #include"engine/physics/AABB.h"
 
 /* c++ */

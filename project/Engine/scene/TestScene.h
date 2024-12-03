@@ -9,9 +9,7 @@
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
-#include "engine/objects/Particle.h"
 #include "engine/Editor/UiEditor.h"
-#include "engine/objects/Particle.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -95,7 +93,6 @@ private:
     ///=========================
     /// particle
     ///=========================
-    std::unique_ptr<ParticleManager>particle_ = nullptr;
     
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;

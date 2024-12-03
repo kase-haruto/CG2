@@ -42,14 +42,14 @@ Sprite::Sprite(const std::string& filePath){
 
 Sprite::~Sprite(){}
 
-void Sprite::Initialize(const Vector2& position, const Vector2& size){
-    this->position = position;
+void Sprite::Initialize(const Vector2& newPosition, const Vector2& newSize){
+    this->position = newPosition;
     transform_.translate.x = position.x;
     transform_.translate.y = position.y;
 
     this->size = size;
-    transform_.scale.x = size.x;
-    transform_.scale.y = size.y;
+    transform_.scale.x = newSize.x;
+    transform_.scale.y = newSize.y;
 }
 
 void Sprite::Update(){
