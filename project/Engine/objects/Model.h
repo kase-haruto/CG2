@@ -23,11 +23,11 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(bool isUseTexture = true);
+    void Initialize();
     /// <summary>
     /// モデルの作成
     /// </summary>
-    void Create(const std::string& filename, bool isUseTexture = true);
+    void Create(const std::string& filename);
     /// <summary>
     /// 更新
     /// </summary>

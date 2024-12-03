@@ -108,7 +108,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource>CreateBufferResource(Microsoft::WRL::ComPt
 
 	// 実際にリソースを作る
     Microsoft::WRL::ComPtr<ID3D12Resource> bufferResource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+	device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
 												 &bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
 
 	return bufferResource;

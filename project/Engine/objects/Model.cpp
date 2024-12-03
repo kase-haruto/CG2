@@ -18,7 +18,7 @@ Model::Model(const std::string& fileName){
 
 Model::~Model(){}
 
-void Model::Initialize(bool isDepth){
+void Model::Initialize(){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
@@ -72,7 +72,7 @@ void Model::ShowImGuiInterface(){
 
 }
 
-void Model::Create(const std::string& filename, bool isUseTexture){
+void Model::Create(const std::string& filename){
     Initialize();
 
     // モデルの読み込み（既に存在すればロードしない）

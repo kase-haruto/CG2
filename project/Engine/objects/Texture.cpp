@@ -39,7 +39,7 @@ Texture& Texture::operator=(Texture&& other) noexcept{
     return *this;
 }
 
-void Texture::Load(ID3D12Device* device){
+void Texture::Load([[maybe_unused]]ID3D12Device* device){
     std::wstring filePathW = ConvertString("Resources/textures/" + filePath_);
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image_);
     assert(SUCCEEDED(hr));
