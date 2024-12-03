@@ -9,9 +9,7 @@
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
-#include "engine/objects/Particle.h"
 #include "engine/Editor/UiEditor.h"
-#include "engine/objects/Particle.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -20,6 +18,7 @@
 
 /* object */
 #include "lib/myFunc/PrimitiveDrawer.h"
+#include "Engine/objects/particle/DemoParticle.h"
 
 /* c++ */
 #include <vector>
@@ -89,10 +88,11 @@ private:
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
+    std::unique_ptr<DemoParticle> demoParticle_ = nullptr;
+
     ///=========================
     /// particle
     ///=========================
-    std::unique_ptr<ParticleManager>particle_ = nullptr;
     
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;

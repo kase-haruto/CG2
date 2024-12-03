@@ -4,6 +4,8 @@
 
 #include "../graphics/camera/CameraManager.h"
 
+#include "Engine/objects/particle/ParticleManager.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
@@ -32,8 +34,8 @@ void TestScene::Initialize(){
 	PrimitiveDrawer::GetInstance()->Initialize();
 
 	//パーティクル
-	particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
-	particle_->Initialize();
+	//particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
+	//particle_->Initialize();
 
 	//球体
 	sphere_ = std::make_unique<Sphere>();
@@ -46,6 +48,12 @@ void TestScene::Initialize(){
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
 
 	modelField_ = std::make_unique<Model>("terrain");
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//							particle
+	/////////////////////////////////////////////////////////////////////////////////////////
+	demoParticle_ = std::make_unique<DemoParticle>();
+	demoParticle_->Initialize("plane");
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -78,9 +86,11 @@ void TestScene::Update(){
 
 	modelField_->Update();
 
+	demoParticle_->Update();
+
 	/*modelGround_->Update();*/
 
-	particle_->Update();
+	//particle_->Update();
 
 	sphere_->Update();
 
@@ -175,14 +185,18 @@ void TestScene::Draw(){
 	modelBuilder_->Draw();
 
 	//球体の描画
-	sphere_->Draw();
+	//sphere_->Draw();
 
 	/*modelGround_->Draw();*/
 
 	//地面の描画
 	modelField_->Draw();
 
+	ParticleManager::GetInstance()->Draw();
+
 	PrimitiveDrawer::GetInstance()->Render();
+
+
 #pragma endregion
 
 
@@ -193,7 +207,7 @@ void TestScene::Draw(){
 	//uiの描画
 	uiEditor_->Draw();
 
-	particle_->Draw();
+	//particle_->Draw();
 
 #pragma endregion
 }
@@ -204,8 +218,8 @@ void TestScene::Finalize(){
 	sphere_.reset();
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();
+	ParticleManager::GetInstance()->Finalize();
 	modelField_.reset();
-	particle_.reset();
 }
 
 void TestScene::ModelPreDraw(){
