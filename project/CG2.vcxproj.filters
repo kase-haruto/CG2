@@ -360,6 +360,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\graphics\camera\Camera3d.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
+    <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
+    <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
+    <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
+    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -557,6 +561,10 @@
     <ClInclude Include="Engine\graphics\camera\Camera3d.h" />
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
     <ClInclude Include="lib\myFunc\Random.h" />
+    <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
+    <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
+    <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
+    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

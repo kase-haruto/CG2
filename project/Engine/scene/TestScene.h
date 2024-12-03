@@ -20,6 +20,7 @@
 
 /* object */
 #include "lib/myFunc/PrimitiveDrawer.h"
+#include "Engine/objects/particle/DemoParticle.h"
 
 /* c++ */
 #include <vector>
@@ -88,6 +89,8 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
+
+    std::unique_ptr<DemoParticle> demoParticle_ = nullptr;
 
     ///=========================
     /// particle

@@ -57,12 +57,6 @@ void ParticleManager::Initialize(){
 	emitter.frequency = 0.5f;
 	emitter.frequencyTime = 0.0f;
 
-	//フィールドの初期化
-	accelerationField.acceleration = {15.0f,0.0f,0.0f};
-	Vector3 min = {-1.0f,-1.0f,-1.0f};
-	Vector3 max = {1.0f,1.0f,1.0f};
-	accelerationField.area.Initialize(min,max);
-	accelerationField.isUpdate = false;
 }
 
 Particle ParticleManager::MakeNewParticle(const Vector3& translate){
@@ -115,7 +109,6 @@ void ParticleManager::Update(){
 	if (ImGui::Button("Add particle")){
 		particle_.splice(particle_.end(), Emit(emitter));
 	}
-	ImGui::Checkbox("isFieldUpdate", &accelerationField.isUpdate);
 	ImGui::DragFloat3("EmitterTranslate", &emitter.transform.translate.x, 0.01f, -100.0f, 100.0f);
 	ImGui::End();
 #endif // _DEBUG
@@ -147,13 +140,6 @@ void ParticleManager::Update(){
 			float alpha = 1.0f - (it->currentTime / it->lifeTime);
 			instancingData[numInstance_].color.w = alpha;
 
-			//フィールドの更新処理
-			if (accelerationField.isUpdate){
-				if (IsCollision(accelerationField.area, it->transform.translate)){
-					it->velocity += accelerationField.acceleration * deltaTime;
-				}
-			}
-			
 
 			// 座標の更新
 			it->transform.translate.x += it->velocity.x * deltaTime;

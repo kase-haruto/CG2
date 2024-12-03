@@ -18,15 +18,6 @@
 
 
 /// <summary>
-/// フィールド
-/// </summary>
-struct AccelerationField{
-    Vector3 acceleration;
-    AABB area;
-    bool isUpdate;
-};
-
-/// <summary>
 /// パーティクル
 /// </summary>
 struct Particle{
@@ -56,8 +47,6 @@ struct ParticleForGPU{
     Matrix4x4 World;
     Vector4 color;
 };
-
-class DirectXCommon;
 
 class ParticleManager{
 public:
@@ -147,9 +136,6 @@ private:
 
     //エミッター
     Emitter emitter {};
-
-    //フィールド
-    AccelerationField accelerationField;
 
     //反対側に回す回転行列
     Matrix4x4 backToFrontMatrix_;
