@@ -65,7 +65,7 @@ void FogEffect::CreateConstantBuffer(){
 	ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
 
 	// リソースの作成
-	HRESULT hr = device->CreateCommittedResource(
+	device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,

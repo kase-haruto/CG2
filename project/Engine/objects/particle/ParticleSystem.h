@@ -13,7 +13,7 @@ public:
     ParticleSystem();
     ~ParticleSystem() override = default;
 
-    virtual void Initialize(const std::string& modelName);
+    virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 
 public:
     //===================================================================*/
@@ -22,6 +22,7 @@ public:
 
     const std::string& GetName() const{ return name_; }
     void SetName(const std::string& name){ name_ = name; }
+    void SetEmitPos(const Vector3& pos){ emitter_.transform.translate = pos; }
 
 private:
     //===================================================================*/
@@ -34,6 +35,6 @@ protected:
     //===================================================================*/
     //                    protected methods
     //===================================================================*/
-    ParticleData::Emitter emitter_;     // エミッター
+
 
 };

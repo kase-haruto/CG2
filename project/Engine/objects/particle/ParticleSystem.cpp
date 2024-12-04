@@ -5,9 +5,9 @@
 
 ParticleSystem::ParticleSystem(){}
 
-void ParticleSystem::Initialize(const std::string& modelName){
+void ParticleSystem::Initialize(const std::string& modelName, const std::string& texturePath){
 
-    BaseParticle::Initialize(modelName, emitter_.count);
+    BaseParticle::Initialize(modelName,texturePath, emitter_.count);
 
     ParticleManager::GetInstance()->AddSystem(this);
 

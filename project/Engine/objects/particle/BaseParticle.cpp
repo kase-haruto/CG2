@@ -18,14 +18,14 @@ BaseParticle::BaseParticle(){
 
 }
 
-void BaseParticle::Initialize(const std::string& modelName,const uint32_t count){
+void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,const uint32_t count){
 
 	Emit(count);
 
 
 	/* modelとmaterial生成 =======================*/
 	modelData_ = ModelManager::LoadModel(modelName);
-	textureHandle = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 

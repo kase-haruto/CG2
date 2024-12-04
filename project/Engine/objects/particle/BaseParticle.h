@@ -55,7 +55,7 @@ public:
     //                    public methods
     //===================================================================*/
     BaseParticle();
-    virtual void Initialize(const std::string& modelName, const uint32_t count);
+    virtual void Initialize(const std::string& modelName,const std::string& texturePath, const uint32_t count);
     virtual ~BaseParticle() = default;
     virtual void Update();
     virtual void Draw();

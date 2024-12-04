@@ -32,9 +32,7 @@ public://メンバ関数
 		// Compilerに使用するProfile
 		const wchar_t* profile,
 		// 初期化で生成したものを3つ
-		ComPtr<IDxcUtils> dxcUtils,
-		ComPtr<IDxcCompiler3> dxcompiler,
-		ComPtr<IDxcIncludeHandler> includeHandler
+		ComPtr<IDxcCompiler3> dxcompiler
 	);
 	void Compile(const std::wstring& filePath,
 				 const wchar_t* profile,

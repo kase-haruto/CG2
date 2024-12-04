@@ -12,13 +12,13 @@ DemoParticle::DemoParticle(){
 
 }
 
-void DemoParticle::Initialize(const std::string& modelName){
+void DemoParticle::Initialize(const std::string& modelName, const std::string& texturePath){
 
 	//50個性性
 	particleNum_ = 50;
 	emitter_.Initialize(particleNum_);
 
-	ParticleSystem::Initialize(modelName);
+	ParticleSystem::Initialize(modelName, texturePath);
 
 }
 
