@@ -56,6 +56,8 @@ public:
 
     void SetColor(const Vector4& color){ RGBa = color; }
 
+    const Vector4& GetColor()const{ return RGBa; }
+
 private:
     void CreateMaterialBuffer();
     void CreateMatrixBuffer();

@@ -114,6 +114,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
+    <ClCompile Include="Game\3d\BaseGameObject.cpp" />
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
@@ -183,6 +185,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\demo\GameObject_Demo.h" />
+    <ClInclude Include="Game\3d\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />

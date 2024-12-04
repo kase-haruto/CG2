@@ -10,6 +10,7 @@
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
+#include "Game/demo/GameObject_Demo.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -85,10 +86,9 @@ private:
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<UIEditor> uiEditor_ = nullptr;
     std::unique_ptr<Model> modelField_ = nullptr;
-    std::unique_ptr<Sphere>sphere_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-    std::unique_ptr<DemoParticle> demoParticle_ = nullptr;
+    std::unique_ptr< GameObject_Demo>demoObject_ = nullptr;
 
     ///=========================
     /// particle
