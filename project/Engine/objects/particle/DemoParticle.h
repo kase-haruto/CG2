@@ -3,6 +3,8 @@
 #include "ParticleSystem.h"
 #include "particleBehavior/PtlBehavior_Diffusion.h"
 
+//* c++
+
 class DemoParticle 
     : public ParticleSystem, public PtlBehavior_Diffusion{
 
@@ -15,4 +17,11 @@ public:
 
     void Initialize(const std::string& modelName) override;
     void Update() override;
+
+private:
+    //===================================================================*/
+    //                   private methods
+    //===================================================================*/
+    uint32_t particleNum_;
+    float coolTime_ = 1;
 };

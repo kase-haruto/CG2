@@ -364,6 +364,8 @@
     <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
+    <ClCompile Include="Game\3d\BaseGameObject.cpp" />
+    <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -564,6 +566,8 @@
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
     <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
+    <ClInclude Include="Game\3d\BaseGameObject.h" />
+    <ClInclude Include="Game\demo\GameObject_Demo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

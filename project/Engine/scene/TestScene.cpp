@@ -33,14 +33,6 @@ void TestScene::Initialize(){
 	//線
 	PrimitiveDrawer::GetInstance()->Initialize();
 
-	//パーティクル
-	//particle_ = std::make_unique<ParticleManager>(50);//パーティクルの最大数を10個に設定
-	//particle_->Initialize();
-
-	//球体
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
-
 	////地面
 	/*modelGround_ = std::make_unique<Model>("ground");
 	modelGround_->SetViewProjection(viewProjection_.get());
@@ -49,12 +41,8 @@ void TestScene::Initialize(){
 
 	modelField_ = std::make_unique<Model>("terrain");
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//							particle
-	/////////////////////////////////////////////////////////////////////////////////////////
-	demoParticle_ = std::make_unique<DemoParticle>();
-	demoParticle_->Initialize("plane");
-
+	demoObject_ = std::make_unique<GameObject_Demo>("plane");
+	demoObject_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -86,13 +74,9 @@ void TestScene::Update(){
 
 	modelField_->Update();
 
-	demoParticle_->Update();
+	demoObject_->Update();
 
 	/*modelGround_->Update();*/
-
-	//particle_->Update();
-
-	sphere_->Update();
 
 }
 
@@ -102,70 +86,73 @@ void TestScene::UpdateDebugUI(){
 	static int selectedEditorIndex = -1;
 
 	// オブジェクト名のリスト
-	std::vector<const char*> objectNames = {"sphere","directionalLight","pointLight"};
+	std::vector<const char*> objectNames = {"directionalLight", "pointLight"};
 
 	// 複数のエディタのリスト（BaseEditor*で管理）
-	std::vector<BaseEditor*> editors = {modelBuilder_.get(),uiEditor_.get()};
+	std::vector<BaseEditor*> editors = {modelBuilder_.get(), uiEditor_.get()};
 
 	// メインウィンドウ
 	ImGui::Begin("Main GUI");
+	if (ImGui::BeginTabBar("MyTabBar")){
 
-	// Objectセクション
-	if (ImGui::CollapsingHeader("Object Settings")){
-		ImGui::Text("Select an object to edit its properties:");
+		// Demo Object タブ
+		demoObject_->ShowDebugUI();
 
-		// オブジェクトのリスト表示（リストボックス形式）
-		if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
-			// オブジェクト選択時の処理はここで必要なら行う
-		}
+		// Object Settings タブ
+		if (ImGui::BeginTabItem("Object Settings")){
+			ImGui::Text("Select an object to edit its properties:");
 
-		// 選択されたオブジェクトの設定表示
-		if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
-			ImGui::Separator();
-			ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
-
-			// 各オブジェクトの設定表示
-			if (selectedObjectIndex == 0 && sphere_){
-				sphere_->UpdateImGui("sphere");
-			}
-			//directionalLight
-			else if (selectedObjectIndex == 1 && directionalLight_){
-				directionalLight_->ShowImGuiInterFace();
-			}
-			//pointLight
-			else if (selectedObjectIndex == 2 && pointLight_){
-				pointLight_->ShowImGuiInterface();
+			// オブジェクトのリスト表示（リストボックス形式）
+			if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
+				// オブジェクト選択時の処理はここで必要なら行う
 			}
 
-			//fog
-			else if (selectedObjectIndex == 3 && fog_){
-				fog_->ShowImGuiInterface();
+			// 選択されたオブジェクトの設定表示
+			if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
+				ImGui::Separator();
+				ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
+
+				// directionalLight
+				if (selectedObjectIndex == 0 && directionalLight_){
+					directionalLight_->ShowImGuiInterFace();
+				}
+				// pointLight
+				else if (selectedObjectIndex == 1 && pointLight_){
+					pointLight_->ShowImGuiInterface();
+				}
+				// fog
+				else if (selectedObjectIndex == 2 && fog_){
+					fog_->ShowImGuiInterface();
+				}
 			}
-		}
-	}
-
-	// Editorセクション
-	if (ImGui::CollapsingHeader("Editor Settings")){
-		ImGui::Text("Select an editor to configure:");
-
-		// エディタのリスト表示（リストボックス形式）
-		if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
-			auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
-			*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
-			return true;
-			}, &editors, static_cast< int >(editors.size()))){ // size_t から int へキャスト
-			// エディタ選択時の処理はここで必要なら行う
+			ImGui::EndTabItem();
 		}
 
-		// 選択されたエディタの設定表示
-		if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
-			ImGui::Separator();
-			ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
+		// Editor Settings タブ
+		if (ImGui::BeginTabItem("Editor Settings")){
+			ImGui::Text("Select an editor to configure:");
 
-			// 選択されたエディタのUIを表示
-			editors[selectedEditorIndex]->ShowImGuiInterface();
+			// エディタのリスト表示（リストボックス形式）
+			if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
+				auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
+				*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
+				return true;
+				}, &editors, static_cast< int >(editors.size()))){
+				// エディタ選択時の処理はここで必要なら行う
+			}
+
+			// 選択されたエディタの設定表示
+			if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
+				ImGui::Separator();
+				ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
+
+				// 選択されたエディタのUIを表示
+				editors[selectedEditorIndex]->ShowImGuiInterface();
+			}
+			ImGui::EndTabItem();
 		}
 
+		ImGui::EndTabBar();
 	}
 
 	ImGui::End();
@@ -184,8 +171,7 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
-	//球体の描画
-	//sphere_->Draw();
+	demoObject_->Draw();
 
 	/*modelGround_->Draw();*/
 
@@ -207,15 +193,12 @@ void TestScene::Draw(){
 	//uiの描画
 	uiEditor_->Draw();
 
-	//particle_->Draw();
-
 #pragma endregion
 }
 
 void TestScene::Finalize(){
 	modelBuilder_.reset();
 	uiEditor_.reset();
-	sphere_.reset();
 	/*modelGround_.reset();*/
 	PrimitiveDrawer::GetInstance()->Finalize();
 	ParticleManager::GetInstance()->Finalize();
