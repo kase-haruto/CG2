@@ -1,43 +1,55 @@
 #include "ParticleManager.h"
 
 #include "Engine/graphics/GraphicsGroup.h"
+#include "Engine/graphics/SrvLocator.h"
 
-ParticleManager::ParticleManager(){
+#include "lib/myFunc/MyFunc.h"
 
-	systems_.clear();
+// ParticleGroup の初期化処理
+void ParticleGroup::Initialize(const std::string& texturePath){
+	textureFilePath = texturePath;
+}
+
+void ParticleGroup::Update(){
+
+	particles->Update();
+
+}
+
+void ParticleGroup::Draw(){
+
+	particles->Draw();
 
 }
 
 ParticleManager* ParticleManager::GetInstance(){
-    static ParticleManager instance;
-    return &instance;
+	static ParticleManager instance;
+	return &instance;
 }
 
-void ParticleManager::AddSystem(ParticleSystem* system){
-    systems_.push_back(system);
+void ParticleManager::CreateParticleGroup(const std::string& name, const std::string& textureFilePath){
+	if (particleGroups_.find(name) != particleGroups_.end()){
+		throw std::runtime_error("ParticleGroup with this name already exists.");
+	}
+
+	ParticleGroup group;
+	group.Initialize(textureFilePath);
+	particleGroups_.emplace(name, std::move(group));
+}
+
+void ParticleManager::Update(){
+	for (auto& [name, group] : particleGroups_){
+		group.Update();
+	}
 }
 
 void ParticleManager::Draw(){
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject);
-	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject);
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
-	// ルートシグネチャを設定
-	commandList->SetGraphicsRootSignature(rootSignature.Get());
-
-	// パイプラインステートを設定
-	commandList->SetPipelineState(pipelineState.Get());
-
-	// プリミティブトポロジーを設定（ここでは三角形リストを指定）
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    for (const auto& system : systems_){
-        system->Draw();
-    }
-}
-
-void ParticleManager::Finalize(){
-
-	systems_.clear();
+	for (auto& [name, group] : particleGroups_){
+		group.Draw();
+	}
 
 }
+
+void ParticleManager::Finalize(){}
+

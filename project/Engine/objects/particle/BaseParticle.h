@@ -55,59 +55,53 @@ public:
     //                    public methods
     //===================================================================*/
     BaseParticle();
-    virtual void Initialize(const std::string& modelName, const uint32_t count);
     virtual ~BaseParticle() = default;
+
+    virtual void Initialize(const std::string& modelName, const std::string& textureFilePath, uint32_t count);
     virtual void Update();
     virtual void Draw();
 
-    virtual void Emit(uint32_t count);
+    void Emit(uint32_t count);
+
+    bool IsAlive() const{ return instanceNum_ > 0; }
 
 
 private:
     //===================================================================*/
     //                    private methods
     //===================================================================*/
-
-
-
-    /* resources =======================*/
     void CreateBuffer();
     void Map();
     void CreateSRV();
+
+private:
+    Matrix4x4 backToFrontMatrix_;
 
 public:
     //===================================================================*/
     //                    public methods
     //===================================================================*/
     std::vector<ParticleData::Parameters> particles_;
-   
-    int32_t kMaxInstanceNum_ = 500;
-    int32_t instanceNum_ = 50;          //デフォルトとして50    
+    uint32_t kMaxInstanceNum_ = 512;
+    uint32_t instanceNum_ = 0;
 
 protected:
     //===================================================================*/
     //                    protected methods
     //===================================================================*/
     ParticleData::Emitter emitter_ {};
-
-    D3D12_GPU_DESCRIPTOR_HANDLE textureHandle; // テクスチャハンドル
-
-    //反対側に回す回転行列
-    Matrix4x4 backToFrontMatrix_;
-
     /* resources =======================*/
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_ = nullptr;
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
     Microsoft::WRL::ComPtr<ID3D12Resource>instancingResource_ = nullptr;
+
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView {};
+    D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
     /* data =======================*/
     std::shared_ptr<ModelData> modelData_;
     Material* materialData = nullptr;
+    ParticleData::ParticleForGPU* instancingData_ = nullptr;
 
-    // インスタンシングSRVのGPUハンドル
-    D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
-
-    // インスタンシングデータ
-    ParticleData::ParticleForGPU* instancingData = nullptr;
+    D3D12_GPU_DESCRIPTOR_HANDLE textureHandle_;
 };

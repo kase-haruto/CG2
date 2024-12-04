@@ -13,27 +13,26 @@
 #include "lib/myFunc/Random.h"
 
 BaseParticle::BaseParticle(){
-
 	particles_.clear();
-
 }
 
-void BaseParticle::Initialize(const std::string& modelName,const uint32_t count){
+void BaseParticle::Initialize(const std::string& modelName, const std::string& textureFilePath, uint32_t count){
 
+	// パーティクルの発生
 	Emit(count);
 
 
 	/* modelとmaterial生成 =======================*/
 	modelData_ = ModelManager::LoadModel(modelName);
-	textureHandle = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
-
+	// テクスチャのロード
+	textureHandle_ = TextureManager::GetInstance()->LoadTexture(textureFilePath);
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 	/* リソースの生成 =======================*/
+
 	CreateBuffer();
 	Map();
 	CreateSRV();
-
 }
 
 void BaseParticle::Update(){
@@ -47,7 +46,6 @@ void BaseParticle::Update(){
 				continue;
 			}
 
-
 			Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
 			billboardMatrix.m[3][0] = 0.0f;
 			billboardMatrix.m[3][1] = 0.0f;
@@ -58,33 +56,28 @@ void BaseParticle::Update(){
 			Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
 			Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 
-			instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
-			instancingData[instanceNum_].World = worldMatrix;
-			instancingData[instanceNum_].color = it->color;
+			instancingData_[instanceNum_].WVP = worldViewProjectionMatrix;
+			instancingData_[instanceNum_].World = worldMatrix;
+			instancingData_[instanceNum_].color = it->color;
 			float alpha = 1.0f - (it->currentTime / it->lifeTime);
-			instancingData[instanceNum_].color.w = alpha;
+			instancingData_[instanceNum_].color.w = alpha;
 
 
 
-			// 生存時間の更新
+			// 更新処理
 			it->currentTime += deltaTime;
 
-			//　座標の更新
 			it->transform.translate += it->velocity * deltaTime;
 
 			++instanceNum_;
 
 		}
-
 		++it;
-
 	}
-
 }
 
 void BaseParticle::Draw(){
-
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
+	auto commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
 	// 頂点バッファを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
@@ -96,7 +89,7 @@ void BaseParticle::Draw(){
 	commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
 
 	// texture用srv
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
+	commandList->SetGraphicsRootDescriptorTable(2, textureHandle_);
 
 	// インスタンシングを用いて、指定された頂点バッファの頂点数分だけ描画を行う
 	commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
@@ -121,7 +114,6 @@ void BaseParticle::Emit(uint32_t count){
 }
 
 void BaseParticle::CreateBuffer(){
-
 	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
 	vertexBuffer_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
@@ -138,7 +130,6 @@ void BaseParticle::CreateBuffer(){
 }
 
 void BaseParticle::Map(){
-
 	/* vertex =======================*/
 	VertexData* vertexData = nullptr;
 	HRESULT hr = vertexBuffer_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
@@ -159,22 +150,20 @@ void BaseParticle::Map(){
 
 
 	/* instance =======================*/
-	HRESULT instancingHr = instancingResource_->Map(0, nullptr, reinterpret_cast< void** >(&instancingData));
+	HRESULT instancingHr = instancingResource_->Map(0, nullptr, reinterpret_cast< void** >(&instancingData_));
 	if (FAILED(instancingHr)){
 		throw std::runtime_error("Failed to map instance buffer.");
 	}
 
 	uint32_t index = 0;
 	for (auto it = particles_.begin(); it != particles_.end(); ++it, ++index){
-		instancingData[index].WVP = Matrix4x4::MakeIdentity();
-		instancingData[index].World = Matrix4x4::MakeIdentity();
-		instancingData[index].color = it->color;
+		instancingData_[index].WVP = Matrix4x4::MakeIdentity();
+		instancingData_[index].World = Matrix4x4::MakeIdentity();
+		instancingData_[index].color = it->color;
 	}
-
 }
 
 void BaseParticle::CreateSRV(){
-
 	Microsoft::WRL::ComPtr<ID3D12Device>device = GraphicsGroup::GetInstance()->GetDevice();
 
 	auto [srvHandleCPU, srvHandleGPU] = SrvLocator::AllocateSrv();
@@ -193,7 +182,6 @@ void BaseParticle::CreateSRV(){
 
 }
 
-
 void ParticleData::Parameters::SetColorRandom(){
 
 	color = {Random::Generate(0.0f, 1.0f),Random::Generate(0.0f, 1.0f),Random::Generate(0.0f, 1.0f),1.0f};
@@ -205,7 +193,7 @@ void ParticleData::Parameters::SetColorInitialize(){
 }
 
 void ParticleData::Parameters::SetVelocityRandom(float min, float max){
-	
+
 	velocity = {Random::Generate(min,max),Random::Generate(min,max),Random::Generate(min,max)};
 
 }

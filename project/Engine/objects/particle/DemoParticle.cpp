@@ -4,6 +4,8 @@
 
 #include "Engine/graphics/GraphicsGroup.h"
 
+#include "ParticleManager.h"
+
 
 DemoParticle::DemoParticle(){
 
@@ -11,12 +13,12 @@ DemoParticle::DemoParticle(){
 
 }
 
-void DemoParticle::Initialize(const std::string& modelName){
+void DemoParticle::Initialize(const std::string& modelName, const std::string& textureFilePath, uint32_t count){
 
-	//50個性性
-	emitter_.Initialize(50);
+	// 親クラス(ParticleSystem)の初期化を呼び出す
+	ParticleSystem::Initialize(modelName, textureFilePath, count);
 
-	ParticleSystem::Initialize(modelName);
+	ParticleManager::GetInstance()->CreateParticleGroup("Demo", textureFilePath);
 
 }
 

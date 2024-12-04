@@ -3,7 +3,7 @@
 #include "BaseParticle.h"
 #include <string>
 
-class ParticleSystem 
+class ParticleSystem
     : public BaseParticle{
 public:
     //===================================================================*/
@@ -13,7 +13,8 @@ public:
     ParticleSystem();
     ~ParticleSystem() override = default;
 
-    virtual void Initialize(const std::string& modelName);
+    // システムの初期化
+    virtual void Initialize(const std::string& modelName, const std::string& textureFilePath, uint32_t count);
 
 public:
     //===================================================================*/
@@ -23,17 +24,10 @@ public:
     const std::string& GetName() const{ return name_; }
     void SetName(const std::string& name){ name_ = name; }
 
-private:
-    //===================================================================*/
-    //                    private methods
-    //===================================================================*/
-
-    std::string name_;                  // システム名
-
 protected:
     //===================================================================*/
     //                    protected methods
     //===================================================================*/
-    ParticleData::Emitter emitter_;     // エミッター
-
+    ParticleData::Emitter emitter_; // エミッター
+    std::string name_;              // システム名
 };
