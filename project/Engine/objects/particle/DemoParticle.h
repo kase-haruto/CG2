@@ -15,7 +15,7 @@ public:
     DemoParticle();
     ~DemoParticle() override = default;
 
-    void Initialize(const std::string& modelName) override;
+    void Initialize(const std::string& modelName, const std::string& texturePath) override;
     void Update() override;
 
 private:
@@ -23,5 +23,4 @@ private:
     //                   private methods
     //===================================================================*/
     uint32_t particleNum_;
-    float coolTime_ = 1;
 };

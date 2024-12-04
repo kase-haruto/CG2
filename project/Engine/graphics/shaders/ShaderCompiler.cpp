@@ -38,9 +38,7 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(
     // Compilerに使用するProfile
     const wchar_t* profile,
     // 初期化で生成したものを3つ
-    ComPtr<IDxcUtils> dxcUtils,
-    ComPtr<IDxcCompiler3> dxcompiler,
-    ComPtr<IDxcIncludeHandler> includeHandler
+    ComPtr<IDxcCompiler3> dxcompiler
 ){
     // hlslファイルを読む
     LoadHLSL(filePath, profile);

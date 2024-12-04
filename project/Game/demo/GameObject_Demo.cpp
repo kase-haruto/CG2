@@ -11,11 +11,13 @@ void GameObject_Demo::Initialize(){
 
 	GameObject_Demo::SetName("debugObject");
 
-	particle_->Initialize("plane");
+	particle_->Initialize("plane","particle.png");
 
 }
 
 void GameObject_Demo::Update(){
+
+	particle_->SetEmitPos(model_->transform.translate);
 
 	particle_->Update();
 
