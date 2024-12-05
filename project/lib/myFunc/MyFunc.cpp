@@ -62,6 +62,13 @@ Matrix4x4 MakeRotateZMatrix(float theta){
 	return result;
 }
 
+Matrix4x4 EulerToMatrix(const Vector3& euler){
+    Matrix4x4 rotateXMatrix = MakeRotateXMatrix(euler.x);
+    Matrix4x4 rotateYMatrix = MakeRotateYMatrix(euler.y);
+    Matrix4x4 rotateZMatrix = MakeRotateZMatrix(euler.z);
+    return Matrix4x4::Multiply(Matrix4x4::Multiply(rotateXMatrix, rotateYMatrix), rotateZMatrix);
+}
+
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate){
 	Matrix4x4 affineMatrix;
 	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);

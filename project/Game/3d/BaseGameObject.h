@@ -14,7 +14,7 @@ public:
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
 	BaseGameObject() = default;
-	virtual ~BaseGameObject() = default;
+	virtual ~BaseGameObject();
 
 	virtual void Initialize();
 	virtual void Update();

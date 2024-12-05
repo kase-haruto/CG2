@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "lib/myMath/Matrix4x4.h"
+
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
@@ -10,6 +12,13 @@ struct Vector3 final{
 
     float Length()const;
     Vector3 Normalize()const;
+    float LengthSquared() const{
+        return x * x + y * y + z * z;
+    }
+
+    static float Dot(const Vector3& v1, const Vector3& v2){
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
 
     Vector3 operator*(const float& scalar) const;
     Vector3 operator*=(const float& scalar);
@@ -36,4 +45,7 @@ struct Vector3 final{
     Vector3 operator-(const Vector3& other) const;
     Vector3 operator-=(const Vector3& other);
     friend Vector3 operator-(float scalar, const Vector3& v);
+
+
+    static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 };

@@ -146,6 +146,27 @@ Vector3 Vector3::operator-=(const Vector3& other){
 	return Vector3(x, y, z);
 }
 
+Vector3 Vector3::Transform(const Vector3& vector, const Matrix4x4& matrix){
+	Vector3 result = {0, 0, 0};
+
+	// 同次座標系への変換
+	// 変換行列を適用
+	Vector4 homogeneousCoordinate(
+		vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0],
+		vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1],
+		vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2],
+		vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3]);
+
+	// 同次座標系から3次元座標系に戻す
+	float w = homogeneousCoordinate.w;
+	result.x = homogeneousCoordinate.x / w;
+	result.y = homogeneousCoordinate.y / w;
+	result.z = homogeneousCoordinate.z / w;
+
+	return result;
+}
+
+
 Vector3 operator-(float scalar, const Vector3& vec){
 	return Vector3(vec.x - scalar, vec.y - scalar, vec.z - scalar);
 }

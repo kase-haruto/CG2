@@ -366,6 +366,12 @@
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
     <ClCompile Include="Game\3d\BaseGameObject.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
+    <ClCompile Include="Engine\physics\Shape.cpp" />
+    <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
+    <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
+    <ClCompile Include="Game\demo\TestObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -568,6 +574,12 @@
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
     <ClInclude Include="Game\3d\BaseGameObject.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
+    <ClInclude Include="Engine\physics\Shape.h" />
+    <ClInclude Include="Engine\objects\Collider\Collider.h" />
+    <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
+    <ClInclude Include="Engine\Collision\CollisionManager.h" />
+    <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
+    <ClInclude Include="Game\demo\TestObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

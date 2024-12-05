@@ -6,6 +6,8 @@
 
 #include "Engine/objects/particle/ParticleManager.h"
 
+#include "Engine/Collision/CollisionManager.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
@@ -41,8 +43,11 @@ void TestScene::Initialize(){
 
 	modelField_ = std::make_unique<Model>("terrain");
 
-	demoObject_ = std::make_unique<GameObject_Demo>("plane");
+	demoObject_ = std::make_unique<GameObject_Demo>("debugCube");
 	demoObject_->Initialize();
+
+	testObject_ = std::make_unique<TestObject>("debugCube");
+	testObject_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -65,16 +70,15 @@ void TestScene::Update(){
 	//uiの更新
 	uiEditor_->Update();
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//		カメラの更新
-	/////////////////////////////////////////////////////////////////////////////////////////
-
 	//モデルの更新
 	modelBuilder_->Update();
 
 	modelField_->Update();
 
 	demoObject_->Update();
+	testObject_->Update();
+
+	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	/*modelGround_->Update();*/
 
@@ -172,6 +176,7 @@ void TestScene::Draw(){
 	modelBuilder_->Draw();
 
 	demoObject_->Draw();
+	testObject_->Draw();
 
 	/*modelGround_->Draw();*/
 

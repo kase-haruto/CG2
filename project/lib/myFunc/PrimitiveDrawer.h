@@ -64,6 +64,7 @@ public:
     void Initialize();
     void Finalize();
     void DrawLine3d(const Vector3& p1, const Vector3& p2, const Vector4& color);
+    void DrawOBB(const Vector3& center, const Vector3& rotate, const Vector3& size, const Vector4 color);
     void Render();
     void Reset();
 
