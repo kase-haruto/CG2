@@ -161,6 +161,11 @@ PixelShaderOutput main(VertexShaderOutput input){
     ////////////////////////////////////////////////////////////////////
     float4 baseColor;
     baseColor.rgb = diffuse + specular;
+    // トーンマッピング
+    baseColor.rgb = baseColor.rgb / (baseColor.rgb + float3(1.0, 1.0, 1.0));
+
+    // ガンマ補正
+    output.color.rgb = pow(baseColor.rgb, 1.0 / 2.2);
     baseColor.a = gMaterial.color.a * textureColor.a;
     
     //カメラからの距離

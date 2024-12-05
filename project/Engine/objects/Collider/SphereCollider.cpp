@@ -1,6 +1,12 @@
 #include "SphereCollider.h"
 
+#include <sstream> 
+
 void SphereCollider::Initialize(float radius){
+
+	std::stringstream ss;
+	ss << "sphere" << "_" << this; // 形状とアドレスを組み合わせ
+	name_ = ss.str();
 
 	collisionShape_ = Sphere {shape_};
 	shape_.radius = radius;

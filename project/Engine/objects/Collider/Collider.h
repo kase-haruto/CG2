@@ -5,6 +5,7 @@
 #include "Engine/physics/Shape.h"
 
 #include <variant>
+#include <string>
 
 class Collider{
 public:
@@ -16,13 +17,16 @@ public:
 
 	virtual void Draw() = 0;
 
-	virtual void OnCollision([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionEnter([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionStay([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionExit([[maybe_unused]]Collider* other){};
 
 protected:
 	//===================================================================*/
 	//                   protected methods
 	//===================================================================*/
 	std::variant<Sphere, OBB> collisionShape_;
+	std::string name_;
 
 public:
 	//===================================================================*/
@@ -30,4 +34,6 @@ public:
 	//===================================================================*/
 	virtual const Vector3& GetCenter()const = 0;
 	virtual const std::variant<Sphere, OBB>& GetCollisionShape() = 0;
+
+	const std::string& GetName()const{ return name_; }
 };

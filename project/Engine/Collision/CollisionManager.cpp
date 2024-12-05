@@ -2,6 +2,8 @@
 
 #include "lib/myFunc/MyFunc.h"
 
+#include <externals/imgui/imgui.h>
+
 #include <algorithm>
 
 CollisionManager* CollisionManager::GetInstance(){
@@ -9,20 +11,74 @@ CollisionManager* CollisionManager::GetInstance(){
 	return &instance;
 }
 
+std::string CollisionManager::MakeCollisionKey(Collider* colliderA, Collider* colliderB){
+
+	// 名前を使ってユニークなキーを生成（順序を保証するために名前をソート）
+	return (colliderA->GetName() < colliderB->GetName())
+		? colliderA->GetName() + " VS " + colliderB->GetName()
+		: colliderB->GetName() + " VS " + colliderA->GetName();
+
+}
+
 void CollisionManager::UpdateCollisionAllCollider(){
+	// 前のフレームの衝突を保存してリセット
+	previousCollisions_ = std::move(currentCollisions_);
+	currentCollisions_.clear();
 
 	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA){
 		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB){
-
 			if (CheckCollisionPair(*itA, *itB)){
-				(*itA)->OnCollision(*itB);
-				(*itB)->OnCollision(*itA);
-			}
+				// 衝突ペアのキーを生成
+				std::string key = MakeCollisionKey(*itA, *itB);
+				currentCollisions_.insert(key);
 
+				// 衝突状態をログに記録
+				if (previousCollisions_.find(key) == previousCollisions_.end()){
+					// 新しい衝突 (Enter)
+					(*itA)->OnCollisionEnter(*itB);
+					(*itB)->OnCollisionEnter(*itA);
+					collisionLogs_.emplace_back("CollisionEnter: " + key);
+				} else{
+					// 持続中の衝突 (Stay)
+					(*itA)->OnCollisionStay(*itB);
+					(*itB)->OnCollisionStay(*itA);
+				}
+			}
 		}
 	}
 
+	// 前のフレームに存在して現在のフレームに存在しないペアをExitとして記録
+	for (const auto& key : previousCollisions_){
+		if (currentCollisions_.find(key) == currentCollisions_.end()){
+			// ペアを分解して対応するコライダーを取得
+			auto delimiterPos = key.find('-');
+			std::string colliderAName = key.substr(0, delimiterPos);
+			std::string colliderBName = key.substr(delimiterPos + 1);
+
+			Collider* colliderA = FindColliderByName(colliderAName);
+			Collider* colliderB = FindColliderByName(colliderBName);
+
+			if (colliderA && colliderB){
+				colliderA->OnCollisionExit(colliderB);
+				colliderB->OnCollisionExit(colliderA);
+			}
+
+			// Exitログを記録
+			collisionLogs_.emplace_back("CollisionExit: " + key);
+		}
+	}
 }
+
+Collider* CollisionManager::FindColliderByName(const std::string& name){
+	for (auto* collider : colliders_){
+		if (collider->GetName() == name){
+			return collider;
+		}
+	}
+	return nullptr; // 見つからない場合
+}
+
+
 
 void CollisionManager::AddCollider(Collider* collider){
 
@@ -35,6 +91,27 @@ void CollisionManager::RemoveCollider(Collider* collider){
 	colliders_.remove(collider);
 
 }
+
+void CollisionManager::DebugLog(){
+#ifdef _DEBUG
+	ImGui::Begin("Collision Manager");
+
+	// 衝突数を表示
+	ImGui::Text("Colliders count: %zu", colliders_.size());
+	ImGui::Text("Collisions detected: %zu", currentCollisions_.size());
+
+	// スクロール可能なログフィールド
+	ImGui::BeginChild("LogScroll", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
+	for (const auto& log : collisionLogs_){
+		ImGui::TextUnformatted(log.c_str());
+	}
+	ImGui::EndChild();
+
+	ImGui::End();
+#endif // _DEBUG
+}
+
+
 
 bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB){
 
@@ -87,7 +164,6 @@ bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		}, shapeA, shapeB);
 }
 
-
 bool CollisionManager::SphereToSphere(const Sphere& sphereA, const Sphere& sphereB){
 	const Vector3& centerA = sphereA.center;
 	const Vector3& centerB = sphereB.center;
@@ -115,23 +191,27 @@ bool CollisionManager::SphereToOBB(const Sphere& sphere, const OBB obb){
 		Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), rotationMatrix),
 	};
 
-	// Sphereの中心をOBBのローカル座標系に変換
-	Vector3 localSphereCenter = sphereCenter - obb.center;
+	// Sphereの中心とOBBの中心の差分
+	Vector3 diff = sphereCenter - obb.center;
 	Vector3 closestPoint = obb.center;
 
-	// 各軸でクランプ
+	// 各軸でクランプ処理
 	for (int i = 0; i < 3; ++i){
-		float distance = Vector3::Dot(localSphereCenter, obbAxes[i]);
-		float halfExtent = (i == 0) ? obb.size.x : (i == 1) ? obb.size.y : obb.size.z;
+		// diffをOBB軸方向に投影して距離を取得
+		float distance = Vector3::Dot(diff, obbAxes[i]);
+		// OBBの半サイズ（軸方向の幅）
+		float halfExtent = (i == 0) ? obb.size.x * 0.5f :
+			(i == 1) ? obb.size.y * 0.5f :
+			obb.size.z * 0.5f;
 
-		// 距離をクランプ
+		// クランプして最近接点を計算
 		distance = std::clamp(distance, -halfExtent, halfExtent);
 		closestPoint += distance * obbAxes[i];
 	}
 
-	// 最短距離を計算
-	Vector3 diff = closestPoint - sphereCenter;
-	float distanceSquared = diff.LengthSquared();
+	// 最近接点とSphere中心の距離を計算
+	Vector3 closestToSphere = closestPoint - sphereCenter;
+	float distanceSquared = closestToSphere.LengthSquared();
 
 	// 衝突判定
 	return distanceSquared <= (sphere.radius * sphere.radius);

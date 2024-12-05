@@ -73,40 +73,47 @@ void OBB::Draw(){
     }
 }
 
-void Sphere::Draw(){
-
+void Sphere::Draw(int subdivision , Vector4 color){
     // 分割数
-    const uint32_t kSubdivision = 16; // 任意の適切な値を設定
-    // 軽度分割1つ分の角度
+    const uint32_t kSubdivision = subdivision; // 分割数を増やして滑らかに
     const float kLonEvery = 2 * float(std::numbers::pi) / kSubdivision;
-    // 緯度分割1つ分の角度
     const float kLatEvery = float(std::numbers::pi) / kSubdivision;
-    Vector3 a, b, c;
-    
-    //緯度の方向に分割　-n/2 ~ n/2
+    Vector3 a, b, c, d;
+
+    // 緯度方向に分割
     for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
         float lat = -float(std::numbers::pi) / 2.0f + kLatEvery * latIndex;
-        //軽度の方向に分割 0~2π
+        float nextLat = lat + kLatEvery;
+
+        // 経度方向に分割
         for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
             float lon = lonIndex * kLonEvery;
+            float nextLon = lon + kLonEvery;
 
             // 点の座標を計算
             a.x = radius * (std::cos(lat) * std::cos(lon)) + center.x;
             a.y = radius * std::sin(lat) + center.y;
             a.z = radius * (std::cos(lat) * std::sin(lon)) + center.z;
 
-            b.x = radius * (std::cos(lat + kLatEvery) * std::cos(lon)) + center.x;
-            b.y = radius * std::sin(lat + kLatEvery) + center.y;
-            b.z = radius * (std::cos(lat + kLatEvery) * std::sin(lon)) + center.z;
+            b.x = radius * (std::cos(nextLat) * std::cos(lon)) + center.x;
+            b.y = radius * std::sin(nextLat) + center.y;
+            b.z = radius * (std::cos(nextLat) * std::sin(lon)) + center.z;
 
-            c.x = radius * (std::cos(lat) * std::cos(lon + kLonEvery)) + center.x;
+            c.x = radius * (std::cos(lat) * std::cos(nextLon)) + center.x;
             c.y = radius * std::sin(lat) + center.y;
-            c.z = radius * (std::cos(lat) * std::sin(lon + kLonEvery)) + center.z;
+            c.z = radius * (std::cos(lat) * std::sin(nextLon)) + center.z;
 
-            //ab,bcで線を引く
-            PrimitiveDrawer::GetInstance()->DrawLine3d(a, b, {1.0f,0.0f,0.0f,1.0f});
-            PrimitiveDrawer::GetInstance()->DrawLine3d(b, c, {1.0f,0.0f,0.0f,1.0f});
+            d.x = radius * (std::cos(nextLat) * std::cos(nextLon)) + center.x;
+            d.y = radius * std::sin(nextLat) + center.y;
+            d.z = radius * (std::cos(nextLat) * std::sin(nextLon)) + center.z;
+
+            // 経度方向の線を描画
+            PrimitiveDrawer::GetInstance()->DrawLine3d(a, c, color);
+            PrimitiveDrawer::GetInstance()->DrawLine3d(a, b, color);
+
+            // 緯度方向の線を描画
+            PrimitiveDrawer::GetInstance()->DrawLine3d(b, d, color);
+            PrimitiveDrawer::GetInstance()->DrawLine3d(c, d, color);
         }
     }
-
 }

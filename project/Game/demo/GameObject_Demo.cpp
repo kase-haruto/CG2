@@ -54,7 +54,11 @@ void GameObject_Demo::Draw(){
 //                    collision
 //===================================================================*/
 
-void GameObject_Demo::OnCollision([[maybe_unused]]Collider* other){}
+void GameObject_Demo::OnCollisionEnter([[maybe_unused]]Collider* other){}
+
+void GameObject_Demo::OnCollisionStay([[maybe_unused]] Collider* other){}
+
+void GameObject_Demo::OnCollisionExit([[maybe_unused]] Collider* other){}
 
 
 //===================================================================*/
@@ -65,6 +69,8 @@ void GameObject_Demo::ShowDebugUI(){
 	BaseGameObject::ShowDebugUI();
 
 }
+
+
 
 
 

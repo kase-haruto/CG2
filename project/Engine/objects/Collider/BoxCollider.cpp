@@ -1,7 +1,13 @@
 #include "BoxCollider.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
 
+#include <sstream> 
+
 void BoxCollider::Initialize(const Vector3& size){
+	std::stringstream ss;
+	ss << "box" << "_" << this; // 形状とアドレスを組み合わせ
+	name_ = ss.str();
+
 	collisionShape_ = shape_;
 
 	shape_.size = size;

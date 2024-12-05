@@ -89,6 +89,8 @@ void TestScene::UpdateDebugUI(){
 	static int selectedObjectIndex = -1;
 	static int selectedEditorIndex = -1;
 
+	CollisionManager::GetInstance()->DebugLog();
+
 	// オブジェクト名のリスト
 	std::vector<const char*> objectNames = {"directionalLight", "pointLight"};
 

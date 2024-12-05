@@ -4,7 +4,7 @@
 TestObject::TestObject(const std::string& modelName)
 :BaseGameObject(modelName){
 
-	SphereCollider::Initialize(model_->transform.scale.x * 0.5f);
+	SphereCollider::Initialize(model_->transform.scale.x * 0.5f + 0.1f);
 
 	CollisionManager::GetInstance()->AddCollider(this);
 }
@@ -36,8 +36,15 @@ void TestObject::Draw(){
 
 }
 
+//===================================================================*/
+//                    collision
+//===================================================================*/
 
-void TestObject::OnCollision([[maybe_unused]]Collider* other){}
+void TestObject::OnCollisionEnter([[maybe_unused]] Collider* other){}
+
+void TestObject::OnCollisionStay([[maybe_unused]] Collider* other){}
+
+void TestObject::OnCollisionExit([[maybe_unused]] Collider* other){}
 
 //===================================================================*/
 //                    imgui/ui
