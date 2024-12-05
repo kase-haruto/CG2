@@ -90,6 +90,47 @@ void PrimitiveDrawer::DrawLine3d(const Vector3& p1, const Vector3& p2, const Vec
 	}
 }
 
+void PrimitiveDrawer::DrawOBB(const Vector3& center, const Vector3& rotate, const Vector3& size, const Vector4 color){
+
+	const uint32_t vertexNum = 8;
+
+	// 回転行列を計算
+	Matrix4x4 rotationMatrix = EulerToMatrix(rotate);
+
+	// 各軸の半サイズを回転
+	Vector3 halfSizeX = Vector3::Transform({1.0f, 0.0f, 0.0f}, rotationMatrix) * size.x * 0.5f;
+	Vector3 halfSizeY = Vector3::Transform({0.0f, 1.0f, 0.0f}, rotationMatrix) * size.y * 0.5f;
+	Vector3 halfSizeZ = Vector3::Transform({0.0f, 0.0f, 1.0f}, rotationMatrix) * size.z * 0.5f;
+
+	// 頂点を計算
+	Vector3 vertices[vertexNum];
+	Vector3 offsets[vertexNum] = {
+		{-1, -1, -1}, {-1,  1, -1}, {1, -1, -1}, {1,  1, -1},
+		{-1, -1,  1}, {-1,  1,  1}, {1, -1,  1}, {1,  1,  1}
+	};
+
+	for (int i = 0; i < vertexNum; ++i){
+		Vector3 localVertex = offsets[i].x * halfSizeX +
+			offsets[i].y * halfSizeY +
+			offsets[i].z * halfSizeZ;
+		vertices[i] = center + localVertex;
+	}
+
+	// 辺を描画
+	int edges[12][2] = {
+		{0, 1}, {1, 3}, {3, 2}, {2, 0},
+		{4, 5}, {5, 7}, {7, 6}, {6, 4},
+		{0, 4}, {1, 5}, {2, 6}, {3, 7}
+	};
+
+	for (int i = 0; i < 12; ++i){
+		int start = edges[i][0];
+		int end = edges[i][1];
+		DrawLine3d(vertices[start], vertices[end], color);
+	}
+
+}
+
 void PrimitiveDrawer::Render(){
 	if (indexLine_ == 0) return; // 描画する線がない場合は終了
 

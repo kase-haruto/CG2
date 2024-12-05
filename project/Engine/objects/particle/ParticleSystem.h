@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseParticle.h"
+
 #include <string>
 
 class ParticleSystem 
@@ -28,7 +29,6 @@ private:
     //===================================================================*/
     //                    private methods
     //===================================================================*/
-
     std::string name_;                  // システム名
 
 protected:

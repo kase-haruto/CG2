@@ -114,6 +114,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
+    <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
+    <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Game\3d\BaseGameObject.cpp" />
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
@@ -183,8 +187,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
+    <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
+    <ClCompile Include="Game\demo\TestObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Collision\CollisionManager.h" />
+    <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
+    <ClInclude Include="Engine\objects\Collider\Collider.h" />
+    <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Game\3d\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
@@ -259,6 +269,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
     <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
+    <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
+    <ClInclude Include="Game\demo\TestObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

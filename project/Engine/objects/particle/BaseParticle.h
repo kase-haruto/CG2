@@ -8,6 +8,7 @@
 /* math */
 #include "lib/myMath/Vector4.h"
 #include "engine/physics/AABB.h"
+#include "Engine/physics/Shape.h"
 
 /* c++ */
 #include <list>
@@ -89,6 +90,7 @@ protected:
     //                    protected methods
     //===================================================================*/
     ParticleData::Emitter emitter_ {};
+    OBB emitterObb_;
 
     D3D12_GPU_DESCRIPTOR_HANDLE textureHandle; // テクスチャハンドル
 

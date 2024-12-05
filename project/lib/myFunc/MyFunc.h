@@ -35,6 +35,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float theta);
 Matrix4x4 MakeRotateYMatrix(float theta);
 Matrix4x4 MakeRotateZMatrix(float theta);
+Matrix4x4 EulerToMatrix(const Vector3& euler);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
 

@@ -9,7 +9,9 @@
 #include "Engine/graphics/camera/CameraManager.h"
 
 //* lib //
+
 #include "lib/myFunc/MyFunc.h"
+#include "lib/myFunc/PrimitiveDrawer.h"
 #include "lib/myFunc/Random.h"
 
 BaseParticle::BaseParticle(){
@@ -18,7 +20,7 @@ BaseParticle::BaseParticle(){
 
 }
 
-void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,const uint32_t count){
+void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
 
 	Emit(count);
 
@@ -101,6 +103,12 @@ void BaseParticle::Draw(){
 	// インスタンシングを用いて、指定された頂点バッファの頂点数分だけ描画を行う
 	commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
 
+
+	//obbの描画
+	PrimitiveDrawer::GetInstance()->DrawOBB(emitter_.transform.translate,
+							 emitter_.transform.rotate,
+							 emitter_.transform.scale,
+							 {1.0f,1.0f,1.0f,1.0f});
 }
 
 void BaseParticle::Emit(uint32_t count){
@@ -205,7 +213,7 @@ void ParticleData::Parameters::SetColorInitialize(){
 }
 
 void ParticleData::Parameters::SetVelocityRandom(float min, float max){
-	
+
 	velocity = {Random::Generate(min,max),Random::Generate(min,max),Random::Generate(min,max)};
 
 }
