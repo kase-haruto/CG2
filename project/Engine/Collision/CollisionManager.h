@@ -4,6 +4,8 @@
 
 // c++
 #include <list>
+#include <array>
+#include <vector>
 
 class CollisionManager{
 public:
@@ -23,6 +25,7 @@ public:
 
 	void AddCollider(Collider* collider);		// コライダーリストに追加
 	void RemoveCollider(Collider* collider);	// コライダーリストから削除
+	void DebugLog();
 
 private:
 	//===================================================================*/
@@ -43,8 +46,9 @@ private:
 
 private:
 	//===================================================================*/
-	//                   private cariable
+	//                   private variable
 	//===================================================================*/
 	std::list<Collider*>colliders_;
+	std::vector<std::string> collisionLogs_; // 衝突ログ
 };
 

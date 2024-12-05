@@ -2,6 +2,8 @@
 
 #include "lib/myFunc/MyFunc.h"
 
+#include <externals/imgui/imgui.h>
+
 #include <algorithm>
 
 CollisionManager* CollisionManager::GetInstance(){
@@ -17,6 +19,10 @@ void CollisionManager::UpdateCollisionAllCollider(){
 			if (CheckCollisionPair(*itA, *itB)){
 				(*itA)->OnCollision(*itB);
 				(*itB)->OnCollision(*itA);
+
+				// 衝突ログを記録
+				collisionLogs_.emplace_back(
+					"Collision detected: " + (*itA)->GetName() + " vs " + (*itB)->GetName());
 			}
 
 		}
@@ -35,6 +41,27 @@ void CollisionManager::RemoveCollider(Collider* collider){
 	colliders_.remove(collider);
 
 }
+
+void CollisionManager::DebugLog(){
+#ifdef _DEBUG
+	ImGui::Begin("Collision Manager");
+
+	// 総数を表示
+	ImGui::Text("Colliders count: %zu", colliders_.size());
+	ImGui::Text("Collisions detected: %zu", collisionLogs_.size());
+
+	// スクロール可能なログフィールド
+	ImGui::BeginChild("LogScroll", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
+	for (const auto& log : collisionLogs_){
+		ImGui::TextUnformatted(log.c_str());
+	}
+	ImGui::EndChild();
+
+	ImGui::End();
+#endif // _DEBUG
+}
+
+
 
 bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB){
 
@@ -115,27 +142,32 @@ bool CollisionManager::SphereToOBB(const Sphere& sphere, const OBB obb){
 		Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), rotationMatrix),
 	};
 
-	// Sphereの中心をOBBのローカル座標系に変換
-	Vector3 localSphereCenter = sphereCenter - obb.center;
+	// Sphereの中心とOBBの中心の差分
+	Vector3 diff = sphereCenter - obb.center;
 	Vector3 closestPoint = obb.center;
 
-	// 各軸でクランプ
+	// 各軸でクランプ処理
 	for (int i = 0; i < 3; ++i){
-		float distance = Vector3::Dot(localSphereCenter, obbAxes[i]);
-		float halfExtent = (i == 0) ? obb.size.x : (i == 1) ? obb.size.y : obb.size.z;
+		// diffをOBB軸方向に投影して距離を取得
+		float distance = Vector3::Dot(diff, obbAxes[i]);
+		// OBBの半サイズ（軸方向の幅）
+		float halfExtent = (i == 0) ? obb.size.x * 0.5f :
+			(i == 1) ? obb.size.y * 0.5f :
+			obb.size.z * 0.5f;
 
-		// 距離をクランプ
+		// クランプして最近接点を計算
 		distance = std::clamp(distance, -halfExtent, halfExtent);
 		closestPoint += distance * obbAxes[i];
 	}
 
-	// 最短距離を計算
-	Vector3 diff = closestPoint - sphereCenter;
-	float distanceSquared = diff.LengthSquared();
+	// 最近接点とSphere中心の距離を計算
+	Vector3 closestToSphere = closestPoint - sphereCenter;
+	float distanceSquared = closestToSphere.LengthSquared();
 
 	// 衝突判定
 	return distanceSquared <= (sphere.radius * sphere.radius);
 }
+
 
 bool CollisionManager::OBBToOBB([[maybe_unused]] const OBB& obbA, [[maybe_unused]] const OBB& obbB){
 	return false;

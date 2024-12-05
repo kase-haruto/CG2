@@ -4,7 +4,7 @@
 TestObject::TestObject(const std::string& modelName)
 :BaseGameObject(modelName){
 
-	SphereCollider::Initialize(model_->transform.scale.x * 0.5f);
+	SphereCollider::Initialize(model_->transform.scale.x * 0.5f + 0.1f);
 
 	CollisionManager::GetInstance()->AddCollider(this);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lib/myMath/Vector3.h"
+#include "lib/myMath/Vector4.h"
 #include "lib/myMath/Matrix4x4.h"
 
 
@@ -21,5 +22,5 @@ struct Sphere{
 	Vector3 center;
 	float radius;
 
-	void Draw();
+	void Draw(int subdivision = 8, Vector4 color = {1.0f,0.0f,0.0f,1.0f});
 };
