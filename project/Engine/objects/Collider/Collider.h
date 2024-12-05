@@ -17,7 +17,9 @@ public:
 
 	virtual void Draw() = 0;
 
-	virtual void OnCollision([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionEnter([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionStay([[maybe_unused]]Collider* other){};
+	virtual void OnCollisionExit([[maybe_unused]]Collider* other){};
 
 protected:
 	//===================================================================*/

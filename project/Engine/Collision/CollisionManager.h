@@ -6,6 +6,7 @@
 #include <list>
 #include <array>
 #include <vector>
+#include <unordered_set>
 
 class CollisionManager{
 public:
@@ -23,6 +24,8 @@ public:
 	//===================================================================*/
 	void UpdateCollisionAllCollider();			// すべてのコライダーを総当たりで判定
 
+	Collider* FindColliderByName(const std::string& name);
+
 	void AddCollider(Collider* collider);		// コライダーリストに追加
 	void RemoveCollider(Collider* collider);	// コライダーリストから削除
 	void DebugLog();
@@ -35,7 +38,7 @@ private:
 	~CollisionManager() = default;
 
 	bool CheckCollisionPair(Collider* colliderA, Collider* colliderB);
-
+	std::string MakeCollisionKey(Collider* colliderA, Collider* colliderB);
 	/*----------------
 	 各形状ごとの衝突
 	----------------*/
@@ -50,5 +53,8 @@ private:
 	//===================================================================*/
 	std::list<Collider*>colliders_;
 	std::vector<std::string> collisionLogs_; // 衝突ログ
+
+	std::unordered_set<std::string> currentCollisions_;  // 現在のフレームの衝突ペア
+	std::unordered_set<std::string> previousCollisions_; // 前のフレームの衝突ペア
 };
 

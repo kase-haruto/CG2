@@ -36,8 +36,15 @@ void TestObject::Draw(){
 
 }
 
+//===================================================================*/
+//                    collision
+//===================================================================*/
 
-void TestObject::OnCollision([[maybe_unused]]Collider* other){}
+void TestObject::OnCollisionEnter([[maybe_unused]] Collider* other){}
+
+void TestObject::OnCollisionStay([[maybe_unused]] Collider* other){}
+
+void TestObject::OnCollisionExit([[maybe_unused]] Collider* other){}
 
 //===================================================================*/
 //                    imgui/ui

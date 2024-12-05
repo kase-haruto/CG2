@@ -11,24 +11,74 @@ CollisionManager* CollisionManager::GetInstance(){
 	return &instance;
 }
 
+std::string CollisionManager::MakeCollisionKey(Collider* colliderA, Collider* colliderB){
+
+	// 名前を使ってユニークなキーを生成（順序を保証するために名前をソート）
+	return (colliderA->GetName() < colliderB->GetName())
+		? colliderA->GetName() + " VS " + colliderB->GetName()
+		: colliderB->GetName() + " VS " + colliderA->GetName();
+
+}
+
 void CollisionManager::UpdateCollisionAllCollider(){
+	// 前のフレームの衝突を保存してリセット
+	previousCollisions_ = std::move(currentCollisions_);
+	currentCollisions_.clear();
 
 	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA){
 		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB){
-
 			if (CheckCollisionPair(*itA, *itB)){
-				(*itA)->OnCollision(*itB);
-				(*itB)->OnCollision(*itA);
+				// 衝突ペアのキーを生成
+				std::string key = MakeCollisionKey(*itA, *itB);
+				currentCollisions_.insert(key);
 
-				// 衝突ログを記録
-				collisionLogs_.emplace_back(
-					"Collision detected: " + (*itA)->GetName() + " vs " + (*itB)->GetName());
+				// 衝突状態をログに記録
+				if (previousCollisions_.find(key) == previousCollisions_.end()){
+					// 新しい衝突 (Enter)
+					(*itA)->OnCollisionEnter(*itB);
+					(*itB)->OnCollisionEnter(*itA);
+					collisionLogs_.emplace_back("CollisionEnter: " + key);
+				} else{
+					// 持続中の衝突 (Stay)
+					(*itA)->OnCollisionStay(*itB);
+					(*itB)->OnCollisionStay(*itA);
+				}
 			}
-
 		}
 	}
 
+	// 前のフレームに存在して現在のフレームに存在しないペアをExitとして記録
+	for (const auto& key : previousCollisions_){
+		if (currentCollisions_.find(key) == currentCollisions_.end()){
+			// ペアを分解して対応するコライダーを取得
+			auto delimiterPos = key.find('-');
+			std::string colliderAName = key.substr(0, delimiterPos);
+			std::string colliderBName = key.substr(delimiterPos + 1);
+
+			Collider* colliderA = FindColliderByName(colliderAName);
+			Collider* colliderB = FindColliderByName(colliderBName);
+
+			if (colliderA && colliderB){
+				colliderA->OnCollisionExit(colliderB);
+				colliderB->OnCollisionExit(colliderA);
+			}
+
+			// Exitログを記録
+			collisionLogs_.emplace_back("CollisionExit: " + key);
+		}
+	}
 }
+
+Collider* CollisionManager::FindColliderByName(const std::string& name){
+	for (auto* collider : colliders_){
+		if (collider->GetName() == name){
+			return collider;
+		}
+	}
+	return nullptr; // 見つからない場合
+}
+
+
 
 void CollisionManager::AddCollider(Collider* collider){
 
@@ -46,9 +96,9 @@ void CollisionManager::DebugLog(){
 #ifdef _DEBUG
 	ImGui::Begin("Collision Manager");
 
-	// 総数を表示
+	// 衝突数を表示
 	ImGui::Text("Colliders count: %zu", colliders_.size());
-	ImGui::Text("Collisions detected: %zu", collisionLogs_.size());
+	ImGui::Text("Collisions detected: %zu", currentCollisions_.size());
 
 	// スクロール可能なログフィールド
 	ImGui::BeginChild("LogScroll", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
@@ -114,7 +164,6 @@ bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		}, shapeA, shapeB);
 }
 
-
 bool CollisionManager::SphereToSphere(const Sphere& sphereA, const Sphere& sphereB){
 	const Vector3& centerA = sphereA.center;
 	const Vector3& centerB = sphereB.center;
@@ -167,7 +216,6 @@ bool CollisionManager::SphereToOBB(const Sphere& sphere, const OBB obb){
 	// 衝突判定
 	return distanceSquared <= (sphere.radius * sphere.radius);
 }
-
 
 bool CollisionManager::OBBToOBB([[maybe_unused]] const OBB& obbA, [[maybe_unused]] const OBB& obbB){
 	return false;

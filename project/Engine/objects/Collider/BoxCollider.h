@@ -15,6 +15,11 @@ public:
     void Initialize(const Vector3& size);
     void Draw()override;
 
+    //* collision ==========================================*//
+    void OnCollisionEnter([[maybe_unused]] Collider* other)override{};
+    void OnCollisionStay([[maybe_unused]] Collider* other)override{};
+    void OnCollisionExit([[maybe_unused]] Collider* other)override{};
+
 protected:
     //===================================================================*/
     //                   private methods
