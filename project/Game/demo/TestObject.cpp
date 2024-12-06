@@ -7,6 +7,8 @@ TestObject::TestObject(const std::string& modelName)
 	SphereCollider::Initialize(model_->transform.scale.x * 0.5f + 0.1f);
 
 	CollisionManager::GetInstance()->AddCollider(this);
+
+	model_->transform.translate.x = 3.0f;
 }
 
 TestObject::~TestObject(){

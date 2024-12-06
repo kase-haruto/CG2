@@ -7,200 +7,242 @@
 #include "Engine/objects/ModelManager.h"
 #include "Engine/objects/TextureManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
+#include "ParticleEmitShape.h"
 
-//* lib //
-
+//* lib
 #include "lib/myFunc/MyFunc.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "lib/myFunc/Random.h"
+#include "lib/myFunc/MathFunc.h"
+
+#include <externals/imgui/imgui.h>
 
 BaseParticle::BaseParticle(){
-
-	particles_.clear();
-
+    particles_.clear();
 }
 
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
+    Emit(count);
 
-	Emit(count);
+    modelData_ = ModelManager::LoadModel(modelName);
+    textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
+    backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
-	/* modelとmaterial生成 =======================*/
-	modelData_ = ModelManager::LoadModel(modelName);
-	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
-
-	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
-
-	/* リソースの生成 =======================*/
-	CreateBuffer();
-	Map();
-	CreateSRV();
-
+    CreateBuffer();
+    Map();
+    CreateSRV();
 }
 
 void BaseParticle::Update(){
-	instanceNum_ = 0;
-	for (auto it = particles_.begin(); it != particles_.end(); ){
+    instanceNum_ = 0;
+    for (auto it = particles_.begin(); it != particles_.end();){
+        if (instanceNum_ < kMaxInstanceNum_){
+            if (it->lifeTime <= it->currentTime){
+                it = particles_.erase(it);
+                continue;
+            }
 
-		if (instanceNum_ < kMaxInstanceNum_){
+            Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
+            billboardMatrix.m[3][0] = 0.0f;
+            billboardMatrix.m[3][1] = 0.0f;
+            billboardMatrix.m[3][2] = 0.0f;
 
-			if (it->lifeTime <= it->currentTime){	// 生存時間を過ぎた場合
-				it = particles_.erase(it);			// パーティクルを削除し、次のイテレータに進む
-				continue;
-			}
+            Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
+            Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
+            Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
+            Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 
+            instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
+            instancingData[instanceNum_].World = worldMatrix;
+            instancingData[instanceNum_].color = it->color;
+            float alpha = 1.0f - (it->currentTime / it->lifeTime);
+            instancingData[instanceNum_].color.w = alpha;
 
-			Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
-			billboardMatrix.m[3][0] = 0.0f;
-			billboardMatrix.m[3][1] = 0.0f;
-			billboardMatrix.m[3][2] = 0.0f;
+            it->currentTime += deltaTime;
+            it->transform.translate += it->velocity * deltaTime;
 
-			Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
-			Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
-			Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
-			Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+            ++instanceNum_;
+        }
 
-			instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
-			instancingData[instanceNum_].World = worldMatrix;
-			instancingData[instanceNum_].color = it->color;
-			float alpha = 1.0f - (it->currentTime / it->lifeTime);
-			instancingData[instanceNum_].color.w = alpha;
+        ++it;
+    }
 
-
-
-			// 生存時間の更新
-			it->currentTime += deltaTime;
-
-			//　座標の更新
-			it->transform.translate += it->velocity * deltaTime;
-
-			++instanceNum_;
-
-		}
-
-		++it;
-
-	}
-
+    emitter_.frequencyTime += deltaTime;
+    if (emitter_.frequencyTime >= emitter_.frequency){
+        Emit(emitter_.count);
+        emitter_.frequencyTime = 0.0f;
+    }
 }
 
 void BaseParticle::Draw(){
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+    commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
-	// 頂点バッファを設定
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
+    commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
 
-	// マテリアル用定数バッファ
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    // OBB描画
+    if (currentShape_ == EmitterShape::OBB){
+        PrimitiveDrawer::GetInstance()->DrawOBB(
+            emitter_.transform.translate,
+            emitter_.transform.rotate,
+            emitter_.transform.scale,
+            {1.0f,1.0f,1.0f,1.0f}
+        );
+    } else if (currentShape_ == EmitterShape::Sphere){
+        PrimitiveDrawer::GetInstance()->DrawSphere(
+            emitter_.transform.translate,
+            emitter_.transform.scale.x * 0.5f,
+            8,
+            {1.0f,1.0f,1.0f,1.0f}
+        );
+    }
 
-	// インスタンシング用srv
-	commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+    
+}
 
-	// texture用srv
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
+void BaseParticle::ImGui(){
 
-	// インスタンシングを用いて、指定された頂点バッファの頂点数分だけ描画を行う
-	commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
+    if (ImGui::CollapsingHeader("emitter")){
 
+        // 形状選択UI
+        int shapeIndex = ( int ) currentShape_;
+        const char* shapeNames[] = {"OBB", "Sphere"};
+        if (ImGui::Combo("Emitter Shape", &shapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames))){
+            currentShape_ = ( EmitterShape ) shapeIndex;
+        }
 
-	//obbの描画
-	PrimitiveDrawer::GetInstance()->DrawOBB(emitter_.transform.translate,
-							 emitter_.transform.rotate,
-							 emitter_.transform.scale,
-							 {1.0f,1.0f,1.0f,1.0f});
+        if (currentShape_ == EmitterShape::OBB){
+            ImGui::DragFloat3("size", &emitter_.transform.scale.x, 0.01f);
+            ImGui::Checkbox("Emit +X Face", &emitPosX_);
+            ImGui::Checkbox("Emit -X Face", &emitNegX_);
+            ImGui::Checkbox("Emit +Y Face", &emitPosY_);
+            ImGui::Checkbox("Emit -Y Face", &emitNegY_);
+            ImGui::Checkbox("Emit +Z Face", &emitPosZ_);
+            ImGui::Checkbox("Emit -Z Face", &emitNegZ_);
+        }
+
+        if (currentShape_ == EmitterShape::Sphere){
+            ImGui::DragFloat("radius", &emitter_.transform.scale.x, 0.01f);
+        }
+    }
 }
 
 void BaseParticle::Emit(uint32_t count){
-	for (uint32_t i = 0; i < count; ++i){
-		if (particles_.size() >= static_cast< size_t >(kMaxInstanceNum_)){
-			break; // 最大数に達した場合は生成を中断
-		}
+    for (uint32_t i = 0; i < count; ++i){
+        if (particles_.size() >= static_cast< size_t >(kMaxInstanceNum_)){
+            break;
+        }
 
-		ParticleData::Parameters particle;
-		particle.SetColorRandom();
-		particle.SetVelocityRandom(-1.0f, 1.0f);
-		particle.lifeTime = Random::Generate(1.0f, 5.0f); // ライフタイムをランダムに設定
-		particle.transform.translate = emitter_.transform.translate; // エミッタの位置に生成
-		particles_.push_back(particle);
-	}
+        ParticleData::Parameters particle;
+        if (GetUseRandomColor()){
+            particle.SetColorRandom();
+        } else{
+            particle.color = GetSelectedColor();
+        }
 
-	instanceNum_ = static_cast< int32_t >(particles_.size());
+        float speed = Random::Generate(0.5f, 2.0f);
+
+        Vector3 localPoint {};
+        Vector3 localNormal {};
+        Vector3 vel {};
+
+        Matrix4x4 rotX = MakeRotateXMatrix(emitter_.transform.rotate.x);
+        Matrix4x4 rotY = MakeRotateYMatrix(emitter_.transform.rotate.y);
+        Matrix4x4 rotZ = MakeRotateZMatrix(emitter_.transform.rotate.z);
+        Matrix4x4 rotationMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(rotZ, rotY), rotX);
+
+        if (currentShape_ == EmitterShape::OBB){
+            FaceInfo fi = GetRandomPointAndNormalOnOBBSurface(emitter_.transform,
+                                                              emitPosX_, emitNegX_,
+                                                              emitPosY_, emitNegY_,
+                                                              emitPosZ_, emitNegZ_);
+            localPoint = fi.localPoint;
+            localNormal = fi.localNormal;
+
+            Vector3 worldNormal = TransformNormal(localNormal, rotationMatrix);
+            particle.velocity = worldNormal * speed;
+
+        } else if (currentShape_ == EmitterShape::Sphere){
+            Vector3 si = GetRandomPointOnSphere(emitter_.transform);
+            localPoint = si;
+            particle.SetVelocityRandom(-1.0f,1.0f);
+        }
+
+        Vector3 worldPos = Vector3::Transform(localPoint, rotationMatrix) + emitter_.transform.translate;
+        
+        particle.transform.translate = worldPos;
+        particle.lifeTime = Random::Generate(2.0f, 5.0f);
+
+        particles_.push_back(particle);
+    }
+
+    instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
 void BaseParticle::CreateBuffer(){
+    Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
-	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
+    vertexBuffer_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
+    vertexBufferView.BufferLocation = vertexBuffer_->GetGPUVirtualAddress();
+    vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
+    vertexBufferView.StrideInBytes = sizeof(VertexData);
 
-	vertexBuffer_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
-	vertexBufferView.BufferLocation = vertexBuffer_->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
-
-	//マテリアル用
-	materialResource_ = CreateBufferResource(device.Get(), sizeof(Material));
-
-	//インスタンシング用
-	instancingResource_ = CreateBufferResource(device.Get(), sizeof(ParticleData::ParticleForGPU) * kMaxInstanceNum_);
-
+    materialResource_ = CreateBufferResource(device.Get(), sizeof(Material));
+    instancingResource_ = CreateBufferResource(device.Get(), sizeof(ParticleData::ParticleForGPU) * kMaxInstanceNum_);
 }
 
 void BaseParticle::Map(){
+    VertexData* vertexData = nullptr;
+    HRESULT hr = vertexBuffer_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
+    if (FAILED(hr)){
+        throw std::runtime_error("Failed to map vertex buffer.");
+    }
+    std::memcpy(vertexData, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());
 
-	/* vertex =======================*/
-	VertexData* vertexData = nullptr;
-	HRESULT hr = vertexBuffer_->Map(0, nullptr, reinterpret_cast< void** >(&vertexData));
-	if (FAILED(hr)){
-		throw std::runtime_error("Failed to map vertex buffer.");
-	}
-	std::memcpy(vertexData, modelData_->vertices.data(), sizeof(VertexData) * modelData_->vertices.size());
+    HRESULT materialHr = materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
+    if (FAILED(materialHr)){
+        throw std::runtime_error("Failed to map material buffer.");
+    }
+    materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    materialData->enableLighting = Lambert;
+    materialData->uvTransform = Matrix4x4::MakeIdentity();
 
+    HRESULT instancingHr = instancingResource_->Map(0, nullptr, reinterpret_cast< void** >(&instancingData));
+    if (FAILED(instancingHr)){
+        throw std::runtime_error("Failed to map instance buffer.");
+    }
 
-	/* material =======================*/
-	HRESULT materialHr = materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData));
-	if (FAILED(materialHr)){
-		throw std::runtime_error("Failed to map material buffer.");
-	}
-	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = Lambert;
-	materialData->uvTransform = Matrix4x4::MakeIdentity();
-
-
-	/* instance =======================*/
-	HRESULT instancingHr = instancingResource_->Map(0, nullptr, reinterpret_cast< void** >(&instancingData));
-	if (FAILED(instancingHr)){
-		throw std::runtime_error("Failed to map instance buffer.");
-	}
-
-	uint32_t index = 0;
-	for (auto it = particles_.begin(); it != particles_.end(); ++it, ++index){
-		instancingData[index].WVP = Matrix4x4::MakeIdentity();
-		instancingData[index].World = Matrix4x4::MakeIdentity();
-		instancingData[index].color = it->color;
-	}
-
+    uint32_t index = 0;
+    for (auto it = particles_.begin(); it != particles_.end(); ++it, ++index){
+        instancingData[index].WVP = Matrix4x4::MakeIdentity();
+        instancingData[index].World = Matrix4x4::MakeIdentity();
+        instancingData[index].color = it->color;
+    }
 }
 
 void BaseParticle::CreateSRV(){
+    Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
+    auto [srvHandleCPU, srvHandleGPU] = SrvLocator::AllocateSrv();
 
-	Microsoft::WRL::ComPtr<ID3D12Device>device = GraphicsGroup::GetInstance()->GetDevice();
+    D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc = {};
+    instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+    instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+    instancingSrvDesc.Buffer.FirstElement = 0;
+    instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+    // SRVは常に最大インスタンス数(kMaxInstanceNum_)で作成
+    instancingSrvDesc.Buffer.NumElements = kMaxInstanceNum_;
+    instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleData::ParticleForGPU);
 
-	auto [srvHandleCPU, srvHandleGPU] = SrvLocator::AllocateSrv();
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc = {};
-	instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	instancingSrvDesc.Buffer.FirstElement = 0;
-	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	instancingSrvDesc.Buffer.NumElements = instanceNum_;
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleData::ParticleForGPU);
-
-	device->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, srvHandleCPU);
-	instancingSrvHandleGPU_ = srvHandleGPU;
-
+    device->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, srvHandleCPU);
+    instancingSrvHandleGPU_ = srvHandleGPU;
 }
-
 
 void ParticleData::Parameters::SetColorRandom(){
 

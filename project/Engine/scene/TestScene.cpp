@@ -49,6 +49,10 @@ void TestScene::Initialize(){
 	testObject_ = std::make_unique<TestObject>("debugCube");
 	testObject_->Initialize();
 
+	demoParticle_ = std::make_unique<DemoParticle>();
+	demoParticle_->Initialize("plane", "particle.png");
+	demoParticle_->SetEmitPos({0.0f,3.0f,0.0f});
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +76,7 @@ void TestScene::Update(){
 
 	//モデルの更新
 	modelBuilder_->Update();
+	demoParticle_->Update();
 
 	modelField_->Update();
 
@@ -104,12 +109,14 @@ void TestScene::UpdateDebugUI(){
 		// Demo Object タブ
 		demoObject_->ShowDebugUI();
 
+		ParticleManager::GetInstance()->ShowDebugUI();
+
 		// Object Settings タブ
-		if (ImGui::BeginTabItem("Object Settings")){
+		if (ImGui::BeginTabItem("light Settings")){
 			ImGui::Text("Select an object to edit its properties:");
 
 			// オブジェクトのリスト表示（リストボックス形式）
-			if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
+			if (ImGui::ListBox("Light", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
 				// オブジェクト選択時の処理はここで必要なら行う
 			}
 

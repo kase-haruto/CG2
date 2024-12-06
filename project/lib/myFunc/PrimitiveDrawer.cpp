@@ -131,6 +131,53 @@ void PrimitiveDrawer::DrawOBB(const Vector3& center, const Vector3& rotate, cons
 
 }
 
+void PrimitiveDrawer::DrawSphere(const Vector3& center, const float radius, int subdivision, Vector4 color){
+
+	// 分割数
+	const uint32_t kSubdivision = subdivision; // 分割数を増やして滑らかに
+	const float kLonEvery = 2 * float(std::numbers::pi) / kSubdivision;
+	const float kLatEvery = float(std::numbers::pi) / kSubdivision;
+	Vector3 a, b, c, d;
+
+	// 緯度方向に分割
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex){
+		float lat = -float(std::numbers::pi) / 2.0f + kLatEvery * latIndex;
+		float nextLat = lat + kLatEvery;
+
+		// 経度方向に分割
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex){
+			float lon = lonIndex * kLonEvery;
+			float nextLon = lon + kLonEvery;
+
+			// 点の座標を計算
+			a.x = radius * (std::cos(lat) * std::cos(lon)) + center.x;
+			a.y = radius * std::sin(lat) + center.y;
+			a.z = radius * (std::cos(lat) * std::sin(lon)) + center.z;
+
+			b.x = radius * (std::cos(nextLat) * std::cos(lon)) + center.x;
+			b.y = radius * std::sin(nextLat) + center.y;
+			b.z = radius * (std::cos(nextLat) * std::sin(lon)) + center.z;
+
+			c.x = radius * (std::cos(lat) * std::cos(nextLon)) + center.x;
+			c.y = radius * std::sin(lat) + center.y;
+			c.z = radius * (std::cos(lat) * std::sin(nextLon)) + center.z;
+
+			d.x = radius * (std::cos(nextLat) * std::cos(nextLon)) + center.x;
+			d.y = radius * std::sin(nextLat) + center.y;
+			d.z = radius * (std::cos(nextLat) * std::sin(nextLon)) + center.z;
+
+			// 経度方向の線を描画
+			DrawLine3d(a, c, color);
+			DrawLine3d(a, b, color);
+
+			// 緯度方向の線を描画
+			DrawLine3d(b, d, color);
+			DrawLine3d(c, d, color);
+		}
+	}
+
+}
+
 void PrimitiveDrawer::Render(){
 	if (indexLine_ == 0) return; // 描画する線がない場合は終了
 

@@ -65,6 +65,7 @@ public:
     void Finalize();
     void DrawLine3d(const Vector3& p1, const Vector3& p2, const Vector4& color);
     void DrawOBB(const Vector3& center, const Vector3& rotate, const Vector3& size, const Vector4 color);
+    void DrawSphere(const Vector3& center, const float radius, int subdivision = 8, Vector4 color = {1.0f,0.0f,0.0f,1.0f});
     void Render();
     void Reset();
 

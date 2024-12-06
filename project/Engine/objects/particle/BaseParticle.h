@@ -40,15 +40,19 @@ namespace ParticleData{
 
     struct Emitter{
         Transform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
-        uint32_t count;         //発生数
-        float frequency;        //発生頻度
-        float frequencyTime;    //頻度用時刻
+        uint32_t count;             //発生数
+        float frequency;            //発生頻度
+        float frequencyTime = 0;    //頻度用時刻
 
         void Initialize(uint32_t count);
         void Initialize(const Transform& transform, const float frequency, const float frequencyTime, uint32_t count);
     };
 }
 
+enum class EmitterShape{
+    OBB,
+    Sphere
+};
 
 class BaseParticle{
 public:
@@ -61,9 +65,12 @@ public:
     virtual void Update();
     virtual void Draw();
 
+    virtual void ImGui();
+
     virtual void Emit(uint32_t count);
 
-
+    virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
+    virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
 private:
     //===================================================================*/
     //                    private methods
@@ -82,15 +89,14 @@ public:
     //===================================================================*/
     std::vector<ParticleData::Parameters> particles_;
    
-    int32_t kMaxInstanceNum_ = 500;
-    int32_t instanceNum_ = 50;          //デフォルトとして50    
+    int32_t kMaxInstanceNum_ = 256;
+    int32_t instanceNum_ = 0;          //デフォルトとして50    
 
 protected:
     //===================================================================*/
     //                    protected methods
     //===================================================================*/
-    ParticleData::Emitter emitter_ {};
-    OBB emitterObb_;
+   
 
     D3D12_GPU_DESCRIPTOR_HANDLE textureHandle; // テクスチャハンドル
 
@@ -112,4 +118,20 @@ protected:
 
     // インスタンシングデータ
     ParticleData::ParticleForGPU* instancingData = nullptr;
+
+
+    /* emitter ------------------------------------*/
+    ParticleData::Emitter emitter_ {};
+
+    bool emitPosX_ = true;
+    bool emitNegX_ = true;
+    bool emitPosY_ = true;
+    bool emitNegY_ = true;
+    bool emitPosZ_ = true;
+    bool emitNegZ_ = true;
+
+
+    // 形状選択用
+    EmitterShape currentShape_ = EmitterShape::OBB;
+
 };
