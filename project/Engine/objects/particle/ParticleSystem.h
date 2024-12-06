@@ -16,8 +16,25 @@ public:
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 
-
+    /* ui ===============================================*/
     virtual void ImGui();
+    void Load(const std::string& filename);
+    void Save(const std::string& filename);
+
+private:
+    //===================================================================*/
+    //                    private methods
+    //===================================================================*/
+    std::string name_;                                  // システム名
+    bool useRandomColor_ = true;                        // ランダムカラーを使用するか
+    Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色
+
+    std::string fileDirectoryPath = "./Resources/json/particle/";
+
+protected:
+    //===================================================================*/
+    //                    protected methods
+    //===================================================================*/
 
 public:
     //===================================================================*/
@@ -31,19 +48,5 @@ public:
     // BaseParticleの仮想関数をオーバーライド
     bool GetUseRandomColor() const override{ return useRandomColor_; }
     Vector4 GetSelectedColor() const override{ return selectedColor_; }
-
-private:
-    //===================================================================*/
-    //                    private methods
-    //===================================================================*/
-    std::string name_;                                  // システム名
-    bool useRandomColor_ = true;                        // ランダムカラーを使用するか
-    Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色
-
-protected:
-    //===================================================================*/
-    //                    protected methods
-    //===================================================================*/
-
 
 };

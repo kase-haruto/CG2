@@ -1,0 +1,32 @@
+{
+    "emitter": {
+        "count": 5,
+        "frequency": 1.0,
+        "frequencyTime": 0.20000000298023224,
+        "transform": {
+            "rotate": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                17.639999389648438,
+                1.0,
+                18.950000762939453
+            ],
+            "translate": [
+                0.0,
+                -0.5400000214576721,
+                0.0
+            ]
+        }
+    },
+    "name": "demoParticle",
+    "selectedColor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "useRandomColor": true
+}

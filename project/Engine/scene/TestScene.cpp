@@ -51,7 +51,6 @@ void TestScene::Initialize(){
 
 	demoParticle_ = std::make_unique<DemoParticle>();
 	demoParticle_->Initialize("plane", "particle.png");
-	demoParticle_->SetEmitPos({0.0f,3.0f,0.0f});
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
