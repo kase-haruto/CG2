@@ -6,7 +6,7 @@
 GameObject_Demo::GameObject_Demo(const std::string& modelName)
 :BaseGameObject(modelName){
 
-	particle_ = std::make_unique<DemoParticle>();
+	//particle_ = std::make_unique<DemoParticle>();
 
 	BoxCollider::Initialize(model_->transform.scale);
 
@@ -24,15 +24,15 @@ void GameObject_Demo::Initialize(){
 
 	BaseGameObject::SetName("debugObject");
 
-	particle_->Initialize("plane","particle.png");
+	/*particle_->Initialize("plane","particle.png");*/
 
 }
 
 void GameObject_Demo::Update(){
 
-	particle_->SetEmitPos(model_->transform.translate);
+	//particle_->SetEmitPos(model_->transform.translate);
 
-	particle_->Update();
+	//particle_->Update();
 
 	shape_.center = model_->transform.translate;
 	shape_.rotate = model_->transform.rotate;

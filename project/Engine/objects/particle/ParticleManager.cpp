@@ -2,6 +2,9 @@
 
 #include "Engine/graphics/GraphicsGroup.h"
 
+// external
+#include <externals/imgui/imgui.h>
+
 ParticleManager::ParticleManager(){
 
 	systems_.clear();
@@ -39,5 +42,24 @@ void ParticleManager::Draw(){
 void ParticleManager::Finalize(){
 
 	systems_.clear();
+
+}
+
+void ParticleManager::ShowDebugUI(){
+
+#ifdef _DEBUG
+    if (ImGui::BeginTabItem("Particles")){
+        // ユニークなIDスコープを作成する
+        for (size_t i = 0; i < systems_.size(); ++i){
+
+            // 各オブジェクトのUIを個別に管理
+            if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
+                systems_[i]->ImGui();
+            }
+
+        }
+        ImGui::EndTabItem();
+    }
+#endif // _DEBUG
 
 }
