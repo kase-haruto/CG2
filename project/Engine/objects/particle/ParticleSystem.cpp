@@ -33,7 +33,7 @@ void ParticleSystem::ImGui(){
 
     // Particle Colorセクション
     if (ImGui::TreeNode("Particle Color")){
-        ImGui::Checkbox("fixationAlpha" ,&isFixationAlpha_);
+        //ImGui::Checkbox("fixationAlpha" ,&isFixationAlpha_);
         const char* modes[] = {"Random", "Single Color", "Similar Color"};
         int currentMode = static_cast< int >(colorMode_);
         if (ImGui::Combo("Color Mode", &currentMode, modes, IM_ARRAYSIZE(modes))){
