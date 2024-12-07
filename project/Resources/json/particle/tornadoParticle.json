@@ -1,0 +1,49 @@
+{
+    "center": [
+        -2.9000000953674316,
+        1.1100000143051147,
+        0.0
+    ],
+    "colorMode": 2,
+    "colorVariation": 0.1599999964237213,
+    "emitter": {
+        "count": 8,
+        "frequency": 0.5,
+        "frequencyTime": 0.18333333730697632,
+        "transform": {
+            "rotate": [
+                0.0,
+                4.539999961853027,
+                0.0
+            ],
+            "scale": [
+                1.6699999570846558,
+                1.0,
+                1.6200000047683716
+            ],
+            "translate": [
+                -2.9000000953674316,
+                1.1100000143051147,
+                0.0
+            ]
+        }
+    },
+    "faces": {
+        "emitNegX": true,
+        "emitNegY": false,
+        "emitNegZ": true,
+        "emitPosX": true,
+        "emitPosY": false,
+        "emitPosZ": true
+    },
+    "name": "tornadoParticle",
+    "radiusGrowthFactor": 0.012000000104308128,
+    "rotateSpeed": 1.2699999809265137,
+    "selectedColor": [
+        0.4538554251194,
+        0.686274528503418,
+        0.41378316283226013,
+        1.0
+    ],
+    "upSpeed": 1.1399999856948853
+}

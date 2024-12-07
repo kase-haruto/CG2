@@ -1,8 +1,10 @@
 {
+    "colorMode": 2,
+    "colorVariation": 0.10000000149011612,
     "emitter": {
-        "count": 5,
-        "frequency": 1.0,
-        "frequencyTime": 0.20000000298023224,
+        "count": 1,
+        "frequency": 0.4000000059604645,
+        "frequencyTime": 0.0833333358168602,
         "transform": {
             "rotate": [
                 0.0,
@@ -16,17 +18,24 @@
             ],
             "translate": [
                 0.0,
-                -0.5400000214576721,
+                -0.5099999904632568,
                 0.0
             ]
         }
     },
+    "faces": {
+        "emitNegX": false,
+        "emitNegY": false,
+        "emitNegZ": false,
+        "emitPosX": false,
+        "emitPosY": true,
+        "emitPosZ": false
+    },
     "name": "demoParticle",
     "selectedColor": [
-        1.0,
-        1.0,
-        1.0,
+        0.7254902124404907,
+        0.34266233444213867,
+        0.29161861538887024,
         1.0
-    ],
-    "useRandomColor": true
+    ]
 }

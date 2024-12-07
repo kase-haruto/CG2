@@ -3,9 +3,17 @@
 #include "BaseParticle.h"
 
 #include <string>
+#include "particleBehavior/ParticleBehavior.h"
 
 class ParticleSystem 
     : public BaseParticle{
+    // カラーモード用のenumを定義
+    enum class ColorMode{
+        Random,
+        SingleColor,
+        SimilarColor
+    };
+
 public:
     //===================================================================*/
     //                    public methods
@@ -31,10 +39,16 @@ private:
 
     std::string fileDirectoryPath = "./Resources/json/particle/";
 
+    ColorMode colorMode_ = ColorMode::Random; // 現在のカラー方式
+    //Vector4 selectedColor_ = {1.0f,1.0f,1.0f,1.0f}; // SINGLEまたはSIMILAR用の基準色
+    float colorVariation_ = 0.1f; // 類似色モードでのバラつき度合い(0.0f〜1.0f程度)
+
 protected:
     //===================================================================*/
     //                    protected methods
     //===================================================================*/
+    std::unique_ptr<ParticleBehavior> behavior_;
+
 
 public:
     //===================================================================*/
@@ -46,7 +60,9 @@ public:
     void SetEmitPos(const Vector3& pos){ emitter_.transform.translate = pos; }
 
     // BaseParticleの仮想関数をオーバーライド
-    bool GetUseRandomColor() const override{ return useRandomColor_; }
-    Vector4 GetSelectedColor() const override{ return selectedColor_; }
+    bool GetUseRandomColor() const override;
+    Vector4 GetSelectedColor() const override;
+
+    const Vector3& GetEmitterPos()const{ return emitter_.transform.translate; }
 
 };

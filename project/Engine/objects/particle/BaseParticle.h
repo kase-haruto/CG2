@@ -76,8 +76,6 @@ private:
     //                    private methods
     //===================================================================*/
 
-
-
     /* resources =======================*/
     void CreateBuffer();
     void Map();
@@ -90,7 +88,7 @@ public:
     std::vector<ParticleData::Parameters> particles_;
    
     int32_t kMaxInstanceNum_ = 256;
-    int32_t instanceNum_ = 0;          //デフォルトとして50    
+    int32_t instanceNum_ = 0;
 
 protected:
     //===================================================================*/
@@ -130,6 +128,8 @@ protected:
     bool emitPosZ_ = true;
     bool emitNegZ_ = true;
 
+    bool isFixationAlpha_ = false;
+    bool isBillboard_ = true;
 
     // 形状選択用
     EmitterShape currentShape_ = EmitterShape::OBB;

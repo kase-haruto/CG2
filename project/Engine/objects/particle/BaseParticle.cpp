@@ -43,20 +43,42 @@ void BaseParticle::Update(){
                 continue;
             }
 
-            Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
-            billboardMatrix.m[3][0] = 0.0f;
-            billboardMatrix.m[3][1] = 0.0f;
-            billboardMatrix.m[3][2] = 0.0f;
+            Matrix4x4 worldMatrix;
+            Matrix4x4 worldViewProjectionMatrix;
 
-            Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
-            Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
-            Matrix4x4 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
-            Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+            if (isBillboard_){
+                // ビルボード処理
+                Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
+                billboardMatrix.m[3][0] = 0.0f;
+                billboardMatrix.m[3][1] = 0.0f;
+                billboardMatrix.m[3][2] = 0.0f;
+
+                Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
+                Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
+                worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
+            } else{
+                // 通常のスケールとトランスレーション
+                Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
+                Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
+                worldMatrix = Matrix4x4::Multiply(scaleMatrix, translateMatrix);
+            }
+
+            // ビルボード有無に関わらず、WVPを計算
+            worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
 
             instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
             instancingData[instanceNum_].World = worldMatrix;
             instancingData[instanceNum_].color = it->color;
-            float alpha = 1.0f - (it->currentTime / it->lifeTime);
+
+
+            float alpha;
+            
+            if (isFixationAlpha_){
+                alpha = 1.0f;
+            } else{
+                alpha = 1.0f - (it->currentTime / it->lifeTime);
+            }
+
             instancingData[instanceNum_].color.w = alpha;
 
             it->currentTime += deltaTime;
@@ -108,7 +130,7 @@ void BaseParticle::Draw(){
 
 void BaseParticle::ImGui(){
 
-    if (ImGui::CollapsingHeader("emitter")){
+    if (ImGui::CollapsingHeader("emitterType")){
 
         // 形状選択UI
         int shapeIndex = ( int ) currentShape_;
