@@ -10,6 +10,8 @@ DemoParticle::DemoParticle(){
 
 	ParticleSystem::SetName("demoParticle");
 
+	behavior_ = std::make_unique<PtlBehavior_Diffusion>();
+
 }
 
 void DemoParticle::Initialize(const std::string& modelName, const std::string& texturePath){
@@ -25,7 +27,9 @@ void DemoParticle::Initialize(const std::string& modelName, const std::string& t
 void DemoParticle::Update(){
 	
 	// 行動の更新
-	PtlBehavior_Diffusion::ApplyBehavior(*this);
+	if (behavior_){
+		behavior_->ApplyBehavior(*this);
+	}
 
 	// パーティクルが消えた分、新たに生成
 	//if (particles_.size() < emitter_.count){

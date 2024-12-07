@@ -190,6 +190,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
+    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
+    <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
@@ -273,6 +275,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
+    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
+    <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -373,6 +373,8 @@
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
+    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
+    <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -582,6 +584,8 @@
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
+    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
+    <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

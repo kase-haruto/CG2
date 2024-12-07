@@ -51,7 +51,9 @@ void TestScene::Initialize(){
 
 	demoParticle_ = std::make_unique<DemoParticle>();
 	demoParticle_->Initialize("plane", "particle.png");
-	demoParticle_->SetEmitPos({0.0f,3.0f,0.0f});
+
+	tornadoParticle_ = std::make_unique<TornadoParticle>();
+	tornadoParticle_->Initialize("debugCube", "uvChecker.png");
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -77,6 +79,7 @@ void TestScene::Update(){
 	//モデルの更新
 	modelBuilder_->Update();
 	demoParticle_->Update();
+	tornadoParticle_->Update();
 
 	modelField_->Update();
 
