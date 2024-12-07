@@ -53,7 +53,7 @@ void TestScene::Initialize(){
 	demoParticle_->Initialize("plane", "particle.png");
 
 	tornadoParticle_ = std::make_unique<TornadoParticle>();
-	tornadoParticle_->Initialize("debugCube", "uvChecker.png");
+	tornadoParticle_->Initialize("debugCube", "white1x1.png");
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
