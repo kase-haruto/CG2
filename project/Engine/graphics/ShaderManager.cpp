@@ -98,8 +98,8 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 
 bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath){
 	//ファイルパスをワイド文字列として結合
-    ComPtr<IDxcBlob> vertexShader = CompileShader(L"Engine/graphics/shaders/" + vsPath, L"vs_6_0");
-    ComPtr<IDxcBlob> pixelShader = CompileShader(L"Engine/graphics/shaders/" + psPath, L"ps_6_0");
+    ComPtr<IDxcBlob> vertexShader = CompileShader(L"Resources/shaders/" + vsPath, L"vs_6_0");
+    ComPtr<IDxcBlob> pixelShader = CompileShader(L"Resources/shaders/" + psPath, L"ps_6_0");
 
     vertexShaders[type] = vertexShader;
     pixelShaders[type] = pixelShader;
