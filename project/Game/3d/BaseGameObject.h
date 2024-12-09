@@ -19,7 +19,7 @@ public:
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	void ImGui();
+	virtual void ImGui();
 	virtual void ShowDebugUI();
 
 private:

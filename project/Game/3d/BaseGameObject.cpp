@@ -67,6 +67,7 @@ void BaseGameObject::ImGui(){
     ImGui::ColorEdit4("color", &color.x);
     model_->SetColor(color);
 
+    ImGui::Separator();
 }
 
 void BaseGameObject::ShowDebugUI(){

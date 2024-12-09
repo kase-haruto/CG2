@@ -2,6 +2,7 @@
 
 #include "Engine/collision/CollisionManager.h"
 
+#include <externals/imgui/imgui.h>
 
 GameObject_Demo::GameObject_Demo(const std::string& modelName)
 :BaseGameObject(modelName){
@@ -50,6 +51,7 @@ void GameObject_Demo::Draw(){
 }
 
 
+
 //===================================================================*/
 //                    collision
 //===================================================================*/
@@ -64,6 +66,14 @@ void GameObject_Demo::OnCollisionExit([[maybe_unused]] Collider* other){}
 //===================================================================*/
 //                    imgui/ui
 //===================================================================*/
+void GameObject_Demo::ImGui(){
+
+	BaseGameObject::ImGui();
+
+	ImGui::Text("test");
+}
+
+
 void GameObject_Demo::ShowDebugUI(){
 
 	BaseGameObject::ShowDebugUI();

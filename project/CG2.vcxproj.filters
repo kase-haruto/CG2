@@ -375,6 +375,7 @@
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
     <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
+    <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -586,6 +587,7 @@
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
     <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
+    <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
