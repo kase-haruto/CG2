@@ -1,7 +1,7 @@
 #include "BaseGameObject.h"
 
 #include "externals/imgui/imgui.h"
-
+#include "Engine/core/Json/JsonCoordinator.h"
 
 
 // 静的メンバ変数の定義
@@ -16,13 +16,20 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 
 BaseGameObject::~BaseGameObject(){
 
-    
+
 
 }
 
 
 void BaseGameObject::Initialize(){
 
+	// JsonCoordinator にプロパティを登録
+	JsonCoordinator::RegisterItem(objectName_, "Scale", model_->transform.scale);
+	JsonCoordinator::RegisterItem(objectName_, "Rotate", model_->transform.rotate);
+	JsonCoordinator::RegisterItem(objectName_, "Translate", model_->transform.translate);
+
+	jsonPath = "gameobject/" + GetName();
+	JsonCoordinator::Load(objectName_, jsonPath);
 
 }
 
@@ -43,14 +50,14 @@ void BaseGameObject::Draw(){
 //===================================================================*/
 
 
-void BaseGameObject::SetName(const std::string& name){ 
-    
-    objectName_ = name; 
-    allGameObjects_.emplace_back(this);
+void BaseGameObject::SetName(const std::string& name){
+
+	objectName_ = name;
+	allGameObjects_.emplace_back(this);
 }
 
 const std::vector<BaseGameObject*>& BaseGameObject::GetGameObjects(){
-    return allGameObjects_;
+	return allGameObjects_;
 }
 
 //===================================================================*/
@@ -59,35 +66,36 @@ const std::vector<BaseGameObject*>& BaseGameObject::GetGameObjects(){
 
 void BaseGameObject::ImGui(){
 
-    ImGui::DragFloat3("scale", &model_->transform.scale.x, 0.01f);
-    ImGui::DragFloat3("rotate", &model_->transform.rotate.x, 0.01f);
-    ImGui::DragFloat3("translation", &model_->transform.translate.x, 0.01f);
+	// JsonCoordinator を利用して保存・ロードボタンを表示
+	if (ImGui::Button("Save")){
+		JsonCoordinator::Save(objectName_, jsonPath);
+	}
 
-    Vector4 color = model_->GetColor();
-    ImGui::ColorEdit4("color", &color.x);
-    model_->SetColor(color);
+	// JsonCoordinator に登録したプロパティを表示
+	JsonCoordinator::RenderGroupUI(objectName_);
 
+	ImGui::Separator();
 }
 
 void BaseGameObject::ShowDebugUI(){
 #ifdef _DEBUG
-    if (ImGui::BeginTabItem("GameObject")){
-        // ユニークなIDスコープを作成する
-        for (size_t i = 0; i < BaseGameObject::GetGameObjects().size(); ++i){
-            auto* gameObject = BaseGameObject::GetGameObjects()[i];
+	if (ImGui::BeginTabItem("GameObject")){
+		// ユニークなIDスコープを作成する
+		for (size_t i = 0; i < BaseGameObject::GetGameObjects().size(); ++i){
+			auto* gameObject = BaseGameObject::GetGameObjects()[i];
 
-            // ImGui::PushIDを使用してユニークなスコープを設定
-            ImGui::PushID(static_cast< int >(i));
+			// ImGui::PushIDを使用してユニークなスコープを設定
+			ImGui::PushID(static_cast< int >(i));
 
-            // 各オブジェクトのUIを個別に管理
-            if (ImGui::CollapsingHeader(gameObject->GetName().c_str())){
-                gameObject->ImGui();
-            }
+			// 各オブジェクトのUIを個別に管理
+			if (ImGui::CollapsingHeader(gameObject->GetName().c_str())){
+				gameObject->ImGui();
+			}
 
-            // IDスコープを終了
-            ImGui::PopID();
-        }
-        ImGui::EndTabItem();
-    }
+			// IDスコープを終了
+			ImGui::PopID();
+		}
+		ImGui::EndTabItem();
+	}
 #endif // _DEBUG
 }

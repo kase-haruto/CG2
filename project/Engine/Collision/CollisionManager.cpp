@@ -37,7 +37,7 @@ void CollisionManager::UpdateCollisionAllCollider(){
 					// 新しい衝突 (Enter)
 					(*itA)->OnCollisionEnter(*itB);
 					(*itB)->OnCollisionEnter(*itA);
-					collisionLogs_.emplace_back("CollisionEnter: " + key);
+					collisionLogs_.emplace_back("Enter: " + key);
 				} else{
 					// 持続中の衝突 (Stay)
 					(*itA)->OnCollisionStay(*itB);
@@ -64,7 +64,7 @@ void CollisionManager::UpdateCollisionAllCollider(){
 			}
 
 			// Exitログを記録
-			collisionLogs_.emplace_back("CollisionExit: " + key);
+			collisionLogs_.emplace_back("Exit: " + key);
 		}
 	}
 }

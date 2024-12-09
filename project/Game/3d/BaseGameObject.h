@@ -19,7 +19,7 @@ public:
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	void ImGui();
+	virtual void ImGui();
 	virtual void ShowDebugUI();
 
 private:
@@ -35,7 +35,11 @@ protected:
 	std::unique_ptr<Model> model_ = nullptr;	// 描画用モデル
 
 private:
+	//===================================================================*/
+	//                    private methods
+	//===================================================================*/
 	static std::vector<BaseGameObject*> allGameObjects_;
+	std::string jsonPath = "gameobject";
 
 public:
 	//===================================================================*/
