@@ -24,6 +24,7 @@ GameObject_Demo::~GameObject_Demo(){
 void GameObject_Demo::Initialize(){
 
 	BaseGameObject::SetName("debugObject");
+	BaseGameObject::Initialize();
 
 	/*particle_->Initialize("plane","particle.png");*/
 

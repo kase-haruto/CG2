@@ -1,100 +1,154 @@
 #include "JsonCoordinator.h"
-
-//* c++ std *//
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <externals/imgui/imgui.h>
 
-namespace nlohmann{
-    template <>
-    struct adl_serializer<AdjustableValue>{
-        // AdjustableValue‚ğJSONŒ`®‚É•ÏŠ·
-        static void to_json(json& j, const AdjustableValue& value){
-            std::visit([&] (auto&& arg){ j = arg; }, value);
-        }
-
-        // JSON‚©‚çAdjustableValue‚É•ÏŠ·
-        static void from_json(const json& j, AdjustableValue& value){
-            if (j.is_number_integer()){
-                value = j.get<int>();
-            } else if (j.is_number_float()){
-                value = j.get<float>();
-            } else if (j.is_string()){
-                value = j.get<std::string>();
-            } else{
-                throw std::runtime_error("Unsupported type for AdjustableValue");
-            }
-        }
-    };
+//-------------------------------------------------------------------
+// ãƒ˜ãƒ«ãƒ‘ãƒ¼é–¢æ•°: ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’æ§‹ç¯‰
+//-------------------------------------------------------------------
+std::string JsonCoordinator::ConstructFullPath(const std::string& fileName, const std::optional<std::string>& parentPath){
+    std::string fullPath = baseDirectory_;
+    if (parentPath){
+        fullPath += *parentPath + "/";
+    }
+    fullPath += fileName + ".json";
+    return fullPath;
 }
 
-
-// ƒAƒCƒeƒ€‚ğ“o˜^‚·‚é
-void JsonCoordinator::RegisterItem(const std::string& group, const std::string& key, AdjustableValue defaultValue){
-    data_[group][key] = defaultValue;
-}
-
-// ’l‚ğİ’è‚·‚é
+//-------------------------------------------------------------------
+// å€¤ã‚’è¨­å®šã™ã‚‹
+//-------------------------------------------------------------------
 void JsonCoordinator::SetValue(const std::string& group, const std::string& key, AdjustableValue value){
-    // w’è‚³‚ê‚½ƒL[‚ªŠù‚É“o˜^‚³‚ê‚Ä‚¢‚é‚©Šm”F
     if (data_.count(group) && data_[group].count(key)){
         data_[group][key] = value;
+
+        // ãƒã‚¤ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãŒå­˜åœ¨ã™ã‚‹å ´åˆã¯ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã³å‡ºã™
+        if (bindings_.count(group) && bindings_[group].count(key)){
+            bindings_[group][key](value);
+        }
     } else{
         throw std::runtime_error("Key not registered: " + group + "::" + key);
     }
 }
 
-// ’l‚ğæ“¾‚·‚é
+//-------------------------------------------------------------------
+// å€¤ã‚’å–å¾—ã™ã‚‹
+//-------------------------------------------------------------------
 AdjustableValue JsonCoordinator::GetValue(const std::string& group, const std::string& key){
-    // w’è‚³‚ê‚½ƒL[‚ª‘¶İ‚·‚é‚©Šm”F
     if (data_.count(group) && data_[group].count(key)){
         return data_.at(group).at(key);
     }
     throw std::runtime_error("Key not found: " + group + "::" + key);
 }
 
-// JSONƒf[ƒ^‚ğ•Û‘¶‚·‚é
-void JsonCoordinator::Save(const std::string& fileName){
-    // ƒfƒBƒŒƒNƒgƒŠƒpƒX‚Æƒtƒ‹ƒpƒX‚ğŒvZ
-    std::string directoryPath = baseDirectory_ + fileName.substr(0, fileName.find_last_of('.'));
-    std::string fullPath = directoryPath + "/" + fileName;
+//-------------------------------------------------------------------
+// JSONã¨ã—ã¦ä¿å­˜
+//-------------------------------------------------------------------
+void JsonCoordinator::Save(const std::string& fileName, std::optional<std::string> parentPath){
+    std::string fullPath = ConstructFullPath(fileName, parentPath);
 
-    // ƒfƒBƒŒƒNƒgƒŠì¬
-    std::filesystem::create_directories(directoryPath);
+    // å¿…è¦ãªãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œæˆ
+    std::filesystem::create_directories(std::filesystem::path(fullPath).parent_path());
 
-    // JSONƒf[ƒ^‚ğ•Û‘¶
+    // ãƒ‡ãƒ¼ã‚¿ã‚’ JSON ã«å¤‰æ›
     json jsonData = data_;
+
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
     std::ofstream file(fullPath);
     if (!file.is_open()){
-        throw std::runtime_error("Could not open file: " + fullPath);
+        throw std::runtime_error("Could not open file for saving: " + fullPath);
     }
-    file << jsonData.dump(4); // JSON‚ğ®Œ`‚µ‚Ä•Û‘¶
+    file << jsonData.dump(4);  // ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã‚’ 4 ã«è¨­å®š
+    file.close();
 
     std::cout << "Data saved successfully to: " << fullPath << std::endl;
 }
 
-// JSONƒf[ƒ^‚ğ“Ç‚İ‚Ş
-void JsonCoordinator::Load(const std::string& fileName){
-    // ƒfƒBƒŒƒNƒgƒŠƒpƒX‚Æƒtƒ‹ƒpƒX‚ğŒvZ
-    std::string directoryPath = baseDirectory_ + fileName.substr(0, fileName.find_last_of('.'));
-    std::string fullPath = directoryPath + "/" + fileName;
+//-------------------------------------------------------------------
+// JSONã‹ã‚‰ãƒ­ãƒ¼ãƒ‰
+//-------------------------------------------------------------------
+void JsonCoordinator::Load(const std::string& fileName, std::optional<std::string> parentPath){
+    std::string fullPath = ConstructFullPath(fileName, parentPath);
 
-    // ƒtƒ@ƒCƒ‹‚ğŠJ‚¢‚ÄJSON‚ğ“Ç‚İ‚Ş
+    // ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆã€æ–°è¦ä½œæˆ
+    if (!std::filesystem::exists(fullPath)){
+        std::cout << "File does not exist. Creating a new file: " << fullPath << std::endl;
+        Save(fileName, parentPath);
+        return;
+    }
+
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+    std::ifstream file(fullPath);
+    if (!file.is_open()){
+        throw std::runtime_error("Could not open file for loading: " + fullPath);
+    }
+
+    // JSON ã‚’èª­ã¿è¾¼ã¿
+    json jsonData;
+    file >> jsonData;
+    file.close();
+
+    // JSON ãƒ‡ãƒ¼ã‚¿ã‚’ `data_` ã«å¤‰æ›
     try{
-        std::ifstream file(fullPath);
-        if (!file.is_open()){
-            throw std::runtime_error("Could not open file: " + fullPath);
-        }
-
-        // JSONƒf[ƒ^‚ğƒp[ƒX‚µ‚Ä“à•”ƒf[ƒ^\‘¢‚É•œŒ³
-        json jsonData;
-        file >> jsonData;
         data_ = jsonData.get<decltype(data_)>();
-
-        std::cout << "Data loaded successfully from: " << fullPath << std::endl;
     } catch (const std::exception& e){
-        // ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚ÍƒƒbƒZ[ƒW‚ğo—Í
-        std::cerr << "Error loading JSON file: " << e.what() << std::endl;
+        throw std::runtime_error("Failed to parse JSON data: " + std::string(e.what()));
+    }
+
+    // ãƒã‚¤ãƒ³ãƒ‰ã•ã‚Œã¦ã„ã‚‹å¤‰æ•°ã«åæ˜ 
+    for (const auto& [group, items] : data_){
+        for (const auto& [key, value] : items){
+            if (bindings_.count(group) && bindings_[group].count(key)){
+                bindings_[group][key](value);
+            }
+        }
+    }
+
+    std::cout << "Data loaded successfully from: " << fullPath << std::endl;
+}
+
+//-------------------------------------------------------------------
+// å€‹åˆ¥ã‚¢ã‚¤ãƒ†ãƒ ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
+//-------------------------------------------------------------------
+void JsonCoordinator::RenderAdjustableItem(const std::string& group, const std::string& key){
+    try{
+        AdjustableValue value = GetValue(group, key);
+
+        if (std::holds_alternative<int>(value)){
+            int val = std::get<int>(value);
+            if (ImGui::InputInt(key.c_str(), &val)){
+                SetValue(group, key, val);
+            }
+        } else if (std::holds_alternative<float>(value)){
+            float val = std::get<float>(value);
+            if (ImGui::InputFloat(key.c_str(), &val)){
+                SetValue(group, key, val);
+            }
+        } else if (std::holds_alternative<Vector3>(value)){
+            Vector3 v = std::get<Vector3>(value);
+            if (ImGui::DragFloat3(key.c_str(), &v.x, 0.01f)){
+                SetValue(group, key, v);
+            }
+        } else{
+            ImGui::Text("Unsupported type for key: %s", key.c_str());
+        }
+    } catch (const std::exception& e){
+        ImGui::Text("Error: %s", e.what());
+    }
+}
+
+//-------------------------------------------------------------------
+// ã‚°ãƒ«ãƒ¼ãƒ—å†…ã®ã™ã¹ã¦ã®é …ç›®ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
+//-------------------------------------------------------------------
+void JsonCoordinator::RenderGroupUI(const std::string& group){
+    if (data_.count(group) == 0){
+        ImGui::Text("No data for group: %s", group.c_str());
+        return;
+    }
+
+    for (const auto& [key, value] : data_[group]){
+        RenderAdjustableItem(group, key);
     }
 }

@@ -35,7 +35,11 @@ protected:
 	std::unique_ptr<Model> model_ = nullptr;	// 描画用モデル
 
 private:
+	//===================================================================*/
+	//                    private methods
+	//===================================================================*/
 	static std::vector<BaseGameObject*> allGameObjects_;
+	std::string jsonPath = "gameobject";
 
 public:
 	//===================================================================*/
