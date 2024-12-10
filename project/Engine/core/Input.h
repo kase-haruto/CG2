@@ -86,6 +86,38 @@ public:
 	//=======================================================================================
 	//      ゲームパッド
 public:
+	/// <summary>
+	/// ゲームパッドのボタンを押した処理
+	/// 長押し
+	/// </summary>
+	/// <param name="button">ボタン番号</param>
+	/// <returns>押されている場合は true</returns>
+	static bool PushGamepadButton(int button);
+
+	/// <summary>
+	/// ゲームパッドのボタンの短押しを確認
+	/// </summary>
+	/// <param name="button">ボタン番号</param>
+	/// <returns>短押しの場合は true</returns>
+	static bool TriggerGamepadButton(int button);
+
+	/// <summary>
+	/// 左スティックの値を取得
+	/// </summary>
+	/// <returns>スティックの値 (-1.0f ～ 1.0f)</returns>
+	static Vector2 GetLeftStick();
+
+	/// <summary>
+	/// 右スティックの値を取得
+	/// </summary>
+	/// <returns>スティックの値 (-1.0f ～ 1.0f)</returns>
+	static Vector2 GetRightStick();
+
+	/// <summary>
+	/// トリガーの値を取得
+	/// </summary>
+	/// <returns>トリガーの値 (0.0f ～ 1.0f)</returns>
+	static float GetTrigger();
 
 	//
 	//=======================================================================================
@@ -106,6 +138,12 @@ private:
 	void KeyboardUpdate();
 
 	void MouseUpdate();
+
+private:
+	/// <summary>
+	/// ゲームパッドの更新
+	/// </summary>
+	void GamepadUpdate();
 
 private:
 	//インスタンス
@@ -131,4 +169,12 @@ private:
 	DIMOUSESTATE mouseStatePre_;
 	Vector2 mousePos_;
 	float mouseWheel_ = 0.0f;
+
+	/*------------------------
+	 パッド
+	------------------------*/
+private:
+	ComPtr<IDirectInputDevice8> gamepad_ = nullptr;
+	DIJOYSTATE2 gamepadState_;
+	DIJOYSTATE2 gamepadStatePre_;
 };
