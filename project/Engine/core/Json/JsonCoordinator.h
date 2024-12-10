@@ -7,6 +7,7 @@
 #include <optional>
 #include <stdexcept>
 #include <fstream>
+#include <filesystem>
 
 #include <nlohmann/json.hpp>
 #include "lib/myMath/Vector3.h"
@@ -21,26 +22,21 @@ public:
     //===================================================================*/
     //                   public function
     //===================================================================*/
-    // ベースディレクトリを設定
-    static void SetBaseDirectory(const std::string& baseDir){
-        baseDirectory_ = baseDir;
-    }
-
     // 項目を登録してバインド
     template <typename T>
-    static void RegisterItem(const std::string& group, const std::string& key, T& target);
+    static bool RegisterItem(const std::string& group, const std::string& key, T& target);
 
     // 値を設定
-    static void SetValue(const std::string& group, const std::string& key, AdjustableValue value);
+    static bool SetValue(const std::string& group, const std::string& key, AdjustableValue value);
 
     // 値を取得
-    static AdjustableValue GetValue(const std::string& group, const std::string& key);
+    static std::optional<AdjustableValue> GetValue(const std::string& group, const std::string& key);
 
     // データを保存
-    static void Save(const std::string& fileName, std::optional<std::string> parentPath = std::nullopt);
+    static bool Save(const std::string& fileName, std::optional<std::string> parentPath = std::nullopt);
 
     // データをロード
-    static void Load(const std::string& fileName, std::optional<std::string> parentPath = std::nullopt);
+    static bool Load(const std::string& fileName, std::optional<std::string> parentPath = std::nullopt);
 
     // グループ内のすべての項目をレンダリング
     static void RenderGroupUI(const std::string& group);
@@ -55,6 +51,9 @@ private:
     // フルパスを構築
     static std::string ConstructFullPath(const std::string& fileName, const std::optional<std::string>& parentPath);
 
+    // ディレクトリ作成
+    static void EnsureDirectoryExists(const std::string& path);
+
 private:
     //===================================================================*/
     //                   private variable
@@ -63,7 +62,6 @@ private:
     static inline std::unordered_map<std::string, std::unordered_map<std::string, AdjustableValue>> data_;  // グループ -> (キー -> 値)
     static inline std::unordered_map<std::string, std::unordered_map<std::string, std::function<void(const AdjustableValue&)>>> bindings_;  // グループ -> (キー -> バインディングコールバック)
 };
-
 
 //===================================================================*/
 //                  inline Function
@@ -94,8 +92,6 @@ inline void from_json(const json& j, AdjustableValue& value){
         value = j.get<float>();
     } else if (j.is_object()){
         value = j.get<Vector3>();
-    } else{
-        throw std::runtime_error("Unsupported type for AdjustableValue");
     }
 }
 
@@ -103,28 +99,24 @@ inline void from_json(const json& j, AdjustableValue& value){
 //                  template Function
 //===================================================================*/
 template <typename T>
-void JsonCoordinator::RegisterItem(const std::string& group, const std::string& key, T& target){
-    try{
-        // 初期値を設定
-        data_[group][key] = target;
-
-        // バインド設定
-        bindings_[group][key] = [&target, key] (const AdjustableValue& value){ // key をコピーキャプチャ
-            try{
-                target = std::get<T>(value);
-            } catch (const std::bad_variant_access&){
-                throw std::runtime_error("Type mismatch for key: " + key);
-            }
-            };
-
-        // 登録済みの値を変数に同期
-        if (data_.count(group) && data_[group].count(key)){
-            target = std::get<T>(data_[group][key]);
-        }
-    } catch (const std::exception& e){
-        throw std::runtime_error("Failed to register item: " + group + "::" + key + " - " + e.what());
+bool JsonCoordinator::RegisterItem(const std::string& group, const std::string& key, T& target){
+    if (data_[group].count(key) > 0){
+        return false; // 既に登録済み
     }
+
+    data_[group][key] = target;
+
+    bindings_[group][key] = [&target] (const AdjustableValue& value){
+        if (auto val = std::get_if<T>(&value)){
+            target = *val; // 型が一致している場合のみ代入
+        }
+        };
+
+    // 登録済みの値を変数に同期
+    if (data_.count(group) && data_[group].count(key)){
+        if (auto val = std::get_if<T>(&data_[group][key])){
+            target = *val;
+        }
+    }
+    return true;
 }
-
-
-
