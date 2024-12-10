@@ -27,6 +27,8 @@ void Input::Initialize(){
 void Input::Update(){
 	//キーボード更新
 	instance_->KeyboardUpdate();
+	instance_->MouseUpdate();
+	instance_->GamepadUpdate();
 }
 
 void Input::Finalize(){
@@ -88,6 +90,25 @@ void Input::DirectInputInitialize(){
 		System::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
 	);
 	assert(SUCCEEDED(hr));
+
+	/*=======================================================================================
+				gamepad
+	========================================================================================*/
+	hr = directInput_->CreateDevice(GUID_Joystick, &gamepad_, nullptr);
+	if (SUCCEEDED(hr)){
+		// 入力データ形式のセット
+		hr = gamepad_->SetDataFormat(&c_dfDIJoystick2);
+		assert(SUCCEEDED(hr));
+
+		// 排他制御レベルのセット
+		hr = gamepad_->SetCooperativeLevel(
+			System::GetHWND(), DISCL_FOREGROUND | DISCL_EXCLUSIVE
+		);
+		assert(SUCCEEDED(hr));
+
+		// デバイスを初期状態で取得
+		gamepad_->Acquire();
+	}
 }
 
 
@@ -154,4 +175,48 @@ Vector2 Input::GetMousePosition(){
 
 float Input::GetMouseWheel(){
 	return instance_->mouseWheel_;
+}
+
+/*=======================================================================================
+			ゲームパッドの更新
+========================================================================================*/
+void Input::GamepadUpdate(){
+	gamepadStatePre_ = instance_->gamepadState_;
+
+	if (gamepad_){
+		HRESULT hr = gamepad_->GetDeviceState(sizeof(DIJOYSTATE2), &instance_->gamepadState_);
+		if (FAILED(hr)){
+			hr = gamepad_->Acquire();
+			while (hr == DIERR_INPUTLOST){
+				hr = gamepad_->Acquire();
+			}
+		}
+	}
+}
+
+/*=======================================================================================
+			ゲームパッドの入力チェック
+========================================================================================*/
+bool Input::PushGamepadButton(int button){
+	return instance_->gamepadState_.rgbButtons[button] & 0x80;
+}
+
+bool Input::TriggerGamepadButton(int button){
+	return (instance_->gamepadState_.rgbButtons[button] & 0x80) &&
+		!(instance_->gamepadStatePre_.rgbButtons[button] & 0x80);
+}
+
+Vector2 Input::GetLeftStick(){
+	return {static_cast< float >(instance_->gamepadState_.lX) / 32767.0f,
+			 static_cast< float >(instance_->gamepadState_.lY) / 32767.0f};
+}
+
+Vector2 Input::GetRightStick(){
+	return {static_cast< float >(instance_->gamepadState_.lRx) / 32767.0f,
+			 static_cast< float >(instance_->gamepadState_.lRy) / 32767.0f};
+}
+
+float Input::GetTrigger(){
+	// Z 軸をトリガー値として取得
+	return static_cast< float >(instance_->gamepadState_.lZ) / 32767.0f;
 }
