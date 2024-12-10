@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/graphics/camera/Camera3d.h"
+#include "Engine/graphics/camera/FollowCamera.h"
 
 //* c++ *//
 #include <memory>
@@ -35,11 +36,14 @@ private:
 
    /* 管理しているカメラ =======================*/
    std::unique_ptr<Camera3d> camera3d_ = nullptr;   // 3dオブジェクトのデフォルトカメラ
-
+   std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
    //===================================================================*/
    //					getter/setter
    //===================================================================*/
 public:
    static Camera3d* GetCamera3d() { return instance_->camera3d_.get(); }
+
+   void SetFollowTarget(const Transform* target){ followCamera_->SetTarget(target); }
+   const Vector3& GetFollowRotate()const{ return followCamera_->GetRotate(); }
 };

@@ -376,6 +376,8 @@
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
     <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
+    <ClCompile Include="Game\3d\gameObject\Player\Player.cpp" />
+    <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -588,6 +590,8 @@
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
     <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
+    <ClInclude Include="Game\3d\gameObject\Player\Player.h" />
+    <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

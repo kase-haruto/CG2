@@ -24,6 +24,8 @@ public:
 	~Camera3d() = default;
 
     void Update();  //更新
+
+    void SetCamera(const Vector3& pos, const Vector3& rotate);
       
 private:
      /////////////////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,7 @@ CameraManager* CameraManager::GetInstance(){
 
 CameraManager::CameraManager(){
 	camera3d_ = std::make_unique<Camera3d>();
+	followCamera_ = std::make_unique<FollowCamera>();
 }
 
 void CameraManager::Initialize(){
@@ -19,6 +20,9 @@ void CameraManager::Initialize(){
 
 void CameraManager::Update(){
 	instance_->camera3d_->Update();
+	instance_->followCamera_->Update();
+
+	instance_->camera3d_->SetCamera(instance_->followCamera_->GetTranslate(), instance_->followCamera_->GetRotate());
 }
 
 void CameraManager::Finalize(){

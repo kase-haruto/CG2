@@ -36,4 +36,5 @@ public:
 	virtual const std::variant<Sphere, OBB>& GetCollisionShape() = 0;
 
 	const std::string& GetName()const{ return name_; }
+	void SetName(const std::string& name){ name_ = name; }
 };

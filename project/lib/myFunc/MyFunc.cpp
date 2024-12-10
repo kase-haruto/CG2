@@ -7,7 +7,7 @@
 #include<assimp/Importer.hpp>
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
-
+#include <numbers>
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
 	Matrix4x4 result = {
@@ -301,4 +301,28 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m){
         v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
         v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
     return result;
+}
+
+float Lerp(float v1, float v2, float t){
+    return v1 + (v2 - v1) * t;
+}
+
+float LerpShortAngle(float a, float b, float t){
+    const float TWO_PI = 2.0f * ( float ) std::numbers::pi; // 2π (6.283185307179586)
+    const float PI = ( float ) std::numbers::pi;            // π (3.141592653589793)
+
+    // 角度差分を求める
+    float diff = b - a;
+
+    // 角度を[-π, π]に補正する
+    diff = fmod(diff, TWO_PI);
+    if (diff > PI){
+        diff -= TWO_PI;
+    } else if (diff < -PI){
+        diff += TWO_PI;
+    }
+
+    // Lerpを使用して補間
+    return Lerp(a, a + diff, t);
+
 }
