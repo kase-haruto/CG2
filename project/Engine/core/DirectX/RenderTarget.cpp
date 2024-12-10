@@ -11,11 +11,17 @@ void RenderTarget::Initialize(ComPtr<ID3D12Device> device, DxSwapChain& swapChai
 
     // swapChainからResourceを取得
     ComPtr<ID3D12Resource> backBuffer0;
+    ComPtr<ID3D12Resource> backBuffer1;
     hr = swapChain.GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&backBuffer0));
     assert(SUCCEEDED(hr));
-    ComPtr<ID3D12Resource> backBuffer1;
+    // バックバッファの初期状態を追跡
+    backBufferStates_[0] = D3D12_RESOURCE_STATE_PRESENT;
+
     hr = swapChain.GetSwapChain()->GetBuffer(1, IID_PPV_ARGS(&backBuffer1));
     assert(SUCCEEDED(hr));
+    // バックバッファの初期状態を追跡
+    backBufferStates_[1] = D3D12_RESOURCE_STATE_PRESENT;
+
 
     // swapChain のバックバッファに保存
     swapChain.SetBackBuffer(0, backBuffer0);
@@ -108,4 +114,43 @@ ComPtr<ID3D12Resource> RenderTarget::CreateDepthStencilTextureResource(ID3D12Dev
     assert(SUCCEEDED(hr));
 
     return resource;
+}
+
+void RenderTarget::CreateOffscreenRenderTarget(ComPtr<ID3D12Device> device, uint32_t width, uint32_t height){
+    D3D12_RESOURCE_DESC resourceDesc = {};
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    resourceDesc.Width = width;
+    resourceDesc.Height = height;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+    D3D12_CLEAR_VALUE clearValue = {};
+    clearValue.Format = resourceDesc.Format;
+    clearValue.Color[0] = 1.0f;
+    clearValue.Color[1] = 0.0f;
+    clearValue.Color[2] = 0.0f;
+    clearValue.Color[3] = 1.0f;
+
+    D3D12_HEAP_PROPERTIES heapProps = {};
+    heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+    HRESULT hr = device->CreateCommittedResource(
+        &heapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        &clearValue,
+        IID_PPV_ARGS(&offscreenRenderTarget_)
+    );
+    assert(SUCCEEDED(hr));
+
+    offscreenRtvHeap_ = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1, false);
+    offscreenRtvDescriptorSize_ = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = offscreenRtvHeap_->GetCPUDescriptorHandleForHeapStart();
+    device->CreateRenderTargetView(offscreenRenderTarget_.Get(), nullptr, rtvHandle);
 }

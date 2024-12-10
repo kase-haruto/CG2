@@ -52,7 +52,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 void System::BeginFrame(){
 	//フレームの開始
-    dxCore_->PreDraw();
+    dxCore_->PreDrawOffscreen();
 	// ImGui受付開始
 	imguiManager_->Begin();
     //インプットの更新
@@ -60,6 +60,9 @@ void System::BeginFrame(){
 }
 
 void System::EndFrame(){
+    //オフスクリーンの内容をスワップチェーンに転送
+    dxCore_->PreDraw();
+
 	//imguiのコマンドを積む
 	imguiManager_->End();
 	//ImGui描画

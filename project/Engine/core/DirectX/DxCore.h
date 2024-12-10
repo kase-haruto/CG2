@@ -32,10 +32,14 @@ public:
     /// </summary>
     void PreDraw();
 
+    void PreDrawOffscreen();
+
     /// <summary>
     /// 描画後処理
     /// </summary>
     void PostDraw();
+
+    void TransferOffscreenToSwapChain();
 
 private:
     /// <summary>
@@ -44,6 +48,7 @@ private:
     /// <param name="width"></param>
     /// <param name="height"></param>
     void SetViewPortAndScissor(uint32_t width, uint32_t height);
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
