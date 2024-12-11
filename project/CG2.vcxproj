@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\3d\gameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
@@ -199,6 +200,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\gameObject\Player\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\3d\gameObject\Enemy\Enemy.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
