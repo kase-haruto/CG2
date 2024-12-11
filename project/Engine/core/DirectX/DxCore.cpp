@@ -75,7 +75,7 @@ void DxCore::PreDrawOffscreen(){
 
     commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
-    float clearColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    float clearColor[] = {0.03f, 0.03f, 0.034f, 1.0f};
     commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
     commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
