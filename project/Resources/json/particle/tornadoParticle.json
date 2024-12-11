@@ -7,9 +7,9 @@
     "colorMode": 2,
     "colorVariation": 0.1599999964237213,
     "emitter": {
-        "count": 11,
-        "frequency": 0.20000000298023224,
-        "frequencyTime": 0.03333333507180214,
+        "count": 0,
+        "frequency": 0.10000000149011612,
+        "frequencyTime": 0.05000000447034836,
         "transform": {
             "rotate": [
                 0.0,
@@ -37,7 +37,7 @@
         "emitPosZ": true
     },
     "name": "tornadoParticle",
-    "radiusGrowthFactor": 0.009999999776482582,
+    "radiusGrowthFactor": 0.06499999761581421,
     "rotateSpeed": 2.240000009536743,
     "selectedColor": [
         0.26316240429878235,

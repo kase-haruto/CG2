@@ -43,6 +43,11 @@ void Camera3d::Update(){
     commandList_->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
 }
 
+void Camera3d::SetCamera(const Vector3& pos, const Vector3& rotate){
+    transform_.translate = pos;
+    transform_.rotate = rotate;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 /*                                       buffer の生成                                 */
 /////////////////////////////////////////////////////////////////////////////////////////

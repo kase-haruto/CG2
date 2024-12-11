@@ -13,16 +13,13 @@ ModelManager* ModelManager::GetInstance(){
 void ModelManager::StartUpLoad(){
     LoadModel("suzanne");
     //LoadModel("axis");
-    LoadModel("bunny");
     LoadModel("debugCube");
     LoadModel("fence");
     LoadModel("ground");
-    LoadModel("multiMaterial");
-    LoadModel("multiMesh");
     LoadModel("plane");
-    LoadModel("suzanne");
     LoadModel("teapot");
     LoadModel("terrain");
+    LoadModel("weapon");
 }
 
 

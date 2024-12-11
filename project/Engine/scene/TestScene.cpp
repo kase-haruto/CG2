@@ -43,9 +43,6 @@ void TestScene::Initialize(){
 
 	modelField_ = std::make_unique<Model>("terrain");
 
-	demoObject_ = std::make_unique<GameObject_Demo>("debugCube");
-	demoObject_->Initialize();
-
 	testObject_ = std::make_unique<TestObject>("debugCube");
 	testObject_->Initialize();
 
@@ -54,6 +51,14 @@ void TestScene::Initialize(){
 
 	tornadoParticle_ = std::make_unique<TornadoParticle>();
 	tornadoParticle_->Initialize("debugCube", "white1x1.png");
+
+
+	/* player =======================*/
+	player_ = std::make_unique<Player>("debugCube");
+	player_->Initialize();
+
+	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -81,9 +86,11 @@ void TestScene::Update(){
 	demoParticle_->Update();
 	tornadoParticle_->Update();
 
+	/* player =======================*/
+	player_->Update();
+
 	modelField_->Update();
 
-	demoObject_->Update();
 	testObject_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -110,7 +117,7 @@ void TestScene::UpdateDebugUI(){
 	if (ImGui::BeginTabBar("MyTabBar")){
 
 		// Demo Object タブ
-		demoObject_->ShowDebugUI();
+		player_->ShowDebugUI();
 
 		ParticleManager::GetInstance()->ShowDebugUI();
 
@@ -187,8 +194,10 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
-	demoObject_->Draw();
 	testObject_->Draw();
+
+	/* player =======================*/
+	player_->Draw();
 
 	/*modelGround_->Draw();*/
 

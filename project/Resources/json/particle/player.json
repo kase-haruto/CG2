@@ -4,7 +4,7 @@
     "emitter": {
         "count": 0,
         "frequency": 0.4000000059604645,
-        "frequencyTime": 0.15000000596046448,
+        "frequencyTime": 0.1666666716337204,
         "transform": {
             "rotate": [
                 0.0,
@@ -12,26 +12,26 @@
                 0.0
             ],
             "scale": [
-                17.639999389648438,
-                1.0,
-                18.950000762939453
+                0.5,
+                0.5,
+                2.0
             ],
             "translate": [
-                0.0,
-                -0.949999988079071,
-                0.0
+                1.692659616470337,
+                0.5460461378097534,
+                -2.8490207195281982
             ]
         }
     },
     "faces": {
-        "emitNegX": false,
+        "emitNegX": true,
         "emitNegY": false,
         "emitNegZ": false,
-        "emitPosX": false,
+        "emitPosX": true,
         "emitPosY": true,
         "emitPosZ": false
     },
-    "name": "demoParticle",
+    "name": "player",
     "selectedColor": [
         0.7254902124404907,
         0.34266233444213867,

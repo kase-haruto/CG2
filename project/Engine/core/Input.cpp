@@ -1,5 +1,6 @@
 #include "engine/core/Input.h"
 #include "engine/core/System.h"
+#include <algorithm>
 
 
 // static変数初期化
@@ -22,9 +23,19 @@ void Input::Initialize(){
 
 	//directInputの初期化
 	instance_->DirectInputInitialize();
+
 }
 
 void Input::Update(){
+
+#ifdef _DEBUG
+	ImGui::Begin("input");
+	ImGui::Text("Left Stick: { %4.1f, %4.1f }", GetLeftStick().x, GetLeftStick().y);
+	ImGui::Text("Right Stick: { %4.1f, %4.1f }", GetRightStick().x, GetRightStick().y);
+	ImGui::End();
+#endif // _DEBUG
+
+
 	//キーボード更新
 	instance_->KeyboardUpdate();
 	instance_->MouseUpdate();
@@ -102,7 +113,7 @@ void Input::DirectInputInitialize(){
 
 		// 排他制御レベルのセット
 		hr = gamepad_->SetCooperativeLevel(
-			System::GetHWND(), DISCL_FOREGROUND | DISCL_EXCLUSIVE
+			System::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
 		);
 		assert(SUCCEEDED(hr));
 
@@ -177,46 +188,75 @@ float Input::GetMouseWheel(){
 	return instance_->mouseWheel_;
 }
 
-/*=======================================================================================
-			ゲームパッドの更新
-========================================================================================*/
-void Input::GamepadUpdate(){
-	gamepadStatePre_ = instance_->gamepadState_;
-
-	if (gamepad_){
-		HRESULT hr = gamepad_->GetDeviceState(sizeof(DIJOYSTATE2), &instance_->gamepadState_);
-		if (FAILED(hr)){
-			hr = gamepad_->Acquire();
-			while (hr == DIERR_INPUTLOST){
-				hr = gamepad_->Acquire();
-			}
-		}
-	}
-}
 
 /*=======================================================================================
 			ゲームパッドの入力チェック
 ========================================================================================*/
+void Input::GamepadUpdate(){
+	// 前回の状態を保存
+	instance_->gamepadStatePre_ = instance_->gamepadState_;
+
+	// ゲームパッドの状態を取得
+	XINPUT_STATE state;
+	DWORD dwResult = XInputGetState(0, &state);
+	if (dwResult == ERROR_SUCCESS){
+		// 接続成功、状態を保存
+		instance_->gamepadState_ = state.Gamepad;
+
+		// スティック入力をキャッシュ
+		instance_->leftThumbX_ = NormalizeAxisInput(state.Gamepad.sThumbLX, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		instance_->leftThumbY_ = NormalizeAxisInput(state.Gamepad.sThumbLY, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		instance_->rightThumbX_ = NormalizeAxisInput(state.Gamepad.sThumbRX, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+		instance_->rightThumbY_ = NormalizeAxisInput(state.Gamepad.sThumbRY, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	} else{
+		// デバイス未接続の場合はゼロにリセット
+		ZeroMemory(&instance_->gamepadState_, sizeof(XINPUT_GAMEPAD));
+		instance_->leftThumbX_ = instance_->leftThumbY_ = instance_->rightThumbX_ = instance_->rightThumbY_ = 0.0f;
+	}
+}
+
+float Input::NormalizeAxisInput(short value, short deadZone){
+	// デッドゾーンの処理
+	if (abs(value) < deadZone){
+		return 0.0f;
+	}
+
+	// 範囲 -32768 ～ 32767 を -1.0 ～ 1.0 に変換
+	float normalized = static_cast< float >(value) / 32767.0f;
+
+	// デッドゾーンを引いた後、再スケーリング
+	if (normalized > 0){
+		normalized = (normalized - (static_cast< float >(deadZone) / 32767.0f)) / (1.0f - static_cast< float >(deadZone) / 32767.0f);
+	} else{
+		normalized = (normalized + (static_cast< float >(deadZone) / 32767.0f)) / (1.0f - static_cast< float >(deadZone) / 32767.0f);
+	}
+
+	// 範囲外の値をクリップ
+	return std::clamp(normalized, -1.0f, 1.0f);
+}
+
 bool Input::PushGamepadButton(int button){
-	return instance_->gamepadState_.rgbButtons[button] & 0x80;
+	// ボタンが押されているかチェック
+	return (instance_->gamepadState_.wButtons & button) != 0;
 }
 
 bool Input::TriggerGamepadButton(int button){
-	return (instance_->gamepadState_.rgbButtons[button] & 0x80) &&
-		!(instance_->gamepadStatePre_.rgbButtons[button] & 0x80);
+	// 押された瞬間をチェック
+	return (instance_->gamepadState_.wButtons & button) != 0 &&
+		(instance_->gamepadStatePre_.wButtons & button) == 0;
 }
 
 Vector2 Input::GetLeftStick(){
-	return {static_cast< float >(instance_->gamepadState_.lX) / 32767.0f,
-			 static_cast< float >(instance_->gamepadState_.lY) / 32767.0f};
+	return {instance_->leftThumbX_, instance_->leftThumbY_};
 }
 
 Vector2 Input::GetRightStick(){
-	return {static_cast< float >(instance_->gamepadState_.lRx) / 32767.0f,
-			 static_cast< float >(instance_->gamepadState_.lRy) / 32767.0f};
+	return {instance_->rightThumbX_, instance_->rightThumbY_};
 }
 
-float Input::GetTrigger(){
-	// Z 軸をトリガー値として取得
-	return static_cast< float >(instance_->gamepadState_.lZ) / 32767.0f;
+StickState Input::GetStickState(){
+	StickState state;
+	state.leftStick = GetLeftStick();
+	state.rightStick = GetRightStick();
+	return state;
 }

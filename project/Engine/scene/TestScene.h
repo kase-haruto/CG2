@@ -22,6 +22,7 @@
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/objects/particle/TornadoParticle.h"
+#include "Game/3d/gameObject/Player/Player.h"
 
 /* c++ */
 #include <vector>
@@ -92,8 +93,8 @@ private:
 
     std::unique_ptr<DemoParticle> demoParticle_ = nullptr;
     std::unique_ptr<TornadoParticle> tornadoParticle_ = nullptr;
-    std::unique_ptr<GameObject_Demo>demoObject_ = nullptr;
     std::unique_ptr<TestObject> testObject_ = nullptr;
+    std::unique_ptr<Player>player_ = nullptr;
 
     ///=========================
     /// particle
