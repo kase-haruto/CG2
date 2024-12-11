@@ -18,6 +18,7 @@ public:
 
 	virtual void Initialize();
 	virtual void Update();
+	void Update(bool hasParent);
 	virtual void Draw();
 	virtual void ImGui();
 	virtual void ShowDebugUI();
@@ -48,6 +49,7 @@ public:
 	void SetName(const std::string& name);
 	const std::string& GetName()const{ return objectName_; }
 	static const std::vector<BaseGameObject*>& GetGameObjects();
+	virtual const Vector3 GetCenterPos()const;
 
 };
 

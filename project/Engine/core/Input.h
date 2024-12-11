@@ -7,6 +7,8 @@
 #include <array>
 #include <dinput.h>
 #include <XInput.h>
+#include <unordered_map>
+#include <string>
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -15,7 +17,6 @@
 // デッドゾーンのデフォルト値
 constexpr float DEFAULT_DEAD_ZONE = 0.2f;
 
-// ボタン列挙型
 enum class PAD_BUTTON{
     UP,
     DOWN,
@@ -32,8 +33,11 @@ enum class PAD_BUTTON{
     X,
     Y,
     LT,
-    RT
+    RT,
+    COUNT // ボタン数を取得可能にするための要素
 };
+
+
 
 using Microsoft::WRL::ComPtr;
 

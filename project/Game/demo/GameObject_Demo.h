@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../3d/BaseGameObject.h"
+#include "../3d/gameObject/BaseGameObject.h"
 
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "Engine/objects/particle/DemoParticle.h"

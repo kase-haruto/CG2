@@ -363,8 +363,7 @@
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
-    <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
-    <ClCompile Include="Game\3d\BaseGameObject.cpp" />
+    <ClCompile Include="Game\3d\gameObject\BaseGameObject.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
@@ -378,6 +377,9 @@
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Game\3d\gameObject\Player\Player.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
+    <ClCompile Include="Game\3d\gameObject\Player\Weapon.cpp" />
+    <ClCompile Include="Game\3d\gameObject\Player\Attack\IPlayerAttack.cpp" />
+    <ClCompile Include="Game\3d\gameObject\Player\Attack\HorizontalSlash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -578,7 +580,7 @@
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
     <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
-    <ClInclude Include="Game\3d\BaseGameObject.h" />
+    <ClInclude Include="Game\3d\gameObject\BaseGameObject.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
@@ -592,6 +594,9 @@
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Game\3d\gameObject\Player\Player.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Game\3d\gameObject\Player\Weapon.h" />
+    <ClInclude Include="Game\3d\gameObject\Player\Attack\IPlayerAttack.h" />
+    <ClInclude Include="Game\3d\gameObject\Player\Attack\HorizontalSlash.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

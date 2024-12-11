@@ -21,6 +21,7 @@ void TestObject::Initialize(){
 
 
 	BaseGameObject::SetName("collisionTestObject");
+	SphereCollider::SetName("CollisionTestObject");
 }
 
 void TestObject::Update(){

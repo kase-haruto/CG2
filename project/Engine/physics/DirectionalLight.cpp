@@ -49,7 +49,7 @@ void DirectionalLight::Map(){
 	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
 	data_->color = {1.0f,1.0f,1.0f,1.0f};
 	data_->direction = {0.0f,-1.0f,0.0f};
-	data_->intensity = 1.0f;
+	data_->intensity = 0.6f;
 	resource_->Unmap(0, nullptr);
 	
 }
