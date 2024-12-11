@@ -93,12 +93,15 @@ void Model::Create(const std::string& filename){
     handle = TextureManager::GetInstance()->LoadTexture(modelData->material.textureFilePath);
 }
 
-void Model::Update(){
+void Model::Update(bool hasParent){
     materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
     materialData->shininess = materialParameter.shininess;
     materialData->enableLighting = materialParameter.enableLighting;
 
-    worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    if (!hasParent){
+        worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    }
+
     Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
     matrixData->world = worldMatrix;
     matrixData->WVP = worldViewProjectionMatrix;

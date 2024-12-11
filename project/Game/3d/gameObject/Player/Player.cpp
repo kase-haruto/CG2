@@ -2,6 +2,9 @@
 
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
+
+
+
 // engine
 #include "Engine/core/Input.h"
 
@@ -16,6 +19,11 @@ Player::Player(const std::string& modelName)
 
 	BoxCollider::Initialize(model_->transform.scale);
 	CollisionManager::GetInstance()->AddCollider(this);
+
+	weapon_ = std::make_unique<Weapon>("weapon");
+	horizontalSlash_ = std::make_unique< HorizontalSlash>();
+	horizontalSlash_->SetPlayer(this);
+
 }
 
 Player::~Player(){
@@ -23,8 +31,6 @@ Player::~Player(){
 	CollisionManager::GetInstance()->RemoveCollider(this);
 
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////
 //						main Methods
@@ -36,12 +42,37 @@ void Player::Initialize(){
 	BoxCollider::SetName("player");		//衝突ログ用
 	BaseGameObject::Initialize();
 
+	weapon_->Initialize();
+
 }
 
 void Player::Update(){
 
 	//移動
 	Move();
+
+	//weaponをplayerの子に設定
+	
+	weapon_->UpdateWorldMat();
+	Matrix4x4 worldMat = Matrix4x4::Multiply(model_->worldMatrix, weapon_->GetWorldMat());
+	weapon_->SetWorldMat(worldMat);
+
+	weapon_->Update();
+
+	// HorizontalSlash の実行
+	if (isAttacking_){
+		horizontalSlash_->Execution();
+
+		if (!horizontalSlash_->GetIsAttacking()){
+			isAttacking_ = false; // 攻撃が終了したらフラグをリセット
+		}
+	} else{
+		// スペースキーで攻撃を開始
+		if (Input::TriggerGamepadButton(XINPUT_GAMEPAD_X)){
+			isAttacking_ = true;
+			horizontalSlash_->Initialize();
+		}
+	}
 
 	shape_.center = model_->transform.translate;
 	shape_.rotate = model_->transform.rotate;
@@ -54,6 +85,11 @@ void Player::Update(){
 void Player::Draw(){
 
 	BoxCollider::Draw();
+
+	horizontalSlash_->Draw();
+	
+	//weapon_->Draw();
+	
 	BaseGameObject::Draw();
 
 }
@@ -83,6 +119,7 @@ void Player::Move(){
 
 }
 
+
 ////////////////////////////////////////////////////////////////////////////
 //						ui/imgui
 ////////////////////////////////////////////////////////////////////////////
@@ -91,7 +128,6 @@ void Player::ImGui(){
 #ifdef _DEBUG
 	BaseGameObject::ImGui();
 #endif // _DEBUG
-
 
 }
 
@@ -108,4 +144,22 @@ void Player::OnCollisionEnter([[maybe_unused]] Collider* other){}
 void Player::OnCollisionStay([[maybe_unused]] Collider* other){}
 
 void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
+
+
+////////////////////////////////////////////////////////////////////////////
+//						getter
+////////////////////////////////////////////////////////////////////////////
+Vector3 Player::GetForward(float distance) const{
+	// ワールド行列の Z 軸方向ベクトルを取得
+	Vector3 forward = Vector3(
+		model_->worldMatrix.m[0][2], // 行列の第3列のX成分
+		model_->worldMatrix.m[1][2], // 行列の第3列のY成分
+		model_->worldMatrix.m[2][2]  // 行列の第3列のZ成分
+	);
+
+	// 単位ベクトル化して距離をスケーリング
+	forward = forward.Normalize() * distance;
+
+	return forward;
+}
 

@@ -31,7 +31,7 @@ public:
     /// <summary>
     /// 更新
     /// </summary>
-    void Update();
+    void Update(bool hasParent = false);
 
     void UpdateMatrix();
 

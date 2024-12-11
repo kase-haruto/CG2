@@ -39,6 +39,10 @@ void BaseGameObject::Update(){
 
 }
 
+void BaseGameObject::Update(bool hasParent){
+	model_->Update(hasParent);
+}
+
 void BaseGameObject::Draw(){
 
 	model_->Draw();
@@ -58,6 +62,12 @@ void BaseGameObject::SetName(const std::string& name){
 
 const std::vector<BaseGameObject*>& BaseGameObject::GetGameObjects(){
 	return allGameObjects_;
+}
+
+const Vector3 BaseGameObject::GetCenterPos()const {
+	const Vector3 offset = {0.0f,1.0f,0.0f};
+	Vector3 worldPos = Vector3::Transform(offset,model_->worldMatrix);
+	return worldPos;
 }
 
 //===================================================================*/
