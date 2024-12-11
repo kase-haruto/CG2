@@ -14,6 +14,7 @@ enum PipelineType{
     Object2D,
     StructuredObject,
     Line,
+    copyImage,
 };
 
 class ShaderManager{

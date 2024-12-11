@@ -35,6 +35,8 @@ public:
     /// <param name="backBufferIndex"></param>
     void ClearRenderTarget(ComPtr<ID3D12GraphicsCommandList> commandList, UINT backBufferIndex);
 
+    void CreateOffscreenSRV(ComPtr<ID3D12Device> device);
+
     ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
 
@@ -55,7 +57,7 @@ public:
     ComPtr<ID3D12Resource> offscreenRenderTarget_ = nullptr;
     ComPtr<ID3D12DescriptorHeap> offscreenRtvHeap_ = nullptr;
     UINT offscreenRtvDescriptorSize_ = 0;
+    ComPtr<ID3D12DescriptorHeap> srvHeap_ = nullptr; // SRV用ディスクリプタヒープ
+    D3D12_GPU_DESCRIPTOR_HANDLE offscreenSrvGpuDescriptorHandle_ = {}; // GPU側のSRVハンドル
 
-    D3D12_RESOURCE_STATES offscreenRenderTargetState_ = D3D12_RESOURCE_STATE_COMMON;
-    D3D12_RESOURCE_STATES backBufferStates_[2] = {D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_PRESENT};
 };
