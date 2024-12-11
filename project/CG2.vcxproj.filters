@@ -376,6 +376,7 @@
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
     <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
+    <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -588,6 +589,7 @@
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
     <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
+    <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
@@ -602,6 +604,11 @@
     <None Include="Engine\graphics\shaders\Particle.hlsli">
       <Filter>Engine\shaders</Filter>
     </None>
+    <None Include="Resources\shaders\CopyImage.hlsli" />
+    <None Include="Resources\shaders\Fragment.hlsli" />
+    <None Include="Resources\shaders\Object2d.hlsli" />
+    <None Include="Resources\shaders\Object3d.hlsli" />
+    <None Include="Resources\shaders\Particle.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl">
@@ -628,5 +635,15 @@
     <FxCompile Include="Engine\graphics\shaders\Particle.VS.hlsl">
       <Filter>Engine\shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\CopyImage.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\Fragment.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\Fragment.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Object2d.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\Object2d.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Object3d.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\Object3d.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Particle.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\Particle.VS.hlsl" />
   </ItemGroup>
 </Project>

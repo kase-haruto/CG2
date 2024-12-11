@@ -1,9 +1,9 @@
 ﻿  BC.cpp
   BC4BC5.cpp
-  BC6HBC7.cpp
 C:\プログラミング\CG2\engine\project\externals\DirectXTex\BC4BC5.cpp(12,10): error C2859: C:\プログラミング\CG2\engine\project\externals\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.pdb は、このプリコンパイル済みヘッダーが作成されたときに使用されたファイル pdb ではありません。プリコンパイル済みヘッダーを再作成してください。
   (ソース ファイル '/BC4BC5.cpp' をコンパイルしています)
   
+  BC6HBC7.cpp
   BCDirectCompute.cpp
 C:\プログラミング\CG2\engine\project\externals\DirectXTex\BCDirectCompute.cpp(10,10): error C2859: C:\プログラミング\CG2\engine\project\externals\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.pdb は、このプリコンパイル済みヘッダーが作成されたときに使用されたファイル pdb ではありません。プリコンパイル済みヘッダーを再作成してください。
   (ソース ファイル '/BCDirectCompute.cpp' をコンパイルしています)
