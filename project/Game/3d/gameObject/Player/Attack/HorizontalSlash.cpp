@@ -19,6 +19,7 @@ HorizontalSlash::HorizontalSlash(){
 
 void HorizontalSlash::Initialize(){
 	startPos_ = pPlayer_->GetForward(0.5f);
+    force_ = 3.0f;
 	attackRange_.position = startPos_;
     isAttacking_ = true;
 }

@@ -11,13 +11,13 @@
 //							  ColliderType
 //===================================================================*/
 enum class ColliderType{
-	Type_None			= 0	,	  // ƒrƒbƒg‚ª—§‚Á‚Ä‚¢‚È‚¢ó‘Ô
+	Type_None			= 0	,	  // ãƒ“ãƒƒãƒˆãŒç«‹ã£ã¦ã„ãªã„çŠ¶æ…‹
 	Type_Player			= 1 << 1,
 	Type_PlayerAttack	= 1 << 2,
 	Type_Enemy			= 1 << 3,
 };
 
-// ƒrƒbƒg‰‰Z‚ÌƒI[ƒo[ƒ[ƒh
+// ãƒ“ãƒƒãƒˆæ¼”ç®—ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 inline ColliderType operator|(ColliderType lhs, ColliderType rhs){
 	using T = std::underlying_type_t<ColliderType>;
 	return static_cast< ColliderType >(static_cast< T >(lhs) | static_cast< T >(rhs));
@@ -28,13 +28,13 @@ inline ColliderType& operator|=(ColliderType& lhs, ColliderType rhs){
 	return lhs;
 }
 
-// ƒrƒbƒgAND‰‰Z‚ÌƒI[ƒo[ƒ[ƒh
+// ãƒ“ãƒƒãƒˆANDæ¼”ç®—ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 inline ColliderType operator&(ColliderType lhs, ColliderType rhs){
 	using T = std::underlying_type_t<ColliderType>;
 	return static_cast< ColliderType >(static_cast< T >(lhs) & static_cast< T >(rhs));
 }
 
-// ƒrƒbƒgAND‘ã“ü‰‰Z‚ÌƒI[ƒo[ƒ[ƒh
+// ãƒ“ãƒƒãƒˆANDä»£å…¥æ¼”ç®—ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 inline ColliderType& operator&=(ColliderType& lhs, ColliderType rhs){
 	lhs = lhs & rhs;
 	return lhs;
@@ -61,8 +61,8 @@ protected:
 	std::variant<Sphere, OBB> collisionShape_;
 	std::string name_;
 
-	ColliderType colliderType_;			//”»’èƒ^ƒCƒv
-	ColliderType targetColliderType_;	//Õ“Ë‘Šè‚Ìƒ^ƒCƒv
+	ColliderType colliderType_;			//åˆ¤å®šã‚¿ã‚¤ãƒ—
+	ColliderType targetColliderType_;	//è¡çªç›¸æ‰‹ã®ã‚¿ã‚¤ãƒ—
 
 public:
 	//===================================================================*/

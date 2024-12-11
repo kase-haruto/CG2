@@ -65,7 +65,7 @@ const std::vector<BaseGameObject*>& BaseGameObject::GetGameObjects(){
 }
 
 const Vector3 BaseGameObject::GetCenterPos()const {
-	const Vector3 offset = {0.0f,1.0f,0.0f};
+	const Vector3 offset = {0.0f,0.5f,0.0f};
 	Vector3 worldPos = Vector3::Transform(offset,model_->worldMatrix);
 	return worldPos;
 }

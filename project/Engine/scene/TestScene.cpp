@@ -43,9 +43,6 @@ void TestScene::Initialize(){
 
 	modelField_ = std::make_unique<Model>("terrain");
 
-	testObject_ = std::make_unique<TestObject>("debugCube");
-	testObject_->Initialize();
-
 	demoParticle_ = std::make_unique<DemoParticle>();
 	demoParticle_->Initialize("plane", "particle.png");
 
@@ -56,9 +53,11 @@ void TestScene::Initialize(){
 	/* player =======================*/
 	player_ = std::make_unique<Player>("debugCube");
 	player_->Initialize();
-
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 
+	/* enemy =======================*/
+	enemy_ = std::make_unique<Enemy>("debugCube");
+	enemy_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -89,9 +88,10 @@ void TestScene::Update(){
 	/* player =======================*/
 	player_->Update();
 
-	modelField_->Update();
+	/* enemy =======================*/
+	enemy_->Update();
 
-	testObject_->Update();
+	modelField_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -194,10 +194,12 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
-	testObject_->Draw();
 
 	/* player =======================*/
 	player_->Draw();
+	
+	/* enemy =======================*/
+	enemy_->Draw();
 
 	/*modelGround_->Draw();*/
 

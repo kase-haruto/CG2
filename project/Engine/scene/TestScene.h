@@ -23,6 +23,7 @@
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/objects/particle/TornadoParticle.h"
 #include "Game/3d/gameObject/Player/Player.h"
+#include "Game/3d/gameObject/Enemy/Enemy.h"
 
 /* c++ */
 #include <vector>
@@ -93,7 +94,7 @@ private:
 
     std::unique_ptr<DemoParticle> demoParticle_ = nullptr;
     std::unique_ptr<TornadoParticle> tornadoParticle_ = nullptr;
-    std::unique_ptr<TestObject> testObject_ = nullptr;
+    std::unique_ptr<Enemy> enemy_ = nullptr;
     std::unique_ptr<Player>player_ = nullptr;
 
     ///=========================
