@@ -7,6 +7,39 @@
 #include <variant>
 #include <string>
 
+//===================================================================*/
+//							  ColliderType
+//===================================================================*/
+enum class ColliderType{
+	Type_None			= 0	,	  // ビットが立っていない状態
+	Type_Player			= 1 << 1,
+	Type_PlayerAttack	= 1 << 2,
+	Type_Enemy			= 1 << 3,
+};
+
+// ビット演算のオーバーロード
+inline ColliderType operator|(ColliderType lhs, ColliderType rhs){
+	using T = std::underlying_type_t<ColliderType>;
+	return static_cast< ColliderType >(static_cast< T >(lhs) | static_cast< T >(rhs));
+}
+
+inline ColliderType& operator|=(ColliderType& lhs, ColliderType rhs){
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+// ビットAND演算のオーバーロード
+inline ColliderType operator&(ColliderType lhs, ColliderType rhs){
+	using T = std::underlying_type_t<ColliderType>;
+	return static_cast< ColliderType >(static_cast< T >(lhs) & static_cast< T >(rhs));
+}
+
+// ビットAND代入演算のオーバーロード
+inline ColliderType& operator&=(ColliderType& lhs, ColliderType rhs){
+	lhs = lhs & rhs;
+	return lhs;
+}
+
 class Collider{
 public:
 	//===================================================================*/
@@ -28,6 +61,9 @@ protected:
 	std::variant<Sphere, OBB> collisionShape_;
 	std::string name_;
 
+	ColliderType colliderType_;			//判定タイプ
+	ColliderType targetColliderType_;	//衝突相手のタイプ
+
 public:
 	//===================================================================*/
 	//                   getter/setter
@@ -37,4 +73,7 @@ public:
 
 	const std::string& GetName()const{ return name_; }
 	void SetName(const std::string& name){ name_ = name; }
+
+	ColliderType GetType()const{ return colliderType_; }
+	ColliderType GetTargetType()const{ return targetColliderType_; }
 };
