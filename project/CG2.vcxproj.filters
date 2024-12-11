@@ -380,6 +380,7 @@
     <ClCompile Include="Game\3d\gameObject\Player\Weapon.cpp" />
     <ClCompile Include="Game\3d\gameObject\Player\Attack\IPlayerAttack.cpp" />
     <ClCompile Include="Game\3d\gameObject\Player\Attack\HorizontalSlash.cpp" />
+    <ClCompile Include="Game\3d\gameObject\Enemy\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -597,6 +598,7 @@
     <ClInclude Include="Game\3d\gameObject\Player\Weapon.h" />
     <ClInclude Include="Game\3d\gameObject\Player\Attack\IPlayerAttack.h" />
     <ClInclude Include="Game\3d\gameObject\Player\Attack\HorizontalSlash.h" />
+    <ClInclude Include="Game\3d\gameObject\Enemy\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
