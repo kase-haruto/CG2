@@ -18,6 +18,9 @@ Player::Player(const std::string& modelName)
 	:BaseGameObject(modelName){
 
 	BoxCollider::Initialize(model_->transform.scale);
+	BoxCollider::colliderType_ = ColliderType::Type_Player;
+	BoxCollider::targetColliderType_ = ColliderType::Type_Enemy;
+
 	CollisionManager::GetInstance()->AddCollider(this);
 
 	weapon_ = std::make_unique<Weapon>("weapon");
@@ -139,7 +142,15 @@ void Player::ShowDebugUI(){
 ////////////////////////////////////////////////////////////////////////////
 //						collision
 ////////////////////////////////////////////////////////////////////////////
-void Player::OnCollisionEnter([[maybe_unused]] Collider* other){}
+void Player::OnCollisionEnter([[maybe_unused]] Collider* other){
+
+	//* 衝突相手がtargetType_に含まれていなければreturnsa
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+
+	}
+
+}
 
 void Player::OnCollisionStay([[maybe_unused]] Collider* other){}
 
