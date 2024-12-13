@@ -57,28 +57,35 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 }
 
 void System::BeginFrame(){
-	// ImGui受付開始
-	imguiManager_->Begin();
-    //インプットの更新
+    // ImGui受付開始
+    imguiManager_->Begin();
+    // インプットの更新
     Input::Update();
-	//フレームの開始
+
+    // オフスクリーンレンダーターゲットの開始
     dxCore_->PreDrawOffscreen();
 }
 
 void System::EndFrame(){
+    dxCore_->RenderEngineUI();
 
-	//imguiのコマンドを積む
-	imguiManager_->End();
-	//ImGui描画
-	imguiManager_->Draw();
-    
-    //オフスクリーンの内容をスワップチェーンに転送
+    // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
-	//フレームの終了
+    // オフスクリーンレンダーターゲットの終了
+    dxCore_->DrawOffscreenTexture();
+
+    // ImGuiのコマンドを積む
+    imguiManager_->End();
+    // ImGui描画（メインレンダーターゲットに描画）
+    imguiManager_->Draw();
+
+    // フレームの終了
     dxCore_->PostDraw();
 }
 
+
 void System::Finalize(){
+
     //imgui終了処理
 	imguiManager_->Finalize();
     //textureの終了処理

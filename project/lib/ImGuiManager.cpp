@@ -39,13 +39,9 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 						srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart()
 	);
 
-	// Customize ImGui style when viewports are enabled
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
-		ImGuiStyle& style = ImGui::GetStyle();
-		if (style.WindowRounding == 0.0f){
-			style.Colors[ImGuiCol_WindowBg].w = 0.9f;
-		}
-	}
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.02f, 0.02f, 1.0f); // 背景を完全に不透明にする
+
 
 	//先頭にimguiが入ったsrvを管理クラスに移す
 	SrvLocator::Provide(srvHeap_, pDxCore_->GetDevice());

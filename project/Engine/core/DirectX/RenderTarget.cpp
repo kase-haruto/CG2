@@ -128,7 +128,7 @@ void RenderTarget::CreateOffscreenRenderTarget(ComPtr<ID3D12Device> device, uint
     clearValue.Format = resourceDesc.Format;
     clearValue.Color[0] = 0.03f;
     clearValue.Color[1] = 0.03f;
-    clearValue.Color[2] = 0.034f;
+    clearValue.Color[2] = 0.05f;
     clearValue.Color[3] = 1.0f;
 
     D3D12_HEAP_PROPERTIES heapProps = {};

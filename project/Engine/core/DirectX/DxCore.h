@@ -25,12 +25,15 @@ public:
     // 描画処理
     void PreDraw();
     void PreDrawOffscreen();
+    void DrawOffscreenTexture();
     void PostDraw();
+    void RenderEngineUI();
 
 private:
     void SetViewPortAndScissor(uint32_t width, uint32_t height);
 
     void TransitionResource(ID3D12GraphicsCommandList* commandList, ID3D12Resource* resource, D3D12_RESOURCE_STATES afterState);
+
 
     // リソース解放
     void ReleaseResources();
