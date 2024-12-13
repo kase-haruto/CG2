@@ -8,6 +8,8 @@
 
 #include "Engine/Collision/CollisionManager.h"
 
+#include "Engine/core/DirectX/DxCore.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
@@ -64,6 +66,75 @@ void TestScene::Initialize(){
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//							ui
+
+	pEngineUI_->SetMainViewportCallback([this] (){
+		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		if (pDxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr != 0){
+			ImGui::Image(reinterpret_cast< ImTextureID >(pDxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr), viewportSize);
+		} else{
+			ImGui::Text("Viewport not ready");
+		}
+										});
+
+	// ツールバーの描画処理
+	pEngineUI_->SetToolbarCallback([] (){
+		ImGui::Button("Edit");
+		ImGui::SameLine();
+		ImGui::Button("Play");
+		ImGui::SameLine();
+		ImGui::Button("Settings");
+								});
+
+	// パネルの追加
+	pEngineUI_->AddPanelCallback("Object Settings", [this] (){
+		static int selectedObjectIndex = -1;
+
+		// オブジェクト名のリスト
+		std::vector<const char*> objectNames = {"directionalLight", "pointLight", "fog"};
+
+		// オブジェクトのリストを描画
+		ImGui::Text("Select an object to edit its properties:");
+		if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
+			// リストボックスで選択が変更されたときに処理を追加（必要であれば）
+		}
+
+		// 選択されたオブジェクトの設定表示
+		if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
+			ImGui::Separator();
+			ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
+
+			// 選択したオブジェクトに応じたインターフェースを表示
+			if (selectedObjectIndex == 0 && directionalLight_){
+				directionalLight_->ShowImGuiInterFace();
+			} else if (selectedObjectIndex == 1 && pointLight_){
+				pointLight_->ShowImGuiInterface();
+			} else if (selectedObjectIndex == 2 && fog_){
+				fog_->ShowImGuiInterface();
+			}
+		}
+							  });
+
+	pEngineUI_->AddPanelCallback("gameObject", [this] (){
+		demoObject_->ShowDebugUI();
+								 });
+
+	pEngineUI_->AddPanelCallback("Particles", [] (){
+		ParticleManager::GetInstance()->ShowDebugUI();
+							  });
+
+	pEngineUI_->AddPanelCallback("CollisionLog", [] (){
+		CollisionManager::GetInstance()->DebugLog();
+								 });
+
+	//// フローティングウィンドウの描画処理
+	//pEngineUI_->SetFloatingWindowCallback([] (){
+	//	ImGui::Text("Engine Settings");
+	//	ImGui::Checkbox("Enable Shadows", nullptr);
+	//								   });
+
 }
 
 void TestScene::Update(){
@@ -94,84 +165,49 @@ void TestScene::Update(){
 
 void TestScene::UpdateDebugUI(){
 #ifdef _DEBUG
-	static int selectedObjectIndex = -1;
-	static int selectedEditorIndex = -1;
+	
 
-	CollisionManager::GetInstance()->DebugLog();
+	//// 複数のエディタのリスト（BaseEditor*で管理）
+	//std::vector<BaseEditor*> editors = {modelBuilder_.get(), uiEditor_.get()};
 
-	// オブジェクト名のリスト
-	std::vector<const char*> objectNames = {"directionalLight", "pointLight"};
+	//// メインウィンドウ
+	//ImGui::Begin("Main GUI");
+	//if (ImGui::BeginTabBar("MyTabBar")){
 
-	// 複数のエディタのリスト（BaseEditor*で管理）
-	std::vector<BaseEditor*> editors = {modelBuilder_.get(), uiEditor_.get()};
+	//	// Demo Object タブ
+	//	demoObject_->ShowDebugUI();
 
-	// メインウィンドウ
-	ImGui::Begin("Main GUI");
-	if (ImGui::BeginTabBar("MyTabBar")){
+	//static int selectedEditorIndex = -1;
+	//	
 
-		// Demo Object タブ
-		demoObject_->ShowDebugUI();
+	//	// Editor Settings タブ
+	//	if (ImGui::BeginTabItem("Editor Settings")){
+	//		ImGui::Text("Select an editor to configure:");
 
-		ParticleManager::GetInstance()->ShowDebugUI();
+	//		// エディタのリスト表示（リストボックス形式）
+	//		if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
+	//			auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
+	//			*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
+	//			return true;
+	//			}, &editors, static_cast< int >(editors.size()))){
+	//			// エディタ選択時の処理はここで必要なら行う
+	//		}
 
-		// Object Settings タブ
-		if (ImGui::BeginTabItem("light Settings")){
-			ImGui::Text("Select an object to edit its properties:");
+	//		// 選択されたエディタの設定表示
+	//		if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
+	//			ImGui::Separator();
+	//			ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
 
-			// オブジェクトのリスト表示（リストボックス形式）
-			if (ImGui::ListBox("Light", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
-				// オブジェクト選択時の処理はここで必要なら行う
-			}
+	//			// 選択されたエディタのUIを表示
+	//			editors[selectedEditorIndex]->ShowImGuiInterface();
+	//		}
+	//		ImGui::EndTabItem();
+	//	}
 
-			// 選択されたオブジェクトの設定表示
-			if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
-				ImGui::Separator();
-				ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
+	//	ImGui::EndTabBar();
+	//}
 
-				// directionalLight
-				if (selectedObjectIndex == 0 && directionalLight_){
-					directionalLight_->ShowImGuiInterFace();
-				}
-				// pointLight
-				else if (selectedObjectIndex == 1 && pointLight_){
-					pointLight_->ShowImGuiInterface();
-				}
-				// fog
-				else if (selectedObjectIndex == 2 && fog_){
-					fog_->ShowImGuiInterface();
-				}
-			}
-			ImGui::EndTabItem();
-		}
-
-		// Editor Settings タブ
-		if (ImGui::BeginTabItem("Editor Settings")){
-			ImGui::Text("Select an editor to configure:");
-
-			// エディタのリスト表示（リストボックス形式）
-			if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
-				auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
-				*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
-				return true;
-				}, &editors, static_cast< int >(editors.size()))){
-				// エディタ選択時の処理はここで必要なら行う
-			}
-
-			// 選択されたエディタの設定表示
-			if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
-				ImGui::Separator();
-				ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
-
-				// 選択されたエディタのUIを表示
-				editors[selectedEditorIndex]->ShowImGuiInterface();
-			}
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-	}
-
-	ImGui::End();
+	//ImGui::End();
 
 #endif // _DEBUG
 }

@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\EngineUI.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
@@ -196,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\EngineUI.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
     <ClInclude Include="Engine\objects\Collider\Collider.h" />

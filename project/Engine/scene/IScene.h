@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 /* engine */
-
+#include "Engine/core/EngineUI.h"
 
 class DxCore;
 
@@ -36,7 +36,10 @@ public:
 	/// </summary>
 	virtual void ModelPreDraw(){}
 
+	void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
+
 protected:
 	DxCore* pDxCore_;
+	EngineUI* pEngineUI_;
 };
 

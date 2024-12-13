@@ -12,12 +12,12 @@ ParticleManager::ParticleManager(){
 }
 
 ParticleManager* ParticleManager::GetInstance(){
-    static ParticleManager instance;
-    return &instance;
+	static ParticleManager instance;
+	return &instance;
 }
 
 void ParticleManager::AddSystem(ParticleSystem* system){
-    systems_.push_back(system);
+	systems_.push_back(system);
 }
 
 void ParticleManager::Draw(){
@@ -34,9 +34,9 @@ void ParticleManager::Draw(){
 	// プリミティブトポロジーを設定（ここでは三角形リストを指定）
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    for (const auto& system : systems_){
-        system->Draw();
-    }
+	for (const auto& system : systems_){
+		system->Draw();
+	}
 }
 
 void ParticleManager::Finalize(){
@@ -47,19 +47,13 @@ void ParticleManager::Finalize(){
 
 void ParticleManager::ShowDebugUI(){
 
-#ifdef _DEBUG
-    if (ImGui::BeginTabItem("Particles")){
-        // ユニークなIDスコープを作成する
-        for (size_t i = 0; i < systems_.size(); ++i){
+	// ユニークなIDスコープを作成する
+	for (size_t i = 0; i < systems_.size(); ++i){
 
-            // 各オブジェクトのUIを個別に管理
-            if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
-                systems_[i]->ImGui();
-            }
+		// 各オブジェクトのUIを個別に管理
+		if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
+			systems_[i]->ImGui();
+		}
 
-        }
-        ImGui::EndTabItem();
-    }
-#endif // _DEBUG
-
+	}
 }

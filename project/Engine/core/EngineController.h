@@ -4,6 +4,7 @@
 #include "System.h"
 #include "../scene/GameScene.h"
 #include "../scene/TestScene.h"
+#include "Engine/core/EngineUI.h"
 
 class EngineController{
 public:
@@ -31,4 +32,6 @@ public:
 private:
     std::unique_ptr<System> system_;
     std::unique_ptr<TestScene> scene_;
+
+    std::unique_ptr<EngineUI> ui_;
 };
