@@ -13,5 +13,7 @@ ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	assert(SUCCEEDED(hr));
+	// Releaseビルドで未使用警告を抑える
+	( void ) hr;
 	return descriptorHeap;
 }

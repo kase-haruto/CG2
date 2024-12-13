@@ -51,6 +51,7 @@ public:
 	void Object2DPipelines();
 	void StructuredObjectPipeline();
 	void LinePipeline();
+	void CopyImagePipeline();
 
 
 	int ProcessMessage();

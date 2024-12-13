@@ -93,8 +93,6 @@ void CollisionManager::RemoveCollider(Collider* collider){
 }
 
 void CollisionManager::DebugLog(){
-#ifdef _DEBUG
-	ImGui::Begin("Collision Manager");
 
 	// 衝突数を表示
 	ImGui::Text("Colliders count: %zu", colliders_.size());
@@ -107,8 +105,6 @@ void CollisionManager::DebugLog(){
 	}
 	ImGui::EndChild();
 
-	ImGui::End();
-#endif // _DEBUG
 }
 
 

@@ -9,8 +9,12 @@ void EngineController::Initialize(HINSTANCE hInstance){
     system_ = std::make_unique<System>();
     system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
+
+    ui_ = std::make_unique<EngineUI>();
+
     // sceneの初期化
     scene_ = std::make_unique<TestScene>(system_->GetDxCore());
+    scene_->SetEngineUI(ui_.get());
     scene_->Initialize();
 }
 
@@ -23,6 +27,8 @@ void EngineController::Run(){
 
         //シーンの更新
         scene_->Update();
+
+        ui_->Render();
 
         //シーンの描画
         scene_->Draw();

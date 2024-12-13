@@ -38,13 +38,13 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 						srvHeap_.Get()->GetCPUDescriptorHandleForHeapStart(),
 						srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart()
 	);
+	ImGui::StyleColorsDark(); // ダークテーマを適用
 
-	// Customize ImGui style when viewports are enabled
+	// Docking時のスタイル調整（任意）
+	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
-		ImGuiStyle& style = ImGui::GetStyle();
-		if (style.WindowRounding == 0.0f){
-			style.Colors[ImGuiCol_WindowBg].w = 0.9f;
-		}
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f; // ウィンドウ背景を完全不透明に
 	}
 
 	//先頭にimguiが入ったsrvを管理クラスに移す

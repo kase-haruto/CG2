@@ -43,7 +43,8 @@ void Texture::Load([[maybe_unused]]ID3D12Device* device){
     std::wstring filePathW = ConvertString("Resources/textures/" + filePath_);
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image_);
     assert(SUCCEEDED(hr));
-
+    // Releaseビルドで未使用警告を抑える
+    ( void ) hr;
     image_ = LoadTextureImage("Resources/textures/" + filePath_);
     metadata_ = image_.GetMetadata();
 }

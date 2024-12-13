@@ -78,8 +78,6 @@ void BaseGameObject::ImGui(){
 }
 
 void BaseGameObject::ShowDebugUI(){
-#ifdef _DEBUG
-	if (ImGui::BeginTabItem("GameObject")){
 		// ユニークなIDスコープを作成する
 		for (size_t i = 0; i < BaseGameObject::GetGameObjects().size(); ++i){
 			auto* gameObject = BaseGameObject::GetGameObjects()[i];
@@ -95,7 +93,4 @@ void BaseGameObject::ShowDebugUI(){
 			// IDスコープを終了
 			ImGui::PopID();
 		}
-		ImGui::EndTabItem();
-	}
-#endif // _DEBUG
 }
