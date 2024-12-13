@@ -173,6 +173,9 @@ void DxCore::TransitionResource(ID3D12GraphicsCommandList* commandList, ID3D12Re
 }
 
 void DxCore::RenderEngineUI(){
+#ifdef _DEBUG
+
+
 	// ウィンドウの現在のサイズを取得
 	ImVec2 windowSize = ImGui::GetIO().DisplaySize;
 
@@ -206,8 +209,7 @@ void DxCore::RenderEngineUI(){
 
 
 	ImGui::End();
-
-
+#endif // _DEBUG
 
 }
 

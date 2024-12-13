@@ -24,6 +24,8 @@ void ShaderCompiler::LoadHLSL(const std::wstring& filePath, const wchar_t* profi
 
     // 読めなければ止める
     assert(SUCCEEDED(hr));
+    // Releaseビルドで未使用警告を抑える
+    ( void ) hr;
 
     // 読み込んだファイルの内容を設定する
     shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();

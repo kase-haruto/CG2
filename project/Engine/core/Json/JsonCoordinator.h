@@ -9,7 +9,7 @@
 #include <fstream>
 #include <filesystem>
 
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 #include "lib/myMath/Vector3.h"
 
 using json = nlohmann::json;

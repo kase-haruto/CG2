@@ -69,6 +69,8 @@ void TestScene::Initialize(){
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							ui
+#ifdef _DEBUG
+
 
 	pEngineUI_->SetMainViewportCallback([this] (){
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
@@ -128,6 +130,7 @@ void TestScene::Initialize(){
 	pEngineUI_->AddPanelCallback("CollisionLog", [] (){
 		CollisionManager::GetInstance()->DebugLog();
 								 });
+#endif // _DEBUG
 
 	//// フローティングウィンドウの描画処理
 	//pEngineUI_->SetFloatingWindowCallback([] (){

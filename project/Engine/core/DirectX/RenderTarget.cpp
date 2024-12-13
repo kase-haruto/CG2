@@ -109,6 +109,10 @@ ComPtr<ID3D12Resource> RenderTarget::CreateDepthStencilTextureResource(ID3D12Dev
     );
     assert(SUCCEEDED(hr));
 
+    // Releaseビルドで未使用警告を抑える
+    ( void ) hr;
+
+
     return resource;
 }
 

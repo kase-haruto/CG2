@@ -7,11 +7,15 @@ void EngineUI::Initialize(){
 }
 
 void EngineUI::Render(){
+#ifdef _DEBUG
     RenderDockSpace();
     RenderToolbar();
     RenderPanels();
     RenderMainViewport();
     RenderFloatingWindows();
+#endif // _DEBUG
+
+    
 }
 
 void EngineUI::SetMainViewportCallback(std::function<void()> callback){
