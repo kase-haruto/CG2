@@ -12,7 +12,7 @@
 #include <externals/nlohmann/json.hpp>
 #include "lib/myMath/Vector3.h"
 
-using json = nlohmann::json;
+using json = nlohmann::ordered_json;
 
 // AdjustableValue: 管理するデータ型
 using AdjustableValue = std::variant<int, float, Vector3>;

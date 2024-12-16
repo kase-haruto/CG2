@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\scene\DemoScene.cpp" />
     <ClCompile Include="Engine\core\EngineUI.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
@@ -195,8 +196,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
     <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
+    <ClCompile Include="Engine\scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\scene\DemoScene.h" />
     <ClInclude Include="Engine\core\EngineUI.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
@@ -283,6 +286,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
     <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
+    <ClInclude Include="Engine\scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

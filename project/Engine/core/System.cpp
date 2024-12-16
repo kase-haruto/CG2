@@ -5,6 +5,7 @@
 #include "../core/Input.h"
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
+#include "lib/myFunc/PrimitiveDrawer.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -45,6 +46,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     // カメラの生成
     CameraManager::Initialize();
+    PrimitiveDrawer::GetInstance()->Initialize();
 
     //モデル管理クラスの初期化(インスタンス生成)
     ModelManager::Initialize();
@@ -54,6 +56,8 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	TextureManager::GetInstance()->Initialize(imguiManager_.get());
     //スタート時に読み込み
     TextureManager::GetInstance()->StartUpLoad();
+
+
 }
 
 void System::BeginFrame(){
