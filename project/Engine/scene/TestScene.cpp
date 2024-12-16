@@ -12,7 +12,10 @@
 
 TestScene::TestScene(){}
 
-TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){}
+TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){
+	// シーン名を設定
+	IScene::SetSceneName("testScene");
+}
 
 void TestScene::Initialize(){
 	///=========================
@@ -25,17 +28,6 @@ void TestScene::Initialize(){
 	pointLight_->Initialize(pDxCore_);
 
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
-
-	///=========================
-	/// カメラ関連
-	///=========================
-	CameraManager::Initialize();
-
-	///=========================
-	/// オブジェクト関連
-	///=========================
-	//線
-	PrimitiveDrawer::GetInstance()->Initialize();
 
 	////地面
 	/*modelGround_ = std::make_unique<Model>("ground");
@@ -71,7 +63,6 @@ void TestScene::Initialize(){
 	//							ui
 #ifdef _DEBUG
 
-
 	pEngineUI_->SetMainViewportCallback([this] (){
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (pDxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr != 0){
@@ -80,56 +71,57 @@ void TestScene::Initialize(){
 			ImGui::Text("Viewport not ready");
 		}
 										});
+	//// エンジンUIの初期化
 
-	// ツールバーの描画処理
-	pEngineUI_->SetToolbarCallback([] (){
-		ImGui::Button("Edit");
-		ImGui::SameLine();
-		ImGui::Button("Play");
-		ImGui::SameLine();
-		ImGui::Button("Settings");
-								});
+	//// ツールバーの描画処理
+	//pEngineUI_->SetToolbarCallback([] (){
+	//	ImGui::Button("Edit");
+	//	ImGui::SameLine();
+	//	ImGui::Button("Play");
+	//	ImGui::SameLine();
+	//	ImGui::Button("Settings");
+	//							});
 
-	// パネルの追加
-	pEngineUI_->AddPanelCallback("Object Settings", [this] (){
-		static int selectedObjectIndex = -1;
+	//// パネルの追加
+	//pEngineUI_->AddPanelCallback("Object Settings", [this] (){
+	//	static int selectedObjectIndex = -1;
 
-		// オブジェクト名のリスト
-		std::vector<const char*> objectNames = {"directionalLight", "pointLight", "fog"};
+	//	// オブジェクト名のリスト
+	//	std::vector<const char*> objectNames = {"directionalLight", "pointLight", "fog"};
 
-		// オブジェクトのリストを描画
-		ImGui::Text("Select an object to edit its properties:");
-		if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
-			// リストボックスで選択が変更されたときに処理を追加（必要であれば）
-		}
+	//	// オブジェクトのリストを描画
+	//	ImGui::Text("Select an object to edit its properties:");
+	//	if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
+	//		// リストボックスで選択が変更されたときに処理を追加（必要であれば）
+	//	}
 
-		// 選択されたオブジェクトの設定表示
-		if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
-			ImGui::Separator();
-			ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
+	//	// 選択されたオブジェクトの設定表示
+	//	if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
+	//		ImGui::Separator();
+	//		ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
 
-			// 選択したオブジェクトに応じたインターフェースを表示
-			if (selectedObjectIndex == 0 && directionalLight_){
-				directionalLight_->ShowImGuiInterFace();
-			} else if (selectedObjectIndex == 1 && pointLight_){
-				pointLight_->ShowImGuiInterface();
-			} else if (selectedObjectIndex == 2 && fog_){
-				fog_->ShowImGuiInterface();
-			}
-		}
-							  });
+	//		// 選択したオブジェクトに応じたインターフェースを表示
+	//		if (selectedObjectIndex == 0 && directionalLight_){
+	//			directionalLight_->ShowImGuiInterFace();
+	//		} else if (selectedObjectIndex == 1 && pointLight_){
+	//			pointLight_->ShowImGuiInterface();
+	//		} else if (selectedObjectIndex == 2 && fog_){
+	//			fog_->ShowImGuiInterface();
+	//		}
+	//	}
+	//						  });
 
-	pEngineUI_->AddPanelCallback("gameObject", [this] (){
-		demoObject_->ShowDebugUI();
-								 });
+	//pEngineUI_->AddPanelCallback("gameObject", [this] (){
+	//	demoObject_->ShowDebugUI();
+	//							 });
 
-	pEngineUI_->AddPanelCallback("Particles", [] (){
-		ParticleManager::GetInstance()->ShowDebugUI();
-							  });
+	//pEngineUI_->AddPanelCallback("Particles", [] (){
+	//	ParticleManager::GetInstance()->ShowDebugUI();
+	//						  });
 
-	pEngineUI_->AddPanelCallback("CollisionLog", [] (){
-		CollisionManager::GetInstance()->DebugLog();
-								 });
+	//pEngineUI_->AddPanelCallback("CollisionLog", [] (){
+	//	CollisionManager::GetInstance()->DebugLog();
+	//							 });
 #endif // _DEBUG
 
 	//// フローティングウィンドウの描画処理
@@ -141,10 +133,6 @@ void TestScene::Initialize(){
 }
 
 void TestScene::Update(){
-#ifdef _DEBUG
-	UpdateDebugUI();
-#endif // _DEBUG
-
 	CameraManager::Update();
 
 	//uiの更新
@@ -164,55 +152,6 @@ void TestScene::Update(){
 
 	/*modelGround_->Update();*/
 
-}
-
-void TestScene::UpdateDebugUI(){
-#ifdef _DEBUG
-	
-
-	//// 複数のエディタのリスト（BaseEditor*で管理）
-	//std::vector<BaseEditor*> editors = {modelBuilder_.get(), uiEditor_.get()};
-
-	//// メインウィンドウ
-	//ImGui::Begin("Main GUI");
-	//if (ImGui::BeginTabBar("MyTabBar")){
-
-	//	// Demo Object タブ
-	//	demoObject_->ShowDebugUI();
-
-	//static int selectedEditorIndex = -1;
-	//	
-
-	//	// Editor Settings タブ
-	//	if (ImGui::BeginTabItem("Editor Settings")){
-	//		ImGui::Text("Select an editor to configure:");
-
-	//		// エディタのリスト表示（リストボックス形式）
-	//		if (ImGui::ListBox("Editors", &selectedEditorIndex, [] (void* data, int idx, const char** out_text){
-	//			auto* editors = reinterpret_cast< std::vector<BaseEditor*>* >(data);
-	//			*out_text = (*editors)[idx]->GetEditorName(); // エディタ名を取得
-	//			return true;
-	//			}, &editors, static_cast< int >(editors.size()))){
-	//			// エディタ選択時の処理はここで必要なら行う
-	//		}
-
-	//		// 選択されたエディタの設定表示
-	//		if (selectedEditorIndex >= 0 && selectedEditorIndex < static_cast< int >(editors.size())){
-	//			ImGui::Separator();
-	//			ImGui::Text("Editing Editor %d", selectedEditorIndex + 1);
-
-	//			// 選択されたエディタのUIを表示
-	//			editors[selectedEditorIndex]->ShowImGuiInterface();
-	//		}
-	//		ImGui::EndTabItem();
-	//	}
-
-	//	ImGui::EndTabBar();
-	//}
-
-	//ImGui::End();
-
-#endif // _DEBUG
 }
 
 void TestScene::Draw(){

@@ -8,4 +8,3 @@ IScene::IScene(DxCore* dxCore){
 	pDxCore_ = dxCore;
 }
 
-IScene::~IScene(){}

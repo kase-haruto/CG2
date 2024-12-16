@@ -378,6 +378,8 @@
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\core\EngineUI.cpp" />
+    <ClCompile Include="Engine\scene\SceneManager.cpp" />
+    <ClCompile Include="Engine\scene\DemoScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -592,6 +594,8 @@
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\core\EngineUI.h" />
+    <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\scene\DemoScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

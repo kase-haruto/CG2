@@ -1,6 +1,10 @@
 ﻿#include "engine/core/EngineController.h"
 #include "engine/core/Enviroment.h"
+#include "../scene/SceneManager.h"
 
+//===================================================================*/
+// Engine全体の初期化処理
+//===================================================================*/
 void EngineController::Initialize(HINSTANCE hInstance){
     // comの初期化
     CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -9,38 +13,45 @@ void EngineController::Initialize(HINSTANCE hInstance){
     system_ = std::make_unique<System>();
     system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
-
+    // UI初期化
     ui_ = std::make_unique<EngineUI>();
 
-    // sceneの初期化
-    scene_ = std::make_unique<TestScene>(system_->GetDxCore());
-    scene_->SetEngineUI(ui_.get());
-    scene_->Initialize();
+    // シーンマネージャ初期化
+    sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
+    sceneManager_->SetEngineUI(ui_.get());
+    sceneManager_->Initialize();
 }
 
+//===================================================================*/
+// メインループ処理
+//===================================================================*/
 void EngineController::Run(){
     // メインループ
     while (!system_->ProcessMessage()){
-
-        //描画前処理
+        // 描画前処理
         system_->BeginFrame();
 
-        //シーンの更新
-        scene_->Update();
+        // シーンの更新
+        sceneManager_->Update();
 
+        // UI描画
         ui_->Render();
 
-        //シーンの描画
-        scene_->Draw();
+        // シーンの描画
+        sceneManager_->Draw();
 
-        //描画後処理
+        // 描画後処理
         system_->EndFrame();
-
     }
 }
 
+//===================================================================*/
+// 終了処理
+//===================================================================*/
 void EngineController::Finalize(){
     //終了処理
-    scene_->Finalize();
     system_->Finalize();
+    sceneManager_.reset();
+    ui_.reset();
+    CoUninitialize();
 }

@@ -1,45 +1,53 @@
 ﻿#pragma once
 
-/* engine */
 #include "Engine/core/EngineUI.h"
 
-class DxCore;
+//lib
+#include <string>
 
-/// <summary>
-/// シーンの基底クラス
-/// </summary>
+//front
+class DxCore;
+class SceneManager;
+
+//===================================================================*/
+// ISceneクラス(インターフェイス)
+// 各シーンはこのクラスを継承して実装する
+//===================================================================*/
 class IScene{
 public:
-	IScene(){}
+	//===================================================================*/
+	//                   public methods
+	//===================================================================*/
+	IScene() = default;
 	IScene(DxCore* dxCore);
-	virtual ~IScene();
+	virtual ~IScene() = default;
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	// 初期化処理
 	virtual void Initialize() = 0;
-	/// <summary>
-	/// 更新
-	/// </summary>
+
+	// 更新処理
 	virtual void Update() = 0;
-	/// <summary>
-	/// 描画
-	/// </summary>
+
+	// 描画処理
 	virtual void Draw() = 0;
-	/// <summary>
-	/// 解放
-	/// </summary>
+
+	// 終了処理
 	virtual void Finalize() = 0;
 
-	/// <summary>
-	/// モデルの描画前処理
-	/// </summary>
+	// モデル描画前処理(必要時オーバーライド)
 	virtual void ModelPreDraw(){}
 
+	// UIとシーンマネージャのセット
 	void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
-
+	void SetSceneManager(SceneManager* sceneManager){ pSceneManager_ = sceneManager; }
+	void SetSceneName(const std::string& name){ sceneName_ = name; }
 protected:
-	DxCore* pDxCore_;
-	EngineUI* pEngineUI_;
-};
+	//===================================================================*/
+	//                   protected fields
+	//===================================================================*/
+	DxCore* pDxCore_ = nullptr;
+	EngineUI* pEngineUI_ = nullptr;
+	SceneManager* pSceneManager_ = nullptr;
 
+	std::string sceneName_;
+};
