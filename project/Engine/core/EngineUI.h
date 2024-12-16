@@ -11,20 +11,39 @@
 
 class EngineUI{
 public:
-    EngineUI() = default;
-    ~EngineUI() = default;
+    //===================================================================*/
+    //                    singleton
+    //===================================================================*/
+    //コピー参照の禁止
+	EngineUI(const EngineUI&) = delete;
+	EngineUI& operator=(const EngineUI&) = delete;
+	//インスタンスの取得
+    static EngineUI* GetInstance();
+
+public:
+    //===================================================================*/
+	//                    public function
+    //===================================================================*/
 
     // 初期化
-    void Initialize();
-
+    static void Initialize();
     // UIのレンダリング
-    void Render();
+    static void Render();
+	// 終了処理
+    static void Finalize();
 
     // 各UIセクションのコールバック設定
-    void SetMainViewportCallback(std::function<void()> callback);
-    void SetToolbarCallback(std::function<void()> callback);
-    void AddPanelCallback(const std::string& panelName, std::function<void()> callback);
-    void SetFloatingWindowCallback(std::function<void()> callback);
+    static void SetMainViewportCallback(std::function<void()> callback);
+    static void SetToolbarCallback(std::function<void()> callback);
+    static void AddPanelCallback(const std::string& panelName, std::function<void()> callback);
+    static void SetFloatingWindowCallback(std::function<void()> callback);
+
+private:
+    //===================================================================*/
+	//                   private function
+    //===================================================================*/
+    EngineUI() = default;
+    ~EngineUI() = default;
 
 private:
     // コールバック関数
@@ -39,6 +58,12 @@ private:
     void RenderPanels();
     void RenderMainViewport();
     void RenderFloatingWindows();
+
+private:
+    //===================================================================*/
+	//                   private variable
+    //===================================================================*/
+	static EngineUI* pInstance_;
 };
 
 #endif // ENGINE_UI_H

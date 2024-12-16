@@ -37,5 +37,4 @@ private:
     //scene
 	std::unique_ptr<SceneManager> sceneManager_;
 
-    std::unique_ptr<EngineUI> ui_;
 };

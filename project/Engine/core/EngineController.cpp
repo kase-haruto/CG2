@@ -14,11 +14,11 @@ void EngineController::Initialize(HINSTANCE hInstance){
     system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
     // UI初期化
-    ui_ = std::make_unique<EngineUI>();
+    auto ui = EngineUI::GetInstance();
 
     // シーンマネージャ初期化
     sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
-    sceneManager_->SetEngineUI(ui_.get());
+    sceneManager_->SetEngineUI(ui);
     sceneManager_->Initialize();
 }
 
@@ -35,7 +35,7 @@ void EngineController::Run(){
         sceneManager_->Update();
 
         // UI描画
-        ui_->Render();
+        EngineUI::Render();
 
         // シーンの描画
         sceneManager_->Draw();
@@ -52,6 +52,6 @@ void EngineController::Finalize(){
     //終了処理
     system_->Finalize();
     sceneManager_.reset();
-    ui_.reset();
+    EngineUI::Finalize();
     CoUninitialize();
 }

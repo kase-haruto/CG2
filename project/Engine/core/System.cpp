@@ -6,6 +6,7 @@
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
+#include "Engine/core/EngineUI.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -26,7 +27,8 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     //インプットの初期化
     Input::Initialize();
 
-   
+	//uiの初期化
+	EngineUI::Initialize();
 
 	//管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
