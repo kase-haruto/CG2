@@ -67,21 +67,6 @@ void GameObject_Demo::OnCollisionExit([[maybe_unused]] Collider* other){}
 //===================================================================*/
 //                    imgui/ui
 //===================================================================*/
-void GameObject_Demo::ImGui(){
-
-	BaseGameObject::ImGui();
-
-	ImGui::Text("test");
+void GameObject_Demo::ShowGui(){
+	BaseGameObject::ShowGui();
 }
-
-
-void GameObject_Demo::ShowDebugUI(){
-
-	BaseGameObject::ShowDebugUI();
-
-}
-
-
-
-
-

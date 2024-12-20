@@ -1,70 +1,72 @@
 #pragma once
 
-
-// EngineUI.h
 #ifndef ENGINE_UI_H
 #define ENGINE_UI_H
 
-#include <string>
-#include <functional>
 #include <vector>
+#include <memory>
+#include <functional>
+#include <d3d12.h>
+#include "UI/IEngineUI.h"
+#include "Engine/objects/SceneObject.h"
 
+///===================================================================*/
+/// EngineUIクラス
+///===================================================================*/
 class EngineUI{
 public:
     //===================================================================*/
     //                    singleton
     //===================================================================*/
-    //コピー参照の禁止
-	EngineUI(const EngineUI&) = delete;
-	EngineUI& operator=(const EngineUI&) = delete;
-	//インスタンスの取得
-    static EngineUI* GetInstance();
+    EngineUI(const EngineUI&) = delete;
+    EngineUI& operator=(const EngineUI&) = delete;
+    static EngineUI* GetInstance(); // インスタンスの取得
 
 public:
     //===================================================================*/
-	//                    public function
+    //                    public function
     //===================================================================*/
-
-    // 初期化
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     static void Initialize();
-    // UIのレンダリング
+
+    /// <summary>
+    /// UIのレンダリング
+    /// </summary>
     static void Render();
-	// 終了処理
+
+    /// <summary>
+    /// 終了処理
+    /// </summary>
     static void Finalize();
 
-    // 各UIセクションのコールバック設定
-    static void SetMainViewportCallback(std::function<void()> callback);
-    static void SetToolbarCallback(std::function<void()> callback);
-    static void AddPanelCallback(const std::string& panelName, std::function<void()> callback);
-    static void SetFloatingWindowCallback(std::function<void()> callback);
+    /// <summary>
+    /// 新しいパネルを追加する
+    /// </summary>
+    void AddPanel(std::unique_ptr<IEngineUI> panel);
+
+    // メインビューポート用のテクスチャを設定
+    static void SetMainViewportTexture(UINT64 textureID);
 
 private:
     //===================================================================*/
-	//                   private function
+    //                    private function
     //===================================================================*/
-    EngineUI() = default;
-    ~EngineUI() = default;
+    EngineUI() = default;       // コンストラクタ
+    ~EngineUI() = default;      // デストラクタ
+
+    void RenderMainViewport();  // メインビューポートの描画
 
 private:
-    // コールバック関数
-    std::function<void()> mainViewportCallback_;
-    std::function<void()> toolbarCallback_;
-    std::vector<std::pair<std::string, std::function<void()>>> panelCallbacks_;
-    std::function<void()> floatingWindowCallback_;
+	//===================================================================*/
+	//                    private variable
+	//===================================================================*/
+    SceneObject* selectedObject = nullptr;
 
-    // 内部描画メソッド
-    void RenderDockSpace();
-    void RenderToolbar();
-    void RenderPanels();
-    void RenderMainViewport();
-    void RenderFloatingWindows();
-
-private:
-    //===================================================================*/
-	//                   private variable
-    //===================================================================*/
-	static EngineUI* pInstance_;
+    static EngineUI* pInstance_;                        // シングルトンインスタンス
+    UINT64 mainViewportTextureID_;            // メインビューポート用のテクスチャポインタ
+    std::vector<std::unique_ptr<IEngineUI>> panels_;    // UIパネルのリスト
 };
 
 #endif // ENGINE_UI_H
-

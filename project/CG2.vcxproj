@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
     <ClCompile Include="Engine\scene\DemoScene.cpp" />
     <ClCompile Include="Engine\core\EngineUI.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
@@ -150,7 +151,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\shaders\ShaderCompiler.cpp" />
     <ClCompile Include="Engine\graphics\SrvLocator.cpp" />
     <ClCompile Include="Engine\graphics\ViewProjection.cpp" />
-    <ClCompile Include="Engine\objects\GameObject.cpp" />
     <ClCompile Include="Engine\objects\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
     <ClCompile Include="Engine\objects\ModelManager.cpp" />
@@ -175,6 +175,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
+    <ClCompile Include="Engine\core\UI\IEngineUI.cpp" />
+    <ClCompile Include="Engine\core\UI\HierarchyPanel.cpp" />
+    <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
+    <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -197,8 +201,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
+    <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
     <ClInclude Include="Engine\scene\DemoScene.h" />
     <ClInclude Include="Engine\core\EngineUI.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
@@ -266,6 +272,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
+    <ClInclude Include="Engine\core\UI\IEngineUI.h" />
+    <ClInclude Include="Engine\core\UI\HierarchyPanel.h" />
+    <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
+    <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -287,6 +297,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Engine\objects\SceneObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -1,93 +1,78 @@
 #include "EngineUI.h"
-
+#include "UI/HierarchyPanel.h"
+#include "UI/InspectorPanel.h"
+#include "UI/ConsolePanel.h"
 #include <externals/imgui/imgui.h>
 
+//===================================================================*/
+//                   静的変数の初期化
+//===================================================================*/
 EngineUI* EngineUI::pInstance_ = nullptr;
 
+//===================================================================*/
+//                   シングルトンインスタンス取得
+//===================================================================*/
 EngineUI* EngineUI::GetInstance(){
-    //　インスタンスがなければ作成
     if (!pInstance_){
         pInstance_ = new EngineUI();
     }
-	return pInstance_;
+    return pInstance_;
 }
 
+//===================================================================*/
+//                   初期化
+//===================================================================*/
 void EngineUI::Initialize(){
-
-    //インスタンスの生成
     GetInstance();
 
+    // パネルの追加
+    pInstance_->panels_.emplace_back(std::make_unique<HierarchyPanel>());
+    pInstance_->panels_.emplace_back(std::make_unique<InspectorPanel>());
+    pInstance_->panels_.emplace_back(std::make_unique<ConsolePanel>());
 }
 
+//===================================================================*/
+//                   レンダリング
+//===================================================================*/
 void EngineUI::Render(){
-#ifdef _DEBUG
-    pInstance_->RenderDockSpace();
-    pInstance_->RenderToolbar();
-    pInstance_->RenderPanels();
-    pInstance_->RenderMainViewport();
-    pInstance_->RenderFloatingWindows();
-#endif // _DEBUG
-
-    
-}
-
-void EngineUI::Finalize(){
-	delete pInstance_;
-	pInstance_ = nullptr;
-}
-
-void EngineUI::SetMainViewportCallback(std::function<void()> callback){
-    pInstance_->mainViewportCallback_ = callback;
-}
-
-void EngineUI::SetToolbarCallback(std::function<void()> callback){
-    pInstance_->toolbarCallback_ = callback;
-}
-
-void EngineUI::AddPanelCallback(const std::string& panelName, std::function<void()> callback){
-    pInstance_->panelCallbacks_.emplace_back(panelName, callback);
-}
-
-void EngineUI::SetFloatingWindowCallback(std::function<void()> callback){
-    pInstance_->floatingWindowCallback_ = callback;
-}
-
-void EngineUI::RenderDockSpace(){
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    for (const auto& panel : GetInstance()->panels_){
+        panel->Render(); // 各パネルを描画
+    }
+    pInstance_->RenderMainViewport();
 }
 
-void EngineUI::RenderToolbar(){
-    if (toolbarCallback_){
-        if (ImGui::Begin("Toolbar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize)){
-            toolbarCallback_();
-        }
-        ImGui::End();
-    }
-}
-
-void EngineUI::RenderPanels(){
-    for (const auto& panel : panelCallbacks_){
-        if (ImGui::Begin(panel.first.c_str())){
-            panel.second();
-        }
-        ImGui::End();
-    }
-}
 
 void EngineUI::RenderMainViewport(){
-    if (mainViewportCallback_){
-        if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)){
-            mainViewportCallback_();
-        }
-        ImGui::End();
+    ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
+
+    if (mainViewportTextureID_){
+        ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+        ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+    } else{
+        ImGui::Text("Viewport texture not set.");
     }
+
+    ImGui::End();
 }
 
-void EngineUI::RenderFloatingWindows(){
-    if (floatingWindowCallback_){
-        if (ImGui::Begin("Settings")){
-            floatingWindowCallback_();
-        }
-        ImGui::End();
-    }
+
+//===================================================================*/
+//                   終了処理
+//===================================================================*/
+void EngineUI::Finalize(){
+    delete pInstance_;
+    pInstance_ = nullptr;
+}
+
+//===================================================================*/
+//                   パネル追加
+//===================================================================*/
+void EngineUI::AddPanel(std::unique_ptr<IEngineUI> panel){
+    panels_.push_back(std::move(panel));
+}
+
+void EngineUI::SetMainViewportTexture(UINT64 textureID){
+    if (pInstance_->mainViewportTextureID_){ return; }
+    pInstance_->mainViewportTextureID_ = textureID;
 }

@@ -25,7 +25,7 @@ public:
 	void Initialize() override;      // 初期化処理
 	void Update() override;          // 更新処理 
 	void Draw() override;            // 描画処理
-	void Finalize() override;        // 終了処理
+	void CleanUp() override;        // 終了処理
 	void ModelPreDraw() override;	// モデル描画前処理
 
 private:

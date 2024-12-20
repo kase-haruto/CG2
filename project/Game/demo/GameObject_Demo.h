@@ -20,13 +20,13 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void ImGui()override;
-	void ShowDebugUI()override;
 
 	/* collision ===================================*/
 	void OnCollisionEnter(Collider* other)override;
 	void OnCollisionStay(Collider* other)override;
 	void OnCollisionExit(Collider* other)override;
+
+	void ShowGui();
 
 private:
 	//===================================================================*/

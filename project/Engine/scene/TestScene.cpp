@@ -63,14 +63,7 @@ void TestScene::Initialize(){
 	//							ui
 #ifdef _DEBUG
 
-	pEngineUI_->SetMainViewportCallback([this] (){
-		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		if (pDxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr != 0){
-			ImGui::Image(reinterpret_cast< ImTextureID >(pDxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr), viewportSize);
-		} else{
-			ImGui::Text("Viewport not ready");
-		}
-										});
+
 	//// エンジンUIの初期化
 
 	//// ツールバーの描画処理
@@ -191,7 +184,7 @@ void TestScene::Draw(){
 #pragma endregion
 }
 
-void TestScene::Finalize(){
+void TestScene::CleanUp(){
 	modelBuilder_.reset();
 	uiEditor_.reset();
 	/*modelGround_.reset();*/

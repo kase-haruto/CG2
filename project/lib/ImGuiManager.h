@@ -45,6 +45,7 @@ public:
 	/// </summary>
 	void Draw();
 
+	void CustomizeImGuiStyle();
 	
 	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap()const{ return srvHeap_; }
 
