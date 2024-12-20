@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 #include <variant>
 #include <functional>
 #include <optional>
@@ -59,7 +58,7 @@ private:
     //                   private variable
     //===================================================================*/
     static inline std::string baseDirectory_ = "resources/json/";  // ベースディレクトリ
-    static inline std::unordered_map<std::string, std::unordered_map<std::string, AdjustableValue>> data_;  // グループ -> (キー -> 値)
+    static inline json data_;  // グループ -> (キー -> 値)
     static inline std::unordered_map<std::string, std::unordered_map<std::string, std::function<void(const AdjustableValue&)>>> bindings_;  // グループ -> (キー -> バインディングコールバック)
 };
 
@@ -100,22 +99,25 @@ inline void from_json(const json& j, AdjustableValue& value){
 //===================================================================*/
 template <typename T>
 bool JsonCoordinator::RegisterItem(const std::string& group, const std::string& key, T& target){
-    if (data_[group].count(key) > 0){
+    if (data_[group].contains(key)){
         return false; // 既に登録済み
     }
 
+    // データに登録
     data_[group][key] = target;
 
+    // バインディングを設定
     bindings_[group][key] = [&target] (const AdjustableValue& value){
         if (auto val = std::get_if<T>(&value)){
             target = *val; // 型が一致している場合のみ代入
         }
         };
 
-    // 登録済みの値を変数に同期
-    if (data_.count(group) && data_[group].count(key)){
-        if (auto val = std::get_if<T>(&data_[group][key])){
-            target = *val;
+    // データを変数に同期
+    if (data_.contains(group) && data_[group].contains(key)){
+        auto val = data_[group][key].get<AdjustableValue>();
+        if (auto valPtr = std::get_if<T>(&val)){
+            target = *valPtr;
         }
     }
     return true;

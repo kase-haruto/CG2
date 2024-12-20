@@ -23,12 +23,11 @@ void JsonCoordinator::EnsureDirectoryExists(const std::string& path){
     std::filesystem::create_directories(std::filesystem::path(path).parent_path());
 }
 
-
 //-------------------------------------------------------------------
 // 値を設定する
 //-------------------------------------------------------------------
 bool JsonCoordinator::SetValue(const std::string& group, const std::string& key, AdjustableValue value){
-    if (!data_.count(group) || !data_[group].count(key)){
+    if (!data_.contains(group) || !data_[group].contains(key)){
         return false; // 未登録のキー
     }
 
@@ -45,8 +44,8 @@ bool JsonCoordinator::SetValue(const std::string& group, const std::string& key,
 // 値を取得する
 //-------------------------------------------------------------------
 std::optional<AdjustableValue> JsonCoordinator::GetValue(const std::string& group, const std::string& key){
-    if (data_.count(group) && data_[group].count(key)){
-        return data_[group][key];
+    if (data_.contains(group) && data_[group].contains(key)){
+        return data_[group][key].get<AdjustableValue>();
     }
     return std::nullopt; // エラー時は無効な値を返す
 }
@@ -58,15 +57,11 @@ bool JsonCoordinator::Save(const std::string& fileName, std::optional<std::strin
     std::string fullPath = ConstructFullPath(fileName, parentPath);
     EnsureDirectoryExists(fullPath);
 
-    // データを JSON に変換
-    json jsonData = data_;
-
-    // ファイルに書き込む
     std::ofstream file(fullPath);
     if (!file.is_open()){
         return false; // 保存に失敗
     }
-    file << jsonData.dump(4); // インデントを 4 に設定
+    file << data_.dump(4); // インデントを 4 に設定
     file.close();
 
     return true; // 成功
@@ -78,35 +73,27 @@ bool JsonCoordinator::Save(const std::string& fileName, std::optional<std::strin
 bool JsonCoordinator::Load(const std::string& fileName, std::optional<std::string> parentPath){
     std::string fullPath = ConstructFullPath(fileName, parentPath);
 
-    // ファイルが存在しない場合、新規作成
     if (!std::filesystem::exists(fullPath)){
-        Save(fileName, parentPath);
-        return false; // 新規作成
+        Save(fileName, parentPath); // 新規作成
+        return false;
     }
 
-    // ファイルを開く
     std::ifstream file(fullPath);
     if (!file.is_open()){
         return false; // ロード失敗
     }
 
-    // JSON を読み込み
     json jsonData;
     file >> jsonData;
+    file.close();
 
-    // JSON データを `data_` に変換
-    try{
-        data_ = jsonData.get<decltype(data_)>();
-    } catch (const std::exception& e){
-        std::cerr << "Error loading JSON: " << e.what() << std::endl;
-        return false; // パース失敗
-    }
+    data_ = jsonData;
 
     // バインドされている変数に反映
-    for (const auto& [group, items] : data_){
-        for (const auto& [key, value] : items){
+    for (const auto& [group, items] : data_.items()){
+        for (const auto& [key, value] : items.items()){
             if (bindings_.count(group) && bindings_[group].count(key)){
-                bindings_[group][key](value);
+                bindings_[group][key](value.get<AdjustableValue>());
             }
         }
     }
@@ -142,12 +129,12 @@ void JsonCoordinator::RenderAdjustableItem(const std::string& group, const std::
 // グループ内のすべての項目をレンダリング
 //-------------------------------------------------------------------
 void JsonCoordinator::RenderGroupUI(const std::string& group){
-    if (!data_.count(group)){
+    if (!data_.contains(group)){
         ImGui::Text("No data for group: %s", group.c_str());
         return;
     }
 
-    for (const auto& [key, value] : data_[group]){
+    for (const auto& [key, value] : data_[group].items()){
         RenderAdjustableItem(group, key);
     }
 }
