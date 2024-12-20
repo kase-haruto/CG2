@@ -179,6 +179,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
+    <ClCompile Include="Game\3d\Player\ICommand.cpp" />
+    <ClCompile Include="Game\3d\Player\InputHandler.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -202,6 +204,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
+    <ClCompile Include="Game\3d\Player\Player.cpp" />
+    <ClCompile Include="Game\3d\Player\MoveCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
@@ -276,6 +280,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\UI\HierarchyPanel.h" />
     <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
+    <ClInclude Include="Game\3d\Player\ICommand.h" />
+    <ClInclude Include="Game\3d\Player\InputHandler.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -298,6 +304,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
+    <ClInclude Include="Game\3d\Player\Player.h" />
+    <ClInclude Include="Game\3d\Player\MoveCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

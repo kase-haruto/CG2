@@ -12,6 +12,9 @@
 #include "engine/Editor/UiEditor.h"
 #include "Game/demo/GameObject_Demo.h"
 #include "Game/demo/TestObject.h"
+#include "Game/3d/Player/Player.h"
+#include "Game/3d/Player/ICommand.h"
+#include "Game/3d/Player/InputHandler.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -94,6 +97,10 @@ private:
     std::unique_ptr<TornadoParticle> tornadoParticle_ = nullptr;
     std::unique_ptr<GameObject_Demo>demoObject_ = nullptr;
     std::unique_ptr<TestObject> testObject_ = nullptr;
+
+	std::unique_ptr<Player> player_ = nullptr;
+	InputHandler* inputHandler_ = nullptr;
+	ICommand* iCommand_ = nullptr;
 
     ///=========================
     /// particle
