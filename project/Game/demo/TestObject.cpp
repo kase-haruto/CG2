@@ -51,8 +51,6 @@ void TestObject::OnCollisionExit([[maybe_unused]] Collider* other){}
 //===================================================================*/
 //                    imgui/ui
 //===================================================================*/
-void TestObject::ShowDebugUI(){
-
-	BaseGameObject::ShowDebugUI();
+void TestObject::ShowGui(){
+	BaseGameObject::ShowGui();
 }
-

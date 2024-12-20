@@ -28,7 +28,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     Input::Initialize();
 
 	//uiの初期化
-	EngineUI::Initialize();
+	InitializeEngineUI();
 
 	//管理クラスの初期化
     shaderManager_ = std::make_shared<ShaderManager>();
@@ -62,7 +62,15 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 }
 
+void System::InitializeEngineUI(){
+    EngineUI::Initialize();
+
+	EngineUI::SetMainViewportTexture(dxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr);
+
+}
+
 void System::BeginFrame(){
+    EngineUI::SetMainViewportTexture(dxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr);
     // ImGui受付開始
     imguiManager_->Begin();
     // インプットの更新
@@ -77,6 +85,8 @@ void System::EndFrame(){
 
     // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
+
+    ImGui::ShowDemoWindow();
     // オフスクリーンレンダーターゲットの終了
     dxCore_->DrawOffscreenTexture();
 

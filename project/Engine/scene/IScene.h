@@ -1,9 +1,10 @@
 ﻿#pragma once
 
 #include "Engine/core/EngineUI.h"
-
+#include "Engine/objects/SceneObject.h"
 //lib
 #include <string>
+#include <vector>
 
 //front
 class DxCore;
@@ -18,7 +19,7 @@ public:
 	//===================================================================*/
 	//                   public methods
 	//===================================================================*/
-	IScene() = default;
+	IScene();
 	IScene(DxCore* dxCore);
 	virtual ~IScene() = default;
 
@@ -32,7 +33,7 @@ public:
 	virtual void Draw() = 0;
 
 	// 終了処理
-	virtual void Finalize() = 0;
+	virtual void CleanUp() = 0;
 
 	// モデル描画前処理(必要時オーバーライド)
 	virtual void ModelPreDraw(){}
@@ -41,6 +42,7 @@ public:
 	void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
 	void SetSceneManager(SceneManager* sceneManager){ pSceneManager_ = sceneManager; }
 	void SetSceneName(const std::string& name){ sceneName_ = name; }
+
 protected:
 	//===================================================================*/
 	//                   protected fields
@@ -50,4 +52,5 @@ protected:
 	SceneManager* pSceneManager_ = nullptr;
 
 	std::string sceneName_;
+
 };

@@ -225,9 +225,6 @@
     <ClCompile Include="Engine\physics\Triangle.cpp">
       <Filter>Engine\project\math\shape</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\GameObject.cpp">
-      <Filter>Engine\project\3d\objects</Filter>
-    </ClCompile>
     <ClCompile Include="externals\GlobalVariable\GlobalVariables.cpp">
       <Filter>Engine\project\lib</Filter>
     </ClCompile>
@@ -380,6 +377,12 @@
     <ClCompile Include="Engine\core\EngineUI.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\scene\DemoScene.cpp" />
+    <ClCompile Include="Engine\core\UI\IEngineUI.cpp" />
+    <ClCompile Include="Engine\core\UI\HierarchyPanel.cpp" />
+    <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
+    <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
+    <ClCompile Include="Engine\objects\SceneObject.cpp" />
+    <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -596,6 +599,12 @@
     <ClInclude Include="Engine\core\EngineUI.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\scene\DemoScene.h" />
+    <ClInclude Include="Engine\core\UI\IEngineUI.h" />
+    <ClInclude Include="Engine\core\UI\HierarchyPanel.h" />
+    <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
+    <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
+    <ClInclude Include="Engine\objects\SceneObject.h" />
+    <ClInclude Include="Engine\objects\SceneObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

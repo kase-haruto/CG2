@@ -14,7 +14,7 @@ public:
     void Initialize()override;
     void Update()override;
     void Draw()override;
-    void ShowDebugUI()override;
+	void ShowGui()override;
 
     /* collision ===================================*/
     void OnCollisionEnter(Collider* other)override;

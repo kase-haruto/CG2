@@ -64,7 +64,7 @@ public:
     /// <summary>
     /// 解放処理
     /// </summary>
-    void Finalize()override;
+    void CleanUp()override;
 
     /// <summary>
     /// モデル描画前処理

@@ -2,31 +2,26 @@
 
 //* engine *//
 #include "Engine/objects/Model.h"
+#include "Engine/objects/SceneObject.h"
 
 //* c++ lib *//
 #include <memory>
 #include <string>
 
-class BaseGameObject{
+class BaseGameObject
+	:public SceneObject{
 public:
 	//===================================================================*/
 	//                    public methods
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
 	BaseGameObject() = default;
-	virtual ~BaseGameObject();
+	virtual ~BaseGameObject()override;
 
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	virtual void ImGui();
-	virtual void ShowDebugUI();
-
-private:
-	//===================================================================*/
-	//                    public methods
-	//===================================================================*/
-	std::string objectName_;
+	virtual void ShowGui()override;
 
 protected:
 	//===================================================================*/
@@ -38,7 +33,6 @@ private:
 	//===================================================================*/
 	//                    private methods
 	//===================================================================*/
-	static std::vector<BaseGameObject*> allGameObjects_;
 	std::string jsonPath = "gameobject";
 
 public:
@@ -46,8 +40,6 @@ public:
 	//                    getter/setter
 	//===================================================================*/
 	void SetName(const std::string& name);
-	const std::string& GetName()const{ return objectName_; }
-	static const std::vector<BaseGameObject*>& GetGameObjects();
-
+	const std::string& GetName()const{ return name_; }
 };
 

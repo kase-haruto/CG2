@@ -24,6 +24,6 @@ void DemoScene::Update(){}
 
 void DemoScene::Draw(){}
 
-void DemoScene::Finalize(){}
+void DemoScene::CleanUp(){}
 
 void DemoScene::ModelPreDraw(){}
