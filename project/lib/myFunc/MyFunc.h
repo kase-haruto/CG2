@@ -57,3 +57,7 @@ DirectX::ScratchImage LoadTextureImage(const std::string& filePath);
 bool IsCollision(const AABB& aabb, const Vector3& point);
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+float Lerp(float v1, float v2, float t);
+
+float LerpShortAngle(float a, float b, float t);

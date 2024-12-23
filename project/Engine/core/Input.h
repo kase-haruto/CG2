@@ -2,179 +2,121 @@
 
 #define DIRECTINPUT_VERSION 0x0800 
 
-/* math */
-#include "lib/myMath/Vector2.h"
-
-/* c++ */
+#include "lib/myMath/Vector2.h" // 必要に応じて実装をリンク
 #include <wrl.h>
 #include <array>
 #include <dinput.h>
+#include <XInput.h>
+#include <unordered_map>
+#include <string>
 
-#pragma comment(lib,"dinput8.lib")
-#pragma comment(lib,"dxguid.lib")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "xinput.lib")
+
+// デッドゾーンのデフォルト値
+constexpr float DEFAULT_DEAD_ZONE = 0.2f;
+
+enum class PAD_BUTTON{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    START,
+    BACK,
+    L_STICK,
+    R_STICK,
+    LB,
+    RB,
+    A,
+    B,
+    X,
+    Y,
+    LT,
+    RT,
+    COUNT // ボタン数を取得可能にするための要素
+};
+
+
 
 using Microsoft::WRL::ComPtr;
 
+// スティックの状態を格納する構造体
+struct StickState{
+    Vector2 leftStick;  // 左スティックの状態
+    Vector2 rightStick; // 右スティックの状態
+};
+
 class Input{
 public:
-	static Input* GetInstance();
+    // インスタンスの取得
+    static Input* GetInstance();
 
-	Input(const Input&) = delete;
-	Input& operator=(const Input&) = delete;
+    // コピー禁止
+    Input(const Input&) = delete;
+    Input& operator=(const Input&) = delete;
 
-	static void Initialize();
+    // 初期化、更新、終了
+    static void Initialize();
+    static void Update();
+    static void Finalize();
 
-	static void Update();
+    // キーボード
+    static bool PushKey(uint32_t keyNum);
+    static bool TriggerKey(uint32_t keyNum);
 
-	static void Finalize();
+    // マウス
+    static bool PushMouseButton(int button);
+    static bool TriggerMouseButton(int button);
+    static Vector2 GetMousePosition();
+    static float GetMouseWheel();
 
-	//=======================================================================================
-	//      キーボード
-public:
-	/// <summary>
-	/// キーボードを押した処理
-	/// 長押し
-	/// </summary>
-	/// <param name="keyNum"></param>
-	/// <returns></returns>
-	static bool PushKey(uint32_t keyNum);
+    // ゲームパッド
+    static bool PushGamepadButton(int button);
+    static bool TriggerGamepadButton(int button);
+    static Vector2 GetLeftStick();
+    static Vector2 GetRightStick();
+    static StickState GetStickState(); // 両スティックの状態を取得
 
-	/// <summary>
-	/// キーボードを押した処理
-	/// 短押し
-	/// </summary>
-	/// <param name="keyNum"></param>
-	/// <returns></returns>
-	static bool TriggerKey(uint32_t keyNum);
+private:
+    Input() = default;
+    ~Input();
 
-	//
-	//=======================================================================================
+    // DirectInput初期化
+    void DirectInputInitialize();
 
+    // 各デバイスの更新
+    void KeyboardUpdate();
+    void MouseUpdate();
+    void GamepadUpdate();
 
-	//=======================================================================================
-	//      マウス
-public:
-	/// <summary>
-	/// マウスボタンが押されたか
-	/// </summary>
-	/// <param name="button">マウスのボタン (0: 左, 1: 右, 2: 中央)</param>
-	/// <returns>ボタンが押された場合は true</returns>
-	static bool PushMouseButton(int button);
-
-	/// <summary>
-	/// マウスボタンの短押しを確認する
-	/// </summary>
-	/// <param name="button">マウスのボタン (0: 左, 1: 右, 2: 中央)</param>
-	/// <returns>短押しの場合は true</returns>
-	static bool TriggerMouseButton(int button);
-
-	/// <summary>
-	/// マウスの座標
-	/// </summary>
-	/// <returns></returns>
-	static Vector2 GetMousePosition();   // マウスの座標を取得
-
-	/// <summary>
-	/// マウスのホイール移動量を取得
-	/// </summary>
-	static float GetMouseWheel();
-
-	//
-	//=======================================================================================
-
-
-	//=======================================================================================
-	//      ゲームパッド
-public:
-	/// <summary>
-	/// ゲームパッドのボタンを押した処理
-	/// 長押し
-	/// </summary>
-	/// <param name="button">ボタン番号</param>
-	/// <returns>押されている場合は true</returns>
-	static bool PushGamepadButton(int button);
-
-	/// <summary>
-	/// ゲームパッドのボタンの短押しを確認
-	/// </summary>
-	/// <param name="button">ボタン番号</param>
-	/// <returns>短押しの場合は true</returns>
-	static bool TriggerGamepadButton(int button);
-
-	/// <summary>
-	/// 左スティックの値を取得
-	/// </summary>
-	/// <returns>スティックの値 (-1.0f ～ 1.0f)</returns>
-	static Vector2 GetLeftStick();
-
-	/// <summary>
-	/// 右スティックの値を取得
-	/// </summary>
-	/// <returns>スティックの値 (-1.0f ～ 1.0f)</returns>
-	static Vector2 GetRightStick();
-
-	/// <summary>
-	/// トリガーの値を取得
-	/// </summary>
-	/// <returns>トリガーの値 (0.0f ～ 1.0f)</returns>
-	static float GetTrigger();
-
-	//
-	//=======================================================================================
+    float NormalizeAxisInput(short value, short deadZone);
 
 
 private:
-	Input() = default;
-	~Input();
+    static Input* instance_; // シングルトンインスタンス
 
-	/// <summary>
-	/// directInputの初期化
-	/// </summary>
-	void DirectInputInitialize();
+    // DirectInputオブジェクト
+    ComPtr<IDirectInput8> directInput_ = nullptr;
 
-	/// <summary>
-	/// キーボードの更新
-	/// </summary>
-	void KeyboardUpdate();
+    // キーボードデバイス
+    ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
+    std::array<BYTE, 256> key_ {};    // 現在のキー状態
+    std::array<BYTE, 256> keyPre_ {}; // 前回のキー状態
 
-	void MouseUpdate();
+    // マウスデバイス
+    ComPtr<IDirectInputDevice8> mouse_ = nullptr;
+    DIMOUSESTATE mouseState_ {};
+    DIMOUSESTATE mouseStatePre_ {};
+    Vector2 mousePos_ {};
+    float mouseWheel_ = 0.0f;
 
-private:
-	/// <summary>
-	/// ゲームパッドの更新
-	/// </summary>
-	void GamepadUpdate();
-
-private:
-	//インスタンス
-	static Input* instance_;
-
-	ComPtr<IDirectInput8> directInput_ = nullptr;
-
-
-private:
-	/*------------------------
-		キーボード
-	------------------------*/
-	ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
-	std::array<BYTE, 256> key_;
-	std::array<BYTE, 256> keyPre_;
-
-private:
-	/*------------------------
-	  マウス
-	------------------------*/
-	ComPtr<IDirectInputDevice8> mouse_ = nullptr;
-	DIMOUSESTATE mouseState_;
-	DIMOUSESTATE mouseStatePre_;
-	Vector2 mousePos_;
-	float mouseWheel_ = 0.0f;
-
-	/*------------------------
-	 パッド
-	------------------------*/
-private:
-	ComPtr<IDirectInputDevice8> gamepad_ = nullptr;
-	DIJOYSTATE2 gamepadState_;
-	DIJOYSTATE2 gamepadStatePre_;
+    // ゲームパッドデバイス
+    ComPtr<IDirectInputDevice8> gamepad_ = nullptr;
+    XINPUT_GAMEPAD gamepadState_ {};
+    XINPUT_GAMEPAD gamepadStatePre_ {};
+    float leftThumbX_;
+    float leftThumbY_;
+    float rightThumbX_;
+    float rightThumbY_;
 };

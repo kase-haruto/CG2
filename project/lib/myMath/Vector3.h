@@ -20,6 +20,8 @@ struct Vector3 final{
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
+    static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
     Vector3 operator*(const float& scalar) const;
     Vector3 operator*=(const float& scalar);
     Vector3 operator*(const Vector3& other) const;

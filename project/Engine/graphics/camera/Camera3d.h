@@ -20,15 +20,17 @@ struct Camera3dForGPU{
 
 class Camera3d{
 public:
-	Camera3d();
-	~Camera3d() = default;
+    Camera3d();
+    ~Camera3d() = default;
 
     void Update();  //更新
-      
+
+    void SetCamera(const Vector3& pos, const Vector3& rotate);
+
 private:
-     /////////////////////////////////////////////////////////////////////////////////////////
-     /*                                       buffer                                  */
     /////////////////////////////////////////////////////////////////////////////////////////
+    /*                                       buffer                                  */
+   /////////////////////////////////////////////////////////////////////////////////////////
     void CreateBuffer();
 
     void Map();
@@ -38,11 +40,11 @@ private:
 
 
 private:
-    Transform transform_ = {    
+    Transform transform_ = {
         {1.0f, 1.0f, 1.0f},         // scale
         {0.0f, 0.0f, 0.0f},         // rotate
         {0.0f, 4.0f, -15.0f}        // translate
-    };                              
+    };
     Matrix4x4 worldMatrix_;         // ワールド行列
     Matrix4x4 viewMatrix_;          // ビュー行列
     Matrix4x4 projectionMatrix_;    // projection
@@ -57,7 +59,7 @@ private:
 
 
 private:
-    
+
     ComPtr<ID3D12Resource> constBuffer_;         // 定数バッファ
     Camera3dForGPU* cameraData_;                 // カメラのデータ
 
@@ -89,4 +91,3 @@ public:
     const Vector3& GetTranslate()const{ return transform_.translate; }
 
 };
-

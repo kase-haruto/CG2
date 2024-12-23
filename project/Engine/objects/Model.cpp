@@ -94,6 +94,11 @@ void Model::Create(const std::string& filename){
 }
 
 void Model::Update(){
+    Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+    materialData->uvTransform = uvTransformMatrix;
+
     materialData->color = Vector4(RGBa.x, RGBa.y, RGBa.z, RGBa.w);
     materialData->shininess = materialParameter.shininess;
     materialData->enableLighting = materialParameter.enableLighting;

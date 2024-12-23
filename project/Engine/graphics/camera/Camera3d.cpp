@@ -14,8 +14,7 @@ Camera3d::Camera3d()
     :worldMatrix_(MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate))
     , viewMatrix_(Matrix4x4::Inverse(worldMatrix_))
     , projectionMatrix_(MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_))
-    , viewProjectionMatrix_(Matrix4x4::Multiply(viewMatrix_, projectionMatrix_))
-{
+    , viewProjectionMatrix_(Matrix4x4::Multiply(viewMatrix_, projectionMatrix_)){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
@@ -25,7 +24,7 @@ Camera3d::Camera3d()
 }
 
 void Camera3d::Update(){
-   
+
     /////////////////////////////////////////////////////////////////////////////////////////
     //      行列の更新
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +40,11 @@ void Camera3d::Update(){
 
     commandList_->SetGraphicsRootSignature(rootSignature_.Get());
     commandList_->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
+}
+
+void Camera3d::SetCamera(const Vector3& pos, const Vector3& rotate){
+    transform_.translate = pos;
+    transform_.rotate = rotate;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

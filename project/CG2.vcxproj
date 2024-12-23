@@ -122,6 +122,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
+    <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Game\3d\BaseGameObject.cpp" />
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
@@ -202,6 +203,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
+    <ClCompile Include="Game\3d\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
@@ -212,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
+    <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Game\3d\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
@@ -298,6 +301,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
+    <ClInclude Include="Game\3d\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -29,7 +29,7 @@ protected:
 	//===================================================================*/
 	std::unique_ptr<Model> model_ = nullptr;	// 描画用モデル
 
-private:
+protected:
 	//===================================================================*/
 	//                    private methods
 	//===================================================================*/
@@ -41,5 +41,11 @@ public:
 	//===================================================================*/
 	void SetName(const std::string& name);
 	const std::string& GetName()const{ return name_; }
+
+	virtual const Vector3 GetCenterPos()const{
+		const Vector3 offset = {0.0f, 1.0f, 0.0f};
+		Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
+		return worldPos;
+	}
 };
 

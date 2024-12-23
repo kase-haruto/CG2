@@ -35,19 +35,13 @@ void TestScene::Initialize(){
 	modelGround_->SetSize({100.0f,0.0f,100.0f});
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
 
-	modelField_ = std::make_unique<Model>("terrain");
+	modelField_ = std::make_unique<Model>("ground");
+	modelField_->SetSize({100.0f,1.0f,100.0f});
+	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
-	demoObject_ = std::make_unique<GameObject_Demo>("debugCube");
-	demoObject_->Initialize();
-
-	testObject_ = std::make_unique<TestObject>("debugCube");
-	testObject_->Initialize();
-
-	demoParticle_ = std::make_unique<DemoParticle>();
-	demoParticle_->Initialize("plane", "particle.png");
-
-	tornadoParticle_ = std::make_unique<TornadoParticle>();
-	tornadoParticle_->Initialize("debugCube", "white1x1.png");
+	player_ = std::make_unique<Player>("player");
+	player_->Initialize();
+	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -59,69 +53,7 @@ void TestScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//							ui
-#ifdef _DEBUG
-
-
-	//// エンジンUIの初期化
-
-	//// ツールバーの描画処理
-	//pEngineUI_->SetToolbarCallback([] (){
-	//	ImGui::Button("Edit");
-	//	ImGui::SameLine();
-	//	ImGui::Button("Play");
-	//	ImGui::SameLine();
-	//	ImGui::Button("Settings");
-	//							});
-
-	//// パネルの追加
-	//pEngineUI_->AddPanelCallback("Object Settings", [this] (){
-	//	static int selectedObjectIndex = -1;
-
-	//	// オブジェクト名のリスト
-	//	std::vector<const char*> objectNames = {"directionalLight", "pointLight", "fog"};
-
-	//	// オブジェクトのリストを描画
-	//	ImGui::Text("Select an object to edit its properties:");
-	//	if (ImGui::ListBox("Objects", &selectedObjectIndex, objectNames.data(), static_cast< int >(objectNames.size()))){
-	//		// リストボックスで選択が変更されたときに処理を追加（必要であれば）
-	//	}
-
-	//	// 選択されたオブジェクトの設定表示
-	//	if (selectedObjectIndex >= 0 && selectedObjectIndex < static_cast< int >(objectNames.size())){
-	//		ImGui::Separator();
-	//		ImGui::Text("Editing: %s", objectNames[selectedObjectIndex]);
-
-	//		// 選択したオブジェクトに応じたインターフェースを表示
-	//		if (selectedObjectIndex == 0 && directionalLight_){
-	//			directionalLight_->ShowImGuiInterFace();
-	//		} else if (selectedObjectIndex == 1 && pointLight_){
-	//			pointLight_->ShowImGuiInterface();
-	//		} else if (selectedObjectIndex == 2 && fog_){
-	//			fog_->ShowImGuiInterface();
-	//		}
-	//	}
-	//						  });
-
-	//pEngineUI_->AddPanelCallback("gameObject", [this] (){
-	//	demoObject_->ShowDebugUI();
-	//							 });
-
-	//pEngineUI_->AddPanelCallback("Particles", [] (){
-	//	ParticleManager::GetInstance()->ShowDebugUI();
-	//						  });
-
-	//pEngineUI_->AddPanelCallback("CollisionLog", [] (){
-	//	CollisionManager::GetInstance()->DebugLog();
-	//							 });
-#endif // _DEBUG
-
-	//// フローティングウィンドウの描画処理
-	//pEngineUI_->SetFloatingWindowCallback([] (){
-	//	ImGui::Text("Engine Settings");
-	//	ImGui::Checkbox("Enable Shadows", nullptr);
-	//								   });
+	
 
 }
 
@@ -133,13 +65,10 @@ void TestScene::Update(){
 
 	//モデルの更新
 	modelBuilder_->Update();
-	demoParticle_->Update();
-	tornadoParticle_->Update();
 
 	modelField_->Update();
 
-	demoObject_->Update();
-	testObject_->Update();
+	player_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -158,8 +87,7 @@ void TestScene::Draw(){
 	//モデルの描画
 	modelBuilder_->Draw();
 
-	demoObject_->Draw();
-	testObject_->Draw();
+	player_->Draw();
 
 	/*modelGround_->Draw();*/
 

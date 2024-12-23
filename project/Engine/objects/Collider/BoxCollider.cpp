@@ -1,6 +1,10 @@
 #include "BoxCollider.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
 
+#include "engine/core/Json/JsonCoordinator.h"
+
+#include <externals/imgui/imgui.h>
+
 #include <sstream> 
 
 void BoxCollider::Initialize(const Vector3& size){
@@ -8,9 +12,14 @@ void BoxCollider::Initialize(const Vector3& size){
 	ss << "box" << "_" << this; // 形状とアドレスを組み合わせ
 	name_ = ss.str();
 
+	JsonCoordinator::RegisterItem(name_, "ColliderSize", shape_.size);
+
 	collisionShape_ = shape_;
 
 	shape_.size = size;
+
+	jsonPath = "gameobject/" + GetName();
+
 }
 
 void BoxCollider::Draw(){
@@ -18,6 +27,22 @@ void BoxCollider::Draw(){
 #ifdef _DEBUG
 	shape_.Draw();
 #endif // DEBUG
+
+}
+
+void BoxCollider::ShowGui(){
+
+#ifdef _DEBUG
+
+	if (ImGui::CollapsingHeader("Collider")){
+		if (ImGui::Button("save")){
+			JsonCoordinator::Save(name_, jsonPath);
+		}
+		JsonCoordinator::RenderGroupUI(name_);
+	}
+
+#endif // _DEBUG
+
 
 }
 

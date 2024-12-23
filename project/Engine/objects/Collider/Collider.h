@@ -17,6 +17,8 @@ public:
 
 	virtual void Draw() = 0;
 
+	virtual void ShowGui()=0;
+
 	virtual void OnCollisionEnter([[maybe_unused]]Collider* other){};
 	virtual void OnCollisionStay([[maybe_unused]]Collider* other){};
 	virtual void OnCollisionExit([[maybe_unused]]Collider* other){};
@@ -36,4 +38,5 @@ public:
 	virtual const std::variant<Sphere, OBB>& GetCollisionShape() = 0;
 
 	const std::string& GetName()const{ return name_; }
+	void SetName(const std::string & name){ name_ = name; }
 };

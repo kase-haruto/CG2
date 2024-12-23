@@ -15,6 +15,15 @@ Vector3 Vector3::Normalize()const{
 	return Vector3(x / length, y / length, z / length);
 }
 
+Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t){
+
+	return Vector3(
+		v1.x + t * (v2.x - v1.x),
+		v1.y + t * (v2.y - v1.y),
+		v1.z + t * (v2.z - v1.z)
+	);
+}
+
 //乗算
 Vector3 Vector3::operator*(const float& scalar) const{
 	float newX = x * scalar;

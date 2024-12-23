@@ -383,6 +383,8 @@
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
+    <ClCompile Include="Game\3d\Player\Player.cpp" />
+    <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -605,6 +607,8 @@
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
+    <ClInclude Include="Game\3d\Player\Player.h" />
+    <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
