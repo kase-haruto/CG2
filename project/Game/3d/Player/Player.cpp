@@ -10,8 +10,7 @@
 #include "Engine/core/Input.h"
 
 Player::Player(const std::string& modelName)
-	:BaseGameObject(modelName){
-
+	:Character(modelName){
 
 	CollisionManager::GetInstance()->AddCollider(this);
 
@@ -34,6 +33,8 @@ void Player::Initialize(){
 	BaseGameObject::Initialize();
 	BoxCollider::Initialize(model_->transform.scale);
 
+	moveSpeed_ = 2.0f;
+
 }
 
 void Player::Update(){
@@ -41,18 +42,22 @@ void Player::Update(){
 
 	shape_.center = GetCenterPos();
 	shape_.rotate = model_->transform.rotate;
+
 	BaseGameObject::Update();
+	Character::Update();
 }
 
 void Player::Draw(){
+
 	BoxCollider::Draw();
 	BaseGameObject::Draw();
+
 }
 
 void Player::Move(){
 
 	Vector3 moveDirection = {Input::GetLeftStick().x,0.0f,Input::GetLeftStick().y};
-	moveVelocity_ = moveDirection * speed_;
+	moveVelocity_ = moveDirection * moveSpeed_;
 	Vector3 rotate = CameraManager::GetInstance()->GetFollowRotate();
 	Matrix4x4 matRotateY = MakeRotateYMatrix(rotate.y);
 	Matrix4x4 matRotateZ = MakeRotateZMatrix(rotate.z);
@@ -79,8 +84,6 @@ void Player::OnCollisionEnter([[maybe_unused]]Collider* other){}
 void Player::OnCollisionStay([[maybe_unused]] Collider* other){}
 
 void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
-
-
 
 //===================================================================*/
 //                    imgui/ui

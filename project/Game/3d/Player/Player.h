@@ -1,12 +1,12 @@
 #pragma once
 
 // engine
+#include "../Base/Character.h"
 #include "../BaseGameObject.h"
 #include "Engine/objects/Collider/BoxCollider.h"
-#include "Engine/objects/particle/DemoParticle.h"
 
 class Player :
-	public BaseGameObject, public BoxCollider{
+	public Character, public BoxCollider{
 public:
 	//===================================================================*/
 	//                   public func
@@ -43,8 +43,6 @@ private:
 
 	bool isAttacking_ = false; // 攻撃中フラグ
 
-	/* Adjustment Variables =============================================*/
-	float speed_ = 3.0f;
 
 public:
 	//===================================================================*/

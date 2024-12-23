@@ -86,7 +86,6 @@ void System::EndFrame(){
     // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
 
-    ImGui::ShowDemoWindow();
     // オフスクリーンレンダーターゲットの終了
     dxCore_->DrawOffscreenTexture();
 
