@@ -8,9 +8,12 @@
 #include <sstream> 
 
 void BoxCollider::Initialize(const Vector3& size){
-	std::stringstream ss;
-	ss << "box" << "_" << this; // 形状とアドレスを組み合わせ
-	name_ = ss.str();
+
+	if (name_.empty()){
+		std::stringstream ss;
+		ss << "box" << "_" << this; // 形状とアドレスを組み合わせ
+		name_ = ss.str();
+	}
 
 	JsonCoordinator::RegisterItem(name_, "ColliderSize", shape_.size);
 
@@ -19,6 +22,8 @@ void BoxCollider::Initialize(const Vector3& size){
 	shape_.size = size;
 
 	jsonPath = "gameobject/" + GetName();
+
+	JsonCoordinator::Load(name_, jsonPath);
 
 }
 
@@ -35,9 +40,7 @@ void BoxCollider::ShowGui(){
 #ifdef _DEBUG
 
 	if (ImGui::CollapsingHeader("Collider")){
-		if (ImGui::Button("save")){
-			JsonCoordinator::Save(name_, jsonPath);
-		}
+		
 		JsonCoordinator::RenderGroupUI(name_);
 	}
 

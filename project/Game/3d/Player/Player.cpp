@@ -4,6 +4,7 @@
 #include "lib/myFunc/MyFunc.h"
 
 #include "Engine/graphics/camera/CameraManager.h"
+#include "Engine/core/Json/JsonCoordinator.h"
 
 #include <externals/imgui/imgui.h>
 #include "Engine/core/Input.h"
@@ -11,7 +12,6 @@
 Player::Player(const std::string& modelName)
 	:BaseGameObject(modelName){
 
-	BoxCollider::Initialize(model_->transform.scale);
 
 	CollisionManager::GetInstance()->AddCollider(this);
 
@@ -32,6 +32,7 @@ void Player::Initialize(){
 	Collider::SetName("Player");
 
 	BaseGameObject::Initialize();
+	BoxCollider::Initialize(model_->transform.scale);
 
 }
 
@@ -40,7 +41,6 @@ void Player::Update(){
 
 	shape_.center = GetCenterPos();
 	shape_.rotate = model_->transform.rotate;
-	shape_.size = model_->transform.scale + 0.1f;
 	BaseGameObject::Update();
 }
 
@@ -86,7 +86,17 @@ void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
 //                    imgui/ui
 //===================================================================*/
 void Player::ShowGui(){
+	std::string saveJsonPath = "gameobject/" + BaseGameObject::GetName();
+	if (ImGui::Button("save")){
+		JsonCoordinator::Save(BaseGameObject::GetName(), saveJsonPath);
+	}
+
+	ImGui::Separator();
+
 	BaseGameObject::ShowGui();
+
+	ImGui::Separator();
+
 	BoxCollider::ShowGui();
 }
 
