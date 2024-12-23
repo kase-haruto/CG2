@@ -16,13 +16,9 @@ BaseGameObject::~BaseGameObject(){}
 
 void BaseGameObject::Initialize(){
 
-	// JsonCoordinator にプロパティを登録
-	JsonCoordinator::RegisterItem(name_, "Scale", model_->transform.scale);
-	JsonCoordinator::RegisterItem(name_, "Rotate", model_->transform.rotate);
-	JsonCoordinator::RegisterItem(name_, "Translate", model_->transform.translate);
-
-	jsonPath = "gameobject/" + GetName();
-	JsonCoordinator::Load(name_, jsonPath);
+	model_->transform.scale = {1.0f,1.0f,1.0f};
+	model_->transform.rotate = {0.0f,0.0f,0.0f};
+	model_->transform.translate = {0.0f,0.0f,0.0f};
 
 }
 
@@ -57,13 +53,11 @@ void BaseGameObject::SetName(const std::string& name){
 //                    imgui/ui
 //===================================================================*/
 void BaseGameObject::ShowGui(){
-	// JsonCoordinator を利用して保存・ロードボタンを表示
-	if (ImGui::Button("Save")){
-		JsonCoordinator::Save(name_, jsonPath);
-	}
 
 	if (ImGui::CollapsingHeader("Transform")){
-		JsonCoordinator::RenderGroupUI(name_);
+		ImGui::DragFloat3("Scale", &model_->transform.scale.x, 0.01f);
+		ImGui::DragFloat3("Rotation", &model_->transform.rotate.x, 0.01f);
+		ImGui::DragFloat3("Position", &model_->transform.translate.x, 0.01f);
 	}
 
 }
