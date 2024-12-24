@@ -206,6 +206,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Game\3d\Player\Player.cpp" />
+    <ClCompile Include="Engine\scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\3d\Base\Character.h" />
@@ -306,6 +308,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
     <ClInclude Include="Game\3d\Player\Player.h" />
+    <ClInclude Include="Engine\scene\TitleScene.h" />
+    <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

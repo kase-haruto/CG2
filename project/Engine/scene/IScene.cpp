@@ -1,4 +1,4 @@
-﻿#include "../scene/IScene.h"
+﻿#include "IScene.h"
 
 /* core */
 #include "../core/DirectX/DxCore.h"

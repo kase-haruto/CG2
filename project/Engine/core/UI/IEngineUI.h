@@ -12,6 +12,7 @@ public:
 	//                   public methods
 	//===================================================================*/
 	IEngineUI(const std::string& name);
+	IEngineUI();
 	virtual ~IEngineUI() = default;
 
 	// パネルの描画
