@@ -11,6 +11,7 @@
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
 #include "Game/3d/Player/Player.h"
+#include "Game/3d/Enemy/Enemy.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -90,6 +91,7 @@ private:
     std::unique_ptr<Model> modelGround_ = nullptr;
 
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<Enemy> enemy_ = nullptr;
 
     ///=========================
     /// particle

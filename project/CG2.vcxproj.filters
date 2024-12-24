@@ -385,6 +385,8 @@
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Game\3d\Player\Player.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
+    <ClCompile Include="Game\3d\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\3d\Base\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -609,6 +611,8 @@
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
     <ClInclude Include="Game\3d\Player\Player.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Game\3d\Enemy\Enemy.h" />
+    <ClInclude Include="Game\3d\Base\Character.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
