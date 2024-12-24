@@ -26,15 +26,18 @@ Player::~Player(){
 //                    main functions
 //===================================================================*/
 void Player::Initialize(){
-
+	//オブジェクトの名前を設定
 	BaseGameObject::SetName("Player");
 	Collider::SetName("Player");
 
 	BaseGameObject::Initialize();
+
+	//colliderの設定
 	BoxCollider::Initialize(model_->transform.scale);
+	Collider::type_ = ColliderType::Type_Player;
+	Collider::targetType_ = ColliderType::Type_Enemy;
 
 	model_->transform.translate.z = -15.0f;
-
 	moveSpeed_ = 10.0f;
 
 }
@@ -81,7 +84,24 @@ void Player::Move(){
 //===================================================================*/
 //                    collision
 //===================================================================*/
-void Player::OnCollisionEnter([[maybe_unused]]Collider* other){}
+void Player::OnCollisionEnter([[maybe_unused]]Collider* other){
+	
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+
+		//////////////////////////////////////////////////////////////////
+		//				敵と衝突
+		//////////////////////////////////////////////////////////////////
+		if (other->GetType() == ColliderType::Type_Enemy){
+
+
+
+		}
+
+	}
+
+}
 
 void Player::OnCollisionStay([[maybe_unused]] Collider* other){}
 
@@ -91,7 +111,6 @@ void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
 //                    imgui/ui
 //===================================================================*/
 void Player::ShowGui(){
-	std::string saveJsonPath = "gameobject/" + BaseGameObject::GetName();
 	if (ImGui::Button("save")){
 		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
 	}
