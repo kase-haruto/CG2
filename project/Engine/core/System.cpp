@@ -7,6 +7,7 @@
 #include "../graphics/camera/CameraManager.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "Engine/core/EngineUI.h"
+#include "Engine/objects/particle/ParticleManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
@@ -107,6 +108,8 @@ void System::Finalize(){
     TextureManager::GetInstance()->Finalize();
     //モデルマネージャーの開放
     ModelManager::GetInstance()->Finalize();
+    PrimitiveDrawer::GetInstance()->Finalize();
+    ParticleManager::GetInstance()->Finalize();
     //カメラの開放
     CameraManager::Finalize();
     //pipelineの終了処理

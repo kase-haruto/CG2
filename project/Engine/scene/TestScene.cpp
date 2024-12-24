@@ -120,12 +120,6 @@ void TestScene::Draw(){
 }
 
 void TestScene::CleanUp(){
-	modelBuilder_.reset();
-	uiEditor_.reset();
-	/*modelGround_.reset();*/
-	PrimitiveDrawer::GetInstance()->Finalize();
-	ParticleManager::GetInstance()->Finalize();
-	modelField_.reset();
 }
 
 void TestScene::ModelPreDraw(){
