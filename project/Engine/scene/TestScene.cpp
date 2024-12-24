@@ -58,8 +58,6 @@ void TestScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
-	
-
 }
 
 void TestScene::Update(){

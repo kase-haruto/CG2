@@ -24,8 +24,14 @@ void Enemy::Initialize(){
 	
 	//コライダー
 	BaseGameObject::Initialize();
+
 	BoxCollider::Initialize(model_->transform.scale);
 	
+	Collider::type_ = ColliderType::Type_Enemy;
+	Collider::targetType_ = 
+		ColliderType::Type_Player |
+		ColliderType::Type_PlayerAttack;
+
 	moveSpeed_ = 2.0f;
 }
 
@@ -50,7 +56,23 @@ void Enemy::Draw(){
 /////////////////////////////////////////////////////////////////////////////////////
 //					Collision
 /////////////////////////////////////////////////////////////////////////////////////
-void Enemy::OnCollisionEnter([[maybe_unused]]Collider* other){}
+void Enemy::OnCollisionEnter([[maybe_unused]]Collider* other){
+	
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		//////////////////////////////////////////////////////////////////
+		//				playerと衝突
+		//////////////////////////////////////////////////////////////////
+		if (other->GetType() == ColliderType::Type_Player){
+
+
+
+		}
+
+	}
+
+}
 
 void Enemy::OnCollisionStay([[maybe_unused]] Collider* other){}
 

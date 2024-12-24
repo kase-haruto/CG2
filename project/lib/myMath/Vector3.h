@@ -16,6 +16,8 @@ struct Vector3 final{
         return x * x + y * y + z * z;
     }
 
+    static Vector3 Cross(const Vector3& v0, const Vector3& v1);
+
     static float Dot(const Vector3& v1, const Vector3& v2){
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
