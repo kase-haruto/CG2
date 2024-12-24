@@ -38,7 +38,6 @@ private:
 	float targetAngle_ = 0;						// 振り向き用
 	Vector3 moveVelocity_ {};					// 移動速度
 
-
 private:
 
 	bool isAttacking_ = false; // 攻撃中フラグ

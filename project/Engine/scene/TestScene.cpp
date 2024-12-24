@@ -43,6 +43,11 @@ void TestScene::Initialize(){
 	player_->Initialize();
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 
+
+	//敵
+	enemy_ = std::make_unique<Enemy>("player");
+	enemy_->Initialize();
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +75,8 @@ void TestScene::Update(){
 
 	player_->Update();
 
+	enemy_->Update();
+
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	/*modelGround_->Update();*/
@@ -88,6 +95,8 @@ void TestScene::Draw(){
 	modelBuilder_->Draw();
 
 	player_->Draw();
+
+	enemy_->Draw();
 
 	/*modelGround_->Draw();*/
 

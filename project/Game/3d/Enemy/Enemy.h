@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../BaseGameObject.h"
+#include "../Base/Character.h"
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/physics/Shape.h"
 
 class Enemy:
-public BaseGameObject,public BoxCollider{
+public Character,public BoxCollider{
 
 public:
 	//===================================================================*/
