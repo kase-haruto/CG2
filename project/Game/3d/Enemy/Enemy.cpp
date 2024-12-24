@@ -61,9 +61,8 @@ void Enemy::OnCollisionExit([[maybe_unused]] Collider* other){}
 /////////////////////////////////////////////////////////////////////////////////////
 void Enemy::ShowGui(){
 #ifdef _DEBUG
-	std::string saveJsonPath = "gameobject/" + BaseGameObject::GetName();
 	if (ImGui::Button("save")){
-		JsonCoordinator::Save(BaseGameObject::GetName(), saveJsonPath);
+		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
 	}
 
 	ImGui::Separator();

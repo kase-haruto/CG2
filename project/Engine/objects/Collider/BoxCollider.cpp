@@ -23,7 +23,7 @@ void BoxCollider::Initialize(const Vector3& size){
 
 	jsonPath = "gameobject/" + GetName();
 
-	JsonCoordinator::Load(name_, jsonPath);
+	JsonCoordinator::LoadGroup(name_);
 
 }
 

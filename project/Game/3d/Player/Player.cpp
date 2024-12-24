@@ -33,7 +33,9 @@ void Player::Initialize(){
 	BaseGameObject::Initialize();
 	BoxCollider::Initialize(model_->transform.scale);
 
-	moveSpeed_ = 2.0f;
+	model_->transform.translate.z = -15.0f;
+
+	moveSpeed_ = 10.0f;
 
 }
 
@@ -91,7 +93,7 @@ void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
 void Player::ShowGui(){
 	std::string saveJsonPath = "gameobject/" + BaseGameObject::GetName();
 	if (ImGui::Button("save")){
-		JsonCoordinator::Save(BaseGameObject::GetName(), saveJsonPath);
+		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
 	}
 
 	ImGui::Separator();

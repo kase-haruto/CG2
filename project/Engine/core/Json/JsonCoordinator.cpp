@@ -1,140 +1,147 @@
 #include "JsonCoordinator.h"
+#include <externals/imgui/imgui.h>
 #include <iostream>
 
-#include <externals/imgui/imgui.h>
-
 
 //-------------------------------------------------------------------
-// ヘルパー関数: フルパスを構築
-//-------------------------------------------------------------------
-std::string JsonCoordinator::ConstructFullPath(const std::string& fileName, const std::optional<std::string>& parentPath){
-    std::string fullPath = baseDirectory_;
-    if (parentPath){
-        fullPath += *parentPath + "/";
-    }
-    fullPath += fileName + ".json";
-    return fullPath;
-}
-
-//-------------------------------------------------------------------
-// ヘルパー関数: ディレクトリを確保
+// ディレクトリ作成
 //-------------------------------------------------------------------
 void JsonCoordinator::EnsureDirectoryExists(const std::string& path){
-    std::filesystem::create_directories(std::filesystem::path(path).parent_path());
+	std::filesystem::create_directories(std::filesystem::path(path).parent_path());
 }
 
 //-------------------------------------------------------------------
-// 値を設定する
+// ファイルパス生成 (必要に応じてカスタマイズ)
+//-------------------------------------------------------------------
+std::string JsonCoordinator::MakeFilePath(const std::string& group){
+	// グループ名をファイル名にしてみる（例: "resources/json/GroupA/GroupA.json"）
+	s_baseDirectory_ = "resources/json/";
+	return s_baseDirectory_ + group + "/" + group + ".json";
+}
+
+//-------------------------------------------------------------------
+// 値を設定
 //-------------------------------------------------------------------
 bool JsonCoordinator::SetValue(const std::string& group, const std::string& key, AdjustableValue value){
-    if (!data_.contains(group) || !data_[group].contains(key)){
-        return false; // 未登録のキー
-    }
+	// グループ or キーが未登録なら失敗
+	if (!s_groupData_.count(group)){
+		return false;
+	}
+	if (!s_groupData_[group].contains(key)){
+		return false;
+	}
 
-    data_[group][key] = value;
+	// データを上書き
+	s_groupData_[group][key] = value;
 
-    // バインディングが存在する場合はコールバックを呼び出す
-    if (bindings_.count(group) && bindings_[group].count(key)){
-        bindings_[group][key](value);
-    }
-    return true;
+	// バインドがあれば反映
+	if (s_bindings_.count(group) && s_bindings_[group].count(key)){
+		s_bindings_[group][key](value);
+	}
+	return true;
 }
 
 //-------------------------------------------------------------------
-// 値を取得する
+// 値を取得
 //-------------------------------------------------------------------
 std::optional<AdjustableValue> JsonCoordinator::GetValue(const std::string& group, const std::string& key){
-    if (data_.contains(group) && data_[group].contains(key)){
-        return data_[group][key].get<AdjustableValue>();
-    }
-    return std::nullopt; // エラー時は無効な値を返す
+	if (s_groupData_.count(group) && s_groupData_[group].contains(key)){
+		return s_groupData_[group][key].get<AdjustableValue>();
+	}
+	return std::nullopt;
 }
 
 //-------------------------------------------------------------------
-// JSONとして保存
+// グループだけを保存（ファイル分割方式）
 //-------------------------------------------------------------------
-bool JsonCoordinator::Save(const std::string& fileName, std::optional<std::string> parentPath){
-    std::string fullPath = ConstructFullPath(fileName, parentPath);
-    EnsureDirectoryExists(fullPath);
+bool JsonCoordinator::SaveGroup(const std::string& group){
+	if (!s_groupData_.count(group)){
+		// グループが何も登録されていない
+		return false;
+	}
 
-    std::ofstream file(fullPath);
-    if (!file.is_open()){
-        return false; // 保存に失敗
-    }
-    file << data_.dump(4); // インデントを 4 に設定
-    file.close();
+	std::string path = MakeFilePath(group);
+	EnsureDirectoryExists(path);
 
-    return true; // 成功
+	std::ofstream ofs(path);
+	if (!ofs.is_open()){
+		return false;
+	}
+
+	// グループ分の JSON を書き込む
+	ofs << s_groupData_[group].dump(4);
+	ofs.close();
+	return true;
 }
 
 //-------------------------------------------------------------------
-// JSONからロード
+// グループだけをロード（ファイル分割方式）
 //-------------------------------------------------------------------
-bool JsonCoordinator::Load(const std::string& fileName, std::optional<std::string> parentPath){
-    std::string fullPath = ConstructFullPath(fileName, parentPath);
+bool JsonCoordinator::LoadGroup(const std::string& group){
+	std::string path = MakeFilePath(group);
+	if (!std::filesystem::exists(path)){
+		// もしファイルが無い場合は、新規として保存して終わる
+		// （あるいは失敗として return false;）
+		SaveGroup(group);
+		return false;
+	}
 
-    if (!std::filesystem::exists(fullPath)){
-        Save(fileName, parentPath); // 新規作成
-        return false;
-    }
+	std::ifstream ifs(path);
+	if (!ifs.is_open()){
+		return false;
+	}
 
-    std::ifstream file(fullPath);
-    if (!file.is_open()){
-        return false; // ロード失敗
-    }
+	json j;
+	ifs >> j;
+	ifs.close();
 
-    json jsonData;
-    file >> jsonData;
-    file.close();
+	// s_groupData_[group] に読み込んだデータを丸ごと上書き
+	s_groupData_[group] = j;
 
-    data_ = jsonData;
+	// バインドされている変数に反映
+	for (auto&& [key, val] : j.items()){
+		if (s_bindings_.count(group) && s_bindings_[group].count(key)){
+			s_bindings_[group][key](val.get<AdjustableValue>());
+		}
+	}
 
-    // バインドされている変数に反映
-    for (const auto& [group, items] : data_.items()){
-        for (const auto& [key, value] : items.items()){
-            if (bindings_.count(group) && bindings_[group].count(key)){
-                bindings_[group][key](value.get<AdjustableValue>());
-            }
-        }
-    }
-
-    return true; // 正常終了
+	return true;
 }
 
 //-------------------------------------------------------------------
-// 個別アイテムをレンダリング
+// グループ内アイテムをImGuiでレンダリング
 //-------------------------------------------------------------------
 void JsonCoordinator::RenderAdjustableItem(const std::string& group, const std::string& key){
-    if (auto value = GetValue(group, key)){
-        if (std::holds_alternative<int>(*value)){
-            int val = std::get<int>(*value);
-            if (ImGui::InputInt(key.c_str(), &val)){
-                SetValue(group, key, val);
-            }
-        } else if (std::holds_alternative<float>(*value)){
-            float val = std::get<float>(*value);
-            if (ImGui::InputFloat(key.c_str(), &val)){
-                SetValue(group, key, val);
-            }
-        } else if (std::holds_alternative<Vector3>(*value)){
-            Vector3 v = std::get<Vector3>(*value);
-            if (ImGui::DragFloat3(key.c_str(), &v.x, 0.01f)){
-                SetValue(group, key, v);
-            }
-        }
-    }
+	if (auto opt = GetValue(group, key)){
+		auto& value = *opt;
+		if (std::holds_alternative<int>(value)){
+			int val = std::get<int>(value);
+			if (ImGui::InputInt(key.c_str(), &val)){
+				SetValue(group, key, val);
+			}
+		} else if (std::holds_alternative<float>(value)){
+			float val = std::get<float>(value);
+			if (ImGui::InputFloat(key.c_str(), &val)){
+				SetValue(group, key, val);
+			}
+		} else if (std::holds_alternative<Vector3>(value)){
+			Vector3 v = std::get<Vector3>(value);
+			if (ImGui::DragFloat3(key.c_str(), &v.x, 0.01f)){
+				SetValue(group, key, v);
+			}
+		}
+	}
 }
 
 //-------------------------------------------------------------------
 // グループ内のすべての項目をレンダリング
 //-------------------------------------------------------------------
 void JsonCoordinator::RenderGroupUI(const std::string& group){
-    if (!data_.contains(group)){
-        ImGui::Text("No data for group: %s", group.c_str());
-        return;
-    }
-
-    for (const auto& [key, value] : data_[group].items()){
-        RenderAdjustableItem(group, key);
-    }
+	if (!s_groupData_.count(group)){
+		ImGui::Text("No data for group: %s", group.c_str());
+		return;
+	}
+	for (auto&& [key, val] : s_groupData_[group].items()){
+		RenderAdjustableItem(group, key);
+	}
 }
