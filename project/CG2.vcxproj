@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Game\3d\Enemy\Enemy.cpp" />
@@ -155,7 +156,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\shaders\ShaderCompiler.cpp" />
     <ClCompile Include="Engine\graphics\SrvLocator.cpp" />
     <ClCompile Include="Engine\graphics\ViewProjection.cpp" />
-    <ClCompile Include="Engine\objects\Model.cpp" />
+    <ClCompile Include="Engine\objects\Model\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
     <ClCompile Include="Engine\objects\ModelManager.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
@@ -212,6 +213,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
@@ -257,7 +259,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\SrvLocator.h" />
     <ClInclude Include="Engine\graphics\VertexData.h" />
     <ClInclude Include="Engine\graphics\ViewProjection.h" />
-    <ClInclude Include="Engine\objects\Model.h" />
+    <ClInclude Include="Engine\objects\Model\Model.h" />
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />
     <ClInclude Include="Engine\objects\ModelManager.h" />

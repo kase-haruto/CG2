@@ -4,7 +4,7 @@
 ///オブジェクト関連///
 #include "engine/objects/Sprite.h"
 #include "engine/physics/DirectionalLight.h"
-#include "engine/objects/Model.h"
+#include "engine/objects/Model/Model.h"
 #include "engine/physics/Sphere.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"

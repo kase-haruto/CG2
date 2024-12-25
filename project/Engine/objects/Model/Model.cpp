@@ -1,4 +1,4 @@
-#include "AnimationModel.h"
+﻿#include "Model.h"
 
 #include "engine/objects/ModelData.h"
 #include "engine/graphics/Material.h"
@@ -19,50 +19,15 @@
 
 #include "lib/myfunc/MyFunc.h" // 必要に応じて
 
-AnimationModel::AnimationModel(const std::string& fileName){
+Model::Model(const std::string& fileName){
     Create(fileName);
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//          モデル生成
-//////////////////////////////////////////////////////////////////////////////////////////////
-void AnimationModel::Create(const std::string& filename){
-    // まずは初期化
-    Initialize();
-
-    // モデルデータのロード(既に存在すればキャッシュから取得)
-    modelData_ = ModelManager::LoadModel(filename);
-
-    // 頂点バッファとインデックスバッファを取得してビューを作成
-    auto vertexResource = ModelManager::GetVertexResource(filename);
-    auto indexResource = ModelManager::GetIndexResource(filename);
-
-    vertexBufferView_.BufferLocation = vertexResource->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-    indexBufferView_.BufferLocation = indexResource->GetGPUVirtualAddress();
-    indexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(uint32_t) * modelData_->indices.size());
-    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-    // テクスチャを読み込む
-    handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+Model::~Model(){
+    // 必要があれば後処理
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//          アニメーションの再生
-//////////////////////////////////////////////////////////////////////////////////////////////
-//void AnimationModel::PlayAnimation(){
-//    animationTime_ += deltaTime;
-//    animationTime_ = std::fmod(animationTime_, animation_.duration);//最後まで行ったら最初からリピートする
-//	NodeAnimation& nodeAnimation = animation_.nodeAnimations[];
-//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//         初期化・更新・描画
-//////////////////////////////////////////////////////////////////////////////////////////////
-void AnimationModel::Initialize(){
+void Model::Initialize(){
     // Device, CommandListの取得
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
@@ -85,7 +50,30 @@ void AnimationModel::Initialize(){
     Map();
 }
 
-void AnimationModel::Update(){
+void Model::Create(const std::string& filename){
+    // まずは初期化
+    Initialize();
+
+    // モデルデータのロード(既に存在すればキャッシュから取得)
+    modelData_ = ModelManager::LoadModel(filename);
+
+    // 頂点バッファとインデックスバッファを取得してビューを作成
+    auto vertexResource = ModelManager::GetVertexResource(filename);
+    auto indexResource = ModelManager::GetIndexResource(filename);
+
+    vertexBufferView_.BufferLocation = vertexResource->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+    indexBufferView_.BufferLocation = indexResource->GetGPUVirtualAddress();
+    indexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(uint32_t) * modelData_->indices.size());
+    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+
+    // テクスチャを読み込む
+    handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+}
+
+void Model::Update(){
     // UV transform を行列化 (例: スケール→Z回転→平行移動)
     Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
@@ -106,37 +94,20 @@ void AnimationModel::Update(){
     matrixData_->WVP = worldViewProjectionMatrix;
 }
 
-
-void AnimationModel::Draw(){
-    // ルートシグネチャ・パイプラインをセット
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList_->SetPipelineState(pipelineState_.Get());
-
-    // 頂点バッファ/インデックスバッファをセット
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    commandList_->IASetIndexBuffer(&indexBufferView_);
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // マテリアル & 行列バッファをセット
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-    commandList_->SetGraphicsRootDescriptorTable(3, handle_);
-
-    // 描画
-    commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
-}
-
-void AnimationModel::UpdateMatrix(){
+void Model::UpdateMatrix(){
     // もし外部から行列のみを更新したい場合などに呼ばれる
     Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//         ui/ImGui
-//////////////////////////////////////////////////////////////////////////////////////////////
-void AnimationModel::ShowImGuiInterface(){
+void Model::Map(){
+    // マテリアルと行列のマッピング
+    MaterialBufferMap();
+    MatrixBufferMap();
+}
+
+void Model::ShowImGuiInterface(){
     // UV Transform用の行列を再計算(念のため)
     Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
@@ -168,26 +139,37 @@ void AnimationModel::ShowImGuiInterface(){
 #endif
 }
 
+void Model::Draw(){
+    // ルートシグネチャ・パイプラインをセット
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList_->SetPipelineState(pipelineState_.Get());
+
+    // 頂点バッファ/インデックスバッファをセット
+    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    commandList_->IASetIndexBuffer(&indexBufferView_);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // マテリアル & 行列バッファをセット
+    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+    commandList_->SetGraphicsRootDescriptorTable(3, handle_);
+
+    // 描画
+    commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
+}
 
 //==============================================================================
 // バッファ生成/マッピング
 //==============================================================================
-
-void AnimationModel::Map(){
-    // マテリアルと行列のマッピング
-    MaterialBufferMap();
-    MatrixBufferMap();
-}
-
-void AnimationModel::CreateMaterialBuffer(){
+void Model::CreateMaterialBuffer(){
     materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
 }
 
-void AnimationModel::CreateMatrixBuffer(){
+void Model::CreateMatrixBuffer(){
     wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 }
 
-void AnimationModel::MaterialBufferMap(){
+void Model::MaterialBufferMap(){
     materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     materialData_->enableLighting = HalfLambert;  // デフォルト
@@ -196,7 +178,7 @@ void AnimationModel::MaterialBufferMap(){
     materialResource_->Unmap(0, nullptr);
 }
 
-void AnimationModel::MatrixBufferMap(){
+void Model::MatrixBufferMap(){
     wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
     matrixData_->WVP = Matrix4x4::MakeIdentity();
     matrixData_->world = Matrix4x4::MakeIdentity();
