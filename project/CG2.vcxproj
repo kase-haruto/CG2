@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Game\3d\Enemy\Enemy.cpp" />
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
@@ -211,6 +212,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
+    <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Game\3d\Enemy\Enemy.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />

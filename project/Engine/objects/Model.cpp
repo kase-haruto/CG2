@@ -162,6 +162,3 @@ void Model::MatrixBufferMap(){
     wvpResource_->Unmap(0, nullptr);
 }
 
-void Model::SetViewProjection(const ViewProjection* viewPro){
-    viewProjection_ = viewPro;
-}

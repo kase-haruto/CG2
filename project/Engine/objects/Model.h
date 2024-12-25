@@ -4,7 +4,6 @@
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
 #include "lib/myMath/Vector4.h"
-#include "Engine/graphics/ViewProjection.h"
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -46,7 +45,6 @@ public:
     /// </summary>
     void Draw();
 
-    void SetViewProjection(const ViewProjection* viewPro);
 
     void SetPos(const Vector3& pos){ transform.translate = pos; }
 
@@ -65,7 +63,7 @@ private:
     void MaterialBufferMap();
     void MatrixBufferMap();
 
-private:
+protected:
     /// DirectX 関連
     Microsoft::WRL::ComPtr<ID3D12Device> device_;
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
@@ -102,6 +100,5 @@ private:
     static const std::string directoryPath_;
 
 public:
-    const ViewProjection* viewProjection_;
 
 };

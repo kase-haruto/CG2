@@ -11,7 +11,7 @@
 #include"engine/graphics/VertexData.h"
 #include"engine/graphics/Material.h"
 #include"engine/physics/AABB.h"
-
+#include "Engine/objects/Animation/AnimationStruct.h"
 /* c++ */
 #include <list>
 #include <d3d12.h>
@@ -51,6 +51,8 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename);
 
 DirectX::ScratchImage LoadTextureImage(const std::string& filePath);
 
