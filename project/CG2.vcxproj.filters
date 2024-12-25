@@ -389,6 +389,7 @@
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\scene\TitleScene.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
+    <ClCompile Include="lib\myMath\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -617,6 +618,7 @@
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\scene\TitleScene.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
+    <ClInclude Include="lib\myMath\Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
