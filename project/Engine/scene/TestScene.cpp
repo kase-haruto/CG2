@@ -10,6 +10,8 @@
 
 #include "Engine/core/DirectX/DxCore.h"
 
+#include "lib/myFunc/MyFunc.h"
+
 TestScene::TestScene(){}
 
 TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){
@@ -18,6 +20,7 @@ TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){
 }
 
 void TestScene::Initialize(){
+	CameraManager::Initialize();
 	///=========================
 	/// グラフィック関連
 	///=========================
@@ -29,24 +32,9 @@ void TestScene::Initialize(){
 
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	////地面
-	/*modelGround_ = std::make_unique<Model>("ground");
-	modelGround_->SetViewProjection(viewProjection_.get());
-	modelGround_->SetSize({100.0f,0.0f,100.0f});
-	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
-
 	modelField_ = std::make_unique<Model>("ground");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
-
-	player_ = std::make_unique<Player>("player");
-	player_->Initialize();
-	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
-
-
-	//敵
-	enemy_ = std::make_unique<Enemy>("player");
-	enemy_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -63,6 +51,33 @@ void TestScene::Initialize(){
 void TestScene::Update(){
 	CameraManager::Update();
 
+#ifdef _DEBUG
+	ImGui::Begin("debugWindow");
+	
+	Quaternion rotate0 = Quaternion::MakeRotateAxisQuaternion({0.71f,0.71f,0.0f}, 0.3f);
+	Quaternion rotate1 = {-rotate0.x,-rotate0.y,-rotate0.z,-rotate0.w};
+
+	Quaternion interpolate0 = Quaternion::Slerp(rotate0, rotate1, 0.0f);
+	Quaternion interpolate1 = Quaternion::Slerp(rotate0, rotate1, 0.3f);
+	Quaternion interpolate2 = Quaternion::Slerp(rotate0, rotate1, 0.5f);
+	Quaternion interpolate3 = Quaternion::Slerp(rotate0, rotate1, 0.7f);
+	Quaternion interpolate4 = Quaternion::Slerp(rotate0, rotate1, 1.0f);
+
+	// オリジナルのクォータニオンを表示
+	ImGui::Text("Rotate0: [%.2f, %.2f, %.2f, %.2f]", rotate0.x, rotate0.y, rotate0.z, rotate0.w);
+	ImGui::Text("Rotate1: [%.2f, %.2f, %.2f, %.2f]", rotate1.x, rotate1.y, rotate1.z, rotate1.w);
+
+	// 補間結果を表示
+	ImGui::Text("Interpolate (t=0.0): [%.2f, %.2f, %.2f, %.2f]", interpolate0.x, interpolate0.y, interpolate0.z, interpolate0.w);
+	ImGui::Text("Interpolate (t=0.3): [%.2f, %.2f, %.2f, %.2f]", interpolate1.x, interpolate1.y, interpolate1.z, interpolate1.w);
+	ImGui::Text("Interpolate (t=0.5): [%.2f, %.2f, %.2f, %.2f]", interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
+	ImGui::Text("Interpolate (t=0.7): [%.2f, %.2f, %.2f, %.2f]", interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
+	ImGui::Text("Interpolate (t=1.0): [%.2f, %.2f, %.2f, %.2f]", interpolate4.x, interpolate4.y, interpolate4.z, interpolate4.w);
+
+	ImGui::End();
+#endif // _DEBUG
+
+
 	//uiの更新
 	uiEditor_->Update();
 
@@ -71,13 +86,8 @@ void TestScene::Update(){
 
 	modelField_->Update();
 
-	player_->Update();
-
-	enemy_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
-
-	/*modelGround_->Update();*/
 
 }
 
@@ -91,12 +101,6 @@ void TestScene::Draw(){
 
 	//モデルの描画
 	modelBuilder_->Draw();
-
-	player_->Draw();
-
-	enemy_->Draw();
-
-	/*modelGround_->Draw();*/
 
 	//地面の描画
 	modelField_->Draw();

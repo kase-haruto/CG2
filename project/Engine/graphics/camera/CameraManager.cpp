@@ -15,14 +15,17 @@ CameraManager::CameraManager(){
 }
 
 void CameraManager::Initialize(){
-	GetInstance();//インスタンスがない場合作成	
+	GetInstance();//インスタンスがない場合作成
+	instance_->type_ = Type_Normal;
 }
 
 void CameraManager::Update(){
 	instance_->camera3d_->Update();
 	instance_->followCamera_->Update();
 
-	instance_->camera3d_->SetCamera(instance_->followCamera_->GetTranslate(), instance_->followCamera_->GetRotate());
+	if (instance_->type_ == Type_Follow){
+		instance_->camera3d_->SetCamera(instance_->followCamera_->GetTranslate(), instance_->followCamera_->GetRotate());
+	}
 }
 
 void CameraManager::Finalize(){

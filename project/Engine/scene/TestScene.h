@@ -22,6 +22,7 @@
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/objects/particle/TornadoParticle.h"
+#include "lib/myMath/Quaternion.h"
 
 /* c++ */
 #include <vector>
@@ -92,6 +93,10 @@ private:
 
 	std::unique_ptr<Player> player_ = nullptr;
 	std::unique_ptr<Enemy> enemy_ = nullptr;
+
+
+    Quaternion q1 = {2.0f,3.0f,4.0f,1.0f};
+    Quaternion q2 = {1.0f,3.0f,5.0f,2.0f};
 
     ///=========================
     /// particle

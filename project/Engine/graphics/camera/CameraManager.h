@@ -6,6 +6,12 @@
 //* c++ *//
 #include <memory>
 
+enum CameraType{
+    Type_Normal,
+    Type_Follow,
+    Type_Debug,
+};
+
 class CameraManager{
 public:
     // インスタンスを取得する関数
@@ -32,7 +38,7 @@ private:
     //					private member variable
     //===================================================================*/
     static CameraManager* instance_;                 // クラスのインスタンス
-
+    CameraType type_ = Type_Normal;
 
     /* 管理しているカメラ =======================*/
     std::unique_ptr<Camera3d> camera3d_ = nullptr;   // 3dオブジェクトのデフォルトカメラ
@@ -44,6 +50,11 @@ private:
 public:
     static Camera3d* GetCamera3d(){ return instance_->camera3d_.get(); }
 
-    void SetFollowTarget(const Transform* target){ followCamera_->SetTarget(target); }
+    void SetFollowTarget(const Transform* target){ 
+        followCamera_->SetTarget(target); 
+        type_ = Type_Follow;
+    }
     const Vector3& GetFollowRotate()const{ return followCamera_->GetRotate(); }
+
+    void SetType(const CameraType type){ type_ = type; }
 };
