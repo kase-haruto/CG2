@@ -83,7 +83,6 @@ void System::BeginFrame(){
 
 void System::EndFrame(){
     dxCore_->RenderEngineUI();
-
     // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
 

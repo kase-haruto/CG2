@@ -28,14 +28,6 @@ void Input::Initialize(){
 
 void Input::Update(){
 
-#ifdef _DEBUG
-	ImGui::Begin("input");
-	ImGui::Text("Left Stick: { %4.1f, %4.1f }", GetLeftStick().x, GetLeftStick().y);
-	ImGui::Text("Right Stick: { %4.1f, %4.1f }", GetRightStick().x, GetRightStick().y);
-	ImGui::End();
-#endif // _DEBUG
-
-
 	//キーボード更新
 	instance_->KeyboardUpdate();
 	instance_->MouseUpdate();

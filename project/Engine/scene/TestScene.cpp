@@ -54,29 +54,7 @@ void TestScene::Update(){
 	CameraManager::Update();
 
 #ifdef _DEBUG
-	ImGui::Begin("debugWindow");
-	
-	Quaternion rotate0 = Quaternion::MakeRotateAxisQuaternion({0.71f,0.71f,0.0f}, 0.3f);
-	Quaternion rotate1 = {-rotate0.x,-rotate0.y,-rotate0.z,-rotate0.w};
 
-	Quaternion interpolate0 = Quaternion::Slerp(rotate0, rotate1, 0.0f);
-	Quaternion interpolate1 = Quaternion::Slerp(rotate0, rotate1, 0.3f);
-	Quaternion interpolate2 = Quaternion::Slerp(rotate0, rotate1, 0.5f);
-	Quaternion interpolate3 = Quaternion::Slerp(rotate0, rotate1, 0.7f);
-	Quaternion interpolate4 = Quaternion::Slerp(rotate0, rotate1, 1.0f);
-
-	// オリジナルのクォータニオンを表示
-	ImGui::Text("Rotate0: [%.2f, %.2f, %.2f, %.2f]", rotate0.x, rotate0.y, rotate0.z, rotate0.w);
-	ImGui::Text("Rotate1: [%.2f, %.2f, %.2f, %.2f]", rotate1.x, rotate1.y, rotate1.z, rotate1.w);
-
-	// 補間結果を表示
-	ImGui::Text("Interpolate (t=0.0): [%.2f, %.2f, %.2f, %.2f]", interpolate0.x, interpolate0.y, interpolate0.z, interpolate0.w);
-	ImGui::Text("Interpolate (t=0.3): [%.2f, %.2f, %.2f, %.2f]", interpolate1.x, interpolate1.y, interpolate1.z, interpolate1.w);
-	ImGui::Text("Interpolate (t=0.5): [%.2f, %.2f, %.2f, %.2f]", interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
-	ImGui::Text("Interpolate (t=0.7): [%.2f, %.2f, %.2f, %.2f]", interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
-	ImGui::Text("Interpolate (t=1.0): [%.2f, %.2f, %.2f, %.2f]", interpolate4.x, interpolate4.y, interpolate4.z, interpolate4.w);
-
-	ImGui::End();
 #endif // _DEBUG
 
 
