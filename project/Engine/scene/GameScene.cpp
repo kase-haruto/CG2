@@ -35,17 +35,17 @@ void GameScene::Initialize(){
 	modelGround_->SetSize({100.0f,0.0f,100.0f});
 	modelGround_->SetUvScale({30.0f,30.0f,0.0f});*/
 
-	modelField_ = std::make_unique<Model>("ground");
+	modelField_ = std::make_unique<Model>("ground.obj");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
-	player_ = std::make_unique<Player>("player");
+	player_ = std::make_unique<Player>("player.obj");
 	player_->Initialize();
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 
 
 	//敵
-	enemy_ = std::make_unique<Enemy>("player");
+	enemy_ = std::make_unique<Enemy>("enemy.gltf");
 	enemy_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////

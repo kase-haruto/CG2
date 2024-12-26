@@ -3,11 +3,10 @@
 
 #include "AnimationStruct.h"
 
-class AnimationModel
-    : public BaseModel{
+class AnimationModel : public BaseModel{
 public:
     //===================================================================*/
-	//                   public func
+    //                   public func
     //===================================================================*/
     AnimationModel() = default;
     AnimationModel(const std::string& fileName);
@@ -20,7 +19,6 @@ public:
     void Create(const std::string& filename) override;
     void Update() override;
     void Draw() override;
-
 
     void UpdateMatrix() override;
     void Map() override;
@@ -35,9 +33,12 @@ public:
     void SetColor(const Vector4& color) override{ RGBa = color; }
     const Vector4& GetColor() const override{ return RGBa; }
 
+    // （もしUIなどでノード名の一覧を見たいなら）
+    std::vector<std::string> GetAnimationNodeNames() const;
+
 private:
     //===================================================================*/
-	//                   private func
+    //                   private func
     //===================================================================*/
     //============
     // バッファ生成/マップの実装
@@ -47,14 +48,17 @@ private:
     void MaterialBufferMap() override;
     void MatrixBufferMap() override;
 
-	//* animation *//
-	void PlayAnimation();
+    // アニメーションを再生する
+    void PlayAnimation();
+
+	Quaternion CalculateValue(const AnimationCurve<Quaternion>& curve, float time);
+	Vector3 CalculateValue(const AnimationCurve<Vector3>& curve, float time);
 
 private:
     //===================================================================*/
-	//                    private variables
+    //                    private variables
     //===================================================================*/
-	float animationTime_ = 0.0f;    //<アニメーションの経過時間
-	Matrix4x4 animationMatrix_;	    //<アニメーション行列
-	Animation animation_;           //<アニメーションデータ
+    float animationTime_ = 0.0f;    //<アニメーションの経過時間
+    Matrix4x4 animationMatrix_;     //<アニメーション行列（必要に応じて）
+    Animation animation_;           //<アニメーションデータ
 };

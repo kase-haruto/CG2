@@ -335,7 +335,10 @@ float LerpShortAngle(float a, float b, float t){
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename){
 	Animation animation;// アニメーションデータ
 	Assimp::Importer importer;
-	std::string filePath = directoryPath + "/" + filename;
+	std::string filePath = directoryPath + "/"
+		+ filename.substr(0, filename.find_last_of('.')) + "/"
+		+ filename;
+
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 	assert(scene->mNumAnimations);// アニメーションがない場合はアサート
 	aiAnimation* animationAssimp = scene->mAnimations[0];// 最初のアニメーションを取得

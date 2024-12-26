@@ -3,12 +3,22 @@
 /* engine */
 #include"../graphics/VertexData.h"
 #include"../graphics/Material.h"
+#include"../objects/Animation/AnimationStruct.h"
 
 /* c++ */
 #include<vector>
 
 struct ModelData{
-    std::vector<VertexData> vertices;    // 頂点データのリスト
-    std::vector<uint32_t> indices;       // インデックスデータのリスト
-    MaterialData material;               // マテリアルデータ
+    std::vector<VertexData> vertices;
+    std::vector<uint32_t> indices;
+
+    MaterialData material;
+
+    //-----------------------------------------------------------
+    // アニメーション情報 (単体例)
+    //-----------------------------------------------------------
+    Animation animation;
+
+    // あるいは複数アニメーション対応例:
+    // std::vector<Animation> animations;
 };

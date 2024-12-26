@@ -3,37 +3,44 @@
 #include "lib/myMath/Vector3.h"
 #include "lib/myMath/Quaternion.h"
 
-//*c++*//
+// C++
 #include <vector>
 #include <map>
+#include <string>
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//					keyframe
+//          keyframe
 /////////////////////////////////////////////////////////////////////////////////////////
 template <typename tValue>
 struct Keyframe{
-	float time;
-	tValue value;
+    float time;     // アニメーション時間(秒)
+    tValue value;   // 補間対象の値 (Vector3 or Quaternion)
 };
 using KeyframeQuaternion = Keyframe<Quaternion>;
 using KeyframeVector3 = Keyframe<Vector3>;
 
-
 /////////////////////////////////////////////////////////////////////////////////////////
-//					NodeAnimation
+//          AnimationCurve
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename tValue>
 struct AnimationCurve{
-	std::vector<Keyframe<tValue>>keyframes;
+    std::vector<Keyframe<tValue>> keyframes;
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//          NodeAnimation
+/////////////////////////////////////////////////////////////////////////////////////////
 struct NodeAnimation{
-	AnimationCurve<Vector3>translate;
-	AnimationCurve<Quaternion>rotate;
-	AnimationCurve<Vector3>scale;
+    AnimationCurve<Vector3>     translate;  // 平行移動
+    AnimationCurve<Quaternion>  rotate;     // 回転
+    AnimationCurve<Vector3>     scale;      // スケーリング
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//          Animation
+/////////////////////////////////////////////////////////////////////////////////////////
 struct Animation{
-	float duration; //アニメーションの尺
-	std::map<std::string, NodeAnimation>nodeAnimations;
+    float duration = 0.0f;  // アニメーション全体の尺(秒)
+    // ※本来は TicksPerSecond など、時間単位の情報もあると便利
+    std::map<std::string, NodeAnimation> nodeAnimations;
 };
