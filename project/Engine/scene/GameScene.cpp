@@ -18,6 +18,7 @@ GameScene::GameScene(DxCore* dxCore) : IScene(dxCore){
 }
 
 void GameScene::Initialize(){
+
 	///=========================
 	/// グラフィック関連
 	///=========================

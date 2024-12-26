@@ -7,7 +7,7 @@
 
 #include <sstream> 
 
-void BoxCollider::Initialize(const Vector3& size){
+void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 
 	if (name_.empty()){
 		std::stringstream ss;
@@ -19,7 +19,7 @@ void BoxCollider::Initialize(const Vector3& size){
 
 	collisionShape_ = shape_;
 
-	shape_.size = size;
+	//shape_.size = size;
 
 	jsonPath = "gameobject/" + GetName();
 

@@ -14,12 +14,15 @@ SceneObjectManager* SceneObjectManager::GetInstance(){
 //------------------------------------------------------------------*//
 void SceneObjectManager::ClearAllObject(){
 
-	//すべてのオブジェクトを削除
-	for (auto& object : allSceneObjects_){
-		delete object;
-	}
 	allSceneObjects_.clear();
 
+}
+
+void SceneObjectManager::ClearGameObjects(){
+	auto it = std::remove_if(allSceneObjects_.begin(), allSceneObjects_.end(), [] (SceneObject* obj){
+		return obj->GetObjectType() == ObjectType::GameObject;
+							 });
+	allSceneObjects_.erase(it, allSceneObjects_.end());
 }
 
 //------------------------------------------------------------------*//

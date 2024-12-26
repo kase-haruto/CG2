@@ -82,7 +82,10 @@ void Enemy::OnCollisionExit([[maybe_unused]] Collider* other){}
 //					ui/ImGui
 /////////////////////////////////////////////////////////////////////////////////////
 void Enemy::ShowGui(){
+
 #ifdef _DEBUG
+	SceneObject::ShowGui();
+
 	if (ImGui::Button("save")){
 		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
 	}

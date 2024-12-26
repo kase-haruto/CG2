@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
@@ -184,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
+    <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -213,6 +215,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
@@ -291,6 +294,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\UI\HierarchyPanel.h" />
     <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
+    <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />

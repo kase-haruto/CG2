@@ -9,6 +9,11 @@
 //c++
 #include <numbers>
 
+FollowCamera::FollowCamera()
+:BaseCamera(){
+	SetName("FollowCamera", ObjectType::Camera);
+}
+
 void FollowCamera::Initialize(){}
 
 void FollowCamera::Update(){
@@ -19,17 +24,15 @@ void FollowCamera::Update(){
 	//* 旋回
 	Turning();
 
-	//* 行列の更新
-	UpdateMatrix();
-
+	BaseCamera::Update();
 }
 
 Vector3 FollowCamera::CalculateOffset(){
 	Vector3 result = offset;
 	//カメラの角度から回転行列を計算
-	Matrix4x4 matRotateX = MakeRotateXMatrix(rotation_.x);
-	Matrix4x4 matRotateY = MakeRotateYMatrix(rotation_.y);
-	Matrix4x4 matRotateZ = MakeRotateZMatrix(rotation_.z);
+	Matrix4x4 matRotateX = MakeRotateXMatrix(transform_.rotate.x);
+	Matrix4x4 matRotateY = MakeRotateYMatrix(transform_.rotate.y);
+	Matrix4x4 matRotateZ = MakeRotateZMatrix(transform_.rotate.z);
 	Matrix4x4 matRotate = Matrix4x4::Multiply(Matrix4x4::Multiply(matRotateX, matRotateY), matRotateZ);
 	result = TransformNormal(result, matRotate);
 	return result;
@@ -49,7 +52,7 @@ void FollowCamera::Turning(){
 	destinationAngle_.x = std::clamp(destinationAngle_.x, -maxVerticalAngle, maxVerticalAngle);
 
 	// 水平方向および垂直方向の回転をスムーズに補間
-	rotation_.y = LerpShortAngle(rotation_.y, destinationAngle_.y, 0.1f);
+	transform_.rotate.y = LerpShortAngle(transform_.rotate.y, destinationAngle_.y, 0.1f);
 
 }
 
@@ -61,28 +64,29 @@ void FollowCamera::Adulation(){
 
 		Vector3 cameraOffset = CalculateOffset();
 		//座標をコピーしてオフセット分ずらす
-		translation_ = interTarget_ + cameraOffset;
+		transform_.translate = interTarget_ + cameraOffset;
 	}
 
 }
 
-
 void FollowCamera::UpdateMatrix(){
 	// 回転行列の作成
-	rotateMatrix_ = EulerToMatrix(rotation_);
+	rotateMatrix_ = EulerToMatrix(transform_.rotate);
 
 	// ワールド行列の初期化
-	worldMat_ = Matrix4x4::MakeIdentity();
+	worldMatrix_ = Matrix4x4::MakeIdentity();
 
 	// 平行移動行列の作成
-	Matrix4x4 translateMatrix = MakeTranslateMatrix(translation_);
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(transform_.translate);
 
 	// 回転と平行移動を適用
-	worldMat_ = Matrix4x4::Multiply(rotateMatrix_, translateMatrix);
+	worldMatrix_ = Matrix4x4::Multiply(rotateMatrix_, translateMatrix);
 
 	// ビュー行列の計算（カメラのワールド行列の逆行列）
-	Matrix4x4 viewMatrix = Matrix4x4::Inverse(worldMat_);
+	Matrix4x4 viewMatrix = Matrix4x4::Inverse(worldMatrix_);
+
+	projectionMatrix_ = MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_);
 
 	// ビュー行列とプロジェクション行列の掛け算
-	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix, CameraManager::GetInstance()->GetCamera3d()->GetProjectionMatrix());
+	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix, projectionMatrix_);
 }

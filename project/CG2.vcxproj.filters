@@ -392,6 +392,8 @@
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
+    <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
+    <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -624,6 +626,8 @@
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
+    <ClInclude Include="Engine\graphics\camera\ICamera.h" />
+    <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
