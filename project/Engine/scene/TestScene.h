@@ -3,8 +3,7 @@
 
 ///オブジェクト関連///
 #include "engine/objects/Sprite.h"
-#include "engine/physics/DirectionalLight.h"
-#include "engine/objects/Model.h"
+#include "engine/objects/Model/Model.h"
 #include "engine/physics/Sphere.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
@@ -12,6 +11,7 @@
 #include "engine/Editor/UiEditor.h"
 #include "Game/3d/Player/Player.h"
 #include "Game/3d/Enemy/Enemy.h"
+#include "Engine/objects/Animation/AnimationModel.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -91,9 +91,7 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-	std::unique_ptr<Player> player_ = nullptr;
-	std::unique_ptr<Enemy> enemy_ = nullptr;
-
+	std::unique_ptr<AnimationModel> animationCube_ = nullptr;
 
     Quaternion q1 = {2.0f,3.0f,4.0f,1.0f};
     Quaternion q2 = {1.0f,3.0f,5.0f,2.0f};

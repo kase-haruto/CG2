@@ -243,7 +243,7 @@
     <ClCompile Include="Engine\scene\TestScene.cpp">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\Model.cpp">
+    <ClCompile Include="Engine\objects\Model\Model.cpp">
       <Filter>Engine\project\3d\objects\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\core\System.cpp">
@@ -390,6 +390,8 @@
     <ClCompile Include="Engine\scene\TitleScene.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
+    <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
+    <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -419,7 +421,7 @@
     <ClInclude Include="Engine\scene\TestScene.h">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\Model.h">
+    <ClInclude Include="Engine\objects\Model\Model.h">
       <Filter>Engine\project\3d\objects\model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\objects\ModelData.h">
@@ -619,6 +621,9 @@
     <ClInclude Include="Engine\scene\TitleScene.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
+    <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
+    <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
+    <ClInclude Include="Engine\objects\Model\BaseModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

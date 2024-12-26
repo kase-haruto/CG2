@@ -1,7 +1,7 @@
 #pragma once
 
 //* engine *//
-#include "Engine/objects/Model.h"
+#include "Engine/objects/Model/Model.h"
 #include "Engine/objects/SceneObject.h"
 
 //* c++ lib *//

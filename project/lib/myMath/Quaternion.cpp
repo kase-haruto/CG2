@@ -1,6 +1,7 @@
 #include "Quaternion.h"
 #include <cmath>
 #include <cfloat>
+#include <numbers>
 
 ///////////////////////////////////////////////////////////////////////////
 //              メンバ関数
@@ -135,6 +136,37 @@ Vector3 Quaternion::RotateVector(const Vector3& vector, const Quaternion& quater
 
 Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs){
     return lhs * rhs;
+}
+
+Vector3 Quaternion::ToEuler(const Quaternion& q){
+    Vector3 euler;
+
+    // roll (X軸回転)
+    {
+        double sinr_cosp = 2.0 * (q.w * q.x + q.y * q.z);
+        double cosr_cosp = 1.0 - 2.0 * (q.x * q.x + q.y * q.y);
+        euler.x = static_cast< float >(std::atan2(sinr_cosp, cosr_cosp));
+    }
+
+    // pitch (Y軸回転)
+    {
+        double sinp = 2.0 * (q.w * q.y - q.z * q.x);
+        if (std::abs(sinp) >= 1.0){
+            // -90° または +90° にクランプ
+            euler.y = static_cast< float >(std::copysign(float(std::numbers::pi) / 2.0, sinp));
+        } else{
+            euler.y = static_cast< float >(std::asin(sinp));
+        }
+    }
+
+    // yaw (Z軸回転)
+    {
+        double siny_cosp = 2.0 * (q.w * q.z + q.x * q.y);
+        double cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z);
+        euler.z = static_cast< float >(std::atan2(siny_cosp, cosy_cosp));
+    }
+
+    return euler;
 }
 
 ///////////////////////////////////////////////////////////////////////////

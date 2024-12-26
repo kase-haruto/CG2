@@ -32,7 +32,7 @@ void TestScene::Initialize(){
 
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	modelField_ = std::make_unique<Model>("ground");
+	modelField_ = std::make_unique<Model>("ground.obj");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
@@ -42,6 +42,8 @@ void TestScene::Initialize(){
 	//モデル
 	modelBuilder_ = std::make_unique<ModelBuilder>();
 	modelBuilder_->Initialize();
+
+	animationCube_ = std::make_unique<AnimationModel>("AnimatedCube.gltf");
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
@@ -86,6 +88,8 @@ void TestScene::Update(){
 
 	modelField_->Update();
 
+	animationCube_->Update();
+
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -104,6 +108,8 @@ void TestScene::Draw(){
 
 	//地面の描画
 	modelField_->Draw();
+
+	animationCube_->Draw();
 
 	ParticleManager::GetInstance()->Draw();
 

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Engine/objects/Model.h"
+#include "Engine/objects/Model/Model.h"
 #include "Engine/Editor/BaseEditor.h"
 
 //* c++ *//
@@ -49,12 +49,6 @@ public:
 	/// imguiの描画
 	/// </summary>
 	void ShowImGuiInterface()override;
-
-	/// <summary>
-	/// viewProjectionのセット
-	/// </summary>
-	/// <param name="viewProjection"></param>
-	void SetViewProjection(ViewProjection* viewProjection);
 
 	/// <summary>
 	/// modelファイルを読み込む

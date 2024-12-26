@@ -61,4 +61,7 @@ struct Quaternion{
 
     // 2つのクォータニオンの積を計算する
     static Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+
+	// クォータニオンからオイラー角を求める
+	static Vector3 ToEuler(const Quaternion& q);
 };
