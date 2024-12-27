@@ -14,8 +14,6 @@ FollowCamera::FollowCamera()
 	SetName("FollowCamera", ObjectType::Camera);
 }
 
-void FollowCamera::Initialize(){}
-
 void FollowCamera::Update(){
 
 	//* 追従

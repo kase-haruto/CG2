@@ -180,6 +180,12 @@ float Input::GetMouseWheel(){
 	return instance_->mouseWheel_;
 }
 
+Vector2 Input::GetMouseDelta(){
+	Vector2 delta = instance_->mousePos_;
+	instance_->mousePos_ = Vector2(0.0f, 0.0f); // リセット
+	return delta;
+}
+
 
 /*=======================================================================================
 			ゲームパッドの入力チェック

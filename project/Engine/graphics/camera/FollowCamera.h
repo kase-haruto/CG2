@@ -16,7 +16,6 @@ public:
 	FollowCamera();
 	~FollowCamera() = default;
 
-	void Initialize();
 	void Update()override;
 
 

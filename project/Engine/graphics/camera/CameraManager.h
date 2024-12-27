@@ -2,6 +2,7 @@
 
 #include "Engine/graphics/camera/Camera3d.h"
 #include "Engine/graphics/camera/FollowCamera.h"
+#include "Engine/graphics/camera/DebugCamera.h"
 #include "Engine/graphics/camera/ICamera.h"
 
 //* c++ *//
@@ -45,6 +46,7 @@ private:
     /* 管理しているカメラ =======================*/
     std::unique_ptr<Camera3d> camera3d_ = nullptr;   // 3dオブジェクトのデフォルトカメラ
     std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 
     // すべてのカメラ
     std::unordered_map<CameraType, ICamera*> cameras_;

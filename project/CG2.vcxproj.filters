@@ -394,6 +394,7 @@
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
+    <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -628,6 +629,7 @@
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
+    <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -12,22 +12,22 @@ CameraManager* CameraManager::GetInstance(){
 CameraManager::CameraManager(){
 	camera3d_ = std::make_unique<Camera3d>();
 	followCamera_ = std::make_unique<FollowCamera>();
+	debugCamera_ = std::make_unique<DebugCamera>();
 
-	cameras_[Type_Default] = followCamera_.get();
+	cameras_[Type_Default] = camera3d_.get();
+	cameras_[Type_Follow] = followCamera_.get();
+	cameras_[Type_Debug] = debugCamera_.get();
 }
 
-//void CameraManager::SetType(const CameraType type){
-//	//type_ = type;
-//	//for (auto& camera : cameras_){
-//	//	camera.second->SetActive(camera.first == type_);
-//	//}
-//}
+void CameraManager::SetType(const CameraType type){
+	type_ = type;
+	for (auto& camera : cameras_){
+		camera.second->SetActive(camera.first == type_);
+	}
+}
 
 void CameraManager::Initialize(){
 	GetInstance();//インスタンスがない場合作成
-	instance_->type_ = Type_Default;
-
-	instance_->cameras_[Type_Default]->SetActive(true);
 }
 
 void CameraManager::Update(){

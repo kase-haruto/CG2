@@ -18,7 +18,7 @@ GameScene::GameScene(DxCore* dxCore) : IScene(dxCore){
 }
 
 void GameScene::Initialize(){
-
+	CameraManager::GetInstance()->SetType(CameraType::Type_Follow);
 	///=========================
 	/// グラフィック関連
 	///=========================
