@@ -59,7 +59,7 @@ public:
 
 	static Matrix4x4 GetViewProjectionMatrix(){ return instance_->cameras_[instance_->type_]->GetViewProjection(); }
 
-    void SetFollowTarget(const Transform* target){ 
+    void SetFollowTarget(const EulerTransform* target){
         followCamera_->SetTarget(target); 
     }
 

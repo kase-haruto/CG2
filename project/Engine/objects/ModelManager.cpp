@@ -15,7 +15,7 @@ ModelManager* ModelManager::GetInstance(){
 void ModelManager::StartUpLoad(){
     LoadModel("suzanne.obj");
     //LoadModel("axis.obj");
-    LoadModel("bunny.obj");
+   // LoadModel("bunny.obj");
     LoadModel("debugCube.obj");
     LoadModel("fence.obj");
     LoadModel("ground.obj");
@@ -88,14 +88,12 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ModelManager::GetIndexResource(const std:
     return nullptr; // 存在しない場合はnullptrを返す
 }
 
-
 void ModelManager::Finalize(){
     if (instance_){
         delete instance_;
         instance_ = nullptr;
     }
 }
-
 
 std::vector<std::string> ModelManager::GetLoadedModelNames() const{
     std::vector<std::string> modelNames;
@@ -104,7 +102,6 @@ std::vector<std::string> ModelManager::GetLoadedModelNames() const{
     }
     return modelNames;
 }
-
 
 //====================================================================
 // メイン：ファイルを読み込み、ModelData を返す

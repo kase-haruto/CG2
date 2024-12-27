@@ -70,6 +70,7 @@ private:
     //指定時間に対して補完結果を返す
 	Vector3 Evaluate(const AnimationCurve<Vector3>& curve, float time);
 	Quaternion Evaluate(const AnimationCurve<Quaternion>& curve, float time);
+
 private:
     ModelManager() = default;
     ~ModelManager() = default;

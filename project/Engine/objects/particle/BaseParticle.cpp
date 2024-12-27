@@ -293,7 +293,7 @@ void ParticleData::Emitter::Initialize(uint32_t Count){
 
 }
 
-void ParticleData::Emitter::Initialize(const Transform& Transform, const float Frequency, const float FrequencyTime, uint32_t Count){
+void ParticleData::Emitter::Initialize(const EulerTransform& Transform, const float Frequency, const float FrequencyTime, uint32_t Count){
 
 	count = Count;
 	transform = Transform;

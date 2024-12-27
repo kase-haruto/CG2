@@ -20,7 +20,7 @@
 
 namespace ParticleData{
     struct Parameters{
-        Transform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+        EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
         Vector3 velocity {};
         Vector4 color {1.0f, 1.0f, 1.0f, 1.0f};
         float lifeTime = 1.0f;
@@ -39,13 +39,13 @@ namespace ParticleData{
     };
 
     struct Emitter{
-        Transform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
+        EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
         uint32_t count;             //発生数
         float frequency;            //発生頻度
         float frequencyTime = 0;    //頻度用時刻
 
         void Initialize(uint32_t count);
-        void Initialize(const Transform& transform, const float frequency, const float frequencyTime, uint32_t count);
+        void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
     };
 }
 

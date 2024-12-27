@@ -47,7 +47,7 @@ public:
 	//===================================================================*/
 	//                   getter
 	//===================================================================*/
-	const Transform& GetTransform()const{ return model_->transform; }
+	const EulerTransform& GetTransform()const{ return model_->transform; }
 	Vector3 GetForward(float distance) const;
 
 	const Vector3 GetCenterPos()const override;
