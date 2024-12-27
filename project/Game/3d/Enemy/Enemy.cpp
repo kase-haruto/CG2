@@ -87,7 +87,7 @@ void Enemy::ShowGui(){
 	SceneObject::ShowGui();
 
 	if (ImGui::Button("save")){
-		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
+		JsonCoordinator::SaveGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
 	}
 
 	ImGui::Separator();

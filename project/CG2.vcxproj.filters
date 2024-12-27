@@ -395,6 +395,9 @@
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\IPlayerAttack.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -630,6 +633,9 @@
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
     <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\IPlayerAttack.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
