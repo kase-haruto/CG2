@@ -5,13 +5,13 @@
 
 #include "Engine/core/Input.h"
 #include "Engine/graphics/camera/CameraManager.h"
-
+#include <externals/imgui/imgui.h>
 //c++
 #include <numbers>
 
 FollowCamera::FollowCamera()
 :BaseCamera(){
-	SetName("FollowCamera", ObjectType::Camera);
+	BaseCamera::SetName("FollowCamera");
 }
 
 void FollowCamera::Update(){
@@ -87,4 +87,14 @@ void FollowCamera::UpdateMatrix(){
 
 	// ビュー行列とプロジェクション行列の掛け算
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix, projectionMatrix_);
+}
+
+void FollowCamera::ShowGui(){
+	//名前の表示
+	SceneObject::ShowGui();
+
+	ImGui::Separator();
+
+	// アクティブかどうか
+	BaseCamera::ShowGui();
 }

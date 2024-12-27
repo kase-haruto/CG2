@@ -45,7 +45,7 @@ protected:
 	//			protected functions
 	//==================================================================*//
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
-
+	void SetName(const std::string& name);
 public:
 	//==================================================================*//
 	//			getter / setter

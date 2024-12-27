@@ -3,9 +3,11 @@
 #include "Engine/graphics/GraphicsGroup.h"
 #include "lib/myFunc/MyFunc.h"
 #include <cmath>
+#include "BaseCamera.h"
 
 BaseCamera::BaseCamera()
-	: worldMatrix_(MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate)),
+	: ICamera(),
+	worldMatrix_(MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate)),
 	viewMatrix_(Matrix4x4::Inverse(worldMatrix_)),
 	projectionMatrix_(MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_)){
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
@@ -54,6 +56,10 @@ Matrix4x4 BaseCamera::MakePerspectiveFovMatrix(float fovY, float aspectRatio, fl
 		0, 0, -nearClip * farClip / (farClip - nearClip), 0
 	};
 	return result;
+}
+
+void BaseCamera::SetName(const std::string& name){
+	SceneObject::SetName(name, ObjectType::Camera);
 }
 
 /////////////////////////////////////////////////////////////////////////

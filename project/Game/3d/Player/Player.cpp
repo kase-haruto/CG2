@@ -13,7 +13,9 @@ Player::Player(const std::string& modelName)
 	:Character(modelName){
 
 	CollisionManager::GetInstance()->AddCollider(this);
-
+	//オブジェクトの名前を設定
+	BaseGameObject::SetName("Player");
+	Collider::SetName("Player");
 }
 
 Player::~Player(){
@@ -26,9 +28,7 @@ Player::~Player(){
 //                    main functions
 //===================================================================*/
 void Player::Initialize(){
-	//オブジェクトの名前を設定
-	BaseGameObject::SetName("Player");
-	Collider::SetName("Player");
+	
 
 	BaseGameObject::Initialize();
 

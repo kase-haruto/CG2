@@ -7,10 +7,20 @@
 
 Camera3d::Camera3d()
     : BaseCamera(){
-	SetName("mainCamera", ObjectType::Camera);
+	BaseCamera::SetName("MainCamera");
 
 }
 
 void Camera3d::Update(){
     BaseCamera::Update();
+}
+
+void Camera3d::ShowGui(){
+	//名前の表示
+	SceneObject::ShowGui();
+
+	ImGui::Separator();
+
+	// アクティブかどうか
+	BaseCamera::ShowGui();
 }
