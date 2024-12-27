@@ -44,7 +44,7 @@ void EngineUI::Render(){
 
 
 void EngineUI::RenderMainViewport(){
-    ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("Main Viewport");
 
     if (mainViewportTextureID_){
         ImVec2 viewportSize = ImGui::GetContentRegionAvail();

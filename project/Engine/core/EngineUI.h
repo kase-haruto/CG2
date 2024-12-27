@@ -1,8 +1,6 @@
 #pragma once
 
-#ifndef ENGINE_UI_H
-#define ENGINE_UI_H
-
+#pragma once
 #include <vector>
 #include <memory>
 #include <functional>
@@ -65,8 +63,7 @@ private:
     SceneObject* selectedObject = nullptr;
 
     static EngineUI* pInstance_;                        // シングルトンインスタンス
-    UINT64 mainViewportTextureID_;            // メインビューポート用のテクスチャポインタ
+    UINT64 mainViewportTextureID_;                      // メインビューポート用のテクスチャポインタ
     std::vector<std::unique_ptr<IEngineUI>> panels_;    // UIパネルのリスト
 };
 
-#endif // ENGINE_UI_H

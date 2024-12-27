@@ -36,7 +36,7 @@ public:
 	//===================================================================*/
 #pragma region アクセッサ
 	//* 追従対象のセット
-	void SetTarget(const Transform* target){ target_ = target; }
+	void SetTarget(const EulerTransform* target){ target_ = target; }
 
 	void SetViewpoint(const Vector3& viewpoint){ viewpoint_ = viewpoint; }
 
@@ -48,7 +48,7 @@ private:
 	//							private Methods
 	//===================================================================*/
 
-	const Transform* target_ = nullptr;			//* 追従対象
+	const EulerTransform* target_ = nullptr;			//* 追従対象
 	Vector3 viewpoint_;							//* 注視点
 	Vector3 interTarget_;						//* 追従対象の残像座標
 	Vector3 offset = {0.0f,2.5f,-8.0f};			//* 追従対象からのオフセット

@@ -77,10 +77,10 @@ public:
     // 各種パラメータ
     //=============
     Vector4    RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-    Transform  uvTransform {{1.0f, 1.0f, 1.0f},
+    EulerTransform  uvTransform {{1.0f, 1.0f, 1.0f},
                              {0.0f, 0.0f, 0.0f},
                              {0.0f, 0.0f, 0.0f}};
-    Transform  transform {{1.0f, 1.0f, 1.0f},
+    EulerTransform  transform {{1.0f, 1.0f, 1.0f},
                            {0.0f, 0.0f, 0.0f},
                            {0.0f, 0.0f, 0.0f}};
     Matrix4x4  worldMatrix {};

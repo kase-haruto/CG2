@@ -5,7 +5,7 @@
 
 #include <numbers>
 
-FaceInfo GetRandomPointAndNormalOnOBBSurface(const Transform& transform,
+FaceInfo GetRandomPointAndNormalOnOBBSurface(const EulerTransform& transform,
                                              bool emitPosX, bool emitNegX,
                                              bool emitPosY, bool emitNegY,
                                              bool emitPosZ, bool emitNegZ){
@@ -73,7 +73,7 @@ FaceInfo GetRandomPointAndNormalOnOBBSurface(const Transform& transform,
     return {localPoint, localNormal};
 }
 
-Vector3 GetRandomPointOnSphere(const Transform& transform){
+Vector3 GetRandomPointOnSphere(const EulerTransform& transform){
     float radius = transform.scale.x * 0.5f;
 
     float theta = Random::Generate(0.0f, float(std::numbers::pi)*2);
