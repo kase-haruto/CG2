@@ -19,8 +19,6 @@ void Camera3d::ShowGui(){
 	//名前の表示
 	SceneObject::ShowGui();
 
-	ImGui::Separator();
-
 	// アクティブかどうか
 	BaseCamera::ShowGui();
 }

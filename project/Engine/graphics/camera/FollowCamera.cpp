@@ -93,8 +93,6 @@ void FollowCamera::ShowGui(){
 	//名前の表示
 	SceneObject::ShowGui();
 
-	ImGui::Separator();
-
 	// アクティブかどうか
 	BaseCamera::ShowGui();
 }

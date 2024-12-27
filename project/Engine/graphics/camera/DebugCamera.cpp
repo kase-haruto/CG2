@@ -61,8 +61,6 @@ void DebugCamera::ShowGui(){
     //名前の表示
 	SceneObject::ShowGui();
 
-	ImGui::Separator();
-
 	// アクティブかどうか
 	BaseCamera::ShowGui();
 }
