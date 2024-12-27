@@ -21,6 +21,8 @@ BaseCamera::BaseCamera()
 void BaseCamera::Update(){
 	if (!isActive_){ return; }//アクティブでない場合は処理しない
 
+	UpdateMatrix();
+
 	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
 	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 
