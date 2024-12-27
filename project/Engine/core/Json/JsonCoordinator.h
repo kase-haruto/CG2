@@ -30,11 +30,12 @@ public:
     // 値を取得
     static std::optional<AdjustableValue> GetValue(const std::string& group, const std::string& key);
 
+
     // グループのみ保存 (ファイル分割方式)
-    static bool SaveGroup(const std::string& group);
+    static bool SaveGroup(const std::string& group, std::optional<std::string> directoryPath = std::nullopt);
 
     // グループのみロード (ファイル分割方式)
-    static bool LoadGroup(const std::string& group);
+    static bool LoadGroup(const std::string& group, std::optional<std::string> directoryPath = std::nullopt);
 
     // グループ内のすべての項目をレンダリング (ImGui)
     static void RenderGroupUI(const std::string& group);
@@ -48,8 +49,9 @@ private:
     // ディレクトリ作成
     static void EnsureDirectoryExists(const std::string& path);
 
+
     // グループ -> JSON ファイル名を作る（適宜カスタマイズ）
-    static std::string MakeFilePath(const std::string& group);
+    static std::string MakeFilePath(const std::string& group, std::optional<std::string> directoryPath = std::nullopt);
 
 private:
     //===================================================================*/
@@ -64,7 +66,7 @@ private:
         s_bindings_;
 
     // ベースパスなど
-    static inline std::string s_baseDirectory_;
+    static std::string s_baseDirectory_;
 };
 
 //-------------------------------------------------------------------

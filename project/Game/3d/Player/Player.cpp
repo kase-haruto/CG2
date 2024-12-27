@@ -40,6 +40,8 @@ void Player::Initialize(){
 	model_->transform.translate.z = -15.0f;
 	moveSpeed_ = 10.0f;
 
+	attackController_.SetPlayer(this);
+
 }
 
 void Player::Update(){
@@ -47,6 +49,9 @@ void Player::Update(){
 
 	shape_.center = GetCenterPos();
 	shape_.rotate = model_->transform.rotate;
+
+	// 攻撃管理クラスの更新
+	attackController_.Update();
 
 	BaseGameObject::Update();
 	Character::Update();
@@ -56,6 +61,9 @@ void Player::Draw(){
 
 	BoxCollider::Draw();
 	BaseGameObject::Draw();
+
+	// 攻撃管理クラスの描画
+	attackController_.Draw();
 
 }
 
@@ -115,7 +123,7 @@ void Player::ShowGui(){
 	SceneObject::ShowGui();
 
 	if (ImGui::Button("save")){
-		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
+		JsonCoordinator::SaveGroup(BaseGameObject::GetName(),BaseGameObject::jsonPath);
 	}
 
 	ImGui::Separator();
@@ -125,6 +133,10 @@ void Player::ShowGui(){
 	ImGui::Separator();
 
 	BoxCollider::ShowGui();
+
+	ImGui::Separator();
+
+	attackController_.ShowGui();
 }
 
 //===================================================================*/

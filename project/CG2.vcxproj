@@ -187,6 +187,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\IPlayerAttack.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -214,6 +216,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\TitleScene.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
@@ -297,6 +300,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\IPlayerAttack.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -323,6 +328,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\TitleScene.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

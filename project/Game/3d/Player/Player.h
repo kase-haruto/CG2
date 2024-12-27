@@ -4,6 +4,7 @@
 #include "../Base/Character.h"
 #include "../BaseGameObject.h"
 #include "Engine/objects/Collider/BoxCollider.h"
+#include "PlayerAttack/PlayerAttackController.h"
 
 class Player :
 	public Character, public BoxCollider{
@@ -38,9 +39,8 @@ private:
 	float targetAngle_ = 0;						// 振り向き用
 	Vector3 moveVelocity_ {};					// 移動速度
 
-private:
-
-	bool isAttacking_ = false; // 攻撃中フラグ
+	bool isAttacking_ = false;					// 攻撃中フラグ
+	PlayerAttackController attackController_;	// 攻撃管理クラス
 
 
 public:

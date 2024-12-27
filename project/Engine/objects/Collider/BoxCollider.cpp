@@ -21,9 +21,9 @@ void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 
 	//shape_.size = size;
 
-	jsonPath = "gameobject/" + GetName();
+	jsonPath = "gameObjects/";
 
-	JsonCoordinator::LoadGroup(name_);
+	JsonCoordinator::LoadGroup(name_,jsonPath);
 
 }
 
@@ -39,8 +39,8 @@ void BoxCollider::ShowGui(){
 
 #ifdef _DEBUG
 
-	if (ImGui::CollapsingHeader("Collider")){
-		
+	std::string headerName = GetName() + "Collider";
+	if (ImGui::CollapsingHeader(headerName.c_str())){
 		JsonCoordinator::RenderGroupUI(name_);
 	}
 
