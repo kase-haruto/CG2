@@ -15,7 +15,5 @@ IScene::IScene(){
 IScene::IScene(DxCore* dxCore){
 	pDxCore_ = dxCore;
 
-	//シーンのオブジェクトの初期化
-	SceneObjectManager::GetInstance()->ClearAllObject();
 }
 

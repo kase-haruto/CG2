@@ -5,10 +5,6 @@
 ICamera::ICamera()
 :SceneObject(){
 
-	//リストに追加
-	SceneObjectManager::GetInstance()->AddObject(this);
-	objectType_ = ObjectType::Camera;
-
 }
 
 void ICamera::ShowGui(){

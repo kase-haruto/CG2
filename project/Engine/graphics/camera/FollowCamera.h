@@ -17,6 +17,7 @@ public:
 	~FollowCamera() = default;
 
 	void Update()override;
+	void ShowGui()override;
 
 
 private:

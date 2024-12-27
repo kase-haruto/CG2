@@ -14,4 +14,5 @@ public:
     ~Camera3d() = default;
 
     void Update() override;  //< 更新
+	void ShowGui() override; //< ImGuiによるGUI表示
 };

@@ -19,6 +19,7 @@ public:
     ~DebugCamera() = default;
 
     void Update() override;  //< 毎フレームの更新処理
+	void ShowGui() override; //< ImGuiによるGUI表示
 
     //===================================================================//
     //							public アクセッサ

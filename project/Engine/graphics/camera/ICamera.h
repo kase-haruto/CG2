@@ -13,7 +13,7 @@ public:
 
 	virtual void Update() = 0;
 	virtual void UpdateMatrix() = 0;
-	virtual void ShowGui();
+	virtual void ShowGui()override;
 
 public:
 	//==================================================================*//

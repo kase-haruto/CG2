@@ -6,7 +6,7 @@
 
 // Engine
 #include "Engine/graphics/camera/CameraManager.h"
-
+#include <externals/imgui/imgui.h>
 // C++
 #include <algorithm>  // std::clamp
 #undef max
@@ -18,13 +18,15 @@ DebugCamera::DebugCamera()
     isDraggingRotate_ {false},
     lastMousePosMove_ {0.0f, 0.0f},
     isDraggingMove_ {false}{
-    SetName("DebugCamera", ObjectType::Camera);
+    BaseCamera::SetName("DebugCamera");
 }
 
 //////////////////////////////////////////////////////////////////////////////
 //							メイン処理
 //////////////////////////////////////////////////////////////////////////////
 void DebugCamera::Update(){
+    if (!isActive_){ return; }
+
     // 入力に基づいてカメラ操作
     Rotate();
     Move();
@@ -52,6 +54,17 @@ void DebugCamera::Update(){
 
     // BaseCameraの更新処理を呼び出す
     BaseCamera::Update();
+}
+
+void DebugCamera::ShowGui(){
+
+    //名前の表示
+	SceneObject::ShowGui();
+
+	ImGui::Separator();
+
+	// アクティブかどうか
+	BaseCamera::ShowGui();
 }
 
 //////////////////////////////////////////////////////////////////////////////
