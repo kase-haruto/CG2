@@ -21,10 +21,6 @@ void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 
 	//shape_.size = size;
 
-	jsonPath = "gameObjects/";
-
-	JsonCoordinator::LoadGroup(name_,jsonPath);
-
 }
 
 void BoxCollider::Draw(){

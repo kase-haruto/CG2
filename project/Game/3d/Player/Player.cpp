@@ -42,6 +42,8 @@ void Player::Initialize(){
 
 	attackController_.SetPlayer(this);
 
+	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
+
 }
 
 void Player::Update(){

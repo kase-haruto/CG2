@@ -19,7 +19,8 @@ IPlayerAttack::IPlayerAttack(const std::string& attackName){
 	rotate_ = Vector3(0.0f, 0.0f, 0.0f);
 	offset_ = Vector3(0.0f, 0.0f, 0.0f);
 
-	JsonCoordinator::LoadGroup(Collider::GetName().c_str());
+	std::string directory = "gameObjects/Player";
+	JsonCoordinator::LoadGroup(Collider::GetName().c_str(), directory);
 
 }
 
@@ -47,8 +48,9 @@ void IPlayerAttack::ShowGui(){
 
 	ImGui::Text(Collider::GetName().c_str());
 
-	if (ImGui::Button("save")){
-		JsonCoordinator::SaveGroup(Collider::GetName().c_str());
+	if (ImGui::Button("SaveAttackData")){
+		std::string directory = "gameObjects/Player";
+		JsonCoordinator::SaveGroup(Collider::GetName().c_str(), directory);
 	}
 
 	ImGui::Separator();

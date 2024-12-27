@@ -33,6 +33,8 @@ void Enemy::Initialize(){
 		ColliderType::Type_PlayerAttack;
 
 	moveSpeed_ = 2.0f;
+
+	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
 }
 
 void Enemy::Update(){
