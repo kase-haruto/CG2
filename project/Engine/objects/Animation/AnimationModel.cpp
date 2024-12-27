@@ -196,7 +196,7 @@ void AnimationModel::Update(){
 
     // (5) カメラ行列との掛け合わせ
     Matrix4x4 worldViewProjectionMatrix
-        = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+        = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
@@ -229,7 +229,7 @@ void AnimationModel::Draw(){
 //-----------------------------------------------------------------------------
 void AnimationModel::UpdateMatrix(){
     Matrix4x4 worldViewProjectionMatrix
-        = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+        = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
 }

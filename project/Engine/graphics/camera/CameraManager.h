@@ -2,12 +2,15 @@
 
 #include "Engine/graphics/camera/Camera3d.h"
 #include "Engine/graphics/camera/FollowCamera.h"
+#include "Engine/graphics/camera/DebugCamera.h"
+#include "Engine/graphics/camera/ICamera.h"
 
 //* c++ *//
 #include <memory>
+#include <unordered_map>
 
 enum CameraType{
-    Type_Normal,
+    Type_Default,
     Type_Follow,
     Type_Debug,
 };
@@ -38,11 +41,15 @@ private:
     //					private member variable
     //===================================================================*/
     static CameraManager* instance_;                 // クラスのインスタンス
-    CameraType type_ = Type_Normal;
+    CameraType type_ = Type_Default;
 
     /* 管理しているカメラ =======================*/
     std::unique_ptr<Camera3d> camera3d_ = nullptr;   // 3dオブジェクトのデフォルトカメラ
     std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+
+    // すべてのカメラ
+    std::unordered_map<CameraType, ICamera*> cameras_;
 
     //===================================================================*/
     //					getter/setter
@@ -50,11 +57,13 @@ private:
 public:
     static Camera3d* GetCamera3d(){ return instance_->camera3d_.get(); }
 
+	static Matrix4x4 GetViewProjectionMatrix(){ return instance_->cameras_[instance_->type_]->GetViewProjection(); }
+
     void SetFollowTarget(const Transform* target){ 
         followCamera_->SetTarget(target); 
-        type_ = Type_Follow;
     }
+
     const Vector3& GetFollowRotate()const{ return followCamera_->GetRotate(); }
 
-    void SetType(const CameraType type){ type_ = type; }
+    void SetType(const CameraType type);
 };

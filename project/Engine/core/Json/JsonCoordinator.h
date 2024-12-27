@@ -113,11 +113,6 @@ bool JsonCoordinator::RegisterItem(const std::string& group, const std::string& 
         s_groupData_[group] = json::object();
     }
 
-    // すでに登録済みなら失敗とする例
-    if (s_groupData_[group].contains(key)){
-        return false;
-    }
-
     // データに登録
     s_groupData_[group][key] = target;
 
@@ -129,11 +124,12 @@ bool JsonCoordinator::RegisterItem(const std::string& group, const std::string& 
         };
 
     // データを変数に同期
-    // ※現状だと既に書き込んでいるので実質不要だが念のため
     auto val = s_groupData_[group][key].get<AdjustableValue>();
     if (auto valPtr = std::get_if<T>(&val)){
         target = *valPtr;
     }
+
+    // デバッグログ
 
     return true;
 }

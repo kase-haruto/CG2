@@ -20,7 +20,7 @@ TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){
 }
 
 void TestScene::Initialize(){
-	CameraManager::Initialize();
+	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	///=========================
 	/// グラフィック関連
 	///=========================

@@ -89,14 +89,14 @@ void Model::Update(){
     worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 
     // カメラ行列との掛け合わせ
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
 }
 
 void Model::UpdateMatrix(){
     // もし外部から行列のみを更新したい場合などに呼ばれる
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
 }

@@ -23,6 +23,7 @@ public:
 	//			public functions
 	//==================================================================*//
 	void ClearAllObject();	//全てのオブジェクトを削除
+	void ClearGameObjects(); // GameObjectのみを削除
 	void Finalize();		//終了処理
 
 	//objectの取得追加

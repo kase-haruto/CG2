@@ -211,7 +211,7 @@ void PrimitiveDrawer::CreateMatrixBuffer(){
 void PrimitiveDrawer::UpdateMatrixBuffer(){
 	// ワールド行列（必要に応じて設定）
 	Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
 	// 定数バッファの更新
 	matrixData_->world = worldMatrix;

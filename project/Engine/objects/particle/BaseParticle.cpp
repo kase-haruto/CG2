@@ -64,7 +64,7 @@ void BaseParticle::Update(){
             }
 
             // ビルボード有無に関わらず、WVPを計算
-            worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+            worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
             instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
             instancingData[instanceNum_].World = worldMatrix;

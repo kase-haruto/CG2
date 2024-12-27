@@ -111,6 +111,9 @@ void Player::OnCollisionExit([[maybe_unused]] Collider* other){}
 //                    imgui/ui
 //===================================================================*/
 void Player::ShowGui(){
+
+	SceneObject::ShowGui();
+
 	if (ImGui::Button("save")){
 		JsonCoordinator::SaveGroup(BaseGameObject::GetName());
 	}

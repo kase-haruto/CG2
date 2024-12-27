@@ -70,6 +70,7 @@ public:
     static bool TriggerMouseButton(int button);
     static Vector2 GetMousePosition();
     static float GetMouseWheel();
+	static Vector2 GetMouseDelta();
 
     // ゲームパッド
     static bool PushGamepadButton(int button);
