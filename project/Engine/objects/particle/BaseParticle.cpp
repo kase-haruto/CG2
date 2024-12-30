@@ -1,6 +1,7 @@
 #include "BaseParticle.h"
 
 //* engine
+#include "Engine/core/System.h"
 #include "Engine/graphics/GraphicsGroup.h"
 #include "Engine/physics/DirectionalLight.h"
 #include "Engine/graphics/SrvLocator.h"
@@ -81,8 +82,8 @@ void BaseParticle::Update(){
 
             instancingData[instanceNum_].color.w = alpha;
 
-            it->currentTime += deltaTime;
-            it->transform.translate += it->velocity * deltaTime;
+            it->currentTime += System::GetDeltaTime();
+            it->transform.translate += it->velocity * System::GetDeltaTime();
 
             ++instanceNum_;
         }
@@ -90,7 +91,7 @@ void BaseParticle::Update(){
         ++it;
     }
 
-    emitter_.frequencyTime += deltaTime;
+    emitter_.frequencyTime += System::GetDeltaTime();
     if (emitter_.frequencyTime >= emitter_.frequency){
         Emit(emitter_.count);
         emitter_.frequencyTime = 0.0f;

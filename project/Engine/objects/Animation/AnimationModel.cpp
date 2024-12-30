@@ -7,6 +7,7 @@
 #include "lib/myMath/Vector4.h"
 
 #include "engine/graphics/GraphicsGroup.h"
+#include "engine/core/System.h"
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
@@ -105,7 +106,7 @@ void AnimationModel::PlayAnimation(){
     }
 
     // 時間を進める
-    animationTime_ += deltaTime;
+    animationTime_ += System::GetDeltaTime();
     // ループ
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 

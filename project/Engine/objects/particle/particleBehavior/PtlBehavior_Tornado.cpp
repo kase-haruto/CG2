@@ -1,5 +1,5 @@
 #include "PtlBehavior_Tornado.h"
-
+#include "Engine/core/System.h"
 #include "../ParticleSystem.h"
 
 #include "lib/myFunc/MyFunc.h"
@@ -17,7 +17,7 @@ void PtlBehavior_Tornado::ApplyBehavior(ParticleSystem& system){
         Vector3 relativePos = p.transform.translate - center_;
 
         // Y軸回転
-        float angle = rotationSpeed_ * deltaTime;
+        float angle = rotationSpeed_ * System::GetDeltaTime();
         float cosA = std::cos(angle);
         float sinA = std::sin(angle);
 
@@ -36,7 +36,7 @@ void PtlBehavior_Tornado::ApplyBehavior(ParticleSystem& system){
         p.transform.translate = center_ + relativePos;
 
         // 上昇
-        p.transform.translate.y += upwardSpeed_ * deltaTime;
+        p.transform.translate.y += upwardSpeed_ * System::GetDeltaTime();
     }
 }
 

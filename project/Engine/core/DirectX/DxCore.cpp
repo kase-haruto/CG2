@@ -147,7 +147,7 @@ void DxCore::PostDraw(){
 	dxCommand_->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
 	// スワップチェインのプレゼント
-	dxSwapChain_->Presetn();
+	dxSwapChain_->Present();
 
 	// フェンス同期
 	dxFence_->Signal(dxCommand_->GetCommandQueue());

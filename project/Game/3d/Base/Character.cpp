@@ -1,5 +1,6 @@
 #include "Character.h"
 
+#include "Engine/core/System.h"
 #include "lib/myFunc/MyFunc.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 
@@ -21,7 +22,7 @@ void Character::Update(){
     acceleration_ = {0.0f, gravity, 0.0f};
 
     // 加速度を考慮して速度を更新（経過時間を考慮）
-    velocity_ += acceleration_ * deltaTime;
+    velocity_ += acceleration_ * System::GetDeltaTime();
 
     // 落下速度を最大落下速度に制限
     if (velocity_.y < terminalVelocity){
@@ -38,7 +39,7 @@ void Character::Update(){
 
     // 空中にいる場合の移動処理
     if (!onGround_){
-        model_->transform.translate += velocity_ * deltaTime;
+        model_->transform.translate += velocity_ * System::GetDeltaTime();
     } else{
         // 接地している場合、Y方向の速度をリセット
         velocity_.y = 0.0f;

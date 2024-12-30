@@ -8,6 +8,7 @@
 
 #include <externals/imgui/imgui.h>
 #include "Engine/core/Input.h"
+#include "Engine/core/System.h"
 
 Player::Player(const std::string& modelName)
 	:Character(modelName){
@@ -79,7 +80,7 @@ void Player::Move(){
 	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
-	model_->transform.translate += moveVelocity_ * deltaTime;
+	model_->transform.translate += moveVelocity_ * System::GetDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	model_->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);

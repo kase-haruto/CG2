@@ -25,7 +25,6 @@
 #include <memory>
 
 
-const float deltaTime = 1.0f / 60.0f;
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
