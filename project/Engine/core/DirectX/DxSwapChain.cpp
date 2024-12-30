@@ -13,20 +13,17 @@ void DxSwapChain::Initialize(
 ){
     HRESULT hr;
 
-    // スワップチェインの設定
+    // スワップチェイン設定
     swapChainDesc_.Width = width;
     swapChainDesc_.Height = height;
     swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc_.SampleDesc.Count = 1;
-    swapChainDesc_.SampleDesc.Quality = 0;
     swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc_.BufferCount = 2;
     swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc_.Scaling = DXGI_SCALING_STRETCH;
-    swapChainDesc_.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-    swapChainDesc_.Flags = 0;
 
-    // スワップチェインの作成
+    // スワップチェイン作成
     ComPtr<IDXGISwapChain1> tempSwapChain;
     hr = dxgiFactory->CreateSwapChainForHwnd(
         commandQueue.Get(),
@@ -38,36 +35,36 @@ void DxSwapChain::Initialize(
     );
     assert(SUCCEEDED(hr));
 
-    // IDXGISwapChain4 にキャスト
     hr = tempSwapChain.As(&swapChain_);
     assert(SUCCEEDED(hr));
 
     // モニターのリフレッシュレートを取得
     ComPtr<IDXGIOutput> output;
     hr = swapChain_->GetContainingOutput(&output);
-    assert(SUCCEEDED(hr));
 
-    // DXGI_MODE_DESC に値を設定
-    DXGI_MODE_DESC modeDesc = {};
-    modeDesc.Width = width;
-    modeDesc.Height = height;
-    modeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    modeDesc.RefreshRate.Numerator = 0; // デフォルト値（FindClosestMatchingModeで上書き）
-    modeDesc.RefreshRate.Denominator = 0; // デフォルト値
-    modeDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-    modeDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    if (FAILED(hr)){
+        OutputDebugStringA("Failed to get containing output. Using default refresh rate.\n");
+        refreshRate_ = 60.0f; // デフォルト値
+    } else{
+        // リフレッシュレート取得
+        DXGI_MODE_DESC modeDesc = {};
+        modeDesc.Width = width;
+        modeDesc.Height = height;
+        modeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-    DXGI_MODE_DESC closestMatch = {};
-    hr = output->FindClosestMatchingMode(&modeDesc, &closestMatch, nullptr);
-    assert(SUCCEEDED(hr));
+        DXGI_MODE_DESC closestMatch = {};
+        hr = output->FindClosestMatchingMode(&modeDesc, &closestMatch, nullptr);
 
-    // リフレッシュレートを計算
-    refreshRate_ = static_cast< float >(closestMatch.RefreshRate.Numerator) / closestMatch.RefreshRate.Denominator;
+        if (FAILED(hr) || closestMatch.RefreshRate.Numerator == 0 || closestMatch.RefreshRate.Denominator == 0){
+            OutputDebugStringA("Failed to get refresh rate, using default 60Hz.\n");
+            refreshRate_ = 60.0f;
+        } else{
+            refreshRate_ = static_cast< float >(closestMatch.RefreshRate.Numerator) / closestMatch.RefreshRate.Denominator;
+        }
+    }
 
-    // syncInterval を計算 (60FPS に固定)
     syncInterval_ = static_cast< UINT >(std::round(refreshRate_ / 60.0f));
-    if (syncInterval_ < 1) syncInterval_ = 1; // 下限を1に設定
-
+    if (syncInterval_ < 1) syncInterval_ = 1;
 
     firstFrameTime_ = std::chrono::high_resolution_clock::now();
 }
