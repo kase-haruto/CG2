@@ -7,6 +7,8 @@
 #include "lib/myFunc/MathFunc.h"
 #include "Engine/core/EngineUI.h"
 
+#include "lib/myFunc/PrimitiveDrawer.h"
+
 #include <cstring> // strncpy を使用するため
 
 PlayerAttackEditor::PlayerAttackEditor(PlayerAttackController* controller)
@@ -65,6 +67,39 @@ void PlayerAttackEditor::ShowGui([[maybe_unused]]bool isShow){
     }
 
     ImGui::End();
+}
+
+void PlayerAttackEditor::Draw(){
+    // 選択された攻撃テンプレートを取得
+    auto& templates = attackController_->GetAttackTemplates();
+    auto it = templates.find(selectedAttackName_);
+    if (it != templates.end()){
+        const std::unique_ptr<IPlayerAttack>& attack = it->second;
+
+        // 制御点の取得
+        const std::vector<Vector3>& controlPoints = attack->GetControlPoints();
+
+        if (controlPoints.size() >= 4){
+            // スプラインポイントのサンプリング
+            const int sampleCount = 50; // サンプリングポイントの数
+            Vector3 previousPoint;
+            bool firstPoint = true;
+
+            for (int i = 0; i <= sampleCount; ++i){
+                float t = static_cast< float >(i) / sampleCount;
+                Vector3 currentPoint =CatmullRomPosition(controlPoints, t);
+
+                if (!firstPoint){
+                    // ラインを描画
+                    PrimitiveDrawer::GetInstance()->DrawLine3d(previousPoint, currentPoint, {1.0f, 1.0f, 1.0f, 1.0f});
+                } else{
+                    firstPoint = false;
+                }
+
+                previousPoint = currentPoint;
+            }
+        }
+    }
 }
 
 void PlayerAttackEditor::EditControlPoints(std::unique_ptr<IPlayerAttack>& attack){
