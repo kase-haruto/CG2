@@ -21,10 +21,13 @@ public:
 	// パネル名を取得
 	virtual const std::string& GetPanelName() const = 0;
 
+	void SetShow(bool isShow){ isShow_ = isShow; }
+	bool IsShow() const{ return isShow_; }
+
 protected:
 	//===================================================================*/
 	//                   protected methods
 	//===================================================================*/
 	std::string panelName_;
-
+	bool isShow_ = true;
 };

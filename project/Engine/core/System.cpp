@@ -85,47 +85,7 @@ void System::BeginFrame(){
 }
 
 void System::EndFrame(){
-    // メニューバーを開始
-    if (ImGui::BeginMainMenuBar()){
-        if (ImGui::BeginMenu("file(F)")){
-            ImGui::MenuItem("新規作成", "Ctrl+N");
-            ImGui::MenuItem("開く", "Ctrl+O");
-            ImGui::MenuItem("保存", "Ctrl+S");
-            ImGui::MenuItem("終了", "Alt+F4");
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("edit(E)")){
-            ImGui::MenuItem("元に戻す", "Ctrl+Z");
-            ImGui::MenuItem("やり直し", "Ctrl+Y");
-            ImGui::MenuItem("切り取り", "Ctrl+X");
-            ImGui::MenuItem("コピー", "Ctrl+C");
-            ImGui::MenuItem("貼り付け", "Ctrl+V");
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("view(V)")){
-            ImGui::MenuItem("ツールバーの表示");
-            ImGui::MenuItem("ステータスバーの表示");
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("build(B)")){
-            ImGui::MenuItem("ビルド");
-            ImGui::MenuItem("クリーン");
-            ImGui::MenuItem("リビルド");
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("debug(D)")){
-            ImGui::MenuItem("開始");
-            ImGui::MenuItem("停止");
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("tools(T)")){
-            ImGui::MenuItem("オプション");
-            ImGui::MenuItem("ショートカット設定");
-            ImGui::EndMenu();
-        }
-        // メニューバーを終了
-        ImGui::EndMainMenuBar();
-    }
+   
     // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
 

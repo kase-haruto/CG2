@@ -31,5 +31,11 @@ protected:
 	bool isAlive_;				//* 生存フラグ
 	bool onGround_;				//* 地面に接地しているか
 
+	//===================================================================*/
+	//                   getter/setter
+	//===================================================================*/
+public:
+	void velocity(const Vector3& velocity){ velocity_ = velocity; }
+
 };
 

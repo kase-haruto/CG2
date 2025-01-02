@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\UI\AttackEditorPanel.cpp" />
     <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
@@ -129,6 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Game\3d\BaseGameObject.cpp" />
     <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
@@ -217,8 +219,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackController.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Base.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Stay.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Jog.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Dush.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.cpp" />
+    <ClCompile Include="Game\3d\Player\Weapon\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\UI\AttackEditorPanel.h" />
     <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
     <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
@@ -235,6 +244,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Game\3d\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
@@ -329,6 +339,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackController.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Base.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Stay.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Jog.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Dush.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.h" />
+    <ClInclude Include="Game\3d\Player\Weapon\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

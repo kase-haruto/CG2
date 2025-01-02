@@ -12,6 +12,7 @@
 #include "engine/graphics/VertexData.h"
 #include "engine/physics/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
+#include "Engine/core/System.h"
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
@@ -50,6 +51,16 @@ void Model::Initialize(){
     Map();
 }
 
+void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths){
+    textureHandles_.clear();
+    for (const auto& filePath : textureFilePaths){
+        textureHandles_.push_back(TextureManager::GetInstance()->LoadTexture(filePath));
+    }
+    if (!textureHandles_.empty()){
+        handle_ = textureHandles_[0]; // 初期テクスチャ
+    }
+}
+
 void Model::Create(const std::string& filename){
     // まずは初期化
     Initialize();
@@ -74,6 +85,9 @@ void Model::Create(const std::string& filename){
 }
 
 void Model::Update(){
+    // テクスチャの更新
+    UpdateTexture();
+
     // UV transform を行列化 (例: スケール→Z回転→平行移動)
     Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
@@ -88,10 +102,24 @@ void Model::Update(){
     // ワールド行列の更新
     worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 
+    // 親の行列がある場合は親の行列を掛け合わせる
+    if (parent_ != nullptr){
+        Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
+        worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
+    }
+
     // カメラ行列との掛け合わせ
-    Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-    matrixData_->world = worldMatrix;
-    matrixData_->WVP = worldViewProjectionMatrix;
+    UpdateMatrix();
+}
+
+void Model::UpdateTexture(){
+    if (textureHandles_.size() <= 1) return; // アニメーション不要
+    elapsedTime_ += System::GetDeltaTime();
+    if (elapsedTime_ >= animationSpeed_){
+        elapsedTime_ -= animationSpeed_;
+        currentFrameIndex_ = (currentFrameIndex_ + 1) % textureHandles_.size();
+        handle_ = textureHandles_[currentFrameIndex_]; // テクスチャを切り替え
+    }
 }
 
 void Model::UpdateMatrix(){

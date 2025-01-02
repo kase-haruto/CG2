@@ -398,6 +398,14 @@
     <ClCompile Include="Game\3d\Player\PlayerAttack\IPlayerAttack.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackController.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Base.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Stay.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Jog.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Dush.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.cpp" />
+    <ClCompile Include="Game\3d\Player\Weapon\Weapon.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.cpp" />
+    <ClCompile Include="Engine\core\UI\AttackEditorPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -636,6 +644,14 @@
     <ClInclude Include="Game\3d\Player\PlayerAttack\IPlayerAttack.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackController.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Base.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Stay.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Jog.h" />
+    <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Dush.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.h" />
+    <ClInclude Include="Game\3d\Player\Weapon\Weapon.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.h" />
+    <ClInclude Include="Engine\core\UI\AttackEditorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

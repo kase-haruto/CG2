@@ -55,15 +55,18 @@ private:
     ~EngineUI() = default;      // デストラクタ
 
     void RenderMainViewport();  // メインビューポートの描画
+	void RenderMenue();         // メニューの描画
 
 private:
 	//===================================================================*/
 	//                    private variable
 	//===================================================================*/
-    SceneObject* selectedObject = nullptr;
+    static EngineUI* pInstance_;
+    std::vector<std::unique_ptr<IEngineUI>> panels_;
 
-    static EngineUI* pInstance_;                        // シングルトンインスタンス
-    UINT64 mainViewportTextureID_;                      // メインビューポート用のテクスチャポインタ
-    std::vector<std::unique_ptr<IEngineUI>> panels_;    // UIパネルのリスト
+    UINT64 mainViewportTextureID_ = 0;
+
+    // AttackEditorパネルの表示状態と管理用ポインタ
+    bool showPlayerAttackEditor_ = false;
 };
 

@@ -24,6 +24,7 @@ public:
     virtual void Create(const std::string& filename) = 0;
     /// 毎フレームの更新
     virtual void Update() = 0;
+    virtual void AnimationUpdate(){}
     /// 行列更新
     virtual void UpdateMatrix() = 0;
     /// バッファへのMap操作(リソースへのCPU書き込みなど)
@@ -87,6 +88,8 @@ public:
 
 
 public:
+    EulerTransform* parent_;
+
     Material materialParameter_;
 
 protected:

@@ -40,13 +40,17 @@ void GameScene::Initialize(){
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
-	player_ = std::make_unique<Player>("player.obj");
+	player_ = std::make_unique<Player>("player.gltf");
 	player_->Initialize();
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
+	playerAttackEditor_ = std::make_unique<PlayerAttackEditor>(player_->GetAttackController());
 
+	attackEditorPanel_ = std::make_unique<AttackEditorPanel>();
+	attackEditorPanel_->SetPlayerAttackEditor(playerAttackEditor_.get());
+	EngineUI::GetInstance()->AddPanel(std::move(attackEditorPanel_));
 
 	//敵
-	enemy_ = std::make_unique<Enemy>("enemy.gltf");
+	enemy_ = std::make_unique<Enemy>("enemy.obj");
 	enemy_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +66,10 @@ void GameScene::Initialize(){
 }
 
 void GameScene::Update(){
+#ifdef _DEBUG
+#endif // _DEBUG
+
+	
 	CameraManager::Update();
 
 	//uiの更新

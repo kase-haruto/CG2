@@ -1,3 +1,5 @@
+// Input.h
+
 #pragma once
 
 #define DIRECTINPUT_VERSION 0x0800 
@@ -9,6 +11,7 @@
 #include <XInput.h>
 #include <unordered_map>
 #include <string>
+#include <cmath> // 追加: sqrt関数を使用するため
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -36,8 +39,6 @@ enum class PAD_BUTTON{
     RT,
     COUNT // ボタン数を取得可能にするための要素
 };
-
-
 
 using Microsoft::WRL::ComPtr;
 
@@ -70,7 +71,7 @@ public:
     static bool TriggerMouseButton(int button);
     static Vector2 GetMousePosition();
     static float GetMouseWheel();
-	static Vector2 GetMouseDelta();
+    static Vector2 GetMouseDelta();
 
     // ゲームパッド
     static bool PushGamepadButton(int button);
@@ -78,6 +79,9 @@ public:
     static Vector2 GetLeftStick();
     static Vector2 GetRightStick();
     static StickState GetStickState(); // 両スティックの状態を取得
+
+    // 左スティックが動いているかどうかを判定する関数
+    static bool IsLeftStickMoved();
 
 private:
     Input() = default;
@@ -92,7 +96,6 @@ private:
     void GamepadUpdate();
 
     float NormalizeAxisInput(short value, short deadZone);
-
 
 private:
     static Input* instance_; // シングルトンインスタンス
@@ -116,8 +119,8 @@ private:
     ComPtr<IDirectInputDevice8> gamepad_ = nullptr;
     XINPUT_GAMEPAD gamepadState_ {};
     XINPUT_GAMEPAD gamepadStatePre_ {};
-    float leftThumbX_;
-    float leftThumbY_;
-    float rightThumbX_;
-    float rightThumbY_;
+    float leftThumbX_ = 0.0f;  // 初期化を追加
+    float leftThumbY_ = 0.0f;  // 初期化を追加
+    float rightThumbX_ = 0.0f; // 初期化を追加
+    float rightThumbY_ = 0.0f; // 初期化を追加
 };

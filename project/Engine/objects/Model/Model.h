@@ -13,8 +13,10 @@ public:
     // BaseModel の純粋仮想関数の実装
     //================================
     void Initialize() override;
+    void InitializeTextures(const std::vector<std::string>& textureFilePaths);
     void Create(const std::string& filename) override;
     void Update() override;
+    void UpdateTexture();
     void UpdateMatrix() override;
     void Map() override;
     void ShowImGuiInterface() override;
@@ -37,4 +39,13 @@ private:
     void CreateMatrixBuffer() override;
     void MaterialBufferMap() override;
     void MatrixBufferMap() override;
+
+private:
+    // 既存のメンバ変数やメソッドの他に以下を追加
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureHandles_; // テクスチャハンドルリスト
+    float animationSpeed_ = 0.1f; // アニメーションの速度 (秒/フレーム)
+    float elapsedTime_ = 0.0f; // 経過時間
+    size_t currentFrameIndex_ = 0; // 現在のフレームインデックス
+
+public:
 };

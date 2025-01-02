@@ -91,7 +91,8 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
 
-	std::unique_ptr<AnimationModel> animationCube_ = nullptr;
+    std::unique_ptr<AnimationModel> animationCube_ = nullptr;
+    std::unique_ptr<Model> spriteTestModel_ = nullptr;
 
     Quaternion q1 = {2.0f,3.0f,4.0f,1.0f};
     Quaternion q2 = {1.0f,3.0f,5.0f,2.0f};
@@ -99,7 +100,7 @@ private:
     ///=========================
     /// particle
     ///=========================
-    
+
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;
 
