@@ -21,7 +21,7 @@ public:
 
 	// 制御点のゲッター
 	std::vector<Vector3>& GetControlPoints(){ return controlPoints_; }
-	const std::vector<Vector3>& GetControlPoints() const{ return controlPoints_; }
+	const std::vector<Vector3>& GetControlPoints() const override{ return controlPoints_; }
 
 	// 軌道の保存・読み込み
 	void SaveControlPoints(const std::string& filepath) const;

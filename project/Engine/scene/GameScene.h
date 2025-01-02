@@ -24,7 +24,7 @@
 #include <vector>
 #include <memory>
 
-///デバッグ関連///
+//デバッグ関連//
 #ifdef _DEBUG
 #include"lib/ImGuiManager.h"
 #include"externals/imgui/imgui.h"

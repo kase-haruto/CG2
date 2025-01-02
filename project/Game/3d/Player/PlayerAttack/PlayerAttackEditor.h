@@ -17,6 +17,8 @@ public:
 
     void ShowGui(bool isShow); // GUI表示
 
+    void Draw();
+
 private:
     char newAttackNameBuffer_[256]; // 新規攻撃名入力用のバッファ
     PlayerAttackController* attackController_; // 編集対象のAttackController

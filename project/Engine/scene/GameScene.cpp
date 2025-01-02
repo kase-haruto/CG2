@@ -107,6 +107,8 @@ void GameScene::Draw(){
 
 	/*modelGround_->Draw();*/
 
+	playerAttackEditor_->Draw();
+
 	//地面の描画
 	modelField_->Draw();
 
