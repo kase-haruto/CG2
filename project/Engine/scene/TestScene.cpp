@@ -45,6 +45,11 @@ void TestScene::Initialize(){
 
 	animationCube_ = std::make_unique<AnimationModel>("AnimatedCube.gltf");
 
+	spriteTestModel_ = std::make_unique<Model>("plane.obj");
+	spriteTestModel_->InitializeTextures({"white1x1.png","uvChecker.png"});
+	spriteTestModel_->SetPos({10.0f,1.0f,0.0f});
+
+
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
@@ -57,16 +62,16 @@ void TestScene::Update(){
 
 #endif // _DEBUG
 
-
 	//uiの更新
 	uiEditor_->Update();
+	spriteTestModel_->Update();
 
 	//モデルの更新
 	modelBuilder_->Update();
 
 	modelField_->Update();
 
-	animationCube_->Update();
+	animationCube_->AnimationUpdate();
 
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -89,6 +94,8 @@ void TestScene::Draw(){
 
 	animationCube_->Draw();
 
+	spriteTestModel_->Draw();
+
 	ParticleManager::GetInstance()->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
@@ -103,6 +110,7 @@ void TestScene::Draw(){
 #pragma region 2Dオブジェクト描画
 	//uiの描画
 	uiEditor_->Draw();
+
 
 #pragma endregion
 }

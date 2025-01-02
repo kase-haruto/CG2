@@ -5,6 +5,19 @@
 #include "../BaseGameObject.h"
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "PlayerAttack/PlayerAttackController.h"
+#include "PlayerAttack/PlayerAttackEditor.h"
+#include "Weapon/Weapon.h"
+
+#include <optional>
+
+	class PlayerState_Base;
+
+	enum class PlayerState{
+		Stay,
+		Jog,
+		Dush,
+		Dead,
+	};
 
 class Player :
 	public Character, public BoxCollider{
@@ -19,6 +32,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void ShowAttackEditorGui();
 	void ShowGui()override;
 
 	/* collision ======================================*/
@@ -30,25 +44,30 @@ private:
 	//===================================================================*/
 	//                   private func
 	//===================================================================*/
-	void Move();
+	void TransitionState(PlayerState nextState);
 
 private:
 	//===================================================================*/
 	//                   private variables
 	//===================================================================*/
-	float targetAngle_ = 0;						// 振り向き用
-	Vector3 moveVelocity_ {};					// 移動速度
+	bool isAttacking_ = false;									// 攻撃中フラグ
+	std::unique_ptr<PlayerAttackController> attackController_;	// 攻撃管理クラス
 
-	bool isAttacking_ = false;					// 攻撃中フラグ
-	PlayerAttackController attackController_;	// 攻撃管理クラス
+	PlayerState state_ = PlayerState::Stay;		// プレイヤーの状態
+	std::unique_ptr<PlayerState_Base> pState_;	// 状態クラス
 
+	//武器
+	std::unique_ptr<Weapon>weapon_ = nullptr;
+
+public:
+	PlayerAttackController* GetAttackController();
 
 public:
 	//===================================================================*/
 	//                   getter
 	//===================================================================*/
-	const EulerTransform& GetTransform()const{ return model_->transform; }
+	const EulerTransform& GetTransform() const;
 	Vector3 GetForward(float distance) const;
-
+	Weapon* GetWeapon()const{ return weapon_.get(); }
 	const Vector3 GetCenterPos()const override;
 };

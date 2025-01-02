@@ -34,12 +34,12 @@ void BoxCollider::Draw(){
 void BoxCollider::ShowGui(){
 
 #ifdef _DEBUG
-
+	ImGui::Spacing(); // 少しスペースを追加
 	std::string headerName = GetName() + "Collider";
 	if (ImGui::CollapsingHeader(headerName.c_str())){
 		JsonCoordinator::RenderGroupUI(name_);
 	}
-
+	ImGui::Spacing();
 #endif // _DEBUG
 
 

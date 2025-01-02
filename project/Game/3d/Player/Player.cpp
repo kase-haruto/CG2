@@ -6,6 +6,11 @@
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 
+//< state
+#include "PlayerState/PlayerState_Stay.h"
+#include "PlayerState/PlayerState_Jog.h"
+#include "PlayerState/PlayerState_Dush.h"
+
 #include <externals/imgui/imgui.h>
 #include "Engine/core/Input.h"
 #include "Engine/core/System.h"
@@ -17,6 +22,7 @@ Player::Player(const std::string& modelName)
 	//オブジェクトの名前を設定
 	BaseGameObject::SetName("Player");
 	Collider::SetName("Player");
+
 }
 
 Player::~Player(){
@@ -29,7 +35,6 @@ Player::~Player(){
 //                    main functions
 //===================================================================*/
 void Player::Initialize(){
-	
 
 	BaseGameObject::Initialize();
 
@@ -41,20 +46,46 @@ void Player::Initialize(){
 	model_->transform.translate.z = -15.0f;
 	moveSpeed_ = 10.0f;
 
-	attackController_.SetPlayer(this);
+	attackController_ = std::make_unique<PlayerAttackController>();
+	attackController_->SetPlayer(this);
 
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
+
+	// 状態クラスの初期化
+	pState_ = std::make_unique<PlayerState_Stay>(this);
+	pState_->Initialize();
+
+	// 武器の初期化
+	weapon_ = std::make_unique<Weapon>("weapon.obj");
+	weapon_->Initialize();
+	weapon_->GetModel()->parent_ = &model_->transform;
 
 }
 
 void Player::Update(){
-	Move();
+
+	//状態の切り替え
+	if (Input::IsLeftStickMoved()){
+		TransitionState(PlayerState::Jog);
+
+		if (Input::PushGamepadButton(12)){
+			TransitionState(PlayerState::Dush);
+		}
+
+	} else{
+		TransitionState(PlayerState::Stay);
+	}
+
+	weapon_->Update();
+
+	// 状態クラスの更新
+	pState_->Update();
 
 	shape_.center = GetCenterPos();
 	shape_.rotate = model_->transform.rotate;
 
 	// 攻撃管理クラスの更新
-	attackController_.Update();
+	attackController_->Update();
 
 	BaseGameObject::Update();
 	Character::Update();
@@ -62,41 +93,48 @@ void Player::Update(){
 
 void Player::Draw(){
 
+	// 状態クラスの描画
+	pState_->Draw();
+
+	weapon_->Draw();
+
 	BoxCollider::Draw();
 	BaseGameObject::Draw();
 
 	// 攻撃管理クラスの描画
-	attackController_.Draw();
+	attackController_->Draw();
 
 }
 
-void Player::Move(){
 
-	Vector3 moveDirection = {Input::GetLeftStick().x,0.0f,Input::GetLeftStick().y};
-	moveVelocity_ = moveDirection * moveSpeed_;
-	Vector3 rotate = CameraManager::GetInstance()->GetFollowRotate();
-	Matrix4x4 matRotateY = MakeRotateYMatrix(rotate.y);
-	Matrix4x4 matRotateZ = MakeRotateZMatrix(rotate.z);
-	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
-	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
-	model_->transform.translate += moveVelocity_ * System::GetDeltaTime();
+void Player::TransitionState(PlayerState nextState){
+	// 状態クラスのクリーンアップ
+	pState_->Cleanup();
 
-	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
-	model_->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
-
-	// 目標角度を計算し、補間を適用
-	targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
-	model_->transform.rotate.y = LerpShortAngle(model_->transform.rotate.y, targetAngle_, 0.1f);
-
+	switch (nextState){
+		case PlayerState::Stay:
+			pState_ = std::make_unique<PlayerState_Stay>(this);
+			break;
+		case PlayerState::Jog:
+			pState_ = std::make_unique<PlayerState_Jog>(this);
+			break;
+		case PlayerState::Dush:
+			pState_ = std::make_unique<PlayerState_Dush>(this);
+			break;
+		case PlayerState::Dead:
+			break;
+	}
+	// 状態クラスの初期化
+	pState_->Initialize();
 }
 
 
 //===================================================================*/
 //                    collision
 //===================================================================*/
-void Player::OnCollisionEnter([[maybe_unused]]Collider* other){
-	
+void Player::OnCollisionEnter([[maybe_unused]] Collider* other){
+
 	//* 衝突相手がtargetType_に含まれていなければreturn
 	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
 
@@ -125,28 +163,45 @@ void Player::ShowGui(){
 
 	SceneObject::ShowGui();
 
-	if (ImGui::Button("save")){
-		JsonCoordinator::SaveGroup(BaseGameObject::GetName(),BaseGameObject::jsonPath);
+	ImGui::Spacing(); // 少しスペースを追加
+
+	// Saveボタン
+	if (ImGui::Button("Save")){
+		JsonCoordinator::SaveGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
 	}
 
-	ImGui::Separator();
 
+	// BaseGameObjectのGUI表示
 	BaseGameObject::ShowGui();
 
-	ImGui::Separator();
 
+	// BoxColliderのGUI表示
 	BoxCollider::ShowGui();
 
-	ImGui::Separator();
+	// AttackControllerのGUI表示
+	attackController_->ShowGui();
 
-	attackController_.ShowGui();
+	
+
 }
+
+PlayerAttackController* Player::GetAttackController(){
+	return attackController_.get();
+}
+
+const EulerTransform& Player::GetTransform() const{
+	return model_->transform;
+}
+
 
 //===================================================================*/
 //                    getter
 //===================================================================*/
-const Vector3 Player::GetCenterPos()const {
+const Vector3 Player::GetCenterPos()const{
 	const Vector3 offset = {0.0f, 1.0f, 0.0f};
-	Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
+	Vector3 worldPos;
+	if (model_){
+		worldPos = Vector3::Transform(offset, model_->worldMatrix);
+	}
 	return worldPos;
 }

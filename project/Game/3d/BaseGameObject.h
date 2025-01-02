@@ -2,6 +2,7 @@
 
 //* engine *//
 #include "Engine/objects/Model/Model.h"
+#include "Engine/objects/Animation/AnimationModel.h"
 #include "Engine/objects/SceneObject.h"
 
 //* c++ lib *//
@@ -10,6 +11,13 @@
 
 class BaseGameObject
 	:public SceneObject{
+
+	enum ObjectModelType{
+		ModelType_Static,		// 静的モデル
+		ModelType_Animation,	// アニメーションモデル
+		ModelType_Unknown,		// 不明
+	};
+
 public:
 	//===================================================================*/
 	//                    public methods
@@ -27,13 +35,27 @@ protected:
 	//===================================================================*/
 	//                    protected methods
 	//===================================================================*/
-	std::unique_ptr<Model> model_ = nullptr;	// 描画用モデル
+	void AnimationModelUpdate();
+	void StaticModelUpdate();
+
+protected:
+	//===================================================================*/
+	//                    protected methods
+	//===================================================================*/
+	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
+	std::unique_ptr<AnimationModel> animationModel_ = nullptr;	// アニメーションモデル
 
 protected:
 	//===================================================================*/
 	//                    private methods
 	//===================================================================*/
 	std::string jsonPath = "gameObjects";
+
+private:
+	//===================================================================*/
+	//                    private variables
+	//===================================================================*/
+	ObjectModelType objectModelType_ = ModelType_Static;
 
 public:
 	//===================================================================*/
@@ -47,5 +69,7 @@ public:
 		Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
 		return worldPos;
 	}
+
+	BaseModel* GetModel()const{ return model_.get(); }
 };
 

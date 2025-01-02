@@ -55,11 +55,7 @@ void AnimationModel::Create(const std::string& filename){
     // テクスチャを読み込む
     handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
 
-    // ▼ ここでアニメーションを読み込む (filenameはモデルと同じ場合、または別ファイルなら調整) ▼
-    //   例: モデルが "suzanne.obj" なら、アニメーションは "suzanne.fbx" とか
-    //   ここでは仮に同名を期待
-    //   - "Resources/animations" フォルダにある想定
-    //   - ファイルが存在しなければアニメーションなしとして扱う
+    // ▼ ここでアニメーションを読み込む
     try{
         animation_ = LoadAnimationFile("Resources/models", filename);
     } catch (...){
@@ -83,12 +79,19 @@ void AnimationModel::Initialize(){
     // デフォルト値
     RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     transform = {
-        {1.0f, 1.0f, 1.0f},  // scale
-        {0.0f, 0.0f, 0.0f},  // rotate
-        {0.0f, 0.0f, 0.0f}   // translate
+        {1.0f, 1.0f, 1.0f}, // scale
+        {0.0f, 0.0f, 0.0f}, // rotate
+        {0.0f, 0.0f, 0.0f}  // translate
     };
     materialParameter_.shininess = 20.0f;
     materialParameter_.enableLighting = HalfLambert;
+
+    // 追加: アニメーション用のtransformを初期化
+    animationTransform_ = {
+        {1.0f, 1.0f, 1.0f}, // scale
+        {0.0f, 0.0f, 0.0f}, // rotate
+        {0.0f, 0.0f, 0.0f}  // translate
+    };
 
     // バッファ生成
     CreateMaterialBuffer();
@@ -105,28 +108,28 @@ void AnimationModel::PlayAnimation(){
         return;
     }
 
-    // 時間を進める
-    animationTime_ += System::GetDeltaTime();
+    // 時間を進める（アニメーション速度を考慮）
+    animationTime_ += System::GetDeltaTime() * animationSpeed_;
     // ループ
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 
-    // ここでは例として「先頭ノードのアニメーション」を適用する
-    // 実際は "Root" など特定のノード名を探すか、複数ノードを再帰処理するか検討する
+    // 「先頭ノードのアニメーション」を適用
     if (!animation_.nodeAnimations.empty()){
         auto it = animation_.nodeAnimations.begin();
         NodeAnimation& nodeAnimation = it->second;
 
         // 補間値を取得
-        Vector3 newTrans = CalculateValue(nodeAnimation.translate, animationTime_);
+        Vector3    newTrans = CalculateValue(nodeAnimation.translate, animationTime_);
         Quaternion newRot = CalculateValue(nodeAnimation.rotate, animationTime_);
-        Vector3 newScale = CalculateValue(nodeAnimation.scale, animationTime_);
+        Vector3    newScale = CalculateValue(nodeAnimation.scale, animationTime_);
 
-        // transform に反映 (Quaternion→Euler変換)
-        transform.translate = newTrans;
-        transform.rotate = Quaternion::ToEuler(newRot);
-        transform.scale = newScale;
+        // 「アニメーション用」のtransformのみ更新する
+        animationTransform_.translate = newTrans;
+        animationTransform_.rotate = Quaternion::ToEuler(newRot);
+        animationTransform_.scale = newScale;
     }
 }
+
 
 Quaternion AnimationModel::CalculateValue(const AnimationCurve<Quaternion>& curve, float time){
     if (curve.keyframes.empty()){
@@ -151,7 +154,6 @@ Quaternion AnimationModel::CalculateValue(const AnimationCurve<Quaternion>& curv
     return curve.keyframes.back().value;
 }
 
-
 Vector3 AnimationModel::CalculateValue(const AnimationCurve<Vector3>& curve, float time){
     if (curve.keyframes.empty()){
         return Vector3(0, 0, 0);
@@ -174,33 +176,52 @@ Vector3 AnimationModel::CalculateValue(const AnimationCurve<Vector3>& curve, flo
     }
     return curve.keyframes.back().value;
 }
+
 //-----------------------------------------------------------------------------
 // 毎フレームの更新
 //-----------------------------------------------------------------------------
-void AnimationModel::Update(){
-    // (1) アニメーションを再生
+void AnimationModel::AnimationUpdate(){
+    // (1) アニメーションを再生（animationTransform_ を更新）
     PlayAnimation();
 
-    // (2) UV transform を行列化 (例: スケール→Z回転→平行移動)
+    // (2) UV transform を行列化
     Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
     uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
     materialData_->uvTransform = uvTransformMatrix;
 
-    // (3) マテリアルの更新
+    // (3) マテリアル更新
     materialData_->color = RGBa;
     materialData_->shininess = materialParameter_.shininess;
     materialData_->enableLighting = materialParameter_.enableLighting;
 
-    // (4) ワールド行列の更新 (アニメーションで変更された transform を利用)
-    worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+    // (4) ワールド行列の更新
+    //   ここで「手動transform + アニメーションtransform」 を合成する
+    Matrix4x4 manualMat = MakeAffineMatrix(
+        transform.scale,
+        transform.rotate,
+        transform.translate
+    );
+    Matrix4x4 animMat = MakeAffineMatrix(
+        animationTransform_.scale,
+        animationTransform_.rotate,
+        animationTransform_.translate
+    );
+
+    // 例: 「手動で移動させたオブジェクト」に対して「アニメーションの回転やスケール」を適用
+    //     → 最終行列 = manualMat * animMat
+    worldMatrix = Matrix4x4::Multiply(animMat,manualMat);
 
     // (5) カメラ行列との掛け合わせ
-    Matrix4x4 worldViewProjectionMatrix
-        = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
+    Matrix4x4 worldViewProjectionMatrix =
+        Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
     matrixData_->world = worldMatrix;
     matrixData_->WVP = worldViewProjectionMatrix;
+}
+
+void AnimationModel::Update(){
+    // 必要に応じて処理を入れる
 }
 
 //-----------------------------------------------------------------------------
@@ -240,10 +261,12 @@ void AnimationModel::UpdateMatrix(){
 //-----------------------------------------------------------------------------
 void AnimationModel::ShowImGuiInterface(){
 #ifdef _DEBUG
+    // transform (ユーザーが自由にいじる用)
     if (ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f)){}
     if (ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f)){}
     if (ImGui::DragFloat3("Scale", &transform.scale.x, 0.01f)){}
     if (ImGui::DragFloat3("uvScale", &uvTransform.scale.x, 0.01f)){}
+
     ImGui::DragFloat("shininess", &materialData_->shininess, 0.01f);
 
     // ライティングモードなど
@@ -266,6 +289,15 @@ void AnimationModel::ShowImGuiInterface(){
     // for (auto &pair : animation_.nodeAnimations) {
     //     ImGui::Text("Node: %s", pair.first.c_str());
     // }
+
+    // アニメーション用transformを直接UI操作したい場合は下記のように追加してもOK
+    // if (ImGui::TreeNode("AnimationTransform")) {
+    //     ImGui::DragFloat3("Anim Translation", &animationTransform_.translate.x, 0.01f);
+    //     ImGui::DragFloat3("Anim Rotation",    &animationTransform_.rotate.x,    0.01f);
+    //     ImGui::DragFloat3("Anim Scale",       &animationTransform_.scale.x,     0.01f);
+    //     ImGui::TreePop();
+    // }
+
 #endif
 }
 

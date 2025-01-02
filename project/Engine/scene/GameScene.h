@@ -6,7 +6,9 @@
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
 #include "Game/3d/Player/Player.h"
+#include "Game/3d/Player/PlayerAttack/PlayerAttackEditor.h"
 #include "Game/3d/Enemy/Enemy.h"
+#include "Engine/core/UI/AttackEditorPanel.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -76,7 +78,10 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
     std::unique_ptr<Model> modelGround_ = nullptr;
     std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<PlayerAttackEditor> playerAttackEditor_ = nullptr;
     std::unique_ptr<Enemy> enemy_ = nullptr;
+
+	std::unique_ptr<AttackEditorPanel> attackEditorPanel_ = nullptr;
 
     // 各ウィンドウの表示フラグ
     bool showObjectWindow = false;
