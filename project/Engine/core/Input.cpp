@@ -302,17 +302,15 @@ float Input::NormalizeAxisInput(short value, short deadZone){
 
 //-----------------------------------------------------------------------------
 /* ゲームパッドボタンが押されているかの判定 */
-bool Input::PushGamepadButton(int button){
-    // ボタンが押されているかチェック
-    return (instance_->gamepadState_.wButtons & (1 << button)) != 0;
+bool Input::PushGamepadButton(PAD_BUTTON button){
+    return (instance_->gamepadState_.wButtons & static_cast< WORD >(button)) != 0;
 }
 
 //-----------------------------------------------------------------------------
 /* ゲームパッドボタンがトリガーされた瞬間の判定 */
-bool Input::TriggerGamepadButton(int button){
-    // ボタンが押された瞬間をチェック
-    return ((instance_->gamepadState_.wButtons & (1 << button)) != 0) &&
-        ((instance_->gamepadStatePre_.wButtons & (1 << button)) == 0);
+bool Input::TriggerGamepadButton(PAD_BUTTON button){
+    return ((instance_->gamepadState_.wButtons & static_cast< WORD >(button)) != 0) &&
+        ((instance_->gamepadStatePre_.wButtons & static_cast< WORD >(button)) == 0);
 }
 
 //-----------------------------------------------------------------------------

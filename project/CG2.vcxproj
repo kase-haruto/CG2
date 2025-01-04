@@ -244,6 +244,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\ComboData.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Game\3d\BaseGameObject.h" />

@@ -20,24 +20,24 @@
 // デッドゾーンのデフォルト値
 constexpr float DEFAULT_DEAD_ZONE = 0.2f;
 
-enum class PAD_BUTTON{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    START,
-    BACK,
-    L_STICK,
-    R_STICK,
-    LB,
-    RB,
-    A,
-    B,
-    X,
-    Y,
-    LT,
-    RT,
-    COUNT // ボタン数を取得可能にするための要素
+enum class PAD_BUTTON : WORD{
+    A = XINPUT_GAMEPAD_A,
+    B = XINPUT_GAMEPAD_B,
+    X = XINPUT_GAMEPAD_X,
+    Y = XINPUT_GAMEPAD_Y,
+    LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
+    RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+    BACK = XINPUT_GAMEPAD_BACK,
+    START = XINPUT_GAMEPAD_START,
+    L_STICK = XINPUT_GAMEPAD_LEFT_THUMB,
+    R_STICK = XINPUT_GAMEPAD_RIGHT_THUMB,
+    DPAD_UP = XINPUT_GAMEPAD_DPAD_UP,
+    DPAD_DOWN = XINPUT_GAMEPAD_DPAD_DOWN,
+    DPAD_LEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+    DPAD_RIGHT = XINPUT_GAMEPAD_DPAD_RIGHT,
+    LT = 0x0001, // Example value, adjust as needed
+    RT = 0x0002, // Example value, adjust as needed
+    COUNT    // ボタン数を取得可能にするための要素
 };
 
 using Microsoft::WRL::ComPtr;
@@ -74,8 +74,8 @@ public:
     static Vector2 GetMouseDelta();
 
     // ゲームパッド
-    static bool PushGamepadButton(int button);
-    static bool TriggerGamepadButton(int button);
+    static bool PushGamepadButton(PAD_BUTTON button);
+    static bool TriggerGamepadButton(PAD_BUTTON button);
     static Vector2 GetLeftStick();
     static Vector2 GetRightStick();
     static StickState GetStickState(); // 両スティックの状態を取得

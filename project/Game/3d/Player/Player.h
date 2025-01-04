@@ -46,6 +46,7 @@ private:
 	//===================================================================*/
 	void TransitionState(PlayerState nextState);
 
+	std::string GetAttackInput(); // 攻撃名を取得する関数
 private:
 	//===================================================================*/
 	//                   private variables
@@ -58,6 +59,7 @@ private:
 
 	//武器
 	std::unique_ptr<Weapon>weapon_ = nullptr;
+
 
 public:
 	PlayerAttackController* GetAttackController();

@@ -652,6 +652,7 @@
     <ClInclude Include="Game\3d\Player\Weapon\Weapon.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.h" />
     <ClInclude Include="Engine\core\UI\AttackEditorPanel.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\ComboData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

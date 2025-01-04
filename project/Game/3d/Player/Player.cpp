@@ -64,11 +64,16 @@ void Player::Initialize(){
 
 void Player::Update(){
 
+	// 攻撃入力の検出
+	if (Input::TriggerGamepadButton(PAD_BUTTON::X)){
+		attackController_->HandleAttackInput();
+	}
+
 	//状態の切り替え
 	if (Input::IsLeftStickMoved()){
 		TransitionState(PlayerState::Jog);
 
-		if (Input::PushGamepadButton(12)){
+		if (Input::PushGamepadButton(PAD_BUTTON::A)){
 			TransitionState(PlayerState::Dush);
 		}
 
@@ -127,6 +132,13 @@ void Player::TransitionState(PlayerState nextState){
 	}
 	// 状態クラスの初期化
 	pState_->Initialize();
+}
+
+std::string Player::GetAttackInput(){
+	if (Input::TriggerGamepadButton(PAD_BUTTON::X)){
+		return "XButtonAttack"; // プレースホルダー。実際にはHandleAttackInputを使用
+	}
+	return "";
 }
 
 
