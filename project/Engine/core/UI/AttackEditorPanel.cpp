@@ -2,7 +2,7 @@
 #include <externals/imgui/imgui.h>
 
 AttackEditorPanel::AttackEditorPanel()
-:IEngineUI("Editor"){
+:IEngineUI("AttackEditor"){
 	isShow_ = true;
 }
 

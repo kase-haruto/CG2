@@ -15,6 +15,7 @@ public:
 	void Execution()override;	//< 実行
 	void Update()override;		//< 更新
 	void Draw()override;		//< 描画
+	void Cleanup()override;		//< クリーンアップ
 
 	/* helper ==================================*/
 	std::unique_ptr<IPlayerAttack> Clone() const override;

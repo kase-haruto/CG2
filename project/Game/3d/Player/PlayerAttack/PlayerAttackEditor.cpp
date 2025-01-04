@@ -51,7 +51,7 @@ PlayerAttackEditor::PlayerAttackEditor(PlayerAttackController* controller)
 	strncpy_s(newAttackNameBuffer_, "NewAttack", sizeof(newAttackNameBuffer_));
 	newAttackNameBuffer_[sizeof(newAttackNameBuffer_) - 1] = '\0'; // ヌル終端
 
-	LoadAttackTemplates("attack_templates.json");
+	LoadAttackTemplates("Resources/json/gameObjects/Player/playerAttack/attack_templates.json");
 
 }
 
@@ -85,7 +85,7 @@ void PlayerAttackEditor::ShowGui(){
 
 	// 保存ボタン
 	if (ImGui::Button("Save Templates")){
-		SaveAttackTemplates("attack_templates.json");
+		SaveAttackTemplates("Resources/json/gameObjects/Player/playerAttack/attack_templates.json");
 	}
 
 	ImGui::SameLine();

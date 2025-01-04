@@ -125,6 +125,17 @@ void EngineUI::AddPanel(std::unique_ptr<IEngineUI> panel){
     panels_.push_back(std::move(panel));
 }
 
+void EngineUI::RemovePanel(const std::string& panelName){
+    auto& panels = pInstance_->panels_;
+    panels.erase(
+        std::remove_if(panels.begin(), panels.end(),
+        [&panelName] (const std::unique_ptr<IEngineUI>& panel) -> bool{
+            return panel->GetPanelName() == panelName;
+        }),
+        panels.end()
+    );
+}
+
 void EngineUI::SetMainViewportTexture(UINT64 textureID){
     if (pInstance_->mainViewportTextureID_){ return; }
     pInstance_->mainViewportTextureID_ = textureID;

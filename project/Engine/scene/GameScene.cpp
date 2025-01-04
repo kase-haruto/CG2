@@ -45,6 +45,7 @@ void GameScene::Initialize(){
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 	playerAttackEditor_ = std::make_unique<PlayerAttackEditor>(player_->GetAttackController());
 	playerAttackEditor_->SetPlayer(player_.get());
+
 	attackEditorPanel_ = std::make_unique<AttackEditorPanel>();
 	attackEditorPanel_->SetPlayerAttackEditor(playerAttackEditor_.get());
 	EngineUI::GetInstance()->AddPanel(std::move(attackEditorPanel_));
@@ -69,7 +70,7 @@ void GameScene::Update(){
 #ifdef _DEBUG
 #endif // _DEBUG
 
-	
+
 	CameraManager::Update();
 
 	//uiの更新
@@ -131,6 +132,7 @@ void GameScene::Draw(){
 }
 
 void GameScene::CleanUp(){
+	EngineUI::GetInstance()->RemovePanel("AttackEditor");
 }
 
 void GameScene::ModelPreDraw(){

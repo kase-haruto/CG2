@@ -44,6 +44,12 @@ public:
     /// </summary>
     void AddPanel(std::unique_ptr<IEngineUI> panel);
 
+    /// <summary>
+  /// パネルを削除する
+  /// </summary>
+  /// <param name="panelName">削除するパネルの名前</param>
+    void RemovePanel(const std::string& panelName);
+
     // メインビューポート用のテクスチャを設定
     static void SetMainViewportTexture(UINT64 textureID);
 
