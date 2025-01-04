@@ -70,4 +70,6 @@ public:
 	Vector3 GetForward(float distance) const;
 	Weapon* GetWeapon()const{ return weapon_.get(); }
 	const Vector3 GetCenterPos()const override;
+	const Matrix4x4 GetWorldMatrix()const;
+	bool IsAttacking()const{ return attackController_->IsAttacking(); }
 };

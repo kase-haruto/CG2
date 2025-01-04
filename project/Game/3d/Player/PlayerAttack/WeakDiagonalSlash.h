@@ -27,6 +27,13 @@ public:
 	void SaveControlPoints(const std::string& filepath) const;
 	void LoadControlPoints(const std::string& filepath);
 
+	std::string GetType() const override{
+		return "WeakDiagonalSlash";
+	}
+
+	void SetControlPoints(const std::vector<Vector3>& controlPoints) override{
+		controlPoints_ = controlPoints;
+	}
 
 	/* gui ui ===================================*/
 	void ShowGui()override;		//< gui表示

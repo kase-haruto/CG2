@@ -44,7 +44,7 @@ void GameScene::Initialize(){
 	player_->Initialize();
 	CameraManager::GetInstance()->SetFollowTarget(&player_->GetTransform());
 	playerAttackEditor_ = std::make_unique<PlayerAttackEditor>(player_->GetAttackController());
-
+	playerAttackEditor_->SetPlayer(player_.get());
 	attackEditorPanel_ = std::make_unique<AttackEditorPanel>();
 	attackEditorPanel_->SetPlayerAttackEditor(playerAttackEditor_.get());
 	EngineUI::GetInstance()->AddPanel(std::move(attackEditorPanel_));

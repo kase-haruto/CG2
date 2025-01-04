@@ -205,3 +205,7 @@ const Vector3 Player::GetCenterPos()const{
 	}
 	return worldPos;
 }
+
+const Matrix4x4 Player::GetWorldMatrix() const{
+	return model_->worldMatrix;
+}

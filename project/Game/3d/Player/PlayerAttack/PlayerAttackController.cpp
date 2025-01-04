@@ -80,3 +80,18 @@ void PlayerAttackController::ShowGui(){
 
     ImGui::End();
 }
+
+
+
+
+std::unordered_map<std::string, std::unique_ptr<IPlayerAttack>>& PlayerAttackController::GetAttackTemplates(){
+    return attackTemplates_;
+}
+
+IPlayerAttack& PlayerAttackController::GetAttackTemplate(const std::string& name){
+    return *(attackTemplates_.at(name));
+}
+
+bool PlayerAttackController::HasAttackTemplate(const std::string& name) const{
+    return attackTemplates_.find(name) != attackTemplates_.end();
+}

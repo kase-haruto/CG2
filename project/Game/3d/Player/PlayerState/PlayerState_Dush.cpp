@@ -17,7 +17,9 @@ PlayerState_Dush::PlayerState_Dush(Player* player)
 void PlayerState_Dush::Initialize(){}
 
 void PlayerState_Dush::Update(){
-	Move();
+	if (!pPlayer_->IsAttacking()){
+		Move();
+	}
 }
 
 void PlayerState_Dush::Draw(){}

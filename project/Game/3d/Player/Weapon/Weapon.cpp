@@ -21,7 +21,8 @@ void Weapon::Initialize(){
 	std::string path = BaseGameObject::jsonPath + "/weapon";
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), path);
 
-
+	model_->transform.translate = {0.8f,1.56f,0.44f};
+	model_->transform.rotate = {0.0f,1.56f,2.39f};
 }
 
 void Weapon::Update(){
@@ -54,5 +55,11 @@ void Weapon::ShowGui(){
 
 	ImGui::DragFloat3("offset", &offset_.x, 0.01f);
 
+}
+
+void Weapon::InitializeTransform(){
+	model_->transform.translate = {0.8f,1.56f,0.44f};
+	model_->transform.rotate = {0.0f,1.56f,2.39f};
+	model_->transform.scale = Vector3(1.0f, 1.0f, 1.0f);
 }
 

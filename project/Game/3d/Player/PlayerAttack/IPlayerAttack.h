@@ -19,6 +19,7 @@ public:
     virtual void Update() = 0;         //< 更新
     virtual void Draw() = 0;           //< 描画
     virtual void ShowGui() = 0;        //< GUI表示
+    virtual void Cleanup(){};        //< クリーンアップ
 
     /* collision ===================================*/
     virtual void OnCollisionEnter([[maybe_unused]] Collider* other) override{}
@@ -45,7 +46,10 @@ public:
 
     // 制御点の取得
     virtual const std::vector<Vector3>& GetControlPoints() const = 0;
+    // 攻撃タイプの取得
+    virtual std::string GetType() const = 0;
 
+    virtual void SetControlPoints(const std::vector<Vector3>& controlPoints) =0;
 protected:
     Vector3 center_;            //< 衝突判定用の中心座標
     Vector3 offset_;            //< 衝突判定用のオフセット

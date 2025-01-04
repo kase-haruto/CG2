@@ -21,7 +21,9 @@ PlayerState_Jog::PlayerState_Jog(Player* player)
 void PlayerState_Jog::Initialize(){}
 
 void PlayerState_Jog::Update(){
-	Move();
+	if (!pPlayer_->IsAttacking()){
+		Move();
+	}
 }
 
 void PlayerState_Jog::Draw(){}
