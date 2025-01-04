@@ -11,54 +11,63 @@
 
 class IPlayerAttack : public BoxCollider{
 public:
-    IPlayerAttack(const std::string& attackName);
-    virtual ~IPlayerAttack();
+	IPlayerAttack(const std::string& attackName);
+	virtual ~IPlayerAttack();
 
-    virtual void Initialize() = 0;    //< 初期化
-    virtual void Execution() = 0;     //< 実行
-    virtual void Update() = 0;         //< 更新
-    virtual void Draw() = 0;           //< 描画
-    virtual void ShowGui() = 0;        //< GUI表示
-    virtual void Cleanup(){};        //< クリーンアップ
+	virtual void Initialize() = 0;    //< 初期化
+	virtual void Execution() = 0;     //< 実行
+	virtual void Update() = 0;         //< 更新
+	virtual void Draw() = 0;           //< 描画
+	virtual void ShowGui() = 0;        //< GUI表示
+	virtual void Cleanup(){};        //< クリーンアップ
 
-    /* collision ===================================*/
-    virtual void OnCollisionEnter([[maybe_unused]] Collider* other) override{}
-    virtual void OnCollisionStay([[maybe_unused]] Collider* other) override{}
-    virtual void OnCollisionExit([[maybe_unused]] Collider* other) override{}
+	/* collision ===================================*/
+	virtual void OnCollisionEnter([[maybe_unused]] Collider* other) override{}
+	virtual void OnCollisionStay([[maybe_unused]] Collider* other) override{}
+	virtual void OnCollisionExit([[maybe_unused]] Collider* other) override{}
 
-    // クローン作成メソッド
-    virtual std::unique_ptr<IPlayerAttack> Clone() const = 0;
+	// クローン作成メソッド
+	virtual std::unique_ptr<IPlayerAttack> Clone() const = 0;
 
 public:
-    //===================================================================*/
-    //					getter/setter
-    //===================================================================*/
-    void SetCenter(const Vector3& center){ center_ = center; }
+	//===================================================================*/
+	//					getter/setter
+	//===================================================================*/
+	void SetCenter(const Vector3& center){ center_ = center; }
 
-    // 攻撃中かどうかを取得
-    bool IsAttacking() const{ return isAttacking_; }
+	// 攻撃中かどうかを取得
+	bool IsAttacking() const{ return isAttacking_; }
 
-    // 攻撃名の取得
-    const std::string& GetName() const{ return attackName_; }
+	// 攻撃名の取得
+	const std::string& GetName() const{ return attackName_; }
 
-    // Weaponのセット
-    void SetWeapon(Weapon* weapon){ weapon_ = weapon; }
+	// Weaponのセット
+	void SetWeapon(Weapon* weapon){ weapon_ = weapon; }
 
-    // 制御点の取得
-    virtual const std::vector<Vector3>& GetControlPoints() const = 0;
-    // 攻撃タイプの取得
-    virtual std::string GetType() const = 0;
+	// 制御点の取得
+	virtual const std::vector<Vector3>& GetControlPoints() const = 0;
+	// 攻撃タイプの取得
+	virtual std::string GetType() const = 0;
 
-    virtual void SetControlPoints(const std::vector<Vector3>& controlPoints) =0;
+	virtual void SetControlPoints(const std::vector<Vector3>& controlPoints) = 0;
+
+	// **コライダーアクセサの実装**
+	Vector3 GetColliderCenter() const{ return shape_.center; }
+	void SetColliderCenter(const Vector3& center){ shape_.center = center; }
+
+	Vector3 GetColliderSize() const{ return shape_.size; }
+	void SetColliderSize(const Vector3& size){ shape_.size = size; }
+
+
 protected:
-    Vector3 center_;            //< 衝突判定用の中心座標
-    Vector3 offset_;            //< 衝突判定用のオフセット
-    Vector3 rotate_;            //< 衝突判定用の回転角度
+	Vector3 center_;            //< 衝突判定用の中心座標
+	Vector3 offset_;            //< 衝突判定用のオフセット
+	Vector3 rotate_;            //< 衝突判定用の回転角度
 
-    bool isAttacking_ = false;  //< 攻撃中フラグ
+	bool isAttacking_ = false;  //< 攻撃中フラグ
 
-    Weapon* weapon_ = nullptr;  //< Weaponへのポインタ
+	Weapon* weapon_ = nullptr;  //< Weaponへのポインタ
 
 private:
-    std::string attackName_;    //< 攻撃名
+	std::string attackName_;    //< 攻撃名
 };

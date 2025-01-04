@@ -18,6 +18,8 @@ WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 void WeakDiagonalSlash::Initialize(){
 	isAttacking_ = true;
 	animationTime_ = 0.0f;
+	offset_ = Vector3(0.0f, 0.0f, 2.0f);
+
 }
 
 void WeakDiagonalSlash::Execution(){
@@ -31,6 +33,7 @@ void WeakDiagonalSlash::Update(){
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
+		Cleanup();
 	}
 
 	// Catmull-Rom 補間を使用して現在の位置を計算
@@ -44,9 +47,14 @@ void WeakDiagonalSlash::Update(){
 }
 
 void WeakDiagonalSlash::Draw(){
-	if (isAttacking_){
 		BoxCollider::Draw();
-	}
+}
+
+void WeakDiagonalSlash::Cleanup(){
+	// クリーンアップ処理
+	isAttacking_ = false;
+	animationTime_ = 0.0f;
+	animationSpeed_ = 1.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////
