@@ -3,6 +3,7 @@
 #include "Engine/core/System.h"
 #include "lib/myFunc/MathFunc.h"
 #include "Engine/core/Json/JsonCoordinator.h"
+#include "../Player.h"
 
 WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 	: IPlayerAttack(attackName),
@@ -18,7 +19,10 @@ WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 void WeakDiagonalSlash::Initialize(){
 	isAttacking_ = true;
 	animationTime_ = 0.0f;
-	offset_ = Vector3(0.0f, 0.0f, 2.0f);
+	offset_ = 2.0f;
+
+	Vector3 weaponRotate {1.4f,0.0f,0.0f};
+	weapon_->SetRotate(weaponRotate);
 
 }
 
@@ -43,7 +47,8 @@ void WeakDiagonalSlash::Update(){
 	//Vector3 weaponPosition = weapon_->GetCenterPos(); // SetCenter で設定された武器の位置を取得
 	weapon_->SetPosition(currentPosition_);
 
-	shape_.center = center_ + offset_;
+	shape_.center = center_ + pPlayer_->GetForward() * offset_;
+	shape_.rotate = pPlayer_->GetRotate();
 }
 
 void WeakDiagonalSlash::Draw(){

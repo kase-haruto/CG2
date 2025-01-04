@@ -2,6 +2,8 @@
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 
+#include "../Player.h"
+
 #include <externals/imgui/imgui.h>
 
 
@@ -17,7 +19,7 @@ IPlayerAttack::IPlayerAttack(const std::string& attackName){
 	BoxCollider::Initialize(Vector3(1.0f, 1.0f, 1.0f));
 
 	rotate_ = Vector3(0.0f, 0.0f, 0.0f);
-	offset_ = Vector3(0.0f, 0.0f, 0.0f);
+	offset_ = 0.0f;
 
 	std::string directory = "gameObjects/Player";
 	JsonCoordinator::LoadGroup(Collider::GetName().c_str(), directory);
@@ -27,4 +29,8 @@ IPlayerAttack::IPlayerAttack(const std::string& attackName){
 
 IPlayerAttack::~IPlayerAttack(){
 	CollisionManager::GetInstance()->RemoveCollider(this);
+}
+
+void IPlayerAttack::SetPlayer(const Player* pPlayer){
+	pPlayer_ = pPlayer;
 }

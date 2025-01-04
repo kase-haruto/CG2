@@ -74,8 +74,9 @@ void PlayerAttackController::ExecuteAttack(const std::string& attackName){
         // テンプレートから新しい攻撃インスタンスを生成
         std::unique_ptr<IPlayerAttack> newAttack = it->second->Clone();
         newAttack->SetCenter(pPlayer_->GetCenterPos());
-        newAttack->Execution();
+		newAttack->SetPlayer(pPlayer_);
         newAttack->SetWeapon(pPlayer_->GetWeapon());
+        newAttack->Execution();
         activeAttacks_.emplace_back(std::move(newAttack));
     }
 }

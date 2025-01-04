@@ -9,6 +9,8 @@
 #include <memory>
 #include <vector>
 
+class Player;
+
 class IPlayerAttack : public BoxCollider{
 public:
 	IPlayerAttack(const std::string& attackName);
@@ -43,6 +45,7 @@ public:
 
 	// Weaponのセット
 	void SetWeapon(Weapon* weapon){ weapon_ = weapon; }
+	void SetPlayer(const Player* pPlayer);
 
 	// 制御点の取得
 	virtual const std::vector<Vector3>& GetControlPoints() const = 0;
@@ -61,12 +64,13 @@ public:
 
 protected:
 	Vector3 center_;            //< 衝突判定用の中心座標
-	Vector3 offset_;            //< 衝突判定用のオフセット
+	float offset_;				//< 衝突判定用のオフセット
 	Vector3 rotate_;            //< 衝突判定用の回転角度
 
 	bool isAttacking_ = false;  //< 攻撃中フラグ
 
 	Weapon* weapon_ = nullptr;  //< Weaponへのポインタ
+	const Player* pPlayer_ = nullptr; //< Playerへのポインタ
 
 private:
 	std::string attackName_;    //< 攻撃名

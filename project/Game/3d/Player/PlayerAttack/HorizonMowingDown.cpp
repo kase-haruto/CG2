@@ -2,13 +2,14 @@
 
 #include "lib/myFunc/MathFunc.h"
 #include "Engine/core/System.h"
+#include "../Player.h"
 
 #include <externals/imgui/imgui.h>
 #include <externals/nlohmann/json.hpp>
 #include <fstream>
 
 HorizonMowingDown::HorizonMowingDown(const std::string& attackName)
-	:IPlayerAttack(attackName), animationTime_(0.0f), animationSpeed_(1.0f){
+	:IPlayerAttack(attackName), animationTime_(0.0f), animationSpeed_(3.0f){
 	SetupDefaultControlPoints();
 }
 
@@ -18,11 +19,15 @@ HorizonMowingDown::HorizonMowingDown(const std::string& attackName)
 void HorizonMowingDown::Initialize(){
 	isAttacking_ = true;
 	animationTime_ = 0.0f;
-	offset_ = Vector3(0.0f, 0.0f, 2.0f);
+	offset_ = 2.0f;
+	Vector3 weaponRotate {1.4f,0.0f,1.5f};
+	weapon_->SetRotate(weaponRotate);
+	
 }
 
 void HorizonMowingDown::Execution(){
 	Initialize();
+	
 }
 
 void HorizonMowingDown::Update(){
@@ -42,7 +47,10 @@ void HorizonMowingDown::Update(){
 	//Vector3 weaponPosition = weapon_->GetCenterPos(); // SetCenter で設定された武器の位置を取得
 	weapon_->SetPosition(currentPosition_);
 
-	shape_.center = center_ + offset_;
+
+
+	shape_.center = center_ + pPlayer_->GetForward() * offset_;
+	shape_.rotate = pPlayer_->GetRotate();
 }
 
 void HorizonMowingDown::Draw(){

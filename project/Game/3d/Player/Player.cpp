@@ -191,9 +191,7 @@ void Player::ShowGui(){
 	BoxCollider::ShowGui();
 
 	// AttackControllerのGUI表示
-	attackController_->ShowGui();
-
-	
+	attackController_->ShowGui();	
 
 }
 
@@ -204,7 +202,6 @@ PlayerAttackController* Player::GetAttackController(){
 const EulerTransform& Player::GetTransform() const{
 	return model_->transform;
 }
-
 
 //===================================================================*/
 //                    getter
@@ -220,4 +217,19 @@ const Vector3 Player::GetCenterPos()const{
 
 const Matrix4x4 Player::GetWorldMatrix() const{
 	return model_->worldMatrix;
+}
+
+Vector3 Player::GetForward() const{
+
+	Matrix4x4 rotationMatrix = EulerToMatrix(model_->transform.rotate);
+
+	Vector3 forward = {
+		rotationMatrix.m[2][0],
+		rotationMatrix.m[2][1],
+		rotationMatrix.m[2][2]
+	};
+
+	// 正規化（必要に応じて）
+	return forward.Normalize();
+
 }

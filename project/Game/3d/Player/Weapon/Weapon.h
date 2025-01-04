@@ -47,6 +47,10 @@ public:
 		model_->transform.translate = pos;
 	}
 
+	void SetRotate(const Vector3& rotate){
+		model_->transform.rotate = rotate;
+	}
+
 	Matrix4x4 GetWorldMatrix()const{
 		return model_->worldMatrix;
 	}

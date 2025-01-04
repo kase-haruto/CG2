@@ -60,6 +60,8 @@ private:
 	//武器
 	std::unique_ptr<Weapon>weapon_ = nullptr;
 
+	Vector3 forward_ = {0.0f,0.0f,1.0f};	// 前方ベクトル
+
 
 public:
 	PlayerAttackController* GetAttackController();
@@ -69,9 +71,11 @@ public:
 	//                   getter
 	//===================================================================*/
 	const EulerTransform& GetTransform() const;
-	Vector3 GetForward(float distance) const;
+	Vector3 GetForward() const;
+	void SetForward(const Vector3& forward){ forward_ = forward; }
 	Weapon* GetWeapon()const{ return weapon_.get(); }
 	const Vector3 GetCenterPos()const override;
+	const Vector3& GetRotate()const{ return model_->transform.rotate; }
 	const Matrix4x4 GetWorldMatrix()const;
 	bool IsAttacking()const{ return attackController_->IsAttacking(); }
 };
