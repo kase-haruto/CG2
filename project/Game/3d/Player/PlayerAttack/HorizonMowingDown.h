@@ -18,6 +18,7 @@ public:
 	void Execution()override;	//< 実行
 	void Update()override;		//< 更新
 	void Draw()override;		//< 描画
+	void Cleanup()override;		//< クリーンアップ
 
 	/* helper ==================================*/
 	std::unique_ptr<IPlayerAttack> Clone() const override;
@@ -30,6 +31,12 @@ public:
 	void SaveControlPoints(const std::string& filepath) const;
 	void LoadControlPoints(const std::string& filepath);
 
+	std::string GetType() const override{
+		return "HorizonMowingDown";
+	}
+	void SetControlPoints(const std::vector<Vector3>& controlPoints) override{
+		controlPoints_ = controlPoints;
+	}
 
 	/* gui ui ===================================*/
 	void ShowGui()override;		//< gui表示

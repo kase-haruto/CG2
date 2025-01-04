@@ -31,6 +31,7 @@ void HorizonMowingDown::Update(){
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
+        Cleanup();
 	}
 
 	// Catmull-Rom 補間を使用して現在の位置を計算
@@ -45,6 +46,13 @@ void HorizonMowingDown::Update(){
 
 void HorizonMowingDown::Draw(){
 	BoxCollider::Draw();
+}
+
+void HorizonMowingDown::Cleanup(){
+	// クリーンアップ処理
+	isAttacking_ = false;
+	animationTime_ = 0.0f;
+	animationSpeed_ = 1.0f;
 }
 
 

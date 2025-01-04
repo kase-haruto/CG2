@@ -7,7 +7,7 @@ AttackEditorPanel::AttackEditorPanel()
 }
 
 void AttackEditorPanel::Render(){
-	playerAttackEditor_->ShowGui(isShow_);
+	playerAttackEditor_->ShowGui();
 }
 
 const std::string& AttackEditorPanel::GetPanelName() const{

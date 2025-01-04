@@ -17,7 +17,7 @@ public:
 	void Update()override;
 	void Draw()override;
 	void ShowGui()override;
-
+	void InitializeTransform();
 private:
 	//===================================================================*/
 	//                   private func
@@ -45,6 +45,10 @@ public:
 
 	void SetPosition(const Vector3& pos){
 		model_->transform.translate = pos;
+	}
+
+	Matrix4x4 GetWorldMatrix()const{
+		return model_->worldMatrix;
 	}
 };
 

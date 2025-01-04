@@ -22,6 +22,7 @@ IPlayerAttack::IPlayerAttack(const std::string& attackName){
 	std::string directory = "gameObjects/Player";
 	JsonCoordinator::LoadGroup(Collider::GetName().c_str(), directory);
 
+
 }
 
 IPlayerAttack::~IPlayerAttack(){

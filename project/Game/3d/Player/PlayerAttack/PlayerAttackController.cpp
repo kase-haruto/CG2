@@ -14,10 +14,22 @@ PlayerAttackController::PlayerAttackController(){
     attackTemplates_["WeakDiagonalSlash"] = std::make_unique<WeakDiagonalSlash>("WeakDiagonalSlash");
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                      main functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void PlayerAttackController::Initialize(){
     for (auto& [name, attackTemplate] : attackTemplates_){
         attackTemplate->Initialize();
     }
+
+    // コンボの定義例
+    Combo combo1;
+    combo1.name = "StrongCombo";
+    combo1.sequence = {
+        {"WeakDiagonalSlash", 0.5f}, // 最初の攻撃
+        {"HorizonMowingDown", 0.5f}  // 次の攻撃
+    };
+    AddCombo(combo1);
 }
 
 void PlayerAttackController::Update(){
@@ -35,6 +47,25 @@ void PlayerAttackController::Update(){
         }),
         activeAttacks_.end()
     );
+
+    // コンボのタイムアウトチェック
+    auto now = std::chrono::steady_clock::now();
+    if (currentComboStep_ > 0){
+        float elapsed = std::chrono::duration<float>(now - lastAttackTime_).count();
+        if (elapsed > comboTimeout_){
+            // タイムアウトした場合、コンボをリセット
+            currentComboStep_ = 0;
+            pendingAttack_ = std::nullopt;
+        }
+    }
+
+    // 攻撃が終了していて、次の攻撃がキューにある場合
+    if (activeAttacks_.empty() && pendingAttack_.has_value()){
+        ExecuteAttack(pendingAttack_.value());
+        currentComboStep_++;
+        lastAttackTime_ = now;
+        pendingAttack_ = std::nullopt;
+    }
 }
 
 void PlayerAttackController::ExecuteAttack(const std::string& attackName){
@@ -44,7 +75,7 @@ void PlayerAttackController::ExecuteAttack(const std::string& attackName){
         std::unique_ptr<IPlayerAttack> newAttack = it->second->Clone();
         newAttack->SetCenter(pPlayer_->GetCenterPos());
         newAttack->Execution();
-		newAttack->SetWeapon(pPlayer_->GetWeapon());
+        newAttack->SetWeapon(pPlayer_->GetWeapon());
         activeAttacks_.emplace_back(std::move(newAttack));
     }
 }
@@ -55,10 +86,113 @@ void PlayerAttackController::Draw(){
     }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                    helper functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// コンボの追加
+void PlayerAttackController::AddCombo(const Combo& combo){
+    combos_.emplace_back(combo);
+}
+
+// コンボ入力の処理
+void PlayerAttackController::HandleComboInput(const std::string& attackName){
+    auto now = std::chrono::steady_clock::now();
+    std::vector<ActiveCombo> combosToStart;
+
+    // 既存のアクティブコンボを更新
+    for (auto it = activeCombos_.begin(); it != activeCombos_.end(); ){
+        auto& activeCombo = *it;
+        const ComboInput& expectedInput = activeCombo.combo->sequence[activeCombo.currentStep];
+        float elapsed = std::chrono::duration<float>(now - activeCombo.lastInputTime).count();
+
+        if (elapsed > expectedInput.maxInterval){
+            // タイムアウトしたコンボを削除
+            it = activeCombos_.erase(it);
+            continue;
+        }
+
+        if (attackName == expectedInput.attackName){
+            // 次のステップに進む
+            activeCombo.currentStep++;
+            activeCombo.lastInputTime = now;
+
+            if (activeCombo.currentStep >= activeCombo.combo->sequence.size()){
+                // コンボ完了
+                // コンボの攻撃を順に実行
+                for (const auto& comboAttack : activeCombo.combo->sequence){
+                    ExecuteAttack(comboAttack.attackName);
+                }
+                it = activeCombos_.erase(it);
+                continue;
+            }
+        }
+
+        ++it;
+    }
+
+    // 新しいコンボの開始をチェック
+    for (const auto& combo : combos_){
+        if (!combo.sequence.empty() && combo.sequence[0].attackName == attackName){
+            ActiveCombo newActiveCombo;
+            newActiveCombo.combo = &combo;
+            newActiveCombo.currentStep = 1;
+            newActiveCombo.lastInputTime = now;
+            activeCombos_.emplace_back(newActiveCombo);
+        }
+    }
+}
+
+// 攻撃入力の処理
+void PlayerAttackController::HandleAttackInput(){
+    auto now = std::chrono::steady_clock::now();
+    float elapsed = std::chrono::duration<float>(now - lastAttackTime_).count();
+
+    if (elapsed > comboTimeout_){
+        // タイムアウトした場合、コンボをリセット
+        currentComboStep_ = 0;
+        pendingAttack_ = std::nullopt;
+    }
+
+    if (currentComboStep_ < comboSequence_.size()){
+        if (activeAttacks_.empty()){
+            // 攻撃が実行中でなければ、次の攻撃を即座に実行
+            ExecuteAttack(comboSequence_[currentComboStep_]);
+            currentComboStep_++;
+            lastAttackTime_ = now;
+        } else{
+            // 攻撃が実行中の場合、次の攻撃をキューに保持
+            pendingAttack_ = comboSequence_[currentComboStep_];
+        }
+    } else{
+        // コンボの最後まで達した場合、リセット
+        currentComboStep_ = 0;
+        pendingAttack_ = std::nullopt;
+    }
+}
+
+// 攻撃テンプレートの取得
+std::unordered_map<std::string, std::unique_ptr<IPlayerAttack>>& PlayerAttackController::GetAttackTemplates(){
+    return attackTemplates_;
+}
+
+// 特定の攻撃テンプレートを取得
+IPlayerAttack& PlayerAttackController::GetAttackTemplate(const std::string& name){
+    return *(attackTemplates_.at(name));
+}
+
+// 攻撃テンプレートの追加
+bool PlayerAttackController::HasAttackTemplate(const std::string& name) const{
+    return attackTemplates_.find(name) != attackTemplates_.end();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                      ui/gui
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void PlayerAttackController::ShowGui(){
     ImGui::Begin("Player Attack Controller");
 
-    // 攻撃タイプの表示と実行ボタン
+    // 攻撃タイプの表示と実行ボタン（必要に応じて）
     ImGui::Text("Attack Types:");
     for (const auto& [attackName, attackTemplate] : attackTemplates_){
         if (ImGui::Button(("Execute " + attackName).c_str())){
@@ -67,6 +201,12 @@ void PlayerAttackController::ShowGui(){
     }
 
     ImGui::Separator();
+
+    // 現在のコンボステップの表示
+    ImGui::Text("Current Combo Step: %zu", currentComboStep_);
+    if (currentComboStep_ > 0 && currentComboStep_ <= comboSequence_.size()){
+        ImGui::Text("Next Attack: %s", comboSequence_[currentComboStep_ - 1].c_str());
+    }
 
     // 実行中の攻撃インスタンスの表示
     ImGui::Text("Active Attacks:");

@@ -46,6 +46,7 @@ private:
 	//===================================================================*/
 	void TransitionState(PlayerState nextState);
 
+	std::string GetAttackInput(); // 攻撃名を取得する関数
 private:
 	//===================================================================*/
 	//                   private variables
@@ -59,6 +60,7 @@ private:
 	//武器
 	std::unique_ptr<Weapon>weapon_ = nullptr;
 
+
 public:
 	PlayerAttackController* GetAttackController();
 
@@ -70,4 +72,6 @@ public:
 	Vector3 GetForward(float distance) const;
 	Weapon* GetWeapon()const{ return weapon_.get(); }
 	const Vector3 GetCenterPos()const override;
+	const Matrix4x4 GetWorldMatrix()const;
+	bool IsAttacking()const{ return attackController_->IsAttacking(); }
 };
