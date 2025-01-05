@@ -10,8 +10,14 @@
 
 PlayerAttackController::PlayerAttackController(){
     // 初期攻撃テンプレートの登録
-    attackTemplates_["HorizonMowingDown"] = std::make_unique<HorizonMowingDown>("HorizonMowingDown");
-    attackTemplates_["WeakDiagonalSlash"] = std::make_unique<WeakDiagonalSlash>("WeakDiagonalSlash");
+     // テンプレートは非アクティブな状態で作成
+    auto horizonAttack = std::make_unique<HorizonMowingDown>("HorizonMowingDown");
+    horizonAttack->SetIsActive(false); // テンプレート自体は非アクティブ
+    attackTemplates_["HorizonMowingDown"] = std::move(horizonAttack);
+
+    auto weakSlashAttack = std::make_unique<WeakDiagonalSlash>("WeakDiagonalSlash");
+    weakSlashAttack->SetIsActive(false); // テンプレート自体は非アクティブ
+    attackTemplates_["WeakDiagonalSlash"] = std::move(weakSlashAttack);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +80,9 @@ void PlayerAttackController::ExecuteAttack(const std::string& attackName){
         // テンプレートから新しい攻撃インスタンスを生成
         std::unique_ptr<IPlayerAttack> newAttack = it->second->Clone();
         newAttack->SetCenter(pPlayer_->GetCenterPos());
-        newAttack->Execution();
+		newAttack->SetPlayer(pPlayer_);
         newAttack->SetWeapon(pPlayer_->GetWeapon());
+        newAttack->Execution();
         activeAttacks_.emplace_back(std::move(newAttack));
     }
 }

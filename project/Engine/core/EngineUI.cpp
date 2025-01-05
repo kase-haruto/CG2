@@ -36,6 +36,7 @@ void EngineUI::Initialize(){
 //                   レンダリング
 //===================================================================
 void EngineUI::Render(){
+#ifdef _DEBUG
     pInstance_->RenderMenue();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
     // すべてのパネルをレンダリングし、閉じられたパネルを削除
@@ -50,6 +51,9 @@ void EngineUI::Render(){
     }
 
     pInstance_->RenderMainViewport();
+#endif // _DEBUG
+
+    
 }
 
 void EngineUI::RenderMainViewport(){

@@ -19,6 +19,7 @@ public:
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
 public:
+	bool ShouldLogCollision(const Collider* a, const Collider* b);
 	//===================================================================*/
 	//                   public functions
 	//===================================================================*/
