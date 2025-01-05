@@ -10,19 +10,22 @@
 
 HorizonMowingDown::HorizonMowingDown(const std::string& attackName)
 	:IPlayerAttack(attackName), animationTime_(0.0f), animationSpeed_(3.0f){
-	SetupDefaultControlPoints();
+	//SetupDefaultControlPoints();
 }
 
 //////////////////////////////////////////////////////////////////////////
 //						main functions
 //////////////////////////////////////////////////////////////////////////
 void HorizonMowingDown::Initialize(){
+	offset_ = 2.0f;
+	shape_.center = center_ + pPlayer_->GetForward() * offset_;
+	IPlayerAttack::Initialize();
+
 	isAttacking_ = true;
 	animationTime_ = 0.0f;
-	offset_ = 2.0f;
+
 	Vector3 weaponRotate {1.4f,0.0f,1.5f};
 	weapon_->SetRotate(weaponRotate);
-	
 }
 
 void HorizonMowingDown::Execution(){
@@ -62,6 +65,7 @@ void HorizonMowingDown::Cleanup(){
 	isAttacking_ = false;
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
+	isActive_ = false;
 }
 
 
@@ -69,8 +73,11 @@ void HorizonMowingDown::Cleanup(){
 //						helper functions
 //////////////////////////////////////////////////////////////////////////
 std::unique_ptr<IPlayerAttack> HorizonMowingDown::Clone() const{
-	return std::make_unique<HorizonMowingDown>(*this);
+	auto clonedAttack = std::make_unique<HorizonMowingDown>(*this);
+	clonedAttack->SetIsActive(false); // クローン時は一旦非アクティブ
+	return clonedAttack;
 }
+
 
 void HorizonMowingDown::SetupDefaultControlPoints(){
 	// デフォルトの制御点を設定

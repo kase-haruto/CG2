@@ -229,7 +229,6 @@ Vector3 Player::GetForward() const{
 		rotationMatrix.m[2][2]
 	};
 
-	// 正規化（必要に応じて）
 	return forward.Normalize();
 
 }

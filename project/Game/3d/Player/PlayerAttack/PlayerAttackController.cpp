@@ -10,8 +10,14 @@
 
 PlayerAttackController::PlayerAttackController(){
     // 初期攻撃テンプレートの登録
-    attackTemplates_["HorizonMowingDown"] = std::make_unique<HorizonMowingDown>("HorizonMowingDown");
-    attackTemplates_["WeakDiagonalSlash"] = std::make_unique<WeakDiagonalSlash>("WeakDiagonalSlash");
+     // テンプレートは非アクティブな状態で作成
+    auto horizonAttack = std::make_unique<HorizonMowingDown>("HorizonMowingDown");
+    horizonAttack->SetIsActive(false); // テンプレート自体は非アクティブ
+    attackTemplates_["HorizonMowingDown"] = std::move(horizonAttack);
+
+    auto weakSlashAttack = std::make_unique<WeakDiagonalSlash>("WeakDiagonalSlash");
+    weakSlashAttack->SetIsActive(false); // テンプレート自体は非アクティブ
+    attackTemplates_["WeakDiagonalSlash"] = std::move(weakSlashAttack);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

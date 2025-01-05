@@ -1,5 +1,8 @@
 #include "Enemy.h"
 
+#include "../Player/Player.h"
+#include "../Player/PlayerAttack/IPlayerAttack.h"
+
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 #include <externals/imgui/imgui.h>
@@ -70,6 +73,26 @@ void Enemy::OnCollisionEnter([[maybe_unused]]Collider* other){
 
 
 
+		}
+
+		//////////////////////////////////////////////////////////////////
+		//				playerの攻撃と衝突
+		//////////////////////////////////////////////////////////////////
+		else if(other->GetType() == ColliderType::Type_PlayerAttack){
+			// IPlayerAttack型にキャスト
+			IPlayerAttack* playerAttack = dynamic_cast< IPlayerAttack* >(other);
+
+			if (playerAttack){
+				Vector3 playerPos = playerAttack->GetPlayerPos();
+
+				// ノックバック処理
+				// プレイヤーと反対方向に力を加える
+				Vector3 dir = (GetCenterPos() - playerPos).Normalize();
+				float knockbackForce = 4.0f; // 力の大きさ（必要に応じて調整）
+				float knockbackDuration = 0.5f; // 持続時間（秒単位、必要に応じて調整）
+
+				KnockBack(dir, knockbackForce, knockbackDuration);
+			}
 		}
 
 	}

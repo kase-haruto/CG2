@@ -5,25 +5,30 @@
 #include "Engine/core/Json/JsonCoordinator.h"
 #include "../Player.h"
 
+#include <externals/imgui/imgui.h>
+
 WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 	: IPlayerAttack(attackName),
 	animationTime_(0.0f),
 	animationSpeed_(1.5f) // 必要に応じて調整
 {
-	SetupDefaultControlPoints();
+	//SetupDefaultControlPoints();
 }
 
 //////////////////////////////////////////////////////////////////////////
 //						main functions
 //////////////////////////////////////////////////////////////////////////
 void WeakDiagonalSlash::Initialize(){
+	offset_ = 2.0f;
+	shape_.center = center_ + pPlayer_->GetForward() * offset_;
+
+	IPlayerAttack::Initialize();
+
 	isAttacking_ = true;
 	animationTime_ = 0.0f;
-	offset_ = 2.0f;
 
 	Vector3 weaponRotate {1.4f,0.0f,0.0f};
 	weapon_->SetRotate(weaponRotate);
-
 }
 
 void WeakDiagonalSlash::Execution(){
@@ -32,7 +37,6 @@ void WeakDiagonalSlash::Execution(){
 
 void WeakDiagonalSlash::Update(){
 	if (!isAttacking_) return;
-
 	animationTime_ += animationSpeed_ * System::GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
@@ -60,6 +64,7 @@ void WeakDiagonalSlash::Cleanup(){
 	isAttacking_ = false;
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
+	isActive_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,7 +79,9 @@ void WeakDiagonalSlash::SetupDefaultControlPoints(){
 }
 
 std::unique_ptr<IPlayerAttack> WeakDiagonalSlash::Clone() const{
-	return std::make_unique<WeakDiagonalSlash>(*this);
+	auto clonedAttack = std::make_unique<WeakDiagonalSlash>(*this);
+	clonedAttack->SetIsActive(false); // クローン時は一旦非アクティブ
+	return clonedAttack;
 }
 
 

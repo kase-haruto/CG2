@@ -69,6 +69,7 @@ protected:
 	ColliderType type_;       //* 自身のタイプ
 	ColliderType targetType_; //* 衝突相手のタイプ
 
+	bool isActive_ = true;     //* 衝突判定を行うかどうか
 public:
 	//===================================================================*/
 	//                   getter/setter
@@ -82,7 +83,7 @@ public:
 	ColliderType GetType() const{ return type_; }
 	ColliderType GetTargetType() const{ return targetType_; }
 
-
+	bool IsActive()const{ return isActive_; }
 };
 
 

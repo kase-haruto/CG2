@@ -5,24 +5,24 @@
 #include "Engine/core/Json/JsonCoordinator.h"
 
 Character::Character(const std::string& modelName)
-:BaseGameObject(modelName){}
+    : BaseGameObject(modelName){}
 
 void Character::Initialize(){
 
-	JsonCoordinator::RegisterItem(name_, "MoveSpeed", moveSpeed_);
+    JsonCoordinator::RegisterItem(name_, "MoveSpeed", moveSpeed_);
 
 }
 
 void Character::Update(){
-
     const float gravity = -9.8f;             // 重力加速度
-    const float terminalVelocity = -50.0f;  // 最大落下速度
+    const float terminalVelocity = -50.0f;   // 最大落下速度
+    float deltaTime = System::GetDeltaTime();
 
     // 重力による加速度を計算
     acceleration_ = {0.0f, gravity, 0.0f};
 
-    // 加速度を考慮して速度を更新（経過時間を考慮）
-    velocity_ += acceleration_ * System::GetDeltaTime();
+    // 加速度を考慮して速度を更新
+    velocity_ += acceleration_ * deltaTime;
 
     // 落下速度を最大落下速度に制限
     if (velocity_.y < terminalVelocity){
@@ -30,30 +30,114 @@ void Character::Update(){
     }
 
     // 地面に接触しているかどうかを判定
-    if (model_->transform.translate.y <= 0.0f){
+    if (model_->transform.translate.y < 0.0f){
         onGround_ = true;
         model_->transform.translate.y = 0.0f; // 地面上に位置を固定
+
+        // 接地している場合、Y方向の速度をリセット
+        velocity_.y = 0.0f;
     } else{
         onGround_ = false;
     }
 
-    // 空中にいる場合の移動処理
-    if (!onGround_){
-        model_->transform.translate += velocity_ * System::GetDeltaTime();
+    // ノックバック中の処理
+    if (isKnockedBack_){
+        knockbackDuration_ -= deltaTime;
+        if (knockbackDuration_ <= 0.0f){
+            isKnockedBack_ = false;
+            knockbackDuration_ = 0.0f;
+
+            // ノックバック終了時に水平方向の速度をリセット
+            velocity_.x = 0.0f;
+            velocity_.z = 0.0f;
+        } else{
+            // ノックバック中は水平方向の減衰を適用
+            float deceleration = friction_ * deltaTime;
+
+            // X方向の減衰
+            if (knockbackForceX_ > 0.0f){
+                knockbackForceX_ -= deceleration;
+                if (knockbackForceX_ < 0.0f) knockbackForceX_ = 0.0f;
+            } else if (knockbackForceX_ < 0.0f){
+                knockbackForceX_ += deceleration;
+                if (knockbackForceX_ > 0.0f) knockbackForceX_ = 0.0f;
+            }
+
+            // Z方向の減衰
+            if (knockbackForceZ_ > 0.0f){
+                knockbackForceZ_ -= deceleration;
+                if (knockbackForceZ_ < 0.0f) knockbackForceZ_ = 0.0f;
+            } else if (knockbackForceZ_ < 0.0f){
+                knockbackForceZ_ += deceleration;
+                if (knockbackForceZ_ > 0.0f) knockbackForceZ_ = 0.0f;
+            }
+
+            // 減衰後の速度を適用
+            velocity_.x = knockbackForceX_;
+            velocity_.z = knockbackForceZ_;
+        }
     } else{
-        // 接地している場合、Y方向の速度をリセット
-        velocity_.y = 0.0f;
+        // ノックバック中でない場合、通常の移動や摩擦を適用可能
+        // 例えば、地面にいる場合に摩擦を適用して速度を減衰させる
+        if (onGround_){
+            float friction = 10.0f; // 地面摩擦係数（必要に応じて調整）
+            float deceleration = friction * deltaTime;
+
+            // X方向の減衰
+            if (velocity_.x > 0.0f){
+                velocity_.x -= deceleration;
+                if (velocity_.x < 0.0f) velocity_.x = 0.0f;
+            } else if (velocity_.x < 0.0f){
+                velocity_.x += deceleration;
+                if (velocity_.x > 0.0f) velocity_.x = 0.0f;
+            }
+
+            // Z方向の減衰
+            if (velocity_.z > 0.0f){
+                velocity_.z -= deceleration;
+                if (velocity_.z < 0.0f) velocity_.z = 0.0f;
+            } else if (velocity_.z < 0.0f){
+                velocity_.z += deceleration;
+                if (velocity_.z > 0.0f) velocity_.z = 0.0f;
+            }
+        }
     }
 
     // キャラクターの生存フラグを更新
     if (life_ <= 0){
         isAlive_ = false;
     }
+
+    // 最終的な位置更新
+    model_->transform.translate += velocity_ * deltaTime;
+}
+
+void Character::KnockBack(const Vector3& direction, float force, float duration){
+    if (!isAlive_) return; // 生存していない場合は無視
+    if (isKnockedBack_) return; // 既にノックバック中の場合は無視（必要に応じて再適用を許可）
+
+    Vector3 normalizedDir = direction.Normalize();
+
+    // 水平ノックバックの速度を設定（加算ではなく設定）
+    knockbackForceX_ = normalizedDir.x * force;
+    knockbackForceZ_ = normalizedDir.z * force;
+
+    // 垂直方向（Y軸）の速度を設定して「ぴょん」と跳ねる
+    float bounceForce = 2.0f; // 必要に応じて調整
+
+    // ノックバックの速度を設定
+    velocity_.x = knockbackForceX_;
+    velocity_.z = knockbackForceZ_;
+    velocity_.y = bounceForce;
+
+    // ノックバック状態を有効化
+    isKnockedBack_ = true;
+    knockbackDuration_ = duration;
 }
 
 
 void Character::ShowGui(){
 
-	JsonCoordinator::RenderGroupUI(name_);
+    JsonCoordinator::RenderGroupUI(name_);
 
 }

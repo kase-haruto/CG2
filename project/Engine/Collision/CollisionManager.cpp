@@ -20,6 +20,16 @@ std::string CollisionManager::MakeCollisionKey(Collider* colliderA, Collider* co
 
 }
 
+// ヘルパー関数: 衝突ペアがログを記録すべきかを判定
+bool CollisionManager::ShouldLogCollision(const Collider* a, const Collider* b){
+	// aのターゲットタイプにbのタイプが含まれているか
+	bool aWantsToCollideWithB = (a->GetTargetType() & b->GetType()) != ColliderType::Type_None;
+
+	// bのターゲットタイプにaのタイプが含まれているか
+	bool bWantsToCollideWithA = (b->GetTargetType() & a->GetType()) != ColliderType::Type_None;
+
+	return aWantsToCollideWithB || bWantsToCollideWithA;
+}
 
 void CollisionManager::UpdateCollisionAllCollider(){
 	// 前のフレームの衝突を保存してリセット
@@ -27,7 +37,13 @@ void CollisionManager::UpdateCollisionAllCollider(){
 	currentCollisions_.clear();
 
 	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA){
+		// コライダーがアクティブでなければスキップ
+		if (!(*itA)->IsActive()) continue;
+
 		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB){
+			// コライダーがアクティブでなければスキップ
+			if (!(*itB)->IsActive()) continue;
+
 			if (CheckCollisionPair(*itA, *itB)){
 				// 衝突ペアのキーを生成
 				std::string key = MakeCollisionKey(*itA, *itB);

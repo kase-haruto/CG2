@@ -16,7 +16,7 @@ public:
 	IPlayerAttack(const std::string& attackName);
 	virtual ~IPlayerAttack();
 
-	virtual void Initialize() = 0;    //< 初期化
+	virtual void Initialize();    //< 初期化
 	virtual void Execution() = 0;     //< 実行
 	virtual void Update() = 0;         //< 更新
 	virtual void Draw() = 0;           //< 描画
@@ -40,12 +40,18 @@ public:
 	// 攻撃中かどうかを取得
 	bool IsAttacking() const{ return isAttacking_; }
 
+	void SetIsActive(bool isActive){
+		isActive_ = isActive;
+	}
+
 	// 攻撃名の取得
 	const std::string& GetName() const{ return attackName_; }
 
 	// Weaponのセット
 	void SetWeapon(Weapon* weapon){ weapon_ = weapon; }
 	void SetPlayer(const Player* pPlayer);
+
+	const Vector3 GetPlayerPos() const;
 
 	// 制御点の取得
 	virtual const std::vector<Vector3>& GetControlPoints() const = 0;

@@ -30,7 +30,7 @@ public:
 
 	std::string GetType() const override{
 		return "WeakDiagonalSlash";
-	}
+	}	
 
 	void SetControlPoints(const std::vector<Vector3>& controlPoints) override{
 		controlPoints_ = controlPoints;
