@@ -36,7 +36,7 @@ void IPlayerAttack::Initialize(){
 	isActive_ = true;
 }
 
-void IPlayerAttack::SetPlayer(const Player* pPlayer){
+void IPlayerAttack::SetPlayer(Player* pPlayer){
 	pPlayer_ = pPlayer;
 }
 

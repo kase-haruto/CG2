@@ -7,7 +7,6 @@
 
 BaseCamera::BaseCamera()
 	: ICamera(),
-	worldMatrix_(MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate)),
 	viewMatrix_(Matrix4x4::Inverse(worldMatrix_)),
 	projectionMatrix_(MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_)){
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
@@ -72,9 +71,7 @@ void BaseCamera::SetCamera(const Vector3& pos, const Vector3& rotate){
 }
 
 
-const Matrix4x4& BaseCamera::GetWorldMat() const{
-	return worldMatrix_;
-}
+
 
 const Matrix4x4& BaseCamera::GetViewMatrix() const{
 	return viewMatrix_;

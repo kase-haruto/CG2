@@ -44,6 +44,7 @@ void Player::Initialize(){
 	Collider::targetType_ = ColliderType::Type_Enemy;
 
 	model_->transform.translate.z = -15.0f;
+	model_->transform.scale = {0.8f, 0.8f, 0.8f};
 	moveSpeed_ = 10.0f;
 
 	attackController_ = std::make_unique<PlayerAttackController>();
@@ -60,10 +61,10 @@ void Player::Initialize(){
 	weapon_->Initialize();
 	weapon_->GetModel()->parent_ = &model_->transform;
 
+
 }
 
 void Player::Update(){
-
 	// 攻撃入力の検出
 	if (Input::TriggerGamepadButton(PAD_BUTTON::X)){
 		attackController_->HandleAttackInput();
@@ -73,7 +74,7 @@ void Player::Update(){
 	if (Input::IsLeftStickMoved()){
 		TransitionState(PlayerState::Jog);
 
-		if (Input::PushGamepadButton(PAD_BUTTON::A)){
+		if (Input::PushGamepadButton(PAD_BUTTON::RB)){
 			TransitionState(PlayerState::Dush);
 		}
 
@@ -191,7 +192,7 @@ void Player::ShowGui(){
 	BoxCollider::ShowGui();
 
 	// AttackControllerのGUI表示
-	attackController_->ShowGui();	
+	attackController_->ShowGui();
 
 }
 

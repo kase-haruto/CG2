@@ -60,5 +60,6 @@ private:
 	float animationTime_;					//< 現在の時間パラメータ (0.0 〜 1.0)
 	float animationSpeed_;					//< アニメーションの速度
 	Vector3 currentPosition_;				//< 現在の位置
+	Vector3 moveVelocity_;					//< 移動速度
 };
 

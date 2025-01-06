@@ -49,7 +49,7 @@ void BaseParticle::Update(){
 
             if (isBillboard_){
                 // ビルボード処理
-                Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
+                Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetWorldMatrix());
                 billboardMatrix.m[3][0] = 0.0f;
                 billboardMatrix.m[3][1] = 0.0f;
                 billboardMatrix.m[3][2] = 0.0f;
@@ -83,19 +83,24 @@ void BaseParticle::Update(){
             instancingData[instanceNum_].color.w = alpha;
 
             it->currentTime += System::GetDeltaTime();
-            it->transform.translate += it->velocity * System::GetDeltaTime();
-
+            // isStatic_ フラグに基づいて位置を更新
+            if (!isStatic_){
+                it->transform.translate += it->velocity * System::GetDeltaTime();
+            }
             ++instanceNum_;
         }
 
         ++it;
     }
 
-    emitter_.frequencyTime += System::GetDeltaTime();
-    if (emitter_.frequencyTime >= emitter_.frequency){
-        Emit(emitter_.count);
-        emitter_.frequencyTime = 0.0f;
+    if (autoEmit_){
+        emitter_.frequencyTime += System::GetDeltaTime();
+        if (emitter_.frequencyTime >= emitter_.frequency){
+            Emit(emitter_.count);
+            emitter_.frequencyTime = 0.0f;
+        }
     }
+  
 }
 
 void BaseParticle::Draw(){
@@ -200,7 +205,7 @@ void BaseParticle::Emit(uint32_t count){
         Vector3 worldPos = Vector3::Transform(localPoint, rotationMatrix) + emitter_.transform.translate;
         
         particle.transform.translate = worldPos;
-        particle.lifeTime = Random::Generate(2.0f, 5.0f);
+		particle.lifeTime = SetParticleLifeTime();
 
         particles_.push_back(particle);
     }

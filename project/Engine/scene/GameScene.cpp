@@ -50,9 +50,12 @@ void GameScene::Initialize(){
 	attackEditorPanel_->SetPlayerAttackEditor(playerAttackEditor_.get());
 	EngineUI::GetInstance()->AddPanel(std::move(attackEditorPanel_));
 
-	//敵
-	enemy_ = std::make_unique<Enemy>("enemy.obj");
-	enemy_->Initialize();
+	particleEditPanel_ = std::make_unique<ParticleEditPanel>();
+	particleEditPanel_->SetParticleManager(ParticleManager::GetInstance());
+	EngineUI::GetInstance()->AddPanel(std::move(particleEditPanel_));
+
+
+	enemyManager_ = std::make_unique<EnemyManager>();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -83,7 +86,7 @@ void GameScene::Update(){
 
 	player_->Update();
 
-	enemy_->Update();
+	enemyManager_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -104,7 +107,7 @@ void GameScene::Draw(){
 
 	player_->Draw();
 
-	enemy_->Draw();
+	enemyManager_->Draw();
 
 	/*modelGround_->Draw();*/
 
@@ -133,6 +136,7 @@ void GameScene::Draw(){
 
 void GameScene::CleanUp(){
 	EngineUI::GetInstance()->RemovePanel("AttackEditor");
+	EngineUI::GetInstance()->RemovePanel("ParticleEdit");
 }
 
 void GameScene::ModelPreDraw(){

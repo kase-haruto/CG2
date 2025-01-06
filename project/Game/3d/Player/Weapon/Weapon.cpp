@@ -26,7 +26,7 @@ void Weapon::Initialize(){
 }
 
 void Weapon::Update(){
-
+	tipPos_ = GetCenterPos() + Vector3 {0.0f,0.7f,0.0f};
 
 	BaseGameObject::Update();
 }

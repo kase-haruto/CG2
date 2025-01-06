@@ -6,6 +6,7 @@
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 #include <externals/imgui/imgui.h>
+#include "lib/myFunc/Random.h"
 
 Enemy::Enemy(const std::string& modelName)
 :Character(modelName){
@@ -38,9 +39,20 @@ void Enemy::Initialize(){
 	moveSpeed_ = 2.0f;
 
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
+
+	life_ = 500;
+
+	//モデルの
+	BaseGameObject::Update();
+
+	hitParticle_ = std::make_unique<AttackParticle>();
+	hitParticle_->Initialize("plane.obj", "attackParticle.png");
 }
 
 void Enemy::Update(){
+
+	hitParticle_->SetEmitPos(GetCenterPos());
+	hitParticle_->Update();
 
 	//衝突処理の更新
 	shape_.center = GetCenterPos();
@@ -92,14 +104,20 @@ void Enemy::OnCollisionEnter([[maybe_unused]]Collider* other){
 				float knockbackDuration = 0.5f; // 持続時間（秒単位、必要に応じて調整）
 
 				KnockBack(dir, knockbackForce, knockbackDuration);
+
+				life_ -= playerAttack->GetDamage();
+
+				hitParticle_->Emit(1);
 			}
 		}
-
 	}
 
 }
 
-void Enemy::OnCollisionStay([[maybe_unused]] Collider* other){}
+void Enemy::OnCollisionStay([[maybe_unused]] Collider* other){
+	
+}
+
 
 void Enemy::OnCollisionExit([[maybe_unused]] Collider* other){}
 

@@ -12,17 +12,23 @@
 #include <externals/imgui/imgui.h>
 
 PlayerState_Dush::PlayerState_Dush(Player* player)
-:PlayerState_Base(player){}
+:PlayerState_Base(player){
+	
 
-void PlayerState_Dush::Initialize(){}
+}
+
+void PlayerState_Dush::Initialize(){
+}
 
 void PlayerState_Dush::Update(){
+
 	if (!pPlayer_->IsAttacking()){
 		Move();
 	}
 }
 
-void PlayerState_Dush::Draw(){}
+void PlayerState_Dush::Draw(){
+}
 
 void PlayerState_Dush::Cleanup(){}
 

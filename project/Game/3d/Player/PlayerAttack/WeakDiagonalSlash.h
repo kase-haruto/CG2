@@ -1,6 +1,9 @@
 #pragma once
 #include "IPlayerAttack.h"
 
+#include "../SwordTrail.h"
+#include "Engine/physics/Triangle.h"
+
 class WeakDiagonalSlash :
     public IPlayerAttack{
 public:
@@ -54,9 +57,14 @@ private:
 	//===================================================================*/
 	//                   private member variables
 	//===================================================================*/
+	// トレイルエフェクトを担当するオブジェクト
+	SwordTrail swordTrail_;
 	std::vector<Vector3> controlPoints_;	//< Catmull-Rom用の制御点
 	float animationTime_;					//< 現在の時間パラメータ (0.0 〜 1.0)
 	float animationSpeed_;					//< アニメーションの速度
 	Vector3 currentPosition_;				//< 現在の位置
+	Vector3 moveVelocity_;					//< 移動ベクトル
+
+	Triangle triangle_;						//< トライアングル
 };
 

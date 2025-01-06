@@ -9,6 +9,7 @@
 #include "lib/myMath/Vector4.h"
 #include "engine/physics/AABB.h"
 #include "Engine/physics/Shape.h"
+#include "lib/myFunc/Random.h"
 
 /* c++ */
 #include <list>
@@ -69,6 +70,9 @@ public:
 
     virtual void Emit(uint32_t count);
 
+    // ライフタイム設定用の仮想関数
+    virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
+
     virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
     virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
 private:
@@ -86,7 +90,8 @@ public:
     //                    public methods
     //===================================================================*/
     std::vector<ParticleData::Parameters> particles_;
-   
+	bool isStatic_ = false;
+	bool autoEmit_ = true;
     int32_t kMaxInstanceNum_ = 256;
     int32_t instanceNum_ = 0;
 

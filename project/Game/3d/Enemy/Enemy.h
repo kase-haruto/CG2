@@ -4,6 +4,7 @@
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/physics/Shape.h"
+#include "../Player/PlayerParticle/AttackParticle.h"
 
 class Enemy:
 public Character,public BoxCollider{
@@ -32,5 +33,5 @@ private:
 	//===================================================================*/
 	//                   private methods
 	//===================================================================*/
-
+	std::unique_ptr<AttackParticle> hitParticle_ = nullptr;
 };

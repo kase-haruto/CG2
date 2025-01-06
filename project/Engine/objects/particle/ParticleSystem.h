@@ -20,7 +20,7 @@ public:
     //===================================================================*/
 
     ParticleSystem();
-    ~ParticleSystem() override = default;
+    ~ParticleSystem() override;
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 

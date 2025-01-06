@@ -3,6 +3,9 @@
 
 #include "lib/myMath/Vector3.h"
 
+#include "../PlayerParticle/DushParticle.h"
+#include "Engine/objects/particle/DemoParticle.h"
+
 class PlayerState_Dush :
     public PlayerState_Base{
 public:
@@ -34,5 +37,6 @@ private:
 	float dushSpeed_ = 10.0f;
 	float targetAngle_ = 0;						// 振り向き用
 	Vector3 moveVelocity_ {};					// 移動速度
+	std::unique_ptr<DemoParticle> dushParticle_ = nullptr;
 };
 

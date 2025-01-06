@@ -54,7 +54,6 @@ public:
 	void SetCamera(const Vector3& pos, const Vector3& rotate);
 
 	// Getter
-	const Matrix4x4& GetWorldMat() const;
 	const Matrix4x4& GetViewMatrix() const;
 	const Matrix4x4& GetProjectionMatrix() const;
 	const Matrix4x4& GetViewProjectionMatrix() const;
@@ -65,12 +64,7 @@ protected:
 	//==================================================================*//
 	//			protected variables
 	//==================================================================*//
-	EulerTransform transform_ = {
-		{1.0f, 1.0f, 1.0f},         // scale
-		{0.0f, 0.0f, 0.0f},         // rotate
-		{0.0f, 4.0f, -15.0f}        // translate
-	};
-	Matrix4x4 worldMatrix_;         // ワールド行列
+	
 	Matrix4x4 viewMatrix_;          // ビュー行列
 	Matrix4x4 projectionMatrix_;    // プロジェクション行列
 
