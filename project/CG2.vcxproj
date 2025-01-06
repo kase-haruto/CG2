@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerParticle\AttackParticle.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerParticle\DushParticle.cpp" />
@@ -235,6 +236,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\Player\PlayerParticle\TrailParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\Audio\Audio.h" />
     <ClInclude Include="Engine\core\Math\Ease.h" />
     <ClInclude Include="Game\3d\Player\PlayerParticle\AttackParticle.h" />
     <ClInclude Include="Game\3d\Player\PlayerParticle\DushParticle.h" />

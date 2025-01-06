@@ -3,6 +3,7 @@
 #include "../graphics/GraphicsGroup.h"
 #include "../graphics/SrvLocator.h"
 #include "../core/Input.h"
+#include "../core/Audio/Audio.h"
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
@@ -28,6 +29,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
     //インプットの初期化
     Input::Initialize();
+
+	//audioの初期化
+	Audio::Initialize();
 
 	//uiの初期化
 	InitializeEngineUI();
@@ -118,6 +122,7 @@ void System::Finalize(){
     pipelineStateManager_->Finalize();
     SrvLocator::Finalize();
     Input::Finalize();
+	Audio::Finalize();
 
 
 	//ウィンドウの破棄

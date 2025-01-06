@@ -1,6 +1,7 @@
 #include "GameScene.h"
 
 #include "../core/Input.h"
+#include "Engine/core/Audio/Audio.h"
 
 #include "../graphics/camera/CameraManager.h"
 
@@ -66,6 +67,9 @@ void GameScene::Initialize(){
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
+
+	Audio::Play("bgm.mp3", true,0.3f);
+
 
 }
 
@@ -137,6 +141,8 @@ void GameScene::Draw(){
 void GameScene::CleanUp(){
 	EngineUI::GetInstance()->RemovePanel("AttackEditor");
 	EngineUI::GetInstance()->RemovePanel("ParticleEdit");
+
+	Audio::EndAudio("bgm.mp3");
 }
 
 void GameScene::ModelPreDraw(){

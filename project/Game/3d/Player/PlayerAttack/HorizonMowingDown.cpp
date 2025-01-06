@@ -5,6 +5,7 @@
 #include "../Player.h"
 
 #include "Engine/core/Input.h"
+#include "Engine/core/Audio/Audio.h"
 #include "Engine/graphics/camera/CameraManager.h"
 
 #include "lib/myFunc/MyFunc.h"
@@ -32,6 +33,8 @@ void HorizonMowingDown::Initialize(){
 	weapon_->SetRotate(weaponRotate);
 
 	damage_ = 210; // ダメージ値を設定
+
+	Audio::Play("attack.mp3", false);
 }
 
 void HorizonMowingDown::Execution(){

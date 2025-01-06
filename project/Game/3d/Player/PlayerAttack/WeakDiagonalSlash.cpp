@@ -5,6 +5,7 @@
 #include "Engine/core/Json/JsonCoordinator.h"
 #include "../Player.h"
 
+#include "Engine/core/Audio/Audio.h"
 #include "Engine/core/Input.h"
 #include "Engine/graphics/camera/CameraManager.h"
 
@@ -52,6 +53,8 @@ void WeakDiagonalSlash::Initialize(){
 	// フェードアウトの速度や最小アルファなどを調整 (必要に応じて)
 	swordTrail_.SetFadeSpeed(2.0f);  // 1秒あたりアルファが2.0 減衰
 	swordTrail_.SetMinAlpha(0.05f);  // 0.05以下で削除
+
+	Audio::Play("attack.mp3", false);
 }
 
 void WeakDiagonalSlash::Execution(){
@@ -134,6 +137,7 @@ void WeakDiagonalSlash::Cleanup(){
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
 	isActive_ = false;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
