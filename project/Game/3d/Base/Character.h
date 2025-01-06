@@ -48,6 +48,11 @@ public:
 
 	bool GetIsAlive() const{ return isAlive_; }
 
+	bool GetOnGround() const{ return onGround_; }
+
     void SetPosition(const Vector3& position){ model_->transform.translate = position; };
 
+	void SetVelocity(const Vector3& velocity){ velocity_ = velocity; }
+
+	const Vector3 GetVelocity()const{ return velocity_; }
 };

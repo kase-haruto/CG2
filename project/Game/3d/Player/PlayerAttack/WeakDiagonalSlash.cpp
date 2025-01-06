@@ -114,10 +114,13 @@ void WeakDiagonalSlash::Update(){
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
 
-	float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
-	pPlayer_->GetModel()->transform.rotate.y =
-		LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
+	if (Input::IsLeftStickMoved()){
+		float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
+		pPlayer_->GetModel()->transform.rotate.y =
+			LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
 
+	}
+	
 	// 攻撃形状を更新
 	shape_.center = center_ + pPlayer_->GetForward() * offset_;
 	shape_.rotate = pPlayer_->GetRotate();
