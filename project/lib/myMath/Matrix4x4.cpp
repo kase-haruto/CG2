@@ -5,6 +5,7 @@
 
 /* lib */
 #include<cmath>
+#include <numbers>
 
 
 float cot(float angle){
@@ -223,5 +224,30 @@ Matrix4x4 Matrix4x4::Inverse(const Matrix4x4& mat){
 #pragma endregion
 
 	return result;
+}
+
+Vector3 Matrix4x4::ToEuler(const Matrix4x4& matrix){
+	Vector3 euler;
+
+	// YXZ順のオイラー角を計算
+	if (matrix.m[0][2] < 1.0f){
+		if (matrix.m[0][2] > -1.0f){
+			euler.y = std::asin(matrix.m[0][2]);
+			euler.x = std::atan2(-matrix.m[1][2], matrix.m[2][2]);
+			euler.z = std::atan2(-matrix.m[0][1], matrix.m[0][0]);
+		} else{
+			// matrix.m[0][2] == -1
+			euler.y = -static_cast< float >(std::numbers::pi) / 2.0f;
+			euler.x = -std::atan2(matrix.m[1][0], matrix.m[1][1]);
+			euler.z = 0.0f;
+		}
+	} else{
+		// matrix.m[0][2] == 1
+		euler.y = static_cast< float >(std::numbers::pi) / 2.0f;
+		euler.x = std::atan2(matrix.m[1][0], matrix.m[1][1]);
+		euler.z = 0.0f;
+	}
+
+	return euler;
 }
 

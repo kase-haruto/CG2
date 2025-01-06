@@ -14,6 +14,8 @@ TornadoParticle::TornadoParticle(){
 	emitNegY_ = false;
 	emitPosZ_ = true;
 	emitNegZ_ = true;
+
+	autoEmit_ = false;
 }
 
 void TornadoParticle::Initialize(const std::string& modelName, const std::string& texturePath){

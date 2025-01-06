@@ -54,13 +54,13 @@ void ParticleManager::Finalize(){
 
 void ParticleManager::ShowDebugUI(){
 
-	//// ユニークなIDスコープを作成する
-	//for (size_t i = 0; i < systems_.size(); ++i){
+	// ユニークなIDスコープを作成する
+	for (size_t i = 0; i < systems_.size(); ++i){
 
-	//	// 各オブジェクトのUIを個別に管理
-	//	if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
-	//		systems_[i]->ImGui();
-	//	}
+		// 各オブジェクトのUIを個別に管理
+		if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
+			systems_[i]->ImGui();
+		}
 
-	//}
+	}
 }

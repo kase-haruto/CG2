@@ -1,24 +1,25 @@
 #pragma once
-
 #include "Engine/objects/particle/ParticleSystem.h"
 #include "Engine/objects/particle/particleBehavior/PtlBehavior_Diffusion.h"
-class AttackParticle 
-	: public ParticleSystem{
+
+class HitParticle :
+    public ParticleSystem{
 public:
 	//===================================================================*/
 	//                   public methods
 	//===================================================================*/
-	AttackParticle();
-	~AttackParticle() override = default;
+	HitParticle();
+	~HitParticle() override = default;
 
 	void Initialize(const std::string& modelName, const std::string& texturePath) override;
 	void Update() override;
+
+	Vector3 GenerateVelocity(float speed)override;
 
 private:
 	//===================================================================*/
 	//                   private methods
 	//===================================================================*/
 	uint32_t particleNum_;
-	float maxScale_ = 6.0f;
 };
 

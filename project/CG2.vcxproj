@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\Math\Ease.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerParticle\AttackParticle.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerParticle\DushParticle.cpp" />
     <ClCompile Include="Game\3d\Enemy\EnemyManager.cpp" />
@@ -194,6 +195,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\IPlayerAttack.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\HitParticle.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -232,6 +234,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\Math\Ease.h" />
     <ClInclude Include="Game\3d\Player\PlayerParticle\AttackParticle.h" />
     <ClInclude Include="Game\3d\Player\PlayerParticle\DushParticle.h" />
     <ClInclude Include="Game\3d\Enemy\EnemyManager.h" />
@@ -321,6 +324,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\IPlayerAttack.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\HitParticle.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />

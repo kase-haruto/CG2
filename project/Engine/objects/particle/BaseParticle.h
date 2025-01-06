@@ -26,6 +26,7 @@ namespace ParticleData{
         Vector4 color {1.0f, 1.0f, 1.0f, 1.0f};
         float lifeTime = 1.0f;
         float currentTime = 0.0f;
+		float maxScale = 1.0f;
 
         void SetColorRandom();          // 色をランダムで初期化
         void SetColorInitialize();      // 色を初期化する(白)
@@ -73,8 +74,22 @@ public:
     // ライフタイム設定用の仮想関数
     virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
 
+
+    // 派生クラスでオーバーライド可能な速度生成
+    virtual Vector3 GenerateVelocity(float speed);
+
     virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
     virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
+
+
+    // maxScale設定のためのインターフェース
+    void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
+    void SetFixedMaxScale(float scale){ fixedMaxScale_ = scale; }
+    void SetRandomScaleRange(float minScale, float maxScale){
+        randomScaleMin_ = minScale;
+        randomScaleMax_ = maxScale;
+    }
+
 private:
     //===================================================================*/
     //                    private methods
@@ -95,6 +110,11 @@ public:
     int32_t kMaxInstanceNum_ = 256;
     int32_t instanceNum_ = 0;
 
+
+    bool useRandomScale_ = true;         // ランダムスケールを使用するかのフラグ
+    float fixedMaxScale_ = 1.0f;        // 固定スケール値
+    float randomScaleMin_ = 1.0f;       // ランダムスケールの最小値
+    float randomScaleMax_ = 6.0f;       // ランダムスケールの最大値
 protected:
     //===================================================================*/
     //                    protected methods

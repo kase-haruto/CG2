@@ -46,7 +46,11 @@ void TestScene::Initialize(){
 	animationCube_ = std::make_unique<AnimationModel>("AnimatedCube.gltf");
 
 	spriteTestModel_ = std::make_unique<Model>("plane.obj");
-	spriteTestModel_->InitializeTextures({"white1x1.png","uvChecker.png"});
+	spriteTestModel_->InitializeTextures({"thunder1.png","thunder2.png",
+										 "thunder3.png","thunder4.png",
+										 "thunder5.png","thunder6.png",
+										 "thunder7.png"});
+
 	spriteTestModel_->SetPos({10.0f,1.0f,0.0f});
 
 

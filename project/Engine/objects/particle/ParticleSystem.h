@@ -43,6 +43,7 @@ private:
     //Vector4 selectedColor_ = {1.0f,1.0f,1.0f,1.0f}; // SINGLEまたはSIMILAR用の基準色
     float colorVariation_ = 0.1f; // 類似色モードでのバラつき度合い(0.0f〜1.0f程度)
 
+
 protected:
     //===================================================================*/
     //                    protected methods

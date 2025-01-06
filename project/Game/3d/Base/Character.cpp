@@ -14,11 +14,6 @@ void Character::Initialize(){
 }
 
 void Character::Update(){
-    //生存フラグの更新
-	if (life_ <= 0){
-		isAlive_ = false;
-	}
-
     const float gravity = -9.8f;             // 重力加速度
     const float terminalVelocity = -50.0f;   // 最大落下速度
     float deltaTime = System::GetDeltaTime();
@@ -106,11 +101,6 @@ void Character::Update(){
                 if (velocity_.z > 0.0f) velocity_.z = 0.0f;
             }
         }
-    }
-
-    // キャラクターの生存フラグを更新
-    if (life_ <= 0){
-        isAlive_ = false;
     }
 
     // 最終的な位置更新

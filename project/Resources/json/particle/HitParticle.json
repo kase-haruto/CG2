@@ -1,0 +1,41 @@
+{
+    "colorMode": 1,
+    "colorVariation": 0.10000000149011612,
+    "emitter": {
+        "count": 0,
+        "frequency": 0.5,
+        "frequencyTime": 0.0,
+        "transform": {
+            "rotate": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translate": [
+                0.0,
+                1.0,
+                0.0
+            ]
+        }
+    },
+    "faces": {
+        "emitNegX": true,
+        "emitNegY": true,
+        "emitNegZ": true,
+        "emitPosX": true,
+        "emitPosY": true,
+        "emitPosZ": true
+    },
+    "name": "HitParticle",
+    "selectedColor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ]
+}

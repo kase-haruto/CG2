@@ -447,18 +447,19 @@ void System::StructuredObjectPipeline(){
     inputLayoutDesc.pInputElementDescs = inputElementDescs;
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
-    // BlendStateの設定
-   // BlendStateの設定
-    D3D12_BLEND_DESC blendDesc {};
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    // BlendStateの設定: 加算ブレンド
+    D3D12_BLEND_DESC blendDesc = {};
     blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE; // 加算ブレンド
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD; // カラーの加算
+    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;           // ソースカラーをそのまま使用
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;          // 背景カラーもそのまま使用
+    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;         // ソースと背景の色を加算
 
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE; // アルファ値の加算
-    blendDesc.RenderTarget[0].BlendOpAlpha= D3D12_BLEND_OP_ADD; // アルファブレンドの加算
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;      // アルファの加算
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;     // アルファの加算
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;    // ソースと背景のアルファを加算
+
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
 
 
     // RasterizerStateの設定

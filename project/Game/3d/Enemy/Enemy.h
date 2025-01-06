@@ -4,7 +4,10 @@
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "Engine/objects/particle/DemoParticle.h"
 #include "Engine/physics/Shape.h"
+
+#include "Engine/objects/particle/TornadoParticle.h"
 #include "../Player/PlayerParticle/AttackParticle.h"
+#include "../Player/PlayerParticle/HitParticle.h"
 
 class Enemy:
 public Character,public BoxCollider{
@@ -34,4 +37,10 @@ private:
 	//                   private methods
 	//===================================================================*/
 	std::unique_ptr<AttackParticle> hitParticle_ = nullptr;
+	std::unique_ptr<HitParticle> hitParticle2_ = nullptr;
+	std::unique_ptr<TornadoParticle> deathParticle_ = nullptr;
+
+
+	float deathAnimationTimer_ = 0.0f;
+	float deathAnimationDuration_ = 1.5f;
 };
