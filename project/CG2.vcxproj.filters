@@ -406,6 +406,13 @@
     <ClCompile Include="Game\3d\Player\Weapon\Weapon.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.cpp" />
     <ClCompile Include="Engine\core\UI\AttackEditorPanel.cpp" />
+    <ClCompile Include="Game\3d\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\DushParticle.cpp" />
+    <ClCompile Include="Game\3d\Player\SwordTrail.cpp" />
+    <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\AttackParticle.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\HitParticle.cpp" />
+    <ClCompile Include="Engine\core\Math\Ease.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -653,6 +660,13 @@
     <ClInclude Include="Game\3d\Player\PlayerAttack\PlayerAttackEditor.h" />
     <ClInclude Include="Engine\core\UI\AttackEditorPanel.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\ComboData.h" />
+    <ClInclude Include="Game\3d\Enemy\EnemyManager.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\DushParticle.h" />
+    <ClInclude Include="Game\3d\Player\SwordTrail.h" />
+    <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\AttackParticle.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\HitParticle.h" />
+    <ClInclude Include="Engine\core\Math\Ease.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

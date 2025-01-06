@@ -20,7 +20,7 @@ public:
     //===================================================================*/
 
     ParticleSystem();
-    ~ParticleSystem() override = default;
+    ~ParticleSystem() override;
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 
@@ -42,6 +42,7 @@ private:
     ColorMode colorMode_ = ColorMode::Random; // 現在のカラー方式
     //Vector4 selectedColor_ = {1.0f,1.0f,1.0f,1.0f}; // SINGLEまたはSIMILAR用の基準色
     float colorVariation_ = 0.1f; // 類似色モードでのバラつき度合い(0.0f〜1.0f程度)
+
 
 protected:
     //===================================================================*/

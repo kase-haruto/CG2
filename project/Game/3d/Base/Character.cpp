@@ -103,11 +103,6 @@ void Character::Update(){
         }
     }
 
-    // キャラクターの生存フラグを更新
-    if (life_ <= 0){
-        isAlive_ = false;
-    }
-
     // 最終的な位置更新
     model_->transform.translate += velocity_ * deltaTime;
 }

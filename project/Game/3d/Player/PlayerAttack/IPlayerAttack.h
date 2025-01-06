@@ -47,9 +47,12 @@ public:
 	// 攻撃名の取得
 	const std::string& GetName() const{ return attackName_; }
 
+	// damageの取得
+	int GetDamage() const{ return damage_; }
+
 	// Weaponのセット
 	void SetWeapon(Weapon* weapon){ weapon_ = weapon; }
-	void SetPlayer(const Player* pPlayer);
+	void SetPlayer(Player* pPlayer);
 
 	const Vector3 GetPlayerPos() const;
 
@@ -76,7 +79,9 @@ protected:
 	bool isAttacking_ = false;  //< 攻撃中フラグ
 
 	Weapon* weapon_ = nullptr;  //< Weaponへのポインタ
-	const Player* pPlayer_ = nullptr; //< Playerへのポインタ
+	Player* pPlayer_ = nullptr; //< Playerへのポインタ
+
+	int damage_ = 1;            //< ダメージ量
 
 private:
 	std::string attackName_;    //< 攻撃名

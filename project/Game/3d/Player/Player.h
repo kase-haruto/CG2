@@ -6,7 +6,11 @@
 #include "Engine/objects/Collider/BoxCollider.h"
 #include "PlayerAttack/PlayerAttackController.h"
 #include "PlayerAttack/PlayerAttackEditor.h"
+#include "PlayerParticle/AttackParticle.h"
 #include "Weapon/Weapon.h"
+
+#include "PlayerParticle/DushParticle.h"
+#include "Engine/physics/Triangle.h"
 
 #include <optional>
 
@@ -62,10 +66,13 @@ private:
 
 	Vector3 forward_ = {0.0f,0.0f,1.0f};	// 前方ベクトル
 
+	// プレイヤーのパーティクル
+	std::unique_ptr<DushParticle> dushParticle_ = nullptr;
+	std::unique_ptr<AttackParticle> attackParticle_ = nullptr;
 
 public:
 	PlayerAttackController* GetAttackController();
-
+	Triangle triangle_;
 public:
 	//===================================================================*/
 	//                   getter

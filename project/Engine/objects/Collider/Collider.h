@@ -17,8 +17,6 @@ enum class ColliderType{
 	Type_Enemy				= 3 << 1
 };
 
-
-
 // ビット演算のオーバーロード
 inline ColliderType operator|(ColliderType lhs, ColliderType rhs){
 	using T = std::underlying_type_t<ColliderType>;

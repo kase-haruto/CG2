@@ -4,6 +4,10 @@
 #include "Engine/core/System.h"
 #include "../Player.h"
 
+#include "Engine/core/Input.h"
+#include "Engine/graphics/camera/CameraManager.h"
+
+#include "lib/myFunc/MyFunc.h"
 #include <externals/imgui/imgui.h>
 #include <externals/nlohmann/json.hpp>
 #include <fstream>
@@ -26,16 +30,18 @@ void HorizonMowingDown::Initialize(){
 
 	Vector3 weaponRotate {1.4f,0.0f,1.5f};
 	weapon_->SetRotate(weaponRotate);
+
+	damage_ = 210; // ダメージ値を設定
 }
 
 void HorizonMowingDown::Execution(){
 	Initialize();
 	
 }
-
 void HorizonMowingDown::Update(){
 	if (!isAttacking_) return;
 
+	// アニメーション時間を更新
 	animationTime_ += animationSpeed_ * System::GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
@@ -46,15 +52,37 @@ void HorizonMowingDown::Update(){
 	// Catmull-Rom 補間を使用して現在の位置を計算
 	currentPosition_ = CatmullRomPosition(controlPoints_, animationTime_);
 
-	// 武器の位置を基準に攻撃オブジェクトの位置を設定
-	//Vector3 weaponPosition = weapon_->GetCenterPos(); // SetCenter で設定された武器の位置を取得
+	// 武器の位置を更新
 	weapon_->SetPosition(currentPosition_);
 
+	// 入力に基づいて移動方向を計算
+	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
+	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度
+
+	// カメラの回転を考慮した移動方向の計算
+	Vector3 cameraRotate = CameraManager::GetInstance()->GetFollowRotate();
+	Matrix4x4 matRotateY = MakeRotateYMatrix(cameraRotate.y);
+	Matrix4x4 matRotateZ = MakeRotateZMatrix(cameraRotate.z);
+	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
+	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
+
+	// プレイヤーの位置を更新
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+
+	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
+	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
+
+	// 目標角度を計算し、補間を適用
+	float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
+	pPlayer_->GetModel()->transform.rotate.y = LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
 
 
+	// 攻撃形状を更新
 	shape_.center = center_ + pPlayer_->GetForward() * offset_;
 	shape_.rotate = pPlayer_->GetRotate();
 }
+
+
 
 void HorizonMowingDown::Draw(){
 	BoxCollider::Draw();

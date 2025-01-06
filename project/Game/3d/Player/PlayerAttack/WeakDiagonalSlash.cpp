@@ -5,6 +5,11 @@
 #include "Engine/core/Json/JsonCoordinator.h"
 #include "../Player.h"
 
+#include "Engine/core/Input.h"
+#include "Engine/graphics/camera/CameraManager.h"
+
+#include "lib/myFunc/MyFunc.h"
+#include "Engine/graphics/GraphicsGroup.h"
 #include <externals/imgui/imgui.h>
 
 WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
@@ -29,6 +34,24 @@ void WeakDiagonalSlash::Initialize(){
 
 	Vector3 weaponRotate {1.4f,0.0f,0.0f};
 	weapon_->SetRotate(weaponRotate);
+
+	damage_ = 123; // ダメージ値を設定
+
+
+	//===========================================
+   // ここで SwordTrail を初期化
+   //===========================================
+	auto graphics = GraphicsGroup::GetInstance();
+	swordTrail_.Initialize(
+		graphics->GetDevice(),
+		graphics->GetCommandList(),
+		graphics->GetRootSignature(Object3D),      // 例: Object3D 用ルートシグネチャ
+		graphics->GetPipelineState(Object3D)       // 例: Object3D 用PSO
+	);
+
+	// フェードアウトの速度や最小アルファなどを調整 (必要に応じて)
+	swordTrail_.SetFadeSpeed(2.0f);  // 1秒あたりアルファが2.0 減衰
+	swordTrail_.SetMinAlpha(0.05f);  // 0.05以下で削除
 }
 
 void WeakDiagonalSlash::Execution(){
@@ -37,6 +60,8 @@ void WeakDiagonalSlash::Execution(){
 
 void WeakDiagonalSlash::Update(){
 	if (!isAttacking_) return;
+
+	// アニメーション時間を更新
 	animationTime_ += animationSpeed_ * System::GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
@@ -44,19 +69,63 @@ void WeakDiagonalSlash::Update(){
 		Cleanup();
 	}
 
-	// Catmull-Rom 補間を使用して現在の位置を計算
+	// Catmull-Rom 補間
 	currentPosition_ = CatmullRomPosition(controlPoints_, animationTime_);
 
-	// 武器の位置を基準に攻撃オブジェクトの位置を設定
-	//Vector3 weaponPosition = weapon_->GetCenterPos(); // SetCenter で設定された武器の位置を取得
+	// 武器の位置を更新
 	weapon_->SetPosition(currentPosition_);
 
+	//=====================================================
+	// 剣先端(tip) と 根元(base) を定義 (例)
+	//=====================================================
+	// ここでは非常にシンプルに、currentPosition_ を基準として
+	// Y方向に少しずらした点を先端 (tip)、そのままを根元 (base) としています。
+	// 実際は武器の長さや回転を考慮するなど、好きに計算可能
+	Vector3 tipPos = currentPosition_ + Vector3(0.0f, 1.0f, 0.0f);
+	Vector3 basePos = currentPosition_;
+
+	// トレイルに頂点を追加
+	swordTrail_.AddSegment(tipPos, basePos);
+
+	//=====================================================
+	// トレイルのフェードアウトなどを更新
+	//=====================================================
+	swordTrail_.Update(System::GetDeltaTime());
+
+	//=====================================================
+	// ↓ 以下、プレイヤーや攻撃形状の既存処理はそのまま ↓
+	//=====================================================
+	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
+	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度
+
+	// カメラの回転を考慮した移動
+	Vector3 cameraRotate = CameraManager::GetInstance()->GetFollowRotate();
+	Matrix4x4 matRotateY = MakeRotateYMatrix(cameraRotate.y);
+	Matrix4x4 matRotateZ = MakeRotateZMatrix(cameraRotate.z);
+	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
+	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
+
+	// プレイヤー位置を更新
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+
+	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
+	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
+
+	float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
+	pPlayer_->GetModel()->transform.rotate.y =
+		LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
+
+	// 攻撃形状を更新
 	shape_.center = center_ + pPlayer_->GetForward() * offset_;
 	shape_.rotate = pPlayer_->GetRotate();
 }
 
 void WeakDiagonalSlash::Draw(){
-		BoxCollider::Draw();
+	// 攻撃形状(コリジョン可視化)の描画
+	BoxCollider::Draw();
+
+	// トレイルの描画
+	swordTrail_.Draw();
 }
 
 void WeakDiagonalSlash::Cleanup(){

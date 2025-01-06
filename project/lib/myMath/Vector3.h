@@ -26,6 +26,16 @@ struct Vector3 final{
 
     static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
+    // == 演算子のオーバーロード
+    bool operator==(const Vector3& other) const{
+        return x == other.x && y == other.y && z == other.z;
+    }
+
+    // != 演算子のオーバーロード（オプション）
+    bool operator!=(const Vector3& other) const{
+        return !(*this == other);
+    }
+
     Vector3 operator*(const float& scalar) const;
     Vector3 operator*=(const float& scalar);
     Vector3 operator*(const Vector3& other) const;

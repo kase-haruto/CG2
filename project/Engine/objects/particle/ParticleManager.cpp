@@ -20,6 +20,13 @@ void ParticleManager::AddSystem(ParticleSystem* system){
 	systems_.push_back(system);
 }
 
+void ParticleManager::RemoveSystem(ParticleSystem* system){
+	auto it = std::remove(systems_.begin(), systems_.end(), system);
+	if (it != systems_.end()){
+		systems_.erase(it, systems_.end());
+	}
+}
+
 void ParticleManager::Draw(){
 	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject);
 	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject);

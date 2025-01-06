@@ -22,7 +22,7 @@ public:
 
     // 粒子システムを追加
     void AddSystem(ParticleSystem* system);
-
+    void RemoveSystem(ParticleSystem* system);
     // 描画処理
     void Draw();
 

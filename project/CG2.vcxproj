@@ -114,6 +114,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\Math\Ease.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\AttackParticle.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\DushParticle.cpp" />
+    <ClCompile Include="Game\3d\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Engine\core\UI\AttackEditorPanel.cpp" />
     <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
@@ -191,6 +195,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\IPlayerAttack.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\HitParticle.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -225,8 +230,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Dush.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.cpp" />
     <ClCompile Include="Game\3d\Player\Weapon\Weapon.cpp" />
+    <ClCompile Include="Game\3d\Player\SwordTrail.cpp" />
+    <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\Math\Ease.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\AttackParticle.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\DushParticle.h" />
+    <ClInclude Include="Game\3d\Enemy\EnemyManager.h" />
     <ClInclude Include="Engine\core\UI\AttackEditorPanel.h" />
     <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
     <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
@@ -313,6 +324,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\IPlayerAttack.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\HorizonMowingDown.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\HitParticle.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -346,6 +358,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Dush.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\WeakDiagonalSlash.h" />
     <ClInclude Include="Game\3d\Player\Weapon\Weapon.h" />
+    <ClInclude Include="Game\3d\Player\SwordTrail.h" />
+    <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

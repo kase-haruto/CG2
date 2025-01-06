@@ -46,4 +46,8 @@ protected:
 public:
     void velocity(const Vector3& velocity){ velocity_ = velocity; }
 
+	bool GetIsAlive() const{ return isAlive_; }
+
+    void SetPosition(const Vector3& position){ model_->transform.translate = position; };
+
 };

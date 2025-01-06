@@ -6,5 +6,5 @@
 
 
 void PtlBehavior_Diffusion::ApplyBehavior([[maybe_unused]] ParticleSystem& particle){
-	
+	// パーティクルの位置をランダムに変更
 }

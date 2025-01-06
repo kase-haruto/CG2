@@ -7,8 +7,9 @@
 #include "engine/Editor/UiEditor.h"
 #include "Game/3d/Player/Player.h"
 #include "Game/3d/Player/PlayerAttack/PlayerAttackEditor.h"
-#include "Game/3d/Enemy/Enemy.h"
+#include "Game/3d/Enemy/EnemyManager.h"
 #include "Engine/core/UI/AttackEditorPanel.h"
+#include "Engine/core/UI/ParticleEditPanel.h"
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -79,7 +80,8 @@ private:
     std::unique_ptr<Model> modelGround_ = nullptr;
     std::unique_ptr<Player> player_ = nullptr;
 	std::unique_ptr<PlayerAttackEditor> playerAttackEditor_ = nullptr;
-    std::unique_ptr<Enemy> enemy_ = nullptr;
+	std::unique_ptr<ParticleEditPanel> particleEditPanel_ = nullptr;
+	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 
 	std::unique_ptr<AttackEditorPanel> attackEditorPanel_ = nullptr;
 
