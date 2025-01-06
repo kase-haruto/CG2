@@ -34,8 +34,7 @@ void Character::Update(){
         onGround_ = true;
         model_->transform.translate.y = 0.0f; // 地面上に位置を固定
 
-        // 接地している場合、Y方向の速度をリセット
-        velocity_.y = 0.0f;
+        
     } else{
         onGround_ = false;
     }
@@ -100,6 +99,8 @@ void Character::Update(){
                 velocity_.z += deceleration;
                 if (velocity_.z > 0.0f) velocity_.z = 0.0f;
             }
+            // 接地している場合、Y方向の速度をリセット
+            velocity_.y = 0.0f;
         }
     }
 

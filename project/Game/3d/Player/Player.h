@@ -67,7 +67,8 @@ private:
 
 	Vector3 forward_ = {0.0f,0.0f,1.0f};	// 前方ベクトル
 
-	float jumpPower_ = 5.0f;	// ジャンプ力
+	float jumpPower_ = 7.0f;	// ジャンプ力
+	Vector3 jumpVelocity_ = {0.0f,0.0f,0.0f};	// ジャンプ速度	
 
 	// プレイヤーのパーティクル
 	std::unique_ptr<DushParticle> dushParticle_ = nullptr;

@@ -90,11 +90,13 @@ void Player::Update(){
 
 	// ジャンプ
 	if (!onGround_){
+		
 		if (Input::TriggerGamepadButton(PAD_BUTTON::A)){
 			Vector3 currentVelocity = GetVelocity();
-			Vector3 jumpVel = {currentVelocity.x, jumpPower_, currentVelocity.z};
-			SetVelocity(jumpVel);
+			jumpVelocity_ = {currentVelocity.x, jumpPower_, currentVelocity.z};
 		}
+	} else{
+		jumpVelocity_ = {0.0f,0.0f,0.0f};	//reset
 	}
 
 	weapon_->Update();
@@ -107,6 +109,8 @@ void Player::Update(){
 
 	// 攻撃管理クラスの更新
 	attackController_->Update();
+
+	model_->transform.translate += jumpVelocity_ * System::GetDeltaTime();
 
 	BaseGameObject::Update();
 	Character::Update();
