@@ -413,6 +413,7 @@
     <ClCompile Include="Game\3d\Player\PlayerParticle\AttackParticle.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerParticle\HitParticle.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\TrailParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -667,6 +668,7 @@
     <ClInclude Include="Game\3d\Player\PlayerParticle\AttackParticle.h" />
     <ClInclude Include="Game\3d\Player\PlayerParticle\HitParticle.h" />
     <ClInclude Include="Engine\core\Math\Ease.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\TrailParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

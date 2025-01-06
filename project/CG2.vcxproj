@@ -232,6 +232,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\Player\Weapon\Weapon.cpp" />
     <ClCompile Include="Game\3d\Player\SwordTrail.cpp" />
     <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerParticle\TrailParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\Math\Ease.h" />
@@ -360,6 +361,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\3d\Player\Weapon\Weapon.h" />
     <ClInclude Include="Game\3d\Player\SwordTrail.h" />
     <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
+    <ClInclude Include="Game\3d\Player\PlayerParticle\TrailParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
