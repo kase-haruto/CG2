@@ -5,6 +5,7 @@
 #include "../Player.h"
 
 #include "Engine/core/Input.h"
+#include "Engine/core/Audio/Audio.h"
 #include "Engine/graphics/camera/CameraManager.h"
 
 #include "lib/myFunc/MyFunc.h"
@@ -32,6 +33,8 @@ void HorizonMowingDown::Initialize(){
 	weapon_->SetRotate(weaponRotate);
 
 	damage_ = 210; // ダメージ値を設定
+
+	Audio::Play("attack.mp3", false);
 }
 
 void HorizonMowingDown::Execution(){
@@ -72,10 +75,12 @@ void HorizonMowingDown::Update(){
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
 
-	// 目標角度を計算し、補間を適用
-	float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
-	pPlayer_->GetModel()->transform.rotate.y = LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
+	if (Input::IsLeftStickMoved()){
+		float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
+		pPlayer_->GetModel()->transform.rotate.y =
+			LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
 
+	}
 
 	// 攻撃形状を更新
 	shape_.center = center_ + pPlayer_->GetForward() * offset_;

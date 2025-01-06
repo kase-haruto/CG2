@@ -1,6 +1,7 @@
 ﻿#include "../scene/TestScene.h"
 
 #include "../core/Input.h"
+#include "../core/Audio/Audio.h"
 
 #include "../graphics/camera/CameraManager.h"
 
@@ -57,10 +58,12 @@ void TestScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
+
 }
 
 void TestScene::Update(){
 	CameraManager::Update();
+
 
 #ifdef _DEBUG
 

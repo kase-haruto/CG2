@@ -71,15 +71,30 @@ void Player::Update(){
 	}
 
 	//状態の切り替え
-	if (Input::IsLeftStickMoved()){
-		TransitionState(PlayerState::Jog);
 
+
+	if (Input::IsLeftStickMoved()){
+		// 移動入力がある場合
+		TransitionState(PlayerState::Jog);
+		// ダッシュ
 		if (Input::PushGamepadButton(PAD_BUTTON::RB)){
 			TransitionState(PlayerState::Dush);
 		}
 
 	} else{
-		TransitionState(PlayerState::Stay);
+		// 移動入力がない場合ジャンプしていなければステイ
+		if (state_ != PlayerState::Jump){
+			TransitionState(PlayerState::Stay);
+		}
+	}
+
+	// ジャンプ
+	if (!onGround_){
+		if (Input::TriggerGamepadButton(PAD_BUTTON::A)){
+			Vector3 currentVelocity = GetVelocity();
+			Vector3 jumpVel = {currentVelocity.x, jumpPower_, currentVelocity.z};
+			SetVelocity(jumpVel);
+		}
 	}
 
 	weapon_->Update();

@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 #include "Engine/core/System.h"
+#include "Engine/core/Audio/Audio.h"
 
 #include "../Player/Player.h"
 #include "../Player/PlayerAttack/IPlayerAttack.h"
@@ -119,6 +120,8 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 
 				hitParticle_->Emit(2);
 				hitParticle2_->Emit(4);
+
+				Audio::Play("hit.mp3", false);
 			}
 		}
 	}

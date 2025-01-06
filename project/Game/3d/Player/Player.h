@@ -21,6 +21,7 @@
 		Jog,
 		Dush,
 		Dead,
+		Jump,
 	};
 
 class Player :
@@ -38,7 +39,7 @@ public:
 	void Draw()override;
 	void ShowAttackEditorGui();
 	void ShowGui()override;
-
+	void TransitionState(PlayerState nextState);
 	/* collision ======================================*/
 	void OnCollisionEnter(Collider* other)override;
 	void OnCollisionStay(Collider* other)override;
@@ -48,7 +49,7 @@ private:
 	//===================================================================*/
 	//                   private func
 	//===================================================================*/
-	void TransitionState(PlayerState nextState);
+
 
 	std::string GetAttackInput(); // 攻撃名を取得する関数
 private:
@@ -65,6 +66,8 @@ private:
 	std::unique_ptr<Weapon>weapon_ = nullptr;
 
 	Vector3 forward_ = {0.0f,0.0f,1.0f};	// 前方ベクトル
+
+	float jumpPower_ = 5.0f;	// ジャンプ力
 
 	// プレイヤーのパーティクル
 	std::unique_ptr<DushParticle> dushParticle_ = nullptr;
