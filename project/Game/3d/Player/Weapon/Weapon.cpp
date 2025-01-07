@@ -21,8 +21,8 @@ void Weapon::Initialize(){
 	std::string path = BaseGameObject::jsonPath + "/weapon";
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), path);
 
-	model_->transform.translate = {0.5f,1.56f,-1.0f};
-	model_->transform.rotate = {0.0f,1.56f,2.39f};
+	model_->transform.translate = INITIAL_TRANSLATE;
+	model_->transform.rotate = INITIAL_ROTATE;
 }
 
 void Weapon::Update(){
@@ -57,9 +57,11 @@ void Weapon::ShowGui(){
 }
 
 void Weapon::InitializeTransform(){
-	model_->transform.translate = {0.5f,1.56f,-1.0f};
-	model_->transform.rotate = {0.0f,1.56f,2.39f};
-	model_->transform.scale = Vector3(1.0f, 1.0f, 1.0f);
+	// 現在の変換値から初期値に向かって線形補間
+	model_->transform.translate = Vector3::Lerp(model_->transform.translate, INITIAL_TRANSLATE, 0.2f);
+	model_->transform.rotate = Vector3::Lerp(model_->transform.rotate, INITIAL_ROTATE, 0.2f);
+	model_->transform.scale = Vector3::Lerp(model_->transform.scale, INITIAL_SCALE, 0.2f);
+
 }
 
 Vector3 Weapon::ComputeTipWorldPosition() const{

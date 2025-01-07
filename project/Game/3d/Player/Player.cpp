@@ -99,6 +99,8 @@ void Player::Update(){
 
 	if (isAttacking_){
 		trailParticle_->Emit(3);
+	} else{
+		weapon_->InitializeTransform();
 	}
 
 	// ジャンプ
