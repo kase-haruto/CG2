@@ -23,7 +23,7 @@ void AttackParticle::Initialize(const std::string& modelName,
 
     // ランダムスケールを使用する
     SetUseRandomScale(true);
-    SetRandomScaleRange(1.0f, 4.0f); // ランダム値の範囲を指定
+	SetRandomScaleRange(0.5f, 1.0f); // ランダム値の範囲を指定
 
 }
 

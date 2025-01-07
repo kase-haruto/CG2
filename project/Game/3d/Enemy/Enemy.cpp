@@ -46,7 +46,7 @@ void Enemy::Initialize(){
 
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
 
-	life_ = 800;
+	life_ = 600;
 
 	//モデルの
 	BaseGameObject::Update();
@@ -172,14 +172,14 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 				// ノックバック処理
 				// プレイヤーと反対方向に力を加える
 				Vector3 dir = (GetCenterPos() - playerPos).Normalize();
-				float knockbackForce = 8.0f; // 力の大きさ（必要に応じて調整）
+				float knockbackForce = 5.0f; // 力の大きさ（必要に応じて調整）
 				float knockbackDuration = 0.5f; // 持続時間（秒単位、必要に応じて調整）
 
 				KnockBack(dir, knockbackForce, knockbackDuration);
 
 				life_ -= playerAttack->GetDamage();
 
-				//hitParticle_->Emit(2);
+				hitParticle_->Emit(2);
 				hitParticle2_->Emit(4);
 
 				Audio::Play("hit.mp3", false);

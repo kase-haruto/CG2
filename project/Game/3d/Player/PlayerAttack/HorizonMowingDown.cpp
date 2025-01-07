@@ -14,7 +14,7 @@
 #include <fstream>
 
 HorizonMowingDown::HorizonMowingDown(const std::string& attackName)
-	:IPlayerAttack(attackName), animationTime_(0.0f), animationSpeed_(3.0f){
+	:IPlayerAttack(attackName), animationTime_(0.0f), animationSpeed_(3.5f){
 	//SetupDefaultControlPoints();
 }
 

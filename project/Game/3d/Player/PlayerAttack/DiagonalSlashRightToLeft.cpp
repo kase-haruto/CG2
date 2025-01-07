@@ -15,7 +15,7 @@
 DiagonalSlashRightToLeft::DiagonalSlashRightToLeft(const std::string& attackName)
 	: IPlayerAttack(attackName),
 	animationTime_(0.0f),
-	animationSpeed_(2.0f) // 必要に応じて調整
+	animationSpeed_(2.5f) // 必要に応じて調整
 {
 	SetupDefaultControlPoints();
 }
@@ -58,6 +58,8 @@ void DiagonalSlashRightToLeft::Initialize(){
 	// 初期回転を設定し、初期回転を保存
 	initialRotate_ = {0.0f, 0.48f, -0.59f};
 	weapon_->SetRotate(initialRotate_);
+
+	pPlayer_->SetIsAttacking(true);
 }
 
 void DiagonalSlashRightToLeft::Execution(){
@@ -85,6 +87,34 @@ void DiagonalSlashRightToLeft::Update(){
 	Vector3 currentRotate = Vector3::Lerp(initialRotate_, targetRotate_, animationTime_);
 	weapon_->SetRotate(currentRotate);
 
+
+	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
+	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度
+
+	// カメラの回転を考慮した移動
+	Vector3 cameraRotate = CameraManager::GetInstance()->GetFollowRotate();
+	Matrix4x4 matRotateY = MakeRotateYMatrix(cameraRotate.y);
+	Matrix4x4 matRotateZ = MakeRotateZMatrix(cameraRotate.z);
+	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
+	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
+
+	// プレイヤー位置を更新
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+
+	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
+	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
+
+	if (Input::IsLeftStickMoved()){
+		float targetAngle_ = std::atan2(moveVelocity_.x, moveVelocity_.z);
+		pPlayer_->GetModel()->transform.rotate.y =
+			LerpShortAngle(pPlayer_->GetModel()->transform.rotate.y, targetAngle_, 0.1f);
+
+	}
+
+	// 攻撃形状を更新
+	shape_.center = center_ + pPlayer_->GetForward() * offset_;
+	shape_.rotate = pPlayer_->GetRotate();
+
 	// 攻撃形状を更新
 	//攻撃範囲をプレイヤーの周りに設定
 	shape_.center = center_ + pPlayer_->GetForward() * offset_;
@@ -105,7 +135,7 @@ void DiagonalSlashRightToLeft::Cleanup(){
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
 	isActive_ = false;
-
+	pPlayer_->SetIsAttacking(false);
 }
 
 //////////////////////////////////////////////////////////////////////////

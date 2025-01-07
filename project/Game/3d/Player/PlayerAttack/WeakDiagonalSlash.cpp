@@ -16,7 +16,7 @@
 WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 	: IPlayerAttack(attackName),
 	animationTime_(0.0f),
-	animationSpeed_(1.5f) // 必要に応じて調整
+	animationSpeed_(2.0f) // 必要に応じて調整
 {
 	//SetupDefaultControlPoints();
 }

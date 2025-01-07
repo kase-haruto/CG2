@@ -107,7 +107,7 @@ public:
     std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
 	bool autoEmit_ = true;
-    int32_t kMaxInstanceNum_ = 256;
+    int32_t kMaxInstanceNum_ = 512;
     int32_t instanceNum_ = 0;
 
 

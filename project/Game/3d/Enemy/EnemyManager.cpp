@@ -34,6 +34,7 @@ void EnemyManager::Update(){
         if (!enemy->GetIsAlive()){
             // 敵が死んでいたら削除
             it = enemies_.erase(it);
+			enemyCount_--;
         } else{
             // 更新
             enemy->Update();

@@ -83,6 +83,9 @@ private:
 	std::unique_ptr<PlayerAttackEditor> playerAttackEditor_ = nullptr;
 	std::unique_ptr<ParticleEditPanel> particleEditPanel_ = nullptr;
 
+    //skydome
+	std::unique_ptr<Model> skydome_ = nullptr;
+
     // enemy
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	const int32_t maxEnemySpawners_ = 3;

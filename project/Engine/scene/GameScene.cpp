@@ -63,12 +63,12 @@ void GameScene::Initialize(){
 	enemyManager_->Initialize();
 
 	// スポナー間の間隔と開始位置を設定
-	const float spacing = 10.0f;  // スポナー同士の間隔
-	Vector3 startPosition(-spacing * (maxEnemySpawners_ - 1) / 2.0f, 1.0f, 0.0f); // 中央揃えの開始位置
+	const float spacing = 15.0f;  // スポナー同士の間隔
+	Vector3 startPosition(-spacing * (maxEnemySpawners_ - 1) / 2.0f, 0.0f, 5.0f); // 中央揃えの開始位置
 
 	for (size_t i = 0; i < maxEnemySpawners_; ++i){
 		// スポナーの生成
-		enemySpawners_[i] = std::make_unique<EnemySpawner>("debugCube.obj");
+		enemySpawners_[i] = std::make_unique<EnemySpawner>("enemySpawner.obj");
 
 		// スポナーの位置を計算して設定
 		Vector3 position = startPosition + Vector3(i * spacing, 0.0f, 0.0f);
@@ -90,6 +90,10 @@ void GameScene::Initialize(){
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
+
+	//skydome
+	skydome_ = std::make_unique<Model>("skydome.obj");
+	skydome_->SetSize({70.0f,70.0f,70.0f});
 
 	Audio::Play("bgm.mp3", true,0.0f);
 
@@ -116,6 +120,8 @@ void GameScene::Update(){
 	modelBuilder_->Update();
 	//地面の更新
 	modelField_->Update();
+
+	skydome_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -150,6 +156,8 @@ void GameScene::Draw(){
 
 	//地面の描画
 	modelField_->Draw();
+
+	skydome_->Draw();
 
 	ParticleManager::GetInstance()->Draw();
 

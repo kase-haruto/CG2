@@ -73,11 +73,15 @@ void BaseParticle::Update(){
             instancingData[instanceNum_].World = worldMatrix;
             instancingData[instanceNum_].color = it->color;
 
-            float alpha;
+            float alpha = instancingData[instanceNum_].color.w;
             if (isFixationAlpha_){
                 alpha = 1.0f;
             } else{
-                alpha = 1.0f - (it->currentTime / it->lifeTime);
+                float ratio = it->currentTime / it->lifeTime;
+                // 0〜1の範囲にクランプ
+                if (ratio < 0.0f) ratio = 0.0f;
+                if (ratio > 1.0f) ratio = 1.0f;
+                alpha = 1.0f - ratio;
             }
 
             instancingData[instanceNum_].color.w = alpha;
@@ -114,6 +118,7 @@ void BaseParticle::Draw(){
     // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
     commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
 
+#ifdef _DEBUG
     // OBB描画
     if (currentShape_ == EmitterShape::OBB){
         PrimitiveDrawer::GetInstance()->DrawOBB(
@@ -130,6 +135,9 @@ void BaseParticle::Draw(){
             {1.0f,1.0f,1.0f,1.0f}
         );
     }
+#endif // _DEBUG
+
+
 
     
 }
