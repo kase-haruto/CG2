@@ -35,6 +35,9 @@ void HorizonMowingDown::Initialize(){
 	damage_ = 210; // ダメージ値を設定
 
 	Audio::Play("attack.mp3", false);
+
+	pPlayer_->SetIsAttacking(true);
+
 }
 
 void HorizonMowingDown::Execution(){
@@ -99,6 +102,7 @@ void HorizonMowingDown::Cleanup(){
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
 	isActive_ = false;
+	pPlayer_->SetIsAttacking(false);
 }
 
 

@@ -24,7 +24,7 @@
 #include <random>
 #include <memory>
 
-
+class  Model;
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
@@ -62,3 +62,5 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 float Lerp(float v1, float v2, float t);
 
 float LerpShortAngle(float a, float b, float t);
+
+Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix);

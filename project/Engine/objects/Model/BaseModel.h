@@ -92,6 +92,9 @@ public:
 
     Material materialParameter_;
 
+public:
+	Matrix4x4 GetWorldRotationMatrix();
+
 protected:
     /// リソースを生成する際のディレクトリパス(例)
     static const std::string directoryPath_;

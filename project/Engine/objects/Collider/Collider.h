@@ -14,7 +14,8 @@ enum class ColliderType{
 	Type_None				= 0,        // ビットが立っていない状態
 	Type_Player				= 1 << 1,
 	Type_PlayerAttack		= 2 << 1,
-	Type_Enemy				= 3 << 1
+	Type_Enemy				= 3 << 1,
+	Type_EnemySpawner		= 4 << 1
 };
 
 // ビット演算のオーバーロード

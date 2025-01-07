@@ -3,6 +3,9 @@
 
 #include "../SwordTrail.h"
 #include "Engine/physics/Triangle.h"
+#include "../PlayerParticle/TrailParticle.h"
+
+#include <memory>
 
 class WeakDiagonalSlash :
     public IPlayerAttack{
@@ -12,6 +15,8 @@ public:
 	//===================================================================*/
 	WeakDiagonalSlash(const std::string& attackName);
 	~WeakDiagonalSlash() override = default;
+	// コピーコンストラクタの宣言
+	WeakDiagonalSlash(const WeakDiagonalSlash& other);
 
 	/* main ===================================*/
 	void Initialize()override;	//< 初期化

@@ -62,6 +62,25 @@ void GameScene::Initialize(){
 	enemyManager_->SetTarget(&player_->GetPosition());
 	enemyManager_->Initialize();
 
+	// スポナー間の間隔と開始位置を設定
+	const float spacing = 10.0f;  // スポナー同士の間隔
+	Vector3 startPosition(-spacing * (maxEnemySpawners_ - 1) / 2.0f, 1.0f, 0.0f); // 中央揃えの開始位置
+
+	for (size_t i = 0; i < maxEnemySpawners_; ++i){
+		// スポナーの生成
+		enemySpawners_[i] = std::make_unique<EnemySpawner>("debugCube.obj");
+
+		// スポナーの位置を計算して設定
+		Vector3 position = startPosition + Vector3(i * spacing, 0.0f, 0.0f);
+
+		// スポナーの初期化
+		enemySpawners_[i]->Initialize(position);
+
+		// EnemyManager を設定（enemyManager_ は既に生成されている前提）
+		enemySpawners_[i]->SetEnemyManager(enemyManager_.get());
+		
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -72,30 +91,31 @@ void GameScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
-	Audio::Play("bgm.mp3", true,0.3f);
+	Audio::Play("bgm.mp3", true,0.0f);
 
 
 }
 
 void GameScene::Update(){
-#ifdef _DEBUG
-#endif // _DEBUG
-
-	pointLight_->SetPosition(player_->GetCenterPos());
-
+	/* カメラ関連更新 ============================*/
 	CameraManager::Update();
 
-	//uiの更新
-	uiEditor_->Update();
-
-	//モデルの更新
-	modelBuilder_->Update();
-
-	modelField_->Update();
-
+	/* player関連更新 ===================================*/
 	player_->Update();
 
+	/* 敵関連更新 ============================*/
 	enemyManager_->Update();
+	for (auto& spawner:enemySpawners_){
+		spawner->Update();
+	}
+
+	/* その他 ============================*/
+	//uiの更新
+	uiEditor_->Update();
+	//モデルの更新
+	modelBuilder_->Update();
+	//地面の更新
+	modelField_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
@@ -115,14 +135,16 @@ void GameScene::Draw(){
 	//3dオブジェクト描画前処理
 	ModelPreDraw();
 
-	//モデルの描画
-	modelBuilder_->Draw();
 
 	player_->Draw();
 
 	enemyManager_->Draw();
+	for (auto& spawner : enemySpawners_){
+		spawner->Draw();
+	}
 
-	/*modelGround_->Draw();*/
+	//モデルの描画
+	modelBuilder_->Draw();
 
 	playerAttackEditor_->Draw();
 

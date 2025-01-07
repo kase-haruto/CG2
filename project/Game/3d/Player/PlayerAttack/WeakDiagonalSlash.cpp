@@ -21,6 +21,15 @@ WeakDiagonalSlash::WeakDiagonalSlash(const std::string& attackName)
 	//SetupDefaultControlPoints();
 }
 
+WeakDiagonalSlash::WeakDiagonalSlash(const WeakDiagonalSlash& other)
+	: IPlayerAttack(other),  // 基底クラスのコピーコンストラクタを呼び出し
+	animationTime_(other.animationTime_),
+	animationSpeed_(other.animationSpeed_),
+	currentPosition_(other.currentPosition_),
+	moveVelocity_(other.moveVelocity_),
+	controlPoints_(other.controlPoints_){
+}
+
 //////////////////////////////////////////////////////////////////////////
 //						main functions
 //////////////////////////////////////////////////////////////////////////
@@ -55,6 +64,8 @@ void WeakDiagonalSlash::Initialize(){
 	swordTrail_.SetMinAlpha(0.05f);  // 0.05以下で削除
 
 	Audio::Play("attack.mp3", false);
+
+	pPlayer_->SetIsAttacking(true);
 }
 
 void WeakDiagonalSlash::Execution(){
@@ -63,7 +74,6 @@ void WeakDiagonalSlash::Execution(){
 
 void WeakDiagonalSlash::Update(){
 	if (!isAttacking_) return;
-
 	// アニメーション時間を更新
 	animationTime_ += animationSpeed_ * System::GetDeltaTime();
 	if (animationTime_ > 1.0f){
@@ -140,7 +150,7 @@ void WeakDiagonalSlash::Cleanup(){
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
 	isActive_ = false;
-
+	pPlayer_->SetIsAttacking(false);
 }
 
 //////////////////////////////////////////////////////////////////////////

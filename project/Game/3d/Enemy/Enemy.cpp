@@ -57,6 +57,9 @@ void Enemy::Initialize(){
 	hitParticle2_ = std::make_unique<HitParticle>();
 	hitParticle2_->Initialize("debugCube.obj", "white1x1.png");
 
+	// ランダムなフェーズオフセットを設定（0 ～ 2π の範囲）
+	floatingPhaseOffset_ = Random::Generate(0.0f, 2.0f * 3.14159265f);
+
 }
 
 void Enemy::Update(){
@@ -66,6 +69,7 @@ void Enemy::Update(){
 	}
 
 	Move();
+	Floating();
 
 	hitParticle_->SetEmitPos(GetCenterPos());
 	hitParticle_->Update();
@@ -118,6 +122,25 @@ void Enemy::Move(){
 	}
 }
 
+void Enemy::Floating(){
+	// 浮遊動作の設定
+	static float globalTimeAccumulator = 0.0f;  // 全敵共通の経過時間
+	float deltaTime = System::GetDeltaTime();
+	globalTimeAccumulator += deltaTime;
+
+	// フローティングのパラメータ
+	const float amplitude = 0.5f;  // 振幅（上下の移動範囲）
+	const float frequency = 1.0f;  // 周波数（1秒あたりの揺れの回数）
+
+	// 各敵の個別フェーズを考慮したサイン波による上下運動
+	float offsetY = amplitude * std::sin(frequency * globalTimeAccumulator + floatingPhaseOffset_);
+
+	// 現在の位置を取得し、新しいY座標を設定
+	Vector3 currentTranslate = model_->transform.translate;
+	currentTranslate.y = offsetY;
+	model_->transform.translate = currentTranslate;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 //					Collision
@@ -149,7 +172,7 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 				// ノックバック処理
 				// プレイヤーと反対方向に力を加える
 				Vector3 dir = (GetCenterPos() - playerPos).Normalize();
-				float knockbackForce = 4.0f; // 力の大きさ（必要に応じて調整）
+				float knockbackForce = 8.0f; // 力の大きさ（必要に応じて調整）
 				float knockbackDuration = 0.5f; // 持続時間（秒単位、必要に応じて調整）
 
 				KnockBack(dir, knockbackForce, knockbackDuration);

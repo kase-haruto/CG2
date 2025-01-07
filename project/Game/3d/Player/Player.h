@@ -7,6 +7,7 @@
 #include "PlayerAttack/PlayerAttackController.h"
 #include "PlayerAttack/PlayerAttackEditor.h"
 #include "PlayerParticle/AttackParticle.h"
+#include "PlayerParticle/TrailParticle.h"
 #include "Weapon/Weapon.h"
 
 #include "PlayerParticle/DushParticle.h"
@@ -69,6 +70,7 @@ private:
 
 	float jumpPower_ = 7.0f;	// ジャンプ力
 	Vector3 jumpVelocity_ = {0.0f,0.0f,0.0f};	// ジャンプ速度	
+	std::unique_ptr<TrailParticle> trailParticle_;	//< パーティクル
 
 	// プレイヤーのパーティクル
 	std::unique_ptr<DushParticle> dushParticle_ = nullptr;
@@ -77,6 +79,8 @@ private:
 public:
 	PlayerAttackController* GetAttackController();
 	Triangle triangle_;
+
+
 public:
 	//===================================================================*/
 	//                   getter
@@ -92,4 +96,5 @@ public:
 	bool IsAttacking()const{ return attackController_->IsAttacking(); }
 	void SetJumpVelocity(const Vector3& velocity){ jumpVelocity_ = velocity; }
 	float GetJumpPower()const{ return jumpPower_; }
+	void SetIsAttacking(bool isAttacking){ isAttacking_ = isAttacking; }
 };

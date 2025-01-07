@@ -59,7 +59,7 @@ public:
     const std::string& GetName() const{ return name_; }
     void SetName(const std::string& name){ name_ = name; }
     void SetEmitPos(const Vector3& pos){ emitter_.transform.translate = pos; }
-
+	void SetEmitRotate(const Vector3& rotate){ emitter_.transform.rotate = rotate; }
     // BaseParticleの仮想関数をオーバーライド
     bool GetUseRandomColor() const override;
     Vector4 GetSelectedColor() const override;

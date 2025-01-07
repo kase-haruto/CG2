@@ -69,6 +69,7 @@ void FollowCamera::Adulation(){
 }
 
 void FollowCamera::UpdateMatrix(){
+
 	// 回転行列の作成
 	rotateMatrix_ = EulerToMatrix(transform_.rotate);
 
@@ -88,12 +89,15 @@ void FollowCamera::UpdateMatrix(){
 
 	// ビュー行列とプロジェクション行列の掛け算
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix, projectionMatrix_);
+
 }
 
 void FollowCamera::ShowGui(){
+
 	//名前の表示
 	SceneObject::ShowGui();
 
 	// アクティブかどうか
 	BaseCamera::ShowGui();
+
 }

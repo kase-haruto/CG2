@@ -26,7 +26,6 @@ void Weapon::Initialize(){
 }
 
 void Weapon::Update(){
-	tipPos_ = GetCenterPos() + Vector3 {0.0f,0.7f,0.0f};
 
 	BaseGameObject::Update();
 }
@@ -63,3 +62,10 @@ void Weapon::InitializeTransform(){
 	model_->transform.scale = Vector3(1.0f, 1.0f, 1.0f);
 }
 
+Vector3 Weapon::ComputeTipWorldPosition() const{
+	// ローカル先端座標を取得
+	Vector3 tipLocalPosition = tipPos_;
+	// ワールド行列を用いてローカル座標をワールド空間に変換
+	Vector3 tipWorldPosition = Vector3::Transform(tipLocalPosition, model_->worldMatrix);
+	return tipWorldPosition;
+}

@@ -1,5 +1,8 @@
 ﻿#include"MyFunc.h"
 #include"ConvertString.h"
+
+#include "Engine/objects/Model/Model.h"
+
 #include<cmath>
 #include<fstream>
 #include<sstream>
@@ -327,6 +330,18 @@ float LerpShortAngle(float a, float b, float t){
 	// Lerpを使用して補間
 	return Lerp(a, a + diff, t);
 
+}
+
+
+Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix){
+	// 仮定: 回転順序は YXZ など
+	Vector3 euler;
+	// row-major 前提での計算例（回転順序に応じて変更必要）
+	euler.y = std::atan2(worldMatrix.m[0][2], worldMatrix.m[2][2]);
+	float cosY = std::cos(euler.y);
+	euler.x = std::atan2(-worldMatrix.m[1][2], worldMatrix.m[2][2] / cosY);
+	euler.z = std::atan2(worldMatrix.m[0][1], worldMatrix.m[0][0]);
+	return euler;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

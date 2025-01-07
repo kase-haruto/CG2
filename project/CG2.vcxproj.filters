@@ -419,6 +419,7 @@
     <ClCompile Include="Game\3d\Player\PlayerAttack\JumpAttack.cpp" />
     <ClCompile Include="Engine\scene\ResultScene.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.cpp" />
+    <ClCompile Include="Game\3d\Enemy\EnemySpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -679,6 +680,7 @@
     <ClInclude Include="Game\3d\Player\PlayerAttack\JumpAttack.h" />
     <ClInclude Include="Engine\scene\ResultScene.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
+    <ClInclude Include="Game\3d\Enemy\EnemySpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

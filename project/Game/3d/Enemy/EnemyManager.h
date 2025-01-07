@@ -29,6 +29,8 @@ public:
 	// ターゲットを設定
 	void SetTarget(Vector3* target){ target_ = target; }
 
+	int32_t GetEnemyCount() const{ return enemyCount_; }
+
 private:
 	//===================================================================*/
 	//      private variables
@@ -46,4 +48,6 @@ private:
     static constexpr size_t maxEnemies_ = 3;
 
 	Vector3* target_ = nullptr;
+
+	int32_t enemyCount_ = 0;
 };

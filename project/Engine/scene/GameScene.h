@@ -8,6 +8,7 @@
 #include "Game/3d/Player/Player.h"
 #include "Game/3d/Player/PlayerAttack/PlayerAttackEditor.h"
 #include "Game/3d/Enemy/EnemyManager.h"
+#include "Game/3d/Enemy/EnemySpawner.h"
 #include "Engine/core/UI/AttackEditorPanel.h"
 #include "Engine/core/UI/ParticleEditPanel.h"
 
@@ -24,7 +25,7 @@
 /* c++ */
 #include <vector>
 #include <memory>
-
+#include <array>
 //デバッグ関連//
 #ifdef _DEBUG
 #include"lib/ImGuiManager.h"
@@ -81,7 +82,11 @@ private:
     std::unique_ptr<Player> player_ = nullptr;
 	std::unique_ptr<PlayerAttackEditor> playerAttackEditor_ = nullptr;
 	std::unique_ptr<ParticleEditPanel> particleEditPanel_ = nullptr;
+
+    // enemy
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	const int32_t maxEnemySpawners_ = 3;
+    std::array<std::unique_ptr<EnemySpawner>, 3> enemySpawners_ = {};
 
 	std::unique_ptr<AttackEditorPanel> attackEditorPanel_ = nullptr;
 

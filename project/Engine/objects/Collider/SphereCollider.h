@@ -14,6 +14,7 @@ public:
 
     void Initialize(float radius);
     void Draw()override;
+	void ShowGui()override;
 
     //* collision ==========================================*//
     void OnCollisionEnter([[maybe_unused]] Collider* other)override{};

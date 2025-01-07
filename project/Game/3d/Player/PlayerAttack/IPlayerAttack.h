@@ -31,6 +31,9 @@ public:
 	// クローン作成メソッド
 	virtual std::unique_ptr<IPlayerAttack> Clone() const = 0;
 
+	// コピーコンストラクタの宣言
+	IPlayerAttack(const IPlayerAttack& other);
+
 public:
 	//===================================================================*/
 	//					getter/setter

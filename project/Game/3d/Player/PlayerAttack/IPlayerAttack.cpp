@@ -15,6 +15,7 @@ IPlayerAttack::IPlayerAttack(const std::string& attackName){
 	rotate_ = Vector3(0.0f, 0.0f, 0.0f);
 	offset_ = 0.0f;
 
+
 }
 
 IPlayerAttack::~IPlayerAttack(){
@@ -34,6 +35,18 @@ void IPlayerAttack::Initialize(){
 
 	isAttacking_ = true;
 	isActive_ = true;
+}
+
+IPlayerAttack::IPlayerAttack(const IPlayerAttack& other)
+	: BoxCollider(other), // 基底クラス BoxCollider のコピー
+	center_(other.center_),
+	offset_(other.offset_),
+	rotate_(other.rotate_),
+	isAttacking_(other.isAttacking_),
+	weapon_(other.weapon_),     // シャローコピー: 元のポインタをそのままコピー
+	pPlayer_(other.pPlayer_),   // シャローコピー
+	damage_(other.damage_),
+	attackName_(other.attackName_){
 }
 
 void IPlayerAttack::SetPlayer(Player* pPlayer){

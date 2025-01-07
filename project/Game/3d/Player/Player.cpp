@@ -61,7 +61,8 @@ void Player::Initialize(){
 	weapon_->Initialize();
 	weapon_->GetModel()->parent_ = &model_->transform;
 
-
+	trailParticle_ = std::make_unique<TrailParticle>();
+	trailParticle_->Initialize("debugCube.obj", "white1x1.png");
 }
 
 void Player::Update(){
@@ -90,6 +91,14 @@ void Player::Update(){
 	if (Input::PushGamepadButton(PAD_BUTTON::A)){
 		Vector3 currentVelocity = GetVelocity();
 		jumpVelocity_ = {currentVelocity.x, jumpPower_, currentVelocity.z};
+	}
+
+	trailParticle_->SetEmitPos(weapon_->GetTipPos());
+	trailParticle_->SetEmitRotate(weapon_->GetRotate());
+	trailParticle_->Update();
+
+	if (isAttacking_){
+		trailParticle_->Emit(3);
 	}
 
 	// ジャンプ
@@ -212,6 +221,8 @@ void Player::ShowGui(){
 
 	// AttackControllerのGUI表示
 	attackController_->ShowGui();
+
+	trailParticle_->ImGui();
 
 }
 

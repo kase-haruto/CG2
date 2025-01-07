@@ -1,0 +1,41 @@
+{
+    "colorMode": 2,
+    "colorVariation": 0.10000000149011612,
+    "emitter": {
+        "count": 0,
+        "frequency": 0.5,
+        "frequencyTime": 0.0,
+        "transform": {
+            "rotate": [
+                3.299999952316284,
+                0.18000000715255737,
+                1.809999942779541
+            ],
+            "scale": [
+                0.25,
+                0.25,
+                2.0799999237060547
+            ],
+            "translate": [
+                0.8455504179000854,
+                0.8826102614402771,
+                -1.8596742153167725
+            ]
+        }
+    },
+    "faces": {
+        "emitNegX": true,
+        "emitNegY": true,
+        "emitNegZ": true,
+        "emitPosX": true,
+        "emitPosY": true,
+        "emitPosZ": true
+    },
+    "name": "TrailParticle",
+    "selectedColor": [
+        0.7107843160629272,
+        0.12194829434156418,
+        0.12194829434156418,
+        1.0
+    ]
+}

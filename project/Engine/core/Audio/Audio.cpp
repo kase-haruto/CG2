@@ -177,7 +177,7 @@ void Audio::PauseAudio(const std::string& filename){
     // SourceVoiceがなければエラー
     assert(instance_->sourceVoices_.find(filename) != instance_->sourceVoices_.end());
 
-    HRESULT hr;
+    HRESULT hr = S_OK;
     hr = instance_->sourceVoices_[filename]->Stop();
     assert(SUCCEEDED(hr));
 
@@ -191,9 +191,9 @@ void Audio::PauseAudio(const std::string& filename){
 void Audio::RestertAudio(const std::string& filename){
     // SourceVoiceがなければエラー
     assert(instance_->sourceVoices_.find(filename) != instance_->sourceVoices_.end());
-
+	HRESULT hr = S_OK;
     if (instance_->sourceVoices_[filename] != nullptr){
-        HRESULT hr = instance_->sourceVoices_[filename]->Start();
+        hr = instance_->sourceVoices_[filename]->Start();
         assert(SUCCEEDED(hr));
 
         instance_->isPlaying_[filename] = true;

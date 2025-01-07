@@ -64,6 +64,9 @@ void JumpAttack::Initialize(){
 	// 初期回転を設定し、初期回転を保存
 	initialRotate_ = {3.3f, 0.18f, 1.81f};
 	weapon_->SetRotate(initialRotate_);
+
+	pPlayer_->SetIsAttacking(true);
+
 }
 
 void JumpAttack::Execution(){
@@ -111,6 +114,7 @@ void JumpAttack::Cleanup(){
 	animationTime_ = 0.0f;
 	animationSpeed_ = 1.0f;
 	isActive_ = false;
+	pPlayer_->SetIsAttacking(false);
 
 }
 

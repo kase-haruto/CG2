@@ -197,12 +197,13 @@ void BaseParticle::Emit(uint32_t count){
 
         Vector3 worldPos = Vector3::Transform(localPoint, Matrix4x4::MakeIdentity()) + emitter_.transform.translate;
         particle.transform.translate = worldPos;
-
+        particle.maxScale = fixedMaxScale_;
         // maxScaleの設定（ランダムまたは固定値）
         if (useRandomScale_){
-            particle.maxScale = Random::Generate(randomScaleMin_, randomScaleMax_); // ランダム値を設定
+			
+            particle.transform.scale = Random::GenerateVector3(randomScaleMin_, randomScaleMax_); // ランダム値を設定
         } else{
-            particle.maxScale = fixedMaxScale_; // 固定値を設定
+            particle.transform.scale = Vector3(fixedMaxScale_,fixedMaxScale_,fixedMaxScale_); // 固定値を設定
         }
 
         if (!isBillboard_){

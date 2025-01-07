@@ -9,7 +9,8 @@
 #include "../Player/PlayerParticle/AttackParticle.h"
 #include "../Player/PlayerParticle/HitParticle.h"
 
-class Enemy : public Character, public BoxCollider{
+class Enemy :
+    public Character, public BoxCollider{
 public:
     //===================================================================*/
     //                   public methods
@@ -32,11 +33,18 @@ public:
 
     void SetTarget(Vector3* target){ target_ = target; }
 
+    const Vector3 GetCenterPos()const{
+        const Vector3 offset = {0.0f, 1.5f, 0.0f};
+        Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
+        return worldPos;
+    }
+
 private:
     //===================================================================*/
     //                   private methods
     //===================================================================*/
     void Move();
+	void Floating();
 
 private:
     //===================================================================*/
@@ -49,7 +57,7 @@ private:
     Vector3* target_ = nullptr;
 
     float movementSpeed_ = 2.0f; // 移動速度（ユニット/秒）
-
+    float floatingPhaseOffset_ = 0.0f;  // 個別のフェーズオフセット
     float deathAnimationTimer_ = 0.0f;
     float deathAnimationDuration_ = 1.5f;
 };
