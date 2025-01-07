@@ -3,6 +3,7 @@
 #include "Game/3d/BaseGameObject.h"
 #include "../Player/PlayerParticle/AttackParticle.h"
 #include "../Player/PlayerParticle/HitParticle.h"
+#include "Engine/objects/Sprite.h"
 
 #include <cstdint>
 
@@ -21,6 +22,8 @@ public:
     void Update() override;
     void Draw() override;
 
+	void DrawUI();
+
     void ShowGui() override;
 
     /* collision ======================================*/
@@ -31,8 +34,10 @@ public:
     // スポナーにターゲットを設定するメソッド（必要に応じて追加）
     void SetEnemyManager(EnemyManager* manager){ enemyManager_ = manager; }
 
+	bool IsActive() const{ return isActive_; }
 private:
     int32_t life_ = 800;
+	const int32_t maxLife_ = 800;
 
     // スポーン間隔や経過時間の管理
     float spawnInterval_ = 10.0f;   // スポーン間隔（秒）
@@ -52,5 +57,21 @@ private:
 	float floatingPhaseOffset_ = 0.0f; // 浮遊動作のフェーズオフセット
 	int32_t rotateDir_ = 1;            // 回転方向（1: 正回転, -1: 逆回転）
 	float rotateTimer_ = 0.0f;         // 回転用タイマー
+
+
+    // 非アクティブ時のトランジション管理用
+    bool isTransitioning_ = false;
+    bool rotationDone_ = false;       // 回転完了フラグ
+    float transitionTimer_ = 0.0f;
+
+    // 回転と落下の各期間（秒）
+    const float rotationDuration_ = 1.5f;  // 回転にかける時間
+    const float fallDuration_ = 1.5f;      // 落下にかける時間
+
+    float initialY_ = 0.0f;
+    float initialRotY_ = 0.0f;
+    const float fallDistance_ = 5.0f;  // 下方向に移動する距離
+
+	std::unique_ptr<Sprite> hp_ = nullptr;
     
 };

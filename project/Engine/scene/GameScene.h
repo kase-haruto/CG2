@@ -11,6 +11,7 @@
 #include "Game/3d/Enemy/EnemySpawner.h"
 #include "Engine/core/UI/AttackEditorPanel.h"
 #include "Engine/core/UI/ParticleEditPanel.h"
+#include "Engine/objects/Sprite.h"  
 
 /* graphics */
 #include "engine/physics/DirectionalLight.h"
@@ -85,11 +86,16 @@ private:
 
     //skydome
 	std::unique_ptr<Model> skydome_ = nullptr;
+	std::unique_ptr<Sprite> spawnerIcon_ = nullptr;
+
+    //sprite
+    std::array<std::unique_ptr<Sprite>, 6> numSprites_ = {};
 
     // enemy
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	const int32_t maxEnemySpawners_ = 3;
-    std::array<std::unique_ptr<EnemySpawner>, 3> enemySpawners_ = {};
+	const int32_t maxEnemySpawners_ = 5;
+	int32_t spawnIndex_ = 5;
+    std::vector<std::unique_ptr<EnemySpawner>> enemySpawners_ = {};
 
 	std::unique_ptr<AttackEditorPanel> attackEditorPanel_ = nullptr;
 

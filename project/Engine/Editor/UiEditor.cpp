@@ -10,10 +10,14 @@
 
 /* lib */
 #include <string>
+#include <externals/nlohmann/json.hpp>
+#include <fstream>
 
 UIEditor::UIEditor(){
 	// テクスチャマネージャーのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
+
+	LoadSpriteDataFromJson("Resources/json/sprite/spriteData.json");
 }
 
 void UIEditor::ShowImGuiInterface(){
@@ -21,6 +25,12 @@ void UIEditor::ShowImGuiInterface(){
 
 
 	ImGui::Begin("Textures");
+
+	// ★ JSON 保存ボタンの追加
+	if (ImGui::Button("Save to JSON")){
+		// 実際にはパスをユーザに入力させても良いし、固定ファイル名でもOK
+		SaveSpriteDataToJson("Resources/json/sprite/spriteData.json");
+	}
 
 	// テクスチャリストの表示
 	static std::string selectedTexture = "uvChecker.png"; // デフォルトの選択テクスチャ名
@@ -121,5 +131,80 @@ void UIEditor::Update(){
 void UIEditor::Draw(){
 	for (const auto& sprite : sprites_){
 		sprite->Draw();
+	}
+}
+
+void UIEditor::SaveSpriteDataToJson(const std::string& filePath){
+	// すべてのスプライトの情報を格納する json 配列
+	nlohmann::json spritesJson = nlohmann::json::array();
+
+	for (auto& sprite : sprites_){
+		// 1つのスプライトに対応する json オブジェクトを作成
+		nlohmann::json spriteData;
+		spriteData["textureName"] = sprite->GetTextureName();  // ※Sprite 側で GetTextureName() を用意してください
+
+		// 位置
+		Vector2 pos = sprite->GetPosition();
+		spriteData["position"] = {
+			{"x", pos.x},
+			{"y", pos.y}
+		};
+
+		// サイズ
+		Vector2 size = sprite->GetSize();
+		spriteData["size"] = {
+			{"x", size.x},
+			{"y", size.y}
+		};
+
+		// 回転
+		float rot = sprite->GetRotation();  // 度数法前提
+		spriteData["rotation"] = rot;
+
+		// 配列にプッシュ
+		spritesJson.push_back(spriteData);
+	}
+
+	// 出力用 JSON オブジェクト全体
+	nlohmann::json root;
+	root["sprites"] = spritesJson;
+
+	// JSON をファイルに書き出し
+	std::ofstream ofs(filePath);
+	if (ofs.is_open()){
+		ofs << root.dump(4); // インデント幅4で整形出力
+		ofs.close();
+	}
+}
+
+void UIEditor::LoadSpriteDataFromJson(const std::string& filePath){
+	std::ifstream ifs(filePath);
+	if (!ifs.is_open()){
+		return;
+	}
+	nlohmann::json root;
+	ifs >> root;
+	ifs.close();
+
+	if (root.contains("sprites")){
+		for (auto& spriteData : root["sprites"]){
+			// 必要情報を取得
+			std::string textureName = spriteData.value("textureName", "uvChecker.png");
+
+			Vector2 pos;
+			pos.x = spriteData["position"].value("x", 0.0f);
+			pos.y = spriteData["position"].value("y", 0.0f);
+
+			Vector2 size;
+			size.x = spriteData["size"].value("x", 64.0f);
+			size.y = spriteData["size"].value("y", 64.0f);
+
+			float rotation = spriteData.value("rotation", 0.0f);
+
+			// スプライト作成
+			AddSprite(textureName, pos, size);
+			// rotation は AddSprite 後に個別に設定
+			sprites_.back()->SetRotation(rotation);
+		}
 	}
 }

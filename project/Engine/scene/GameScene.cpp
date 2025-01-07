@@ -11,6 +11,7 @@
 
 #include "Engine/core/DirectX/DxCore.h"
 
+
 #include "SceneManager.h"
 
 GameScene::GameScene(){}
@@ -22,6 +23,7 @@ GameScene::GameScene(DxCore* dxCore) : IScene(dxCore){
 
 void GameScene::Initialize(){
 	CameraManager::GetInstance()->SetType(CameraType::Type_Follow);
+	CameraManager::GetInstance()->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
 	///=========================
 	/// グラフィック関連
 	///=========================
@@ -62,23 +64,34 @@ void GameScene::Initialize(){
 	enemyManager_->SetTarget(&player_->GetPosition());
 	enemyManager_->Initialize();
 
-	// スポナー間の間隔と開始位置を設定
-	const float spacing = 15.0f;  // スポナー同士の間隔
-	Vector3 startPosition(-spacing * (maxEnemySpawners_ - 1) / 2.0f, 0.0f, 5.0f); // 中央揃えの開始位置
 
+	// スポナー間の間隔と開始位置を設定
+	const float spacing = 15.0f;  // スポナー同士の間隔（X軸方向）
+	const float zOffset = 5.0f;  // Z軸方向のジグザグ間隔
+	Vector3 startPosition(-spacing * (maxEnemySpawners_ - 1) / 2.0f, 0.0f, 0.0f); // 中央揃えの開始位置
+
+
+	enemySpawners_.resize(maxEnemySpawners_);
 	for (size_t i = 0; i < maxEnemySpawners_; ++i){
 		// スポナーの生成
 		enemySpawners_[i] = std::make_unique<EnemySpawner>("enemySpawner.obj");
 
-		// スポナーの位置を計算して設定
-		Vector3 position = startPosition + Vector3(i * spacing, 0.0f, 0.0f);
+		// スポナーの位置を計算
+		float zOffsetValue = (i % 2 == 0) ? zOffset : -zOffset; // 偶数番目は+zOffset、奇数番目は-zOffset
+		Vector3 position = startPosition + Vector3(i * spacing, 0.0f, zOffsetValue);
 
 		// スポナーの初期化
 		enemySpawners_[i]->Initialize(position);
 
 		// EnemyManager を設定（enemyManager_ は既に生成されている前提）
 		enemySpawners_[i]->SetEnemyManager(enemyManager_.get());
-		
+
+	}
+
+	for (size_t i = 0; i <= 5; i++){
+		std::string textureName = std::to_string(i) + ".png";
+		numSprites_[i] = std::make_unique<Sprite>(textureName);
+		numSprites_[i]->Initialize({1180.0f,50.0f}, {50.0f,50.0f});
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -95,8 +108,7 @@ void GameScene::Initialize(){
 	skydome_ = std::make_unique<Model>("skydome.obj");
 	skydome_->SetSize({70.0f,70.0f,70.0f});
 
-	Audio::Play("bgm.mp3", true,0.0f);
-
+	Audio::Play("bgm.mp3", true, 0.0f);
 
 }
 
@@ -109,13 +121,27 @@ void GameScene::Update(){
 
 	/* 敵関連更新 ============================*/
 	enemyManager_->Update();
-	for (auto& spawner:enemySpawners_){
+	// スポナーの更新と無効化されたスポナーの削除
+	enemySpawners_.erase(
+		std::remove_if(
+		enemySpawners_.begin(),
+		enemySpawners_.end(),
+		[] (const std::unique_ptr<EnemySpawner>& spawner){
+			// GetIsActive() が false なら削除
+			return !spawner->IsActive();
+		}),
+		enemySpawners_.end()
+	);
+	for (auto& spawner : enemySpawners_){
 		spawner->Update();
 	}
+
+	spawnIndex_ = static_cast< int32_t >(enemySpawners_.size());
 
 	/* その他 ============================*/
 	//uiの更新
 	uiEditor_->Update();
+	uiEditor_->ShowImGuiInterface();
 	//モデルの更新
 	modelBuilder_->Update();
 	//地面の更新
@@ -123,11 +149,15 @@ void GameScene::Update(){
 
 	skydome_->Update();
 
+	//spriteの更新
+	for (auto& sprite : numSprites_){
+		sprite->Update();
+	}
+
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
-	/*modelGround_->Update();*/
-
-	if (Input::TriggerKey(DIK_SPACE)){
+	if (spawnIndex_ <= 0){
+		pSceneManager_->gameResult_ = true;
 		pSceneManager_->RequestSceneChange(SceneType::RESULT);
 	}
 
@@ -171,6 +201,15 @@ void GameScene::Draw(){
 	//					2dオブジェクトの描画
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 2Dオブジェクト描画
+
+	if (spawnIndex_ >= 1 && spawnIndex_ <= 5){ // 1～5の範囲でチェック
+		numSprites_[spawnIndex_]->Draw();  // spawnIndex_ を 1減算して対応
+	}
+
+	for (auto& spawner:enemySpawners_){
+		spawner->DrawUI();
+	}
+
 	//uiの描画
 	uiEditor_->Draw();
 

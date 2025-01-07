@@ -12,6 +12,8 @@
 #include<assimp/postprocess.h>
 #include <numbers>
 
+#include "Engine/graphics/camera/CameraManager.h"
+
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
 	Matrix4x4 result = {
@@ -343,6 +345,60 @@ Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix){
 	euler.z = std::atan2(worldMatrix.m[0][1], worldMatrix.m[0][0]);
 	return euler;
 }
+
+Vector2 WorldToScreen(const Vector3& worldPos){
+	// ビューポート行列を作成
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+
+	// ビュー・プロジェクションの合成行列を計算
+	Matrix4x4 matVPV = Matrix4x4::Multiply(CameraManager::GetViewProjectionMatrix(), matViewport);
+
+	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
+	Vector3 screenPos = Vector3::Transform(worldPos, matVPV);
+	// スクリーン座標を返す
+	return Vector2(screenPos.x, screenPos.y);
+}
+
+Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec){
+	return Vector4(
+		mat.m[0][0] * vec.x + mat.m[1][0] * vec.y + mat.m[2][0] * vec.z + mat.m[3][0] * vec.w,
+		mat.m[0][1] * vec.x + mat.m[1][1] * vec.y + mat.m[2][1] * vec.z + mat.m[3][1] * vec.w,
+		mat.m[0][2] * vec.x + mat.m[1][2] * vec.y + mat.m[2][2] * vec.z + mat.m[3][2] * vec.w,
+		mat.m[0][3] * vec.x + mat.m[1][3] * vec.y + mat.m[2][3] * vec.z + mat.m[3][3] * vec.w
+	);
+}
+
+bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos){
+	// ビューポート行列を作成
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+
+	// ビュー・プロジェクションの合成行列を計算
+	Matrix4x4 matVP = CameraManager::GetViewProjectionMatrix();
+
+	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
+	Vector4 clipPos = MultiplyMatrixVector(matVP, Vector4(worldPos.x,worldPos.y,worldPos.z, 1));
+
+	// 正規化デバイス座標（NDC）に変換
+	if (clipPos.w != 0.0f){
+		clipPos.x /= clipPos.w;
+		clipPos.y /= clipPos.w;
+		clipPos.z /= clipPos.w;
+	}
+
+	// 視錐台（クリップ座標）の範囲外にある場合は false を返す
+	if (clipPos.x < -1.0f || clipPos.x > 1.0f ||
+		clipPos.y < -1.0f || clipPos.y > 1.0f ||
+		clipPos.z < 0.0f || clipPos.z > 1.0f){
+		return false; // 見えていない
+	}
+
+	// ビューポート行列で変換し、スクリーン座標を計算
+	Vector4 screenPos = MultiplyMatrixVector(matViewport, clipPos);
+	outScreenPos = Vector2(screenPos.x, screenPos.y);
+
+	return true; // 見えている
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //							Animation

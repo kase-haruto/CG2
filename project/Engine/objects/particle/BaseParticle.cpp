@@ -228,9 +228,6 @@ void BaseParticle::Emit(uint32_t count){
     instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
-
-
-
 Vector3 BaseParticle::GenerateVelocity(float speed){
     // デフォルトのランダムな方向の速度生成
     Vector3 velocity = Random::GenerateVector3(-1.0f, 1.0f);
@@ -240,7 +237,7 @@ Vector3 BaseParticle::GenerateVelocity(float speed){
 void BaseParticle::CreateBuffer(){
     Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
-    vertexBuffer_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
+    vertexBuffer_ = CreateBufferResource(device.Get(), sizeof(VertexData) * modelData_->vertices.size());
     vertexBufferView.BufferLocation = vertexBuffer_->GetGPUVirtualAddress();
     vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
     vertexBufferView.StrideInBytes = sizeof(VertexData);

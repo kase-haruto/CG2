@@ -67,5 +67,9 @@ public:
 
     const Vector3& GetFollowRotate()const{ return followCamera_->GetRotate(); }
 
+	void SetRotate(const Vector3& rotate){
+		followCamera_->SetRotate(rotate);
+	}
+
     void SetType(const CameraType type);
 };

@@ -113,10 +113,13 @@ public:
 	const Vector2& GetLeftTop()const{ return textureLeftTop; }
 	void SetLeftTop(const Vector2& LTop){ this->textureLeftTop = LTop; }
 
-	const 
+	const std::string& GetTextureName() const{
+		return path;
+	}
+
 
 	// テクスチャハンドルを設定する関数
-	void SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle);
+	const void SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle);
 
 private:
 	EulerTransform transform_ {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};

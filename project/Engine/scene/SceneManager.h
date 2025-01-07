@@ -42,4 +42,7 @@ private:
     std::unique_ptr<SceneSwitcherPanel> sceneSwitchPanel_ = nullptr;
     EngineUI* pEngineUI_ = nullptr;
     DxCore* pDxCore_ = nullptr;
+
+public:
+	bool gameResult_ = false;
 };

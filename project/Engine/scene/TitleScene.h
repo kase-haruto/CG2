@@ -1,6 +1,8 @@
 #pragma once
 #include "IScene.h"
 
+#include "engine/objects/ModelBuilder.h"
+#include "Engine/objects/Sprite.h"
 #include "Engine/graphics/FogEffect.h"
 #include "Engine/physics/DirectionalLight.h"
 #include "Engine/physics/PointLight.h"
@@ -29,4 +31,8 @@ private:
     std::unique_ptr<DirectionalLight>directionalLight_ = nullptr;
     std::unique_ptr<PointLight> pointLight_ = nullptr;
     std::unique_ptr<FogEffect>fog_ = nullptr;
+
+    std::unique_ptr<Model> modelField_ = nullptr;
+	std::unique_ptr<Sprite> titleSprite_ = nullptr;
+	std::unique_ptr<Sprite> startSprite_ = nullptr;
 };

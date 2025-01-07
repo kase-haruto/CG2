@@ -47,7 +47,7 @@ void Sprite::Initialize(const Vector2& newPosition, const Vector2& newSize){
     transform_.translate.x = position.x;
     transform_.translate.y = position.y;
 
-    this->size = size;
+    this->size = newSize;
     transform_.scale.x = newSize.x;
     transform_.scale.y = newSize.y;
 }
