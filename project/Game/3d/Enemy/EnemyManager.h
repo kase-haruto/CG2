@@ -26,6 +26,9 @@ public:
     // 敵を削除する
     void RemoveEnemy(Enemy* enemy);
 
+	// ターゲットを設定
+	void SetTarget(Vector3* target){ target_ = target; }
+
 private:
 	//===================================================================*/
 	//      private variables
@@ -41,4 +44,6 @@ private:
 
     // 敵の最大数制御
     static constexpr size_t maxEnemies_ = 3;
+
+	Vector3* target_ = nullptr;
 };

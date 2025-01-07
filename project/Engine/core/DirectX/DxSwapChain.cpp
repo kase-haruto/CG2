@@ -2,6 +2,10 @@
 
 #include <thread>
 
+#include <algorithm>
+#undef max
+#undef min
+
 float DxSwapChain::deltaTime_ = 0.016f;
 
 void DxSwapChain::Initialize(
@@ -81,6 +85,8 @@ void DxSwapChain::Present(){
     if (deltaTime_ > 0.0f){
         currentFPS_ = 1.0f / deltaTime_;
     }
+
+    deltaTime_ = std::min(std::max(0.0f, deltaTime_), 0.017f);
 
     // 累積時間を正確に計算
     totalTime_ = std::chrono::duration<float>(currentFrameTime - firstFrameTime_).count();

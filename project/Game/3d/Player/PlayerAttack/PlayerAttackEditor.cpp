@@ -4,6 +4,8 @@
 #include "IPlayerAttack.h"
 #include "HorizonMowingDown.h"
 #include "WeakDiagonalSlash.h"
+#include "DiagonalSlashRightToLeft.h"
+#include "JumpAttack.h" // JumpAttack のインクルードを追加
 #include "lib/myFunc/MathFunc.h"
 #include "Engine/core/EngineUI.h"
 #include "Game/3d/Player/Player.h"
@@ -44,7 +46,6 @@ namespace nlohmann{
 	};
 }
 
-
 PlayerAttackEditor::PlayerAttackEditor(PlayerAttackController* controller)
 	: attackController_(controller), selectedAttackName_(""){
 	// 初期バッファ設定
@@ -52,7 +53,6 @@ PlayerAttackEditor::PlayerAttackEditor(PlayerAttackController* controller)
 	newAttackNameBuffer_[sizeof(newAttackNameBuffer_) - 1] = '\0'; // ヌル終端
 
 	LoadAttackTemplates("Resources/json/gameObjects/Player/playerAttack/attack_templates.json");
-
 }
 
 void PlayerAttackEditor::ShowGui(){
@@ -81,6 +81,28 @@ void PlayerAttackEditor::ShowGui(){
 			newAttackNameBuffer_[sizeof(newAttackNameBuffer_) - 1] = '\0';
 		}
 	}
+
+	if (ImGui::Button("Add JumpAttack")){ // JumpAttack 追加ボタン
+		std::string attackName(newAttackNameBuffer_);
+		if (!attackName.empty()){
+			attackController_->AddAttackTemplate(attackName, std::make_unique<JumpAttack>(attackName));
+			// バッファのリセット
+			strncpy_s(newAttackNameBuffer_, "NewAttack", sizeof(newAttackNameBuffer_));
+			newAttackNameBuffer_[sizeof(newAttackNameBuffer_) - 1] = '\0';
+		}
+	}
+
+	if (ImGui::Button("Add rightToLeftSlash")){ // JumpAttack 追加ボタン
+		std::string attackName(newAttackNameBuffer_);
+		if (!attackName.empty()){
+			attackController_->AddAttackTemplate(attackName, std::make_unique<DiagonalSlashRightToLeft>(attackName));
+			// バッファのリセット
+			strncpy_s(newAttackNameBuffer_, "NewAttack", sizeof(newAttackNameBuffer_));
+			newAttackNameBuffer_[sizeof(newAttackNameBuffer_) - 1] = '\0';
+		}
+	}
+
+
 	ImGui::SameLine();
 
 	// 保存ボタン
@@ -125,7 +147,7 @@ void PlayerAttackEditor::Draw(){
 			// 制御点の取得
 			const std::vector<Vector3>& controlPoints = attack->GetControlPoints();
 
-			//武器のワールド座標
+			// 武器のワールド座標
 			Matrix4x4 worldMatrix = pPlayer_->GetWorldMatrix();
 
 			if (controlPoints.size() >= 4){
@@ -148,13 +170,14 @@ void PlayerAttackEditor::Draw(){
 	}
 }
 
-
 void PlayerAttackEditor::EditControlPoints(std::unique_ptr<IPlayerAttack>& attack){
 	// 制御点の取得
 	// 具体的な攻撃クラスでのみ制御点を取得できるように動的キャスト
-	// ここでは WeakDiagonalSlash と HorizonMowingDown が制御点を持つと仮定
+	// ここでは WeakDiagonalSlash, HorizonMowingDown, JumpAttack が制御点を持つと仮定
 	HorizonMowingDown* swingAttack = dynamic_cast< HorizonMowingDown* >(attack.get());
 	WeakDiagonalSlash* slashAttack = dynamic_cast< WeakDiagonalSlash* >(attack.get());
+	JumpAttack* jumpAttack = dynamic_cast< JumpAttack* >(attack.get()); // JumpAttack の動的キャストを追加
+	DiagonalSlashRightToLeft* rightToLeftSlash = dynamic_cast< DiagonalSlashRightToLeft* >(attack.get()); // JumpAttack の動的キャストを追加
 
 	std::vector<Vector3>* controlPoints = nullptr;
 
@@ -162,6 +185,10 @@ void PlayerAttackEditor::EditControlPoints(std::unique_ptr<IPlayerAttack>& attac
 		controlPoints = &swingAttack->GetControlPoints();
 	} else if (slashAttack){
 		controlPoints = &slashAttack->GetControlPoints();
+	} else if (jumpAttack){ // JumpAttack の制御点を取得
+		controlPoints = &jumpAttack->GetControlPoints();
+	} else if (rightToLeftSlash){ // JumpAttack の制御点を取得
+		controlPoints = &rightToLeftSlash->GetControlPoints();
 	}
 
 	if (controlPoints){
@@ -179,12 +206,8 @@ void PlayerAttackEditor::EditControlPoints(std::unique_ptr<IPlayerAttack>& attac
 		if (ImGui::Button("Remove Last Control Point") && !controlPoints->empty()){
 			controlPoints->pop_back();
 		}
-
-		
 	}
 }
-
-
 
 // 保存機能の実装
 void PlayerAttackEditor::SaveAttackTemplates(const std::string& filepath){
@@ -230,6 +253,10 @@ void PlayerAttackEditor::LoadAttackTemplates(const std::string& filepath){
 						newAttack = std::make_unique<WeakDiagonalSlash>(attackName);
 					} else if (type == "HorizonMowingDown"){
 						newAttack = std::make_unique<HorizonMowingDown>(attackName);
+					} else if (type == "JumpAttack"){ // JumpAttack の読み込みを追加
+						newAttack = std::make_unique<JumpAttack>(attackName);
+					} else if (type == "rightToLeftSlash"){
+						newAttack = std::make_unique<DiagonalSlashRightToLeft>(attackName);
 					}
 					// 他の攻撃タイプを追加する場合はここに分岐を追加
 

@@ -15,7 +15,7 @@ void Character::Initialize(){
 
 void Character::Update(){
     const float gravity = -9.8f;             // 重力加速度
-    const float terminalVelocity = -50.0f;   // 最大落下速度
+    const float terminalVelocity = -100.0f;   // 最大落下速度
     float deltaTime = System::GetDeltaTime();
 
     // 重力による加速度を計算

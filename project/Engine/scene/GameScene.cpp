@@ -11,6 +11,8 @@
 
 #include "Engine/core/DirectX/DxCore.h"
 
+#include "SceneManager.h"
+
 GameScene::GameScene(){}
 
 GameScene::GameScene(DxCore* dxCore) : IScene(dxCore){
@@ -57,6 +59,8 @@ void GameScene::Initialize(){
 
 
 	enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_->SetTarget(&player_->GetPosition());
+	enemyManager_->Initialize();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -77,6 +81,7 @@ void GameScene::Update(){
 #ifdef _DEBUG
 #endif // _DEBUG
 
+	pointLight_->SetPosition(player_->GetCenterPos());
 
 	CameraManager::Update();
 
@@ -95,6 +100,10 @@ void GameScene::Update(){
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	/*modelGround_->Update();*/
+
+	if (Input::TriggerKey(DIK_SPACE)){
+		pSceneManager_->RequestSceneChange(SceneType::RESULT);
+	}
 
 }
 

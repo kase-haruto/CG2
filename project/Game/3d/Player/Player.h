@@ -86,7 +86,10 @@ public:
 	void SetForward(const Vector3& forward){ forward_ = forward; }
 	Weapon* GetWeapon()const{ return weapon_.get(); }
 	const Vector3 GetCenterPos()const override;
+	Vector3& GetPosition()const{ return model_->transform.translate; }
 	const Vector3& GetRotate()const{ return model_->transform.rotate; }
 	const Matrix4x4 GetWorldMatrix()const;
 	bool IsAttacking()const{ return attackController_->IsAttacking(); }
+	void SetJumpVelocity(const Vector3& velocity){ jumpVelocity_ = velocity; }
+	float GetJumpPower()const{ return jumpPower_; }
 };

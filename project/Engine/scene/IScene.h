@@ -12,7 +12,7 @@ class SceneManager;
 enum class SceneType{
     TITLE,
     PLAY,
-    CLEAR,
+    RESULT,
     TEST,
     count,
 };

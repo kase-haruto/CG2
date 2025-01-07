@@ -62,6 +62,8 @@ private:
 	std::vector<std::string> comboSequence_ = {
 		"WeakDiagonalSlash",
 		"HorizonMowingDown",
+		"DiagonalSlashRightToLeft",
+		"JumpAttack"
 	};
 	size_t currentComboStep_ = 0; // 現在のコンボステップ
 	std::chrono::steady_clock::time_point lastAttackTime_; // 最後の攻撃時間

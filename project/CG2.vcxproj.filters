@@ -416,6 +416,9 @@
     <ClCompile Include="Game\3d\Player\PlayerParticle\TrailParticle.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Jump.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\JumpAttack.cpp" />
+    <ClCompile Include="Engine\scene\ResultScene.cpp" />
+    <ClCompile Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -673,6 +676,9 @@
     <ClInclude Include="Game\3d\Player\PlayerParticle\TrailParticle.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />
     <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Jump.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\JumpAttack.h" />
+    <ClInclude Include="Engine\scene\ResultScene.h" />
+    <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

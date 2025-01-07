@@ -69,3 +69,7 @@ void PointLight::ShowImGuiInterface(){
 void PointLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){
 	rootSignature_ = rootSignature;
 }
+
+void PointLight::SetPosition(const Vector3& position){
+	data_->position = position;
+}

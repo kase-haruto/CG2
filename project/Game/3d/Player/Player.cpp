@@ -83,20 +83,20 @@ void Player::Update(){
 
 	} else{
 		// 移動入力がない場合ジャンプしていなければステイ
-		if (state_ != PlayerState::Jump){
 			TransitionState(PlayerState::Stay);
-		}
+	}
+
+	//ジャンプ処理
+	if (Input::PushGamepadButton(PAD_BUTTON::A)){
+		Vector3 currentVelocity = GetVelocity();
+		jumpVelocity_ = {currentVelocity.x, jumpPower_, currentVelocity.z};
 	}
 
 	// ジャンプ
-	if (!onGround_){
+	if (onGround_){
 		
-		if (Input::TriggerGamepadButton(PAD_BUTTON::A)){
-			Vector3 currentVelocity = GetVelocity();
-			jumpVelocity_ = {currentVelocity.x, jumpPower_, currentVelocity.z};
-		}
-	} else{
 		jumpVelocity_ = {0.0f,0.0f,0.0f};	//reset
+
 	}
 
 	weapon_->Update();

@@ -50,6 +50,8 @@ public:
 
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
+	void SetPosition(const Vector3& position);
+
 private:
 	const DxCore* pDxCore_ = nullptr;
 

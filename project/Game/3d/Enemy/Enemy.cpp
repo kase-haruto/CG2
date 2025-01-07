@@ -11,6 +11,8 @@
 #include <externals/imgui/imgui.h>
 #include "lib/myFunc/Random.h"
 
+#include <numbers>
+
 Enemy::Enemy(const std::string& modelName)
 	:Character(modelName){
 	CollisionManager::GetInstance()->AddCollider(this);
@@ -37,13 +39,14 @@ void Enemy::Initialize(){
 	Collider::type_ = ColliderType::Type_Enemy;
 	Collider::targetType_ =
 		ColliderType::Type_Player |
-		ColliderType::Type_PlayerAttack;
+		ColliderType::Type_PlayerAttack|
+		ColliderType::Type_Enemy;
 
 	moveSpeed_ = 2.0f;
 
 	JsonCoordinator::LoadGroup(BaseGameObject::GetName(), BaseGameObject::jsonPath);
 
-	life_ = 500;
+	life_ = 800;
 
 	//モデルの
 	BaseGameObject::Update();
@@ -57,6 +60,12 @@ void Enemy::Initialize(){
 }
 
 void Enemy::Update(){
+
+	if (life_ <= 0){
+		isAlive_ = false;
+	}
+
+	Move();
 
 	hitParticle_->SetEmitPos(GetCenterPos());
 	hitParticle_->Update();
@@ -78,6 +87,35 @@ void Enemy::Update(){
 void Enemy::Draw(){
 	BoxCollider::Draw();
 	BaseGameObject::Draw();
+}
+
+
+void Enemy::Move(){
+	if (target_){
+		// 現在の中心位置とターゲットの位置を取得
+		Vector3 currentPosition = GetCenterPos();
+		Vector3 targetPosition = *target_;
+
+		// ターゲットへの方向ベクトルを計算
+		Vector3 direction = (targetPosition - currentPosition).Normalize();
+		float distance = (targetPosition - currentPosition).Length();
+
+		if (distance > 5.0f){ // 一定距離以上離れている場合に移動
+
+			// 移動量を計算（フレームレートに依存しないようにデルタタイムを使用）
+			
+			direction.y = 0.0f; // 上下方向の移動はしない
+			Vector3 movement = direction * movementSpeed_ ;
+
+			// モデルの位置を更新
+			model_->transform.translate += movement * System::GetDeltaTime();
+		}
+
+		// 進行方向を向くように回転を更新
+		float targetRotationY = std::atan2(-direction.x, -direction.z);
+		// 回転を設定
+		model_->transform.rotate.y = targetRotationY;
+	}
 }
 
 
@@ -118,7 +156,7 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 
 				life_ -= playerAttack->GetDamage();
 
-				hitParticle_->Emit(2);
+				//hitParticle_->Emit(2);
 				hitParticle2_->Emit(4);
 
 				Audio::Play("hit.mp3", false);
@@ -128,9 +166,46 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 
 }
 
-void Enemy::OnCollisionStay([[maybe_unused]] Collider* other){
 
+void Enemy::OnCollisionStay([[maybe_unused]] Collider* other){
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) == ColliderType::Type_None){
+		return;
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// エネミー同士の衝突時の分離処理
+	//////////////////////////////////////////////////////////////////
+	if (other->GetType() == ColliderType::Type_Enemy){
+		// 他のエネミーと重なっている場合、分離させる
+		Enemy* otherEnemy = dynamic_cast< Enemy* >(other);
+		if (otherEnemy && otherEnemy != this){
+			Vector3 otherPosition = otherEnemy->GetCenterPos();
+			Vector3 currentPosition = GetCenterPos();
+			Vector3 separationDir = currentPosition - otherPosition; // 他との分離方向
+			float distance = separationDir.Length();
+
+			// 最小許容距離を設定（例えば2.0fなど適宜調整）
+			const float minDistance = 2.0f;
+			if (distance < minDistance && distance > 0.001f){
+				separationDir.Normalize();
+				// 衝突からの逃避距離を決定（距離が短いほど大きく押し出す）
+				float overlap = minDistance - distance;
+				// 分離処理の強さを調整（シーンに応じてパラメータを変更）
+				float separationStrength = 0.1f;
+				Vector3 separationMovement = separationDir * overlap * separationStrength;
+
+				// モデルの位置を更新して重なりを解消
+				model_->transform.translate += separationMovement;
+			}
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// 他の処理があればここに記述
+	//////////////////////////////////////////////////////////////////
 }
+
 
 
 void Enemy::OnCollisionExit([[maybe_unused]] Collider* other){}
@@ -157,3 +232,4 @@ void Enemy::ShowGui(){
 #endif // _DEBUG
 
 }
+
