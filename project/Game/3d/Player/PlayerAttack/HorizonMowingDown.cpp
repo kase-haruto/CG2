@@ -7,7 +7,7 @@
 #include "Engine/core/Input.h"
 #include "Engine/core/Audio/Audio.h"
 #include "Engine/graphics/camera/CameraManager.h"
-
+#include "Engine/graphics/GraphicsGroup.h"
 #include "lib/myFunc/MyFunc.h"
 #include <externals/imgui/imgui.h>
 #include <externals/nlohmann/json.hpp>
@@ -34,6 +34,20 @@ void HorizonMowingDown::Initialize(){
 
 	damage_ = 210; // ダメージ値を設定
 
+	//===========================================
+   // ここで SwordTrail を初期化
+   //===========================================
+	auto graphics = GraphicsGroup::GetInstance();
+	swordTrail_.Initialize(
+		graphics->GetDevice(),
+		graphics->GetCommandList(),
+		graphics->GetRootSignature(Object3D),      // 例: Object3D 用ルートシグネチャ
+		graphics->GetPipelineState(Object3D)       // 例: Object3D 用PSO
+	);
+
+	// フェードアウトの速度や最小アルファなどを調整 (必要に応じて)
+	swordTrail_.SetFadeSpeed(2.0f);  // 1秒あたりアルファが2.0 減衰
+	swordTrail_.SetMinAlpha(0.05f);  // 0.05以下で削除
 	Audio::Play("attack.mp3", false);
 
 	pPlayer_->SetIsAttacking(true);
@@ -60,6 +74,25 @@ void HorizonMowingDown::Update(){
 
 	// 武器の位置を更新
 	weapon_->SetPosition(currentPosition_);
+
+	Vector3 tip = weapon_->ComputeTipWorldPosition();
+	Vector3 base = weapon_->GetBasePos();
+
+	if (!hasPrevFrame_){
+		// 最初のフレームは軌跡を追加しない
+		prevTip_ = tip;
+		prevBase_ = base;
+		hasPrevFrame_ = true;
+	} else{
+		// 2フレーム目以降は前フレームとの連続で軌跡を追加
+		swordTrail_.AddSegment(tip, base);
+
+		// 次フレーム用に記憶
+		prevTip_ = tip;
+		prevBase_ = base;
+	}
+
+	swordTrail_.Update(System::GetDeltaTime());
 
 	// 入力に基づいて移動方向を計算
 	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
@@ -94,6 +127,7 @@ void HorizonMowingDown::Update(){
 
 void HorizonMowingDown::Draw(){
 	BoxCollider::Draw();
+	swordTrail_.Draw();
 }
 
 void HorizonMowingDown::Cleanup(){

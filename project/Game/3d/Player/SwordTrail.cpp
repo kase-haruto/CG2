@@ -1,4 +1,5 @@
 #include "SwordTrail.h"
+
 #include "engine/graphics/GraphicsGroup.h"
 #include "engine/objects/TextureManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
@@ -9,6 +10,9 @@
 #include <algorithm>
 #undef max
 
+//----------------------------------------------------------------------
+// Initialize
+//----------------------------------------------------------------------
 void SwordTrail::Initialize(
     Microsoft::WRL::ComPtr<ID3D12Device> device,
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
@@ -19,23 +23,24 @@ void SwordTrail::Initialize(
     rootSignature_ = rootSig;
     pipelineState_ = pso;
 
-    // 例: テクスチャ(uvChecker.png)
-    textureHandle_ = TextureManager::GetInstance()->LoadTexture("uvChecker.png");
+    // テクスチャを読み込む (例: white1x1.png)
+    textureHandle_ = TextureManager::GetInstance()->LoadTexture("noise.png");
 
-    // バッファ作成 & マップ
     CreateVertexBuffer();
     CreateMaterialBuffer();
     CreateMatrixBuffer();
     Map();
 }
 
+//----------------------------------------------------------------------
+// Create Buffer Resources
+//----------------------------------------------------------------------
 void SwordTrail::CreateVertexBuffer(){
-    // TrailVertex * MAX_TRAIL_VERTICES
-    const UINT vbSize = static_cast< UINT >(sizeof(TrailVertex) * MAX_TRAIL_VERTICES);
+    const UINT vbSize = static_cast< UINT >(sizeof(VertexData) * MAX_TRAIL_VERTICES);
     vertexResource_ = CreateBufferResource(device_.Get(), vbSize);
 
     vbView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vbView_.StrideInBytes = sizeof(TrailVertex);
+    vbView_.StrideInBytes = sizeof(VertexData);
     vbView_.SizeInBytes = vbSize;
 }
 
@@ -47,6 +52,9 @@ void SwordTrail::CreateMatrixBuffer(){
     matrixResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
 }
 
+//----------------------------------------------------------------------
+// Map
+//----------------------------------------------------------------------
 void SwordTrail::Map(){
     VertexBufferMap();
     MaterialBufferMap();
@@ -54,7 +62,6 @@ void SwordTrail::Map(){
 }
 
 void SwordTrail::VertexBufferMap(){
-    // 永続Mapしておき、頂点追加のたびに書き込めるようにする
     vertexResource_->Map(0, nullptr, reinterpret_cast< void** >(&mappedVertices_));
 }
 
@@ -69,65 +76,96 @@ void SwordTrail::MaterialBufferMap(){
 
 void SwordTrail::MatrixBufferMap(){
     matrixResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
-    // 初期値
     matrixData_->world = Matrix4x4::MakeIdentity();
     matrixData_->WVP = Matrix4x4::MakeIdentity();
     matrixResource_->Unmap(0, nullptr);
 }
 
+//----------------------------------------------------------------------
+// AddSegment (tip/base 2頂点を追加)
+//----------------------------------------------------------------------
 void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
-    // 容量オーバー時に先頭を削除
+    // 容量オーバー時に古い頂点を先に削除
+    // (2頂点追加できないなら先頭から削除 etc...)
     if (vertices_.size() + 2 > MAX_TRAIL_VERTICES){
+        // とりあえず、先頭から2頂点削除 (1セグメントぶん)
         if (!vertices_.empty()){
             vertices_.erase(vertices_.begin(), vertices_.begin() + 2);
         }
     }
 
-    // tip頂点
-    TrailVertex vt;
-    vt.position = {tip.x, tip.y, tip.z, 1.0f};
-    vt.color = {1.0f, 1.0f, 1.0f, 1.0f};
-    vt.normal = {0.0f, 0.0f, -1.0f};
-    vertices_.push_back(vt);
+    // 今回のセグメントの u 座標を計算
+    float uCoord = static_cast< float >(segmentCount_++) * uvStep_;
 
-    // base頂点
-    TrailVertex vb;
-    vb.position = {base.x, base.y, base.z, 1.0f};
-    vb.color = {1.0f, 1.0f, 1.0f, 1.0f};
-    vb.normal = {0.0f, 0.0f, -1.0f};
-    vertices_.push_back(vb);
-}
+    // 先端
+    {
+        VertexData v;
+        v.position = {tip.x,  tip.y,  tip.z, 1.0f};    // w に alpha=1.0
+        v.texcoord = {uCoord, 0.0f};
+        v.normal = {0.0f, 0.0f, -1.0f};             // 仮の法線
 
-void SwordTrail::Update(float deltaTime){
-    // フェードアウト
-    for (auto& v : vertices_){
-        v.color.w = std::max(v.color.w - fadeSpeed_ * deltaTime, 0.0f); // 負のalphaを防止
+        vertices_.push_back(v);
     }
 
-    // 非アクティブ頂点をリストの末尾に移動し、一括削除
-    auto it = std::remove_if(vertices_.begin(), vertices_.end(), [this] (const TrailVertex& v){
-        return v.color.w < minAlpha_;
-                             });
-    vertices_.erase(it, vertices_.end());
+    // 根元
+    {
+        VertexData v;
+        v.position = {base.x, base.y, base.z, 1.0f};
+        v.texcoord = {uCoord, 1.0f};
+        v.normal = {0.0f, 0.0f, -1.0f};
+
+        vertices_.push_back(v);
+    }
+}
+
+//----------------------------------------------------------------------
+// Update (アルファフェード → 2頂点単位の削除)
+//----------------------------------------------------------------------
+void SwordTrail::Update([[maybe_unused]]float deltaTime){
+    // アルファ値 (position.w) を減衰
+  /*  for (auto& v : vertices_){
+        float alpha = v.position.w;
+        alpha -= fadeSpeed_ * deltaTime;
+        v.position.w = std::max(alpha, 0.0f);
+    }*/
+
+    // 先頭から2頂点ペア単位でチェックし、alpha < minAlpha_ なら削除
+    // ※ 三角形ストリップの連続性を保つため 2頂点ずつ削除する
+    // 例: (tip0, base0), (tip1, base1), ...
+    for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 は後で */){
+        float alpha0 = vertices_[i].position.w;
+        float alpha1 = vertices_[i + 1].position.w;
+
+        // 2頂点とも minAlpha_ 以下なら削除
+        if (alpha0 < minAlpha_ && alpha1 < minAlpha_){
+            vertices_.erase(vertices_.begin() + i, vertices_.begin() + i + 2);
+        } else{
+            i += 2; // 次のペアへ
+        }
+    }
 
     // 行列更新 & 頂点バッファ更新
     UpdateMatrix();
     UpdateVertexBuffer();
 }
 
+//----------------------------------------------------------------------
+// UpdateMatrix
+//----------------------------------------------------------------------
 void SwordTrail::UpdateMatrix(){
-    // トレイルはワールド座標を直接入れているので、World行列は単位行列
-    // カメラのVPを掛けるだけ
     Matrix4x4 world = Matrix4x4::MakeIdentity();
     Matrix4x4 wvp = Matrix4x4::Multiply(world, CameraManager::GetViewProjectionMatrix());
 
-    // 書き込み
+    // CBV に書き込み
     matrixResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
     matrixData_->world = world;
     matrixData_->WVP = wvp;
     matrixResource_->Unmap(0, nullptr);
 }
 
+//----------------------------------------------------------------------
+// UpdateVertexBuffer (CPU→GPU)
+//----------------------------------------------------------------------
 void SwordTrail::UpdateVertexBuffer(){
     // vertices_ を mappedVertices_ にコピー
     for (size_t i = 0; i < vertices_.size(); ++i){
@@ -135,34 +173,45 @@ void SwordTrail::UpdateVertexBuffer(){
     }
 }
 
+//----------------------------------------------------------------------
+// Draw
+//----------------------------------------------------------------------
 void SwordTrail::Draw(){
-    if (vertices_.size() < 2){
-        return; // セグメントがない
+    // 4頂点未満の場合はストリップで三角形を形成できない
+    if (vertices_.size() < 4){
+        return;
     }
-    
+
+    // ルートシグネチャ & パイプライン設定
     commandList_->SetGraphicsRootSignature(rootSignature_.Get());
     commandList_->SetPipelineState(pipelineState_.Get());
 
     // 頂点バッファ設定
     commandList_->IASetVertexBuffers(0, 1, &vbView_);
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    // Material & Matrix
+    // ==== TriangleStrip を指定 ====
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+    // CBV (Material & Matrix)
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     commandList_->SetGraphicsRootConstantBufferView(1, matrixResource_->GetGPUVirtualAddress());
 
-    // テクスチャ
+    // SRV (テクスチャ)
     commandList_->SetGraphicsRootDescriptorTable(3, textureHandle_);
 
-    // 描画
+    // Draw (頂点数だけストリップを進める)
     commandList_->DrawInstanced(
-        static_cast< UINT >(vertices_.size()), // 頂点数
-        1,                                   // InstanceCount
-        0,                                   // StartVertexLocation
-        0                                    // StartInstanceLocation
+        static_cast< UINT >(vertices_.size()),  // VertexCountPerInstance
+        1,                                    // InstanceCount
+        0,                                    // StartVertexLocation
+        0                                     // StartInstanceLocation
     );
 }
 
+//----------------------------------------------------------------------
+// Clear
+//----------------------------------------------------------------------
 void SwordTrail::Clear(){
     vertices_.clear();
+    segmentCount_ = 0;
 }

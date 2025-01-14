@@ -5,29 +5,19 @@
 #include <wrl.h>
 
 #include "engine/graphics/Material.h"
+#include "Engine/graphics/VertexData.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "lib/myMath/Vector3.h"
 #include "lib/myMath/Vector4.h"
 
 /// <summary>
-/// トレイル用の頂点 (ワールド座標を直接持つ想定)
-/// </summary>
-struct TrailVertex{
-    Vector4 position;
-    Vector4 color;   // フェード用アルファ
-    Vector3 normal;
-};
-
-/// <summary>
-/// 剣の軌跡(トレイル)描画クラス
-/// Modelクラスと同じくMaterial/Matrixを使って描画
+/// 剣の軌跡(トレイル)描画クラス (TriangleStrip版)
 /// </summary>
 class SwordTrail{
 public:
     SwordTrail() = default;
     ~SwordTrail() = default;
 
-    /// 初期化 (GPUリソース生成など)
     void Initialize(
         Microsoft::WRL::ComPtr<ID3D12Device> device,
         Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
@@ -35,42 +25,35 @@ public:
         Microsoft::WRL::ComPtr<ID3D12PipelineState> pso
     );
 
-    /// 剣の先端と根元を追加 (2頂点/フレーム)
+    /// <summary>剣の先端と根元を追加 (1フレームあたり2頂点)</summary>
     void AddSegment(const Vector3& tip, const Vector3& base);
 
-    /// フレーム更新 (アルファフェード → 削除)
+    /// <summary>フレーム更新 (アルファフェード → 削除)</summary>
     void Update(float deltaTime);
 
-    /// 描画
+    /// <summary>描画</summary>
     void Draw();
 
-    /// 全消去
+    /// <summary>全消去</summary>
     void Clear();
 
-    /// フェード速度 / 最小アルファ
     void SetFadeSpeed(float speed){ fadeSpeed_ = speed; }
     void SetMinAlpha(float alpha){ minAlpha_ = alpha; }
 
 private:
-    /// リソース生成
     void CreateVertexBuffer();
     void CreateMaterialBuffer();
     void CreateMatrixBuffer();
 
-    /// Map (CPU→GPU)
     void Map();
-    void VertexBufferMap();      //< 毎フレーム呼ぶ(UpdateVertexBuffer)的にも可
+    void VertexBufferMap();
     void MaterialBufferMap();
     void MatrixBufferMap();
 
-    /// ViewProjectionを掛け合わせる
     void UpdateMatrix();
-
-    /// 頂点配列→GPU反映
     void UpdateVertexBuffer();
 
 private:
-    // D3D12関連
     Microsoft::WRL::ComPtr<ID3D12Device>              device_;
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
     Microsoft::WRL::ComPtr<ID3D12RootSignature>       rootSignature_;
@@ -79,7 +62,7 @@ private:
     // 頂点バッファ
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     D3D12_VERTEX_BUFFER_VIEW               vbView_ {};
-    TrailVertex* mappedVertices_ = nullptr;
+    VertexData* mappedVertices_ = nullptr;
 
     // Material & Matrix
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
@@ -87,14 +70,18 @@ private:
     Material* materialData_ = nullptr;
     TransformationMatrix* matrixData_ = nullptr;
 
-    // 頂点リスト
-    std::vector<TrailVertex> vertices_;
-    static const size_t MAX_TRAIL_VERTICES = 400; // 容量(例)
+    // 頂点リスト (TriangleStrip用に [tip0, base0, tip1, base1, tip2, base2, ...] の順)
+    std::vector<VertexData> vertices_;
+    static const size_t MAX_TRAIL_VERTICES = 400;
 
     // フェード
-    float fadeSpeed_ = 1.0f;  // 1秒あたり alpha が1.0減衰
-    float minAlpha_ = 0.05f; // 削除閾値
+    float fadeSpeed_ = 1.0f;
+    float minAlpha_ = 0.05f;
 
-    // テクスチャ (例: uvChecker.png)
+    // テクスチャ
     D3D12_GPU_DESCRIPTOR_HANDLE textureHandle_ {};
+
+    // テクスチャ座標の進め方
+    int   segmentCount_ = 0;
+    float uvStep_ = 1.0f;
 };

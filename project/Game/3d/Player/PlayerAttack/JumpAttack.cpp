@@ -58,7 +58,7 @@ void JumpAttack::Initialize(){
 
 
 	Vector3 currentVelocity = pPlayer_->GetVelocity();
-	Vector3 jumpVelocity = {currentVelocity.x, pPlayer_->GetJumpPower(), currentVelocity.z};
+	Vector3 jumpVelocity = {currentVelocity.x, pPlayer_->GetJumpPower()*0.5f, currentVelocity.z};
 	pPlayer_->SetJumpVelocity(jumpVelocity);
 
 	// 初期回転を設定し、初期回転を保存
@@ -89,10 +89,32 @@ void JumpAttack::Update(){
 
 	// 武器の位置を更新
 	weapon_->SetPosition(currentPosition_);
+
+
 	// 武器の回転をアニメーション進行度に基づいて補間
    // 線形補間 (Lerp) を使用
 	Vector3 currentRotate = Vector3::Lerp(initialRotate_, targetRotate_, animationTime_);
 	weapon_->SetRotate(currentRotate);
+
+
+	Vector3 tip = weapon_->ComputeTipWorldPosition();
+	Vector3 base = weapon_->GetBasePos();
+
+	if (!hasPrevFrame_){
+		// 最初のフレームは軌跡を追加しない
+		prevTip_ = tip;
+		prevBase_ = base;
+		hasPrevFrame_ = true;
+	} else{
+		// 2フレーム目以降は前フレームとの連続で軌跡を追加
+		swordTrail_.AddSegment(tip, base);
+
+		// 次フレーム用に記憶
+		prevTip_ = tip;
+		prevBase_ = base;
+	}
+
+	swordTrail_.Update(System::GetDeltaTime());
 
 	// 攻撃形状を更新
 	//攻撃範囲をプレイヤーの周りに設定

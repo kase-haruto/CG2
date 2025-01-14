@@ -86,6 +86,10 @@ protected:
 
 	int damage_ = 1;            //< ダメージ量
 
+	bool hasPrevFrame_ = false; //< 前フレームでの攻撃中フラグ
+	Vector3 prevTip_;           //< 前フレームでの先端座標
+	Vector3 prevBase_;          //< 前フレームでの基底座標
+
 private:
 	std::string attackName_;    //< 攻撃名
 };

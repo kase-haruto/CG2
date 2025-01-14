@@ -86,7 +86,24 @@ void DiagonalSlashRightToLeft::Update(){
    // 線形補間 (Lerp) を使用
 	Vector3 currentRotate = Vector3::Lerp(initialRotate_, targetRotate_, animationTime_);
 	weapon_->SetRotate(currentRotate);
+	Vector3 tip = weapon_->ComputeTipWorldPosition();
+	Vector3 base = weapon_->GetBasePos();
 
+	if (!hasPrevFrame_){
+		// 最初のフレームは軌跡を追加しない
+		prevTip_ = tip;
+		prevBase_ = base;
+		hasPrevFrame_ = true;
+	} else{
+		// 2フレーム目以降は前フレームとの連続で軌跡を追加
+		swordTrail_.AddSegment(tip, base);
+
+		// 次フレーム用に記憶
+		prevTip_ = tip;
+		prevBase_ = base;
+	}
+
+	swordTrail_.Update(System::GetDeltaTime());
 
 	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
 	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度

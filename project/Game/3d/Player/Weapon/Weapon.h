@@ -31,6 +31,8 @@ private:
 	//===================================================================*/
 	Vector3 offset_ = {0.0f, 0.0f, 0.0f};	//< オフセット
 	Vector3 tipPos_ = {0.0f, 2.0f, 0.0f};	//< 先端座標
+	// ローカル座標での剣の根元 (ハンドル付近)
+	Vector3 basePos_ = {0.0f, 0.0f, 0.0f};
 
 	// 初期値を定義（Weapon::InitializeTransformで設定した値）
 	const Vector3 INITIAL_TRANSLATE = {0.5f, 1.56f, -1.0f};
@@ -48,6 +50,14 @@ public:
 		const Vector3 offset = {0.0f, 0.5f, 0.0f};
 		Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
 		return worldPos;
+	}
+
+	const Vector3 GetBasePos()const{
+		// ローカル先端座標を取得
+		Vector3 baseLocalPosition = basePos_;
+		// ワールド行列を用いてローカル座標をワールド空間に変換
+		Vector3 baseWorldPosition = Vector3::Transform(baseLocalPosition, model_->worldMatrix);
+		return baseWorldPosition;
 	}
 
 	Vector3 ComputeTipWorldPosition() const;

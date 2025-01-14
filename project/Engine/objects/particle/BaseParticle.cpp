@@ -110,36 +110,35 @@ void BaseParticle::Update(){
 void BaseParticle::Draw(){
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
-    commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
+    if (instanceNum_>=1){
+        commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+        commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+        commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
-    // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
-    commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
+        // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
+        commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
 
-#ifdef _DEBUG
-    // OBB描画
-    if (currentShape_ == EmitterShape::OBB){
-        PrimitiveDrawer::GetInstance()->DrawOBB(
-            emitter_.transform.translate,
-            emitter_.transform.rotate,
-            emitter_.transform.scale,
-            {1.0f,1.0f,1.0f,1.0f}
-        );
-    } else if (currentShape_ == EmitterShape::Sphere){
-        PrimitiveDrawer::GetInstance()->DrawSphere(
-            emitter_.transform.translate,
-            emitter_.transform.scale.x * 0.5f,
-            8,
-            {1.0f,1.0f,1.0f,1.0f}
-        );
+    #ifdef _DEBUG
+        // OBB描画
+        if (currentShape_ == EmitterShape::OBB){
+            PrimitiveDrawer::GetInstance()->DrawOBB(
+                emitter_.transform.translate,
+                emitter_.transform.rotate,
+                emitter_.transform.scale,
+                {1.0f,1.0f,1.0f,1.0f}
+            );
+        } else if (currentShape_ == EmitterShape::Sphere){
+            PrimitiveDrawer::GetInstance()->DrawSphere(
+                emitter_.transform.translate,
+                emitter_.transform.scale.x * 0.5f,
+                8,
+                {1.0f,1.0f,1.0f,1.0f}
+            );
+        }
+    #endif // _DEBUG
     }
-#endif // _DEBUG
 
-
-
-    
 }
 
 void BaseParticle::ImGui(){

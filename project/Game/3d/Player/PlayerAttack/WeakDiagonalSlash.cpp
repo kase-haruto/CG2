@@ -88,21 +88,23 @@ void WeakDiagonalSlash::Update(){
 	// 武器の位置を更新
 	weapon_->SetPosition(currentPosition_);
 
-	//=====================================================
-	// 剣先端(tip) と 根元(base) を定義 (例)
-	//=====================================================
-	// ここでは非常にシンプルに、currentPosition_ を基準として
-	// Y方向に少しずらした点を先端 (tip)、そのままを根元 (base) としています。
-	// 実際は武器の長さや回転を考慮するなど、好きに計算可能
-	Vector3 tipPos = currentPosition_ + Vector3(0.0f, 1.0f, 0.0f);
-	Vector3 basePos = currentPosition_;
+	Vector3 tip = weapon_->ComputeTipWorldPosition();
+	Vector3 base = weapon_->GetBasePos();
 
-	// トレイルに頂点を追加
-	swordTrail_.AddSegment(tipPos, basePos);
+	if (!hasPrevFrame_){
+		// 最初のフレームは軌跡を追加しない
+		prevTip_ = tip;
+		prevBase_ = base;
+		hasPrevFrame_ = true;
+	} else{
+		// 2フレーム目以降は前フレームとの連続で軌跡を追加
+		swordTrail_.AddSegment(tip, base);
 
-	//=====================================================
-	// トレイルのフェードアウトなどを更新
-	//=====================================================
+		// 次フレーム用に記憶
+		prevTip_ = tip;
+		prevBase_ = base;
+	}
+
 	swordTrail_.Update(System::GetDeltaTime());
 
 	//=====================================================
