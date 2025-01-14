@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "../graphics/camera/CameraManager.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "SceneManager.h"
 #include "Engine/core/Input.h"
@@ -63,7 +64,7 @@ void TitleScene::Draw(){
 	const float blinkInterval = 1.0f;    // 点滅間隔（秒）
 
 	// 時間の取得
-	float deltaTime = System::GetDeltaTime(); // フレーム間の経過時間を取得
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime(); // フレーム間の経過時間を取得
 	blinkTimer += deltaTime;
 
 	// 1秒ごとに表示状態を切り替え

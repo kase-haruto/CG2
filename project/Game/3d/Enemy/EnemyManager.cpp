@@ -1,6 +1,6 @@
 #include "EnemyManager.h"
 
-#include "Engine/core/System.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                      main functions
@@ -23,7 +23,7 @@ void EnemyManager::Initialize(){
 
 void EnemyManager::Update(){
     // 毎フレームのデルタタイムを取得
-    float deltaTime = System::GetDeltaTime();
+    float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
     // 累積時間を更新
     elapsedTime_ += deltaTime;

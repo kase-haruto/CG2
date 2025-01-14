@@ -8,6 +8,8 @@
 #include "Engine/core/Input.h"
 #include "Engine/graphics/camera/CameraManager.h"
 
+#include "Engine/core/Clock/ClockManager.h"
+
 #include "lib/myFunc/MyFunc.h"
 #include "Engine/graphics/GraphicsGroup.h"
 #include <externals/imgui/imgui.h>
@@ -70,7 +72,7 @@ void DiagonalSlashRightToLeft::Update(){
 	if (!isAttacking_) return;
 
 	// アニメーション時間を更新
-	animationTime_ += animationSpeed_ * System::GetDeltaTime();
+	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
@@ -103,7 +105,7 @@ void DiagonalSlashRightToLeft::Update(){
 		prevBase_ = base;
 	}
 
-	swordTrail_.Update(System::GetDeltaTime());
+	swordTrail_.Update(ClockManager::GetInstance()->GetDeltaTime());
 
 	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
 	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度
@@ -116,7 +118,7 @@ void DiagonalSlashRightToLeft::Update(){
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
 	// プレイヤー位置を更新
-	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
@@ -247,7 +249,9 @@ void DiagonalSlashRightToLeft::LoadControlPoints(const std::string& filepath){
 //////////////////////////////////////////////////////////////////////////
 //						collision
 //////////////////////////////////////////////////////////////////////////
-void DiagonalSlashRightToLeft::OnCollisionEnter([[maybe_unused]] Collider* other){}
+void DiagonalSlashRightToLeft::OnCollisionEnter([[maybe_unused]] Collider* other){
+	IPlayerAttack::OnCollisionEnter(other);
+}
 
 void DiagonalSlashRightToLeft::OnCollisionStay([[maybe_unused]] Collider* other){}
 

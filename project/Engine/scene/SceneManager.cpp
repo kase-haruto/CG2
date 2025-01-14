@@ -14,7 +14,7 @@ SceneManager::SceneManager(DxCore* dxCore)
     scenes_[static_cast< int >(SceneType::TEST)] = std::make_unique<TestScene>(pDxCore_);
 
     // 最初は TITLE シーンにしておく
-    currentSceneNo_ = static_cast< int >(SceneType::TEST);
+    currentSceneNo_ = static_cast< int >(SceneType::PLAY);
     nextSceneNo_ = currentSceneNo_;
 }
 

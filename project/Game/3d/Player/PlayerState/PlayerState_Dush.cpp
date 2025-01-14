@@ -3,6 +3,7 @@
 #include "../Player.h"
 #include "Engine/core/Input.h"
 #include "Engine/graphics/camera/CameraManager.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "Engine/core/System.h"
 
 //< lib >
@@ -44,7 +45,7 @@ void PlayerState_Dush::Move(){
 	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
-	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);

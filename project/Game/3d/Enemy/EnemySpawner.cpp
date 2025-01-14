@@ -11,6 +11,7 @@
 #include "lib/myFunc/MyFunc.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "Engine/core/Audio/Audio.h"
 //c++
 #include <externals/imgui/imgui.h>
@@ -91,7 +92,7 @@ void EnemySpawner::Update(){
 			initialRotY_ = model_->transform.rotate.y;
 		}
 
-		float deltaTime = System::GetDeltaTime();
+		float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
 		// 回転フェーズ
 		if (!rotationDone_){
@@ -128,7 +129,7 @@ void EnemySpawner::Update(){
 		}
 	} 
 
-	spawnTimer_ += System::GetDeltaTime();
+	spawnTimer_ += ClockManager::GetInstance()->GetDeltaTime();
 
 	if (isActive_){
 		//6体よりも少ないときにスポーン
@@ -169,7 +170,7 @@ void EnemySpawner::Update(){
 		//		headを上下運動
 		////////////////////////////////////////////////////////////////////////
 		static float globalTimeAccumulator = 0.0f;  // 全敵共通の経過時間
-		float deltaTime = System::GetDeltaTime();
+		float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 		globalTimeAccumulator += deltaTime;
 
 		// フローティングのパラメータ
@@ -182,7 +183,7 @@ void EnemySpawner::Update(){
 		head_->transform.translate.y = offsetY;
 
 		//回転
-		rotateTimer_ -= System::GetDeltaTime();
+		rotateTimer_ -= ClockManager::GetInstance()->GetDeltaTime();
 		if (rotateTimer_ <= 0.0f){
 			rotateTimer_ = Random::Generate(1.0f, 5.0f);
 			rotateDir_ = Random::Generate(0, 1) == 0 ? -1 : 1;

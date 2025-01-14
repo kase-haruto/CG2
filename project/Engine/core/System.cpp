@@ -6,13 +6,13 @@
 #include "../core/Audio/Audio.h"
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "Engine/core/EngineUI.h"
 #include "Engine/objects/particle/ParticleManager.h"
 
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
-float System::deltaTime_ = 0.0f;
 
 System::System(){}
 
@@ -76,7 +76,7 @@ void System::InitializeEngineUI(){
 }
 
 void System::BeginFrame(){
-	deltaTime_ = DxCore::GetDeltaTime();
+	ClockManager::GetInstance()->Update();
 
     EngineUI::SetMainViewportTexture(dxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr);
     // ImGui受付開始
