@@ -3,6 +3,7 @@
 #include "Engine/core/System.h"
 #include "lib/myFunc/MathFunc.h"
 #include "Engine/core/Json/JsonCoordinator.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "../Player.h"
 
 #include "Engine/core/Audio/Audio.h"
@@ -74,8 +75,11 @@ void WeakDiagonalSlash::Execution(){
 
 void WeakDiagonalSlash::Update(){
 	if (!isAttacking_) return;
+
+	
+
 	// アニメーション時間を更新
-	animationTime_ += animationSpeed_ * System::GetDeltaTime();
+	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
@@ -105,7 +109,7 @@ void WeakDiagonalSlash::Update(){
 		prevBase_ = base;
 	}
 
-	swordTrail_.Update(System::GetDeltaTime());
+	swordTrail_.Update(ClockManager::GetInstance()->GetDeltaTime());
 
 	//=====================================================
 	// ↓ 以下、プレイヤーや攻撃形状の既存処理はそのまま ↓
@@ -121,7 +125,7 @@ void WeakDiagonalSlash::Update(){
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
 	// プレイヤー位置を更新
-	pPlayer_->GetModel()->transform.translate += moveVelocity_ * System::GetDeltaTime();
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);
@@ -247,7 +251,9 @@ void WeakDiagonalSlash::LoadControlPoints(const std::string& filepath){
 //////////////////////////////////////////////////////////////////////////
 //						collision
 //////////////////////////////////////////////////////////////////////////
-void WeakDiagonalSlash::OnCollisionEnter([[maybe_unused]] Collider* other){}
+void WeakDiagonalSlash::OnCollisionEnter([[maybe_unused]] Collider* other){
+	IPlayerAttack::OnCollisionEnter(other);
+}
 
 void WeakDiagonalSlash::OnCollisionStay([[maybe_unused]] Collider* other){}
 

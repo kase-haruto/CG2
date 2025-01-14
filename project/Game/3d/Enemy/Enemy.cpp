@@ -6,6 +6,8 @@
 #include "../Player/Player.h"
 #include "../Player/PlayerAttack/IPlayerAttack.h"
 
+#include "Engine/core/Clock/ClockManager.h"
+
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
 #include <externals/imgui/imgui.h>
@@ -112,7 +114,7 @@ void Enemy::Move(){
 			Vector3 movement = direction * movementSpeed_ ;
 
 			// モデルの位置を更新
-			model_->transform.translate += movement * System::GetDeltaTime();
+			model_->transform.translate += movement * ClockManager::GetInstance()->GetDeltaTime();
 		}
 
 		// 進行方向を向くように回転を更新
@@ -125,7 +127,7 @@ void Enemy::Move(){
 void Enemy::Floating(){
 	// 浮遊動作の設定
 	static float globalTimeAccumulator = 0.0f;  // 全敵共通の経過時間
-	float deltaTime = System::GetDeltaTime();
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 	globalTimeAccumulator += deltaTime;
 
 	// フローティングのパラメータ

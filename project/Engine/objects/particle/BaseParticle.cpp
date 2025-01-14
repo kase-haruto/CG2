@@ -9,6 +9,7 @@
 #include "Engine/objects/TextureManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "ParticleEmitShape.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 //* lib
 #include "lib/myFunc/MyFunc.h"
@@ -86,9 +87,9 @@ void BaseParticle::Update(){
 
             instancingData[instanceNum_].color.w = alpha;
 
-            it->currentTime += System::GetDeltaTime();
+            it->currentTime += ClockManager::GetInstance()->GetDeltaTime();
             if (!isStatic_){
-                it->transform.translate += it->velocity * System::GetDeltaTime();
+                it->transform.translate += it->velocity * ClockManager::GetInstance()->GetDeltaTime();
             }
 
             ++instanceNum_;
@@ -98,7 +99,7 @@ void BaseParticle::Update(){
     }
 
     if (autoEmit_){
-        emitter_.frequencyTime += System::GetDeltaTime();
+        emitter_.frequencyTime += ClockManager::GetInstance()->GetDeltaTime();
         if (emitter_.frequencyTime >= emitter_.frequency){
             Emit(emitter_.count);
             emitter_.frequencyTime = 0.0f;

@@ -63,7 +63,6 @@ public:
 	///////////////////////////////////////////////////////////
 	static HINSTANCE GetHinstance(){ return hInstance_; }
 	static HWND GetHWND(){ return hwnd_; }
-	static float GetDeltaTime(){ return deltaTime_; }
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 
 private:
@@ -83,8 +82,6 @@ private:
 	/// </summary>
 	std::shared_ptr<ShaderManager>shaderManager_;
 	std::unique_ptr<PipelineStateManager>pipelineStateManager_;
-
-	static float deltaTime_;
 
 };
 

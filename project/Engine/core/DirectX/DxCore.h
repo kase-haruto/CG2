@@ -44,10 +44,6 @@ public:
     const DxSwapChain& GetSwapChain() const{ return *dxSwapChain_; }
     const RenderTarget& GetRenderTarget() const{ return *renderTarget_; }
 
-    static float GetDeltaTime() { return DxSwapChain::deltaTime_; }
-	float GetCurrentFPS() const{ return dxSwapChain_->GetCurrentFPS(); }
-	float GetAverageFPS() const{ return dxSwapChain_->GetAverageFPS(); }
-
 private:
     WinApp* winApp_ = nullptr;
     uint32_t clientWidth_ = 0;

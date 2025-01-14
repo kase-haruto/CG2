@@ -6,8 +6,6 @@
 #undef max
 #undef min
 
-float DxSwapChain::deltaTime_ = 0.016f;
-
 void DxSwapChain::Initialize(
     ComPtr<IDXGIFactory7> dxgiFactory,
     ComPtr<ID3D12CommandQueue> commandQueue,
@@ -69,37 +67,10 @@ void DxSwapChain::Initialize(
 
     syncInterval_ = static_cast< UINT >(std::round(refreshRate_ / 60.0f));
     if (syncInterval_ < 1) syncInterval_ = 1;
-
-    firstFrameTime_ = std::chrono::high_resolution_clock::now();
 }
 
 
 void DxSwapChain::Present(){
-    // フレームの開始時刻を取得
-    auto currentFrameTime = std::chrono::high_resolution_clock::now();
-
-    // deltaTime を計算 (ミリ秒から秒に変換)
-    deltaTime_ = std::chrono::duration<float, std::milli>(currentFrameTime - lastFrameTime_).count() / 1000.0f;
-
-    // 現在のFPSを計算
-    if (deltaTime_ > 0.0f){
-        currentFPS_ = 1.0f / deltaTime_;
-    }
-
-    deltaTime_ = std::min(std::max(0.0f, deltaTime_), 0.017f);
-
-    // 累積時間を正確に計算
-    totalTime_ = std::chrono::duration<float>(currentFrameTime - firstFrameTime_).count();
-
-    // 平均FPSを計算
-    if (totalTime_ > 0.0f){
-        averageFPS_ = static_cast< float >(frameCount_) / totalTime_;
-    }
-
     // スワップチェインをPresent
     swapChain_->Present(syncInterval_, 0);
-
-    // フレーム終了時刻を記録
-    lastFrameTime_ = currentFrameTime;
-    frameCount_++;
 }

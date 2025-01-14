@@ -27,10 +27,6 @@ public:
     //              アクセッサ
     ///////////////////////////////////////////////////////////////////////////////////////// 
 public:
-    float GetDeltaTime() const{ return deltaTime_; }
-    float GetCurrentFPS() const{ return currentFPS_; }
-    float GetAverageFPS() const{ return averageFPS_; }
-
     UINT GetCurrentBackBufferIndex() const{ return swapChain_->GetCurrentBackBufferIndex(); }
     ComPtr<IDXGISwapChain4> GetSwapChain() const{ return swapChain_; }
     ComPtr<ID3D12Resource> GetBackBuffer(UINT index) const{ return backBuffers_[index]; }
@@ -48,15 +44,4 @@ private:
     float refreshRate_ = 60.0f; // デフォルトで60Hz
 	UINT syncInterval_ = 1; // デフォルトで垂直同期を行う
 
-    // FPS計測用
-    float currentFPS_ = 0.0;             // 現在のFPS
-    float averageFPS_ = 0.0;             // 平均FPS
-    uint64_t frameCount_ = 0;             // フレームカウント
-    float totalTime_ = 0.0;              // 累積時間 (秒)
-
-    std::chrono::high_resolution_clock::time_point lastFrameTime_;
-	std::chrono::high_resolution_clock::time_point firstFrameTime_;
-
-public:
-    static float deltaTime_;               // フレーム間の経過時間 (ms)
 };

@@ -6,6 +6,7 @@
 #include "Engine/core/Input.h"
 #include "Engine/core/System.h"
 #include "Engine/graphics/camera/CameraManager.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include <externals/imgui/imgui.h>
 //c++
 #include <numbers>
@@ -44,7 +45,7 @@ void FollowCamera::Turning(){
 
 	float deltaX = Input::GetRightStick().x;
 
-	destinationAngle_.y += deltaX * rotateSpeed * System::GetDeltaTime();
+	destinationAngle_.y += deltaX * rotateSpeed * ClockManager::GetInstance()->GetDeltaTime();
 
 	// 垂直方向の回転角度の制限（必要に応じて）
 	const float maxVerticalAngle = float(std::numbers::pi) / 2.0f - 0.1f; // 制限値を調整

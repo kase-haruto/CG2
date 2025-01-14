@@ -24,7 +24,7 @@ public:
 	virtual void Cleanup(){};        //< クリーンアップ
 
 	/* collision ===================================*/
-	virtual void OnCollisionEnter([[maybe_unused]] Collider* other) override{}
+	virtual void OnCollisionEnter([[maybe_unused]] Collider* other) override;
 	virtual void OnCollisionStay([[maybe_unused]] Collider* other) override{}
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other) override{}
 

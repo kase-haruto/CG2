@@ -420,6 +420,7 @@
     <ClCompile Include="Engine\scene\ResultScene.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.cpp" />
     <ClCompile Include="Game\3d\Enemy\EnemySpawner.cpp" />
+    <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -681,6 +682,7 @@
     <ClInclude Include="Engine\scene\ResultScene.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
     <ClInclude Include="Game\3d\Enemy\EnemySpawner.h" />
+    <ClInclude Include="Engine\core\Clock\ClockManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

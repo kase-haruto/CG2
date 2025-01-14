@@ -13,6 +13,7 @@
 #include "engine/physics/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/System.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
@@ -114,7 +115,7 @@ void Model::Update(){
 
 void Model::UpdateTexture(){
     if (textureHandles_.size() <= 1) return; // アニメーション不要
-    elapsedTime_ += System::GetDeltaTime();
+    elapsedTime_ += ClockManager::GetInstance()->GetDeltaTime();
     if (elapsedTime_ >= animationSpeed_){
         elapsedTime_ -= animationSpeed_;
         currentFrameIndex_ = (currentFrameIndex_ + 1) % textureHandles_.size();

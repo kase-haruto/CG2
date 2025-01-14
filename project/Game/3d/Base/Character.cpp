@@ -3,6 +3,7 @@
 #include "Engine/core/System.h"
 #include "lib/myFunc/MyFunc.h"
 #include "Engine/core/Json/JsonCoordinator.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 Character::Character(const std::string& modelName)
     : BaseGameObject(modelName){}
@@ -16,7 +17,7 @@ void Character::Initialize(){
 void Character::Update(){
     const float gravity = -9.8f;             // 重力加速度
     const float terminalVelocity = -100.0f;   // 最大落下速度
-    float deltaTime = System::GetDeltaTime();
+    float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
     // 重力による加速度を計算
     acceleration_ = {0.0f, gravity, 0.0f};

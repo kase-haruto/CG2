@@ -5,7 +5,7 @@
 
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
-
+#include "Engine/core/Clock/ClockManager.h"
 //< state
 #include "PlayerState/PlayerState_Stay.h"
 #include "PlayerState/PlayerState_Jog.h"
@@ -121,7 +121,7 @@ void Player::Update(){
 	// 攻撃管理クラスの更新
 	attackController_->Update();
 
-	model_->transform.translate += jumpVelocity_ * System::GetDeltaTime();
+	model_->transform.translate += jumpVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
 
 	BaseGameObject::Update();
 	Character::Update();

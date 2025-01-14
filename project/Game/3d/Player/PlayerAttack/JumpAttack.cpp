@@ -8,6 +8,7 @@
 #include "Engine/core/Audio/Audio.h"
 #include "Engine/core/Input.h"
 #include "Engine/graphics/camera/CameraManager.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 #include "lib/myFunc/MyFunc.h"
 #include "Engine/graphics/GraphicsGroup.h"
@@ -77,7 +78,7 @@ void JumpAttack::Update(){
 	if (!isAttacking_) return;
 
 	// アニメーション時間を更新
-	animationTime_ += animationSpeed_ * System::GetDeltaTime();
+	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
@@ -114,7 +115,7 @@ void JumpAttack::Update(){
 		prevBase_ = base;
 	}
 
-	swordTrail_.Update(System::GetDeltaTime());
+	swordTrail_.Update(ClockManager::GetInstance()->GetDeltaTime());
 
 	// 攻撃形状を更新
 	//攻撃範囲をプレイヤーの周りに設定

@@ -8,6 +8,7 @@
 
 #include "engine/graphics/GraphicsGroup.h"
 #include "engine/core/System.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
@@ -109,7 +110,7 @@ void AnimationModel::PlayAnimation(){
     }
 
     // 時間を進める（アニメーション速度を考慮）
-    animationTime_ += System::GetDeltaTime() * animationSpeed_;
+    animationTime_ += ClockManager::GetInstance()->GetDeltaTime() * animationSpeed_;
     // ループ
     animationTime_ = std::fmod(animationTime_, animation_.duration);
 

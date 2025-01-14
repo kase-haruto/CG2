@@ -1,10 +1,12 @@
 #include "IPlayerAttack.h"
 #include "Engine/collision/CollisionManager.h"
 #include "Engine/core/Json/JsonCoordinator.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 #include "../Player.h"
 
 #include <externals/imgui/imgui.h>
+#include "Engine/core/math/Ease.h"
 
 
 IPlayerAttack::IPlayerAttack(const std::string& attackName){
@@ -37,6 +39,7 @@ void IPlayerAttack::Initialize(){
 	isActive_ = true;
 }
 
+
 IPlayerAttack::IPlayerAttack(const IPlayerAttack& other)
 	: BoxCollider(other), // 基底クラス BoxCollider のコピー
 	center_(other.center_),
@@ -55,4 +58,14 @@ void IPlayerAttack::SetPlayer(Player* pPlayer){
 
 const Vector3 IPlayerAttack::GetPlayerPos() const{
 	return pPlayer_->GetCenterPos();
+}
+
+
+void IPlayerAttack::OnCollisionEnter([[maybe_unused]]Collider* other){
+	//hitStop
+	ClockManager::GetInstance()->StartHitStop(
+		0.2f,
+		EvoEase::EaseOutQuad,
+		EvoEase::EaseInQuad
+	);
 }
