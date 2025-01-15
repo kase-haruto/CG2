@@ -233,7 +233,17 @@ void JumpAttack::LoadControlPoints(const std::string& filepath){
 //////////////////////////////////////////////////////////////////////////
 //						collision
 //////////////////////////////////////////////////////////////////////////
-void JumpAttack::OnCollisionEnter([[maybe_unused]] Collider* other){}
+void JumpAttack::OnCollisionEnter([[maybe_unused]] Collider* other){
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		IPlayerAttack::OnCollisionEnter(other);
+
+		CameraManager::GetInstance()->SetShake(0.5f, 0.1f);
+
+	}
+	
+}
 
 void JumpAttack::OnCollisionStay([[maybe_unused]] Collider* other){}
 

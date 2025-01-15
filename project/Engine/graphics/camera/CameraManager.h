@@ -72,4 +72,8 @@ public:
 	}
 
     void SetType(const CameraType type);
+
+	void SetShake(float duration, float intensity){
+		instance_->cameras_[instance_->type_]->StartShake(duration, intensity);
+	}
 };

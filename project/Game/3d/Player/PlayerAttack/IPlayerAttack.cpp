@@ -62,10 +62,10 @@ const Vector3 IPlayerAttack::GetPlayerPos() const{
 
 
 void IPlayerAttack::OnCollisionEnter([[maybe_unused]]Collider* other){
-	//hitStop
-	ClockManager::GetInstance()->StartHitStop(
-		0.2f,
-		EvoEase::EaseOutQuad,
-		EvoEase::EaseInQuad
-	);
+	////hitStop
+	//ClockManager::GetInstance()->StartHitStop(
+	//	0.2f,
+	//	EvoEase::EaseOutQuad,
+	//	EvoEase::EaseInQuad
+	//);
 }

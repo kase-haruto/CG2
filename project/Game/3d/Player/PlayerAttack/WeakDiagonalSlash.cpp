@@ -252,7 +252,12 @@ void WeakDiagonalSlash::LoadControlPoints(const std::string& filepath){
 //						collision
 //////////////////////////////////////////////////////////////////////////
 void WeakDiagonalSlash::OnCollisionEnter([[maybe_unused]] Collider* other){
-	IPlayerAttack::OnCollisionEnter(other);
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		IPlayerAttack::OnCollisionEnter(other);
+
+	}
 }
 
 void WeakDiagonalSlash::OnCollisionStay([[maybe_unused]] Collider* other){}

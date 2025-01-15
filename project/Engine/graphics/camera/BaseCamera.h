@@ -33,6 +33,8 @@ public:
 
 	virtual void UpdateMatrix();  // 行列の更新
 
+	void StartShake(float duration, float intensity)override;  // カメラシェイク開始
+
 private:
 	//==================================================================*//
 	//			private functions
@@ -46,6 +48,8 @@ protected:
 	//==================================================================*//
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 	void SetName(const std::string& name);
+
+
 public:
 	//==================================================================*//
 	//			getter / setter
@@ -72,6 +76,14 @@ protected:
 	float nearZ_ = 0.1f;                                         // 近クリップ面
 	float farZ_ = 1000.0f;                                       // 遠クリップ面
 	float fovAngleY_ = 45.0f * static_cast< float >(std::numbers::pi) / 180.0f;  // 垂直視野角
+
+protected:
+	// カメラシェイク関連
+	bool isShaking_ = false;
+	float shakeDuration_ = 0.0f;
+	float shakeElapsed_ = 0.0f;
+	float shakeIntensity_ = 0.0f;  // シェイクの強さ
+	Vector3 originalPosition_;     // シェイク前の元のカメラ位置
 
 
 private:

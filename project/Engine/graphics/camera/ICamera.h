@@ -16,6 +16,8 @@ public:
 	virtual void UpdateMatrix() = 0;
 	virtual void ShowGui()override;
 
+	virtual void StartShake([[maybe_unused]]float duration, [[maybe_unused]] float intensity){};
+
 public:
 	//==================================================================*//
 	//			getter/setter
