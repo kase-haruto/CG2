@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "../graphics/PipelineState.h"
 
+//engine
+#include "pipeline/PipelineKey.h"
+
 /* c++ */
 #include<string>
 #include<unordered_map>
@@ -18,19 +21,31 @@ public:
 		: device_(device), shaderManager_(shaderManager){}
 	~PipelineStateManager();
 
-	bool CreatePipelineState(const PipelineType& name,
-							const std::wstring& vsPath,const std::wstring& psPath,
-							const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
-							const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc);
+	bool CreatePipelineState(
+		PipelineType pipelineType,
+		const std::wstring& vsPath,
+		const std::wstring& psPath,
+		const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
+		const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc,
+		BlendMode blendMode
+	);
 
 	void Finalize();
 
-	const ComPtr<ID3D12PipelineState>& GetPipelineState(const PipelineType& name)const;
-	const ComPtr<ID3D12RootSignature>& GetRootSignature(const PipelineType& name)const;
+	const ComPtr<ID3D12PipelineState>& GetPipelineState(
+		PipelineType pipelineType,
+		BlendMode blendMode
+	) const;
+
+	const ComPtr<ID3D12RootSignature>& GetRootSignature(
+		PipelineType pipelineType,
+		BlendMode blendMode
+	) const;
 
 private:
 	ComPtr<ID3D12Device>device_;
 	std::shared_ptr<ShaderManager>shaderManager_;
-	std::unordered_map<PipelineType, std::unique_ptr<PipelineState>>pipelineStates_;
+	// ★ キーを (pipelineType, blendMode) にした Map
+	std::unordered_map<PipelineKey, std::unique_ptr<PipelineState>> pipelineStates_;
 };
 

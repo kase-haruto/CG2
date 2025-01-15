@@ -21,8 +21,8 @@ public:
 	/// pipelineの取得
 	///=========================================
 	PipelineStateManager* GetPipelineState()const;
-	const ComPtr<ID3D12RootSignature>& GetRootSignature(const PipelineType& type)const;
-	const ComPtr<ID3D12PipelineState>& GetPipelineState(const PipelineType& type)const;
+	const ComPtr<ID3D12RootSignature>& GetRootSignature(const PipelineType& type, const BlendMode& blendMode = BlendMode::NORMAL)const;
+	const ComPtr<ID3D12PipelineState>& GetPipelineState(const PipelineType& type,const BlendMode& blendMode = BlendMode::NORMAL)const;
 
 	///=========================================
 	/// device/commandListの取得

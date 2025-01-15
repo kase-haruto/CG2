@@ -23,6 +23,10 @@ void TrailParticle::Initialize(const std::string& modelName,
 	isStatic_ = true;
 	autoEmit_ = false;
 	isFixationAlpha_ = false;
+
+	// blendMode
+	blendMode_ = BlendMode::MUL;
+
 	// ランダムスケールを使用する
 	SetUseRandomScale(false);
 	SetFixedMaxScale(0.1f); // ランダム値の範囲を指定

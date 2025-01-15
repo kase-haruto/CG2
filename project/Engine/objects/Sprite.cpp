@@ -19,8 +19,8 @@ Sprite::Sprite(const std::string& filePath){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 
     // パイプラインとルートシグネチャの設定
-    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
-    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
+    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Object2D,BlendMode::ALPHA);
+    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Object2D,BlendMode::ALPHA);
 
     handle = TextureManager::GetInstance()->LoadTexture(filePath);
 

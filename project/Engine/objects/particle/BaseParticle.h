@@ -1,9 +1,11 @@
 #pragma once
 
+/* engine */
 #include "engine/objects/ModelData.h"
 #include "engine/graphics/Material.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
+#include "Engine/graphics/blendMode/BlendMode.h"
 
 /* math */
 #include "lib/myMath/Vector4.h"
@@ -81,6 +83,8 @@ public:
     virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
     virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
 
+    // 色合成取得
+	BlendMode GetBlendMode() const{ return blendMode_; }
 
     // maxScale設定のためのインターフェース
     void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
@@ -158,5 +162,8 @@ protected:
 
     // 形状選択用
     EmitterShape currentShape_ = EmitterShape::OBB;
+
+    // blend
+	BlendMode blendMode_ = BlendMode::ADD;
 
 };
