@@ -236,7 +236,12 @@ void HorizonMowingDown::LoadControlPoints(const std::string& filepath){
 //						collision
 //////////////////////////////////////////////////////////////////////////
 void HorizonMowingDown::OnCollisionEnter([[maybe_unused]] Collider* other){
-	IPlayerAttack::OnCollisionEnter(other);
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		IPlayerAttack::OnCollisionEnter(other);
+
+	}
 }
 
 void HorizonMowingDown::OnCollisionStay([[maybe_unused]] Collider* other){}

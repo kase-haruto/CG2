@@ -2,6 +2,7 @@
 #include "Engine/graphics/camera/BaseCamera.h"
 #include "Engine/graphics/GraphicsGroup.h"
 #include "lib/myFunc/MyFunc.h"
+#include "Engine/core/Clock/ClockManager.h"
 #include <cmath>
 #include "BaseCamera.h"
 
@@ -21,6 +22,25 @@ BaseCamera::BaseCamera()
 /////////////////////////////////////////////////////////////////////////
 void BaseCamera::Update(){
 	if (!isActive_){ return; }//アクティブでない場合は処理しない
+
+	// シェイク処理
+	if (isShaking_){
+		shakeElapsed_ += ClockManager::GetInstance()->GetDeltaTime();  // シングルトンから時間取得
+		if (shakeElapsed_ < shakeDuration_){
+			// ランダムなオフセットを生成（例：-1〜1の範囲で乱数を取得）
+			float offsetX = ((rand() / ( float ) RAND_MAX) * 2.0f - 1.0f) * shakeIntensity_;
+			float offsetY = ((rand() / ( float ) RAND_MAX) * 2.0f - 1.0f) * shakeIntensity_;
+			float offsetZ = ((rand() / ( float ) RAND_MAX) * 2.0f - 1.0f) * shakeIntensity_;
+
+			// 現在のカメラ位置にオフセットを加算
+			transform_.translate = originalPosition_ + Vector3(offsetX, offsetY, offsetZ);
+		} else{
+			// シェイク終了時に元の位置に戻す
+			isShaking_ = false;
+			transform_.translate = originalPosition_;
+		}
+	}
+
 
 	UpdateMatrix();
 
@@ -43,7 +63,6 @@ void BaseCamera::UpdateMatrix(){
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //  projection行列の作成
 /////////////////////////////////////////////////////////////////////////
@@ -57,21 +76,31 @@ Matrix4x4 BaseCamera::MakePerspectiveFovMatrix(float fovY, float aspectRatio, fl
 	return result;
 }
 
-void BaseCamera::SetName(const std::string& name){
-	SceneObject::SetName(name, ObjectType::Camera);
+/////////////////////////////////////////////////////////////////////////
+//  カメラシェイク開始
+/////////////////////////////////////////////////////////////////////////
+void BaseCamera::StartShake(float duration, float intensity){
+	if (!isShaking_){
+		originalPosition_ = transform_.translate;  // 現在の位置を記憶
+	}
+	isShaking_ = true;
+	shakeDuration_ = duration;
+	shakeElapsed_ = 0.0f;
+	shakeIntensity_ = intensity;
 }
 
 /////////////////////////////////////////////////////////////////////////
 //  アクセッサ
 /////////////////////////////////////////////////////////////////////////
 #pragma region アクセッサ
+void BaseCamera::SetName(const std::string& name){
+	SceneObject::SetName(name, ObjectType::Camera);
+}
+
 void BaseCamera::SetCamera(const Vector3& pos, const Vector3& rotate){
 	transform_.translate = pos;
 	transform_.rotate = rotate;
 }
-
-
-
 
 const Matrix4x4& BaseCamera::GetViewMatrix() const{
 	return viewMatrix_;
@@ -108,5 +137,4 @@ void BaseCamera::Map(){
 	cameraData_->worldPosition = transform_.translate;
 	constBuffer_->Unmap(0, nullptr);  // データ設定後にアンマップ
 }
-
 #pragma endregion

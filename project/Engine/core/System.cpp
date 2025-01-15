@@ -455,8 +455,8 @@ void System::StructuredObjectPipeline(){
     // BlendStateの設定: 加算ブレンド
     D3D12_BLEND_DESC blendDesc = {};
     blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;           // ソースカラーをそのまま使用
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;          // 背景カラーもそのまま使用
+    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;           // ソースカラーをそのまま使用
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_ALPHA;          // 背景カラーもそのまま使用
     blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;         // ソースと背景の色を加算
 
     blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;      // アルファの加算
