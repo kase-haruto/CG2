@@ -24,7 +24,7 @@ void SwordTrail::Initialize(
     pipelineState_ = pso;
 
     // テクスチャを読み込む (例: white1x1.png)
-    textureHandle_ = TextureManager::GetInstance()->LoadTexture("noise.png");
+    textureHandle_ = TextureManager::GetInstance()->LoadTexture("trail.png");
 
     CreateVertexBuffer();
     CreateMaterialBuffer();
@@ -122,16 +122,12 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
 // Update (アルファフェード → 2頂点単位の削除)
 //----------------------------------------------------------------------
 void SwordTrail::Update([[maybe_unused]]float deltaTime){
-    // アルファ値 (position.w) を減衰
-  /*  for (auto& v : vertices_){
-        float alpha = v.position.w;
-        alpha -= fadeSpeed_ * deltaTime;
-        v.position.w = std::max(alpha, 0.0f);
-    }*/
-
     // 先頭から2頂点ペア単位でチェックし、alpha < minAlpha_ なら削除
     // ※ 三角形ストリップの連続性を保つため 2頂点ずつ削除する
     // 例: (tip0, base0), (tip1, base1), ...
+
+
+
     for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 は後で */){
         float alpha0 = vertices_[i].position.w;
         float alpha1 = vertices_[i + 1].position.w;

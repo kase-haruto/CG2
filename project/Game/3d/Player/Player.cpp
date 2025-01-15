@@ -73,7 +73,6 @@ void Player::Update(){
 
 	//状態の切り替え
 
-
 	if (Input::IsLeftStickMoved()){
 		// 移動入力がある場合
 		TransitionState(PlayerState::Jog);

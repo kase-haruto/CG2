@@ -250,7 +250,12 @@ void DiagonalSlashRightToLeft::LoadControlPoints(const std::string& filepath){
 //						collision
 //////////////////////////////////////////////////////////////////////////
 void DiagonalSlashRightToLeft::OnCollisionEnter([[maybe_unused]] Collider* other){
-	IPlayerAttack::OnCollisionEnter(other);
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		IPlayerAttack::OnCollisionEnter(other);
+
+	}
 }
 
 void DiagonalSlashRightToLeft::OnCollisionStay([[maybe_unused]] Collider* other){}

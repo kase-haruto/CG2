@@ -39,7 +39,7 @@ Vector3 FollowCamera::CalculateOffset(){
 }
 
 void FollowCamera::Turning(){
-	if (!target_){
+	if (!target_||isShaking_){
 		return; // ターゲットが存在しない場合は処理しない
 	}
 
