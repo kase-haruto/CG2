@@ -109,8 +109,8 @@ void DxCore::DrawOffscreenTexture(){
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	// 以降はオフスクリーンテクスチャをSRVとして使用する
-	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage);
-	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage);
+	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage,BlendMode::NONE);
+	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
 	if (!pipelineState || !rootSignature){
 		OutputDebugStringA("PipelineState or RootSignature is null.\n");
 		return;

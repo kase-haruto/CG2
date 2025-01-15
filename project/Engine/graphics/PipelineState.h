@@ -1,10 +1,14 @@
 ﻿#pragma once
 
-#include<d3d12.h>
-#include<wrl.h>
-#include<string>
-#include<dxcapi.h>
-#include<memory>
+// engine
+#include "blendMode/BlendMode.h"
+
+// lib
+#include <d3d12.h>
+#include <wrl.h>
+#include <string>
+#include <dxcapi.h>
+#include <memory>
 
 #include"ShaderManager.h"
 
@@ -17,7 +21,8 @@ public:
 
 	bool Initialize(const std::wstring& vsPath, const std::wstring& psPath,
 					const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
-					const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc);
+					const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc,
+					const BlendMode& blendMode);
 
 	const ComPtr<ID3D12PipelineState>& GetPipelineState()const{ return pipelineState_; }
 	const ComPtr<ID3D12RootSignature>& GetRootSignature()const{ return rootSignature_; }

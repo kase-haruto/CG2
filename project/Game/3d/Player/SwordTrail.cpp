@@ -24,7 +24,7 @@ void SwordTrail::Initialize(
     pipelineState_ = pso;
 
     // テクスチャを読み込む (例: white1x1.png)
-    textureHandle_ = TextureManager::GetInstance()->LoadTexture("noise.png");
+    textureHandle_ = TextureManager::GetInstance()->LoadTexture("AnimatedCube_MetallicRoughness.png");
 
     CreateVertexBuffer();
     CreateMaterialBuffer();

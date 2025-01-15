@@ -12,9 +12,9 @@ void GraphicsGroup::Initialize(const DxCore* dxCore, PipelineStateManager* psMan
 
 PipelineStateManager* GraphicsGroup::GetPipelineState()const{ return pipelineManager_; }
 
-const ComPtr<ID3D12PipelineState>& GraphicsGroup::GetPipelineState(const PipelineType& type)const { return pipelineManager_->GetPipelineState(type); }
+const ComPtr<ID3D12PipelineState>& GraphicsGroup::GetPipelineState(const PipelineType& type,const BlendMode& blendMode)const { return pipelineManager_->GetPipelineState(type,blendMode); }
 
-const ComPtr<ID3D12RootSignature>& GraphicsGroup::GetRootSignature(const PipelineType& type)const{ return pipelineManager_->GetRootSignature(type); }
+const ComPtr<ID3D12RootSignature>& GraphicsGroup::GetRootSignature(const PipelineType& type, const BlendMode& blendMode)const{ return pipelineManager_->GetRootSignature(type,blendMode); }
 
 ComPtr<ID3D12Device> GraphicsGroup::GetDevice() const{ return pDxCore_->GetDevice(); }
 

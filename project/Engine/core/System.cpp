@@ -10,7 +10,7 @@
 #include "lib/myFunc/PrimitiveDrawer.h"
 #include "Engine/core/EngineUI.h"
 #include "Engine/objects/particle/ParticleManager.h"
-
+#include "Engine/graphics/blendMode/BlendMode.h"
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
 
@@ -42,7 +42,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	//パイプラインを設定
 	CreatePipelines();
-
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
 
@@ -137,7 +136,6 @@ int System::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 //              Pipelineの作成
 //=============================================================================================================
-
 void System::CreatePipelines(){
 	  shaderManager_->InitializeDXC();
       Object3DPipelines();
@@ -166,17 +164,6 @@ void System::Object3DPipelines(){
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
     inputLayoutDesc.pInputElementDescs = inputElementDescs;
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-    // BlendStateの設定
-    D3D12_BLEND_DESC blendDesc {};
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-    blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -283,7 +270,6 @@ void System::Object3DPipelines(){
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.VS = {shaderManager_->GetVertexShader(Object3D)->GetBufferPointer(), shaderManager_->GetVertexShader(Object3D)->GetBufferSize()};
     psoDesc.PS = {shaderManager_->GetPixelShader(Object3D)->GetBufferPointer(), shaderManager_->GetPixelShader(Object3D)->GetBufferSize()};
-    psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
     psoDesc.NumRenderTargets = 1;
@@ -293,10 +279,22 @@ void System::Object3DPipelines(){
     psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
     psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    // パイプラインステートオブジェクトの作成
-    if (!pipelineStateManager_->CreatePipelineState(Object3D, L"Object3d.VS.hlsl", L"Object3d.PS.hlsl", rootSignatureDesc, psoDesc)){
-        // エラーハンドリング
-        return;
+    //shaderPath
+    std::wstring vsPath = L"Object3d.VS.hlsl";
+    std::wstring psPath = L"Object3d.PS.hlsl";
+
+    for (int i = 0; i < static_cast< int >(BlendMode::kBlendModeCount); i++){
+        BlendMode mode = static_cast< BlendMode >(i);
+
+        // mode に対応する処理を行う
+        pipelineStateManager_->CreatePipelineState(
+            PipelineType::Object3D,
+            vsPath,
+            psPath,
+            rootSignatureDesc,
+            psoDesc,
+            mode
+        );
     }
 }
 
@@ -317,15 +315,7 @@ void System::Object2DPipelines(){
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
     // BlendStateの設定 (アルファブレンド有効)
-    D3D12_BLEND_DESC blendDesc {};
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-    blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+	BlendMode blendMode = BlendMode::ALPHA;
 
     // RasterizerStateの設定 (カリングなし)
     D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -413,7 +403,6 @@ void System::Object2DPipelines(){
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.VS = {shaderManager_->GetVertexShader(Object2D)->GetBufferPointer(), shaderManager_->GetVertexShader(Object2D)->GetBufferSize()};
     psoDesc.PS = {shaderManager_->GetPixelShader(Object2D)->GetBufferPointer(), shaderManager_->GetPixelShader(Object2D)->GetBufferSize()};
-    psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
     psoDesc.NumRenderTargets = 1;
@@ -424,13 +413,11 @@ void System::Object2DPipelines(){
     psoDesc.DSVFormat = DXGI_FORMAT_UNKNOWN; // 深度ステンシル不要なのでDSVFormatは設定しない
 
     // パイプラインステートオブジェクトの作成
-    if (!pipelineStateManager_->CreatePipelineState(Object2D, L"Object2d.VS.hlsl", L"Object2d.PS.hlsl", rootSignatureDesc, psoDesc)){
+    if (!pipelineStateManager_->CreatePipelineState(Object2D, L"Object2d.VS.hlsl", L"Object2d.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)){
         // エラーハンドリング
         return;
     }
 }
-
-
 
 void System::StructuredObjectPipeline(){
     // InputLayoutの設定
@@ -451,21 +438,6 @@ void System::StructuredObjectPipeline(){
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
     inputLayoutDesc.pInputElementDescs = inputElementDescs;
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-    // BlendStateの設定: 加算ブレンド
-    D3D12_BLEND_DESC blendDesc = {};
-    blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;           // ソースカラーをそのまま使用
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;          // 背景カラーもそのまま使用
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;         // ソースと背景の色を加算
-
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;      // アルファの加算
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;     // アルファの加算
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;    // ソースと背景のアルファを加算
-
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-
-
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -552,7 +524,6 @@ void System::StructuredObjectPipeline(){
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.VS = {shaderManager_->GetVertexShader(StructuredObject)->GetBufferPointer(), shaderManager_->GetVertexShader(StructuredObject)->GetBufferSize()};
     psoDesc.PS = {shaderManager_->GetPixelShader(StructuredObject)->GetBufferPointer(), shaderManager_->GetPixelShader(StructuredObject)->GetBufferSize()};
-    psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
     psoDesc.NumRenderTargets = 1;
@@ -562,10 +533,22 @@ void System::StructuredObjectPipeline(){
     psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
     psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    // パイプラインステートオブジェクトの作成
-    if (!pipelineStateManager_->CreatePipelineState(StructuredObject, L"Particle.VS.hlsl", L"Particle.PS.hlsl", rootSignatureDesc, psoDesc)){
-        // エラーハンドリング
-        return;
+    //shaderPath, 
+    std::wstring vsPath = L"Particle.VS.hlsl";
+    std::wstring psPath = L"Particle.PS.hlsl";
+
+    for (int i = 0; i < static_cast< int >(BlendMode::kBlendModeCount); i++){
+        BlendMode mode = static_cast< BlendMode >(i);
+
+        // mode に対応する処理を行う
+        pipelineStateManager_->CreatePipelineState(
+            PipelineType::StructuredObject,
+            vsPath,
+            psPath,
+            rootSignatureDesc,
+            psoDesc,
+            mode
+        );
     }
 }
 
@@ -587,15 +570,7 @@ void System::LinePipeline(){
     inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
     // BlendStateの設定
-    D3D12_BLEND_DESC blendDesc {};
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-    blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+	BlendMode blendMode = BlendMode::NORMAL;
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
@@ -652,7 +627,6 @@ void System::LinePipeline(){
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.VS = {shaderManager_->GetVertexShader(Line)->GetBufferPointer(), shaderManager_->GetVertexShader(Line)->GetBufferSize()};
     psoDesc.PS = {shaderManager_->GetPixelShader(Line)->GetBufferPointer(), shaderManager_->GetPixelShader(Line)->GetBufferSize()};
-    psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
     psoDesc.NumRenderTargets = 1;
@@ -663,7 +637,7 @@ void System::LinePipeline(){
     psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     // パイプラインステートオブジェクトの作成
-    if (!pipelineStateManager_->CreatePipelineState(Line, L"Fragment.VS.hlsl", L"Fragment.PS.hlsl", rootSignatureDesc, psoDesc)){
+    if (!pipelineStateManager_->CreatePipelineState(Line, L"Fragment.VS.hlsl", L"Fragment.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)){
         return;
     }
 }
@@ -673,10 +647,7 @@ void System::CopyImagePipeline(){
     inputLayoutDesc.pInputElementDescs = nullptr;
     inputLayoutDesc.NumElements = 0;
 
-    D3D12_BLEND_DESC blendDesc = {};
-    blendDesc.RenderTarget[0].BlendEnable = FALSE;
-    blendDesc.RenderTarget[0].LogicOpEnable = FALSE;
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	BlendMode blendMode = BlendMode::NONE;
 
     D3D12_RASTERIZER_DESC rasterizeDesc = {};
     rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
@@ -749,7 +720,6 @@ void System::CopyImagePipeline(){
     psoDesc.InputLayout = inputLayoutDesc;
     psoDesc.VS = {shaderManager_->GetVertexShader(copyImage)->GetBufferPointer(), shaderManager_->GetVertexShader(copyImage)->GetBufferSize()};
     psoDesc.PS = {shaderManager_->GetPixelShader(copyImage)->GetBufferPointer(), shaderManager_->GetPixelShader(StructuredObject)->GetBufferSize()};
-    psoDesc.BlendState = blendDesc;
     psoDesc.RasterizerState = rasterizeDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
     psoDesc.NumRenderTargets = 1;
@@ -759,7 +729,7 @@ void System::CopyImagePipeline(){
     psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
     psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    if (!pipelineStateManager_->CreatePipelineState(copyImage, L"CopyImage.VS.hlsl", L"CopyImage.PS.hlsl", rootSignatureDesc, psoDesc)){
+    if (!pipelineStateManager_->CreatePipelineState(copyImage, L"CopyImage.VS.hlsl", L"CopyImage.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)){
         return;
     }
 }

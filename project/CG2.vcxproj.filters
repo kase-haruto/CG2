@@ -683,6 +683,9 @@
     <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
     <ClInclude Include="Game\3d\Enemy\EnemySpawner.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
+    <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
