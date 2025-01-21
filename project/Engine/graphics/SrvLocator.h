@@ -23,8 +23,14 @@ public:
     static void Finalize();
 
 private:
+    void CheckHeapAvailable(uint32_t requested);
+
+private:
     static ComPtr<ID3D12DescriptorHeap> srvHeap_;
     static uint32_t descriptorSizeSrv_;
     static uint32_t currentOffset_;
     static std::mutex mutex_; // スレッドセーフのためのミューテックス
+
+private:
+	static const uint32_t kMaxSrvNum = 2048; // SRVヒープの最大スロット数
 };
