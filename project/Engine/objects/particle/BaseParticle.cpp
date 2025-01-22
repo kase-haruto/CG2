@@ -3,7 +3,7 @@
 //* engine
 #include "Engine/core/System.h"
 #include "Engine/graphics/GraphicsGroup.h"
-#include "Engine/physics/DirectionalLight.h"
+#include "Engine/physics/light/DirectionalLight.h"
 #include "Engine/graphics/SrvLocator.h"
 #include "Engine/objects/ModelManager.h"
 #include "Engine/objects/TextureManager.h"

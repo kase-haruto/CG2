@@ -12,7 +12,7 @@
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 #include "engine/graphics/camera/CameraManager.h"
 
 #ifdef _DEBUG

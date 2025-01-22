@@ -14,8 +14,8 @@
 #include "Engine/objects/Sprite.h"  
 
 /* graphics */
-#include "engine/physics/DirectionalLight.h"
-#include "engine/physics/PointLight.h"
+#include "engine/physics/light/DirectionalLight.h"
+#include "engine/physics/light/PointLight.h"
 #include "engine/graphics/FogEffect.h"
 
 /* object */

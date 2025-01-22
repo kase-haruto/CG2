@@ -3,8 +3,8 @@
 #include "engine/graphics/GraphicsGroup.h"
 #include "engine/objects/TextureManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
-#include "engine/physics/DirectionalLight.h"
 #include "Engine/core/System.h"
+
 
 #include "lib/myFunc/MyFunc.h" // MakeAffineMatrix, etc
 #include <algorithm>
@@ -68,7 +68,7 @@ void SwordTrail::VertexBufferMap(){
 void SwordTrail::MaterialBufferMap(){
     materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
     materialData_->color = Vector4(1, 1, 1, 1);
-    materialData_->enableLighting = HalfLambert;
+    materialData_->enableLighting = 0;
     materialData_->uvTransform = Matrix4x4::MakeIdentity();
     materialData_->shininess = 20.0f;
     materialResource_->Unmap(0, nullptr);

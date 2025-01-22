@@ -3,7 +3,7 @@
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/graphics/GraphicsGroup.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 
 /* math */
 #include "lib/myfunc/MyFunc.h"

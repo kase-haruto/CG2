@@ -10,7 +10,7 @@
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/System.h"
 #include "Engine/core/Clock/ClockManager.h"

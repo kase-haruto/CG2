@@ -1,7 +1,7 @@
 ﻿#include "Triangle.h"
 #include "engine/objects/TextureManager.h"
 #include "externals/imgui/imgui.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
 		 
 /* math */
