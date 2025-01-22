@@ -705,6 +705,7 @@
     <None Include="Resources\shaders\Object2d.hlsli" />
     <None Include="Resources\shaders\Object3d.hlsli" />
     <None Include="Resources\shaders\Particle.hlsli" />
+    <None Include="Resources\shaders\Effect.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl">
@@ -741,5 +742,7 @@
     <FxCompile Include="Resources\shaders\Object3d.VS.hlsl" />
     <FxCompile Include="Resources\shaders\Particle.PS.hlsl" />
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Effect.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Effect.PS.hlsl" />
   </ItemGroup>
 </Project>

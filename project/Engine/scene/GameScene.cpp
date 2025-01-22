@@ -189,9 +189,9 @@ void GameScene::Draw(){
 
 	skydome_->Draw();
 
+	PrimitiveDrawer::GetInstance()->Render();
 	ParticleManager::GetInstance()->Draw();
 
-	PrimitiveDrawer::GetInstance()->Render();
 
 
 #pragma endregion
@@ -227,4 +227,5 @@ void GameScene::ModelPreDraw(){
 	pointLight_->Render();
 	directionalLight_->Render();
 	fog_->Update();
+	CameraManager::TransfarToGPU();
 }

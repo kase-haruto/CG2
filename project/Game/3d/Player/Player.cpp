@@ -69,6 +69,8 @@ void Player::Update(){
 	// 攻撃入力の検出
 	if (Input::TriggerGamepadButton(PAD_BUTTON::X)){
 		attackController_->HandleAttackInput();
+	} else if (Input::TriggerKey(DIK_SPACE)){
+		attackController_->HandleAttackInput();
 	}
 
 	//状態の切り替え
@@ -136,7 +138,7 @@ void Player::Draw(){
 	BoxCollider::Draw();
 	BaseGameObject::Draw();
 
-	// 攻撃管理クラスの描画
+	//攻撃管理クラスの描画
 	attackController_->Draw();
 
 }

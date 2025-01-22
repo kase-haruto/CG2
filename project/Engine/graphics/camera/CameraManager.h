@@ -32,6 +32,8 @@ public:
     static void Update();          // 更新
     static void Finalize();        // 解放
 
+	static void TransfarToGPU();   // GPUへの転送
+
 private:
     CameraManager();
     ~CameraManager() = default;

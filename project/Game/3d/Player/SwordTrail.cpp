@@ -36,11 +36,11 @@ void SwordTrail::Initialize(
 // Create Buffer Resources
 //----------------------------------------------------------------------
 void SwordTrail::CreateVertexBuffer(){
-    const UINT vbSize = static_cast< UINT >(sizeof(VertexData) * MAX_TRAIL_VERTICES);
+    const UINT vbSize = static_cast< UINT >(sizeof(EffectVertexData) * MAX_TRAIL_VERTICES);
     vertexResource_ = CreateBufferResource(device_.Get(), vbSize);
 
     vbView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vbView_.StrideInBytes = sizeof(VertexData);
+    vbView_.StrideInBytes = sizeof(EffectVertexData);
     vbView_.SizeInBytes = vbSize;
 }
 
@@ -99,20 +99,20 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
 
     // 先端
     {
-        VertexData v;
+        EffectVertexData v;
         v.position = {tip.x,  tip.y,  tip.z, 1.0f};    // w に alpha=1.0
         v.texcoord = {uCoord, 0.0f};
-        v.normal = {0.0f, 0.0f, -1.0f};             // 仮の法線
+		v.color = {1.0f, 1.0f, 1.0f,1.0f}; // white
 
         vertices_.push_back(v);
     }
 
     // 根元
     {
-        VertexData v;
+        EffectVertexData v;
         v.position = {base.x, base.y, base.z, 1.0f};
         v.texcoord = {uCoord, 1.0f};
-        v.normal = {0.0f, 0.0f, -1.0f};
+        v.color = {1.0f, 1.0f, 1.0f,1.0f}; // white
 
         vertices_.push_back(v);
     }
@@ -178,28 +178,31 @@ void SwordTrail::Draw(){
         return;
     }
 
+	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
+    // ==== TriangleStrip を指定 ====
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect);
+	ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect);
     // ルートシグネチャ & パイプライン設定
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList_->SetPipelineState(pipelineState_.Get());
+    commandList->SetGraphicsRootSignature(rootSig.Get());
+    commandList->SetPipelineState(pso.Get());
 
     // 頂点バッファ設定
-    commandList_->IASetVertexBuffers(0, 1, &vbView_);
-
-    // ==== TriangleStrip を指定 ====
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    commandList->IASetVertexBuffers(0, 1, &vbView_);
 
     // CBV (Material & Matrix)
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList_->SetGraphicsRootConstantBufferView(1, matrixResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, matrixResource_->GetGPUVirtualAddress());
 
     // SRV (テクスチャ)
-    commandList_->SetGraphicsRootDescriptorTable(3, textureHandle_);
+    commandList->SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     // Draw (頂点数だけストリップを進める)
-    commandList_->DrawInstanced(
+    commandList->DrawInstanced(
         static_cast< UINT >(vertices_.size()),  // VertexCountPerInstance
         1,                                    // InstanceCount
-        0,                                    // StartVertexLocation
+        0,                                     // StartVertexLocation
         0                                     // StartInstanceLocation
     );
 }

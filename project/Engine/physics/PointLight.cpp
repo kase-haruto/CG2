@@ -29,7 +29,6 @@ void PointLight::Update(){
 
 void PointLight::Render(){
 	assert(rootSignature_);
-	
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 

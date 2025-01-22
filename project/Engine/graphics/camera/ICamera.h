@@ -15,7 +15,7 @@ public:
 	virtual void Update() = 0;
 	virtual void UpdateMatrix() = 0;
 	virtual void ShowGui()override;
-
+	virtual void TransfarToGPU(){}  // GPUへ転送
 	virtual void StartShake([[maybe_unused]]float duration, [[maybe_unused]] float intensity){};
 
 public:

@@ -5,7 +5,6 @@
 #include <wrl.h>
 
 #include "engine/graphics/Material.h"
-#include "Engine/graphics/VertexData.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "lib/myMath/Vector3.h"
 #include "lib/myMath/Vector4.h"
@@ -14,6 +13,12 @@
 /// 剣の軌跡(トレイル)描画クラス (TriangleStrip版)
 /// </summary>
 class SwordTrail{
+    struct EffectVertexData{
+        Vector4 position;
+        Vector2 texcoord;
+        Vector4 color;
+    };
+
 public:
     SwordTrail() = default;
     ~SwordTrail() = default;
@@ -62,7 +67,7 @@ private:
     // 頂点バッファ
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     D3D12_VERTEX_BUFFER_VIEW               vbView_ {};
-    VertexData* mappedVertices_ = nullptr;
+    EffectVertexData* mappedVertices_ = nullptr;
 
     // Material & Matrix
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
@@ -71,7 +76,7 @@ private:
     TransformationMatrix* matrixData_ = nullptr;
 
     // 頂点リスト (TriangleStrip用に [tip0, base0, tip1, base1, tip2, base2, ...] の順)
-    std::vector<VertexData> vertices_;
+    std::vector<EffectVertexData> vertices_;
     static const size_t MAX_TRAIL_VERTICES = 400;
 
     // フェード

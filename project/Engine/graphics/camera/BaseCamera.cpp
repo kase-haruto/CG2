@@ -44,12 +44,6 @@ void BaseCamera::Update(){
 
 	UpdateMatrix();
 
-	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
-	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-
-	commandList->SetGraphicsRootSignature(rootSignature.Get());
-	commandList->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
-
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -62,6 +56,18 @@ void BaseCamera::UpdateMatrix(){
 	projectionMatrix_ = MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_);
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
 }
+
+void BaseCamera::TransfarToGPU(){
+	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
+	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Object3D);
+
+	commandList->SetGraphicsRootSignature(rootSignature.Get());
+
+	// ルートシグネチャを設定
+	commandList->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
+
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 //  projection行列の作成

@@ -33,6 +33,8 @@ public:
 
 	virtual void UpdateMatrix();  // 行列の更新
 
+	void TransfarToGPU()override;  // GPUへ転送
+
 	void StartShake(float duration, float intensity)override;  // カメラシェイク開始
 
 private:

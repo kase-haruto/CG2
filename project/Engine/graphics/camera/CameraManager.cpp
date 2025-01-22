@@ -42,3 +42,9 @@ void CameraManager::Update(){
 void CameraManager::Finalize(){
 	if (instance_){ delete instance_; }
 }
+
+void CameraManager::TransfarToGPU(){
+	for (auto& camera : instance_->cameras_){
+		camera.second->TransfarToGPU();
+	}
+}
