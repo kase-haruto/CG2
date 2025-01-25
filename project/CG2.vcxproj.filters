@@ -688,6 +688,7 @@
     <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
+    <ClInclude Include="Engine\physics\light\LightData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -1,7 +1,12 @@
 #pragma once
+
+#include "Engine/graphics/Pipeline/PipelineType.h"
+
 #include "Engine/objects/SceneObject.h"
 #include "lib/myMath/Matrix4x4.h"
 #include "Engine/objects/Transform.h" 
+
+#include <wrl.h>
 
 class ICamera
 	:public SceneObject{

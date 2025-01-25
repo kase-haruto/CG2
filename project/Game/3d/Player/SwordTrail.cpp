@@ -85,24 +85,42 @@ void SwordTrail::MatrixBufferMap(){
 // AddSegment (tip/base 2頂点を追加)
 //----------------------------------------------------------------------
 void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
-    // 容量オーバー時に古い頂点を先に削除
-    // (2頂点追加できないなら先頭から削除 etc...)
+    // （容量オーバー時の頂点削除はそのままでOK）
     if (vertices_.size() + 2 > MAX_TRAIL_VERTICES){
-        // とりあえず、先頭から2頂点削除 (1セグメントぶん)
         if (!vertices_.empty()){
             vertices_.erase(vertices_.begin(), vertices_.begin() + 2);
         }
     }
 
-    // 今回のセグメントの u 座標を計算
-    float uCoord = static_cast< float >(segmentCount_++) * uvStep_;
+    // ---- 先端の移動距離を使って U 座標を計算する例 ----
+    if (segmentCount_ == 0){
+        // 初回は lastTip_ をいきなり今回の先端位置に合わせる
+        // (そうしないと不要な大きい差分が出たりする)
+        lastTip_ = tip;
+        accumulatedLength_ = 0.0f;
+    } else{
+        // 前回の先端との距離を測って加算
+        float dist = (tip - lastTip_).Length();
+        accumulatedLength_ += dist;
+
+        // 次に備えて先端位置を覚える
+        lastTip_ = tip;
+    }
+
+    // 例: テクスチャを "1メートル = u1.0" 程度で流したいとき
+    // （実際はテクスチャの大きさや好みに合わせてスケールを調整）
+    float textureScale = 1.0f;
+    float uCoord = std::fmod(accumulatedLength_ * textureScale, 1.0f);
+
+    // 今回の追加分に合わせて segmentCount_ をインクリメント
+    ++segmentCount_;
 
     // 先端
     {
         EffectVertexData v;
-        v.position = {tip.x,  tip.y,  tip.z, 1.0f};    // w に alpha=1.0
+        v.position = {tip.x, tip.y, tip.z, 1.0f};
         v.texcoord = {uCoord, 0.0f};
-		v.color = {1.0f, 1.0f, 1.0f,1.0f}; // white
+        v.color = {1.0f, 1.0f, 1.0f, 1.0f};
 
         vertices_.push_back(v);
     }
@@ -112,7 +130,7 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
         EffectVertexData v;
         v.position = {base.x, base.y, base.z, 1.0f};
         v.texcoord = {uCoord, 1.0f};
-        v.color = {1.0f, 1.0f, 1.0f,1.0f}; // white
+        v.color = {1.0f, 1.0f, 1.0f, 1.0f};
 
         vertices_.push_back(v);
     }
@@ -129,8 +147,8 @@ void SwordTrail::Update([[maybe_unused]]float deltaTime){
 
 
     for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 は後で */){
-        float alpha0 = vertices_[i].position.w;
-        float alpha1 = vertices_[i + 1].position.w;
+        float alpha0 = vertices_[i].color.w;
+        float alpha1 = vertices_[i + 1].color.w;
 
         // 2頂点とも minAlpha_ 以下なら削除
         if (alpha0 < minAlpha_ && alpha1 < minAlpha_){
@@ -182,8 +200,8 @@ void SwordTrail::Draw(){
     // ==== TriangleStrip を指定 ====
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect);
-	ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect);
+    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect,BlendMode::ADD);
+	ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect, BlendMode::ADD);
     // ルートシグネチャ & パイプライン設定
     commandList->SetGraphicsRootSignature(rootSig.Get());
     commandList->SetPipelineState(pso.Get());
@@ -199,7 +217,7 @@ void SwordTrail::Draw(){
     commandList->SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     // Draw (頂点数だけストリップを進める)
-    commandList->DrawInstanced(
+     commandList->DrawInstanced(
         static_cast< UINT >(vertices_.size()),  // VertexCountPerInstance
         1,                                    // InstanceCount
         0,                                     // StartVertexLocation

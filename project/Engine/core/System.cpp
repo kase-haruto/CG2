@@ -1,4 +1,4 @@
-﻿#include "../core/System.h"
+#include "../core/System.h"
 #include "../objects/TextureManager.h"
 #include "../graphics/GraphicsGroup.h"
 #include "../graphics/SrvLocator.h"
@@ -11,6 +11,10 @@
 #include "Engine/core/EngineUI.h"
 #include "Engine/objects/particle/ParticleManager.h"
 #include "Engine/graphics/blendMode/BlendMode.h"
+
+// engine
+#include "Engine/physics/light/LightManager.h"
+
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
 
@@ -44,6 +48,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	CreatePipelines();
 
     GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
+
+	// lightManagerの初期化
+	LightManager::GetInstance()->Initialize(dxCore_.get());
 
     imguiManager_ = std::make_unique<ImGuiManager>();
     imguiManager_->Initialize(winApp_.get(), dxCore_.get());
@@ -115,6 +122,8 @@ void System::Finalize(){
     ModelManager::GetInstance()->Finalize();
     PrimitiveDrawer::GetInstance()->Finalize();
     ParticleManager::GetInstance()->Finalize();
+	//lightManagerの終了処理
+    LightManager::GetInstance()->Finalize();
     //カメラの開放
     CameraManager::Finalize();
     //pipelineの終了処理

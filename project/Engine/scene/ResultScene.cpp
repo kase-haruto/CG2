@@ -14,13 +14,6 @@ ResultScene::ResultScene(DxCore* dxCore) : IScene(dxCore){
 
 void ResultScene::Initialize(){
 
-
-	directionalLight_ = std::make_unique<DirectionalLight>();
-	directionalLight_->Initialize(pDxCore_);
-
-	pointLight_ = std::make_unique<PointLight>();
-	pointLight_->Initialize(pDxCore_);
-
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
 	//スプライト
@@ -95,7 +88,5 @@ void ResultScene::Draw(){
 void ResultScene::CleanUp(){}
 
 void ResultScene::ModelPreDraw(){
-	pointLight_->Render();
-	directionalLight_->Render();
 	fog_->Update();
 }

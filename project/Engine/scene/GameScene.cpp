@@ -27,14 +27,9 @@ void GameScene::Initialize(){
 	///=========================
 	/// グラフィック関連
 	///=========================
-	directionalLight_ = std::make_unique<DirectionalLight>();
-	directionalLight_->Initialize(pDxCore_);
-
-	pointLight_ = std::make_unique<PointLight>();
-	pointLight_->Initialize(pDxCore_);
 
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
-
+	
 	////地面
 	/*modelGround_ = std::make_unique<Model>("ground");
 	modelGround_->SetViewProjection(viewProjection_.get());
@@ -174,20 +169,20 @@ void GameScene::Draw(){
 
 	player_->Draw();
 
-	enemyManager_->Draw();
-	for (auto& spawner : enemySpawners_){
-		spawner->Draw();
-	}
+	//enemyManager_->Draw();
+	//for (auto& spawner : enemySpawners_){
+	//	spawner->Draw();
+	//}
 
-	//モデルの描画
-	modelBuilder_->Draw();
+	////モデルの描画
+	//modelBuilder_->Draw();
 
-	playerAttackEditor_->Draw();
+	//playerAttackEditor_->Draw();
 
-	//地面の描画
-	modelField_->Draw();
+	////地面の描画
+	//modelField_->Draw();
 
-	skydome_->Draw();
+	//skydome_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 	ParticleManager::GetInstance()->Draw();
@@ -224,8 +219,5 @@ void GameScene::CleanUp(){
 }
 
 void GameScene::ModelPreDraw(){
-	pointLight_->Render();
-	directionalLight_->Render();
-	fog_->Update();
-	CameraManager::TransfarToGPU();
+	//fog_->Update();
 }

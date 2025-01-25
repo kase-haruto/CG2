@@ -1,8 +1,11 @@
-﻿#pragma once
+#pragma once
 
 /* math */
 #include "lib/myMath/Vector3.h"
 #include "lib/myMath/Vector4.h"
+
+/* engine */
+#include "Engine/graphics/Pipeline/PipelineType.h"
 
 /* lib */
 #include <wrl.h>
@@ -34,10 +37,6 @@ public:
 	/// </summary>
 	void Update();
 	/// <summary>
-	/// 描画
-	/// </summary>
-	void Render();
-	/// <summary>
 	/// バッファの生成
 	/// </summary>
 	void CreateBuffer();
@@ -50,12 +49,12 @@ public:
 
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
+	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
+
 	void SetPosition(const Vector3& position);
 
 private:
 	const DxCore* pDxCore_ = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	PointLightData* data_;

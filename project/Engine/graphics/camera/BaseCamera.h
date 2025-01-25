@@ -33,7 +33,7 @@ public:
 
 	virtual void UpdateMatrix();  // 行列の更新
 
-	void TransfarToGPU()override;  // GPUへ転送
+	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType);
 
 	void StartShake(float duration, float intensity)override;  // カメラシェイク開始
 
@@ -43,6 +43,7 @@ private:
 	//==================================================================*//
 	void CreateBuffer();
 	void Map();
+
 
 protected:
 	//==================================================================*//

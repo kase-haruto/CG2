@@ -247,6 +247,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
+    <ClInclude Include="Engine\physics\light\LightData.h" />
     <ClInclude Include="Game\3d\Enemy\EnemySpawner.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />

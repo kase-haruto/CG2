@@ -1,4 +1,4 @@
-﻿#include "FogEffect.h"
+#include "FogEffect.h"
 #include "../core/DirectX/DxCore.h"
 #include "../graphics/GraphicsGroup.h"
 

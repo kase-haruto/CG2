@@ -89,4 +89,7 @@ private:
     // テクスチャ座標の進め方
     int   segmentCount_ = 0;
     float uvStep_ = 1.0f;
+
+    float accumulatedLength_ = 0.0f; // 累積距離
+    Vector3 lastTip_         = Vector3(0,0,0); // 直前フレームの先端座標
 };
