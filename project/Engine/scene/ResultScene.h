@@ -2,8 +2,6 @@
 #include "IScene.h"
 
 #include "Engine/graphics/FogEffect.h"
-#include "Engine/physics/DirectionalLight.h"
-#include "Engine/physics/PointLight.h"
 #include "Engine/objects/Sprite.h"
 
 #include <memory>
@@ -28,8 +26,6 @@ private:
     //===================================================================*/
 
     //* グラフィック関連 *//
-    std::unique_ptr<DirectionalLight>directionalLight_ = nullptr;
-    std::unique_ptr<PointLight> pointLight_ = nullptr;
     std::unique_ptr<FogEffect>fog_ = nullptr;
 
 	//* 2Dオブジェクト *//

@@ -1,6 +1,7 @@
 #include "ICamera.h"
 #include <externals/imgui/imgui.h>
 #include "engine/objects/SceneObjectManager.h"
+#include "Engine/graphics/GraphicsGroup.h"
 
 #include "lib/myFunc/MyFunc.h"
 
@@ -16,6 +17,9 @@ void ICamera::ShowGui(){
 	ImGui::Spacing();
 
 }
+
+
+
 
 const Matrix4x4& ICamera::GetWorldMat() const{
 	return worldMatrix_;

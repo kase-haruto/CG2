@@ -1,4 +1,4 @@
-﻿#include "PointLight.h"
+#include "PointLight.h"
 
 /* engine */
 #include "lib/myFunc/MyFunc.h"
@@ -16,26 +16,12 @@ PointLight::~PointLight(){}
 
 void PointLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
-	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	CreateBuffer();
 	Map();
-
-	
 }
 
 void PointLight::Update(){
 
-}
-
-void PointLight::Render(){
-	assert(rootSignature_);
-	
-
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
-
-	// ルートシグネチャをコマンドリストに設定する
-	commandList->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList->SetGraphicsRootConstantBufferView(6, resource_->GetGPUVirtualAddress());
 }
 
 void PointLight::CreateBuffer(){
@@ -66,8 +52,15 @@ void PointLight::ShowImGuiInterface(){
 #endif // _DEBUG
 }
 
-void PointLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){
-	rootSignature_ = rootSignature;
+void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type){
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(type);
+	uint32_t index = 0;
+	if (type == PipelineType::Object3D){
+		index = 6;
+	}
+	// ルートシグネチャをコマンドリストに設定する
+	commandList->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList->SetGraphicsRootConstantBufferView(index, resource_->GetGPUVirtualAddress());
 }
 
 void PointLight::SetPosition(const Vector3& position){

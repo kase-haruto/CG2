@@ -176,8 +176,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Texture.cpp" />
     <ClCompile Include="Engine\objects\TextureManager.cpp" />
     <ClCompile Include="Engine\physics\AABB.cpp" />
-    <ClCompile Include="Engine\physics\DirectionalLight.cpp" />
-    <ClCompile Include="Engine\physics\PointLight.cpp" />
+    <ClCompile Include="Engine\physics\light\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\physics\light\PointLight.cpp" />
     <ClCompile Include="Engine\physics\Sphere.cpp" />
     <ClCompile Include="Engine\physics\Triangle.cpp" />
     <ClCompile Include="Engine\scene\GameScene.cpp" />
@@ -209,6 +209,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
+    <ClCompile Include="Engine\physics\light\LightManager.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -246,6 +247,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
+    <ClInclude Include="Engine\physics\light\LightData.h" />
     <ClInclude Include="Game\3d\Enemy\EnemySpawner.h" />
     <ClInclude Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />
@@ -315,8 +317,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Transform.h" />
     <ClInclude Include="Engine\objects\TransformationMatrix.h" />
     <ClInclude Include="Engine\physics\AABB.h" />
-    <ClInclude Include="Engine\physics\DirectionalLight.h" />
-    <ClInclude Include="Engine\physics\PointLight.h" />
+    <ClInclude Include="Engine\physics\light\DirectionalLight.h" />
+    <ClInclude Include="Engine\physics\light\PointLight.h" />
     <ClInclude Include="Engine\physics\Sphere.h" />
     <ClInclude Include="Engine\physics\Triangle.h" />
     <ClInclude Include="Engine\scene\GameScene.h" />
@@ -379,6 +381,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\3d\Player\PlayerParticle\TrailParticle.h" />
     <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Jump.h" />
     <ClInclude Include="Engine\scene\ResultScene.h" />
+    <ClInclude Include="Engine\physics\light\LightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -402,6 +405,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Resources\shaders\CopyImage.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Resources\shaders\Effect.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
@@ -460,6 +467,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Effect.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Effect.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

@@ -3,7 +3,7 @@
 #include "Engine/graphics/camera/Camera3d.h"
 #include "Engine/graphics/camera/FollowCamera.h"
 #include "Engine/graphics/camera/DebugCamera.h"
-#include "Engine/graphics/camera/ICamera.h"
+#include "Engine/graphics/camera/BaseCamera.h"
 
 //* c++ *//
 #include <memory>
@@ -32,6 +32,12 @@ public:
     static void Update();          // 更新
     static void Finalize();        // 解放
 
+	static void TransfarToGPU();   // GPUへの転送
+
+	static void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
+		instance_->cameras_[instance_->type_]->SetCommand(command, pipelineType);
+	}
+
 private:
     CameraManager();
     ~CameraManager() = default;
@@ -49,7 +55,7 @@ private:
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 
     // すべてのカメラ
-    std::unordered_map<CameraType, ICamera*> cameras_;
+    std::unordered_map<CameraType, BaseCamera*> cameras_;
 
     //===================================================================*/
     //					getter/setter

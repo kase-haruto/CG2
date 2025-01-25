@@ -228,10 +228,10 @@
     <ClCompile Include="externals\GlobalVariable\GlobalVariables.cpp">
       <Filter>Engine\project\lib</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\physics\DirectionalLight.cpp">
+    <ClCompile Include="Engine\physics\light\DirectionalLight.cpp">
       <Filter>Engine\project\3d\light\directionalLight</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\physics\PointLight.cpp">
+    <ClCompile Include="Engine\physics\light\PointLight.cpp">
       <Filter>Engine\project\3d\light\pointLight</Filter>
     </ClCompile>
     <ClCompile Include="Engine\scene\GameScene.cpp">
@@ -421,6 +421,7 @@
     <ClCompile Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.cpp" />
     <ClCompile Include="Game\3d\Enemy\EnemySpawner.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
+    <ClCompile Include="Engine\physics\light\LightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -435,10 +436,10 @@
     <ClInclude Include="externals\imgui\imgui_internal.h">
       <Filter>Engine\externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\physics\DirectionalLight.h">
+    <ClInclude Include="Engine\physics\light\DirectionalLight.h">
       <Filter>Engine\project\3d\light\directionalLight</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\physics\PointLight.h">
+    <ClInclude Include="Engine\physics\light\PointLight.h">
       <Filter>Engine\project\3d\light\pointLight</Filter>
     </ClInclude>
     <ClInclude Include="Engine\scene\GameScene.h">
@@ -686,6 +687,8 @@
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
+    <ClInclude Include="Engine\physics\light\LightManager.h" />
+    <ClInclude Include="Engine\physics\light\LightData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
@@ -705,6 +708,7 @@
     <None Include="Resources\shaders\Object2d.hlsli" />
     <None Include="Resources\shaders\Object3d.hlsli" />
     <None Include="Resources\shaders\Particle.hlsli" />
+    <None Include="Resources\shaders\Effect.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl">
@@ -741,5 +745,7 @@
     <FxCompile Include="Resources\shaders\Object3d.VS.hlsl" />
     <FxCompile Include="Resources\shaders\Particle.PS.hlsl" />
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Effect.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Effect.PS.hlsl" />
   </ItemGroup>
 </Project>

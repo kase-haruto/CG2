@@ -44,12 +44,6 @@ void BaseCamera::Update(){
 
 	UpdateMatrix();
 
-	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
-	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-
-	commandList->SetGraphicsRootSignature(rootSignature.Get());
-	commandList->SetGraphicsRootConstantBufferView(5, constBuffer_->GetGPUVirtualAddress());
-
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -138,3 +132,17 @@ void BaseCamera::Map(){
 	constBuffer_->Unmap(0, nullptr);  // データ設定後にアンマップ
 }
 #pragma endregion
+
+
+void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
+	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
+	command->SetGraphicsRootSignature(rootSignature.Get());
+
+	uint32_t index = 0;
+	if (pipelineType == PipelineType::Object3D){
+		index = 5;
+	}
+
+	command->SetGraphicsRootConstantBufferView(index, constBuffer_->GetGPUVirtualAddress());
+
+}

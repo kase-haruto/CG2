@@ -1,9 +1,10 @@
-﻿#include "engine/physics/DirectionalLight.h"
+#include "DirectionalLight.h"
 
 /* engine */
 #include "lib/myFunc/MyFunc.h"
 #include "engine/core/DirectX/DxCore.h"
 #include "engine/graphics/GraphicsGroup.h"
+
 
 /* externals */
 #ifdef _DEBUG
@@ -17,7 +18,6 @@ DirectionalLight::~DirectionalLight(){}
 
 void DirectionalLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
-	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 	CreateBuffer();
 	Map();
 }
@@ -25,17 +25,6 @@ void DirectionalLight::Initialize(const DxCore* dxCore){
 
 void DirectionalLight::Update(){
 	
-}
-
-void DirectionalLight::Render(){
-	assert(rootSignature_);
-	
-
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
-
-	// ルートシグネチャをコマンドリストに設定する
-	commandList->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList->SetGraphicsRootConstantBufferView(4, resource_->GetGPUVirtualAddress());
 }
 
 
@@ -54,6 +43,19 @@ void DirectionalLight::Map(){
 	
 }
 
+void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,PipelineType type){
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(type);
+	
+	uint32_t index = 0;
+	if (type == PipelineType::Object3D){
+		index = 4;
+	}
+
+	// ルートシグネチャをコマンドリストに設定する
+	commandList->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList->SetGraphicsRootConstantBufferView(index, resource_->GetGPUVirtualAddress());
+}
+
 void DirectionalLight::ShowImGuiInterFace(){
 #ifdef _DEBUG
 	ImGui::Begin("directionalLight");
@@ -65,6 +67,3 @@ void DirectionalLight::ShowImGuiInterFace(){
 
 }
 
-void DirectionalLight::SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature){
-	rootSignature_ = rootSignature;
-}

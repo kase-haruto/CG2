@@ -56,8 +56,8 @@ void WeakDiagonalSlash::Initialize(){
 	swordTrail_.Initialize(
 		graphics->GetDevice(),
 		graphics->GetCommandList(),
-		graphics->GetRootSignature(Object3D),      // 例: Object3D 用ルートシグネチャ
-		graphics->GetPipelineState(Object3D)       // 例: Object3D 用PSO
+		graphics->GetRootSignature(Effect),      // 例: Object3D 用ルートシグネチャ
+		graphics->GetPipelineState(Effect)       // 例: Object3D 用PSO
 	);
 
 	// フェードアウトの速度や最小アルファなどを調整 (必要に応じて)

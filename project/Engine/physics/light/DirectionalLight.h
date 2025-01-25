@@ -1,8 +1,12 @@
-﻿#pragma once
+#pragma once
 
 /* math */
 #include"lib/myMath/Vector4.h"
 #include"lib/myMath/Vector3.h"
+
+/* lib */
+#include "Engine/graphics/Pipeline/PipelineType.h"
+#include "LightData.h"
 
 /* c++ */
 #include<wrl.h>
@@ -14,13 +18,7 @@ struct DirectionalLightData{
 	float intensity;	//輝度
 };
 
-// ライティングモードの定義
-enum LightingMode{
-	HalfLambert = 0,
-	Lambert,
-	specularReflection,
-	NoLighting,
-};
+
 
 class DxCore;
 
@@ -39,10 +37,6 @@ public:
 	/// </summary>
 	void Update();
 	/// <summary>
-	/// 描画
-	/// </summary>
-	void Render();
-	/// <summary>
 	/// バッファの生成
 	/// </summary>
 	void CreateBuffer();
@@ -51,12 +45,11 @@ public:
 	/// </summary>
 	void Map();
 
+	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
+
 	void ShowImGuiInterFace();
 
-	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
-
 private:
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
 	DirectionalLightData* data_;

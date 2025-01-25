@@ -1,4 +1,4 @@
-﻿#include "Model.h"
+#include "Model.h"
 
 #include "engine/objects/ModelData.h"
 #include "engine/graphics/Material.h"
@@ -10,10 +10,11 @@
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
-#include "engine/physics/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/core/System.h"
 #include "Engine/core/Clock/ClockManager.h"
+
+#include "Engine/physics/light/LightManager.h"
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
@@ -177,6 +178,13 @@ void Model::Draw(){
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
     commandList_->IASetIndexBuffer(&indexBufferView_);
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // light
+	LightManager::GetInstance()->SetCommand(commandList_,LightType::Directional, PipelineType::Object3D);
+	LightManager::GetInstance()->SetCommand(commandList_,LightType::Point, PipelineType::Object3D);
+
+    // camera
+	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
     // マテリアル & 行列バッファをセット
     commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());

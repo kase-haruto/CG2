@@ -53,6 +53,7 @@ public:
 	void StructuredObjectPipeline();
 	void LinePipeline();
 	void CopyImagePipeline();
+	void EffectPipeline();
 
 
 	int ProcessMessage();
