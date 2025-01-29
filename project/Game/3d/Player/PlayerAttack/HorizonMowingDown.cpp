@@ -38,7 +38,6 @@ void HorizonMowingDown::Initialize(){
 	//===========================================
    // ここで SwordTrail を初期化
    //===========================================
-	swordTrail_.Initialize();
 
 	Audio::Play("attack.mp3", false);
 
@@ -69,22 +68,6 @@ void HorizonMowingDown::Update(){
 
 	Vector3 tip = weapon_->ComputeTipWorldPosition();
 	Vector3 base = weapon_->GetBasePos();
-
-	if (!hasPrevFrame_){
-		// 最初のフレームは軌跡を追加しない
-		prevTip_ = tip;
-		prevBase_ = base;
-		hasPrevFrame_ = true;
-	} else{
-		// 2フレーム目以降は前フレームとの連続で軌跡を追加
-		swordTrail_.AddSegment(tip, base);
-
-		// 次フレーム用に記憶
-		prevTip_ = tip;
-		prevBase_ = base;
-	}
-
-	swordTrail_.Update(ClockManager::GetInstance()->GetDeltaTime());
 
 	// 入力に基づいて移動方向を計算
 	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
@@ -119,7 +102,6 @@ void HorizonMowingDown::Update(){
 
 void HorizonMowingDown::Draw(){
 	BoxCollider::Draw();
-	swordTrail_.Draw();
 }
 
 void HorizonMowingDown::Cleanup(){

@@ -66,6 +66,12 @@ void PlayerAttackController::Update(){
 		activeAttacks_.end()
 	);
 
+	// すべての攻撃が終了したら、トレイルをクリアする
+	if (activeAttacks_.empty()){
+		pPlayer_->GetWeapon()->ClearTrail();
+		pPlayer_->GetWeapon()->SetComboActive(false);
+	}
+
 	// コンボのタイムアウトチェック
 	auto now = std::chrono::steady_clock::now();
 	if (currentComboStep_ > 0){
@@ -74,6 +80,7 @@ void PlayerAttackController::Update(){
 			// タイムアウトした場合、コンボをリセット
 			currentComboStep_ = 0;
 			pendingAttack_ = std::nullopt;
+			pPlayer_->GetWeapon()->ClearTrail();  // 🔥 コンボの時間切れでもトレイルをクリア
 		}
 	}
 
@@ -86,16 +93,19 @@ void PlayerAttackController::Update(){
 	}
 }
 
+
 void PlayerAttackController::ExecuteAttack(const std::string& attackName){
 	auto it = attackTemplates_.find(attackName);
 	if (it != attackTemplates_.end()){
-		// テンプレートから新しい攻撃インスタンスを生成
 		std::unique_ptr<IPlayerAttack> newAttack = it->second->Clone();
 		newAttack->SetCenter(pPlayer_->GetCenterPos());
 		newAttack->SetPlayer(const_cast< Player* >(pPlayer_));
 		newAttack->SetWeapon(pPlayer_->GetWeapon());
 		newAttack->Execution();
 		activeAttacks_.emplace_back(std::move(newAttack));
+
+		// コンボが開始されたら Weapon に通知
+		pPlayer_->GetWeapon()->SetComboActive(true);
 	}
 }
 

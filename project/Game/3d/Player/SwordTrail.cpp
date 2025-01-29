@@ -11,20 +11,23 @@
 #undef max
 
 //----------------------------------------------------------------------
-// Initialize
+ // Initialize
 //----------------------------------------------------------------------
 void SwordTrail::Initialize(){
-
-    // テクスチャを読み込む (例: white1x1.png)
+    // テクスチャを読み込む (例: trail.png)
     textureHandle_ = TextureManager::GetInstance()->LoadTexture("trail.png");
 
-    fadeSpeed_ = 3.0f;
-	minAlpha_ = 0.05f;
+    // フェード設定
+    fadeSpeed_ = 4.0f;
+    minAlpha_ = 0.05f;
 
-	CreateBuffer();
+    CreateBuffer();
     Map();
 }
 
+//----------------------------------------------------------------------
+ // Create Buffer Resources
+//----------------------------------------------------------------------
 //----------------------------------------------------------------------
 // Create Buffer Resources
 //----------------------------------------------------------------------
@@ -46,14 +49,18 @@ void SwordTrail::CreateMatrixBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device)
 }
 
 void SwordTrail::CreateBuffer(){
-	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-	CreateVertexBuffer(device);
-	CreateMaterialBuffer(device);
-	CreateMatrixBuffer(device);
+    Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
+    CreateVertexBuffer(device);
+    CreateMaterialBuffer(device);
+    CreateMatrixBuffer(device);
+
+    if (!vertexResource_){
+        assert(false);
+    }
 }
 
 //----------------------------------------------------------------------
-// Map
+ // Map
 //----------------------------------------------------------------------
 void SwordTrail::Map(){
     VertexBufferMap();
@@ -82,20 +89,19 @@ void SwordTrail::MatrixBufferMap(){
 }
 
 //----------------------------------------------------------------------
-// AddSegment (tip/base 2頂点を追加)
+ // AddSegment (tip/base 2頂点を追加)
 //----------------------------------------------------------------------
 void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
-    // （容量オーバー時の頂点削除はそのままでOK）
+    // 容量オーバー時の頂点削除
     if (vertices_.size() + 2 > MAX_TRAIL_VERTICES){
         if (!vertices_.empty()){
             vertices_.erase(vertices_.begin(), vertices_.begin() + 2);
         }
     }
 
-    // ---- 先端の移動距離を使って U 座標を計算する例 ----
+    // 先端の移動距離を使って U 座標を計算
     if (segmentCount_ == 0){
-        // 初回は lastTip_ をいきなり今回の先端位置に合わせる
-        // (そうしないと不要な大きい差分が出たりする)
+        // 初回は lastTip_ を今回の先端位置に合わせる
         lastTip_ = tip;
         accumulatedLength_ = 0.0f;
     } else{
@@ -107,12 +113,11 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
         lastTip_ = tip;
     }
 
-    // 例: テクスチャを "1メートル = u1.0" 程度で流したいとき
-    // （実際はテクスチャの大きさや好みに合わせてスケールを調整）
+    // テクスチャの U 座標を計算
     float textureScale = 1.0f;
     float uCoord = std::fmod(accumulatedLength_ * textureScale, 1.0f);
 
-    // 今回の追加分に合わせて segmentCount_ をインクリメント
+    // セグメントカウントをインクリメント
     ++segmentCount_;
 
     // 先端
@@ -137,7 +142,7 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
 }
 
 //----------------------------------------------------------------------
-// Update (アルファフェード → 2頂点単位の削除)
+ // Update (アルファフェード → 2頂点単位の削除)
 //----------------------------------------------------------------------
 void SwordTrail::Update(float deltaTime){
     // 全ての頂点のアルファ値を減少させる
@@ -149,9 +154,7 @@ void SwordTrail::Update(float deltaTime){
     }
 
     // 先頭から2頂点ペア単位でチェックし、alpha < minAlpha_ なら削除
-    // ※ 三角形ストリップの連続性を保つため 2頂点ずつ削除する
-    // 例: (tip0, base0), (tip1, base1), ...
-    for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 は後で */){
+    for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 */){
         float alpha0 = vertices_[i].color.w;
         float alpha1 = vertices_[i + 1].color.w;
 
@@ -168,9 +171,8 @@ void SwordTrail::Update(float deltaTime){
     UpdateVertexBuffer();
 }
 
-
 //----------------------------------------------------------------------
-// UpdateMatrix
+ // UpdateMatrix
 //----------------------------------------------------------------------
 void SwordTrail::UpdateMatrix(){
     Matrix4x4 world = Matrix4x4::MakeIdentity();
@@ -184,7 +186,7 @@ void SwordTrail::UpdateMatrix(){
 }
 
 //----------------------------------------------------------------------
-// UpdateVertexBuffer (CPU→GPU)
+ // UpdateVertexBuffer (CPU→GPU)
 //----------------------------------------------------------------------
 void SwordTrail::UpdateVertexBuffer(){
     // vertices_ を mappedVertices_ にコピー
@@ -194,7 +196,7 @@ void SwordTrail::UpdateVertexBuffer(){
 }
 
 //----------------------------------------------------------------------
-// Draw
+ // Draw
 //----------------------------------------------------------------------
 void SwordTrail::Draw(){
     // 4頂点未満の場合はストリップで三角形を形成できない
@@ -202,15 +204,16 @@ void SwordTrail::Draw(){
         return;
     }
 
-	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
-    // ==== TriangleStrip を指定 ====
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+  
 
-    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect,BlendMode::ADD);
-	ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect, BlendMode::ADD);
+    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect, BlendMode::ALPHA);
+    ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect, BlendMode::ALPHA);
+    ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
     // ルートシグネチャ & パイプライン設定
     commandList->SetGraphicsRootSignature(rootSig.Get());
     commandList->SetPipelineState(pso.Get());
+    // ==== TriangleStrip を指定 ====
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     // 頂点バッファ設定
     commandList->IASetVertexBuffers(0, 1, &vbView_);
@@ -223,16 +226,16 @@ void SwordTrail::Draw(){
     commandList->SetGraphicsRootDescriptorTable(2, textureHandle_);
 
     // Draw (頂点数だけストリップを進める)
-     commandList->DrawInstanced(
+    commandList->DrawInstanced(
         static_cast< UINT >(vertices_.size()),  // VertexCountPerInstance
-        1,                                    // InstanceCount
-        0,                                     // StartVertexLocation
-        0                                     // StartInstanceLocation
+        1,                                   // InstanceCount
+        0,                                   // StartVertexLocation
+        0                                    // StartInstanceLocation
     );
 }
 
 //----------------------------------------------------------------------
-// Clear
+ // Clear
 //----------------------------------------------------------------------
 void SwordTrail::Clear(){
     vertices_.clear();

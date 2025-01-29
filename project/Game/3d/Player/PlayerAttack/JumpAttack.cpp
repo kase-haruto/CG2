@@ -40,13 +40,7 @@ void JumpAttack::Initialize(){
 	damage_ = 235; // ダメージ値を設定
 
 
-	//===========================================
-   // ここで SwordTrail を初期化
-   //===========================================
-	swordTrail_.Initialize();
-
 	Audio::Play("attack.mp3", false);
-
 
 	Vector3 currentVelocity = pPlayer_->GetVelocity();
 	Vector3 jumpVelocity = {currentVelocity.x, pPlayer_->GetJumpPower()*0.5f, currentVelocity.z};
@@ -88,25 +82,6 @@ void JumpAttack::Update(){
 	weapon_->SetRotate(currentRotate);
 
 
-	Vector3 tip = weapon_->ComputeTipWorldPosition();
-	Vector3 base = weapon_->GetBasePos();
-
-	if (!hasPrevFrame_){
-		// 最初のフレームは軌跡を追加しない
-		prevTip_ = tip;
-		prevBase_ = base;
-		hasPrevFrame_ = true;
-	} else{
-		// 2フレーム目以降は前フレームとの連続で軌跡を追加
-		swordTrail_.AddSegment(tip, base);
-
-		// 次フレーム用に記憶
-		prevTip_ = tip;
-		prevBase_ = base;
-	}
-
-	swordTrail_.Update(ClockManager::GetInstance()->GetDeltaTime());
-
 	// 攻撃形状を更新
 	//攻撃範囲をプレイヤーの周りに設定
 	shape_.center = pPlayer_->GetCenterPos();
@@ -117,8 +92,6 @@ void JumpAttack::Draw(){
 	// 攻撃形状(コリジョン可視化)の描画
 	BoxCollider::Draw();
 
-	// トレイルの描画
-	swordTrail_.Draw();
 }
 
 void JumpAttack::Cleanup(){

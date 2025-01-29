@@ -14,6 +14,7 @@
 FollowCamera::FollowCamera()
 :BaseCamera(){
 	BaseCamera::SetName("FollowCamera");
+	transform_.rotate.x = 0.4f;
 }
 
 void FollowCamera::Update(){

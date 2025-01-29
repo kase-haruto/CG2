@@ -52,7 +52,7 @@ private:
 	const EulerTransform* target_ = nullptr;	//* 追従対象
 	Vector3 viewpoint_;							//* 注視点
 	Vector3 interTarget_;						//* 追従対象の残像座標
-	Vector3 offset = {0.0f,2.5f,-10.0f};		//* 追従対象からのオフセット
+	Vector3 offset = {0.0f,3.0f,-10.0f};		//* 追従対象からのオフセット
 	float rotateSpeed = 2.0f;					//* 回転の速度
 
 	Vector2 destinationAngle_ {0.0f,0.0f};		//* 目標角度

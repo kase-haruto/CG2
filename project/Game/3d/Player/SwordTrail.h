@@ -1,3 +1,4 @@
+// SwordTrail.h
 #pragma once
 
 #include <vector>
@@ -24,21 +25,21 @@ public:
     ~SwordTrail() = default;
 
     void Initialize();
-
     /// <summary>剣の先端と根元を追加 (1フレームあたり2頂点)</summary>
     void AddSegment(const Vector3& tip, const Vector3& base);
-
     /// <summary>フレーム更新 (アルファフェード → 削除)</summary>
     void Update(float deltaTime);
-
     /// <summary>描画</summary>
     void Draw();
-
     /// <summary>全消去</summary>
     void Clear();
 
     void SetFadeSpeed(float speed){ fadeSpeed_ = speed; }
     void SetMinAlpha(float alpha){ minAlpha_ = alpha; }
+
+    // フェード速度と最小アルファのゲッターを追加
+    float GetFadeSpeed() const{ return fadeSpeed_; }
+    float GetMinAlpha() const{ return minAlpha_; }
 
 private:
     void CreateBuffer();
@@ -57,7 +58,7 @@ private:
 private:
     // 頂点バッファ
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
-    D3D12_VERTEX_BUFFER_VIEW               vbView_ {};
+    D3D12_VERTEX_BUFFER_VIEW vbView_ {};
     EffectVertexData* mappedVertices_ = nullptr;
 
     // Material & Matrix
@@ -78,9 +79,9 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE textureHandle_ {};
 
     // テクスチャ座標の進め方
-    int   segmentCount_ = 0;
+    int segmentCount_ = 0;
     float uvStep_ = 1.0f;
 
     float accumulatedLength_ = 0.0f; // 累積距離
-    Vector3 lastTip_         = Vector3(0,0,0); // 直前フレームの先端座標
+    Vector3 lastTip_ = Vector3(0, 0, 0); // 直前フレームの先端座標
 };

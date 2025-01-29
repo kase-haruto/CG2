@@ -57,8 +57,6 @@ private:
 	//===================================================================*/
 	//                   private member variables
 	//===================================================================*/
-	// トレイルエフェクトを担当するオブジェクト
-	SwordTrail swordTrail_;
 	std::vector<Vector3> controlPoints_;	//< Catmull-Rom用の制御点
 	float animationTime_;					//< 現在の時間パラメータ (0.0 〜 1.0)
 	float animationSpeed_;					//< アニメーションの速度
@@ -66,5 +64,9 @@ private:
 	Vector3 moveVelocity_;					//< 移動ベクトル
 	Vector3 initialRotate_;        // 初期回転
 	Vector3 targetRotate_ = {-2.33f, 0.18f, 1.81f}; // 目標回転
-	Triangle triangle_;						//< トライアングル
+
+	// 前フレームの武器位置
+	Vector3 prevTip_;
+	Vector3 prevBase_;
+	bool hasPrevFrame_ = false;
 };

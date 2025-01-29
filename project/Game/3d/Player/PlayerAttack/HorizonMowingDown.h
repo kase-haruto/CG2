@@ -1,6 +1,5 @@
 #pragma once
 #include "IPlayerAttack.h"
-#include "../SwordTrail.h"
 
 #include <memory>
 #include <vector>
@@ -63,7 +62,9 @@ private:
 	Vector3 currentPosition_;				//< 現在の位置
 	Vector3 moveVelocity_;					//< 移動速度
 
-	// トレイルエフェクトを担当するオブジェクト
-	SwordTrail swordTrail_;
+	// 前フレームの武器位置
+	Vector3 prevTip_;
+	Vector3 prevBase_;
+	bool hasPrevFrame_ = false;
 };
 
