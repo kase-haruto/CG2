@@ -43,17 +43,7 @@ void JumpAttack::Initialize(){
 	//===========================================
    // ここで SwordTrail を初期化
    //===========================================
-	auto graphics = GraphicsGroup::GetInstance();
-	swordTrail_.Initialize(
-		graphics->GetDevice(),
-		graphics->GetCommandList(),
-		graphics->GetRootSignature(Object3D),      // 例: Object3D 用ルートシグネチャ
-		graphics->GetPipelineState(Object3D)       // 例: Object3D 用PSO
-	);
-
-	// フェードアウトの速度や最小アルファなどを調整 (必要に応じて)
-	swordTrail_.SetFadeSpeed(2.0f);  // 1秒あたりアルファが2.0 減衰
-	swordTrail_.SetMinAlpha(0.05f);  // 0.05以下で削除
+	swordTrail_.Initialize();
 
 	Audio::Play("attack.mp3", false);
 

@@ -13,43 +13,43 @@
 //----------------------------------------------------------------------
 // Initialize
 //----------------------------------------------------------------------
-void SwordTrail::Initialize(
-    Microsoft::WRL::ComPtr<ID3D12Device> device,
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
-    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSig,
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> pso){
-    device_ = device;
-    commandList_ = cmdList;
-    rootSignature_ = rootSig;
-    pipelineState_ = pso;
+void SwordTrail::Initialize(){
 
     // テクスチャを読み込む (例: white1x1.png)
     textureHandle_ = TextureManager::GetInstance()->LoadTexture("trail.png");
 
-    CreateVertexBuffer();
-    CreateMaterialBuffer();
-    CreateMatrixBuffer();
+    fadeSpeed_ = 3.0f;
+	minAlpha_ = 0.05f;
+
+	CreateBuffer();
     Map();
 }
 
 //----------------------------------------------------------------------
 // Create Buffer Resources
 //----------------------------------------------------------------------
-void SwordTrail::CreateVertexBuffer(){
+void SwordTrail::CreateVertexBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device){
     const UINT vbSize = static_cast< UINT >(sizeof(EffectVertexData) * MAX_TRAIL_VERTICES);
-    vertexResource_ = CreateBufferResource(device_.Get(), vbSize);
+    vertexResource_ = CreateBufferResource(device.Get(), vbSize);
 
     vbView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
     vbView_.StrideInBytes = sizeof(EffectVertexData);
     vbView_.SizeInBytes = vbSize;
 }
 
-void SwordTrail::CreateMaterialBuffer(){
-    materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+void SwordTrail::CreateMaterialBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device){
+    materialResource_ = CreateBufferResource(device.Get(), sizeof(Material));
 }
 
-void SwordTrail::CreateMatrixBuffer(){
-    matrixResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+void SwordTrail::CreateMatrixBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device){
+    matrixResource_ = CreateBufferResource(device.Get(), sizeof(TransformationMatrix));
+}
+
+void SwordTrail::CreateBuffer(){
+	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
+	CreateVertexBuffer(device);
+	CreateMaterialBuffer(device);
+	CreateMatrixBuffer(device);
 }
 
 //----------------------------------------------------------------------
@@ -139,13 +139,18 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
 //----------------------------------------------------------------------
 // Update (アルファフェード → 2頂点単位の削除)
 //----------------------------------------------------------------------
-void SwordTrail::Update([[maybe_unused]]float deltaTime){
+void SwordTrail::Update(float deltaTime){
+    // 全ての頂点のアルファ値を減少させる
+    for (auto& vertex : vertices_){
+        vertex.color.w -= fadeSpeed_ * deltaTime;
+        if (vertex.color.w < 0.0f){
+            vertex.color.w = 0.0f;
+        }
+    }
+
     // 先頭から2頂点ペア単位でチェックし、alpha < minAlpha_ なら削除
     // ※ 三角形ストリップの連続性を保つため 2頂点ずつ削除する
     // 例: (tip0, base0), (tip1, base1), ...
-
-
-
     for (size_t i = 0; i + 1 < vertices_.size(); /* i += 2 は後で */){
         float alpha0 = vertices_[i].color.w;
         float alpha1 = vertices_[i + 1].color.w;
@@ -162,6 +167,7 @@ void SwordTrail::Update([[maybe_unused]]float deltaTime){
     UpdateMatrix();
     UpdateVertexBuffer();
 }
+
 
 //----------------------------------------------------------------------
 // UpdateMatrix

@@ -169,20 +169,20 @@ void GameScene::Draw(){
 
 	player_->Draw();
 
-	//enemyManager_->Draw();
-	//for (auto& spawner : enemySpawners_){
-	//	spawner->Draw();
-	//}
+	enemyManager_->Draw();
+	for (auto& spawner : enemySpawners_){
+		spawner->Draw();
+	}
 
-	////モデルの描画
-	//modelBuilder_->Draw();
+	//モデルの描画
+	modelBuilder_->Draw();
 
-	//playerAttackEditor_->Draw();
+	playerAttackEditor_->Draw();
 
-	////地面の描画
-	//modelField_->Draw();
+	//地面の描画
+	modelField_->Draw();
 
-	//skydome_->Draw();
+	skydome_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
 	ParticleManager::GetInstance()->Draw();

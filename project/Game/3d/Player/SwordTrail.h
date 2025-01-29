@@ -23,12 +23,7 @@ public:
     SwordTrail() = default;
     ~SwordTrail() = default;
 
-    void Initialize(
-        Microsoft::WRL::ComPtr<ID3D12Device> device,
-        Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
-        Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSig,
-        Microsoft::WRL::ComPtr<ID3D12PipelineState> pso
-    );
+    void Initialize();
 
     /// <summary>剣の先端と根元を追加 (1フレームあたり2頂点)</summary>
     void AddSegment(const Vector3& tip, const Vector3& base);
@@ -46,9 +41,10 @@ public:
     void SetMinAlpha(float alpha){ minAlpha_ = alpha; }
 
 private:
-    void CreateVertexBuffer();
-    void CreateMaterialBuffer();
-    void CreateMatrixBuffer();
+    void CreateBuffer();
+    void CreateVertexBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device);
+    void CreateMaterialBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device);
+    void CreateMatrixBuffer(Microsoft::WRL::ComPtr<ID3D12Device> device);
 
     void Map();
     void VertexBufferMap();
@@ -59,11 +55,6 @@ private:
     void UpdateVertexBuffer();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D12Device>              device_;
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-    Microsoft::WRL::ComPtr<ID3D12RootSignature>       rootSignature_;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>       pipelineState_;
-
     // 頂点バッファ
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     D3D12_VERTEX_BUFFER_VIEW               vbView_ {};
