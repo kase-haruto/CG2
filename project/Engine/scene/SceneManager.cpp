@@ -1,13 +1,16 @@
 #include "SceneManager.h"
 #include "TestScene.h"
 #include "GameScene.h"
+#include "SceneFactory.h"
+
 #include "engine/objects/SceneObjectManager.h"
 
 SceneManager::SceneManager(DxCore* dxCore)
     : pDxCore_(dxCore){
     // ここでシーンをすべて生成しておく場合
-    scenes_[static_cast< int >(SceneType::PLAY)] = std::make_unique<GameScene>(pDxCore_);
-    scenes_[static_cast< int >(SceneType::TEST)] = std::make_unique<TestScene>(pDxCore_);
+    for (int i = 0; i < static_cast< int >(SceneType::count); ++i){
+        scenes_[i] = SceneFactory::CreateScene(static_cast< SceneType >(i), pDxCore_);
+    }
 
     // 最初は TITLE シーンにしておく
     currentSceneNo_ = static_cast< int >(SceneType::PLAY);
@@ -61,8 +64,8 @@ void SceneManager::Draw(){
 
 void SceneManager::RequestSceneChange(SceneType nextScene){
     nextSceneNo_ = static_cast< int >(nextScene);
-	SceneObjectManager::GetInstance()->ClearGameObjects();
-    
+    SceneObjectManager::GetInstance()->ClearGameObjects();
+
 }
 
 void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene){
