@@ -23,7 +23,7 @@ public:
     /// モデルの作成や読み込み
     virtual void Create(const std::string& filename) = 0;
     /// 毎フレームの更新
-    virtual void Update() = 0;
+    virtual void Update();
     virtual void AnimationUpdate(){}
     /// 行列更新
     virtual void UpdateMatrix() = 0;
@@ -69,6 +69,7 @@ protected:
     //=============
     // モデルデータ・マテリアル
     //=============
+	std::string fileName_;
     std::shared_ptr<ModelData> modelData_;
     Material* materialData_ = nullptr;
     TransformationMatrix* matrixData_ = nullptr;

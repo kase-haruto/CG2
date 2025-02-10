@@ -137,7 +137,8 @@ protected:
     Microsoft::WRL::ComPtr<ID3D12Resource>instancingResource_ = nullptr;
 
     /* data =======================*/
-    std::shared_ptr<ModelData> modelData_;
+    std::string modelName_;                           // ▼ロードするファイル名を保持
+    std::shared_ptr<ModelData> modelData_ = nullptr;  // ▼取得後に代入
     Material* materialData = nullptr;
 
     // インスタンシングSRVのGPUハンドル

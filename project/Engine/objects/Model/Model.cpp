@@ -23,6 +23,7 @@
 #include "lib/myfunc/MyFunc.h" // 必要に応じて
 
 Model::Model(const std::string& fileName){
+	fileName_ = fileName;
     Create(fileName);
 }
 
@@ -35,7 +36,6 @@ void Model::Initialize(){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
-    // ルートシグネチャ・パイプラインを設定(例: Object3D)
     rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
     pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 
@@ -64,54 +64,41 @@ void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths)
 }
 
 void Model::Create(const std::string& filename){
+	fileName_ = filename;
     // まずは初期化
     Initialize();
-
-    // モデルデータのロード(既に存在すればキャッシュから取得)
-    modelData_ = ModelManager::LoadModel(filename);
-
-    // 頂点バッファとインデックスバッファを取得してビューを作成
-    auto vertexResource = ModelManager::GetVertexResource(filename);
-    auto indexResource = ModelManager::GetIndexResource(filename);
-
-    vertexBufferView_.BufferLocation = vertexResource->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-    indexBufferView_.BufferLocation = indexResource->GetGPUVirtualAddress();
-    indexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(uint32_t) * modelData_->indices.size());
-    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-    // テクスチャを読み込む
-    handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
 }
 
 void Model::Update(){
-    // テクスチャの更新
-    UpdateTexture();
 
-    // UV transform を行列化 (例: スケール→Z回転→平行移動)
-    Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
-    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
-    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-    materialData_->uvTransform = uvTransformMatrix;
+    if (modelData_){
+        // テクスチャの更新
+        UpdateTexture();
 
-    // マテリアルの更新
-    materialData_->color = RGBa;
-    materialData_->shininess = materialParameter_.shininess;
-    materialData_->enableLighting = materialParameter_.enableLighting;
+        // UV transform を行列化 (例: スケール→Z回転→平行移動)
+        Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+        materialData_->uvTransform = uvTransformMatrix;
 
-    // ワールド行列の更新
-    worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+        // マテリアルの更新
+        materialData_->color = RGBa;
+        materialData_->shininess = materialParameter_.shininess;
+        materialData_->enableLighting = materialParameter_.enableLighting;
 
-    // 親の行列がある場合は親の行列を掛け合わせる
-    if (parent_ != nullptr){
-        Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
-        worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
+        // ワールド行列の更新
+        worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
+        // 親の行列がある場合は親の行列を掛け合わせる
+        if (parent_ != nullptr){
+            Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
+            worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
+        }
+
+        // カメラ行列との掛け合わせ
+        UpdateMatrix();
     }
-
-    // カメラ行列との掛け合わせ
-    UpdateMatrix();
+	BaseModel::Update();
 }
 
 void Model::UpdateTexture(){
@@ -170,6 +157,9 @@ void Model::ShowImGuiInterface(){
 }
 
 void Model::Draw(){
+    if (!modelData_){
+        return;
+    }
     // ルートシグネチャ・パイプラインをセット
     commandList_->SetGraphicsRootSignature(rootSignature_.Get());
     commandList_->SetPipelineState(pipelineState_.Get());
