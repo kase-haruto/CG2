@@ -1,6 +1,6 @@
 #pragma once
 #include <chrono>
-#include <functional>
+#include <algorithm>
 
 class ClockManager{
 public:
@@ -15,13 +15,19 @@ public:
     void operator=(const ClockManager&) = delete;
 
     void Update();  // 毎フレーム呼び出し
-    float GetDeltaTime() const{ return currentDeltaTime_; }
+
+    // グローバルな deltaTime（ヒットストップの影響を受けない）
+    float GetDeltaTime() const{ return globalDeltaTime_; }
+
+    // プレイヤー関連用の deltaTime（ヒットストップの影響を受ける）
+    float GetPlayerDeltaTime() const{ return playerDeltaTime_; }
+
     float GetTotalTime() const{ return totalTime_; }
     float GetCurrentFPS() const{ return currentFPS_; }
     float GetAverageFPS() const{ return averageFPS_; }
 
-    // ヒットストップ開始
-    void StartHitStop(float duration, std::function<float(float)> easeOutCurve, std::function<float(float)> easeInCurve);
+    // ヒットストップ開始（イージングは使用しない）
+    void StartHitStop(float duration);
 
 private:
     // コンストラクタをprivate化
@@ -30,7 +36,11 @@ private:
     std::chrono::high_resolution_clock::time_point firstFrameTime_;
     std::chrono::high_resolution_clock::time_point lastFrameTime_;
 
-    float currentDeltaTime_ = 0.016f;
+    // グローバル deltaTime（ヒットストップ影響なし）
+    float globalDeltaTime_ = 0.016f;
+    // プレイヤー用 deltaTime（ヒットストップでスケールされる）
+    float playerDeltaTime_ = 0.016f;
+
     float totalTime_ = 0.0f;
     float currentFPS_ = 60.0f;
     float averageFPS_ = 60.0f;
@@ -42,7 +52,4 @@ private:
     float hitStopElapsed_ = 0.0f;
     float normalTimeScale_ = 1.0f;
     float currentTimeScale_ = 1.0f;
-
-    std::function<float(float)> easeOutCurve_;
-    std::function<float(float)> easeInCurve_;
 };

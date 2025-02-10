@@ -57,7 +57,7 @@ void DiagonalSlashRightToLeft::Update(){
 	if (!isAttacking_) return;
 
 	// アニメーション時間を更新
-	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
+	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetPlayerDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;
@@ -75,7 +75,7 @@ void DiagonalSlashRightToLeft::Update(){
 	weapon_->SetRotate(currentRotate);
 
 	Vector3 moveDirection = {Input::GetLeftStick().x, 0.0f, Input::GetLeftStick().y};
-	moveVelocity_ = moveDirection * 2.0f; // jogSpeed_ は移動速度
+	moveVelocity_ = moveDirection * 3.0f; // jogSpeed_ は移動速度
 
 	// カメラの回転を考慮した移動
 	Vector3 cameraRotate = CameraManager::GetInstance()->GetFollowRotate();
@@ -85,7 +85,7 @@ void DiagonalSlashRightToLeft::Update(){
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
 	// プレイヤー位置を更新
-	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetPlayerDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);

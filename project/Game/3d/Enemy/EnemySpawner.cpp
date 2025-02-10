@@ -259,7 +259,9 @@ void EnemySpawner::OnCollisionEnter([[maybe_unused]] Collider* other){
 			if (playerAttack){
 				Vector3 playerPos = playerAttack->GetPlayerPos();
 
+				if (life_>=0){
 				life_ -= playerAttack->GetDamage();
+				}
 
 				hitParticle_->Emit(4);
 

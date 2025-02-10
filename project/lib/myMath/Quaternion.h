@@ -64,4 +64,7 @@ struct Quaternion{
 
 	// クォータニオンからオイラー角を求める
 	static Vector3 ToEuler(const Quaternion& q);
+
+	// オイラー角からクォータニオンを生成する
+	static Quaternion FromEuler(const Vector3& from, const Vector3& to);
 };

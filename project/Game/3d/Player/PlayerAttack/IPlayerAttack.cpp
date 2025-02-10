@@ -49,8 +49,7 @@ IPlayerAttack::IPlayerAttack(const IPlayerAttack& other)
 	weapon_(other.weapon_),     // シャローコピー: 元のポインタをそのままコピー
 	pPlayer_(other.pPlayer_),   // シャローコピー
 	damage_(other.damage_),
-	attackName_(other.attackName_){
-}
+	attackName_(other.attackName_){}
 
 void IPlayerAttack::SetPlayer(Player* pPlayer){
 	pPlayer_ = pPlayer;
@@ -61,11 +60,14 @@ const Vector3 IPlayerAttack::GetPlayerPos() const{
 }
 
 
-void IPlayerAttack::OnCollisionEnter([[maybe_unused]]Collider* other){
-	////hitStop
-	//ClockManager::GetInstance()->StartHitStop(
-	//	0.2f,
-	//	EvoEase::EaseOutQuad,
-	//	EvoEase::EaseInQuad
-	//);
+void IPlayerAttack::OnCollisionEnter([[maybe_unused]] Collider* other){
+
+
+	//* 衝突相手がtargetType_に含まれていなければreturn
+	if ((other->GetType() & Collider::GetTargetType()) != ColliderType::Type_None){
+
+		//hitStop
+		ClockManager::GetInstance()->StartHitStop(0.09f);
+
+	}
 }

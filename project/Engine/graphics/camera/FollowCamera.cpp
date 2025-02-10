@@ -40,22 +40,29 @@ Vector3 FollowCamera::CalculateOffset(){
 }
 
 void FollowCamera::Turning(){
-	if (!target_||isShaking_){
+	if (!target_ || isShaking_){
 		return; // ターゲットが存在しない場合は処理しない
 	}
 
-	float deltaX = Input::GetRightStick().x;
+	// 🔥 スティック入力を取得
+	float deltaX = Input::GetRightStick().x; // 左右
+	float deltaY = -Input::GetRightStick().y; // 上下 🔥 追加
 
+	// 🔥 水平方向の回転 (Y軸)
 	destinationAngle_.y += deltaX * rotateSpeed * ClockManager::GetInstance()->GetDeltaTime();
 
-	// 垂直方向の回転角度の制限（必要に応じて）
-	const float maxVerticalAngle = float(std::numbers::pi) / 2.0f - 0.1f; // 制限値を調整
+	// 🔥 垂直方向の回転 (X軸)
+	destinationAngle_.x += deltaY * rotateSpeed * ClockManager::GetInstance()->GetDeltaTime();
+
+	// 垂直方向の回転角度の制限
+	const float maxVerticalAngle = float(std::numbers::pi) / 4.0f - 0.1f;
 	destinationAngle_.x = std::clamp(destinationAngle_.x, -maxVerticalAngle, maxVerticalAngle);
 
-	// 水平方向および垂直方向の回転をスムーズに補間
+	// 🔥 スムーズに補間して適用
 	transform_.rotate.y = LerpShortAngle(transform_.rotate.y, destinationAngle_.y, 0.1f);
-
+	transform_.rotate.x = std::lerp(transform_.rotate.x, destinationAngle_.x, 0.1f); // 🔥 X軸も補間
 }
+
 
 void FollowCamera::Adulation(){
 

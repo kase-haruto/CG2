@@ -59,6 +59,12 @@ void Enemy::Initialize(){
 	hitParticle2_ = std::make_unique<HitParticle>();
 	hitParticle2_->Initialize("debugCube.obj", "white1x1.png");
 
+	sparkParticle_ = std::make_unique<SparkParticle>();
+	sparkParticle_->Initialize("hit.obj", "white1x1.png");
+
+	deadParticle_ = std::make_unique<EnemyDeadParticle>();
+	deadParticle_->Initialize("plane.obj", "particle.png");
+
 	// ランダムなフェーズオフセットを設定（0 ～ 2π の範囲）
 	floatingPhaseOffset_ = Random::Generate(0.0f, 2.0f * 3.14159265f);
 
@@ -67,7 +73,9 @@ void Enemy::Initialize(){
 void Enemy::Update(){
 
 	if (life_ <= 0){
+		deadParticle_->Emit(10);
 		isAlive_ = false;
+		deathAnimationTimer_ += ClockManager::GetInstance()->GetDeltaTime();
 	}
 
 	Move();
@@ -78,6 +86,12 @@ void Enemy::Update(){
 
 	hitParticle2_->SetEmitPos(GetCenterPos());
 	hitParticle2_->Update();
+
+	sparkParticle_->SetEmitPos(GetCenterPos());
+	sparkParticle_->Update();
+
+	deadParticle_->SetEmitPos(GetCenterPos());
+	deadParticle_->Update();
 
 	//衝突処理の更新
 	shape_.center = GetCenterPos();
@@ -183,6 +197,7 @@ void Enemy::OnCollisionEnter([[maybe_unused]] Collider* other){
 
 				hitParticle_->Emit(2);
 				hitParticle2_->Emit(4);
+				sparkParticle_->Emit(8);
 
 				Audio::Play("hit.mp3", false);
 			}

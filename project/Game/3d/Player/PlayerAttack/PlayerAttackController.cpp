@@ -80,7 +80,7 @@ void PlayerAttackController::Update(){
 			// タイムアウトした場合、コンボをリセット
 			currentComboStep_ = 0;
 			pendingAttack_ = std::nullopt;
-			pPlayer_->GetWeapon()->ClearTrail();  // 🔥 コンボの時間切れでもトレイルをクリア
+			pPlayer_->GetWeapon()->ClearTrail();  //コンボの時間切れでもトレイルをクリア
 		}
 	}
 

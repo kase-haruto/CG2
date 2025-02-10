@@ -8,6 +8,8 @@
 #include "Engine/objects/particle/TornadoParticle.h"
 #include "../Player/PlayerParticle/AttackParticle.h"
 #include "../Player/PlayerParticle/HitParticle.h"
+#include "Engine/objects/particle/SparkParticle.h"
+#include "Engine//objects/particle/EnemyDeadParticle.h"
 
 class Enemy :
     public Character, public BoxCollider{
@@ -53,6 +55,8 @@ private:
     std::unique_ptr<AttackParticle> hitParticle_ = nullptr;
     std::unique_ptr<HitParticle> hitParticle2_ = nullptr;
     std::unique_ptr<TornadoParticle> deathParticle_ = nullptr;
+	std::unique_ptr<SparkParticle> sparkParticle_ = nullptr;
+	std::unique_ptr<EnemyDeadParticle> deadParticle_ = nullptr;
 
     Vector3* target_ = nullptr;
 

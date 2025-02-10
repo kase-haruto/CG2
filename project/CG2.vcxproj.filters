@@ -422,6 +422,7 @@
     <ClCompile Include="Game\3d\Enemy\EnemySpawner.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
+    <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -689,6 +690,7 @@
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\physics\light\LightData.h" />
+    <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

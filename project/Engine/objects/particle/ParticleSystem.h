@@ -7,6 +7,7 @@
 
 class ParticleSystem 
     : public BaseParticle{
+protected:
     // カラーモード用のenumを定義
     enum class ColorMode{
         Random,
@@ -29,7 +30,7 @@ public:
     void Load(const std::string& filename);
     void Save(const std::string& filename);
 
-private:
+protected:
     //===================================================================*/
     //                    private methods
     //===================================================================*/

@@ -8,11 +8,12 @@ SamplerState gSampler : register(s0);
 /////////////////////////////////////////////////////////////////////////
 //                      main
 /////////////////////////////////////////////////////////////////////////
-float4 main(VSOutput input) : SV_TARGET{
-
-    // テクスチャサンプリング
+float4 main(VSOutput input) : SV_TARGET
+{
     float4 texColor = gTexture.Sample(gSampler, input.texcoord);
 
-    // 頂点色とテクスチャの色を乗算
-    return texColor * input.color;
+    // アルファチャンネルを正しく適用する
+    float alpha = texColor.a * input.color.a;
+
+    return float4(texColor.rgb * input.color.rgb, alpha);
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Game\3d\Enemy\EnemySpawner.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerAttack\DiagonalSlashRightToLeft.cpp" />
@@ -241,8 +242,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\Player\PlayerParticle\TrailParticle.cpp" />
     <ClCompile Include="Game\3d\Player\PlayerState\PlayerState_Jump.cpp" />
     <ClCompile Include="Engine\scene\ResultScene.cpp" />
+    <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
@@ -382,6 +385,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\3d\Player\PlayerState\PlayerState_Jump.h" />
     <ClInclude Include="Engine\scene\ResultScene.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
+    <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

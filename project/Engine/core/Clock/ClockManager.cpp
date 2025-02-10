@@ -1,7 +1,6 @@
 #include "ClockManager.h"
-
-// lib
 #include <algorithm>
+#include <chrono>
 
 ClockManager::ClockManager(){
     firstFrameTime_ = std::chrono::high_resolution_clock::now();
@@ -11,30 +10,24 @@ ClockManager::ClockManager(){
 void ClockManager::Update(){
     auto currentFrameTime = std::chrono::high_resolution_clock::now();
 
-    // deltaTime 計算
+    // 実際の deltaTime を計算（秒単位）
     float dt = std::chrono::duration<float, std::milli>(currentFrameTime - lastFrameTime_).count() / 1000.0f;
+    // 急激な dt の変動を防ぐための clamp（グローバル更新用）
     dt = std::clamp(dt, 0.0f, 0.017f);
 
-    // FPS 計算
+    // グローバルな deltaTime はそのまま dt を使用
+    globalDeltaTime_ = dt;
+
+    // FPS 計算（dt が 0 でないことを前提）
     if (dt > 0.0f){
         currentFPS_ = 1.0f / dt;
     }
 
-    // ヒットストップ処理
+    // ヒットストップ処理（プレイヤー用 time scale の計算）
     if (isHitStopActive_){
         hitStopElapsed_ += dt;
-        float progress = hitStopElapsed_ / hitStopDuration_;
-
-        // 減速フェーズ (前半)
-        if (progress < 0.5f){
-            float t = progress / 0.5f;
-            currentTimeScale_ = normalTimeScale_ * easeOutCurve_(t);
-        }
-        // 加速フェーズ (後半)
-        else{
-            float t = (progress - 0.5f) / 0.5f;
-            currentTimeScale_ = normalTimeScale_ * easeInCurve_(t);
-        }
+        // イージングなし：ヒットストップ中は一定のスローモーション倍率を適用（例：0.1倍速）
+        currentTimeScale_ = 0.1f;
 
         if (hitStopElapsed_ >= hitStopDuration_){
             isHitStopActive_ = false;
@@ -44,8 +37,10 @@ void ClockManager::Update(){
         currentTimeScale_ = normalTimeScale_;
     }
 
-    currentDeltaTime_ = dt * currentTimeScale_;
+    // プレイヤー用 deltaTime は、global dt に現在の time scale を掛ける
+    playerDeltaTime_ = dt * currentTimeScale_;
 
+    // totalTime の更新（秒単位）
     totalTime_ = std::chrono::duration<float>(currentFrameTime - firstFrameTime_).count();
 
     frameCount_++;
@@ -56,10 +51,8 @@ void ClockManager::Update(){
     lastFrameTime_ = currentFrameTime;
 }
 
-void ClockManager::StartHitStop(float duration, std::function<float(float)> easeOutCurve, std::function<float(float)> easeInCurve){
+void ClockManager::StartHitStop(float duration){
     isHitStopActive_ = true;
     hitStopDuration_ = duration;
     hitStopElapsed_ = 0.0f;
-    easeOutCurve_ = easeOutCurve;
-    easeInCurve_ = easeInCurve;
 }

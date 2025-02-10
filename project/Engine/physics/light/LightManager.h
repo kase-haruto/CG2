@@ -30,6 +30,7 @@ public:
 	void Initialize(const DxCore* dxCore);
 	void Update();
 	void Finalize();
+	void ShowImGui();
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,
 					LightType lightType,
 					PipelineType pipelineType);

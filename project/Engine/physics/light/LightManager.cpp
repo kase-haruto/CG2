@@ -29,6 +29,13 @@ void LightManager::Finalize(){
 	pointLight_.reset();
 }
 
+void LightManager::ShowImGui(){
+#ifdef _DEBUG
+	directionalLight_->ShowImGuiInterFace();
+	pointLight_->ShowImGuiInterface();
+#endif
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // コマンドの設定
 ///////////////////////////////////////////////////////////////////////////

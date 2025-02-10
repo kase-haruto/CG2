@@ -101,15 +101,11 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
 
     // 先端の移動距離を使って U 座標を計算
     if (segmentCount_ == 0){
-        // 初回は lastTip_ を今回の先端位置に合わせる
         lastTip_ = tip;
         accumulatedLength_ = 0.0f;
     } else{
-        // 前回の先端との距離を測って加算
         float dist = (tip - lastTip_).Length();
         accumulatedLength_ += dist;
-
-        // 次に備えて先端位置を覚える
         lastTip_ = tip;
     }
 
@@ -120,22 +116,25 @@ void SwordTrail::AddSegment(const Vector3& tip, const Vector3& base){
     // セグメントカウントをインクリメント
     ++segmentCount_;
 
-    // 先端
+    // **アルファの設定**
+    float alphaRoot = 0.2f; // 根元のアルファを低めに設定 (0.0 ~ 1.0 の範囲)
+
+    // 先端 (Alpha = 1.0)
     {
         EffectVertexData v;
         v.position = {tip.x, tip.y, tip.z, 1.0f};
         v.texcoord = {uCoord, 0.0f};
-        v.color = {1.0f, 1.0f, 1.0f, 1.0f};
+        v.color = {1.0f, 1.0f, 1.0f, 1.0f};  // 先端は完全不透明
 
         vertices_.push_back(v);
     }
 
-    // 根元
+    // 根元 (Alpha = alphaRoot)
     {
         EffectVertexData v;
         v.position = {base.x, base.y, base.z, 1.0f};
         v.texcoord = {uCoord, 1.0f};
-        v.color = {1.0f, 1.0f, 1.0f, 1.0f};
+        v.color = {1.0f, 1.0f, 1.0f, alphaRoot};  // 根元は薄く
 
         vertices_.push_back(v);
     }
@@ -204,10 +203,8 @@ void SwordTrail::Draw(){
         return;
     }
 
-  
-
-    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect, BlendMode::ALPHA);
-    ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect, BlendMode::ALPHA);
+    ComPtr<ID3D12PipelineState> pso = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Effect, BlendMode::NORMAL);
+    ComPtr<ID3D12RootSignature> rootSig = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Effect, BlendMode::NORMAL);
     ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
     // ルートシグネチャ & パイプライン設定
     commandList->SetGraphicsRootSignature(rootSig.Get());

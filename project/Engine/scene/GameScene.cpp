@@ -11,6 +11,8 @@
 
 #include "Engine/core/DirectX/DxCore.h"
 
+#include "Engine/physics/light/LightManager.h"
+
 
 #include "SceneManager.h"
 
@@ -108,6 +110,8 @@ void GameScene::Initialize(){
 }
 
 void GameScene::Update(){
+	LightManager::GetInstance()->ShowImGui();
+
 	/* カメラ関連更新 ============================*/
 	CameraManager::Update();
 
@@ -197,16 +201,16 @@ void GameScene::Draw(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 2Dオブジェクト描画
 
-	//if (spawnIndex_ >= 1 && spawnIndex_ <= 5){ // 1～5の範囲でチェック
-	//	numSprites_[spawnIndex_]->Draw();  // spawnIndex_ を 1減算して対応
-	//}
+	if (spawnIndex_ >= 1 && spawnIndex_ <= 5){ // 1～5の範囲でチェック
+		numSprites_[spawnIndex_]->Draw();  // spawnIndex_ を 1減算して対応
+	}
 
-	//for (auto& spawner:enemySpawners_){
-	//	spawner->DrawUI();
-	//}
+	for (auto& spawner:enemySpawners_){
+		spawner->DrawUI();
+	}
 
-	////uiの描画
-	//uiEditor_->Draw();
+	//uiの描画
+	uiEditor_->Draw();
 
 #pragma endregion
 }

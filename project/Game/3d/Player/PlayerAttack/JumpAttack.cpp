@@ -43,7 +43,7 @@ void JumpAttack::Initialize(){
 	Audio::Play("attack.mp3", false);
 
 	Vector3 currentVelocity = pPlayer_->GetVelocity();
-	Vector3 jumpVelocity = {currentVelocity.x, pPlayer_->GetJumpPower()*0.5f, currentVelocity.z};
+	Vector3 jumpVelocity = {currentVelocity.x, pPlayer_->GetJumpPower(), currentVelocity.z};
 	pPlayer_->SetJumpVelocity(jumpVelocity);
 
 	// 初期回転を設定し、初期回転を保存
@@ -62,7 +62,7 @@ void JumpAttack::Update(){
 	if (!isAttacking_) return;
 
 	// アニメーション時間を更新
-	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
+	animationTime_ += animationSpeed_ * ClockManager::GetInstance()->GetPlayerDeltaTime();
 	if (animationTime_ > 1.0f){
 		animationTime_ = 1.0f;
 		isAttacking_ = false;

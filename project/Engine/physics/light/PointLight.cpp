@@ -35,7 +35,7 @@ void PointLight::Map(){
 	data_->color = {1.0f,1.0f,1.0f,1.0f};
 	data_->position = {0.0f,2.0f,0.0f};
 	data_->intensity = 1.0f;
-	data_->radius = 4.0f;
+	data_->radius = 20.0f;
 	data_->decay = 1.0f;
 	resource_->Unmap(0, nullptr);
 }

@@ -53,7 +53,7 @@ void PlayerState_Jump::Move(){
 	Matrix4x4 matRotate = Matrix4x4::Multiply(matRotateY, matRotateZ);
 	moveVelocity_ = Vector3::Transform(moveVelocity_, matRotate);
 
-	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
+	pPlayer_->GetModel()->transform.translate += moveVelocity_ * ClockManager::GetInstance()->GetPlayerDeltaTime();
 
 	float horizontalDistance = sqrtf(moveVelocity_.x * moveVelocity_.x + moveVelocity_.z * moveVelocity_.z);
 	pPlayer_->GetModel()->transform.rotate.x = std::atan2(-moveVelocity_.y, horizontalDistance);

@@ -122,7 +122,7 @@ void Player::Update(){
 	// 攻撃管理クラスの更新
 	attackController_->Update();
 
-	model_->transform.translate += jumpVelocity_ * ClockManager::GetInstance()->GetDeltaTime();
+	model_->transform.translate += jumpVelocity_ * ClockManager::GetInstance()->GetPlayerDeltaTime();
 
 	BaseGameObject::Update();
 	Character::Update();

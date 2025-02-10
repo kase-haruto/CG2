@@ -169,6 +169,35 @@ Vector3 Quaternion::ToEuler(const Quaternion& q){
     return euler;
 }
 
+Quaternion Quaternion::FromEuler(const Vector3& from, const Vector3& to){
+    Vector3 fromNorm = from.Normalize();
+    Vector3 toNorm = to.Normalize();
+
+    float dot = Vector3::Dot(fromNorm,toNorm); // 内積を計算
+    Vector3 axis; // 回転軸
+
+    // ほぼ同じ方向の場合（回転不要）
+    if (dot > 0.9999f){
+        return Quaternion::MakeIdentity();
+    }
+
+    // ほぼ反対方向の場合（180度回転）
+    if (dot < -0.9999f){
+        // 任意の直交ベクトルを求める
+        axis = Vector3::Cross(Vector3(1, 0, 0),fromNorm);
+        if (axis.LengthSquared() < 0.0001f){
+            axis = Vector3::Cross(Vector3(0, 1, 0),fromNorm);
+        }
+        axis = axis.Normalize();
+        return Quaternion::MakeRotateAxisQuaternion(axis, 3.14159265358979323846f); // 180度回転
+    }
+
+    // 通常の回転処理
+    axis = Vector3::Cross(fromNorm,toNorm); // 回転軸
+    float angle = std::acos(dot);  // 回転角
+    return Quaternion::MakeRotateAxisQuaternion(axis, angle);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 //              演算子オーバーロード
 ///////////////////////////////////////////////////////////////////////////
