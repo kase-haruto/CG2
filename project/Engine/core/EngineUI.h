@@ -1,8 +1,6 @@
 #pragma once
 
-#ifndef ENGINE_UI_H
-#define ENGINE_UI_H
-
+#pragma once
 #include <vector>
 #include <memory>
 #include <functional>
@@ -46,6 +44,12 @@ public:
     /// </summary>
     void AddPanel(std::unique_ptr<IEngineUI> panel);
 
+    /// <summary>
+  /// パネルを削除する
+  /// </summary>
+  /// <param name="panelName">削除するパネルの名前</param>
+    void RemovePanel(const std::string& panelName);
+
     // メインビューポート用のテクスチャを設定
     static void SetMainViewportTexture(UINT64 textureID);
 
@@ -57,16 +61,18 @@ private:
     ~EngineUI() = default;      // デストラクタ
 
     void RenderMainViewport();  // メインビューポートの描画
+	void RenderMenue();         // メニューの描画
 
 private:
 	//===================================================================*/
 	//                    private variable
 	//===================================================================*/
-    SceneObject* selectedObject = nullptr;
+    static EngineUI* pInstance_;
+    std::vector<std::unique_ptr<IEngineUI>> panels_;
 
-    static EngineUI* pInstance_;                        // シングルトンインスタンス
-    UINT64 mainViewportTextureID_;            // メインビューポート用のテクスチャポインタ
-    std::vector<std::unique_ptr<IEngineUI>> panels_;    // UIパネルのリスト
+    UINT64 mainViewportTextureID_ = 0;
+
+    // AttackEditorパネルの表示状態と管理用ポインタ
+    bool showPlayerAttackEditor_ = false;
 };
 
-#endif // ENGINE_UI_H

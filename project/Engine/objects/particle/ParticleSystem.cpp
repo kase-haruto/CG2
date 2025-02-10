@@ -13,6 +13,10 @@ using json = nlohmann::json;
 
 ParticleSystem::ParticleSystem(){}
 
+ParticleSystem::~ParticleSystem(){
+    ParticleManager::GetInstance()->RemoveSystem(this);
+}
+
 void ParticleSystem::Initialize(const std::string& modelName, const std::string& texturePath){
     Load(fileDirectoryPath + GetName() + ".json");
 
@@ -132,6 +136,7 @@ void ParticleSystem::Save(const std::string& filename){
         ofs << j.dump(4);
     }
 }
+
 
 void ParticleSystem::Load(const std::string& filename){
 

@@ -1,4 +1,9 @@
 ﻿#pragma once
+
+// engine
+#include "Pipeline/PipelineType.h"
+
+//lib
 #include<d3d12.h>
 #include<wrl.h>
 #include<string>
@@ -6,16 +11,7 @@
 #include<dxcapi.h>
 #include<cassert>
 
-
 using Microsoft::WRL::ComPtr;
-
-enum PipelineType{
-    Object3D,
-    Object2D,
-    StructuredObject,
-    Line,
-    copyImage,
-};
 
 class ShaderManager{
 public:

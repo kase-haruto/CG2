@@ -16,8 +16,24 @@ struct Vector3 final{
         return x * x + y * y + z * z;
     }
 
+    static Vector3 Cross(const Vector3& v0, const Vector3& v1);
+
     static float Dot(const Vector3& v1, const Vector3& v2){
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
+    static const Vector3 Zero;
+
+    static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+    // == 演算子のオーバーロード
+    bool operator==(const Vector3& other) const{
+        return x == other.x && y == other.y && z == other.z;
+    }
+
+    // != 演算子のオーバーロード（オプション）
+    bool operator!=(const Vector3& other) const{
+        return !(*this == other);
     }
 
     Vector3 operator*(const float& scalar) const;

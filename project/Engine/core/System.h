@@ -53,6 +53,7 @@ public:
 	void StructuredObjectPipeline();
 	void LinePipeline();
 	void CopyImagePipeline();
+	void EffectPipeline();
 
 
 	int ProcessMessage();
@@ -63,7 +64,6 @@ public:
 	///////////////////////////////////////////////////////////
 	static HINSTANCE GetHinstance(){ return hInstance_; }
 	static HWND GetHWND(){ return hwnd_; }
-
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 
 private:

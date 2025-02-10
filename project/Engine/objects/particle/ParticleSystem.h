@@ -7,6 +7,7 @@
 
 class ParticleSystem 
     : public BaseParticle{
+protected:
     // カラーモード用のenumを定義
     enum class ColorMode{
         Random,
@@ -20,7 +21,7 @@ public:
     //===================================================================*/
 
     ParticleSystem();
-    ~ParticleSystem() override = default;
+    ~ParticleSystem() override;
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 
@@ -29,7 +30,7 @@ public:
     void Load(const std::string& filename);
     void Save(const std::string& filename);
 
-private:
+protected:
     //===================================================================*/
     //                    private methods
     //===================================================================*/
@@ -42,6 +43,7 @@ private:
     ColorMode colorMode_ = ColorMode::Random; // 現在のカラー方式
     //Vector4 selectedColor_ = {1.0f,1.0f,1.0f,1.0f}; // SINGLEまたはSIMILAR用の基準色
     float colorVariation_ = 0.1f; // 類似色モードでのバラつき度合い(0.0f〜1.0f程度)
+
 
 protected:
     //===================================================================*/
@@ -58,7 +60,7 @@ public:
     const std::string& GetName() const{ return name_; }
     void SetName(const std::string& name){ name_ = name; }
     void SetEmitPos(const Vector3& pos){ emitter_.transform.translate = pos; }
-
+	void SetEmitRotate(const Vector3& rotate){ emitter_.transform.rotate = rotate; }
     // BaseParticleの仮想関数をオーバーライド
     bool GetUseRandomColor() const override;
     Vector4 GetSelectedColor() const override;

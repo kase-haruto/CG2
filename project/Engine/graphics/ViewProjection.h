@@ -24,7 +24,7 @@ class ViewProjection{
 public:
 
 #pragma region ビュー行列の設定
-    Transform transform = {
+    EulerTransform transform = {
         {1.0f, 1.0f, 1.0f},
         {0.0f, 0.0f, 0.0f},
         {0.0f, 4.0f, -15.0f}

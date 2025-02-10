@@ -4,13 +4,20 @@
 #include "engine/objects/ModelData.h"
 #include "engine/graphics/GraphicsGroup.h"
 #include "lib/myFunc/MyFunc.h"
+#include "Engine/objects/Animation/AnimationStruct.h"
 
 // lib
+#include "lib/myMath/Quaternion.h"
+
 #include <d3d12.h>
 #include <unordered_map>
 #include <string>
 #include <memory>
 #include <wrl.h>
+
+#include<assimp/Importer.hpp>
+#include<assimp/scene.h>
+#include<assimp/postprocess.h>
 
 class ModelManager{
 public:
@@ -49,6 +56,20 @@ public:
 
     // ロードされたモデル名のリストを取得
     std::vector<std::string> GetLoadedModelNames() const;
+
+private:
+    ModelData LoadModelFile(const std::string& directoryPath, const std::string& fileNameWithExt);
+
+    void LoadMesh(const aiMesh* mesh, ModelData& modelData);
+
+    void LoadMaterial(const aiScene* scene, const aiMesh* mesh, ModelData& modelData);
+
+    void LoadUVTransform(const aiMaterial* material, MaterialData& outMaterial);
+
+
+    //指定時間に対して補完結果を返す
+	Vector3 Evaluate(const AnimationCurve<Vector3>& curve, float time);
+	Quaternion Evaluate(const AnimationCurve<Quaternion>& curve, float time);
 
 private:
     ModelManager() = default;

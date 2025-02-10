@@ -1,14 +1,17 @@
 #pragma once
 
+/* engine */
 #include "engine/objects/ModelData.h"
 #include "engine/graphics/Material.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
+#include "Engine/graphics/blendMode/BlendMode.h"
 
 /* math */
 #include "lib/myMath/Vector4.h"
 #include "engine/physics/AABB.h"
 #include "Engine/physics/Shape.h"
+#include "lib/myFunc/Random.h"
 
 /* c++ */
 #include <list>
@@ -20,11 +23,12 @@
 
 namespace ParticleData{
     struct Parameters{
-        Transform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+        EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
         Vector3 velocity {};
         Vector4 color {1.0f, 1.0f, 1.0f, 1.0f};
         float lifeTime = 1.0f;
         float currentTime = 0.0f;
+		float maxScale = 1.0f;
 
         void SetColorRandom();          // 色をランダムで初期化
         void SetColorInitialize();      // 色を初期化する(白)
@@ -39,13 +43,13 @@ namespace ParticleData{
     };
 
     struct Emitter{
-        Transform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
+        EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
         uint32_t count;             //発生数
         float frequency;            //発生頻度
         float frequencyTime = 0;    //頻度用時刻
 
         void Initialize(uint32_t count);
-        void Initialize(const Transform& transform, const float frequency, const float frequencyTime, uint32_t count);
+        void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
     };
 }
 
@@ -69,8 +73,27 @@ public:
 
     virtual void Emit(uint32_t count);
 
+    // ライフタイム設定用の仮想関数
+    virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
+
+
+    // 派生クラスでオーバーライド可能な速度生成
+    virtual Vector3 GenerateVelocity(float speed);
+
     virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
     virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
+
+    // 色合成取得
+	BlendMode GetBlendMode() const{ return blendMode_; }
+
+    // maxScale設定のためのインターフェース
+    void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
+    void SetFixedMaxScale(float scale){ fixedMaxScale_ = scale; }
+    void SetRandomScaleRange(float minScale, float maxScale){
+        randomScaleMin_ = minScale;
+        randomScaleMax_ = maxScale;
+    }
+
 private:
     //===================================================================*/
     //                    private methods
@@ -86,10 +109,16 @@ public:
     //                    public methods
     //===================================================================*/
     std::vector<ParticleData::Parameters> particles_;
-   
-    int32_t kMaxInstanceNum_ = 256;
+	bool isStatic_ = false;
+	bool autoEmit_ = true;
+    int32_t kMaxInstanceNum_ = 512;
     int32_t instanceNum_ = 0;
 
+
+    bool useRandomScale_ = true;         // ランダムスケールを使用するかのフラグ
+    float fixedMaxScale_ = 1.0f;        // 固定スケール値
+    float randomScaleMin_ = 1.0f;       // ランダムスケールの最小値
+    float randomScaleMax_ = 6.0f;       // ランダムスケールの最大値
 protected:
     //===================================================================*/
     //                    protected methods
@@ -133,5 +162,8 @@ protected:
 
     // 形状選択用
     EmitterShape currentShape_ = EmitterShape::OBB;
+
+    // blend
+	BlendMode blendMode_ = BlendMode::ADD;
 
 };

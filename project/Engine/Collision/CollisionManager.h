@@ -19,6 +19,7 @@ public:
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
 public:
+	bool ShouldLogCollision(const Collider* a, const Collider* b);
 	//===================================================================*/
 	//                   public functions
 	//===================================================================*/
@@ -39,6 +40,14 @@ private:
 
 	bool CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 	std::string MakeCollisionKey(Collider* colliderA, Collider* colliderB);
+
+	void ComputeOBBAxes(const OBB& obb, Vector3 outAxis[3]);
+	float ProjectOBB(const OBB& obb, const Vector3 obbAxes[3], const Vector3& axisCandidate);
+	bool OverlapOnAxis(
+		const OBB& obbA, const Vector3 aAxes[3],
+		const OBB& obbB, const Vector3 bAxes[3],
+		const Vector3& axisCandidate);
+
 	/*----------------
 	 各形状ごとの衝突
 	----------------*/

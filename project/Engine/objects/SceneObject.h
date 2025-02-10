@@ -15,7 +15,7 @@ public:
 	//==================================================================*//
 	virtual ~SceneObject() = default;
 	SceneObject();
-	virtual void ShowGui() = 0;
+	virtual void ShowGui();
 
 protected:
 	//==================================================================*//

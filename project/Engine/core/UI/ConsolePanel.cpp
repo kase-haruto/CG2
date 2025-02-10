@@ -2,7 +2,8 @@
 #include <externals/imgui/imgui.h>
 #include "Engine/Collision/CollisionManager.h"
 
-ConsolePanel::ConsolePanel() : IEngineUI("Console"){}
+ConsolePanel::ConsolePanel() 
+	: IEngineUI("Console"){}
 
 void ConsolePanel::Render(){
 	ImGui::Begin(panelName_.c_str());

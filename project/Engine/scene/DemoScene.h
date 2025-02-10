@@ -3,8 +3,8 @@
 #include "IScene.h"
 
 #include "Engine/graphics/FogEffect.h"
-#include "Engine/physics/DirectionalLight.h"
-#include "Engine/physics/PointLight.h"
+#include "Engine/physics/light/DirectionalLight.h"
+#include "Engine/physics/light/PointLight.h"
 
 #include <memory>
 

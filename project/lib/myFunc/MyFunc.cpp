@@ -1,5 +1,8 @@
 ﻿#include"MyFunc.h"
 #include"ConvertString.h"
+
+#include "Engine/objects/Model/Model.h"
+
 #include<cmath>
 #include<fstream>
 #include<sstream>
@@ -7,6 +10,9 @@
 #include<assimp/Importer.hpp>
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
+#include <numbers>
+
+#include "Engine/graphics/camera/CameraManager.h"
 
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
@@ -63,10 +69,10 @@ Matrix4x4 MakeRotateZMatrix(float theta){
 }
 
 Matrix4x4 EulerToMatrix(const Vector3& euler){
-    Matrix4x4 rotateXMatrix = MakeRotateXMatrix(euler.x);
-    Matrix4x4 rotateYMatrix = MakeRotateYMatrix(euler.y);
-    Matrix4x4 rotateZMatrix = MakeRotateZMatrix(euler.z);
-    return Matrix4x4::Multiply(Matrix4x4::Multiply(rotateXMatrix, rotateYMatrix), rotateZMatrix);
+	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(euler.x);
+	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(euler.y);
+	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(euler.z);
+	return Matrix4x4::Multiply(Matrix4x4::Multiply(rotateXMatrix, rotateYMatrix), rotateZMatrix);
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate){
@@ -114,9 +120,9 @@ Microsoft::WRL::ComPtr<ID3D12Resource>CreateBufferResource(Microsoft::WRL::ComPt
 	bufferResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 実際にリソースを作る
-    Microsoft::WRL::ComPtr<ID3D12Resource> bufferResource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> bufferResource = nullptr;
 	device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-												 &bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
+									&bufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&bufferResource));
 
 	return bufferResource;
 }
@@ -134,156 +140,157 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 }
 
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
-    Assimp::Importer importer;
+	Assimp::Importer importer;
 
-    // ファイルパスを作成
-    std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
+	// ファイルパスを作成
+	std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
 
-    // Assimpによるシーンの読み込み
-    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    assert(scene && scene->HasMeshes()); // 読み込みエラーやメッシュの有無を確認
+	// Assimpによるシーンの読み込み
+	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	assert(scene && scene->HasMeshes()); // 読み込みエラーやメッシュの有無を確認
 
-    ModelData modelData;
-    const aiMesh* mesh = scene->mMeshes[0]; // 最初のメッシュを取得
+	ModelData modelData;
+	const aiMesh* mesh = scene->mMeshes[0]; // 最初のメッシュを取得
 
-    // 頂点データの読み込み
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++){
-        VertexData vertex;
+	// 頂点データの読み込み
+	for (unsigned int i = 0; i < mesh->mNumVertices; i++){
+		VertexData vertex;
 
-        // 位置データの取得
-        vertex.position.x = mesh->mVertices[i].x;
-        vertex.position.y = mesh->mVertices[i].y;
-        vertex.position.z = mesh->mVertices[i].z;
-        vertex.position.w = 1.0f;
+		// 位置データの取得
+		vertex.position.x = mesh->mVertices[i].x;
+		vertex.position.y = mesh->mVertices[i].y;
+		vertex.position.z = mesh->mVertices[i].z;
+		vertex.position.w = 1.0f;
 
-        // 法線データの取得
-        if (mesh->HasNormals()){
-            vertex.normal.x = mesh->mNormals[i].x;
-            vertex.normal.y = mesh->mNormals[i].y;
-            vertex.normal.z = mesh->mNormals[i].z;
-        }
+		// 法線データの取得
+		if (mesh->HasNormals()){
+			vertex.normal.x = mesh->mNormals[i].x;
+			vertex.normal.y = mesh->mNormals[i].y;
+			vertex.normal.z = mesh->mNormals[i].z;
+		}
 
-        // テクスチャ座標の取得
-        if (mesh->HasTextureCoords(0)){
-            vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
-            vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
-        } else{
-            vertex.texcoord = {0.0f, 0.0f};
-        }
+		// テクスチャ座標の取得
+		if (mesh->HasTextureCoords(0)){
+			vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
+			vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
+		} else{
+			vertex.texcoord = {0.0f, 0.0f};
+		}
 
-        modelData.vertices.push_back(vertex);
-    }
+		modelData.vertices.push_back(vertex);
+	}
 
-    // インデックスデータの読み込み
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++){
-        const aiFace& face = mesh->mFaces[i];
-        assert(face.mNumIndices == 3); // 三角形のみを想定
+	// インデックスデータの読み込み
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++){
+		const aiFace& face = mesh->mFaces[i];
+		assert(face.mNumIndices == 3); // 三角形のみを想定
 
-        modelData.indices.push_back(face.mIndices[0]);
-        modelData.indices.push_back(face.mIndices[1]);
-        modelData.indices.push_back(face.mIndices[2]);
-    }
+		modelData.indices.push_back(face.mIndices[0]);
+		modelData.indices.push_back(face.mIndices[1]);
+		modelData.indices.push_back(face.mIndices[2]);
+	}
 
-    // マテリアルの読み込み
-    if (scene->HasMaterials()){
-        const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        aiString texturePath;
-        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS){
-            modelData.material.textureFilePath = texturePath.C_Str();
-        } else{
-            modelData.material.textureFilePath = "white1x1.png";
-        }
-    }
+	// マテリアルの読み込み
+	if (scene->HasMaterials()){
+		const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		aiString texturePath;
+		if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS){
+			modelData.material.textureFilePath = texturePath.C_Str();
+		} else{
+			modelData.material.textureFilePath = "white1x1.png";
+		}
+	}
 
-    return modelData;
+	return modelData;
 }
 
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
 
-    // ファイルを開く
-    std::ifstream file(directoryPath + "/" + filename);
-    assert(file.is_open());// 失敗したらアサート
+	// ファイルを開く
+	std::ifstream file(directoryPath + "/" + filename);
+	assert(file.is_open());// 失敗したらアサート
 
-    MaterialData materialData;
-    std::string line;
+	MaterialData materialData;
+	std::string line;
 
-    while (std::getline(file, line)){
+	while (std::getline(file, line)){
 
-        // まずobjファイルの行の先頭の識別子を読む
-        std::string identifer;
-        std::istringstream s(line);
-        s >> identifer;
+		// まずobjファイルの行の先頭の識別子を読む
+		std::string identifer;
+		std::istringstream s(line);
+		s >> identifer;
 
-        if (identifer == "map_Kd"){// ファイル名
+		if (identifer == "map_Kd"){// ファイル名
 
-            std::string textureFilename;
-            Vector3 scale = {1.0f,1.0f,1.0f};
-            Vector3 offset = {0.0f,0.0f,0.0f};
-            Vector3 translate = {0.0f,0.0f,0.0f};
+			std::string textureFilename;
+			Vector3 scale = {1.0f,1.0f,1.0f};
+			Vector3 offset = {0.0f,0.0f,0.0f};
+			Vector3 translate = {0.0f,0.0f,0.0f};
 
-            // ファイル名を格納
-            while (s >> textureFilename){
-                if (textureFilename[0] == '-'){
-                    std::string option = textureFilename.substr(1);
-                    if (option == "s"){
-                        s >> scale.x >> scale.y >> scale.z;
-                    } else if (option == "o"){
-                        s >> offset.x >> offset.y >> offset.z;
-                    } else if (option == "t"){
-                        s >> translate.x >> translate.y >> translate.z;
-                    }
-                } else{
-                    materialData.textureFilePath = textureFilename;
-                }
-            }
+			// ファイル名を格納
+			while (s >> textureFilename){
+				if (textureFilename[0] == '-'){
+					std::string option = textureFilename.substr(1);
+					if (option == "s"){
+						s >> scale.x >> scale.y >> scale.z;
+					} else if (option == "o"){
+						s >> offset.x >> offset.y >> offset.z;
+					} else if (option == "t"){
+						s >> translate.x >> translate.y >> translate.z;
+					}
+				} else{
+					materialData.textureFilePath = textureFilename;
+				}
+			}
 
-            materialData.uv_scale = scale;
-            materialData.uv_offset = offset;
-            materialData.uv_translate = translate;
-        }
-    }
+			materialData.uv_scale = scale;
+			materialData.uv_offset = offset;
+			materialData.uv_translate = translate;
+		}
+	}
 
-    // テクスチャなしのモデルの場合
-    if (materialData.textureFilePath == ""){
-        materialData.textureFilePath = "white1x1.png";
-    }
+	// テクスチャなしのモデルの場合
+	if (materialData.textureFilePath == ""){
+		materialData.textureFilePath = "white1x1.png";
+	}
 
-    return materialData;
+	return materialData;
 }
+
 
 DirectX::ScratchImage LoadTextureImage(const std::string& filePath){
 
-    DirectX::ScratchImage image {};
-    DirectX::ScratchImage mipImages {};
+	DirectX::ScratchImage image {};
+	DirectX::ScratchImage mipImages {};
 
-    std::wstring filePathW = ConvertString(filePath);// wstring型に変換
-    // ファイルを読み込む
-    HRESULT hr = DirectX::LoadFromWICFile(
-        filePathW.c_str(),
-        DirectX::WIC_FLAGS_FORCE_SRGB,
-        nullptr,
-        image
-    );
-    assert(SUCCEEDED(hr));
+	std::wstring filePathW = ConvertString(filePath);// wstring型に変換
+	// ファイルを読み込む
+	HRESULT hr = DirectX::LoadFromWICFile(
+		filePathW.c_str(),
+		DirectX::WIC_FLAGS_FORCE_SRGB,
+		nullptr,
+		image
+	);
+	assert(SUCCEEDED(hr));
 
-    // ミップマップの作成
-    if (image.GetMetadata().width > 1 && image.GetMetadata().height > 1){
-        hr = DirectX::GenerateMipMaps(
-            image.GetImages(),
-            image.GetImageCount(),
-            image.GetMetadata(),
-            DirectX::TEX_FILTER_SRGB,
-            0,
-            mipImages
-        );
-    } else{// サイズが1x1のときはここ
-        return image;
-    }
+	// ミップマップの作成
+	if (image.GetMetadata().width > 1 && image.GetMetadata().height > 1){
+		hr = DirectX::GenerateMipMaps(
+			image.GetImages(),
+			image.GetImageCount(),
+			image.GetMetadata(),
+			DirectX::TEX_FILTER_SRGB,
+			0,
+			mipImages
+		);
+	} else{// サイズが1x1のときはここ
+		return image;
+	}
 
-    assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 
-    return mipImages;
+	return mipImages;
 }
 
 
@@ -296,9 +303,155 @@ bool IsCollision(const AABB& aabb, const Vector3& point){
 }
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m){
-    Vector3 result {
-        v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
-        v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
-        v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
-    return result;
+	Vector3 result {
+		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
+		v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
+		v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
+	return result;
+}
+
+float Lerp(float v1, float v2, float t){
+	return v1 + (v2 - v1) * t;
+}
+
+float LerpShortAngle(float a, float b, float t){
+	const float TWO_PI = 2.0f * ( float ) std::numbers::pi; // 2π (6.283185307179586)
+	const float PI = ( float ) std::numbers::pi;            // π (3.141592653589793)
+
+	// 角度差分を求める
+	float diff = b - a;
+
+	// 角度を[-π, π]に補正する
+	diff = fmod(diff, TWO_PI);
+	if (diff > PI){
+		diff -= TWO_PI;
+	} else if (diff < -PI){
+		diff += TWO_PI;
+	}
+
+	// Lerpを使用して補間
+	return Lerp(a, a + diff, t);
+
+}
+
+
+Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix){
+	// 仮定: 回転順序は YXZ など
+	Vector3 euler;
+	// row-major 前提での計算例（回転順序に応じて変更必要）
+	euler.y = std::atan2(worldMatrix.m[0][2], worldMatrix.m[2][2]);
+	float cosY = std::cos(euler.y);
+	euler.x = std::atan2(-worldMatrix.m[1][2], worldMatrix.m[2][2] / cosY);
+	euler.z = std::atan2(worldMatrix.m[0][1], worldMatrix.m[0][0]);
+	return euler;
+}
+
+Vector2 WorldToScreen(const Vector3& worldPos){
+	// ビューポート行列を作成
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+
+	// ビュー・プロジェクションの合成行列を計算
+	Matrix4x4 matVPV = Matrix4x4::Multiply(CameraManager::GetViewProjectionMatrix(), matViewport);
+
+	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
+	Vector3 screenPos = Vector3::Transform(worldPos, matVPV);
+	// スクリーン座標を返す
+	return Vector2(screenPos.x, screenPos.y);
+}
+
+Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec){
+	return Vector4(
+		mat.m[0][0] * vec.x + mat.m[1][0] * vec.y + mat.m[2][0] * vec.z + mat.m[3][0] * vec.w,
+		mat.m[0][1] * vec.x + mat.m[1][1] * vec.y + mat.m[2][1] * vec.z + mat.m[3][1] * vec.w,
+		mat.m[0][2] * vec.x + mat.m[1][2] * vec.y + mat.m[2][2] * vec.z + mat.m[3][2] * vec.w,
+		mat.m[0][3] * vec.x + mat.m[1][3] * vec.y + mat.m[2][3] * vec.z + mat.m[3][3] * vec.w
+	);
+}
+
+bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos){
+	// ビューポート行列を作成
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+
+	// ビュー・プロジェクションの合成行列を計算
+	Matrix4x4 matVP = CameraManager::GetViewProjectionMatrix();
+
+	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
+	Vector4 clipPos = MultiplyMatrixVector(matVP, Vector4(worldPos.x,worldPos.y,worldPos.z, 1));
+
+	// 正規化デバイス座標（NDC）に変換
+	if (clipPos.w != 0.0f){
+		clipPos.x /= clipPos.w;
+		clipPos.y /= clipPos.w;
+		clipPos.z /= clipPos.w;
+	}
+
+	// 視錐台（クリップ座標）の範囲外にある場合は false を返す
+	if (clipPos.x < -1.0f || clipPos.x > 1.0f ||
+		clipPos.y < -1.0f || clipPos.y > 1.0f ||
+		clipPos.z < 0.0f || clipPos.z > 1.0f){
+		return false; // 見えていない
+	}
+
+	// ビューポート行列で変換し、スクリーン座標を計算
+	Vector4 screenPos = MultiplyMatrixVector(matViewport, clipPos);
+	outScreenPos = Vector2(screenPos.x, screenPos.y);
+
+	return true; // 見えている
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+//							Animation
+/////////////////////////////////////////////////////////////////////////////////////////////
+Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename){
+	Animation animation;// アニメーションデータ
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/"
+		+ filename.substr(0, filename.find_last_of('.')) + "/"
+		+ filename;
+
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
+	assert(scene->mNumAnimations);// アニメーションがない場合はアサート
+	aiAnimation* animationAssimp = scene->mAnimations[0];// 最初のアニメーションを取得
+	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);// アニメーションの長さを取得
+
+	// assimpでは個々のanimationをchannelとして読んでいるからchannelの数だけループ
+	for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex){
+		aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];// channelを取得
+		NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];// ノードアニメーションを取得
+		
+		//translate
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex){
+			aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];// キーフレームを取得
+			KeyframeVector3 keyframe;
+
+			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);// キーフレームの時間を取得
+			keyframe.value = {-keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z};// キーフレームの値を取得 //<右手->左手座標系に変換>
+			nodeAnimation.translate.keyframes.push_back(keyframe);// ノードアニメーションに追加
+
+		}
+
+		//rotate
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex){
+			aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
+			KeyframeQuaternion keyframe;
+
+			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);
+			// 右手->左手 (yとzの符号を反転)
+			keyframe.value = {keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w};
+			nodeAnimation.rotate.keyframes.push_back(keyframe);
+		}
+
+		//scale
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex){
+			aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
+			KeyframeVector3 keyframe;
+		
+			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);
+			keyframe.value = {keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z};
+			nodeAnimation.scale.keyframes.push_back(keyframe);
+		}
+
+	}
+	return animation;
 }

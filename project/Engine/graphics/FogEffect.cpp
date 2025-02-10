@@ -1,4 +1,4 @@
-﻿#include "FogEffect.h"
+#include "FogEffect.h"
 #include "../core/DirectX/DxCore.h"
 #include "../graphics/GraphicsGroup.h"
 
@@ -8,14 +8,12 @@
 
 
 FogEffect::~FogEffect(){ 
-	constantBuffer->Release();
-	constantBuffer = nullptr;
 }
 
 void FogEffect::ShowImGuiInterface(){
 #ifdef _DEBUG
 	ImGui::Begin("fogEffect");
-	ImGui::SliderFloat("fogStart", &parameters->fogStart, 10.0f, 50.0f);
+	ImGui::SliderFloat("fogStart", &parameters->fogStart, 100.0f, 50.0f);
 	ImGui::SliderFloat("fogEnd", &parameters->fogEnd, 500.0f, 1000.0f);
 	ImGui::End();
 #endif // _DEBUG
@@ -32,11 +30,11 @@ FogEffect::FogEffect(const DxCore* dxCore):pDxCore_(dxCore){
 	///	霧のパラメータを設定
 	///================================
 	//霧のスタート地点
-	parameters->fogStart = 30.0f;
+	parameters->fogStart = 5.0f;
 	//霧の終点
-	parameters->fogEnd = 1000.0f;
+	parameters->fogEnd = 90.0f;
 	//霧の色
-	parameters->fogColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f); // 白色の設定
+	parameters->fogColor = XMFLOAT4(0.02f, 0.02f, 0.02f, 1.0f); // 白色の設定
 
 	constantBuffer->Unmap(0, nullptr);
 	

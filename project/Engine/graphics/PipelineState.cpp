@@ -7,10 +7,10 @@ PipelineState::PipelineState(ComPtr<ID3D12Device>device, std::shared_ptr<ShaderM
 PipelineState::~PipelineState(){}
 
 
-
 bool PipelineState::Initialize(const std::wstring& vsPath, const std::wstring& psPath,
                                const D3D12_ROOT_SIGNATURE_DESC& rootSignatureDesc,
-                               const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc){
+                               const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psoDesc,
+                               const BlendMode& blendMode){
     vertexShader_ = shaderManager_->CompileShader(L"Resources/shaders/" + vsPath, L"vs_6_0");
     pixelShader_ = shaderManager_->CompileShader(L"Resources/shaders/" + psPath, L"ps_6_0");
     if (!vertexShader_ || !pixelShader_){
@@ -39,6 +39,9 @@ bool PipelineState::Initialize(const std::wstring& vsPath, const std::wstring& p
     pipelineDesc.pRootSignature = rootSignature_.Get();
     pipelineDesc.VS = {vertexShader_->GetBufferPointer(), vertexShader_->GetBufferSize()};
     pipelineDesc.PS = {pixelShader_->GetBufferPointer(), pixelShader_->GetBufferSize()};
+
+	// ブレンドモードの設定
+	pipelineDesc.BlendState = CreateBlendDesc(blendMode);
 
     hr = device_->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState_));
     return SUCCEEDED(hr);

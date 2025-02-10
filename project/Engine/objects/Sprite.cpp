@@ -3,7 +3,7 @@
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/graphics/GraphicsGroup.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 
 /* math */
 #include "lib/myfunc/MyFunc.h"
@@ -19,8 +19,8 @@ Sprite::Sprite(const std::string& filePath){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
 
     // パイプラインとルートシグネチャの設定
-    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object2D);
-    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object2D);
+    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Object2D,BlendMode::ALPHA);
+    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Object2D,BlendMode::ALPHA);
 
     handle = TextureManager::GetInstance()->LoadTexture(filePath);
 
@@ -47,7 +47,7 @@ void Sprite::Initialize(const Vector2& newPosition, const Vector2& newSize){
     transform_.translate.x = position.x;
     transform_.translate.y = position.y;
 
-    this->size = size;
+    this->size = newSize;
     transform_.scale.x = newSize.x;
     transform_.scale.y = newSize.y;
 }

@@ -1,83 +1,79 @@
 #include "SceneManager.h"
 #include "TestScene.h"
+#include "GameScene.h"
+#include "engine/objects/SceneObjectManager.h"
 
-//===================================================================*/
-//                   デストラクタ
-//===================================================================*/
-SceneManager::~SceneManager(){
-	if (currentScene_){
-		currentScene_->CleanUp();
-		currentScene_.reset();
-	}
+SceneManager::SceneManager(DxCore* dxCore)
+    : pDxCore_(dxCore){
+    // ここでシーンをすべて生成しておく場合
+    scenes_[static_cast< int >(SceneType::PLAY)] = std::make_unique<GameScene>(pDxCore_);
+    scenes_[static_cast< int >(SceneType::TEST)] = std::make_unique<TestScene>(pDxCore_);
+
+    // 最初は TITLE シーンにしておく
+    currentSceneNo_ = static_cast< int >(SceneType::PLAY);
+    nextSceneNo_ = currentSceneNo_;
 }
 
-//===================================================================*/
-// 初期シーンの生成・初期化
-//===================================================================*/
+SceneManager::~SceneManager(){}
+
 void SceneManager::Initialize(){
-	// 初期シーンを生成
-	std::unique_ptr<IScene> initialScene = std::make_unique<TestScene>(pDxCore_);
+    // シーン切り替えパネルを作成 (UI がある場合)
+    if (pEngineUI_){
+        sceneSwitchPanel_ = std::make_unique<SceneSwitcherPanel>(this);
 
-	// UIが必要ならセット
-	if (pEngineUI_){
-		initialScene->SetEngineUI(pEngineUI_);
-	}
+        sceneSwitchPanel_->AddSceneOption("Game Scene", SceneType::PLAY);
+        sceneSwitchPanel_->AddSceneOption("Test Scene", SceneType::TEST);
+        // ... ほかのシーンも必要なら追加 ...
 
-	// シーンマネージャをセット
-	initialScene->SetSceneManager(this);
+        // UIにパネルを追加
+        pEngineUI_->AddPanel(std::move(sceneSwitchPanel_));
+    }
 
-	// シーン初期化
-	initialScene->Initialize();
-
-	// 現在のシーンに設定
-	currentScene_ = std::move(initialScene);
+    // まずは最初のシーンを初期化
+    scenes_[currentSceneNo_]->SetSceneManager(this);
+    scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
+    scenes_[currentSceneNo_]->Initialize();
 }
 
-//===================================================================*/
-// シーン切り替え予約があれば反映し、現在シーンを更新
-//===================================================================*/
 void SceneManager::Update(){
-	// 次シーンの予約があれば切り替え
-	if (nextScene_){
-		SwitchToNextScene();
-	}
+    // シーン切り替えチェック
+    if (currentSceneNo_ != nextSceneNo_){
+        // いったん現在シーンをクリーンアップ
+        scenes_[currentSceneNo_]->CleanUp();
 
-	// シーンの更新
-	if (currentScene_){
-		currentScene_->Update();
-	}
+        // シーン番号を更新
+        currentSceneNo_ = nextSceneNo_;
+
+        // 新しいシーンに UI と SceneManager をセットして Initialize
+        scenes_[currentSceneNo_]->SetSceneManager(this);
+        scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
+        scenes_[currentSceneNo_]->Initialize();
+    }
+
+    // 現在のシーンを更新
+    scenes_[currentSceneNo_]->Update();
 }
 
-//===================================================================*/
-// 現在のシーンを描画
-//===================================================================*/
 void SceneManager::Draw(){
-	if (currentScene_){
-		currentScene_->Draw();
-	}
+    // 現在のシーンを描画
+    scenes_[currentSceneNo_]->Draw();
 }
 
-//===================================================================*/
-// 次シーンへ切り替える内部処理
-//===================================================================*/
-void SceneManager::SwitchToNextScene(){
-	// 旧シーンの終了
-	if (currentScene_){
-		currentScene_->CleanUp();
-		currentScene_.reset();
-	}
+void SceneManager::RequestSceneChange(SceneType nextScene){
+    nextSceneNo_ = static_cast< int >(nextScene);
+	SceneObjectManager::GetInstance()->ClearGameObjects();
+    
+}
 
-	// 次シーンを現在シーンへ
-	currentScene_ = std::move(nextScene_);
+void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene){
+    // いったん現在シーンをクリーンアップ
+    scenes_[currentSceneNo_]->CleanUp();
 
-	// シーンマネージャをセット
-	currentScene_->SetSceneManager(this);
+    // シーン番号を更新
+    currentSceneNo_ = nextSceneNo_;
 
-	// UIをセット
-	if (pEngineUI_){
-		currentScene_->SetEngineUI(pEngineUI_);
-	}
-
-	// シーン初期化
-	currentScene_->Initialize();
+    // 新しいシーンに UI と SceneManager をセットして Initialize
+    scenes_[currentSceneNo_]->SetSceneManager(this);
+    scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
+    scenes_[currentSceneNo_]->Initialize();
 }

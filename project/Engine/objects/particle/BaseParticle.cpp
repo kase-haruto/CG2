@@ -1,13 +1,15 @@
 #include "BaseParticle.h"
 
 //* engine
+#include "Engine/core/System.h"
 #include "Engine/graphics/GraphicsGroup.h"
-#include "Engine/physics/DirectionalLight.h"
+#include "Engine/physics/light/DirectionalLight.h"
 #include "Engine/graphics/SrvLocator.h"
 #include "Engine/objects/ModelManager.h"
 #include "Engine/objects/TextureManager.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "ParticleEmitShape.h"
+#include "Engine/core/Clock/ClockManager.h"
 
 //* lib
 #include "lib/myFunc/MyFunc.h"
@@ -48,41 +50,47 @@ void BaseParticle::Update(){
 
             if (isBillboard_){
                 // ビルボード処理
-                Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetCamera3d()->GetWorldMat());
-                billboardMatrix.m[3][0] = 0.0f;
+                Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetWorldMatrix());
+                billboardMatrix.m[3][0] = 0.0f; // 位置情報をリセット
                 billboardMatrix.m[3][1] = 0.0f;
                 billboardMatrix.m[3][2] = 0.0f;
 
+                // スケールと位置を適用
                 Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
                 Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
                 worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, billboardMatrix), translateMatrix);
             } else{
-                // 通常のスケールとトランスレーション
+                // 発生時に設定した回転を保持
+                Matrix4x4 rotationMatrix = EulerToMatrix(it->transform.rotate);
                 Matrix4x4 scaleMatrix = MakeScaleMatrix(it->transform.scale);
                 Matrix4x4 translateMatrix = MakeTranslateMatrix(it->transform.translate);
-                worldMatrix = Matrix4x4::Multiply(scaleMatrix, translateMatrix);
+                worldMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, rotationMatrix), translateMatrix);
             }
 
-            // ビルボード有無に関わらず、WVPを計算
-            worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+            // WVP計算
+            worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
             instancingData[instanceNum_].WVP = worldViewProjectionMatrix;
             instancingData[instanceNum_].World = worldMatrix;
             instancingData[instanceNum_].color = it->color;
 
-
-            float alpha;
-            
+            float alpha = instancingData[instanceNum_].color.w;
             if (isFixationAlpha_){
                 alpha = 1.0f;
             } else{
-                alpha = 1.0f - (it->currentTime / it->lifeTime);
+                float ratio = it->currentTime / it->lifeTime;
+                // 0〜1の範囲にクランプ
+                if (ratio < 0.0f) ratio = 0.0f;
+                if (ratio > 1.0f) ratio = 1.0f;
+                alpha = 1.0f - ratio;
             }
 
             instancingData[instanceNum_].color.w = alpha;
 
-            it->currentTime += deltaTime;
-            it->transform.translate += it->velocity * deltaTime;
+            it->currentTime += ClockManager::GetInstance()->GetDeltaTime();
+            if (!isStatic_){
+                it->transform.translate += it->velocity * ClockManager::GetInstance()->GetDeltaTime();
+            }
 
             ++instanceNum_;
         }
@@ -90,42 +98,48 @@ void BaseParticle::Update(){
         ++it;
     }
 
-    emitter_.frequencyTime += deltaTime;
-    if (emitter_.frequencyTime >= emitter_.frequency){
-        Emit(emitter_.count);
-        emitter_.frequencyTime = 0.0f;
+    if (autoEmit_){
+        emitter_.frequencyTime += ClockManager::GetInstance()->GetDeltaTime();
+        if (emitter_.frequencyTime >= emitter_.frequency){
+            Emit(emitter_.count);
+            emitter_.frequencyTime = 0.0f;
+        }
     }
 }
+
 
 void BaseParticle::Draw(){
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
-    commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
+    if (instanceNum_>=1){
+        commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+        commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+        commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+        commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
-    // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
-    commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
+        // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
+        commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
 
-    // OBB描画
-    if (currentShape_ == EmitterShape::OBB){
-        PrimitiveDrawer::GetInstance()->DrawOBB(
-            emitter_.transform.translate,
-            emitter_.transform.rotate,
-            emitter_.transform.scale,
-            {1.0f,1.0f,1.0f,1.0f}
-        );
-    } else if (currentShape_ == EmitterShape::Sphere){
-        PrimitiveDrawer::GetInstance()->DrawSphere(
-            emitter_.transform.translate,
-            emitter_.transform.scale.x * 0.5f,
-            8,
-            {1.0f,1.0f,1.0f,1.0f}
-        );
+    #ifdef _DEBUG
+        // OBB描画
+        if (currentShape_ == EmitterShape::OBB){
+            PrimitiveDrawer::GetInstance()->DrawOBB(
+                emitter_.transform.translate,
+                emitter_.transform.rotate,
+                emitter_.transform.scale,
+                {1.0f,1.0f,1.0f,1.0f}
+            );
+        } else if (currentShape_ == EmitterShape::Sphere){
+            PrimitiveDrawer::GetInstance()->DrawSphere(
+                emitter_.transform.translate,
+                emitter_.transform.scale.x * 0.5f,
+                8,
+                {1.0f,1.0f,1.0f,1.0f}
+            );
+        }
+    #endif // _DEBUG
     }
 
-    
 }
 
 void BaseParticle::ImGui(){
@@ -172,13 +186,8 @@ void BaseParticle::Emit(uint32_t count){
 
         Vector3 localPoint {};
         Vector3 localNormal {};
-        Vector3 vel {};
 
-        Matrix4x4 rotX = MakeRotateXMatrix(emitter_.transform.rotate.x);
-        Matrix4x4 rotY = MakeRotateYMatrix(emitter_.transform.rotate.y);
-        Matrix4x4 rotZ = MakeRotateZMatrix(emitter_.transform.rotate.z);
-        Matrix4x4 rotationMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(rotZ, rotY), rotX);
-
+        // パーティクルの初期位置と速度の設定
         if (currentShape_ == EmitterShape::OBB){
             FaceInfo fi = GetRandomPointAndNormalOnOBBSurface(emitter_.transform,
                                                               emitPosX_, emitNegX_,
@@ -186,31 +195,49 @@ void BaseParticle::Emit(uint32_t count){
                                                               emitPosZ_, emitNegZ_);
             localPoint = fi.localPoint;
             localNormal = fi.localNormal;
-
-            Vector3 worldNormal = TransformNormal(localNormal, rotationMatrix);
-            particle.velocity = worldNormal * speed;
+            particle.velocity = TransformNormal(localNormal, Matrix4x4::MakeIdentity()) * speed;
 
         } else if (currentShape_ == EmitterShape::Sphere){
             Vector3 si = GetRandomPointOnSphere(emitter_.transform);
             localPoint = si;
-            particle.SetVelocityRandom(-1.0f,1.0f);
+            particle.SetVelocityRandom(-1.0f, 1.0f);
         }
 
-        Vector3 worldPos = Vector3::Transform(localPoint, rotationMatrix) + emitter_.transform.translate;
-        
+        Vector3 worldPos = Vector3::Transform(localPoint, Matrix4x4::MakeIdentity()) + emitter_.transform.translate;
         particle.transform.translate = worldPos;
-        particle.lifeTime = Random::Generate(2.0f, 5.0f);
+        particle.maxScale = fixedMaxScale_;
+        // maxScaleの設定（ランダムまたは固定値）
+        if (useRandomScale_){
+			
+            particle.transform.scale = Random::GenerateVector3(randomScaleMin_, randomScaleMax_); // ランダム値を設定
+        } else{
+            particle.transform.scale = Vector3(fixedMaxScale_,fixedMaxScale_,fixedMaxScale_); // 固定値を設定
+        }
 
+        if (!isBillboard_){
+            // 非ビルボードモードでは発生時にカメラの方向を設定
+            Matrix4x4 cameraMatrix = CameraManager::GetWorldMatrix();
+            particle.transform.rotate = Matrix4x4::ToEuler(cameraMatrix);
+        }
+
+        // ライフタイムの設定
+        particle.lifeTime = SetParticleLifeTime();
         particles_.push_back(particle);
     }
 
     instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
+Vector3 BaseParticle::GenerateVelocity(float speed){
+    // デフォルトのランダムな方向の速度生成
+    Vector3 velocity = Random::GenerateVector3(-1.0f, 1.0f);
+    return velocity * speed;
+}
+
 void BaseParticle::CreateBuffer(){
     Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
-    vertexBuffer_ = CreateBufferResource(device, sizeof(VertexData) * modelData_->vertices.size());
+    vertexBuffer_ = CreateBufferResource(device.Get(), sizeof(VertexData) * modelData_->vertices.size());
     vertexBufferView.BufferLocation = vertexBuffer_->GetGPUVirtualAddress();
     vertexBufferView.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
     vertexBufferView.StrideInBytes = sizeof(VertexData);
@@ -293,7 +320,7 @@ void ParticleData::Emitter::Initialize(uint32_t Count){
 
 }
 
-void ParticleData::Emitter::Initialize(const Transform& Transform, const float Frequency, const float FrequencyTime, uint32_t Count){
+void ParticleData::Emitter::Initialize(const EulerTransform& Transform, const float Frequency, const float FrequencyTime, uint32_t Count){
 
 	count = Count;
 	transform = Transform;

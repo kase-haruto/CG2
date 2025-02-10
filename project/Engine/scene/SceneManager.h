@@ -1,55 +1,48 @@
 #pragma once
 
 #include <memory>
+#include <array>
 #include "IScene.h"
 #include "Engine/core/EngineUI.h"
 #include "Engine/core/DirectX/DxCore.h"
+#include "Engine/core/UI/SceneSwitcherPanel.h"
 
-//===================================================================*/
-// SceneManagerクラス
-// シーンの生成・破棄、シーン切り替えなどを管理する
-//===================================================================*/
 class SceneManager{
 public:
-	//===================================================================*/
-	//                   public methods
-	//===================================================================*/
-	SceneManager() = default;
-	SceneManager(DxCore* dxCore){ pDxCore_ = dxCore; }
-	~SceneManager();
+    SceneManager() = default;
+    SceneManager(DxCore* dxCore);
+    ~SceneManager();
 
-	//===================================================================*/
-	//                   シーン管理
-	//===================================================================*/
-	// 初期シーンの設定と初期化
-	void Initialize();
+    // 初期化(シーン生成など)
+    void Initialize();
 
-	// シーン更新処理
-	// 予約された次シーンがあればここで切り替える
-	void Update();
+    // シーン更新
+    void Update();
 
-	// シーン描画処理
-	void Draw();
+    // シーン描画
+    void Draw();
 
-	// 次シーンを予約
-	void SetNextScene(std::unique_ptr<IScene> scene){ nextScene_ = std::move(scene); }
+    // UIをセット
+    void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
 
-	// UIをセット
-	void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
+    // 切り替えリクエスト用メソッド (UI などから呼び出す)
+    void RequestSceneChange(SceneType nextScene);
+
+    void SetCurrentScene(std::unique_ptr<IScene> newScene);
 
 private:
-	//===================================================================*/
-	//                   private methods
-	//===================================================================*/
-	// 次シーンへの切り替え処理
-	void SwitchToNextScene();
+    // シーンインスタンスの配列
+    std::array<std::unique_ptr<IScene>, static_cast< int >(SceneType::count)> scenes_;
 
-	//===================================================================*/
-	//                   private fields
-	//===================================================================*/
-	std::unique_ptr<IScene> nextScene_ = nullptr;    // 次のシーン
-	std::unique_ptr<IScene> currentScene_ = nullptr; // 現在のシーン
+    // 現在シーン・次シーン
+    int currentSceneNo_ {static_cast< int >(SceneType::TITLE)};
+    int nextSceneNo_ {static_cast< int >(SceneType::TITLE)};
 
-	EngineUI* pEngineUI_ = nullptr;  // ui
-	DxCore* pDxCore_ = nullptr;      // dxcore
+    // UIパネルなど
+    std::unique_ptr<SceneSwitcherPanel> sceneSwitchPanel_ = nullptr;
+    EngineUI* pEngineUI_ = nullptr;
+    DxCore* pDxCore_ = nullptr;
+
+public:
+	bool gameResult_ = false;
 };

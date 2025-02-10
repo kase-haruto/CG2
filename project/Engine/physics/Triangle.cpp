@@ -1,7 +1,7 @@
 ﻿#include "Triangle.h"
 #include "engine/objects/TextureManager.h"
 #include "externals/imgui/imgui.h"
-#include "engine/physics/DirectionalLight.h"
+#include "engine/physics/light/DirectionalLight.h"
 #include "Engine/graphics/camera/CameraManager.h"
 		 
 /* math */
@@ -133,7 +133,7 @@ void Triangle::MatrixInitialize(){
 											 transform.translate
 	);
 
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetCamera3d()->GetViewProjectionMatrix());
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 	matrixData->world = worldMatrix;
 	matrixData->WVP = worldViewProjectionMatrix;
 }

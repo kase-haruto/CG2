@@ -1,0 +1,61 @@
+#include "LightManager.h"
+
+LightManager* LightManager::GetInstance(){
+	static LightManager instance;
+    return &instance;
+}
+
+///////////////////////////////////////////////////////////////////////////
+// 初期化関数
+///////////////////////////////////////////////////////////////////////////
+void LightManager::Initialize(const DxCore* dxCore){
+
+	directionalLight_ = std::make_unique<DirectionalLight>();
+	directionalLight_->Initialize(dxCore);
+	pointLight_ = std::make_unique<PointLight>();
+	pointLight_->Initialize(dxCore);
+}
+
+///////////////////////////////////////////////////////////////////////////
+// 更新処理
+///////////////////////////////////////////////////////////////////////////
+void LightManager::Update(){}
+
+///////////////////////////////////////////////////////////////////////////
+// 終了処理
+///////////////////////////////////////////////////////////////////////////
+void LightManager::Finalize(){
+	directionalLight_.reset();
+	pointLight_.reset();
+}
+
+void LightManager::ShowImGui(){
+#ifdef _DEBUG
+	directionalLight_->ShowImGuiInterFace();
+	pointLight_->ShowImGuiInterface();
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////
+// コマンドの設定
+///////////////////////////////////////////////////////////////////////////
+void LightManager::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,
+							  LightType lightType,
+							  PipelineType pipelineType){
+	// ライトの種類によってコマンドを設定
+
+	// ディレクショナルライトの場合
+	if (lightType == LightType::Directional){
+		directionalLight_->SetCommand(commandList, pipelineType);
+	}
+
+	// ポイントライトの場合
+	else if (lightType == LightType::Point){
+		pointLight_->SetCommand(commandList, pipelineType);
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// rootParameterの設定
+///////////////////////////////////////////////////////////////////////////

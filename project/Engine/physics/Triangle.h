@@ -78,7 +78,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
 	Vector4 RGBa;
-	Transform transform;
+	EulerTransform transform;
 	Material* materialData;
 	TransformationMatrix* matrixData;
 

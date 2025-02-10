@@ -41,11 +41,11 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	ImGui::StyleColorsDark(); // ダークテーマを適用
 
 	// Docking時のスタイル調整（任意）
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f; // ウィンドウ背景を完全不透明に
-	}
+	//ImGuiStyle& style = ImGui::GetStyle();
+	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
+	//	style.WindowRounding = 0.0f;
+	//	style.Colors[ImGuiCol_WindowBg].w = 1.0f; // ウィンドウ背景を完全不透明に
+	//}
 
 	CustomizeImGuiStyle();
 
@@ -89,7 +89,6 @@ void ImGuiManager::Draw(){
 	ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 	//描画コマンドを発行
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
-
 }
 
 void ImGuiManager::CustomizeImGuiStyle(){

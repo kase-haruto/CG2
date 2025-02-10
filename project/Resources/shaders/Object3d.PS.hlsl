@@ -175,9 +175,9 @@ PixelShaderOutput main(VertexShaderOutput input){
     float fogFactor = saturate((distanceToCamera - fogStart) / (fogEnd - fogStart));
     
     //フォグの色をブレンド
-    float4 foggedColor = lerp(baseColor, fogColor, fogFactor);
+   // float4 foggedColor = lerp(baseColor, fogColor, fogFactor);
     
-    output.color = gMaterial.color * foggedColor;
+    output.color = gMaterial.color * baseColor;
     
     // アルファ値が0の場合、ピクセルを破棄
     if (output.color.a == 0.0){

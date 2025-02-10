@@ -11,7 +11,7 @@
 #include"engine/graphics/VertexData.h"
 #include"engine/graphics/Material.h"
 #include"engine/physics/AABB.h"
-
+#include "Engine/objects/Animation/AnimationStruct.h"
 /* c++ */
 #include <list>
 #include <d3d12.h>
@@ -24,8 +24,7 @@
 #include <random>
 #include <memory>
 
-
-const float deltaTime = 1.0f / 60.0f;
+class  Model;
 
 // 平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
@@ -52,8 +51,22 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
+Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename);
+
 DirectX::ScratchImage LoadTextureImage(const std::string& filePath);
 
 bool IsCollision(const AABB& aabb, const Vector3& point);
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+float Lerp(float v1, float v2, float t);
+
+float LerpShortAngle(float a, float b, float t);
+
+Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix);
+
+Vector2 WorldToScreen(const Vector3& worldPos);
+
+Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec);
+
+bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos);

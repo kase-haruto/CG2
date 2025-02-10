@@ -86,7 +86,7 @@ void DxCore::PreDrawOffscreen(){
 
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
-	float clearColor[] = {0.03f, 0.03f, 0.05f, 1.0f};
+	float clearColor[] = {0.02f, 0.02f, 0.02f, 1.0f};
 	commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -109,8 +109,8 @@ void DxCore::DrawOffscreenTexture(){
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	// 以降はオフスクリーンテクスチャをSRVとして使用する
-	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage);
-	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage);
+	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage,BlendMode::NONE);
+	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
 	if (!pipelineState || !rootSignature){
 		OutputDebugStringA("PipelineState or RootSignature is null.\n");
 		return;
@@ -147,7 +147,7 @@ void DxCore::PostDraw(){
 	dxCommand_->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
 	// スワップチェインのプレゼント
-	dxSwapChain_->Presetn();
+	dxSwapChain_->Present();
 
 	// フェンス同期
 	dxFence_->Signal(dxCommand_->GetCommandQueue());
@@ -176,39 +176,7 @@ void DxCore::RenderEngineUI(){
 #ifdef _DEBUG
 
 
-	// ウィンドウの現在のサイズを取得
-	ImVec2 windowSize = ImGui::GetIO().DisplaySize;
-
-	// オフスクリーンレンダリングのサイズ（例：1280x720）
-	const ImVec2 offscreenSize = ImVec2(static_cast< float >(kWindowWidth), static_cast< float >(kWindowHeight));
-
-	// 表示するスケール（小さく表示するために適用）
-	const float scaleFactor = 0.55f; // 縮小率（0.5で50%縮小）
-
-	// アスペクト比を維持しつつ描画サイズを計算
-	ImVec2 renderSize = ImVec2(offscreenSize.x * scaleFactor, offscreenSize.y * scaleFactor);
-
-	// 描画を中央に配置するための位置を計算
-	ImVec2 renderPos = {
-		(windowSize.x - renderSize.x) / 2.0f,
-		(windowSize.y - renderSize.y) / 2.0f
-	};
-
-	// フルスクリーンウィンドウの設定
-	ImGui::SetNextWindowPos(ImVec2(0, 0)); // 左上に位置を固定
-	ImGui::SetNextWindowSize(windowSize);  // ウィンドウサイズを画面全体に設定
-	
-	// フルスクリーンのImGuiウィンドウを開始
-	ImGui::Begin("FullScreenUI", nullptr,
-				 ImGuiWindowFlags_NoBringToFrontOnFocus |
-				 ImGuiWindowFlags_NoMove |
-				 ImGuiWindowFlags_NoResize |
-				 ImGuiWindowFlags_NoDecoration | // ウィンドウの装飾を無効化
-				 ImGuiWindowFlags_NoCollapse);
-
-
-
-	ImGui::End();
+	//ImGui::End();
 #endif // _DEBUG
 
 }
