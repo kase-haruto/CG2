@@ -2,7 +2,6 @@
 #include "UI/HierarchyPanel.h"
 #include "UI/InspectorPanel.h"
 #include "UI/ConsolePanel.h"
-#include "UI/AttackEditorPanel.h" // 新しいパネルのインクルード
 #include <externals/imgui/imgui.h>
 
 //===================================================================

@@ -15,9 +15,9 @@ void EnemyDeadParticle::Initialize(const std::string& modelName, const std::stri
 	blendMode_ = BlendMode::SUB;
 	currentShape_ = EmitterShape::Sphere;
 
-	// ƒ‰ƒ“ƒ_ƒ€ƒXƒP[ƒ‹‚ğg—p‚·‚é
+	// ãƒ©ãƒ³ãƒ€ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹
 	SetUseRandomScale(true);
-	SetRandomScaleRange(0.5f, 1.0f); // ƒ‰ƒ“ƒ_ƒ€’l‚Ì”ÍˆÍ‚ğw’è
+	SetRandomScaleRange(0.5f, 1.0f); // ãƒ©ãƒ³ãƒ€ãƒ å€¤ã®ç¯„å›²ã‚’æŒ‡å®š
 
 	useRandomColor_ = false;
 }

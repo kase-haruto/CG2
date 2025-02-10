@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IScene.h"
 
 ///オブジェクト関連///
@@ -9,8 +9,6 @@
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
-#include "Game/3d/Player/Player.h"
-#include "Game/3d/Enemy/Enemy.h"
 #include "Engine/objects/Animation/AnimationModel.h"
 
 /* graphics */
@@ -46,63 +44,20 @@ public:
     TestScene(DxCore* dxCore);
     ~TestScene() override = default;
 
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
     void Initialize()override;
-    /// <summary>
-    /// 更新処理
-    /// </summary>
     void Update()override;
-    /// <summary>
-    /// デバッグ用ui
-    /// </summary>
-    void UpdateDebugUI();
-    /// <summary>
-    /// 描画処理
-    /// </summary>
     void Draw()override;
-    /// <summary>
-    /// 解放処理
-    /// </summary>
     void CleanUp()override;
 
-    /// <summary>
-    /// モデル描画前処理
-    /// </summary>
-    void ModelPreDraw();
 private:
-    ///=========================
-    /// グラフィック関連
-    ///=========================
-    std::unique_ptr<DirectionalLight>directionalLight_ = nullptr;
-    std::unique_ptr<PointLight> pointLight_ = nullptr;
+	/* graphics =====================================================*/
     std::unique_ptr<FogEffect>fog_ = nullptr;
 
-    ///=========================
-    /// カメラ関連
-    ///=========================
+	/* objects ====================================================*/
+    std::unique_ptr<Model> modelField_ = nullptr;
 
-    ///=========================
-    /// オブジェクト関連
-    ///=========================
+	/* editor =====================================================*/
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<UIEditor> uiEditor_ = nullptr;
-    std::unique_ptr<Model> modelField_ = nullptr;
-    std::unique_ptr<Model> modelGround_ = nullptr;
-
-    std::unique_ptr<AnimationModel> animationCube_ = nullptr;
-    std::unique_ptr<Model> spriteTestModel_ = nullptr;
-
-    Quaternion q1 = {2.0f,3.0f,4.0f,1.0f};
-    Quaternion q2 = {1.0f,3.0f,5.0f,2.0f};
-
-    ///=========================
-    /// particle
-    ///=========================
-
-    // 各ウィンドウの表示フラグ
-    bool showObjectWindow = false;
-
 };
 

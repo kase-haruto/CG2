@@ -1,5 +1,5 @@
 #pragma once
-#include "Game/3d/BaseGameObject.h"
+#include "Game/3d/Base/BaseGameObject.h"
 #include "Engine/objects/Collider/SphereCollider.h"
 class TestObject :
     public BaseGameObject,public SphereCollider{

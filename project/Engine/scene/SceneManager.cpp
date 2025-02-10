@@ -1,16 +1,12 @@
 #include "SceneManager.h"
 #include "TestScene.h"
-#include "TitleScene.h"
-#include "ResultScene.h"
 #include "GameScene.h"
 #include "engine/objects/SceneObjectManager.h"
 
 SceneManager::SceneManager(DxCore* dxCore)
     : pDxCore_(dxCore){
     // ここでシーンをすべて生成しておく場合
-    scenes_[static_cast< int >(SceneType::TITLE)] = std::make_unique<TitleScene>(pDxCore_);
     scenes_[static_cast< int >(SceneType::PLAY)] = std::make_unique<GameScene>(pDxCore_);
-	scenes_[static_cast< int >(SceneType::RESULT)] = std::make_unique<ResultScene>(pDxCore_);
     scenes_[static_cast< int >(SceneType::TEST)] = std::make_unique<TestScene>(pDxCore_);
 
     // 最初は TITLE シーンにしておく
@@ -25,9 +21,7 @@ void SceneManager::Initialize(){
     if (pEngineUI_){
         sceneSwitchPanel_ = std::make_unique<SceneSwitcherPanel>(this);
 
-        sceneSwitchPanel_->AddSceneOption("Title Scene", SceneType::TITLE);
         sceneSwitchPanel_->AddSceneOption("Game Scene", SceneType::PLAY);
-		sceneSwitchPanel_->AddSceneOption("Result Scene", SceneType::RESULT);
         sceneSwitchPanel_->AddSceneOption("Test Scene", SceneType::TEST);
         // ... ほかのシーンも必要なら追加 ...
 

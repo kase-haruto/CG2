@@ -1,5 +1,5 @@
 #pragma once
-#include "../BaseGameObject.h"
+#include "../Base/BaseGameObject.h"
 
 #include <cstdint>
 #include <string>

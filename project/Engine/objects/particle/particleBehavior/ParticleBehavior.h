@@ -5,6 +5,7 @@ class ParticleSystem;
 
 class ParticleBehavior{
 public:
+	ParticleBehavior() = default;
     virtual ~ParticleBehavior() = default;
     virtual void ApplyBehavior(ParticleSystem& particle) = 0;
 

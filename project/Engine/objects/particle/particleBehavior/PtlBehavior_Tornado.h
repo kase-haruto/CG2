@@ -12,6 +12,7 @@ public:
     //===================================================================*/
     //                   public methods
     //===================================================================*/
+	PtlBehavior_Tornado() = default;
     PtlBehavior_Tornado(const Vector3& center, const float rotateSpeed,const float upSpeed);
     ~PtlBehavior_Tornado()override = default;
 
