@@ -399,6 +399,7 @@
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
     <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
+    <ClCompile Include="Engine\scene\SceneFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -642,6 +643,7 @@
     <ClInclude Include="Engine\physics\light\LightData.h" />
     <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
+    <ClInclude Include="Engine\scene\SceneFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

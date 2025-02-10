@@ -95,8 +95,6 @@ Collider* CollisionManager::FindColliderByName(const std::string& name){
 	return nullptr; // 見つからない場合
 }
 
-
-
 void CollisionManager::AddCollider(Collider* collider){
 
 	colliders_.emplace_back(collider);
@@ -123,8 +121,6 @@ void CollisionManager::DebugLog(){
 	ImGui::EndChild();
 
 }
-
-
 
 bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB){
 
@@ -263,7 +259,6 @@ bool CollisionManager::OBBToOBB([[maybe_unused]] const OBB& obbA, [[maybe_unused
 	// 3) すべての軸で重なった -> 衝突している
 	return true;
 }
-
 
 void CollisionManager::ComputeOBBAxes(const OBB& obb, Vector3 outAxis[3]){
 	Matrix4x4 rot = EulerToMatrix(obb.rotate);
