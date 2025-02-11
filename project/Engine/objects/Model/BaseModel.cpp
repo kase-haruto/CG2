@@ -40,6 +40,9 @@ void BaseModel::Update(){
 
             // テクスチャ設定
             handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+
+			// マテリアル・行列バッファ生成
+            UpdateMatrix();
         }
         // loaded が nullptr の場合、まだ読み込み中 → 次フレーム以降に再試行
     }

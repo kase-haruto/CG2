@@ -5,7 +5,7 @@ ModelManager* ModelManager::instance_ = nullptr;
 const std::string ModelManager::directoryPath_ = "Resources/models";
 
 ModelManager::ModelManager(){
-    // ワーカースレッドを起動 (1本だけ)
+    // スレッドを起動
     workerThread_ = std::thread(&ModelManager::WorkerMain, this);
 }
 
@@ -41,7 +41,7 @@ void ModelManager::Finalize(){
 }
 
 //----------------------------------------------------------------------------
-// 非同期ロード開始 (ワーカースレッド1本で順番に処理)
+// 非同期ロード開始
 //----------------------------------------------------------------------------
 std::future<std::shared_ptr<ModelData>> ModelManager::LoadModel(const std::string& fileName){
     // 既にロード済みかどうかチェック
@@ -91,7 +91,7 @@ void ModelManager::WorkerMain(){
             requestQueue_.pop();
         }
 
-        // (A) ファイルを読み込み & Assimp でパース → CPU上の ModelData を生成
+        // ファイルを読み込み
         std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(
             LoadModelFile(directoryPath_, currentRequest.fileName)
         );
