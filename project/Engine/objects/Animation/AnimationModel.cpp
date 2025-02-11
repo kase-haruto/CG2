@@ -28,6 +28,7 @@ extern Animation LoadAnimationFile(const std::string& directoryPath, const std::
 // コンストラクタ
 //-----------------------------------------------------------------------------
 AnimationModel::AnimationModel(const std::string& fileName){
+	fileName_ = fileName;
     Create(fileName);
 }
 
@@ -37,25 +38,6 @@ AnimationModel::AnimationModel(const std::string& fileName){
 void AnimationModel::Create(const std::string& filename){
     // まずは初期化
     Initialize();
-
-    // モデルデータのロード(既に存在すればキャッシュから取得)
-    modelData_ = ModelManager::LoadModel(filename);
-
-    // 頂点バッファとインデックスバッファを取得してビューを作成
-    auto vertexResource = ModelManager::GetVertexResource(filename);
-    auto indexResource = ModelManager::GetIndexResource(filename);
-
-    vertexBufferView_.BufferLocation = vertexResource->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(VertexData) * modelData_->vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-    indexBufferView_.BufferLocation = indexResource->GetGPUVirtualAddress();
-    indexBufferView_.SizeInBytes = static_cast< UINT >(sizeof(uint32_t) * modelData_->indices.size());
-    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-    // テクスチャを読み込む
-    handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
-
     // ▼ ここでアニメーションを読み込む
     try{
         animation_ = LoadAnimationFile("Resources/models", filename);
@@ -182,43 +164,46 @@ Vector3 AnimationModel::CalculateValue(const AnimationCurve<Vector3>& curve, flo
 // 毎フレームの更新
 //-----------------------------------------------------------------------------
 void AnimationModel::AnimationUpdate(){
-    // (1) アニメーションを再生（animationTransform_ を更新）
-    PlayAnimation();
+    if (modelData_){
+        // (1) アニメーションを再生（animationTransform_ を更新）
+        PlayAnimation();
 
-    // (2) UV transform を行列化
-    Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
-    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
-    uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-    materialData_->uvTransform = uvTransformMatrix;
+        // (2) UV transform を行列化
+        Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+        materialData_->uvTransform = uvTransformMatrix;
 
-    // (3) マテリアル更新
-    materialData_->color = RGBa;
-    materialData_->shininess = materialParameter_.shininess;
-    materialData_->enableLighting = materialParameter_.enableLighting;
+        // (3) マテリアル更新
+        materialData_->color = RGBa;
+        materialData_->shininess = materialParameter_.shininess;
+        materialData_->enableLighting = materialParameter_.enableLighting;
 
-    // (4) ワールド行列の更新
-    //   ここで「手動transform + アニメーションtransform」 を合成する
-    Matrix4x4 manualMat = MakeAffineMatrix(
-        transform.scale,
-        transform.rotate,
-        transform.translate
-    );
-    Matrix4x4 animMat = MakeAffineMatrix(
-        animationTransform_.scale,
-        animationTransform_.rotate,
-        animationTransform_.translate
-    );
+        // (4) ワールド行列の更新
+        //   ここで「手動transform + アニメーションtransform」 を合成する
+        Matrix4x4 manualMat = MakeAffineMatrix(
+            transform.scale,
+            transform.rotate,
+            transform.translate
+        );
+        Matrix4x4 animMat = MakeAffineMatrix(
+            animationTransform_.scale,
+            animationTransform_.rotate,
+            animationTransform_.translate
+        );
 
-    // 例: 「手動で移動させたオブジェクト」に対して「アニメーションの回転やスケール」を適用
-    //     → 最終行列 = manualMat * animMat
-    worldMatrix = Matrix4x4::Multiply(animMat,manualMat);
+        // 例: 「手動で移動させたオブジェクト」に対して「アニメーションの回転やスケール」を適用
+        //     → 最終行列 = manualMat * animMat
+        worldMatrix = Matrix4x4::Multiply(animMat, manualMat);
 
-    // (5) カメラ行列との掛け合わせ
-    Matrix4x4 worldViewProjectionMatrix =
-        Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
+        // (5) カメラ行列との掛け合わせ
+        Matrix4x4 worldViewProjectionMatrix =
+            Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
-    matrixData_->world = worldMatrix;
-    matrixData_->WVP = worldViewProjectionMatrix;
+        matrixData_->world = worldMatrix;
+        matrixData_->WVP = worldViewProjectionMatrix;
+    }
+	BaseModel::Update();
 }
 
 void AnimationModel::Update(){

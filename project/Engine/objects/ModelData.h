@@ -7,6 +7,8 @@
 
 /* c++ */
 #include<vector>
+#include <d3d12.h>
+#include <wrl.h>
 
 struct ModelData{
     std::vector<VertexData> vertices;
@@ -21,4 +23,7 @@ struct ModelData{
 
     // あるいは複数アニメーション対応例:
     // std::vector<Animation> animations;
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource;
+    Microsoft::WRL::ComPtr<ID3D12Resource> indexBufferResource;
 };

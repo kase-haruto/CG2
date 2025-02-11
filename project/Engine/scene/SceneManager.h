@@ -35,8 +35,8 @@ private:
     std::array<std::unique_ptr<IScene>, static_cast< int >(SceneType::count)> scenes_;
 
     // 現在シーン・次シーン
-    int currentSceneNo_ {static_cast< int >(SceneType::TITLE)};
-    int nextSceneNo_ {static_cast< int >(SceneType::TITLE)};
+    int currentSceneNo_ {static_cast< int >(SceneType::PLAY)};
+    int nextSceneNo_ {static_cast< int >(SceneType::PLAY)};
 
     // UIパネルなど
     std::unique_ptr<SceneSwitcherPanel> sceneSwitchPanel_ = nullptr;

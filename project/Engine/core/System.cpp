@@ -89,7 +89,7 @@ void System::BeginFrame(){
     imguiManager_->Begin();
     // インプットの更新
     Input::Update();
-
+	ModelManager::GetInstance()->ProcessLoadingTasks();
     // オフスクリーンレンダーターゲットの開始
     dxCore_->PreDrawOffscreen();
 }

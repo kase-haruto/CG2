@@ -41,6 +41,11 @@ void TestScene::Initialize(){
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
+	//test用
+	bunny_ = std::make_unique<Model>("bunny.obj");
+	teapot_ = std::make_unique<Model>("teapot.obj");
+	teapot_->SetPos({5.0f, 0.0f, 0.0f});
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +71,12 @@ void TestScene::Update(){
 	//モデルの更新
 	modelBuilder_->Update();
 
+	//地面
 	modelField_->Update();
+
+	//test
+	bunny_->Update();
+	teapot_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -83,6 +93,10 @@ void TestScene::Draw(){
 
 	//地面の描画
 	modelField_->Draw();
+
+	//test
+	bunny_->Draw();
+	teapot_->Draw();
 
 	ParticleManager::GetInstance()->Draw();
 

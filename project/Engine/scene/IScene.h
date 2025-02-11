@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine/core/EngineUI.h"
 #include "Engine/objects/SceneObject.h"
@@ -10,9 +10,7 @@ class DxCore;
 class SceneManager;
 
 enum class SceneType{
-    TITLE,
     PLAY,
-    RESULT,
     TEST,
     count,
 };

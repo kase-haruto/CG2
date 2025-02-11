@@ -55,6 +55,8 @@ private:
 
 	/* objects ====================================================*/
     std::unique_ptr<Model> modelField_ = nullptr;
+	std::unique_ptr<Model> bunny_ = nullptr;
+	std::unique_ptr<Model> teapot_ = nullptr;
 
 	/* editor =====================================================*/
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;

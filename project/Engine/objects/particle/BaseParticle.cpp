@@ -26,17 +26,30 @@ BaseParticle::BaseParticle(){
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
     Emit(count);
 
-    modelData_ = ModelManager::LoadModel(modelName);
+	modelName_ = modelName;
     textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
     backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
-    CreateBuffer();
-    Map();
-    CreateSRV();
 }
 
 void BaseParticle::Update(){
+    // ----------------------------------------
+   // ▼ もしまだ modelData_ が無ければ、ロード完了したかを確認
+   // ----------------------------------------
+    if (!modelData_){
+        auto loaded = ModelManager::GetInstance()->GetModelData(modelName_);
+        if (loaded){
+            // GPUリソース作成済みの ModelData をゲットした！
+            modelData_ = loaded;
+
+            // 頂点バッファの作成/マッピング/SRV作成を初回だけ行う
+            CreateBuffer();
+            Map();
+            CreateSRV();
+        }
+    }
+
     instanceNum_ = 0;
     for (auto it = particles_.begin(); it != particles_.end();){
         if (instanceNum_ < kMaxInstanceNum_){
@@ -110,34 +123,37 @@ void BaseParticle::Update(){
 
 void BaseParticle::Draw(){
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
+    if (modelData_){
 
-    if (instanceNum_>=1){
-        commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-        commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-        commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
-        commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
-        // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
-        commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
+        if (instanceNum_ >= 1){
+            commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+            commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+            commandList->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
+            commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
-    #ifdef _DEBUG
-        // OBB描画
-        if (currentShape_ == EmitterShape::OBB){
-            PrimitiveDrawer::GetInstance()->DrawOBB(
-                emitter_.transform.translate,
-                emitter_.transform.rotate,
-                emitter_.transform.scale,
-                {1.0f,1.0f,1.0f,1.0f}
-            );
-        } else if (currentShape_ == EmitterShape::Sphere){
-            PrimitiveDrawer::GetInstance()->DrawSphere(
-                emitter_.transform.translate,
-                emitter_.transform.scale.x * 0.5f,
-                8,
-                {1.0f,1.0f,1.0f,1.0f}
-            );
+            // DrawInstancedの第2引数で現在のインスタンス数(instanceNum_)を反映
+            commandList->DrawInstanced(static_cast< UINT >(modelData_->vertices.size()), instanceNum_, 0, 0);
+
+        #ifdef _DEBUG
+            // OBB描画
+            if (currentShape_ == EmitterShape::OBB){
+                PrimitiveDrawer::GetInstance()->DrawOBB(
+                    emitter_.transform.translate,
+                    emitter_.transform.rotate,
+                    emitter_.transform.scale,
+                    {1.0f,1.0f,1.0f,1.0f}
+                );
+            } else if (currentShape_ == EmitterShape::Sphere){
+                PrimitiveDrawer::GetInstance()->DrawSphere(
+                    emitter_.transform.translate,
+                    emitter_.transform.scale.x * 0.5f,
+                    8,
+                    {1.0f,1.0f,1.0f,1.0f}
+                );
+            }
+        #endif // _DEBUG
         }
-    #endif // _DEBUG
     }
 
 }
