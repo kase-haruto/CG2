@@ -30,7 +30,7 @@ public:
     /// バッファへのMap操作(リソースへのCPU書き込みなど)
     virtual void Map() = 0;
     /// ImGuiの更新処理
-    virtual void ShowImGuiInterface() = 0;
+    virtual void ShowImGuiInterface();
     /// 描画
     virtual void Draw() = 0;
 

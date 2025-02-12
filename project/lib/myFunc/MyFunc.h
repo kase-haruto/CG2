@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /* math */
 #include"lib/myMath/Matrix4x4.h"
@@ -70,3 +70,6 @@ Vector2 WorldToScreen(const Vector3& worldPos);
 Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec);
 
 bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos);
+
+// 4x4 行列から Scale, Rotate (Euler角), Translation を抽出する関数
+void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate, Vector3& outTrans);

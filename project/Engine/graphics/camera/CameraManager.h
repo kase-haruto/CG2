@@ -63,7 +63,11 @@ private:
 public:
     static Camera3d* GetCamera3d(){ return instance_->camera3d_.get(); }
 
+    static BaseCamera* GetBaseCamera(){ return instance_->cameras_[instance_->type_]; }
+
 	static Matrix4x4 GetViewProjectionMatrix(){ return instance_->cameras_[instance_->type_]->GetViewProjection(); }
+
+    static Matrix4x4 GetViewMatrix(){ return instance_->cameras_[instance_->type_]->GetViewMatrix(); }
 
 	static Matrix4x4 GetWorldMatrix(){ return instance_->cameras_[instance_->type_]->GetWorldMat(); }
 

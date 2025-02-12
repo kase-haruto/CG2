@@ -1,4 +1,4 @@
-﻿#include"MyFunc.h"
+#include"MyFunc.h"
 #include"ConvertString.h"
 
 #include "Engine/objects/Model/Model.h"
@@ -397,6 +397,62 @@ bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos){
 	outScreenPos = Vector2(screenPos.x, screenPos.y);
 
 	return true; // 見えている
+}
+
+void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate, Vector3& outTrans){
+		// ① 平行移動成分の抽出
+		// ※ row-major の場合、4行目（インデックス 3）の 0～2列目に Translation が入っていると仮定
+		outTrans.x = mat.m[3][0];
+		outTrans.y = mat.m[3][1];
+		outTrans.z = mat.m[3][2];
+
+		// ② スケール成分の抽出
+		// 各行の上位３成分の長さが各軸方向のスケール（シアーがない前提）
+		outScale.x = std::sqrt(mat.m[0][0] * mat.m[0][0] +
+							   mat.m[0][1] * mat.m[0][1] +
+							   mat.m[0][2] * mat.m[0][2]);
+
+		outScale.y = std::sqrt(mat.m[1][0] * mat.m[1][0] +
+							   mat.m[1][1] * mat.m[1][1] +
+							   mat.m[1][2] * mat.m[1][2]);
+
+		outScale.z = std::sqrt(mat.m[2][0] * mat.m[2][0] +
+							   mat.m[2][1] * mat.m[2][1] +
+							   mat.m[2][2] * mat.m[2][2]);
+
+		// ③ 回転成分の抽出
+		// 上位3×3 部分からスケール成分を除く（各行を正規化）
+		// ※ここでは rXY は「行 X, 列 Y」の要素
+		float r00 = mat.m[0][0] / outScale.x;
+		/*float r01 = mat.m[0][1] / outScale.x;
+		float r02 = mat.m[0][2] / outScale.x;*/
+
+		float r10 = mat.m[1][0] / outScale.y;
+		float r11 = mat.m[1][1] / outScale.y;
+		float r12 = mat.m[1][2] / outScale.y;
+
+		float r20 = mat.m[2][0] / outScale.z;
+		float r21 = mat.m[2][1] / outScale.z;
+		float r22 = mat.m[2][2] / outScale.z;
+
+		// オイラー角抽出（回転順序：X→Y→Z、つまり outRotate.x = pitch, outRotate.y = yaw, outRotate.z = roll）
+		// ※以下は一般的な Tait-Bryan 角の抽出例です。※
+		// まず sy = sqrt(r00² + r10²) を求め、特異点（ジンバルロック）をチェックします。
+		float sy = std::sqrt(r00 * r00 + r10 * r10);
+		const float EPSILON = 1e-6f;
+		bool singular = sy < EPSILON;
+
+		if (!singular){
+			// 通常ケース
+			outRotate.x = std::atan2(r21, r22);   // ピッチ（X軸回り）
+			outRotate.y = std::atan2(-r20, sy);     // ヨー（Y軸回り）
+			outRotate.z = std::atan2(r10, r00);     // ロール（Z軸回り）
+		} else{
+			// 特異点（ジンバルロック）の場合
+			outRotate.x = std::atan2(-r12, r11);
+			outRotate.y = std::atan2(-r20, sy);
+			outRotate.z = 0.0f;
+		}
 }
 
 

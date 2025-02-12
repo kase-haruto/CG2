@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 struct Vector3;
@@ -15,6 +15,9 @@ struct Matrix4x4 final{
 	static Matrix4x4 Inverse(const Matrix4x4& m);
 
 	static Vector3 ToEuler(const Matrix4x4& matrix);
+
+	//転置
+	static Matrix4x4 Transpose(const Matrix4x4& mat);
 
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth){
 
