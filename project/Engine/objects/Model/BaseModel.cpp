@@ -8,6 +8,8 @@
 #include "Engine/graphics/camera/CameraManager.h"
 
 #include "externals/imgui/imgui.h"
+#define IMGUIZMO_USE_LH
+#define IMGUIZMO_USE_D3D9_CLIP_SPACE
 #include "externals/imgui/ImGuizmo.h"
 
 const std::string BaseModel::directoryPath_ = "Resource/models";
@@ -18,7 +20,7 @@ Matrix4x4 BaseModel::GetWorldRotationMatrix(){
 
 	// 親が存在する場合、親のワールド回転行列と合成する
 	if (parent_ != nullptr){
-		Matrix4x4 parentWorldRot = EulerToMatrix(parent_->translate);
+		Matrix4x4 parentWorldRot = EulerToMatrix(parent_->rotate);
 		return Matrix4x4::Multiply(parentWorldRot, localRot);
 	} else{
 		return localRot;
@@ -58,14 +60,13 @@ void BaseModel::ShowImGuiInterface(){
   // 1. カメラ取得
   //===========================
   // 例：現在アクティブなカメラを取得
-  //     カメラの種類は CameraManager の内部状態で切り替わっていると想定
     CameraManager* camMgr = CameraManager::GetInstance();
     if (!camMgr){
         ImGui::Text("CameraManager not found!");
         return;
     }
 
-    BaseCamera* camera = camMgr->GetBaseCamera();
+    BaseCamera* camera = camMgr->GetActiveCamera();
     if (!camera){
         ImGui::Text("No Active Camera found!");
         return;
@@ -74,17 +75,16 @@ void BaseModel::ShowImGuiInterface(){
     //===========================
     // 2. カメラ行列 (View, Proj) を列優先に転置して float[16] へ
     //===========================
-    // row-major (DX) → column-major (imGuizmo)
-    const Matrix4x4& rowViewMat = camera->GetViewMatrix();
-    const Matrix4x4& rowProjMat = camera->GetViewProjection();
-
-    Matrix4x4 colViewMat = Matrix4x4::Transpose(rowViewMat);
-    Matrix4x4 colProjMat = Matrix4x4::Transpose(rowProjMat);
+    // カメラのView行列とProjection行列を row-major(左手系DX) → column-major(右手系OpenGL) に転置
+    Matrix4x4 rowViewMat = camera->GetViewMatrix();
+    Matrix4x4 rowProjMat = camera->GetProjectionMatrix();
+    /*Matrix4x4 colViewMat = Matrix4x4::Transpose(rowViewMat);
+    Matrix4x4 colProjMat = Matrix4x4::Transpose(rowProjMat);*/
 
     float view[16];
     float proj[16];
-    memcpy(view, &colViewMat, sizeof(view));
-    memcpy(proj, &colProjMat, sizeof(proj));
+    memcpy(view, &rowViewMat, sizeof(view));
+    memcpy(proj, &rowProjMat, sizeof(proj));
 
     //===========================
     // 3. モデルのローカル行列を column-major にして渡す
@@ -96,25 +96,18 @@ void BaseModel::ShowImGuiInterface(){
     // (親の行列も row-major で取得 → multiply)
     if (parent_){
         Matrix4x4 parentRM = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
-        localRM = Matrix4x4::Multiply(localRM, parentRM);
+        localRM = Matrix4x4::Multiply(parentRM, localRM);  // 親の行列を左側に掛ける
     }
 
     // row-major → column-major
-    Matrix4x4 localCM = Matrix4x4::Transpose(localRM);
+    //Matrix4x4 localCM = Matrix4x4::Transpose(localRM);
 
     float model[16];
-    memcpy(model, &localCM, sizeof(model));
+    memcpy(model, &localRM, sizeof(model));
 
     //===========================
     // 4. ギズモ表示
     //===========================
-    // ギズモを描画する領域 (ここでは画面全体)
-    ImGuizmo::SetRect(
-        0.0f,
-        0.0f,
-        ImGui::GetIO().DisplaySize.x,
-        ImGui::GetIO().DisplaySize.y
-    );
 
     // 操作モード (Translate / Rotate / Scale)
     static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
@@ -136,19 +129,19 @@ void BaseModel::ShowImGuiInterface(){
         // `model` はギズモ操作で更新済み → 再び row-major へ戻す
         Matrix4x4 updatedCM;
         memcpy(&updatedCM, model, sizeof(updatedCM));
-        Matrix4x4 updatedRM = Matrix4x4::Transpose(updatedCM);
+        //Matrix4x4 updatedRM = Matrix4x4::Transpose(updatedCM);
 
         // 親がある場合、「ワールド行列」になっているので
         // 親の逆行列を掛けてローカル行列を取り出す場合がある。
         if (parent_){
             Matrix4x4 parentRM = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
             Matrix4x4 parentInv = Matrix4x4::Inverse(parentRM);
-            updatedRM = Matrix4x4::Multiply(updatedRM, parentInv);
+            updatedCM = Matrix4x4::Multiply(updatedCM, parentInv);
         }
 
         // row-major行列 → (S,R,T) に分解
         Vector3 newScale, newRotate, newTrans;
-        DecomposeMatrix(updatedRM, newScale, newRotate, newTrans);
+        DecomposeMatrix(updatedCM, newScale, newRotate, newTrans);
 
         // 変更を自身の transform に反映
         transform.scale = newScale;

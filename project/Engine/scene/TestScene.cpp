@@ -63,6 +63,11 @@ void TestScene::Initialize(){
 //	更新処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Update(){
+#ifdef _DEBUG
+	modelField_->ShowImGuiInterface();
+#endif //  _DEBUG
+
+
 	CameraManager::Update();
 
 	//uiの更新

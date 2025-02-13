@@ -71,7 +71,6 @@ void Model::Create(const std::string& filename){
 
 void Model::Update(){
 	if (modelData_){
-	ShowImGuiInterface();
 		// テクスチャの更新
 		UpdateTexture();
 
