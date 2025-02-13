@@ -3,6 +3,7 @@
 #include "UI/InspectorPanel.h"
 #include "UI/ConsolePanel.h"
 #include <externals/imgui/imgui.h>
+#include <externals/imgui/ImGuizmo.h>
 
 //===================================================================
 //                   静的変数の初期化
@@ -59,8 +60,16 @@ void EngineUI::RenderMainViewport(){
     ImGui::Begin("Main Viewport");
 
     if (mainViewportTextureID_){
+        // 利用可能な領域を取得して、ビュー画像を描画
         ImVec2 viewportSize = ImGui::GetContentRegionAvail();
         ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+
+        // Image の描画後、画像の矩形情報を取得
+        ImVec2 imagePos = ImGui::GetItemRectMin();
+        ImVec2 imageSize = ImGui::GetItemRectSize();
+        ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+        // ギズモの描画範囲を画像と同じ領域に設定 (スクリーン座標系)
+        ImGuizmo::SetRect(imagePos.x, imagePos.y, imageSize.x, imageSize.y);
     } else{
         ImGui::Text("Viewport texture not set.");
     }

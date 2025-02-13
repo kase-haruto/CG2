@@ -400,6 +400,7 @@
     <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
+    <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
