@@ -1,4 +1,4 @@
-﻿#include "Matrix4x4.h"
+#include "Matrix4x4.h"
 
 #include "lib/myMath/Vector4.h"
 #include "lib/myMath/Vector3.h"
@@ -251,3 +251,12 @@ Vector3 Matrix4x4::ToEuler(const Matrix4x4& matrix){
 	return euler;
 }
 
+Matrix4x4 Matrix4x4::Transpose(const Matrix4x4& mat){
+	Matrix4x4 result;
+	for (int r = 0; r < 4; ++r){
+		for (int c = 0; c < 4; ++c){
+			result.m[r][c] = mat.m[c][r];
+		}
+	}
+	return result;
+}
