@@ -3,7 +3,7 @@
 
 ///オブジェクト関連///
 #include "engine/objects/Sprite.h"
-#include "engine/objects/Model/Model.h"
+#include "Game/3d/Base/BaseGameObject.h"
 #include "engine/physics/Sphere.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
@@ -55,8 +55,8 @@ private:
 
 	/* objects ====================================================*/
     std::unique_ptr<Model> modelField_ = nullptr;
-	std::unique_ptr<Model> bunny_ = nullptr;
-	std::unique_ptr<Model> teapot_ = nullptr;
+	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
+	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 
 	/* editor =====================================================*/
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;

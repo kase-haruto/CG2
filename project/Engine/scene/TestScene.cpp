@@ -12,6 +12,7 @@
 #include "Engine/objects/particle/ParticleManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/core/DirectX/DxCore.h"
+#include "Engine/objects/SceneObjectManager.h"
 
 // lib
 #include "lib/myFunc/MyFunc.h"
@@ -42,9 +43,11 @@ void TestScene::Initialize(){
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
 	//test用
-	bunny_ = std::make_unique<Model>("bunny.obj");
-	teapot_ = std::make_unique<Model>("teapot.obj");
-	teapot_->SetPos({5.0f, 0.0f, 0.0f});
+	bunny_ = std::make_unique<BaseGameObject>("bunny.obj");
+	bunny_->SetName("bunny");
+	teapot_ = std::make_unique<BaseGameObject>("teapot.obj");
+	teapot_->SetName("teapot");
+	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -55,8 +58,6 @@ void TestScene::Initialize(){
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
-
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +67,6 @@ void TestScene::Update(){
 #ifdef _DEBUG
 	modelField_->ShowImGuiInterface();
 #endif //  _DEBUG
-
 
 	CameraManager::Update();
 
@@ -103,8 +103,10 @@ void TestScene::Draw(){
 	bunny_->Draw();
 	teapot_->Draw();
 
+	//particle描画
 	ParticleManager::GetInstance()->Draw();
 
+	//primitiveな描画
 	PrimitiveDrawer::GetInstance()->Render();
 
 
@@ -121,4 +123,5 @@ void TestScene::Draw(){
 }
 
 void TestScene::CleanUp(){
+	SceneObjectManager::GetInstance()->ClearAllObject();
 }

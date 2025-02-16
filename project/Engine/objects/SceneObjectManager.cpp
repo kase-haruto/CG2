@@ -32,6 +32,11 @@ void SceneObjectManager::AddObject(SceneObject* object){
 	allSceneObjects_.push_back(object);
 }
 
+void SceneObjectManager::RemoveObject(SceneObject* object){
+	auto it = std::remove(allSceneObjects_.begin(), allSceneObjects_.end(), object);
+	allSceneObjects_.erase(it, allSceneObjects_.end());	
+}
+
 void SceneObjectManager::Finalize(){
 	ClearAllObject();
 }
