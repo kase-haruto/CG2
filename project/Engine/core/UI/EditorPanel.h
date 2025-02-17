@@ -16,8 +16,8 @@ public:
 	EditorPanel();
 	~EditorPanel() = default;
 
-	void Render(); // •`‰æˆ—
-	const std::string& GetPanelName() const; // ƒpƒlƒ‹–¼‚Ìæ“¾
+	void Render(); // æç”»å‡¦ç†
+	const std::string& GetPanelName() const; // ãƒ‘ãƒãƒ«åã®å–å¾—
 
 private:
 	//===================================================================*/

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include"WinApp.h"
 
 //グラフィック関係
@@ -19,34 +19,15 @@ public:
 	System();
 	~System() = default;
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="clientWidth"></param>
-	/// <param name="clientHeight"></param>
 	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle);
 	void InitializeEngineUI();
-	/// <summary>
-	/// メモリの開放など
-	/// </summary>
 	void Finalize();
-	/// <summary>
-	/// フレーム前処理
-	/// </summary>
 	void BeginFrame();
-	/// <summary>
-	/// フレーム後処理
-	/// </summary>
 	void EndFrame();
 
-	/// <summary>
-	/// rootSignatureの設定を行う
-	/// </summary>
 	void SettingRootSignatur1es();
 
-	/// <summary>
-	/// pipelineの設定を行う
-	/// </summary>
+	//* パイプラインの作成
 	void CreatePipelines();
 	void Object3DPipelines();
 	void Object2DPipelines();

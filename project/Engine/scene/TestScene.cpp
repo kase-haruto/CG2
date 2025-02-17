@@ -58,6 +58,7 @@ void TestScene::Initialize(){
 
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +86,6 @@ void TestScene::Update(){
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
-
 }
 
 void TestScene::Draw(){

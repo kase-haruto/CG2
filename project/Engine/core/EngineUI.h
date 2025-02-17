@@ -8,9 +8,6 @@
 #include "UI/IEngineUI.h"
 #include "Engine/objects/SceneObject.h"
 
-///===================================================================*/
-/// EngineUIクラス
-///===================================================================*/
 class EngineUI{
 public:
     //===================================================================*/
@@ -24,34 +21,25 @@ public:
     //===================================================================*/
     //                    public function
     //===================================================================*/
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
     static void Initialize();
-
-    /// <summary>
-    /// UIのレンダリング
-    /// </summary>
     static void Render();
-
-    /// <summary>
-    /// 終了処理
-    /// </summary>
     static void Finalize();
 
-    /// <summary>
-    /// 新しいパネルを追加する
-    /// </summary>
     void AddPanel(std::unique_ptr<IEngineUI> panel);
-
-    /// <summary>
-  /// パネルを削除する
-  /// </summary>
-  /// <param name="panelName">削除するパネルの名前</param>
     void RemovePanel(const std::string& panelName);
 
-    // メインビューポート用のテクスチャを設定
     static void SetMainViewportTexture(UINT64 textureID);
+
+    //パネルの取得
+	template<class Panel>
+	Panel* GetPanel(){
+		for (auto& panel : panels_){
+			if (auto p = dynamic_cast< Panel* >(panel.get())){
+				return p;
+			}
+		}
+		return nullptr;
+	}
 
 private:
     //===================================================================*/
@@ -72,7 +60,5 @@ private:
 
     UINT64 mainViewportTextureID_ = 0;
 
-    // AttackEditorパネルの表示状態と管理用ポインタ
-    bool showPlayerAttackEditor_ = false;
 };
 

@@ -1,4 +1,4 @@
-sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss#include "EditorPanel.h"
+#include "EditorPanel.h"
 
 // panels
 
@@ -18,7 +18,6 @@ EditorPanel::EditorPanel()
 ///////////////////////////////////////////////////////////////////////////
 void EditorPanel::Render(){
 	ImGui::Begin(panelName_.c_str());
-	ImGui::Text("Editor");
 
 	// インスペクタパネルを描画
 
