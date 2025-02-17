@@ -114,6 +114,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include=".editorconfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
     <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
@@ -222,6 +223,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
