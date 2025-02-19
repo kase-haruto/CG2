@@ -126,9 +126,9 @@ void BaseModel::ShowImGuiInterface(){
 
 	//===========================
 	// 5. ギズモ操作の結果をモデルに反映
-	//===========================
+	//===========================	
 	if (ImGuizmo::IsUsing()){
-		// `model` はギズモ操作で更新済み → 再び row-major へ戻す
+		// `model` はギズモ操作で更新済み → 再び row-major へ戻す	
 		Matrix4x4 updatedCM;
 		memcpy(&updatedCM, model, sizeof(updatedCM));
 		//Matrix4x4 updatedRM = Matrix4x4::Transpose(updatedCM);
