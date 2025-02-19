@@ -115,6 +115,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
+    <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
+    <ClCompile Include="Engine\graphics\Material.cpp" />
     <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
@@ -123,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
+    <ClCompile Include="Engine\objects\Transform.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
@@ -221,6 +224,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
@@ -341,6 +345,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
+    <ClInclude Include="Engine\core\UI\SelectionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

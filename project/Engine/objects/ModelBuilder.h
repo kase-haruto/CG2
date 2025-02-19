@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Engine/objects/Model/Model.h"
 #include "Engine/Editor/BaseEditor.h"
 
@@ -62,10 +62,6 @@ public:
 	/// <param name="directoryPath"></param>
 	void ListAndLoadModelsFromDirectory(const std::string& directoryPath);
 
-
-	const char* GetEditorName() const override{
-		return "ModelBuilder";
-	}
 
 private:
 	// モデルの保存と読み込み

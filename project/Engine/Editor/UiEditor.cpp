@@ -16,15 +16,13 @@
 UIEditor::UIEditor(){
 	// テクスチャマネージャーのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
-
+	editorName_ = "UIEditor";
 	LoadSpriteDataFromJson("Resources/json/sprite/spriteData.json");
 }
 
 void UIEditor::ShowImGuiInterface(){
 #ifdef _DEBUG
 
-
-	ImGui::Begin("Textures");
 
 	// ★ JSON 保存ボタンの追加
 	if (ImGui::Button("Save to JSON")){
@@ -105,7 +103,6 @@ void UIEditor::ShowImGuiInterface(){
 	}
 
 
-	ImGui::End();
 #endif // _DEBUG
 }
 

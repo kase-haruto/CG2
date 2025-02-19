@@ -5,6 +5,7 @@
 #include "engine/objects/TransformationMatrix.h"
 #include "engine/objects/Transform.h"
 #include "lib/myMath/Vector4.h"
+#include "Engine/graphics/blendMode/BlendMode.h"
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -49,8 +50,6 @@ protected:
     //=============
     Microsoft::WRL::ComPtr<ID3D12Device>              device_;
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-    Microsoft::WRL::ComPtr<ID3D12RootSignature>       rootSignature_;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>       pipelineState_;
 
     //=============
     // リソース・バッファビュー
@@ -73,11 +72,11 @@ protected:
     std::shared_ptr<ModelData> modelData_;
     Material* materialData_ = nullptr;
     TransformationMatrix* matrixData_ = nullptr;
-    int currentLightingMode_ = 0;
 public:
     //=============
     // 各種パラメータ
     //=============
+	BlendMode blendMode_ = BlendMode::NORMAL;
     Vector4    RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     EulerTransform  uvTransform {{1.0f, 1.0f, 1.0f},
                              {0.0f, 0.0f, 0.0f},

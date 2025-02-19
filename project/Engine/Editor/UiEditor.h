@@ -35,10 +35,6 @@ public:
 	void SaveSpriteDataToJson(const std::string& filePath);
     void LoadSpriteDataFromJson(const std::string& filePath);
 
-    const char* GetEditorName() const override{
-        return "UiEditor";
-    }
-
 private:
     void AddSprite(const std::string& textureName, const Vector2& position, const Vector2& size);
 

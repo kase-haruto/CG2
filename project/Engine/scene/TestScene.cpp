@@ -13,6 +13,7 @@
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/core/DirectX/DxCore.h"
 #include "Engine/objects/SceneObjectManager.h"
+#include "Engine/core/UI/EditorPanel.h"
 
 // lib
 #include "lib/myFunc/MyFunc.h"
@@ -59,6 +60,11 @@ void TestScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
+	// uiに追加
+	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
+	editorPanel->AddEditor(modelBuilder_.get());
+	editorPanel->AddEditor(uiEditor_.get());
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +72,6 @@ void TestScene::Initialize(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Update(){
 #ifdef _DEBUG
-	modelField_->ShowImGuiInterface();
 #endif //  _DEBUG
 
 	CameraManager::Update();

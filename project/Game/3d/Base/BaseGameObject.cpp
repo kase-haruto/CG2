@@ -91,10 +91,10 @@ void BaseGameObject::SetName(const std::string& name){
 //===================================================================*/
 void BaseGameObject::ShowGui(){
 	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Transform")){
-		ImGui::DragFloat3("Scale", &model_->transform.scale.x, 0.01f);
-		ImGui::DragFloat3("Rotation", &model_->transform.rotate.x, 0.01f);
-		ImGui::DragFloat3("Translate", &model_->transform.translate.x, 0.01f);
-	}
+	
+	model_->ShowImGuiInterface();
+
+	
+	
 	ImGui::Spacing();
 }

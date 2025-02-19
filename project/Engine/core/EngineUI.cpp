@@ -127,9 +127,6 @@ void EngineUI::RenderMenue(){
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("tools(T)")){
-            if (ImGui::MenuItem("Player Attack Editor")){ // 新しいメニューアイテム
-                showPlayerAttackEditor_ = true;
-            }
             ImGui::EndMenu();
         }
         // メニューバーを終了
