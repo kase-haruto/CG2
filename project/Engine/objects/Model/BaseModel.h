@@ -63,7 +63,7 @@ protected:
     //=============
     // テクスチャ
     //=============
-    D3D12_GPU_DESCRIPTOR_HANDLE handle_ {};
+    std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> handle_ {};
 
     //=============
     // モデルデータ・マテリアル

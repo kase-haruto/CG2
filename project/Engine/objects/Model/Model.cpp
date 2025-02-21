@@ -154,7 +154,7 @@ void Model::Draw(){
 	// マテリアル & 行列バッファをセット
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootDescriptorTable(3, handle_);
+	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
 	// 描画
 	commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
