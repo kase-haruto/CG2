@@ -14,6 +14,8 @@
 #include "Engine/core/DirectX/DxCore.h"
 #include "Engine/objects/SceneObjectManager.h"
 #include "Engine/core/UI/EditorPanel.h"
+#include "Engine/physics/light/LightManager.h"
+#include "Engine/graphics/GraphicsGroup.h"
 
 // lib
 #include "lib/myFunc/MyFunc.h"
@@ -105,22 +107,8 @@ void TestScene::Draw(){
 	//					3dオブジェクトの描画
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 3Dオブジェクト描画
-	//モデルの描画
-	modelBuilder_->Draw();
 
-	//地面の描画
-	modelField_->Draw();
-
-	//test
-	bunny_->Draw();
-	teapot_->Draw();
-
-	//particle描画
-	ParticleManager::GetInstance()->Draw();
-
-	//primitiveな描画
-	PrimitiveDrawer::GetInstance()->Render();
-
+	Draw3dObject();
 
 #pragma endregion
 
@@ -135,4 +123,40 @@ void TestScene::Draw(){
 
 void TestScene::CleanUp(){
 	SceneObjectManager::GetInstance()->ClearAllObject();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//					3dオブジェクト描画
+/////////////////////////////////////////////////////////////////////////////////////////
+void TestScene::Draw3dObject(){
+	/*=======================================================================================
+				モデルの描画
+	========================================================================================*/
+	auto commandList_ = pDxCore_->GetCommandList();
+	// light
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
+	// camera
+	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
+
+	//モデルの描画
+	modelBuilder_->Draw();
+
+	//地面の描画
+	modelField_->Draw();
+
+	//test
+	bunny_->Draw();
+	teapot_->Draw();
+
+
+	/* =======================================================================================
+				particleの描画
+	========================================================================================*/
+	ParticleManager::GetInstance()->Draw();
+
+	/* =======================================================================================
+				プリミティブな図形の描画
+	========================================================================================*/
+	PrimitiveDrawer::GetInstance()->Render();
 }

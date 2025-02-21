@@ -49,6 +49,8 @@ public:
     void Draw()override;
     void CleanUp()override;
 
+	void Draw3dObject()override;
+
 private:
 	/* graphics =====================================================*/
     std::unique_ptr<FogEffect>fog_ = nullptr;
