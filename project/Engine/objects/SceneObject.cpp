@@ -2,6 +2,10 @@
 #include <externals/imgui/imgui.h>
 #include "SceneObjectManager.h"
 
+SceneObject::~SceneObject(){
+	SceneObjectManager::GetInstance()->RemoveObject(this);
+}
+
 SceneObject::SceneObject(){
 
 	//リストに追加

@@ -55,10 +55,6 @@ void AnimationModel::Initialize(){
     device_ = GraphicsGroup::GetInstance()->GetDevice();
     commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
-    // ルートシグネチャ・パイプラインを設定(例: Object3D)
-    rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
-    pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
-
     // デフォルト値
     RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
     transform = {
@@ -214,9 +210,14 @@ void AnimationModel::Update(){
 // 描画
 //-----------------------------------------------------------------------------
 void AnimationModel::Draw(){
+    // ルートシグネチャ・パイプラインを設定(例: Object3D)
+
+	ComPtr<ID3D12PipelineState> pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(Object3D, blendMode_);
+	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D, blendMode_);
+
     // ルートシグネチャ・パイプラインをセット
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList_->SetPipelineState(pipelineState_.Get());
+    commandList_->SetGraphicsRootSignature(rootSignature.Get());
+    commandList_->SetPipelineState(pipelineState.Get());
 
     // 頂点バッファ/インデックスバッファをセット
     commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -247,29 +248,6 @@ void AnimationModel::UpdateMatrix(){
 //-----------------------------------------------------------------------------
 void AnimationModel::ShowImGuiInterface(){
 #ifdef _DEBUG
-    // transform (ユーザーが自由にいじる用)
-    if (ImGui::DragFloat3("Translation", &transform.translate.x, 0.01f)){}
-    if (ImGui::DragFloat3("Rotation", &transform.rotate.x, 0.01f)){}
-    if (ImGui::DragFloat3("Scale", &transform.scale.x, 0.01f)){}
-    if (ImGui::DragFloat3("uvScale", &uvTransform.scale.x, 0.01f)){}
-
-    ImGui::DragFloat("shininess", &materialData_->shininess, 0.01f);
-
-    // ライティングモードなど
-    const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
-    if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){
-        for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
-            bool is_selected = (currentLightingMode_ == n);
-            if (ImGui::Selectable(lightingModes[n], is_selected)){
-                currentLightingMode_ = n;
-                materialData_->enableLighting = currentLightingMode_;
-            }
-            if (is_selected){
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-        ImGui::EndCombo();
-    }
 
     // もし複数ノードを選択可能にしたいなら、以下のようにnodeAnimationsのキー一覧をUI表示など
     // for (auto &pair : animation_.nodeAnimations) {

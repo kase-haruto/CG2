@@ -64,6 +64,12 @@ public:
 	void SetName(const std::string& name);
 	const std::string& GetName()const{ return name_; }
 
+	void SetTranslate(const Vector3& pos){
+		if (model_){
+			model_->SetPos(pos);
+		}
+	}
+
 	virtual const Vector3 GetCenterPos()const{
 		const Vector3 offset = {0.0f, 1.0f, 0.0f};
 		Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);

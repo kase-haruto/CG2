@@ -401,6 +401,11 @@
     <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
+    <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
+    <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
+    <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
+    <ClCompile Include="Engine\graphics\Material.cpp" />
+    <ClCompile Include="Engine\objects\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -645,6 +650,9 @@
     <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
+    <ClInclude Include="Engine\core\UI\EditorPanel.h" />
+    <ClInclude Include="externals\imgui\ImGuizmo.h" />
+    <ClInclude Include="Engine\core\UI\SelectionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -1,8 +1,9 @@
 #include "InspectorPanel.h"
+#include "SelectionManager.h"
 #include "Engine/objects/SceneObject.h"
-#include "Engine/objects/SceneObjectManager.h"
+#include "Engine/Editor/BaseEditor.h"
+#include "SelectionManager.h"
 #include <externals/imgui/imgui.h>
-#include "HierarchyPanel.h"
 
 InspectorPanel::InspectorPanel()
     : IEngineUI("Inspector"){}
@@ -10,18 +11,25 @@ InspectorPanel::InspectorPanel()
 void InspectorPanel::Render(){
     ImGui::Begin(panelName_.c_str());
 
-    const auto& allObjects = SceneObjectManager::GetInstance()->GetAllObjects();
+    // 選択中のシーンオブジェクト / エディタを取得
+    SceneObject* selectedObject = SelectionManager::GetInstance()->GetSelectedObject();
+    BaseEditor* selectedEditor = SelectionManager::GetInstance()->GetSelectedEditor();
 
-    if (HierarchyPanel::selectedObjectIndex_ >= 0 && HierarchyPanel::selectedObjectIndex_ < static_cast< int >(allObjects.size())){
-        SceneObject* selectedObject = allObjects[HierarchyPanel::selectedObjectIndex_];
-        if (selectedObject){
-            selectedObject->ShowGui();
-        } else{
-            ImGui::Text("Selected object is invalid.");
-        }
+    // 例：優先してエディタを表示したい場合
+    if (selectedEditor != nullptr){
+        ImGui::Text("Selected Editor: %s", selectedEditor->GetEditorName().c_str());
+        // エディタ固有の表示を行う
+        selectedEditor->ShowImGuiInterface();
+        ImGui::Separator();
+    } else if (selectedObject != nullptr){
+        ImGui::Text("Selected Object: %s", selectedObject->GetName().c_str());
+        // オブジェクト固有の表示を行う
+        selectedObject->ShowGui();
+        ImGui::Separator();
     } else{
-        ImGui::Text("No object selected.");
+        ImGui::Text("Nothing is selected.");
     }
+
     ImGui::End();
 }
 

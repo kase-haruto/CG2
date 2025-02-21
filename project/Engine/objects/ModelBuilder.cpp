@@ -1,4 +1,4 @@
-﻿#include "Engine/objects/ModelBuilder.h"
+#include "Engine/objects/ModelBuilder.h"
 #include "externals/imgui/imgui.h"
 #include "Engine/objects/ModelManager.h"
 
@@ -8,6 +8,7 @@
 using json = nlohmann::json;
 ModelBuilder::ModelBuilder(){}
 void ModelBuilder::Initialize(){
+	editorName_ = "ModelBuilder";
     LoadModels("Resources/json/models.json");
 }
 
@@ -31,7 +32,6 @@ void ModelBuilder::RemoveModel(size_t index){
 }
 
 void ModelBuilder::ShowImGuiInterface(){
-    ImGui::Begin("Model Builder");
 
     // === 操作ボタン ===
     ImGui::Text("Operations:");
@@ -110,7 +110,6 @@ void ModelBuilder::ShowImGuiInterface(){
     }
 
     ImGui::Columns(1);
-    ImGui::End();
 }
 
 void ModelBuilder::AddModel(const std::string& modelName){

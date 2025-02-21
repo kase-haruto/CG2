@@ -15,6 +15,10 @@ struct Material{
 	float pad[3];
 	Matrix4x4 uvTransform;
 	float shininess;
+
+	int currentLightingMode_ = 0;
+
+	void ShowImGui();
 };
 
 struct Material2D{

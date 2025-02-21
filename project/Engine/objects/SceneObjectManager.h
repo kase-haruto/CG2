@@ -30,6 +30,9 @@ public:
 	void AddObject(SceneObject* object);
 	const std::vector<SceneObject*>& GetAllObjects()const{ return allSceneObjects_; }
 
+	//objectの解放処理
+	void RemoveObject(SceneObject* object);
+
 private:
 	//==================================================================*//
 	//			private functions

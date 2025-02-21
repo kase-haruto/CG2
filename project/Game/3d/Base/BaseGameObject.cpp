@@ -29,15 +29,12 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 		}
 
 	}
-
 }
 
 BaseGameObject::~BaseGameObject(){}
 
 
-void BaseGameObject::Initialize(){
-
-}
+void BaseGameObject::Initialize(){}
 
 void BaseGameObject::Update(){
 
@@ -77,14 +74,12 @@ void BaseGameObject::Draw(){
 
 	}
 
-
 }
 
 
 //===================================================================*/
 //                   getter/setter
 //===================================================================*/
-
 void BaseGameObject::SetName(const std::string& name){
 	SceneObject::SetName(name, ObjectType::GameObject);
 }
@@ -96,10 +91,10 @@ void BaseGameObject::SetName(const std::string& name){
 //===================================================================*/
 void BaseGameObject::ShowGui(){
 	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Transform")){
-		ImGui::DragFloat3("Scale", &model_->transform.scale.x, 0.01f);
-		ImGui::DragFloat3("Rotation", &model_->transform.rotate.x, 0.01f);
-		ImGui::DragFloat3("Position", &model_->transform.translate.x, 0.01f);
-	}
+	
+	model_->ShowImGuiInterface();
+
+	
+	
 	ImGui::Spacing();
 }

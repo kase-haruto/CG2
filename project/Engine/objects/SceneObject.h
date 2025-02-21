@@ -13,7 +13,7 @@ public:
 	//==================================================================*//
 	//			public functions
 	//==================================================================*//
-	virtual ~SceneObject() = default;
+	virtual ~SceneObject();
 	SceneObject();
 	virtual void ShowGui();
 

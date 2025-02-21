@@ -1,8 +1,10 @@
 #include "HierarchyPanel.h"
 #include "InspectorPanel.h"
+#include "SelectionManager.h"
 #include "Engine/objects/SceneObjectManager.h"
-#include <externals/imgui/imgui.h>
 
+// lib
+#include <externals/imgui/imgui.h>
 
 int HierarchyPanel::selectedObjectIndex_ = -1;
 
@@ -45,7 +47,9 @@ void HierarchyPanel::Render(){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(i));
             if (ImGui::Selectable(cameraObjects[i]->GetName().c_str(), isSelected)){
                 selectedObjectIndex_ = static_cast< int >(i);
-                selectedObject_ = cameraObjects[i]; // 選択されたオブジェクトを更新
+                SelectionManager::GetInstance()->SetSelectedObject(cameraObjects[i]);
+                // ★Editor の選択をクリア
+                SelectionManager::GetInstance()->ClearSelectedEditor();
             }
             if (isSelected){
                 ImGui::SetItemDefaultFocus();
@@ -53,14 +57,16 @@ void HierarchyPanel::Render(){
         }
     }
     // 2行分の隙間を追加（行の高さを20ピクセルと仮定）
-    ImGui::Dummy(ImVec2(0.0f, 40.0f));
+    ImGui::Dummy(ImVec2(0.0f, 20.0f));
     // ライトセクション
     if (ImGui::CollapsingHeader("Lights")){
         for (size_t i = 0; i < lightObjects.size(); ++i){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + i));
             if (ImGui::Selectable(lightObjects[i]->GetName().c_str(), isSelected)){
                 selectedObjectIndex_ = static_cast< int >(cameraObjects.size() + i);
-                selectedObject_ = lightObjects[i]; // 選択されたオブジェクトを更新
+                SelectionManager::GetInstance()->SetSelectedObject(lightObjects[i]);
+                // ★Editor の選択をクリア
+                SelectionManager::GetInstance()->ClearSelectedEditor();
             }
             if (isSelected){
                 ImGui::SetItemDefaultFocus();
@@ -68,14 +74,16 @@ void HierarchyPanel::Render(){
         }
     }
     // 2行分の隙間を追加（行の高さを20ピクセルと仮定）
-    ImGui::Dummy(ImVec2(0.0f, 40.0f));
+    ImGui::Dummy(ImVec2(0.0f, 20.0f));
     // ゲームオブジェクトセクション
     if (ImGui::CollapsingHeader("Game Objects")){
         for (size_t i = 0; i < gameObjects.size(); ++i){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + lightObjects.size() + i));
             if (ImGui::Selectable(gameObjects[i]->GetName().c_str(), isSelected)){
                 selectedObjectIndex_ = static_cast< int >(cameraObjects.size() + lightObjects.size() + i);
-                selectedObject_ = gameObjects[i]; // 選択されたオブジェクトを更新
+                SelectionManager::GetInstance()->SetSelectedObject(gameObjects[i]);
+                // ★Editor の選択をクリア
+                SelectionManager::GetInstance()->ClearSelectedEditor();
             }
             if (isSelected){
                 ImGui::SetItemDefaultFocus();

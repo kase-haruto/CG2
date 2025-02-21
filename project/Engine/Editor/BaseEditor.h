@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 /// <summary>
 /// editor
 /// </summary>
@@ -9,5 +11,8 @@ public:
     virtual ~BaseEditor() = default;
 
     // エディタ名を取得する仮想関数
-    virtual const char* GetEditorName() const = 0;
+    const std::string& GetEditorName() const;
+
+protected:
+	std::string editorName_; // エディタ名
 };
