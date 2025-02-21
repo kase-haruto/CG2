@@ -1,4 +1,4 @@
-﻿#include "WinApp.h"
+#include "WinApp.h"
 
 /* lib */
 #include "lib/myFunc/ConvertString.h"
@@ -13,57 +13,55 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam);
 
-//コンストラクタ
-WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName) {
+// コンストラクタ
+WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName){
     wrc.right = wWidth;
     wrc.bottom = wHeight;
     windowName_ = windowName;
-
-	CreateWnd();
+    CreateWnd();
 }
 
-//デストラクタ
-WinApp::~WinApp() {
+// デストラクタ
+WinApp::~WinApp(){
     CloseWindow(hwnd);
 }
 
-//ウィンドウプロシージャ
-LRESULT CALLBACK WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam) {
+// ウィンドウプロシージャ
+LRESULT CALLBACK WinApp::WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam){
     if (ImGui_ImplWin32_WndProcHandler(hand, msg, wparam, lparam)){
         return true;
     }
-    
-    //メッセージに応じてゲームの画面の制御を行う
-	switch (msg) {
-	case WM_DESTROY:
-		//osに対して、アプリの終了を伝える
-		PostQuitMessage(0);
-		return 0;
-	}
 
-	//標準のメッセージ処理を行う
-	return DefWindowProc(hand, msg, wparam, lparam);
-}
+    switch (msg){
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
 
-bool WinApp::ProcessMessage() {
-    MSG msg{}; // メッセージ
-
-    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) // メッセージがある？
-    {
-        TranslateMessage(&msg); // キー入力メッセージの処理
-        DispatchMessage(&msg);  // ウィンドウプロシージャにメッセージを送る
+        case WM_KEYDOWN:
+            if (wparam == VK_RETURN && (GetAsyncKeyState(VK_MENU) & 0x8000)){ // Alt + Enter でフルスクリーン切り替え
+                WinApp* app = reinterpret_cast< WinApp* >(GetWindowLongPtr(hand, GWLP_USERDATA));
+                if (app){
+                    app->SetFullScreen(!app->isFullScreen);
+                }
+            }
+            break;
     }
 
-    if (msg.message == WM_QUIT) // 終了メッセージが来たらループを抜ける
-    {
-        return true;
-    }
-
-    return false;
+    return DefWindowProc(hand, msg, wparam, lparam);
 }
 
-void WinApp::CreateWnd(void) {
-    // ウィンドウクラスの初期化
+bool WinApp::ProcessMessage(){
+    MSG msg {}; // メッセージ
+
+    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return msg.message == WM_QUIT;
+}
+
+void WinApp::CreateWnd(){
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WindowProc;
@@ -71,13 +69,10 @@ void WinApp::CreateWnd(void) {
     wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wc.lpszClassName = _T("WinApp");
 
-    // ウィンドウクラスの登録
     RegisterClassEx(&wc);
 
-    // サイズの補正
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
-    // ウィンドウの作成
     hwnd = CreateWindow(
         wc.lpszClassName,
         ConvertString(windowName_).c_str(),
@@ -89,19 +84,43 @@ void WinApp::CreateWnd(void) {
         nullptr,
         nullptr,
         wc.hInstance,
-        nullptr
+        this
     );
-    // ウィンドウの表示
+
+    SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >(this));
+
     ShowWindow(hwnd, SW_SHOW);
 }
 
-/// <summary>
-/// ゲームウィンドウの破棄
-/// </summary>
 void WinApp::TerminateGameWindow(){
-    // ウィンドウクラスを登録解除
     UnregisterClass(wc.lpszClassName, wc.hInstance);
-
-    // COM 終了
     CoUninitialize();
 }
+
+void WinApp::SetFullScreen(bool enable){
+    if (isFullScreen == enable) return;
+
+    isFullScreen = enable;
+
+    if (enable){
+        GetWindowPlacement(hwnd, &windowPlacement);
+        SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+
+        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+        SetWindowPos(hwnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
+
+        // **ここで ImGui の解像度を更新**
+        ImGui::GetIO().DisplaySize = ImVec2(( float ) screenWidth, ( float ) screenHeight);
+    } else{
+        SetWindowLong(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+        SetWindowPlacement(hwnd, &windowPlacement);
+        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+
+        // **ウィンドウモードのときも更新**
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+        ImGui::GetIO().DisplaySize = ImVec2(( float ) (rect.right - rect.left), ( float ) (rect.bottom - rect.top));
+    }
+}
+

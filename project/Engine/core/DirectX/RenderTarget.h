@@ -13,32 +13,15 @@ class RenderTarget{
     template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-    /// <summary>
-    /// 初期化
-    /// </summary>
-    /// <param name="device"></param>
-    /// <param name="swapChain"></param>
     void Initialize(ComPtr<ID3D12Device> device, DxSwapChain& swapChain);
 
-    /// <summary>
-    /// 深度バッファの生成
-    /// </summary>
-    /// <param name="device"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
     void CreateDepthBuffer(ComPtr<ID3D12Device> device, uint32_t width, uint32_t height);
 
-    /// <summary>
-    /// レンダーターゲットのクリア
-    /// </summary>
-    /// <param name="commandList"></param>
-    /// <param name="backBufferIndex"></param>
     void ClearRenderTarget(ComPtr<ID3D12GraphicsCommandList> commandList, UINT backBufferIndex);
 
     void CreateOffscreenSRV(ComPtr<ID3D12Device> device);
 
     ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
-
 
     // オフスクリーンターゲット作成
     void CreateOffscreenRenderTarget(ComPtr<ID3D12Device> device, uint32_t width, uint32_t height);
