@@ -144,13 +144,6 @@ void Model::Draw(){
 	commandList_->IASetIndexBuffer(&indexBufferView_);
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
 	// マテリアル & 行列バッファをセット
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());

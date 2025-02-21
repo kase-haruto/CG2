@@ -31,8 +31,6 @@ void LightManager::Finalize(){
 
 void LightManager::ShowImGui(){
 #ifdef _DEBUG
-	directionalLight_->ShowImGuiInterFace();
-	pointLight_->ShowImGuiInterface();
 #endif
 }
 

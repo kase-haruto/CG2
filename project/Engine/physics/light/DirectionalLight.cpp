@@ -18,6 +18,8 @@ DirectionalLight::~DirectionalLight(){}
 
 void DirectionalLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
+	name_ = "DirectionalLight";
+	objectType_ = ObjectType::Light;
 	CreateBuffer();
 	Map();
 }
@@ -56,14 +58,12 @@ void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandLi
 	commandList->SetGraphicsRootConstantBufferView(index, resource_->GetGPUVirtualAddress());
 }
 
-void DirectionalLight::ShowImGuiInterFace(){
-#ifdef _DEBUG
-	ImGui::Begin("directionalLight");
+
+void DirectionalLight::ShowGui(){
+	SceneObject::ShowGui();
+
 	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
-	ImGui::End();
-#endif // _DEBUG
-
 }
 

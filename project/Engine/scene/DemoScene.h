@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IScene.h"
 
@@ -26,7 +26,7 @@ public:
 	void Update() override;          // 更新処理 
 	void Draw() override;            // 描画処理
 	void CleanUp() override;        // 終了処理
-	void ModelPreDraw() override;	// モデル描画前処理
+	void Draw3dObject() override;	// モデル描画前処理
 
 private:
     //===================================================================*/

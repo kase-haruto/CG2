@@ -26,4 +26,5 @@ void DemoScene::Draw(){}
 
 void DemoScene::CleanUp(){}
 
-void DemoScene::ModelPreDraw(){}
+void DemoScene::Draw3dObject(){}
+

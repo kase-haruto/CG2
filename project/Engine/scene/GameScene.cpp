@@ -64,7 +64,6 @@ void GameScene::Update(){
 	/* その他 ============================*/
 	//uiの更新
 	uiEditor_->Update();
-	uiEditor_->ShowImGuiInterface();
 	//モデルの更新
 	modelBuilder_->Update();
 
