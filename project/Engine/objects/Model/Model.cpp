@@ -80,8 +80,6 @@ void Model::Update(){
 
 		// マテリアルの更新
 		materialData_->color = RGBa;
-		materialData_->shininess = materialParameter_.shininess;
-		materialData_->enableLighting = materialParameter_.enableLighting;
 
 		// ワールド行列の更新
 		worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);

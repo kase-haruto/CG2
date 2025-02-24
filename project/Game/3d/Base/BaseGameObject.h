@@ -10,7 +10,7 @@
 #include <string>
 
 class BaseGameObject
-	:public SceneObject{
+	:public SceneObuiject{
 
 	enum ObjectModelType{
 		ModelType_Static,		// 静的モデル
