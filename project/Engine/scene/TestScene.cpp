@@ -60,10 +60,14 @@ void TestScene::Initialize(){
 	//sprite
 	uiEditor_ = std::make_unique<UIEditor>();
 
+	//particle
+	particleEditor_ = std::make_unique<ParticleEditor>();
+
 	// uiに追加
 	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
 	editorPanel->AddEditor(modelBuilder_.get());
 	editorPanel->AddEditor(uiEditor_.get());
+	editorPanel->AddEditor(particleEditor_.get());
 
 }
 

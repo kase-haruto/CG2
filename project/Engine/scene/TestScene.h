@@ -7,9 +7,12 @@
 #include "engine/physics/Sphere.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
-#include "engine/objects/ModelBuilder.h"
-#include "engine/Editor/UiEditor.h"
 #include "Engine/objects/Animation/AnimationModel.h"
+
+/* editors */
+#include "Engine/objects/ModelBuilder.h"
+#include "Engine/Editor/UiEditor.h"
+#include "Engine/Editor/ParticleEditor.h"
 
 /* graphics */
 #include "engine/physics/light/DirectionalLight.h"
@@ -61,5 +64,6 @@ private:
 	/* editor =====================================================*/
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
     std::unique_ptr<UIEditor> uiEditor_ = nullptr;
+	std::unique_ptr<ParticleEditor> particleEditor_ = nullptr;
 };
 

@@ -6,9 +6,7 @@
 #include <externals/imgui/imgui.h>
 
 ParticleManager::ParticleManager(){
-
 	systems_.clear();
-
 }
 
 ParticleManager* ParticleManager::GetInstance(){
@@ -28,7 +26,6 @@ void ParticleManager::RemoveSystem(ParticleSystem* system){
 }
 
 void ParticleManager::Draw(){
-	
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
 	// プリミティブトポロジーを設定（ここでは三角形リストを指定）
@@ -50,20 +47,15 @@ void ParticleManager::Draw(){
 }
 
 void ParticleManager::Finalize(){
-
 	systems_.clear();
-
 }
 
 void ParticleManager::ShowDebugUI(){
-
 	// ユニークなIDスコープを作成する
 	for (size_t i = 0; i < systems_.size(); ++i){
-
 		// 各オブジェクトのUIを個別に管理
 		if (ImGui::CollapsingHeader(systems_[i]->GetName().c_str())){
 			systems_[i]->ImGui();
 		}
-
 	}
 }
