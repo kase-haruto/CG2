@@ -138,13 +138,15 @@ void Model::Draw(){
 	commandList_->SetPipelineState(pipelineState.Get());
 
 	// 頂点バッファ/インデックスバッファをセット
-	commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	commandList_->IASetIndexBuffer(&indexBufferView_);
+	modelData_->vertexBuffer.SetCommand(commandList_);
+	modelData_->indexBuffer.SetCommand(commandList_);
+
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// マテリアル & 行列バッファをセット
-	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	materialBuffer_.SetCommand(commandList_,0);
+	wvpBuffer_.SetCommand(commandList_, 1);
+
 	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
 	// 描画
@@ -155,25 +157,38 @@ void Model::Draw(){
 // バッファ生成/マッピング
 //==============================================================================
 void Model::CreateMaterialBuffer(){
-	materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+	materialData_ = new Material();
+	materialData_->color = Vector4(1.0f,1.0f,1.0f,1.0f);
+	materialData_->shininess = 20.0f;
+	materialData_->enableLighting = HalfLambert;
+	materialData_->uvTransform = Matrix4x4::MakeIdentity();
+
+	materialBuffer_.Initialize(
+		device_.Get(),
+		1,
+		materialData_
+	);
+
 }
 
 void Model::CreateMatrixBuffer(){
-	wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+	matrixData_ = new TransformationMatrix();
+	matrixData_->WVP = Matrix4x4::MakeIdentity();
+	matrixData_->world = Matrix4x4::MakeIdentity();
+
+	wvpBuffer_.Initialize(
+		device_.Get(),
+		1,
+		matrixData_
+	);
 }
 
 void Model::MaterialBufferMap(){
-	materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
-	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData_->enableLighting = HalfLambert;  // デフォルト
-	materialData_->uvTransform = Matrix4x4::MakeIdentity();
-	materialData_->shininess = 20.0f;
-	materialResource_->Unmap(0, nullptr);
+	// マテリアルのデータを転送
+	materialBuffer_.TransferData(&materialParameter_, 1);
 }
 
 void Model::MatrixBufferMap(){
-	wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
-	matrixData_->WVP = Matrix4x4::MakeIdentity();
-	matrixData_->world = Matrix4x4::MakeIdentity();
-	wvpResource_->Unmap(0, nullptr);
+	// ワールド行列と WVP 行列のデータを転送
+	wvpBuffer_.TransferData(matrixData_, 1);
 }

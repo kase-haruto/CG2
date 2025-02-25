@@ -653,6 +653,10 @@
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\core\UI\SelectionManager.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -225,8 +225,8 @@ void AnimationModel::Draw(){
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // マテリアル & 行列バッファをセット
-    commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	materialBuffer_.SetCommand(commandList_, 0);
+	wvpBuffer_.SetCommand(commandList_, 1);
     commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
     // 描画
@@ -274,29 +274,30 @@ void AnimationModel::Map(){
 }
 
 void AnimationModel::CreateMaterialBuffer(){
-    materialResource_ = CreateBufferResource(device_.Get(), sizeof(Material));
+    materialBuffer_.Initialize(
+        device_.Get(),
+        1
+    );
+
 }
 
 void AnimationModel::CreateMatrixBuffer(){
-    wvpResource_ = CreateBufferResource(device_.Get(), sizeof(TransformationMatrix));
+    wvpBuffer_.Initialize(
+        device_.Get(),
+        1
+    );
+
 }
 
 void AnimationModel::MaterialBufferMap(){
-    materialResource_->Map(0, nullptr, reinterpret_cast< void** >(&materialData_));
-    materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = HalfLambert;
-    materialData_->uvTransform = Matrix4x4::MakeIdentity();
-    materialData_->shininess = 20.0f;
-    materialResource_->Unmap(0, nullptr);
+    // マテリアルのデータを転送
+    materialBuffer_.TransferData(&materialParameter_, 1);
 }
 
 void AnimationModel::MatrixBufferMap(){
-    wvpResource_->Map(0, nullptr, reinterpret_cast< void** >(&matrixData_));
-    matrixData_->WVP = Matrix4x4::MakeIdentity();
-    matrixData_->world = Matrix4x4::MakeIdentity();
-    wvpResource_->Unmap(0, nullptr);
+    // ワールド行列と WVP 行列のデータを転送
+    wvpBuffer_.TransferData(matrixData_, 1);
 }
-
 //-----------------------------------------------------------------------------
 // ノード名の取得例
 //-----------------------------------------------------------------------------

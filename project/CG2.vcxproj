@@ -227,6 +227,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />

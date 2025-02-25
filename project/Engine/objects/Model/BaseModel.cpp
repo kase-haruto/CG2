@@ -35,22 +35,14 @@ void BaseModel::Update(){
 			// ここで初めて GPUリソースが完成した ModelData を受け取れた！
 			modelData_ = loaded;
 
-			// 頂点バッファビューをセットアップ
-			vertexBufferView_.BufferLocation = modelData_->vertexBufferResource->GetGPUVirtualAddress();
-			vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());
-			vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-			// インデックスバッファビューをセットアップ
-			indexBufferView_.BufferLocation = modelData_->indexBufferResource->GetGPUVirtualAddress();
-			indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_->indices.size());
-			indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
+			modelData_->vertexBuffer.Initialize(device_,UINT(modelData_->vertices.size()));
+			modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()));
+			
 			// テクスチャ設定
 			if (!handle_){
 				handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
 			}
 
-			// マテリアル・行列バッファ生成
 			UpdateMatrix();
 		}
 		// loaded が nullptr の場合、まだ読み込み中 → 次フレーム以降に再試行

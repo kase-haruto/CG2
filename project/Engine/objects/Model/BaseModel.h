@@ -6,6 +6,7 @@
 #include "engine/objects/Transform.h"
 #include "lib/myMath/Vector4.h"
 #include "Engine/graphics/blendMode/BlendMode.h"
+#include "Engine/core/DirectX/Buffer/DxConstantBuffer.h"
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -57,8 +58,8 @@ protected:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ {};
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_ {};
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-    Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
+	DxConstantBuffer<Material> materialBuffer_;
+	DxConstantBuffer<TransformationMatrix> wvpBuffer_;
 
     //=============
     // テクスチャ
