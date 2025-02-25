@@ -55,17 +55,6 @@ void TestScene::Initialize(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
-	//モデル
-	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->Initialize();
-
-	//sprite
-	uiEditor_ = std::make_unique<UIEditor>();
-
-	// uiに追加
-	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
-	editorPanel->AddEditor(modelBuilder_.get());
-	editorPanel->AddEditor(uiEditor_.get());
 
 }
 
@@ -77,12 +66,6 @@ void TestScene::Update(){
 #endif //  _DEBUG
 
 	CameraManager::Update();
-
-	//uiの更新
-	uiEditor_->Update();
-
-	//モデルの更新
-	modelBuilder_->Update();
 
 	//地面
 	modelField_->Update();
@@ -116,7 +99,6 @@ void TestScene::Draw(){
 	//					2dオブジェクトの描画
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 2Dオブジェクト描画
-	uiEditor_->Draw();
 
 #pragma endregion
 }
@@ -138,9 +120,6 @@ void TestScene::Draw3dObject(){
 	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
 	// camera
 	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
-	//モデルの描画
-	modelBuilder_->Draw();
 
 	//地面の描画
 	modelField_->Draw();

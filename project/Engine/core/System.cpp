@@ -1,26 +1,46 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+//  include space
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// engine
 #include "../core/System.h"
-#include "../objects/TextureManager.h"
 #include "../graphics/GraphicsGroup.h"
 #include "../graphics/SrvLocator.h"
 #include "../core/Input.h"
 #include "../core/Audio/Audio.h"
+#include "Engine/core/EngineUI.h"
+#include "Engine/graphics/blendMode/BlendMode.h"
+#include "Engine/core/UI/EditorPanel.h"
+
+// manager
+#include "../objects/TextureManager.h"
 #include "../objects/ModelManager.h"
 #include "../graphics/camera/CameraManager.h"
 #include "Engine/core/Clock/ClockManager.h"
-#include "lib/myFunc/PrimitiveDrawer.h"
-#include "Engine/core/EngineUI.h"
 #include "Engine/objects/particle/ParticleManager.h"
-#include "Engine/graphics/blendMode/BlendMode.h"
-
-// engine
 #include "Engine/physics/light/LightManager.h"
 
+// editor
+#include "Engine/Editor/UiEditor.h"
+#include "Engine/objects/ModelBuilder.h"
+
+// lib
+#include "lib/myFunc/PrimitiveDrawer.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//  静的変数初期化
+/////////////////////////////////////////////////////////////////////////////////////////
 HINSTANCE System::hInstance_ = nullptr;
 HWND System::hwnd_ = nullptr;
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  コンストラクタ
+/////////////////////////////////////////////////////////////////////////////////////////
 System::System(){}
 
-
+/////////////////////////////////////////////////////////////////////////////////////////
+//  初期化処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle){
     winApp_ = std::make_unique<WinApp>(clientWidth,clientHeight, windowTitle);
     hInstance_ = hInstance;
@@ -71,9 +91,24 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     //スタート時に読み込み
     TextureManager::GetInstance()->StartUpLoad();
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    /*                     editorの初期化と追加                                              */
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //モデル
+    modelBuilder_ = std::make_unique<ModelBuilder>();
+    modelBuilder_->Initialize();
 
+    //sprite
+    uiEditor_ = std::make_unique<UIEditor>();
+
+    EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
+    editorPanel->AddEditor(modelBuilder_.get());
+    editorPanel->AddEditor(uiEditor_.get());
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  engineUIの初期化
+/////////////////////////////////////////////////////////////////////////////////////////
 void System::InitializeEngineUI(){
     EngineUI::Initialize();
 
@@ -81,6 +116,9 @@ void System::InitializeEngineUI(){
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  フレーム開始処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void System::BeginFrame(){
 	ClockManager::GetInstance()->Update();
 
@@ -92,9 +130,15 @@ void System::BeginFrame(){
 	ModelManager::GetInstance()->ProcessLoadingTasks();
     // オフスクリーンレンダーターゲットの開始
     dxCore_->PreDrawOffscreen();
+
+    EditorUpdate();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  フレーム終了処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void System::EndFrame(){
+    EditorDraw();
    
     // メインレンダーターゲットに再設定
     dxCore_->PreDraw();
@@ -111,7 +155,39 @@ void System::EndFrame(){
     dxCore_->PostDraw();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  Editorの更新
+/////////////////////////////////////////////////////////////////////////////////////////
+void System::EditorUpdate(){
+    modelBuilder_->Update();
+    uiEditor_->Update();
+}
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  Editorの描画
+/////////////////////////////////////////////////////////////////////////////////////////
+void System::EditorDraw(){
+    /*=======================================================================================
+                モデルの描画
+    ========================================================================================*/
+    auto commandList_ = dxCore_->GetCommandList();
+    // light
+    LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
+    LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
+    // camera
+    CameraManager::SetCommand(commandList_, PipelineType::Object3D);
+
+    modelBuilder_->Draw();
+
+    /*=======================================================================================
+               ui描画
+   ========================================================================================*/
+    uiEditor_->Draw();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//  終了処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void System::Finalize(){
 
     //imgui終了処理
@@ -137,10 +213,10 @@ void System::Finalize(){
 	winApp_->TerminateGameWindow();
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////
+//プロセスメッセージ
+/////////////////////////////////////////////////////////////////////////////////////////
 int System::ProcessMessage(){ return winApp_->ProcessMessage() ? 1 : 0; }
-
-
 
 //=============================================================================================================
 //              Pipelineの作成
