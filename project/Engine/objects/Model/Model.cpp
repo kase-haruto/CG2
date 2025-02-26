@@ -89,9 +89,10 @@ void Model::Update(){
 			Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
 			worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
 		}
-
 		// カメラ行列との掛け合わせ
 		UpdateMatrix();
+		Map();
+
 	}
 	BaseModel::Update();
 }
@@ -157,18 +158,18 @@ void Model::Draw(){
 // バッファ生成/マッピング
 //==============================================================================
 void Model::CreateMaterialBuffer(){
-	materialData_ = new Material();
-	materialData_->color = Vector4(1.0f,1.0f,1.0f,1.0f);
+	// materialData_ が未確保なら確保
+	if (!materialData_){
+		materialData_ = new Material();
+	}
+	// materialData_ に初期値をセットする
+	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData_->shininess = 20.0f;
 	materialData_->enableLighting = HalfLambert;
 	materialData_->uvTransform = Matrix4x4::MakeIdentity();
 
-	materialBuffer_.Initialize(
-		device_.Get(),
-		1,
-		materialData_
-	);
-
+	// materialData_ の内容で GPU に転送
+	materialBuffer_.Initialize(device_.Get(), 1, materialData_);
 }
 
 void Model::CreateMatrixBuffer(){
@@ -185,7 +186,7 @@ void Model::CreateMatrixBuffer(){
 
 void Model::MaterialBufferMap(){
 	// マテリアルのデータを転送
-	materialBuffer_.TransferData(&materialParameter_, 1);
+	materialBuffer_.TransferData(materialData_, 1);
 }
 
 void Model::MatrixBufferMap(){

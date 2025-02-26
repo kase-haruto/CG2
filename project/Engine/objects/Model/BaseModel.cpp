@@ -35,9 +35,9 @@ void BaseModel::Update(){
 			// ここで初めて GPUリソースが完成した ModelData を受け取れた！
 			modelData_ = loaded;
 
-			modelData_->vertexBuffer.Initialize(device_,UINT(modelData_->vertices.size()));
-			modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()));
-			
+			modelData_->vertexBuffer.Initialize(device_,UINT(modelData_->vertices.size()), modelData_->vertices.data());
+			modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()),modelData_->indices.data());
+
 			// テクスチャ設定
 			if (!handle_){
 				handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);

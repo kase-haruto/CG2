@@ -7,7 +7,8 @@
 #include "DxBuffer.h"
 
 template<typename T>
-class DxVertexBuffer : public DxBuffer<T>{
+class DxVertexBuffer 
+	: public DxBuffer<T>{
 public:
 	//===================================================================*/
 	//                   public functions
@@ -31,7 +32,6 @@ public:
 			assert(false && "VertexBuffer resource is null. Initialize() might not have been called.");
 			return;
 		}
-
 
 		// **入力アセンブラに頂点バッファを設定**
 		cmdList->IASetVertexBuffers(0, 1, &vertexBufferView_);
