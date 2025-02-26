@@ -28,13 +28,14 @@ public:
     virtual void Update();
     virtual void AnimationUpdate(){}
     /// 行列更新
-    virtual void UpdateMatrix() = 0;
+    virtual void UpdateMatrix();
+	void UpdateTexture();
     /// バッファへのMap操作(リソースへのCPU書き込みなど)
     virtual void Map() = 0;
     /// ImGuiの更新処理
     virtual void ShowImGuiInterface();
     /// 描画
-    virtual void Draw() = 0;
+    void Draw();
 
     //=============
     // Transform関連
@@ -92,6 +93,13 @@ public:
     EulerTransform* parent_;
 
     Material materialParameter_;
+
+protected:
+    // 既存のメンバ変数やメソッドの他に以下を追加
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureHandles_; // テクスチャハンドルリスト
+    float animationSpeed_ = 0.1f; // アニメーションの速度 (秒/フレーム)
+    float elapsedTime_ = 0.0f; // 経過時間
+    size_t currentFrameIndex_ = 0; // 現在のフレームインデックス
 
 public:
 	Matrix4x4 GetWorldRotationMatrix();

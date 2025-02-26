@@ -7,7 +7,8 @@
 #include "DxBuffer.h"
 
 template<typename T>
-class DxIndexBuffer : public DxBuffer<T>{
+class DxIndexBuffer 
+	: public DxBuffer<T>{
 public:
 	//===================================================================*/
 	//                   public functions

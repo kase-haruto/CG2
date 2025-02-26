@@ -164,17 +164,6 @@ void AnimationModel::AnimationUpdate(){
         // (1) アニメーションを再生（animationTransform_ を更新）
         PlayAnimation();
 
-        // (2) UV transform を行列化
-        Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
-        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
-        uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-        materialData_->uvTransform = uvTransformMatrix;
-
-        // (3) マテリアル更新
-        materialData_->color = RGBa;
-        materialData_->shininess = materialParameter_.shininess;
-        materialData_->enableLighting = materialParameter_.enableLighting;
-
         // (4) ワールド行列の更新
         //   ここで「手動transform + アニメーションtransform」 を合成する
         Matrix4x4 manualMat = MakeAffineMatrix(
@@ -187,17 +176,6 @@ void AnimationModel::AnimationUpdate(){
             animationTransform_.rotate,
             animationTransform_.translate
         );
-
-        // 例: 「手動で移動させたオブジェクト」に対して「アニメーションの回転やスケール」を適用
-        //     → 最終行列 = manualMat * animMat
-        worldMatrix = Matrix4x4::Multiply(animMat, manualMat);
-
-        // (5) カメラ行列との掛け合わせ
-        Matrix4x4 worldViewProjectionMatrix =
-            Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-
-        matrixData_->world = worldMatrix;
-        matrixData_->WVP = worldViewProjectionMatrix;
     }
 	BaseModel::Update();
 }
@@ -209,29 +187,6 @@ void AnimationModel::Update(){
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void AnimationModel::Draw(){
-    // ルートシグネチャ・パイプラインを設定(例: Object3D)
-
-	ComPtr<ID3D12PipelineState> pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(Object3D, blendMode_);
-	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D, blendMode_);
-
-    // ルートシグネチャ・パイプラインをセット
-    commandList_->SetGraphicsRootSignature(rootSignature.Get());
-    commandList_->SetPipelineState(pipelineState.Get());
-
-    // 頂点バッファ/インデックスバッファをセット
-    commandList_->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    commandList_->IASetIndexBuffer(&indexBufferView_);
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // マテリアル & 行列バッファをセット
-	materialBuffer_.SetCommand(commandList_, 0);
-	wvpBuffer_.SetCommand(commandList_, 1);
-    commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
-
-    // 描画
-    commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
-}
 
 //-----------------------------------------------------------------------------
 // 行列のみ更新

@@ -40,8 +40,8 @@ void Model::Initialize(){
 	// デフォルト値
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 	transform = {{1.0f, 1.0f, 1.0f},
-				   {0.0f, 0.0f, 0.0f},
-				   {0.0f, 0.0f, 0.0f}};
+				{0.0f, 0.0f, 0.0f},
+				{0.0f, 0.0f, 0.0f}};
 
 	materialParameter_.shininess = 20.0f;
 
@@ -67,53 +67,6 @@ void Model::Create(const std::string& filename){
 	Initialize();
 }
 
-void Model::Update(){
-	if (modelData_){
-		// テクスチャの更新
-		UpdateTexture();
-
-		// UV transform を行列化 (例: スケール→Z回転→平行移動)
-		Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
-		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
-		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-		materialData_->uvTransform = uvTransformMatrix;
-
-		// マテリアルの更新
-		materialData_->color = RGBa;
-
-		// ワールド行列の更新
-		worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-
-		// 親の行列がある場合は親の行列を掛け合わせる
-		if (parent_ != nullptr){
-			Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
-			worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
-		}
-		// カメラ行列との掛け合わせ
-		UpdateMatrix();
-		Map();
-
-	}
-	BaseModel::Update();
-}
-
-void Model::UpdateTexture(){
-	if (textureHandles_.size() <= 1) return; // アニメーション不要
-	elapsedTime_ += ClockManager::GetInstance()->GetDeltaTime();
-	if (elapsedTime_ >= animationSpeed_){
-		elapsedTime_ -= animationSpeed_;
-		currentFrameIndex_ = (currentFrameIndex_ + 1) % textureHandles_.size();
-		handle_ = textureHandles_[currentFrameIndex_]; // テクスチャを切り替え
-	}
-}
-
-void Model::UpdateMatrix(){
-	// もし外部から行列のみを更新したい場合などに呼ばれる
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-	matrixData_->world = worldMatrix;
-	matrixData_->WVP = worldViewProjectionMatrix;
-}
-
 void Model::Map(){
 	// マテリアルと行列のマッピング
 	MaterialBufferMap();
@@ -124,34 +77,6 @@ void Model::ShowImGuiInterface(){
 #ifdef _DEBUG
 	BaseModel::ShowImGuiInterface();
 #endif
-}
-
-void Model::Draw(){
-	if (!modelData_){
-		return;
-	}
-
-	ComPtr<ID3D12PipelineState> pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(Object3D, blendMode_);
-	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(Object3D, blendMode_);
-
-	// ルートシグネチャ・パイプラインをセット
-	commandList_->SetGraphicsRootSignature(rootSignature.Get());
-	commandList_->SetPipelineState(pipelineState.Get());
-
-	// 頂点バッファ/インデックスバッファをセット
-	modelData_->vertexBuffer.SetCommand(commandList_);
-	modelData_->indexBuffer.SetCommand(commandList_);
-
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// マテリアル & 行列バッファをセット
-	materialBuffer_.SetCommand(commandList_,0);
-	wvpBuffer_.SetCommand(commandList_, 1);
-
-	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
-
-	// 描画
-	commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
 }
 
 //==============================================================================

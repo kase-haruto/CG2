@@ -18,7 +18,6 @@ public:
     void Create(const std::string& filename) override;
     void AnimationUpdate() override;
     void Update() override;
-    void Draw() override;
     void UpdateMatrix() override;
     void Map() override;
     void ShowImGuiInterface() override;
