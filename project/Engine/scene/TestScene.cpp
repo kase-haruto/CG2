@@ -14,6 +14,8 @@
 #include "Engine/core/DirectX/DxCore.h"
 #include "Engine/objects/SceneObjectManager.h"
 #include "Engine/core/UI/EditorPanel.h"
+#include "Engine/physics/light/LightManager.h"
+#include "Engine/graphics/GraphicsGroup.h"
 
 // lib
 #include "lib/myFunc/MyFunc.h"
@@ -62,6 +64,7 @@ void TestScene::Initialize(){
 
 	//particle
 	particleEditor_ = std::make_unique<ParticleEditor>();
+	particleEditor_->SetParticleManager(ParticleManager::GetInstance());
 
 	// uiに追加
 	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
@@ -99,9 +102,48 @@ void TestScene::Update(){
 
 void TestScene::Draw(){
 	/////////////////////////////////////////////////////////////////////////////////////////
+	//					2dオブジェクトの描画
+	/////////////////////////////////////////////////////////////////////////////////////////
+#pragma region 2Dオブジェクト背景描画
+
+#pragma endregion
+
+	/////////////////////////////////////////////////////////////////////////////////////////
 	//					3dオブジェクトの描画
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 3Dオブジェクト描画
+
+	Draw3dObject();
+
+#pragma endregion
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//					2dオブジェクトの描画
+	/////////////////////////////////////////////////////////////////////////////////////////
+#pragma region 2Dオブジェクト描画
+	uiEditor_->Draw();
+
+#pragma endregion
+}
+
+void TestScene::CleanUp(){
+	SceneObjectManager::GetInstance()->ClearAllObject();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//					3dオブジェクト描画
+/////////////////////////////////////////////////////////////////////////////////////////
+void TestScene::Draw3dObject(){
+	/*=======================================================================================
+				モデルの描画
+	========================================================================================*/
+	auto commandList_ = pDxCore_->GetCommandList();
+	// light
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
+	// camera
+	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
+
 	//モデルの描画
 	modelBuilder_->Draw();
 
@@ -112,25 +154,14 @@ void TestScene::Draw(){
 	bunny_->Draw();
 	teapot_->Draw();
 
-	//particle描画
+
+	/* =======================================================================================
+				particleの描画
+	========================================================================================*/
 	ParticleManager::GetInstance()->Draw();
 
-	//primitiveな描画
+	/* =======================================================================================
+				プリミティブな図形の描画
+	========================================================================================*/
 	PrimitiveDrawer::GetInstance()->Render();
-
-
-#pragma endregion
-
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					2dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 2Dオブジェクト描画
-
-
-#pragma endregion
-}
-
-void TestScene::CleanUp(){
-	SceneObjectManager::GetInstance()->ClearAllObject();
 }

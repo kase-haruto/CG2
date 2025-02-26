@@ -8,7 +8,6 @@
 /* objects */
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
-#include "Engine/core/UI/ParticleEditPanel.h"
 #include "Engine/objects/Sprite.h"  
 
 /* graphics */

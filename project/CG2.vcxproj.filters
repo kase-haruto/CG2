@@ -392,7 +392,6 @@
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
     <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
-    <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
@@ -639,7 +638,6 @@
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
     <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
-    <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
     <ClInclude Include="Engine\core\Math\Ease.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />

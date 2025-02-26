@@ -16,6 +16,8 @@ PointLight::~PointLight(){}
 
 void PointLight::Initialize(const DxCore* dxCore){
 	pDxCore_ = dxCore;
+	name_ = "PointLight";
+	objectType_ = ObjectType::Light;
 	CreateBuffer();
 	Map();
 }
@@ -40,16 +42,14 @@ void PointLight::Map(){
 	resource_->Unmap(0, nullptr);
 }
 
-void PointLight::ShowImGuiInterface(){
-#ifdef _DEBUG
-	ImGui::Begin("PointLight");
+void PointLight::ShowGui(){
+	SceneObject::ShowGui();
+
 	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
 	ImGui::DragFloat("radius", &data_->radius, 0.01f);
 	ImGui::DragFloat("decay", &data_->decay, 0.01f);
-	ImGui::End();
-#endif // _DEBUG
 }
 
 void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type){

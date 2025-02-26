@@ -80,8 +80,6 @@ void Model::Update(){
 
 		// マテリアルの更新
 		materialData_->color = RGBa;
-		materialData_->shininess = materialParameter_.shininess;
-		materialData_->enableLighting = materialParameter_.enableLighting;
 
 		// ワールド行列の更新
 		worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
@@ -144,17 +142,10 @@ void Model::Draw(){
 	commandList_->IASetIndexBuffer(&indexBufferView_);
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
 	// マテリアル & 行列バッファをセット
 	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootDescriptorTable(3, handle_);
+	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
 	// 描画
 	commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);

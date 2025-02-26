@@ -46,7 +46,9 @@ void BaseModel::Update(){
 			indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 			// テクスチャ設定
-			handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+			if (!handle_){
+				handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+			}
 
 			// マテリアル・行列バッファ生成
 			UpdateMatrix();
@@ -181,6 +183,22 @@ void BaseModel::ShowImGuiInterface(){
 
 		if (ImGui::BeginTabItem("Material")){
 			materialData_->ShowImGui();
+			static std::string selectedTextureName = modelData_->material.textureFilePath;
+			//テクスチャの切り替え
+			auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
+			if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())){
+				for (const auto& texture : textures){
+					bool is_selected = (selectedTextureName == texture.first);
+					if (ImGui::Selectable(texture.first.c_str(), is_selected)){
+						selectedTextureName = texture.first; // 選択したテクスチャ名を更新
+						handle_ = TextureManager::GetInstance()->LoadTexture(texture.first); // テクスチャを変更
+					}
+					if (is_selected){
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
 			ImGui::EndTabItem();
 		}
 

@@ -56,8 +56,6 @@ void HierarchyPanel::Render(){
             }
         }
     }
-    // 2行分の隙間を追加（行の高さを20ピクセルと仮定）
-    ImGui::Dummy(ImVec2(0.0f, 20.0f));
     // ライトセクション
     if (ImGui::CollapsingHeader("Lights")){
         for (size_t i = 0; i < lightObjects.size(); ++i){
@@ -73,8 +71,6 @@ void HierarchyPanel::Render(){
             }
         }
     }
-    // 2行分の隙間を追加（行の高さを20ピクセルと仮定）
-    ImGui::Dummy(ImVec2(0.0f, 20.0f));
     // ゲームオブジェクトセクション
     if (ImGui::CollapsingHeader("Game Objects")){
         for (size_t i = 0; i < gameObjects.size(); ++i){

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 #include <../DirectXTex/DirectXTex.h>
@@ -39,8 +39,8 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_ = {0};
 
 private:
-    // コピーコンストラクタとコピー代入演算子を削除
-    Texture(const Texture&) = delete;
-    Texture& operator=(const Texture&) = delete;
+    //// コピーコンストラクタとコピー代入演算子を削除
+    //Texture(const Texture&) = delete;
+    //Texture& operator=(const Texture&) = delete;
 };
 

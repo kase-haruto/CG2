@@ -221,7 +221,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
-    <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
@@ -342,7 +341,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
-    <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />

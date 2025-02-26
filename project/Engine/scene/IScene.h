@@ -35,7 +35,7 @@ public:
     virtual void CleanUp() = 0;
 
     // モデル描画前処理(必要時オーバーライド)
-    virtual void ModelPreDraw(){}
+    virtual void Draw3dObject(){};
 
     // UIとシーンマネージャのセット
     void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }

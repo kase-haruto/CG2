@@ -30,6 +30,8 @@ public:
 
     void ShowDebugUI();
 
+	std::vector<ParticleSystem*>& GetSystems(){ return systems_; }
+
 private:
     //===================================================================*/
     //                   private Methods

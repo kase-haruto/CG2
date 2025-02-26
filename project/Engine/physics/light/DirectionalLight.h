@@ -4,6 +4,9 @@
 #include"lib/myMath/Vector4.h"
 #include"lib/myMath/Vector3.h"
 
+/* engine */
+#include "Engine/objects/SceneObject.h"
+
 /* lib */
 #include "Engine/graphics/Pipeline/PipelineType.h"
 #include "LightData.h"
@@ -18,11 +21,10 @@ struct DirectionalLightData{
 	float intensity;	//輝度
 };
 
-
-
 class DxCore;
 
-class DirectionalLight{
+class DirectionalLight
+	:public SceneObject{
 public:
 	DirectionalLight();
 	~DirectionalLight();
@@ -47,7 +49,7 @@ public:
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
 
-	void ShowImGuiInterFace();
+	void ShowGui()override;
 
 private:
 

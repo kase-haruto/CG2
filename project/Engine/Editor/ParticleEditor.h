@@ -19,17 +19,17 @@ private:
 	//===================================================================*/
 	//                    private functions
 	//===================================================================*/
+	void AddParticle4Manager();
 
 private:
 	//===================================================================*/
 	//                   　private variables
 	//===================================================================*/
-	const ParticleManager* pParticleManager_;
+	ParticleManager* pParticleManager_;
 
 public:
 	//===================================================================*/
 	//                    getter / setter
 	//===================================================================*/
-	void SetParticleManager(const ParticleManager* pParticleManager);
+	void SetParticleManager(ParticleManager* pParticleManager);
 };
-

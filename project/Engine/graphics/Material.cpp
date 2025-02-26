@@ -1,9 +1,13 @@
 #include "Material.h"
 
+
 #include <externals/imgui/imgui.h>
 
 void Material::ShowImGui(){
 	ImGui::DragFloat("shininess", &shininess, 0.01f);
+
+
+
 
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){

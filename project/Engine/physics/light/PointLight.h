@@ -6,6 +6,7 @@
 
 /* engine */
 #include "Engine/graphics/Pipeline/PipelineType.h"
+#include "Engine/objects/SceneObject.h"
 
 /* lib */
 #include <wrl.h>
@@ -22,7 +23,8 @@ struct PointLightData{
 
 class DxCore;
 
-class PointLight{
+class PointLight
+: public SceneObject{
 public:
 	PointLight();
 	~PointLight();
@@ -45,7 +47,7 @@ public:
 	/// </summary>
 	void Map();
 
-	void ShowImGuiInterface();
+	void ShowGui()override;
 
 	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
