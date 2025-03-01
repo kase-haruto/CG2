@@ -183,9 +183,7 @@ void PrimitiveDrawer::Render(){
 
 	UpdateMatrixBuffer();
 
-	// パイプラインステートとルートシグネチャを設定
-	commandList_->SetPipelineState(pipelineState_.Get());
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	GraphicsGroup::GetInstance()->SetCommand(commandList_,PipelineType::Line,BlendMode::NORMAL);
 
 	// プリミティブトポロジをラインリストに設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);

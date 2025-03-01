@@ -2,18 +2,14 @@
 
 #include "Engine/core/EngineUI.h"
 #include "Engine/objects/SceneObject.h"
+#include "SceneType.h"
+
 // lib
 #include <string>
 #include <vector>
 
 class DxCore;
 class SceneManager;
-
-enum class SceneType{
-    PLAY,
-    TEST,
-    count,
-};
 
 //===================================================================*/
 // ISceneクラス(インターフェイス)

@@ -14,7 +14,7 @@ BaseCamera::BaseCamera()
 
 	/* バッファの生成とマッピング =======================*/
 	CreateBuffer();
-	Map();
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ void BaseCamera::Update(){
 		}
 	}
 
-
+	cameraBuffer_.TransferData(cameraData_, 1);
 	UpdateMatrix();
 
 }
@@ -123,13 +123,11 @@ const Vector3& BaseCamera::GetTranslate() const{
 #pragma region バッファの生成とマッピング
 void BaseCamera::CreateBuffer(){
 	ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-	constBuffer_ = CreateBufferResource(device.Get(), sizeof(Camera3dForGPU));
+	cameraData_ = new Camera3dForGPU();
+	cameraBuffer_.Initialize(device.Get(), 1,cameraData_);
 }
 
 void BaseCamera::Map(){
-	constBuffer_->Map(0, nullptr, reinterpret_cast< void** >(&cameraData_));
-	cameraData_->worldPosition = transform_.translate;
-	constBuffer_->Unmap(0, nullptr);  // データ設定後にアンマップ
 }
 #pragma endregion
 
@@ -138,11 +136,9 @@ void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
 	command->SetGraphicsRootSignature(rootSignature.Get());
 
-	uint32_t index = 0;
+	uint32_t rootParameterIndex = 0;
 	if (pipelineType == PipelineType::Object3D){
-		index = 5;
+		rootParameterIndex = 5;
 	}
-
-	command->SetGraphicsRootConstantBufferView(index, constBuffer_->GetGPUVirtualAddress());
-
+	cameraBuffer_.SetCommand(command, rootParameterIndex);
 }

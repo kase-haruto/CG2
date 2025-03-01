@@ -10,8 +10,6 @@
 #include <string>
 #include <vector>
 #include <cassert>
-#include <dxgi1_4.h>
-#include <dxgiformat.h>
 
 // using
 using Microsoft::WRL::ComPtr;

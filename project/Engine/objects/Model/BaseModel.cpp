@@ -267,11 +267,12 @@ void BaseModel::Draw(){
 
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
 
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// 頂点バッファ/インデックスバッファをセット
 	modelData_->vertexBuffer.SetCommand(commandList_);
 	modelData_->indexBuffer.SetCommand(commandList_);
 
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// マテリアル & 行列バッファをセット
 	materialBuffer_.SetCommand(commandList_, 0);

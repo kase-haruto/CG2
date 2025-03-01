@@ -180,7 +180,7 @@ PixelShaderOutput main(VertexShaderOutput input){
     output.color = gMaterial.color * baseColor;
     
     // アルファ値が0の場合、ピクセルを破棄
-    if (output.color.a == 0.0){
+    if (output.color.a == 0.1){
         discard;
     }
 

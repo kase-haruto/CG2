@@ -245,6 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
+    <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />

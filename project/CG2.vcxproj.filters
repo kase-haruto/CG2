@@ -657,6 +657,7 @@
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
+    <ClInclude Include="Engine\scene\SceneType.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
