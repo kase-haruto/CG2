@@ -3,6 +3,7 @@
 
 #include "ICamera.h"
 #include "Engine/objects/Transform.h"
+#include "Engine/core/DirectX/Buffer/DxConstantBuffer.h"
 #include "lib/myMath/Matrix4x4.h"
 #include "lib/myMath/Vector3.h"
 
@@ -93,6 +94,7 @@ private:
 	//==================================================================*//
 	//			private variables
 	//==================================================================*//
-	ComPtr<ID3D12Resource> constBuffer_;    //< 定数バッファ
-	Camera3dForGPU* cameraData_;            //< カメラのデータ
+	ComPtr<ID3D12Resource> constBuffer_;			//< 定数バッファ
+	DxConstantBuffer<Camera3dForGPU> cameraBuffer_;	//< 定数バッファデータ
+	Camera3dForGPU* cameraData_;					//< カメラのデータ
 };

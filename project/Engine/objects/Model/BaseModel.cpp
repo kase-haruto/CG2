@@ -12,6 +12,8 @@
 #define IMGUIZMO_USE_D3D9_CLIP_SPACE
 #include "externals/imgui/ImGuizmo.h"
 
+#include "Engine/core/Clock/ClockManager.h"
+
 const std::string BaseModel::directoryPath_ = "Resource/models";
 
 Matrix4x4 BaseModel::GetWorldRotationMatrix(){
@@ -35,25 +37,55 @@ void BaseModel::Update(){
 			// ここで初めて GPUリソースが完成した ModelData を受け取れた！
 			modelData_ = loaded;
 
-			// 頂点バッファビューをセットアップ
-			vertexBufferView_.BufferLocation = modelData_->vertexBufferResource->GetGPUVirtualAddress();
-			vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_->vertices.size());
-			vertexBufferView_.StrideInBytes = sizeof(VertexData);
-
-			// インデックスバッファビューをセットアップ
-			indexBufferView_.BufferLocation = modelData_->indexBufferResource->GetGPUVirtualAddress();
-			indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_->indices.size());
-			indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+			modelData_->vertexBuffer.Initialize(device_,UINT(modelData_->vertices.size()), modelData_->vertices.data());
+			modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()),modelData_->indices.data());
 
 			// テクスチャ設定
 			if (!handle_){
 				handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
 			}
 
-			// マテリアル・行列バッファ生成
 			UpdateMatrix();
 		}
 		// loaded が nullptr の場合、まだ読み込み中 → 次フレーム以降に再試行
+	} else{
+		// テクスチャの更新
+		UpdateTexture();
+
+		// UV transform を行列化 (例: スケール→Z回転→平行移動)
+		Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+		materialData_->uvTransform = uvTransformMatrix;
+
+		// カメラ行列との掛け合わせ
+		UpdateMatrix();
+		Map();
+	}
+}
+
+void BaseModel::UpdateMatrix(){
+	// ワールド行列の更新
+	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	// 親の行列がある場合は親の行列を掛け合わせる
+	if (parent_ != nullptr){
+		Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
+		worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
+	}
+
+	// もし外部から行列のみを更新したい場合などに呼ばれる
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
+	matrixData_->world = worldMatrix;
+	matrixData_->WVP = worldViewProjectionMatrix;
+}
+
+void BaseModel::UpdateTexture(){
+	if (textureHandles_.size() <= 1) return; // アニメーション不要
+	elapsedTime_ += ClockManager::GetInstance()->GetDeltaTime();
+	if (elapsedTime_ >= animationSpeed_){
+		elapsedTime_ -= animationSpeed_;
+		currentFrameIndex_ = (currentFrameIndex_ + 1) % textureHandles_.size();
+		handle_ = textureHandles_[currentFrameIndex_]; // テクスチャを切り替え
 	}
 }
 
@@ -226,4 +258,28 @@ void BaseModel::ShowImGuiInterface(){
 	}
 
 
+}
+
+void BaseModel::Draw(){
+	if (!modelData_){
+		return;
+	}
+
+	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
+
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// 頂点バッファ/インデックスバッファをセット
+	modelData_->vertexBuffer.SetCommand(commandList_);
+	modelData_->indexBuffer.SetCommand(commandList_);
+
+
+	// マテリアル & 行列バッファをセット
+	materialBuffer_.SetCommand(commandList_, 0);
+	wvpBuffer_.SetCommand(commandList_, 1);
+
+	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
+
+	// 描画
+	commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
 }

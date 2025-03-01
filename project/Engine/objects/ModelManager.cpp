@@ -1,5 +1,8 @@
 #include "ModelManager.h"
 
+#include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
+#include "Engine/core/DirectX/Buffer/DxIndexBuffer.h"
+
 // static 変数初期化
 ModelManager* ModelManager::instance_ = nullptr;
 const std::string ModelManager::directoryPath_ = "Resources/models";
@@ -258,27 +261,13 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
 void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileName, std::shared_ptr<ModelData> model){
     auto device = GraphicsGroup::GetInstance()->GetDevice();
 
-    size_t vertexBufferSize = sizeof(VertexData) * model->vertices.size();
-    auto vertexBuffer = CreateBufferResource(device, vertexBufferSize);
-    {
-        VertexData* mapped = nullptr;
-        vertexBuffer->Map(0, nullptr, reinterpret_cast< void** >(&mapped));
-        memcpy(mapped, model->vertices.data(), vertexBufferSize);
-        vertexBuffer->Unmap(0, nullptr);
-    }
+    DxVertexBuffer<VertexData> new_vertexBuffer;
+    new_vertexBuffer.Initialize(device, ( UINT ) model->vertices.size());
+	DxIndexBuffer<uint32_t> new_indexBuffer;
+    new_indexBuffer.Initialize(device, ( UINT ) model->indices.size());
 
-    size_t indexBufferSize = sizeof(uint32_t) * model->indices.size();
-    auto indexBuffer = CreateBufferResource(device, indexBufferSize);
-    {
-        uint32_t* mapped = nullptr;
-        indexBuffer->Map(0, nullptr, reinterpret_cast< void** >(&mapped));
-        memcpy(mapped, model->indices.data(), indexBufferSize);
-        indexBuffer->Unmap(0, nullptr);
-    }
-
-    // ModelData にバッファリソースをセット
-    model->vertexBufferResource = vertexBuffer;
-    model->indexBufferResource = indexBuffer;
+    model->vertexBuffer = new_vertexBuffer;
+    model->indexBuffer = new_indexBuffer;
 }
 
 //----------------------------------------------------------------------------

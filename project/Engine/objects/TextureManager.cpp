@@ -1,4 +1,4 @@
-﻿#include "TextureManager.h"
+#include "TextureManager.h"
 
 /* engine */
 #include "../graphics/GraphicsGroup.h"
@@ -17,12 +17,6 @@ TextureManager* TextureManager::GetInstance(){
 void TextureManager::StartUpLoad(){
     LoadTexture("uvChecker.png");
     LoadTexture("MonsterBall.png");
-
-	LoadTexture("spawnerIcon.png");
-	LoadTexture("XButton.png");
-	LoadTexture("AButton.png");
-
-	LoadTexture("weapon.png");
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{

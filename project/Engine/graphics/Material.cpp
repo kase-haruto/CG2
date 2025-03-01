@@ -6,8 +6,7 @@
 void Material::ShowImGui(){
 	ImGui::DragFloat("shininess", &shininess, 0.01f);
 
-
-
+	ImGui::ColorPicker4("Color", &color.x);
 
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){

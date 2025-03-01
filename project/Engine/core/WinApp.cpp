@@ -84,7 +84,7 @@ void WinApp::CreateWnd(){
         nullptr,
         nullptr,
         wc.hInstance,
-        this
+        nullptr
     );
 
     SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >(this));

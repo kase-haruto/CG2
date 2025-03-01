@@ -4,6 +4,8 @@
 #include"../graphics/VertexData.h"
 #include"../graphics/Material.h"
 #include"../objects/Animation/AnimationStruct.h"
+#include "Engine/core/DirectX/Buffer/DxIndexBuffer.h"
+#include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
 
 /* c++ */
 #include<vector>
@@ -23,7 +25,6 @@ struct ModelData{
 
     // あるいは複数アニメーション対応例:
     // std::vector<Animation> animations;
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertexBufferResource;
-    Microsoft::WRL::ComPtr<ID3D12Resource> indexBufferResource;
+	DxVertexBuffer<VertexData> vertexBuffer;
+	DxIndexBuffer<uint32_t> indexBuffer;
 };

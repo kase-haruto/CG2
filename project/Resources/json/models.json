@@ -1,3 +1,42 @@
 {
-    "models": null
+    "models": [
+        {
+            "original_name": "debugCube.obj",
+            "position": [
+                -6.630000114440918,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "unique_key": "debugCube.obj_1"
+        },
+        {
+            "original_name": "suzanne.obj",
+            "position": [
+                -3.109999895095825,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "unique_key": "suzanne.obj_0"
+        }
+    ]
 }

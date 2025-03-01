@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../graphics/PipelineStateManager.h"
 #include "engine/core/DirectX/DxCore.h"
 
@@ -29,6 +29,8 @@ public:
 	///=========================================
 	ComPtr<ID3D12Device> GetDevice()const;
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList()const;
+
+	void SetCommand(ComPtr<ID3D12GraphicsCommandList> commandList,PipelineType psoType,BlendMode blendMode);
 
 private:
 	GraphicsGroup() :pDxCore_(nullptr), pipelineManager_(nullptr){}

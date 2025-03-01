@@ -1,4 +1,4 @@
-﻿#include "engine/core/EngineController.h"
+#include "engine/core/EngineController.h"
 #include "engine/core/Enviroment.h"
 #include "../scene/SceneManager.h"
 

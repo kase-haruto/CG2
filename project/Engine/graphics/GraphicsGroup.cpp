@@ -19,3 +19,8 @@ const ComPtr<ID3D12RootSignature>& GraphicsGroup::GetRootSignature(const Pipelin
 ComPtr<ID3D12Device> GraphicsGroup::GetDevice() const{ return pDxCore_->GetDevice(); }
 
 ComPtr<ID3D12GraphicsCommandList> GraphicsGroup::GetCommandList() const{ return pDxCore_->GetCommandList(); }
+
+void GraphicsGroup::SetCommand(ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType psoType, BlendMode blendMode){
+	commandList->SetPipelineState(pipelineManager_->GetPipelineState(psoType, blendMode).Get());
+	commandList->SetGraphicsRootSignature(pipelineManager_->GetRootSignature(psoType, blendMode).Get());
+}

@@ -32,7 +32,7 @@ public:
     PrimitiveDrawer& operator=(const PrimitiveDrawer&) = delete;
 
     // 線分の最大数
-    static const UINT kMaxLineCount = 4096;
+    static const UINT kMaxLineCount = 2048;
     // 線分の頂点数
     static const UINT kVertexCountLine = 2;
     // 線分のインデックス数

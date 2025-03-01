@@ -227,6 +227,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
@@ -241,6 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
+    <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
