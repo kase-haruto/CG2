@@ -9,11 +9,6 @@
 #include "engine/graphics/ViewProjection.h"
 #include "Engine/objects/Animation/AnimationModel.h"
 
-/* editors */
-#include "Engine/objects/ModelBuilder.h"
-#include "Engine/Editor/UiEditor.h"
-#include "Engine/Editor/ParticleEditor.h"
-
 /* graphics */
 #include "engine/physics/light/DirectionalLight.h"
 #include "engine/physics/light/PointLight.h"
@@ -64,8 +59,5 @@ private:
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 
 	/* editor =====================================================*/
-    std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
-    std::unique_ptr<UIEditor> uiEditor_ = nullptr;
-	std::unique_ptr<ParticleEditor> particleEditor_ = nullptr;
 };
 

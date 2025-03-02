@@ -17,14 +17,13 @@ class Sprite;
 /// spriteEditor
 /// </summary>
 class UIEditor final:
-public BaseEditor{
+    public BaseEditor{
 public:
     UIEditor();   // コンストラクタ
     ~UIEditor() = default;  //デストラクタ
 
     // UIの描画
     void ShowImGuiInterface()override;
-
 
     // 更新処理
     void Update();

@@ -43,12 +43,6 @@ void GameScene::Initialize(){
 	//===================================================================*/
 	//                    editor
 	//===================================================================*/
-	//モデル
-	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->Initialize();
-
-	//sprite
-	uiEditor_ = std::make_unique<UIEditor>();
 }
 
 void GameScene::Update(){
@@ -62,10 +56,6 @@ void GameScene::Update(){
 	modelField_->Update();
 	
 	/* その他 ============================*/
-	//uiの更新
-	uiEditor_->Update();
-	//モデルの更新
-	modelBuilder_->Update();
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 }
@@ -75,8 +65,12 @@ void GameScene::Draw(){
 	//					3dオブジェクトの描画
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 3Dオブジェクト描画
-	//モデルの描画
-	modelBuilder_->Draw();
+	auto commandList_ = pDxCore_->GetCommandList();
+	// light
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
+	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
+	// camera
+	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
 	//地面の描画
 	modelField_->Draw();
@@ -90,9 +84,7 @@ void GameScene::Draw(){
 	/////////////////////////////////////////////////////////////////////////////////////////
 #pragma region 2Dオブジェクト描画
 
-	//uiの描画
-	uiEditor_->Draw();
-
+	
 #pragma endregion
 }
 

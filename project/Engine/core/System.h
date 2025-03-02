@@ -5,7 +5,7 @@
 #include "engine/core/DirectX/DxCore.h"
 #include "../graphics/ShaderManager.h"
 #include "../graphics/PipelineStateManager.h"
-
+#include "Engine/Editor/ParticleEditor.h"
 #include "lib/ImGuiManager.h"
 
 //リークチェック
@@ -14,8 +14,16 @@
 /* c++ */
 #include<stdint.h>
 
+// forward
+class UIEditor;
+class ModelBuilder;
+class ParticleEditor;
+
 class System{
 public:
+	//===================================================================*/
+	//                    public functions
+	//===================================================================*/
 	System();
 	~System() = default;
 
@@ -25,9 +33,12 @@ public:
 	void BeginFrame();
 	void EndFrame();
 
-	void SettingRootSignatur1es();
+	void EditorUpdate();	//engine内部Editorの更新
+	void EditorDraw();		//engine内部editorの描画
 
-	//* パイプラインの作成
+	int ProcessMessage();
+
+	//* パイプラインの作成 ==============================*/
 	void CreatePipelines();
 	void Object3DPipelines();
 	void Object2DPipelines();
@@ -36,34 +47,37 @@ public:
 	void CopyImagePipeline();
 	void EffectPipeline();
 
-
-	int ProcessMessage();
-
-
-	////////////////////////////////////////////////////////////
-	//		アクセッサ
-	///////////////////////////////////////////////////////////
+	//===================================================================*/
+	//                    getter / setter
+	//===================================================================*/
 	static HINSTANCE GetHinstance(){ return hInstance_; }
 	static HWND GetHWND(){ return hwnd_; }
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 
 private:
+	//===================================================================*/
+	//                    private members
+	//===================================================================*/
 	LeakChecker leakChecker_;
 	std::unique_ptr<DxCore> dxCore_ = nullptr;
 
 	/*window*/
-	std::unique_ptr<WinApp> winApp_;
-	static HINSTANCE hInstance_;
-	static HWND hwnd_;
+	std::unique_ptr<WinApp> winApp_;	//ウィンドウ
+	static HINSTANCE hInstance_;		//インスタンス
+	static HWND hwnd_;					//ウィンドウハンドル
 
 	// ImGuiの初期化
 	std::unique_ptr<ImGuiManager> imguiManager_ = nullptr;
 
-	/// <summary>
-	/// グラフィック関連管理クラス
-	/// </summary>
-	std::shared_ptr<ShaderManager>shaderManager_;
-	std::unique_ptr<PipelineStateManager>pipelineStateManager_;
+private:
+	// grapics
+	std::shared_ptr<ShaderManager>shaderManager_;					//shader管理
+	std::unique_ptr<PipelineStateManager>pipelineStateManager_;		//パイプライン管理
 
+private:
+	// Editors
+	std::unique_ptr<UIEditor> uiEditor_;				//ui編集
+	std::unique_ptr<ModelBuilder> modelBuilder_;		//モデル配置
+	std::unique_ptr<ParticleEditor> particleEditor_;	//パーティクル編集
 };
 
