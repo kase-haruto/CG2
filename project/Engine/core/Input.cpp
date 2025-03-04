@@ -4,6 +4,7 @@
 #include "engine/core/System.h" // System::GetHinstance() と System::GetHWND() を使用
 #include <algorithm>
 #include <externals/imgui/imgui.h>
+#include <Engine/core/Enviroment.h>
 
 // シングルトンインスタンスの初期化
 Input* Input::instance_ = nullptr;
@@ -109,6 +110,7 @@ void Input::ShowImGui(){
 	ImGui::Begin("input");
 
 	ImGui::Text("mousePos: %f, %f", instance_->mousePos_.x, instance_->mousePos_.y);
+	ImGui::Text("mousePosInExecuteView:%f,%f", instance_->GetMousePosInDebugWindow().x, instance_->GetMousePosInDebugWindow().y);
 
 	ImGui::End();
 }
@@ -222,26 +224,24 @@ bool Input::TriggerKey(uint32_t keyNum){
 //-----------------------------------------------------------------------------
 /* マウスの更新 */
 void Input::MouseUpdate(){
-	HRESULT hr;
-
-	hr = mouse_->Acquire();
+	HRESULT hr = mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 	if (FAILED(hr)){
 		if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED){
-
-			mouse_->Acquire();
+			hr = mouse_->Acquire();
 		}
 	}
-
-	hr = mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
-
 
 	if (FAILED(hr)){
 		mousePos_ = {0.0f, 0.0f};
 	} else{
 
-		// マウスの座標更新（画面座標にマッピングする処理）
-		mousePos_.x += static_cast< float >(mouseState_.lX);
-		mousePos_.y += static_cast< float >(mouseState_.lY);
+		POINT point;
+		GetCursorPos(&point);
+		ScreenToClient(System::GetHWND(), &point);
+
+		// マウスの移動量を保存
+		mousePos_.x = static_cast< float >(point.x);
+		mousePos_.y = static_cast< float >(point.y);
 
 		// ホイール量をfloatで更新
 		mouseWheel_ = static_cast< float >(mouseState_.lZ) / 120.0f; // 1段階のホイール移動を1.0fにする
@@ -268,6 +268,28 @@ Vector2 Input::GetMousePosition(){
 	return instance_->mousePos_;
 }
 
+Vector2 Input::GetMousePosInDebugWindow(){
+	Vector2 m_ImagePos = Vector2(0, 38);       // テクスチャを描画開始するスクリーン上の座標
+	Vector2 m_ImageSize = kExecuteWindowSize;   // テクスチャの幅・高さ
+	Vector2 m_GameSize = kWindowSize; // 本来のゲーム描画サイズ
+
+	// （1）ImGui全体でのマウス座標を取得
+	Vector2 mousePos = GetMousePosition();
+
+	// （2）テクスチャを貼っている領域の左上座標からの相対位置を計算
+	float relativeX = mousePos.x - m_ImagePos.x;
+	float relativeY = mousePos.y - m_ImagePos.y;
+
+	// （3）テクスチャサイズに対する相対座標を、ゲーム本来の座標系に合わせてスケーリング
+	float scaleX = m_GameSize.x / m_ImageSize.x;
+	float scaleY = m_GameSize.y / m_ImageSize.y;
+
+	float gamePosX = relativeX * scaleX;
+	float gamePosY = relativeY * scaleY;
+
+	return Vector2(gamePosX, gamePosY);
+}
+
 //-----------------------------------------------------------------------------
 /* 現在のマウスホイールの値を取得 */
 float Input::GetMouseWheel(){
@@ -277,14 +299,20 @@ float Input::GetMouseWheel(){
 //-----------------------------------------------------------------------------
 /* マウスの移動量を取得し、リセット */
 Vector2 Input::GetMouseDelta(){
-	Vector2 delta = instance_->mousePos_;
-	instance_->mousePos_ = Vector2(0.0f, 0.0f); // リセット
-	return delta;
+	// ヘッダーに追加
+	static Vector2 mouseDelta_;
+
+	// MouseUpdate()
+	mouseDelta_.x = static_cast< float >(instance_->mouseState_.lX);
+	mouseDelta_.y = static_cast< float >(instance_->mouseState_.lY);
+	return mouseDelta_;
 }
 
 //-----------------------------------------------------------------------------
 /* ゲームパッドの更新 */
 void Input::GamepadUpdate(){
+	if (!instance_->gamepad_) return; // 安全チェック
+
 	// 前回の状態を保存
 	instance_->gamepadStatePre_ = instance_->gamepadState_;
 

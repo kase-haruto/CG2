@@ -70,6 +70,7 @@ public:
     static bool PushMouseButton(int button);
     static bool TriggerMouseButton(int button);
     static Vector2 GetMousePosition();
+    static Vector2 GetMousePosInDebugWindow();
     static float GetMouseWheel();
     static Vector2 GetMouseDelta();
 

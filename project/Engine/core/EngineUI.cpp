@@ -62,8 +62,6 @@ void EngineUI::Render(){
 
 	pInstance_->RenderMainViewport();
 #endif // _DEBUG
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,28 +69,45 @@ void EngineUI::Render(){
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::RenderMainViewport(){
 
-	// ウィンドウ自体も固定サイズにしたい場合は、Begin()の前に設定
 	ImGui::SetNextWindowSize(ImVec2(700, 400));
-	ImGui::Begin("Main Viewport");
+	ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 	if (mainViewportTextureID_){
-		ImVec2 fixedViewportSize(kExecuteWindowSize.x, kExecuteWindowSize.y);
-		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), fixedViewportSize);
+		ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
 
-		// Image の矩形領域（スクリーン座標）を取得
-		Vector2 m_ImagePos = Vector2(8, 30);       // 画像の描画開始座標
+		// Image描画開始位置（スクリーン座標）を取得
+		ImVec2 imagePos = ImGui::GetCursorScreenPos();
 
-		// ギズモの描画先と当たり判定領域を設定
-		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
-		ImGuizmo::SetRect(m_ImagePos.x, m_ImagePos.y, fixedViewportSize.x, fixedViewportSize.y);
+		// Imageを描画
+		ImGui::SetCursorScreenPos(imagePos);
+		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+		// ギズモの描画範囲設定
+		ImGuizmo::SetRect(imagePos.x, imagePos.y, viewportSize.x, viewportSize.y);
+
+		//fps表示
+		// 画像描画位置を表示
+		ImVec2 textPos = ImVec2(imagePos.x, imagePos.y);
+		float fps = ImGui::GetIO().Framerate;
+		ImGui::GetForegroundDrawList()->AddText(
+			textPos,
+			IM_COL32(255, 255, 255, 255),
+			(std::string("fps: ") + std::to_string(( int ) fps)).c_str()
+		);
+		textPos.y += 20;
+		if (ImGui::IsItemHovered()){
+
+			ImGui::GetForegroundDrawList()->AddText(
+				textPos,
+				IM_COL32(255, 255, 255, 255),
+				(std::string("Hovered")).c_str() // ホバーしているか
+			);
+		}
 
 	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
 
 	ImGui::End();
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
