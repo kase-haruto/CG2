@@ -2,6 +2,7 @@
 //  include
 ////////////////////////////////////////////////////////////////////////////////////////////
 #include "EngineUI.h"
+#include <Engine/core/Enviroment.h>
 
 // uiPanel
 #include "UI/HierarchyPanel.h"
@@ -70,28 +71,27 @@ void EngineUI::Render(){
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::RenderMainViewport(){
 
+	// ウィンドウ自体も固定サイズにしたい場合は、Begin()の前に設定
+	ImGui::SetNextWindowSize(ImVec2(700, 400));
 	ImGui::Begin("Main Viewport");
 
 	if (mainViewportTextureID_){
-		// 1. ウィンドウ内で利用可能な領域サイズを取得し、テクスチャ描画
-		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+		ImVec2 fixedViewportSize(kExecuteWindowSize.x, kExecuteWindowSize.y);
+		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), fixedViewportSize);
 
-		// 2. 直前に描画した Image の矩形領域（スクリーン座標）を取得
-		ImVec2 imagePos = ImGui::GetItemRectMin();
-		ImVec2 imageSize = ImGui::GetItemRectSize();
+		// Image の矩形領域（スクリーン座標）を取得
+		Vector2 m_ImagePos = Vector2(8, 30);       // 画像の描画開始座標
 
-		// 3. ギズモの描画先 (DrawList) と、当たり判定を行う矩形を設定
+		// ギズモの描画先と当たり判定領域を設定
 		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
-		ImGuizmo::SetRect(imagePos.x, imagePos.y, imageSize.x, imageSize.y);
+		ImGuizmo::SetRect(m_ImagePos.x, m_ImagePos.y, fixedViewportSize.x, fixedViewportSize.y);
 
-		// （透視投影なら）
-		ImGuizmo::SetOrthographic(false);
 	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
 
 	ImGui::End();
+
 
 }
 
