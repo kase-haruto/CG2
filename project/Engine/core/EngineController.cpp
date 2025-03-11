@@ -31,11 +31,11 @@ void EngineController::Run(){
         // 描画前処理
         system_->BeginFrame();
 
-        // シーンの更新
-        sceneManager_->Update();
-
         // UI描画
         EngineUI::Render();
+
+        // シーンの更新
+        sceneManager_->Update();
 
         // シーンの描画
         sceneManager_->Draw();

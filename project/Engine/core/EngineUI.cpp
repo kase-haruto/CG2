@@ -80,9 +80,10 @@ void EngineUI::RenderMainViewport(){
 
 		// Imageを描画
 		ImGui::SetCursorScreenPos(imagePos);
-		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
 		// ギズモの描画範囲設定
 		ImGuizmo::SetRect(imagePos.x, imagePos.y, viewportSize.x, viewportSize.y);
+		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+		ImGuizmo::SetDrawlist();
 
 		//fps表示
 		// 画像描画位置を表示
@@ -102,6 +103,7 @@ void EngineUI::RenderMainViewport(){
 				(std::string("Hovered")).c_str() // ホバーしているか
 			);
 		}
+
 
 	} else{
 		ImGui::Text("Viewport texture not set.");

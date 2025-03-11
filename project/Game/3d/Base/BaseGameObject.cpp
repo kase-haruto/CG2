@@ -15,6 +15,7 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 			objectModelType_ = ObjectModelType::ModelType_Static;
 			model_ = std::make_unique<Model>(modelName);
 			model_->transform.Initialize();
+			model_->UpdateMatrix();
 		}
 		// gltf
 		else if (extension == ".gltf"){
