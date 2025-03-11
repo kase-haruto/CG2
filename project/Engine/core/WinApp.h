@@ -21,19 +21,19 @@ public:
     // メッセージ処理
     bool ProcessMessage();
     // フルスクリーン切り替え
-    void SetFullScreen(bool enable);
+    void SetBorderlessFullscreen(bool enable);
 
 private:
     // ウィンドウの情報
     WNDCLASSEX wc {};
     // ウィンドウのサイズ
-    RECT wrc = {0, 0, 1280, 720};
+    RECT wrc = {};
     // ウィンドウのハンドル
     HWND hwnd {};
     // ウィンドウタイトル
     std::string windowName_;
     // フルスクリーン状態
-    bool isFullScreen = false;
+    bool isFullScreen = true;
     // ウィンドウの元の位置とサイズ
     WINDOWPLACEMENT windowPlacement = {sizeof(WINDOWPLACEMENT)};
 };

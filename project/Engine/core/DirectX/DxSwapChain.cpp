@@ -1,5 +1,5 @@
 #include"engine/core/DirectX/DxSwapChain.h"
-
+#include <Engine/core/Enviroment.h>
 #include <thread>
 
 #include <algorithm>
@@ -67,8 +67,8 @@ void DxSwapChain::Initialize(
 
     syncInterval_ = static_cast< UINT >(std::round(refreshRate_ / 60.0f));
     if (syncInterval_ < 1) syncInterval_ = 1;
-}
 
+}
 
 void DxSwapChain::Present(){
     // スワップチェインをPresent

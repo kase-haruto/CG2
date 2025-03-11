@@ -10,6 +10,7 @@
 
 /* c++ */
 #include <tchar.h>
+#include <cassert>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -19,6 +20,7 @@ WinApp::WinApp(const int wWidth, const int wHeight, const std::string windowName
     wrc.bottom = wHeight;
     windowName_ = windowName;
     CreateWnd();
+	SetBorderlessFullscreen(true);
 }
 
 // デストラクタ
@@ -26,41 +28,7 @@ WinApp::~WinApp(){
     CloseWindow(hwnd);
 }
 
-// ウィンドウプロシージャ
-LRESULT CALLBACK WinApp::WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM lparam){
-    if (ImGui_ImplWin32_WndProcHandler(hand, msg, wparam, lparam)){
-        return true;
-    }
-
-    switch (msg){
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-
-        case WM_KEYDOWN:
-            if (wparam == VK_RETURN && (GetAsyncKeyState(VK_MENU) & 0x8000)){ // Alt + Enter でフルスクリーン切り替え
-                WinApp* app = reinterpret_cast< WinApp* >(GetWindowLongPtr(hand, GWLP_USERDATA));
-                if (app){
-                    app->SetFullScreen(!app->isFullScreen);
-                }
-            }
-            break;
-    }
-
-    return DefWindowProc(hand, msg, wparam, lparam);
-}
-
-bool WinApp::ProcessMessage(){
-    MSG msg {}; // メッセージ
-
-    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    return msg.message == WM_QUIT;
-}
-
+// ウィンドウ作成処理
 void WinApp::CreateWnd(){
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -75,7 +43,8 @@ void WinApp::CreateWnd(){
 
     hwnd = CreateWindow(
         wc.lpszClassName,
-        ConvertString(windowName_).c_str(),
+        // マルチバイト→ワイド文字変換が必要な場合は適宜対応する
+        _T("MyGameWindow"),
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -92,35 +61,87 @@ void WinApp::CreateWnd(){
     ShowWindow(hwnd, SW_SHOW);
 }
 
+// ウィンドウ破棄
 void WinApp::TerminateGameWindow(){
     UnregisterClass(wc.lpszClassName, wc.hInstance);
     CoUninitialize();
 }
 
-void WinApp::SetFullScreen(bool enable){
-    if (isFullScreen == enable) return;
-
-    isFullScreen = enable;
-
-    if (enable){
-        GetWindowPlacement(hwnd, &windowPlacement);
-        SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-
-        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-        SetWindowPos(hwnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
-
-        // **ここで ImGui の解像度を更新**
-        ImGui::GetIO().DisplaySize = ImVec2(( float ) screenWidth, ( float ) screenHeight);
-    } else{
-        SetWindowLong(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-        SetWindowPlacement(hwnd, &windowPlacement);
-        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
-
-        // **ウィンドウモードのときも更新**
-        RECT rect;
-        GetClientRect(hwnd, &rect);
-        ImGui::GetIO().DisplaySize = ImVec2(( float ) (rect.right - rect.left), ( float ) (rect.bottom - rect.top));
+// メッセージループ
+bool WinApp::ProcessMessage(){
+    MSG msg {};
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
+    return (msg.message == WM_QUIT);
 }
 
+// ウィンドウプロシージャ
+LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam){
+    // ImGui用の処理
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)){
+        return true;
+    }
+
+    // このウィンドウに対応するWinAppインスタンスを取得
+    WinApp* pThis = reinterpret_cast< WinApp* >(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    if (pThis){
+        // 必要に応じて pThis->～ な処理を書く
+    }
+
+    switch (msg){
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+    }
+
+    return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+//------------------------------------------------------------------------------
+// ボーダーレス フルスクリーンの切り替え
+//------------------------------------------------------------------------------
+void WinApp::SetBorderlessFullscreen(bool enable){
+
+    if (enable){
+        // 今のウィンドウの情報を保存
+        GetWindowRect(hwnd, &wrc);
+
+        // ウィンドウがあるモニターの領域を取得
+        HMONITOR hMon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+        MONITORINFO mi {};
+        mi.cbSize = sizeof(MONITORINFO);
+        GetMonitorInfo(hMon, &mi);
+
+        // スタイルを境界線なしのポップアップへ変更
+        SetWindowLong(hwnd, GWL_STYLE, WS_POPUP);
+        SetWindowLong(hwnd, GWL_EXSTYLE, 0);
+
+        // ウィンドウをモニター領域いっぱいに拡大
+        SetWindowPos(
+            hwnd,
+            HWND_TOP,
+            mi.rcMonitor.left,
+            mi.rcMonitor.top,
+            mi.rcMonitor.right - mi.rcMonitor.left,
+            mi.rcMonitor.bottom - mi.rcMonitor.top,
+            SWP_FRAMECHANGED | SWP_NOOWNERZORDER
+        );
+        ShowWindow(hwnd, SW_MAXIMIZE);
+    } else{
+        // 通常のウィンドウスタイルに戻す
+
+        // 以前の位置・サイズに復元
+        SetWindowPos(
+            hwnd,
+            0,
+            wrc.left,
+            wrc.top,
+            wrc.right - wrc.left,
+            wrc.bottom - wrc.top,
+            SWP_FRAMECHANGED | SWP_NOOWNERZORDER
+        );
+        ShowWindow(hwnd, SW_SHOWNORMAL);
+    }
+}

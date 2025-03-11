@@ -47,7 +47,7 @@ void EngineUI::Initialize(){
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::Render(){
 #ifdef _DEBUG
-	pInstance_->RenderMenue();
+	//pInstance_->RenderMenue();
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 	// すべてのパネルをレンダリングし、閉じられたパネルを削除
 	for (auto it = pInstance_->panels_.begin(); it != pInstance_->panels_.end(); ){
@@ -92,7 +92,7 @@ void EngineUI::RenderMainViewport(){
 		ImGui::GetForegroundDrawList()->AddText(
 			textPos,
 			IM_COL32(255, 255, 255, 255),
-			(std::string("fps: ") + std::to_string(( int ) fps)).c_str()
+			(std::string("fps: ") + std::to_string(fps)).c_str()
 		);
 		textPos.y += 20;
 		if (ImGui::IsItemHovered()){

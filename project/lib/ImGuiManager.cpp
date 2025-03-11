@@ -41,6 +41,9 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	);
 	ImGui::StyleColorsDark(); // ダークテーマを適用
 
+	// fontの設定
+	ImFont* font = io.Fonts->AddFontFromFileTTF("Resources/asetts/fonts/FiraMono.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	io.FontDefault = font;
 	CustomizeImGuiStyle();
 
 	//先頭にimguiが入ったsrvを管理クラスに移す

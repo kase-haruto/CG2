@@ -1,6 +1,7 @@
 #include "engine/core/EngineController.h"
 #include "engine/core/Enviroment.h"
 #include "../scene/SceneManager.h"
+#include <Engine/core/Input.h>
 
 //===================================================================*/
 // Engine全体の初期化処理
@@ -42,6 +43,10 @@ void EngineController::Run(){
 
         // 描画後処理
         system_->EndFrame();
+
+        if (Input::TriggerKey(DIK_ESCAPE)){
+            break;
+        }
     }
 }
 

@@ -11,17 +11,10 @@ class DxSwapChain{
     template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-    /// <summary>
-    /// 初期化
-    /// </summary>
-    /// <param name="dxgiFactory"></param>
-    /// <param name="commandQueue"></param>
-    /// <param name="hwnd"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
     void Initialize(ComPtr<IDXGIFactory7> dxgiFactory, ComPtr<ID3D12CommandQueue> commandQueue, HWND hwnd, uint32_t width, uint32_t height);
 
     void Present();
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     //              アクセッサ
