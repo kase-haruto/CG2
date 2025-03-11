@@ -1,5 +1,3 @@
-// Input.h
-
 #pragma once
 
 #define DIRECTINPUT_VERSION 0x0800 
@@ -11,7 +9,7 @@
 #include <XInput.h>
 #include <unordered_map>
 #include <string>
-#include <cmath> // 追加: sqrt関数を使用するため
+#include <cmath>
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -57,10 +55,12 @@ public:
     Input(const Input&) = delete;
     Input& operator=(const Input&) = delete;
 
+public:
     // 初期化、更新、終了
     static void Initialize();
     static void Update();
     static void Finalize();
+	static void ShowImGui();
 
     // キーボード
     static bool PushKey(uint32_t keyNum);
@@ -70,6 +70,7 @@ public:
     static bool PushMouseButton(int button);
     static bool TriggerMouseButton(int button);
     static Vector2 GetMousePosition();
+    static Vector2 GetMousePosInDebugWindow();
     static float GetMouseWheel();
     static Vector2 GetMouseDelta();
 

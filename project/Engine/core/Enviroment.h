@@ -2,8 +2,20 @@
 #include <stdint.h>
 #include <string>
 
+#include <lib/myMath/Vector2.h>
+
 static const std::string windowTitle = "LE2A_08_カセ_Engine";
 
 //フルhdとhdの中間1280x720と1920x1080,1600x900
 static const uint32_t kWindowWidth = 1280;
 static const uint32_t kWindowHeight = 720;
+
+static const Vector2 kWindowSize = Vector2(
+	static_cast<float>(kWindowWidth), static_cast< float >(kWindowHeight));
+
+//imGUiの実行ウィンドウサイズ
+static const uint32_t kGuiWindowWidth = 736;
+static const uint32_t kGuiWindowHeight = 414;
+
+static const Vector2 kExecuteWindowSize = Vector2(
+	static_cast< float >(kGuiWindowWidth), static_cast< float >(kGuiWindowHeight));

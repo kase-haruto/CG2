@@ -2,6 +2,7 @@
 //  include
 ////////////////////////////////////////////////////////////////////////////////////////////
 #include "EngineUI.h"
+#include <Engine/core/Enviroment.h>
 
 // uiPanel
 #include "UI/HierarchyPanel.h"
@@ -61,8 +62,6 @@ void EngineUI::Render(){
 
 	pInstance_->RenderMainViewport();
 #endif // _DEBUG
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,29 +69,47 @@ void EngineUI::Render(){
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::RenderMainViewport(){
 
-	ImGui::Begin("Main Viewport");
+	ImGui::SetNextWindowSize(ImVec2(700, 400));
+	ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 	if (mainViewportTextureID_){
-		// 1. ウィンドウ内で利用可能な領域サイズを取得し、テクスチャ描画
-		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
+
+		// Image描画開始位置（スクリーン座標）を取得
+		ImVec2 imagePos = ImGui::GetCursorScreenPos();
+
+		// Imageを描画
+		ImGui::SetCursorScreenPos(imagePos);
+		// ギズモの描画範囲設定
+		ImGuizmo::SetRect(imagePos.x, imagePos.y, viewportSize.x, viewportSize.y);
 		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+		ImGuizmo::SetDrawlist();
 
-		// 2. 直前に描画した Image の矩形領域（スクリーン座標）を取得
-		ImVec2 imagePos = ImGui::GetItemRectMin();
-		ImVec2 imageSize = ImGui::GetItemRectSize();
+		//fps表示
+		// 画像描画位置を表示
+		ImVec2 textPos = ImVec2(imagePos.x, imagePos.y);
+		float fps = ImGui::GetIO().Framerate;
+		ImGui::GetForegroundDrawList()->AddText(
+			textPos,
+			IM_COL32(255, 255, 255, 255),
+			(std::string("fps: ") + std::to_string(( int ) fps)).c_str()
+		);
+		textPos.y += 20;
+		if (ImGui::IsItemHovered()){
 
-		// 3. ギズモの描画先 (DrawList) と、当たり判定を行う矩形を設定
-		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
-		ImGuizmo::SetRect(imagePos.x, imagePos.y, imageSize.x, imageSize.y);
+			ImGui::GetForegroundDrawList()->AddText(
+				textPos,
+				IM_COL32(255, 255, 255, 255),
+				(std::string("Hovered")).c_str() // ホバーしているか
+			);
+		}
 
-		// （透視投影なら）
-		ImGuizmo::SetOrthographic(false);
+
 	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
 
 	ImGui::End();
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

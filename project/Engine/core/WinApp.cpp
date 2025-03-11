@@ -53,7 +53,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hand, UINT msg, WPARAM wparam, LPARAM l
 bool WinApp::ProcessMessage(){
     MSG msg {}; // メッセージ
 
-    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }

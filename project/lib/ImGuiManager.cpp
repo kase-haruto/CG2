@@ -19,17 +19,17 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 									128,
 									true
 	);
-	
+
 
 	//srvの設定
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
 
-	// Docking and Multi-Viewport feature enable
+	// Dockingのみ有効、Viewportsは無効
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; ← この行は削除またはコメントアウト
 
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(pDxCore_->GetDevice().Get(),
@@ -41,18 +41,12 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	);
 	ImGui::StyleColorsDark(); // ダークテーマを適用
 
-	// Docking時のスタイル調整（任意）
-	//ImGuiStyle& style = ImGui::GetStyle();
-	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
-	//	style.WindowRounding = 0.0f;
-	//	style.Colors[ImGuiCol_WindowBg].w = 1.0f; // ウィンドウ背景を完全不透明に
-	//}
-
 	CustomizeImGuiStyle();
 
 	//先頭にimguiが入ったsrvを管理クラスに移す
 	SrvLocator::Provide(srvHeap_, pDxCore_->GetDevice());
 }
+
 
 void ImGuiManager::Finalize(){
 	//後始末
@@ -80,11 +74,6 @@ void ImGuiManager::End(){
 	//描画前準備
 	ImGui::Render();
 
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
 }
 
 void ImGuiManager::Draw(){

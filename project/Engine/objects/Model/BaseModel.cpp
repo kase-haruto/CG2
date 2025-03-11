@@ -158,6 +158,11 @@ void BaseModel::ShowImGuiInterface(){
 		model           // モデル行列 (in/out col-major)
 	);
 
+	//Matrix4x4 identityMatrix = Matrix4x4::MakeIdentity();
+	//float identityMat[16];
+	//memcpy(identityMat, &identityMatrix, sizeof(identityMat));
+	//ImGuizmo::DrawGrid(view, proj, identityMat, 100.0f);
+
 	//===========================
 	// 5. ギズモ操作の結果をモデルに反映
 	//===========================	
