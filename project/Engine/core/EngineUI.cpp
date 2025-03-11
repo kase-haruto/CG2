@@ -94,17 +94,6 @@ void EngineUI::RenderMainViewport(){
 			IM_COL32(255, 255, 255, 255),
 			(std::string("fps: ") + std::to_string(fps)).c_str()
 		);
-		textPos.y += 20;
-		if (ImGui::IsItemHovered()){
-
-			ImGui::GetForegroundDrawList()->AddText(
-				textPos,
-				IM_COL32(255, 255, 255, 255),
-				(std::string("Hovered")).c_str() // ホバーしているか
-			);
-		}
-
-
 	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
