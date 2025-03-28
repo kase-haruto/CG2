@@ -6,9 +6,9 @@
 #include "../scene/TestScene.h"
 
 // engine
-#include "../core/Input.h"
-#include "../core/Audio/Audio.h"
-#include "../graphics/camera/CameraManager.h"
+#include "Engine/core/Input.h"
+#include "Engine/core/Audio/Audio.h"
+#include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/objects/particle/ParticleManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/core/DirectX/DxCore.h"
