@@ -40,4 +40,8 @@ struct Matrix4x4 final{
 		return matrix;
 	}
 
+	//operator関数
+	Matrix4x4 operator*(const Matrix4x4& other) const{
+		return Multiply(*this, other);
+	}
 };

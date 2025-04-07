@@ -7,11 +7,12 @@
 #include"lib/myMath/Vector4.h"
 
 /* engine */
-#include"engine/objects/ModelData.h"
-#include"engine/graphics/VertexData.h"
-#include"engine/graphics/Material.h"
-#include"engine/physics/AABB.h"
+#include "engine/objects/ModelData.h"
+#include "engine/graphics/VertexData.h"
+#include "engine/graphics/Material.h"
+#include "engine/physics/AABB.h"
 #include "Engine/objects/Animation/AnimationStruct.h"
+
 /* c++ */
 #include <list>
 #include <d3d12.h>
@@ -36,7 +37,7 @@ Matrix4x4 MakeRotateYMatrix(float theta);
 Matrix4x4 MakeRotateZMatrix(float theta);
 Matrix4x4 EulerToMatrix(const Vector3& euler);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
-
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 //正射影行列
 Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearClip, float farClip);
@@ -73,3 +74,11 @@ bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos);
 
 // 4x4 行列から Scale, Rotate (Euler角), Translation を抽出する関数
 void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate, Vector3& outTrans);
+
+// skeletonの作成
+Skeleton CreateSkeleton(const Node& rootNode);
+
+// jointの作成
+int32_t CreateJoint(const Node& node,
+					const std::optional<int32_t>& parent,
+					std::vector<Joint>& joints);

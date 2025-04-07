@@ -90,6 +90,16 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return affineMatrix;
 }
 
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate){
+	Matrix4x4 affineMatrix;
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	// Quaternionを行列に変換
+	Matrix4x4 rotateMatrix = Quaternion::ToMatrix(rotate);
+	affineMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+	return affineMatrix;
+}
+
 Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearClip, float farClip){
 	Matrix4x4 result;
 	result = {
@@ -204,7 +214,6 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 	return modelData;
 }
 
-
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
 
 	// ファイルを開く
@@ -257,7 +266,6 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 
 	return materialData;
 }
-
 
 DirectX::ScratchImage LoadTextureImage(const std::string& filePath){
 
@@ -456,9 +464,12 @@ void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate
 }
 
 
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 //							Animation
 /////////////////////////////////////////////////////////////////////////////////////////////
+//アニメーションデータを読み込む関数
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename){
 	Animation animation;// アニメーションデータ
 	Assimp::Importer importer;
@@ -511,3 +522,39 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
 	}
 	return animation;
 }
+
+//ノードの情報を取得する関数
+Skeleton CreateSkeleton(const Node& rootNode){
+	Skeleton skeleton;
+	skeleton.root = CreateJoint(rootNode, {},skeleton.joints);
+
+	//名前とindexのマッピングを行いアクセスしやすくする
+	for(const Joint& joint:skeleton.joints){
+		skeleton.jointMap.emplace(joint.name, joint.index);
+	}
+	return skeleton;
+}
+
+//ノードの情報を取得する関数
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints){
+	
+	Joint joint;
+	joint.name = node.name;
+	joint.localMatrix = node.localMatrix;
+	joint.skeletonSpaceMatrix = Matrix4x4::MakeIdentity();
+	joint.transform = node.transform;
+	joint.index = int32_t(joints.size());	//現在登録されているjointの数をindexにする
+	joint.parent = parent;
+
+	//skeletonのjoint列に追加
+	joints.push_back(joint);
+
+	for (const Node& child : node.children){
+		//子jointを作成し、そのindexを登録
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+	//自身のindexを返す
+	return joint.index;
+}
+

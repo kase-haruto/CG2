@@ -163,7 +163,7 @@ void AnimationModel::AnimationUpdate(){
     if (modelData_){
         // (1) アニメーションを再生（animationTransform_ を更新）
         PlayAnimation();
-
+        SkeletonUpdate();
         // (4) ワールド行列の更新
         //   ここで「手動transform + アニメーションtransform」 を合成する
         Matrix4x4 manualMat = MakeAffineMatrix(
@@ -179,6 +179,22 @@ void AnimationModel::AnimationUpdate(){
     }
 	BaseModel::Update();
 }
+
+void AnimationModel::SkeletonUpdate(){
+    // すべてのjointを更新
+    for (Joint& joint:skeleton_.joints){
+        joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+    
+		// 親の行列がある場合は、親の行列を掛け合わせる
+		if (joint.parent.has_value()){
+			joint.skeletonSpaceMatrix = joint.localMatrix * skeleton_.joints[*joint.parent].skeletonSpaceMatrix;
+		} else{
+			joint.skeletonSpaceMatrix = joint.localMatrix;
+		}
+    }
+
+}
+
 
 void AnimationModel::Update(){
     // 必要に応じて処理を入れる
@@ -219,6 +235,7 @@ void AnimationModel::ShowImGuiInterface(){
 
 #endif
 }
+
 
 //-----------------------------------------------------------------------------
 // バッファ生成/マッピング

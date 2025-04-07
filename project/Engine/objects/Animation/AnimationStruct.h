@@ -73,35 +73,4 @@ struct Skeleton{
 	std::map<std::string, int32_t> jointMap;	//< ボーン名とインデックスのマップ
 	std::vector<Joint> joints;					//< 所属しているジョイント
 };
-//
-//int32_t CreateJoint(const Node& node,
-//					const std::optional<int32_t>& parent,
-//					std::vector<Joint>& joints){
-//	Joint joint;
-//	joint.name = node.name;
-//	joint.localMatrix = node.localMatrix;
-//	joint.skeletonSpaceMatrix = Matrix4x4::MakeIdentity();
-//	joint.transform = node.transform;
-//	joint.index = int32_t(joints.size());
-//	joint.parent = parent;
-//	joints.push_back(joint); //skeletonのjoint列に追加
-//	for (const Node& child:node.children){
-//		//子jointを制作し、そのindexを登録
-//		int32_t childIndex = CreateJoint(child, joint.index, joints);
-//		joints[joint.index].children.push_back(childIndex);
-//	}
-//	//自身のindexを返す
-//	return joint.index;
-//}
-//
-//Skeleton CreateSkeleton(const Node& rootNode){
-//
-//	Skeleton skeleton;
-//	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
-//
-//	//名前とindexのマッピングを行いアクセスしやすくする
-//	for (const Joint& joint:skeleton.joints){
-//		skeleton.jointMap.emplace(joint.name, joint.index);
-//	}
-//	return skeleton;
-//}
+
