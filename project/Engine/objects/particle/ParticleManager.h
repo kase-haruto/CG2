@@ -20,15 +20,16 @@ public:
     //                   public Methods
     //===================================================================*/
 
-    // 粒子システムを追加
+    void Draw();
+    void Finalize();
+    void ShowDebugUI();
+
+    //--------- particleの追加・削除 -----------------------------------------------------
     void AddSystem(ParticleSystem* system);
     void RemoveSystem(ParticleSystem* system);
-    // 描画処理
-    void Draw();
 
-    void Finalize();
-
-    void ShowDebugUI();
+    //--------- accessor -----------------------------------------------------
+	std::vector<ParticleSystem*>& GetParticleSystems(){ return systems_; }
 
 private:
     //===================================================================*/

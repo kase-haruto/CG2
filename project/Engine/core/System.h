@@ -1,12 +1,19 @@
 #pragma once
-#include"WinApp.h"
 
-//グラフィック関係
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+
+// engine
+#include"WinApp.h"
 #include "engine/core/DirectX/DxCore.h"
 #include "../graphics/ShaderManager.h"
 #include "../graphics/PipelineStateManager.h"
 
 #include "lib/ImGuiManager.h"
+
+/* editor */
+#include <Engine/Editor/ParticleEditor.h>
 
 //リークチェック
 #include "LeakChecker.h"
@@ -14,10 +21,14 @@
 /* c++ */
 #include<stdint.h>
 
+
 // forward
 class UIEditor;
 class ModelBuilder;
 
+/* ========================================================================
+/* system Class
+/* ===================================================================== */
 class System{
 public:
 	//===================================================================*/
@@ -75,8 +86,8 @@ private:
 
 private:
 	// engineEditors
-	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
-	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
-
+	std::unique_ptr<UIEditor> uiEditor_;				//<ui編集
+	std::unique_ptr<ModelBuilder> modelBuilder_;		//<モデル配置
+	std::unique_ptr<ParticleEditor> particleEditor_;	//<パーティクル編集
 };
 

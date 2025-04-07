@@ -20,7 +20,8 @@ public:
     //                    public methods
     //===================================================================*/
 
-    ParticleSystem();
+    ParticleSystem() = default;
+    ParticleSystem(const std::string& name);
     ~ParticleSystem() override;
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
@@ -51,7 +52,6 @@ protected:
     //===================================================================*/
     std::unique_ptr<ParticleBehavior> behavior_;
 
-
 public:
     //===================================================================*/
     //                    getter/setter
@@ -64,6 +64,7 @@ public:
     // BaseParticleの仮想関数をオーバーライド
     bool GetUseRandomColor() const override;
     Vector4 GetSelectedColor() const override;
+	//void SetEmitterShape(EmitterShape shape){ emitter_.sha = shape; }
 
     const Vector3& GetEmitterPos()const{ return emitter_.transform.translate; }
 

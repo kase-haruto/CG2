@@ -12,6 +12,9 @@
 #include "Engine/graphics/blendMode/BlendMode.h"
 #include "Engine/core/UI/EditorPanel.h"
 
+// editor
+
+
 // manager
 #include "../objects/TextureManager.h"
 #include "../objects/ModelManager.h"
@@ -101,9 +104,14 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
     //sprite
     uiEditor_ = std::make_unique<UIEditor>();
 
+    //particle
+	ParticleManager* particleManager = ParticleManager::GetInstance();
+	particleEditor_ = std::make_unique<ParticleEditor>(particleManager);
+
     EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
     editorPanel->AddEditor(modelBuilder_.get());
     editorPanel->AddEditor(uiEditor_.get());
+	editorPanel->AddEditor(particleEditor_.get());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

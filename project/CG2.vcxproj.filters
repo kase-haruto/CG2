@@ -406,6 +406,7 @@
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
     <ClCompile Include="Engine\graphics\Material.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
+    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -658,6 +659,7 @@
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
     <ClInclude Include="Engine\scene\SceneType.h" />
+    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

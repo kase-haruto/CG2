@@ -1,7 +1,9 @@
 #pragma once
+#include "lib/myMath/Vector3.h"
+
+/* c++ */
 #include <random>
 #include <type_traits>
-#include "lib/myMath/Vector3.h" // Vector3 クラスが定義されている前提
 
 class Random{
 public:
