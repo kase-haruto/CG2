@@ -137,19 +137,19 @@ void ModelBuilder::SaveModels(const std::string& filePath){
         modelData["unique_key"] = pair.first;
         modelData["original_name"] = pair.second.first;
         modelData["position"] = {
-            pair.second.second->transform.translate.x,
-            pair.second.second->transform.translate.y,
-            pair.second.second->transform.translate.z
+            pair.second.second->worldTransform_.translation.x,
+            pair.second.second->worldTransform_.translation.y,
+            pair.second.second->worldTransform_.translation.z
         };
         modelData["scale"] = {
-            pair.second.second->transform.scale.x,
-            pair.second.second->transform.scale.y,
-            pair.second.second->transform.scale.z
+            pair.second.second->worldTransform_.scale.x,
+            pair.second.second->worldTransform_.scale.y,
+            pair.second.second->worldTransform_.scale.z
         };
         modelData["rotation"] = {
-            pair.second.second->transform.rotate.x,
-            pair.second.second->transform.rotate.y,
-            pair.second.second->transform.rotate.z
+            pair.second.second->worldTransform_.eulerRotation.x,
+            pair.second.second->worldTransform_.eulerRotation.y,
+            pair.second.second->worldTransform_.eulerRotation.z
         };
         jsonModels.push_back(modelData);
     }
@@ -179,15 +179,15 @@ void ModelBuilder::LoadModels(const std::string& filePath){
 
         if (modelData.contains("position")){
             auto pos = modelData["position"];
-            model->transform.translate = Vector3({pos[0], pos[1], pos[2]});
+            model->worldTransform_.translation = Vector3({pos[0], pos[1], pos[2]});
         }
         if (modelData.contains("scale")){
             auto scale = modelData["scale"];
-            model->transform.scale = Vector3({scale[0], scale[1], scale[2]});
+            model->worldTransform_.scale = Vector3({scale[0], scale[1], scale[2]});
         }
         if (modelData.contains("rotation")){
             auto rot = modelData["rotation"];
-            model->transform.rotate = Vector3({rot[0], rot[1], rot[2]});
+            model->worldTransform_.eulerRotation = Vector3({rot[0], rot[1], rot[2]});
         }
         models_.emplace(uniqueKey, std::make_pair(originalName, std::move(model)));
     }

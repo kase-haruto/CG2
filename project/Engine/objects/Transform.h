@@ -48,6 +48,13 @@ public:
 	//--------- main -----------------------------------------------------
 	virtual void Initialize();
 	virtual void Update([[maybe_unused]]const Matrix4x4& viewProMatrix){}
+	virtual void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,
+							UINT rootParameterIndex){
+		DxBuffer::SetCommand(commandList, rootParameterIndex);
+	};
+
+	//--------- ImGui ---------------------------------------------------
+	virtual void ShowImGui(const std::string& lavel = "Transform");
 
 	//--------- accessor -------------------------------------------------
 	virtual Vector3 GetWorldPosition()const;
@@ -60,6 +67,8 @@ public:
 	Quaternion rotation;
 	Vector3 translation;
 
+	Vector3 eulerRotation;
+
 	TransformationMatrix matrix;
 	const BaseTransform* parent = nullptr;
 };
@@ -68,7 +77,11 @@ public:
 //	worldTransform class
 //============================================================================*/
 class WorldTransform :
-	BaseTransform{
+	public BaseTransform{
+public:
+	//========================================================================*/
+	//	public functions
+	//========================================================================*/
 	WorldTransform() = default;
 	~WorldTransform()override = default;
 

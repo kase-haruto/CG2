@@ -18,11 +18,11 @@ const std::string BaseModel::directoryPath_ = "Resource/models";
 
 Matrix4x4 BaseModel::GetWorldRotationMatrix(){
 	// 現在のオブジェクトのローカル回転行列を取得
-	Matrix4x4 localRot = EulerToMatrix(transform.rotate);
+	Matrix4x4 localRot = EulerToMatrix(worldTransform_.eulerRotation);
 
 	// 親が存在する場合、親のワールド回転行列と合成する
-	if (parent_ != nullptr){
-		Matrix4x4 parentWorldRot = EulerToMatrix(parent_->rotate);
+	if (worldTransform_.parent != nullptr){
+		Matrix4x4 parentWorldRot = EulerToMatrix(worldTransform_.parent->eulerRotation);
 		return Matrix4x4::Multiply(parentWorldRot, localRot);
 	} else{
 		return localRot;
@@ -69,20 +69,9 @@ void BaseModel::OnModelLoaded(){
 }
 
 void BaseModel::UpdateMatrix(){
-	// ワールド行列の更新
-	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	// 親の行列がある場合は親の行列を掛け合わせる
-	if (parent_ != nullptr){
-		Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
-		worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
-	}
 
-	// もし外部から行列のみを更新したい場合などに呼ばれる
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-	matrixData_.world = worldMatrix;
-	matrixData_.WVP = worldViewProjectionMatrix;
+	worldTransform_.Update(CameraManager::GetViewProjectionMatrix());
 
-	wvpBuffer_.TransferData(matrixData_);
 }
 
 void BaseModel::UpdateTexture(){
@@ -132,12 +121,16 @@ void BaseModel::ShowImGuiInterface(){
 	// 3. モデルのローカル行列を column-major にして渡す
 	//===========================
 	// transform.scale, rotate, translate から行列を作る (row-major)
-	Matrix4x4 localRM = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	Matrix4x4 localRM = MakeAffineMatrix(worldTransform_.scale,
+										 worldTransform_.eulerRotation,
+										 worldTransform_.translation);
 
 	// 親（parent_）がある場合は、さらに掛け合わせるならここで合成
 	// (親の行列も row-major で取得 → multiply)
-	if (parent_){
-		Matrix4x4 parentRM = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
+	if (worldTransform_.parent){
+		Matrix4x4 parentRM = MakeAffineMatrix(worldTransform_.parent->scale,
+											  worldTransform_.parent->eulerRotation,
+											  worldTransform_.parent->translation);
 		localRM = Matrix4x4::Multiply(parentRM, localRM);  // 親の行列を左側に掛ける
 	}
 
@@ -180,8 +173,10 @@ void BaseModel::ShowImGuiInterface(){
 
 		// 親がある場合、「ワールド行列」になっているので
 		// 親の逆行列を掛けてローカル行列を取り出す場合がある。
-		if (parent_){
-			Matrix4x4 parentRM = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
+		if (worldTransform_.parent){
+			Matrix4x4 parentRM = MakeAffineMatrix(worldTransform_.parent->scale,
+												  worldTransform_.parent->eulerRotation,
+												  worldTransform_.parent->translation);
 			Matrix4x4 parentInv = Matrix4x4::Inverse(parentRM);
 			updatedCM = Matrix4x4::Multiply(updatedCM, parentInv);
 		}
@@ -191,9 +186,9 @@ void BaseModel::ShowImGuiInterface(){
 		DecomposeMatrix(updatedCM, newScale, newRotate, newTrans);
 
 		// 変更を自身の transform に反映
-		transform.scale = newScale;
-		transform.rotate = newRotate;  // オイラー角
-		transform.translate = newTrans;
+		worldTransform_.scale = newScale;
+		worldTransform_.eulerRotation = newRotate;  // オイラー角
+		worldTransform_.translation = newTrans;
 	}
 
 	//===========================
@@ -219,7 +214,7 @@ void BaseModel::ShowImGuiInterface(){
 	if (ImGui::BeginTabBar("##InspectorTabs")){
 
 		if (ImGui::BeginTabItem("Transform")){
-			transform.ShowImGui();
+			worldTransform_.ShowImGui();
 			uvTransform.ShowImGui("UV Transform");
 			ImGui::EndTabItem();
 		}
@@ -283,7 +278,7 @@ void BaseModel::Draw(){
 
 	// マテリアル & 行列バッファをセット
 	materialBuffer_.SetCommand(commandList_, 0);
-	wvpBuffer_.SetCommand(commandList_, 1);
+	worldTransform_.SetCommand(commandList_, 1);
 
 	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 

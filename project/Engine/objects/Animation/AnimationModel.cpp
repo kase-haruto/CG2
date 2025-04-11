@@ -30,22 +30,15 @@ extern Animation LoadAnimationFile(const std::string& directoryPath, const std::
 //-----------------------------------------------------------------------------
 AnimationModel::AnimationModel(const std::string& fileName){
 	fileName_ = fileName;
-	Create(fileName);
-}
-
-//-----------------------------------------------------------------------------
-// モデル生成
-//-----------------------------------------------------------------------------
-void AnimationModel::Create(const std::string& filename){
 	// まずは初期化
 	Initialize();
 	try{
-		animationData_ = LoadAnimationFile("Resources/models", filename);
+		animationData_ = LoadAnimationFile("Resources/models", fileName_);
 	} catch (...){
 		// 読み込み失敗時は何もしない or duration=0 のまま
 		modelData_->animation.duration = 0.0f;
 	}
-	
+
 }
 
 //-----------------------------------------------------------------------------
@@ -58,11 +51,6 @@ void AnimationModel::Initialize(){
 
 	// デフォルト値
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-	transform = {
-		{1.0f, 1.0f, 1.0f}, // scale
-		{0.0f, 0.0f, 0.0f}, // rotate
-		{0.0f, 0.0f, 0.0f}  // translate
-	};
 	materialParameter_.shininess = 20.0f;
 	materialParameter_.enableLighting = HalfLambert;
 
@@ -73,9 +61,11 @@ void AnimationModel::Initialize(){
 		{0.0f, 0.0f, 0.0f}  // translate
 	};
 
+
+	worldTransform_.Initialize();
+	UpdateMatrix();
 	// バッファ生成
 	CreateMaterialBuffer();
-	CreateMatrixBuffer();
 	Map();
 }
 
@@ -168,9 +158,9 @@ void AnimationModel::AnimationUpdate(){
 		// (4) ワールド行列の更新
 		//   ここで「手動transform + アニメーションtransform」 を合成する
 		Matrix4x4 manualMat = MakeAffineMatrix(
-			transform.scale,
-			transform.rotate,
-			transform.translate
+			worldTransform_.scale,
+			worldTransform_.eulerRotation,
+			worldTransform_.translation
 		);
 		Matrix4x4 animMat = MakeAffineMatrix(
 			animationTransform_.scale,
@@ -178,7 +168,7 @@ void AnimationModel::AnimationUpdate(){
 			animationTransform_.translate
 		);
 		// ワールド行列を更新
-		worldMatrix = Matrix4x4::Multiply(manualMat, animMat);
+		//worldMatrix = Matrix4x4::Multiply(manualMat, animMat);
 	}
 
 	BaseModel::Update();
@@ -254,17 +244,9 @@ void AnimationModel::Draw(){
 //-----------------------------------------------------------------------------
 void AnimationModel::UpdateMatrix(){
 	// 親の行列がある場合は親の行列を掛け合わせる
-	if (parent_ != nullptr){
-		Matrix4x4 parentWorldMat = MakeAffineMatrix(parent_->scale, parent_->rotate, parent_->translate);
-		worldMatrix = Matrix4x4::Multiply(worldMatrix, parentWorldMat);
-	}
 
-	// もし外部から行列のみを更新したい場合などに呼ばれる
-	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-	matrixData_.world = worldMatrix;
-	matrixData_.WVP = worldViewProjectionMatrix;
+	worldTransform_.Update(CameraManager::GetViewProjectionMatrix());
 
-	wvpBuffer_.TransferData(matrixData_);
 }
 
 //-----------------------------------------------------------------------------
@@ -294,7 +276,6 @@ void AnimationModel::ShowImGuiInterface(){
 //-----------------------------------------------------------------------------
 void AnimationModel::Map(){
 	MaterialBufferMap();
-	MatrixBufferMap();
 }
 
 void AnimationModel::CreateMaterialBuffer(){
@@ -309,22 +290,12 @@ void AnimationModel::CreateMaterialBuffer(){
 
 }
 
-void AnimationModel::CreateMatrixBuffer(){
-	matrixData_.WVP = Matrix4x4::MakeIdentity();
-	matrixData_.world = Matrix4x4::MakeIdentity();
-
-	wvpBuffer_.Initialize(device_.Get());
-}
-
 void AnimationModel::MaterialBufferMap(){
+	// materialData_ の内容で GPU に転送
 	// マテリアルのデータを転送
 	materialBuffer_.TransferData(materialData_);
 }
 
-void AnimationModel::MatrixBufferMap(){
-	// ワールド行列と WVP 行列のデータを転送
-	wvpBuffer_.TransferData(matrixData_);
-}
 //-----------------------------------------------------------------------------
 // ノード名の取得例
 //-----------------------------------------------------------------------------

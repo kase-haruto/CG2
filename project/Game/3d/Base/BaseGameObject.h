@@ -66,13 +66,13 @@ public:
 
 	void SetTranslate(const Vector3& pos){
 		if (model_){
-			model_->SetPos(pos);
+			model_->worldTransform_.translation = pos;
 		}
 	}
 
 	virtual const Vector3 GetCenterPos()const{
 		const Vector3 offset = {0.0f, 1.0f, 0.0f};
-		Vector3 worldPos = Vector3::Transform(offset, model_->worldMatrix);
+		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
 		return worldPos;
 	}
 

@@ -68,5 +68,13 @@ struct Quaternion{
 	static Vector3 ToEuler(const Quaternion& q);
 
 	// オイラー角からクォータニオンを生成する
-	static Quaternion FromEuler(const Vector3& from, const Vector3& to);
+	static Quaternion FlomToQuaternion(const Vector3& from, const Vector3& to);
+	static Quaternion EulerToQuaternion(const Vector3& euler);
+
+    // X軸回転
+    static Quaternion MakeRotateX(float radian);
+    // Y軸回転
+    static Quaternion MakeRotateY(float radian);
+    // Z軸回転
+    static Quaternion MakeRotateZ(float radian);
 };

@@ -27,7 +27,7 @@ public:
 	virtual ~DxBuffer() = default;
 
 	virtual void Initialize(ComPtr<ID3D12Device> device, UINT elementCount = 1) = 0;
-	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex) = 0;
+	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex);
 	virtual void TransferData(const T& data);
 
 	// リソースの取得 ===================================================================*/
@@ -49,6 +49,15 @@ protected:
 	UINT elementCount_ = 0;
 	UINT rootParameterIndex_ = 0;
 };
+
+template<typename T>
+inline void DxBuffer<T>::SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT rootParameterIndex){
+	if (!resource_){
+		assert(false && "DxBuffer: resource is null.");
+		return;
+	}
+	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, resource_->GetGPUVirtualAddress());
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	データ転送
