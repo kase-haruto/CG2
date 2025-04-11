@@ -76,8 +76,8 @@ void TestScene::Update(){
 	modelField_->Update();
 
 	//test
-	/*bunny_->Update();
-	teapot_->Update();*/
+	bunny_->Update();
+	teapot_->Update();
 	walkHuman_->AnimationUpdate();
 
 	//衝突判定
@@ -131,8 +131,8 @@ void TestScene::Draw3dObject(){
 	//modelField_->Draw();
 
 	//test
-	/*bunny_->Draw();
-	teapot_->Draw();*/
+	bunny_->Draw();
+	teapot_->Draw();
 	walkHuman_->Draw();
 
 	/* =======================================================================================

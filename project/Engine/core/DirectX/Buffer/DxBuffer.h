@@ -26,12 +26,13 @@ public:
 	DxBuffer() = default;
 	virtual ~DxBuffer() = default;
 
-	virtual void Initialize(ComPtr<ID3D12Device> device, UINT elementCount, const T* data = nullptr) = 0;
+	virtual void Initialize(ComPtr<ID3D12Device> device, UINT elementCount = 1) = 0;
 	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex) = 0;
-	virtual void TransferData(const T* data, UINT elementCount);
+	virtual void TransferData(const T& data);
 
 	// リソースの取得 ===================================================================*/
 	ComPtr<ID3D12Resource> GetResource() const{ return resource_; }
+	UINT GetRootParameterIndex() const{ return rootParameterIndex_; }
 
 protected:
 	//===================================================================*/
@@ -46,15 +47,16 @@ protected:
 	ComPtr<ID3D12Resource> resource_ = nullptr;
 	UINT8* mappedPtr_ = nullptr;
 	UINT elementCount_ = 0;
+	UINT rootParameterIndex_ = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	データ転送
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename T>
-void DxBuffer<T>::TransferData(const T* data, UINT elementCount){
+void DxBuffer<T>::TransferData(const T& data){
 	assert(mappedPtr_ && "Resource is not mapped!");
-	std::memcpy(mappedPtr_, data, sizeof(T) * elementCount);
+	std::memcpy(mappedPtr_, &data, sizeof(T) * elementCount_);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

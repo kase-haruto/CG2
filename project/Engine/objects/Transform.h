@@ -2,8 +2,16 @@
 #include"lib/myMath/Vector3.h"
 #include "lib/myMath/Quaternion.h"
 
+#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+
 // c++
 #include <string>
+
+struct TransformationMatrix{
+	Matrix4x4 WVP;
+	Matrix4x4 world;
+	Matrix4x4 WorldInverseTranspose;
+};
 
 struct EulerTransform{
 	Vector3 scale;
@@ -23,4 +31,46 @@ struct QuaternionTransform{
 	Vector3 scale;
 	Quaternion rotate;
 	Vector3 translate;
+};
+
+//============================================================================*/
+//	BaseTransform class
+//============================================================================*/
+class BaseTransform :
+	public DxConstantBuffer<TransformationMatrix>{
+public:
+	//========================================================================*/
+	//	public functions
+	//========================================================================*/
+	BaseTransform() = default;
+	virtual ~BaseTransform() = default;
+
+	//--------- main -----------------------------------------------------
+	virtual void Initialize();
+	virtual void Update([[maybe_unused]]const Matrix4x4& viewProMatrix){}
+
+	//--------- accessor -------------------------------------------------
+	virtual Vector3 GetWorldPosition()const;
+
+public:
+	//========================================================================*/
+	//	public variables
+	//========================================================================*/
+	Vector3 scale;
+	Quaternion rotation;
+	Vector3 translation;
+
+	TransformationMatrix matrix;
+	const BaseTransform* parent = nullptr;
+};
+
+//============================================================================*/
+//	worldTransform class
+//============================================================================*/
+class WorldTransform :
+	BaseTransform{
+	WorldTransform() = default;
+	~WorldTransform()override = default;
+
+	virtual void Update(const Matrix4x4& viewProMatrix) override;
 };

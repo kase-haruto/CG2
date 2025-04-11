@@ -32,8 +32,8 @@ Matrix4x4 BaseModel::GetWorldRotationMatrix(){
 void BaseModel::Update(){
 	// --- まだ modelData_ を取得していないなら、取得を試みる ---
 	if (!modelData_){
-		auto loaded = ModelManager::GetInstance()->GetModelData(fileName_);
-		if (loaded){
+		if (ModelManager::GetInstance()->IsModelLoaded(fileName_)){
+			auto loaded = ModelManager::GetInstance()->GetModelData(fileName_);
 			modelData_ = loaded;
 			OnModelLoaded();
 		}
@@ -46,8 +46,8 @@ void BaseModel::Update(){
 		Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
 		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
 		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-		materialData_->uvTransform = uvTransformMatrix;
-
+		materialData_.uvTransform = uvTransformMatrix;
+		materialBuffer_.TransferData(materialData_);
 		// カメラ行列との掛け合わせ
 		UpdateMatrix();
 		Map();
@@ -55,10 +55,10 @@ void BaseModel::Update(){
 }
 
 void BaseModel::OnModelLoaded(){
-	// ここで初めて GPUリソースが完成した ModelData を受け取れた！
-
-	modelData_->vertexBuffer.Initialize(device_, UINT(modelData_->vertices.size()), modelData_->vertices.data());
-	modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()), modelData_->indices.data());
+	modelData_->vertexBuffer.Initialize(device_, UINT(modelData_->vertices.size()));
+	modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()));
+	modelData_->vertexBuffer.TransferData(*modelData_->vertices.data());
+	modelData_->indexBuffer.TransferData(*modelData_->indices.data());
 
 	// テクスチャ設定
 	if (!handle_){
@@ -79,8 +79,10 @@ void BaseModel::UpdateMatrix(){
 
 	// もし外部から行列のみを更新したい場合などに呼ばれる
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-	matrixData_->world = worldMatrix;
-	matrixData_->WVP = worldViewProjectionMatrix;
+	matrixData_.world = worldMatrix;
+	matrixData_.WVP = worldViewProjectionMatrix;
+
+	wvpBuffer_.TransferData(matrixData_);
 }
 
 void BaseModel::UpdateTexture(){
@@ -223,7 +225,7 @@ void BaseModel::ShowImGuiInterface(){
 		}
 
 		if (ImGui::BeginTabItem("Material")){
-			materialData_->ShowImGui();
+			materialData_.ShowImGui();
 			static std::string selectedTextureName = modelData_->material.textureFilePath;
 			//テクスチャの切り替え
 			auto& textures = TextureManager::GetInstance()->GetLoadedTextures();

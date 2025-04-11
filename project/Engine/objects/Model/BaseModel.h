@@ -72,9 +72,9 @@ protected:
     // モデルデータ・マテリアル
     //=============
 	std::string fileName_;
-    std::shared_ptr<ModelData> modelData_;
-    Material* materialData_ = nullptr;
-    TransformationMatrix* matrixData_ = nullptr;
+    std::optional<ModelData> modelData_;
+    Material materialData_;
+    TransformationMatrix matrixData_;
 public:
     //=============
     // 各種パラメータ

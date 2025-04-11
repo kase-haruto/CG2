@@ -242,7 +242,7 @@ void AnimationModel::Draw(){
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
 	BaseModel::Draw();
 
-	modelData_->skeleton.Draw(0.05f, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f});
+	//modelData_->skeleton.Draw(0.05f, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f});
 }
 
 //-----------------------------------------------------------------------------
@@ -261,8 +261,10 @@ void AnimationModel::UpdateMatrix(){
 
 	// もし外部から行列のみを更新したい場合などに呼ばれる
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-	matrixData_->world = worldMatrix;
-	matrixData_->WVP = worldViewProjectionMatrix;
+	matrixData_.world = worldMatrix;
+	matrixData_.WVP = worldViewProjectionMatrix;
+
+	wvpBuffer_.TransferData(matrixData_);
 }
 
 //-----------------------------------------------------------------------------
@@ -296,41 +298,32 @@ void AnimationModel::Map(){
 }
 
 void AnimationModel::CreateMaterialBuffer(){
-	// materialData_ が未確保なら確保
-	if (!materialData_){
-		materialData_ = new Material();
-	}
 	// materialData_ に初期値をセットする
-	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData_->shininess = 20.0f;
-	materialData_->enableLighting = HalfLambert;
-	materialData_->uvTransform = Matrix4x4::MakeIdentity();
+	materialData_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData_.shininess = 20.0f;
+	materialData_.enableLighting = HalfLambert;
+	materialData_.uvTransform = Matrix4x4::MakeIdentity();
 
 	// materialData_ の内容で GPU に転送
-	materialBuffer_.Initialize(device_.Get(), 1, materialData_);
+	materialBuffer_.Initialize(device_.Get());
 
 }
 
 void AnimationModel::CreateMatrixBuffer(){
-	matrixData_ = new TransformationMatrix();
-	matrixData_->WVP = Matrix4x4::MakeIdentity();
-	matrixData_->world = Matrix4x4::MakeIdentity();
+	matrixData_.WVP = Matrix4x4::MakeIdentity();
+	matrixData_.world = Matrix4x4::MakeIdentity();
 
-	wvpBuffer_.Initialize(
-		device_.Get(),
-		1,
-		matrixData_
-	);
+	wvpBuffer_.Initialize(device_.Get());
 }
 
 void AnimationModel::MaterialBufferMap(){
 	// マテリアルのデータを転送
-	materialBuffer_.TransferData(materialData_, 1);
+	materialBuffer_.TransferData(materialData_);
 }
 
 void AnimationModel::MatrixBufferMap(){
 	// ワールド行列と WVP 行列のデータを転送
-	wvpBuffer_.TransferData(matrixData_, 1);
+	wvpBuffer_.TransferData(matrixData_);
 }
 //-----------------------------------------------------------------------------
 // ノード名の取得例

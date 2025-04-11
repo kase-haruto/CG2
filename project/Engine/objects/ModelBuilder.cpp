@@ -115,7 +115,7 @@ void ModelBuilder::ShowImGuiInterface(){
 void ModelBuilder::AddModel(const std::string& modelName){
     static int uniqueId = 0;
     std::string uniqueKey = modelName + "_" + std::to_string(uniqueId++);
-    auto modelData = ModelManager::GetInstance()->GetModelData(modelName);
+    std::optional<ModelData> modelData = ModelManager::GetInstance()->GetModelData(modelName);
     if (!modelData){
         return;
     }
