@@ -24,6 +24,7 @@
 #include <string>
 #include <random>
 #include <memory>
+#include<assimp/scene.h>
 
 class  Model;
 
@@ -82,3 +83,9 @@ Skeleton CreateSkeleton(const Node& rootNode);
 int32_t CreateJoint(const Node& node,
 					const std::optional<int32_t>& parent,
 					std::vector<Joint>& joints);
+
+Node ConvertAssimpNode(const aiNode* assimpNode);
+
+// skinClusterの作成
+SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device,
+							  const Skeleton& skeleton,const ModelData& modelData);

@@ -26,6 +26,7 @@ public:
     virtual void Create(const std::string& filename) = 0;
     /// 毎フレームの更新
     virtual void Update();
+    virtual void OnModelLoaded();
     virtual void AnimationUpdate(){}
     /// 行列更新
     virtual void UpdateMatrix();
@@ -35,7 +36,7 @@ public:
     /// ImGuiの更新処理
     virtual void ShowImGuiInterface();
     /// 描画
-    void Draw();
+    virtual void Draw();
 
     //=============
     // Transform関連

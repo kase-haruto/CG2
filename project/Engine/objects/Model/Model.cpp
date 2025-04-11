@@ -67,6 +67,17 @@ void Model::Create(const std::string& filename){
 	Initialize();
 }
 
+void Model::Draw(){
+	if (!modelData_){
+		return;
+	}
+
+	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
+
+	BaseModel::Draw();
+}
+
+
 void Model::Map(){
 	// マテリアルと行列のマッピング
 	MaterialBufferMap();

@@ -24,42 +24,29 @@ Quaternion Quaternion::MakeIdentity(){
     return {0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t){
+Quaternion Quaternion::Slerp(Quaternion q0, const Quaternion& q1, float t){
+    /// q0とq1の内積
     float dot = Dot(q0, q1);
-    Quaternion q1Mod = q1;
 
-    // 内積が負の場合、q1を反転して短い経路を取る
     if (dot < 0.0f){
-        q1Mod.x = -q1.x;
-        q1Mod.y = -q1.y;
-        q1Mod.z = -q1.z;
-        q1Mod.w = -q1.w;
+
+        q0 = -q0;
         dot = -dot;
     }
 
-    // クォータニオンがほぼ同じ場合は線形補間
-    if (dot > 1.0f - FLT_EPSILON){
-        Quaternion result;
-        result.x = (1.0f - t) * q0.x + t * q1Mod.x;
-        result.y = (1.0f - t) * q0.y + t * q1Mod.y;
-        result.z = (1.0f - t) * q0.z + t * q1Mod.z;
-        result.w = (1.0f - t) * q0.w + t * q1Mod.w;
-        return Normalize(result);
+    if (dot >= 1.0f - FLT_EPSILON){
+
+        return (1.0f - t) * q0 + t * q1;
     }
 
-    // なす角と補間係数を計算
     float theta = std::acos(dot);
     float sinTheta = std::sin(theta);
 
     float scale0 = std::sin((1.0f - t) * theta) / sinTheta;
     float scale1 = std::sin(t * theta) / sinTheta;
 
-    Quaternion result;
-    result.x = scale0 * q0.x + scale1 * q1Mod.x;
-    result.y = scale0 * q0.y + scale1 * q1Mod.y;
-    result.z = scale0 * q0.z + scale1 * q1Mod.z;
-    result.w = scale0 * q0.w + scale1 * q1Mod.w;
-    return Normalize(result);
+    // 補完後のクォータニオンを求める
+    return q0 * scale0 + q1 * scale1;
 }
 
 Quaternion Quaternion::Conjugate(const Quaternion& q){
@@ -106,24 +93,40 @@ Quaternion Quaternion::MakeRotateAxisQuaternion(const Vector3& axis, float angle
     };
 }
 
-Matrix4x4 Quaternion::ToMatrix(const Quaternion& q){
-    float xx = q.x * q.x;
-    float yy = q.y * q.y;
-    float zz = q.z * q.z;
-    float ww = q.w * q.w;
-    float xy = q.x * q.y;
-    float xz = q.x * q.z;
-    float yz = q.y * q.z;
-    float wx = q.w * q.x;
-    float wy = q.w * q.y;
-    float wz = q.w * q.z;
+Matrix4x4 Quaternion::ToMatrix(const Quaternion& quaternion){
+    Matrix4x4 result;
+    float xx = quaternion.x * quaternion.x;
+    float yy = quaternion.y * quaternion.y;
+    float zz = quaternion.z * quaternion.z;
+    float ww = quaternion.w * quaternion.w;
+    float xy = quaternion.x * quaternion.y;
+    float xz = quaternion.x * quaternion.z;
+    float yz = quaternion.y * quaternion.z;
+    float wx = quaternion.w * quaternion.x;
+    float wy = quaternion.w * quaternion.y;
+    float wz = quaternion.w * quaternion.z;
 
-    return Matrix4x4({
-        { ww + xx - yy - zz,   2.0f * (xy + wz),     2.0f * (xz - wy),     0.0f },
-        { 2.0f * (xy - wz),    ww - xx + yy - zz,    2.0f * (yz + wx),     0.0f },
-        { 2.0f * (xz + wy),    2.0f * (yz - wx),     ww - xx - yy + zz,    0.0f },
-        { 0.0f,                0.0f,                 0.0f,                 1.0f }
-                     });
+    result.m[0][0] = ww + xx - yy - zz;
+    result.m[0][1] = 2.0f * (xy + wz);
+    result.m[0][2] = 2.0f * (xz - wy);
+    result.m[0][3] = 0.0f;
+
+    result.m[1][0] = 2.0f * (xy - wz);
+    result.m[1][1] = ww - xx + yy - zz;
+    result.m[1][2] = 2.0f * (yz + wx);
+    result.m[1][3] = 0.0f;
+
+    result.m[2][0] = 2.0f * (xz + wy);
+    result.m[2][1] = 2.0f * (yz - wx);
+    result.m[2][2] = ww - xx - yy + zz;
+    result.m[2][3] = 0.0f;
+
+    result.m[3][0] = 0.0f;
+    result.m[3][1] = 0.0f;
+    result.m[3][2] = 0.0f;
+    result.m[3][3] = 1.0f;
+
+    return result;
 }
 
 Vector3 Quaternion::RotateVector(const Vector3& vector, const Quaternion& quaternion){
@@ -206,9 +209,6 @@ Quaternion Quaternion::operator+(const Quaternion& q) const{
     return {x + q.x, y + q.y, z + q.z, w + q.w};
 }
 
-Quaternion Quaternion::operator-(const Quaternion& q) const{
-    return {x - q.x, y - q.y, z - q.z, w - q.w};
-}
 
 Quaternion Quaternion::operator*(const Quaternion& other) const{
     return {
@@ -217,6 +217,10 @@ Quaternion Quaternion::operator*(const Quaternion& other) const{
         w * other.z + x * other.y - y * other.x + z * other.w,
         w * other.w - x * other.x - y * other.y - z * other.z
     };
+}
+
+Quaternion Quaternion::operator-() const{
+    return Quaternion {-x, -y, -z, -w};
 }
 
 Quaternion Quaternion::operator/(const Quaternion& q) const{
@@ -234,4 +238,11 @@ Quaternion Quaternion::operator/(const Quaternion& q) const{
         multiplied.z / normSquared,
         multiplied.w / normSquared
     };
+}
+
+Quaternion operator*(float scalar, const Quaternion& q){
+    return {scalar * q.x,scalar * q.y ,scalar * q.z ,scalar * q.w};
+}
+Quaternion Quaternion::operator*(float scalar) const{
+    return {x * scalar, y * scalar, z * scalar, w * scalar};
 }

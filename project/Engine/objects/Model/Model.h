@@ -16,6 +16,7 @@ public:
     void InitializeTextures(const std::vector<std::string>& textureFilePaths);
     void Create(const std::string& filename) override;
     void Map() override;
+    void Draw()override;
     void ShowImGuiInterface() override;
 
     //=============

@@ -79,7 +79,7 @@ private:
     void LoadMesh(const aiMesh* mesh, ModelData& modelData);
     void LoadMaterial(const aiScene* scene, const aiMesh* mesh, ModelData& modelData);
     void LoadUVTransform(const aiMaterial* material, MaterialData& outMaterial);
-
+    void LoadSkinData(const aiMesh* mesh, ModelData& modelData);
     // アニメーション評価関連
     Vector3 Evaluate(const AnimationCurve<Vector3>& curve, float time);
     Quaternion Evaluate(const AnimationCurve<Quaternion>& curve, float time);

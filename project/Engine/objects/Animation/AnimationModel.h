@@ -16,10 +16,14 @@ public:
     void Create(const std::string& filename) override;
     void AnimationUpdate() override;
     void Update() override;
+	void OnModelLoaded() override;
+    void Draw();
     void UpdateMatrix() override;
     void Map() override;
     void ShowImGuiInterface() override;
-	void SkeletonUpdate();
+    void SkeletonUpdate();
+	void SkinClusterUpdate();
+    void DrawSkeleton();
 
     //============= 
     // Transform関連
@@ -60,10 +64,11 @@ private:
     //===================================================================*/
     float animationTime_ = 0.0f;        //< アニメーションの経過時間
 
-    Animation animation_;               //< アニメーションデータ
+    Animation animationData_;               //< アニメーションデータ
 
     EulerTransform animationTransform_;
-	Skeleton skeleton_;                 //< スケルトンデータ
+	SkinCluster skinCluster_;           //< スキンクラスター
+	D3D12_VERTEX_BUFFER_VIEW vbvs_[2]; //< スキンクラスター用のバッファビュー
 
 public:
     float animationSpeed_ = 1.0f;       //< アニメーションの再生速度

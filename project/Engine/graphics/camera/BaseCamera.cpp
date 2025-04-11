@@ -137,7 +137,7 @@ void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	command->SetGraphicsRootSignature(rootSignature.Get());
 
 	uint32_t rootParameterIndex = 0;
-	if (pipelineType == PipelineType::Object3D){
+	if (pipelineType == PipelineType::Object3D||PipelineType::SkinningObject3D){
 		rootParameterIndex = 5;
 	}
 	cameraBuffer_.SetCommand(command, rootParameterIndex);

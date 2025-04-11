@@ -52,6 +52,8 @@ void TestScene::Initialize(){
 	teapot_->SetName("teapot");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
+	walkHuman_ = std::make_unique<AnimationModel>("walk.gltf");
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +76,9 @@ void TestScene::Update(){
 	modelField_->Update();
 
 	//test
-	bunny_->Update();
-	teapot_->Update();
+	/*bunny_->Update();
+	teapot_->Update();*/
+	walkHuman_->AnimationUpdate();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -125,12 +128,12 @@ void TestScene::Draw3dObject(){
 	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
 	//地面の描画
-	modelField_->Draw();
+	//modelField_->Draw();
 
 	//test
-	bunny_->Draw();
-	teapot_->Draw();
-
+	/*bunny_->Draw();
+	teapot_->Draw();*/
+	walkHuman_->Draw();
 
 	/* =======================================================================================
 				particleの描画
@@ -140,5 +143,6 @@ void TestScene::Draw3dObject(){
 	/* =======================================================================================
 				プリミティブな図形の描画
 	========================================================================================*/
+	PrimitiveDrawer::GetInstance()->DrawGrid();
 	PrimitiveDrawer::GetInstance()->Render();
 }

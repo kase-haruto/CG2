@@ -170,6 +170,8 @@ void ModelManager::StartUpLoad(){
     LoadModel("teapot.obj");
     LoadModel("terrain.obj");
     LoadModel("bunny.obj");
+	LoadModel("AnimatedCube.gltf");
+	LoadModel("walk.gltf");
 }
 
 //----------------------------------------------------------------------------
@@ -214,6 +216,29 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
     for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex){
         const aiMesh* mesh = scene->mMeshes[meshIndex];
         LoadMesh(mesh, modelData);
+
+        // skinCluster構築用のデータ取得
+        for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
+
+            aiBone* bone = mesh->mBones[boneIndex];
+            std::string jointName = bone->mName.C_Str();
+            JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+
+            aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+            aiVector3D scale, translate;
+            aiQuaternion rotate;
+            bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+
+            Matrix4x4 bindPoseMatrix =
+                MakeAffineMatrix({scale.x,scale.y,scale.z}, {rotate.x,-rotate.y,-rotate.z,rotate.w}, {-translate.x,translate.y,translate.z});
+            jointWeightData.inverseBindPoseMatrix = Matrix4x4::Inverse(bindPoseMatrix);
+
+            for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex){
+
+                jointWeightData.vertexWeights.push_back({bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId});
+            }
+        }
+
         LoadMaterial(scene, mesh, modelData);
     }
 
@@ -228,29 +253,41 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
             aiNodeAnim* nodeAnim = aiAnim->mChannels[channelIdx];
             NodeAnimation nodeAnimation;
 
-            // Translation
-            for (unsigned int i = 0; i < nodeAnim->mNumPositionKeys; ++i){
-                float time = ( float ) (nodeAnim->mPositionKeys[i].mTime / ticksPerSecond);
-                aiVector3D aiPos = nodeAnim->mPositionKeys[i].mValue;
-                nodeAnimation.translate.keyframes.push_back({time, Vector3{aiPos.x, aiPos.y, aiPos.z}});
+            // Translation Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumPositionKeys; ++keyIndex){
+                aiVectorKey& keyAssimp = nodeAnim->mPositionKeys[keyIndex];
+                KeyframeVector3 keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {-keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}; // 右手→左手
+                nodeAnimation.translate.keyframes.push_back(keyframe);
             }
-            // Rotation
-            for (unsigned int i = 0; i < nodeAnim->mNumRotationKeys; ++i){
-                float time = ( float ) (nodeAnim->mRotationKeys[i].mTime / ticksPerSecond);
-                aiQuaternion aiRot = nodeAnim->mRotationKeys[i].mValue;
-                nodeAnimation.rotate.keyframes.push_back({time, Quaternion{aiRot.x, aiRot.y, aiRot.z, aiRot.w}});
+
+            // Rotation Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumRotationKeys; ++keyIndex){
+                aiQuatKey& keyAssimp = nodeAnim->mRotationKeys[keyIndex];
+                KeyframeQuaternion keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w}; // 右手→左手
+                nodeAnimation.rotate.keyframes.push_back(keyframe);
             }
-            // Scaling
-            for (unsigned int i = 0; i < nodeAnim->mNumScalingKeys; ++i){
-                float time = ( float ) (nodeAnim->mScalingKeys[i].mTime / ticksPerSecond);
-                aiVector3D aiScale = nodeAnim->mScalingKeys[i].mValue;
-                nodeAnimation.scale.keyframes.push_back({time, Vector3{aiScale.x, aiScale.y, aiScale.z}});
+
+            // Scaling Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumScalingKeys; ++keyIndex){
+                aiVectorKey& keyAssimp = nodeAnim->mScalingKeys[keyIndex];
+                KeyframeVector3 keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}; // スケールはそのまま
+                nodeAnimation.scale.keyframes.push_back(keyframe);
             }
             std::string nodeName(nodeAnim->mNodeName.C_Str());
             animation.nodeAnimations[nodeName] = nodeAnimation;
         }
         modelData.animation = animation;
     }
+
+    // スケルトン構築
+    Node rootNode = ConvertAssimpNode(scene->mRootNode);
+    modelData.skeleton = CreateSkeleton(rootNode);
 
     return modelData;
 }
@@ -332,6 +369,10 @@ void ModelManager::LoadUVTransform(const aiMaterial* material, MaterialData& out
         outMaterial.uv_offset = {0, 0, 0};
         outMaterial.uv_scale = {1, 1, 1};
     }
+}
+
+void ModelManager::LoadSkinData( [[maybe_unused]]const aiMesh* mesh, [[maybe_unused]] ModelData& modelData){
+   
 }
 
 //----------------------------------------------------------------------------

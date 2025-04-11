@@ -34,18 +34,8 @@ void BaseModel::Update(){
 	if (!modelData_){
 		auto loaded = ModelManager::GetInstance()->GetModelData(fileName_);
 		if (loaded){
-			// ここで初めて GPUリソースが完成した ModelData を受け取れた！
 			modelData_ = loaded;
-
-			modelData_->vertexBuffer.Initialize(device_,UINT(modelData_->vertices.size()), modelData_->vertices.data());
-			modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()),modelData_->indices.data());
-
-			// テクスチャ設定
-			if (!handle_){
-				handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
-			}
-
-			UpdateMatrix();
+			OnModelLoaded();
 		}
 		// loaded が nullptr の場合、まだ読み込み中 → 次フレーム以降に再試行
 	} else{
@@ -62,6 +52,20 @@ void BaseModel::Update(){
 		UpdateMatrix();
 		Map();
 	}
+}
+
+void BaseModel::OnModelLoaded(){
+	// ここで初めて GPUリソースが完成した ModelData を受け取れた！
+
+	modelData_->vertexBuffer.Initialize(device_, UINT(modelData_->vertices.size()), modelData_->vertices.data());
+	modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()), modelData_->indices.data());
+
+	// テクスチャ設定
+	if (!handle_){
+		handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+	}
+
+	UpdateMatrix();
 }
 
 void BaseModel::UpdateMatrix(){
@@ -266,11 +270,7 @@ void BaseModel::ShowImGuiInterface(){
 }
 
 void BaseModel::Draw(){
-	if (!modelData_){
-		return;
-	}
 
-	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
 
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
