@@ -35,11 +35,11 @@ void BaseTransform::Initialize(){
 //	imgui
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseTransform::ShowImGui(const std::string& lavel){
-	ImGui::Text(lavel.c_str());
-	ImGui::DragFloat3("scale", &scale.x, 0.01f);
-	//クォータニオンなのでimguiでの表示は難しい
-	//ImGui::DragFloat3("rotation", &rotation.x, 0.01f);
-	ImGui::DragFloat3("translate", &translation.x, 0.01f);
+	if (ImGui::CollapsingHeader(lavel.c_str())){
+		ImGui::DragFloat3("scale", &scale.x, 0.01f);
+		ImGui::DragFloat3("rotation", &eulerRotation.x, 0.01f);
+		ImGui::DragFloat3("translate", &translation.x, 0.01f);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
