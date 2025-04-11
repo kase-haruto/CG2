@@ -64,9 +64,10 @@ void Model::Draw(){
 	if (!modelData_){
 		return;
 	}
-
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
-
+	// 頂点バッファ/インデックスバッファをセット
+	modelData_->vertexBuffer.SetCommand(commandList_);
+	modelData_->indexBuffer.SetCommand(commandList_);
 	BaseModel::Draw();
 }
 

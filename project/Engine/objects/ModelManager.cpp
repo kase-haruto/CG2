@@ -225,6 +225,10 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
         LoadMesh(mesh, modelData);
 
         // skinCluster構築用のデータ取得
+        // 頂点ごとのインフルエンスデータを集計
+        std::vector<std::vector<std::pair<uint32_t, float>>> vertexInfluences(mesh->mNumVertices);
+
+        // ボーンごとの影響を集約
         for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
 
             aiBone* bone = mesh->mBones[boneIndex];
@@ -245,6 +249,7 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
                 jointWeightData.vertexWeights.push_back({bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId});
             }
         }
+
 
         LoadMaterial(scene, mesh, modelData);
     }

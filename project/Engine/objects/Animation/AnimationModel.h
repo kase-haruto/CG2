@@ -61,7 +61,6 @@ private:
 
     Animation animationData_;               //< アニメーションデータ
 
-    EulerTransform animationTransform_;
 	SkinCluster skinCluster_;           //< スキンクラスター
 	D3D12_VERTEX_BUFFER_VIEW vbvs_[2]; //< スキンクラスター用のバッファビュー
 

@@ -54,14 +54,6 @@ void AnimationModel::Initialize(){
 	materialParameter_.shininess = 20.0f;
 	materialParameter_.enableLighting = HalfLambert;
 
-	// 追加: アニメーション用のtransformを初期化
-	animationTransform_ = {
-		{1.0f, 1.0f, 1.0f}, // scale
-		{0.0f, 0.0f, 0.0f}, // rotate
-		{0.0f, 0.0f, 0.0f}  // translate
-	};
-
-
 	worldTransform_.Initialize();
 	UpdateMatrix();
 	// バッファ生成
@@ -94,9 +86,9 @@ void AnimationModel::PlayAnimation(){
 		Vector3    newScale = CalculateValue(nodeAnimation.scale, animationTime_);
 
 		// 「アニメーション用」のtransformのみ更新する
-		animationTransform_.translate = newTrans;
-		animationTransform_.rotate = Quaternion::ToEuler(newRot);
-		animationTransform_.scale = newScale;
+		worldTransform_.translation = newTrans;
+		worldTransform_.eulerRotation = Quaternion::ToEuler(newRot);
+		worldTransform_.scale = newScale;
 	}
 }
 
@@ -157,16 +149,16 @@ void AnimationModel::AnimationUpdate(){
 		SkinClusterUpdate();
 		// (4) ワールド行列の更新
 		//   ここで「手動transform + アニメーションtransform」 を合成する
-		Matrix4x4 manualMat = MakeAffineMatrix(
-			worldTransform_.scale,
-			worldTransform_.eulerRotation,
-			worldTransform_.translation
-		);
-		Matrix4x4 animMat = MakeAffineMatrix(
-			animationTransform_.scale,
-			animationTransform_.rotate,
-			animationTransform_.translate
-		);
+		//Matrix4x4 manualMat = MakeAffineMatrix(
+		//	worldTransform_.scale,
+		//	worldTransform_.eulerRotation,
+		//	worldTransform_.translation
+		//);
+		//Matrix4x4 animMat = MakeAffineMatrix(
+		//	animationTransform_.scale,
+		//	animationTransform_.rotate,
+		//	animationTransform_.translate
+		//);
 		// ワールド行列を更新
 		//worldMatrix = Matrix4x4::Multiply(manualMat, animMat);
 	}
@@ -214,8 +206,7 @@ void AnimationModel::OnModelLoaded(){
 	
 	// スキンクラスターのリソースを確保
 	skinCluster_ = CreateSkinCluster(device_, modelData_->skeleton, *modelData_);
-	vbvs_[0] = vertexBufferView_;	//vertexDataのvbv
-	vbvs_[1] = skinCluster_.influenceBufferView;	//influenceDataのvbv
+
 }
 
 void AnimationModel::Draw(){
@@ -229,6 +220,11 @@ void AnimationModel::Draw(){
 	CameraManager::SetCommand(commandList_, PipelineType::SkinningObject3D);
 
 	commandList_->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
+
+	// 頂点バッファ/インデックスバッファをセット
+	vbvs_[0] = modelData_->vertexBuffer.GetVertexBufferView();	//vertexDataのvbv
+	vbvs_[1] = skinCluster_.influenceBufferView;				//influenceDataのvbv
+	modelData_->indexBuffer.SetCommand(commandList_);
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
 	BaseModel::Draw();
 

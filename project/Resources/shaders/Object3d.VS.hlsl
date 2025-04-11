@@ -1,18 +1,33 @@
-#include "Object3d.hlsli"
+#include "Object3D.hlsli"
 
-//ワールド変換行列
-cbuffer VSConstants : register(b0){
-    TransformationMatrix gTransformationMat;
-}
+/*===========================================================
+                     Object3D VS Shader
+===========================================================*/
+
+struct TransformationMatrix {
+
+    float4x4 World;
+    float4x4 WVP;
+    float4x4 WorldInverseTranspose;
+};
+
+struct VertexShaderInput {
+    
+    float4 position : POSITION0;
+    float2 texcoord : TEXCOORD0;
+    float3 normal : NORMAL0;
+};
+
+ConstantBuffer<TransformationMatrix> gTransformationMatirx : register(b0);
 
 VertexShaderOutput main(VertexShaderInput input){
+
     VertexShaderOutput output;
 
-    // ワールド、ビュー、プロジェクション変換
-    output.position = mul(input.position, gTransformationMat.WVP);
+    output.position = mul(input.position, gTransformationMatirx.WVP);
     output.texcoord = input.texcoord;
-    output.normal = normalize(mul(input.normal, (float3x3) gTransformationMat.worldInverseTranspose));
-    output.worldPosition = mul(input.position, gTransformationMat.world).xyz;
+    output.normal = normalize(mul(input.normal, (float3x3) gTransformationMatirx.WorldInverseTranspose));
+    output.worldPosition = mul(input.position, gTransformationMatirx.World).xyz;
 
     return output;
 }
