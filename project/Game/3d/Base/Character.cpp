@@ -31,11 +31,10 @@ void Character::Update(){
     }
 
     // 地面に接触しているかどうかを判定
-    if (model_->transform.translate.y < 0.0f){
+    if (model_->worldTransform_.translation.y < 0.0f){
         onGround_ = true;
-        model_->transform.translate.y = 0.0f; // 地面上に位置を固定
+        model_->worldTransform_.translation.y = 0.0f; // 地面上に位置を固定
 
-        
     } else{
         onGround_ = false;
     }
@@ -106,7 +105,7 @@ void Character::Update(){
     }
 
     // 最終的な位置更新
-    model_->transform.translate += velocity_ * deltaTime;
+    model_->worldTransform_.translation += velocity_ * deltaTime;
 }
 
 void Character::KnockBack(const Vector3& direction, float force, float duration){

@@ -24,7 +24,7 @@
 
 Model::Model(const std::string& fileName){
 	fileName_ = fileName;
-	Create(fileName);
+	Initialize();
 }
 
 Model::~Model(){
@@ -39,15 +39,14 @@ void Model::Initialize(){
 
 	// デフォルト値
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-	transform = {{1.0f, 1.0f, 1.0f},
-				{0.0f, 0.0f, 0.0f},
-				{0.0f, 0.0f, 0.0f}};
+
+	worldTransform_.Initialize();
+	UpdateMatrix();
 
 	materialParameter_.shininess = 20.0f;
 
 	// マテリアル・行列バッファ生成
 	CreateMaterialBuffer();
-	CreateMatrixBuffer();
 	Map();
 }
 
@@ -61,12 +60,6 @@ void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths)
 	}
 }
 
-void Model::Create(const std::string& filename){
-	fileName_ = filename;
-	// まずは初期化
-	Initialize();
-}
-
 void Model::Draw(){
 	if (!modelData_){
 		return;
@@ -77,11 +70,9 @@ void Model::Draw(){
 	BaseModel::Draw();
 }
 
-
 void Model::Map(){
 	// マテリアルと行列のマッピング
 	MaterialBufferMap();
-	MatrixBufferMap();
 }
 
 void Model::ShowImGuiInterface(){
@@ -94,38 +85,19 @@ void Model::ShowImGuiInterface(){
 // バッファ生成/マッピング
 //==============================================================================
 void Model::CreateMaterialBuffer(){
-	// materialData_ が未確保なら確保
-	if (!materialData_){
-		materialData_ = new Material();
-	}
 	// materialData_ に初期値をセットする
-	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData_->shininess = 20.0f;
-	materialData_->enableLighting = HalfLambert;
-	materialData_->uvTransform = Matrix4x4::MakeIdentity();
+	materialData_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData_.shininess = 20.0f;
+	materialData_.enableLighting = HalfLambert;
+	materialData_.uvTransform = Matrix4x4::MakeIdentity();
 
-	// materialData_ の内容で GPU に転送
-	materialBuffer_.Initialize(device_.Get(), 1, materialData_);
+	materialBuffer_.Initialize(device_.Get());
 }
 
-void Model::CreateMatrixBuffer(){
-	matrixData_ = new TransformationMatrix();
-	matrixData_->WVP = Matrix4x4::MakeIdentity();
-	matrixData_->world = Matrix4x4::MakeIdentity();
-
-	wvpBuffer_.Initialize(
-		device_.Get(),
-		1,
-		matrixData_
-	);
-}
 
 void Model::MaterialBufferMap(){
+	// materialData_ の内容で GPU に転送
 	// マテリアルのデータを転送
-	materialBuffer_.TransferData(materialData_, 1);
+	materialBuffer_.TransferData(materialData_);
 }
 
-void Model::MatrixBufferMap(){
-	// ワールド行列と WVP 行列のデータを転送
-	wvpBuffer_.TransferData(matrixData_, 1);
-}

@@ -50,7 +50,7 @@ public:
 
 	bool GetOnGround() const{ return onGround_; }
 
-    void SetPosition(const Vector3& position){ model_->transform.translate = position; };
+    void SetPosition(const Vector3& position){ model_->worldTransform_.translation = position; };
 
 	void SetVelocity(const Vector3& velocity){ velocity_ = velocity; }
 

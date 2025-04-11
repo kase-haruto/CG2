@@ -141,6 +141,28 @@ Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs){
     return lhs * rhs;
 }
 
+Quaternion Quaternion::EulerToQuaternion(const Vector3& euler){
+    Quaternion qx = Quaternion::MakeRotateX(euler.x);
+    Quaternion qy = Quaternion::MakeRotateY(euler.y);
+    Quaternion qz = Quaternion::MakeRotateZ(euler.z);
+    return qz * qy * qx; // ZYX順（一般的）
+}
+
+Quaternion Quaternion::MakeRotateX(float radian){
+    float half = radian * 0.5f;
+    return {std::sin(half), 0.0f, 0.0f, std::cos(half)};
+}
+
+Quaternion Quaternion::MakeRotateY(float radian){
+    float half = radian * 0.5f;
+    return {0.0f, std::sin(half), 0.0f, std::cos(half)};
+}
+
+Quaternion Quaternion::MakeRotateZ(float radian){
+    float half = radian * 0.5f;
+    return {0.0f, 0.0f, std::sin(half), std::cos(half)};
+}
+
 Vector3 Quaternion::ToEuler(const Quaternion& q){
     Vector3 euler;
 
@@ -172,7 +194,7 @@ Vector3 Quaternion::ToEuler(const Quaternion& q){
     return euler;
 }
 
-Quaternion Quaternion::FromEuler(const Vector3& from, const Vector3& to){
+Quaternion Quaternion::FlomToQuaternion(const Vector3& from, const Vector3& to){
     Vector3 fromNorm = from.Normalize();
     Vector3 toNorm = to.Normalize();
 

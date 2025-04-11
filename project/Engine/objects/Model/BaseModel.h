@@ -22,8 +22,6 @@ public:
     //=============
     /// 初期化
     virtual void Initialize() = 0;
-    /// モデルの作成や読み込み
-    virtual void Create(const std::string& filename) = 0;
     /// 毎フレームの更新
     virtual void Update();
     virtual void OnModelLoaded();
@@ -41,11 +39,10 @@ public:
     //=============
     // Transform関連
     //=============
-    virtual void SetPos(const Vector3& pos) = 0;
-    virtual void SetSize(const Vector3& size) = 0;
     virtual void SetUvScale(const Vector3& uvScale) = 0;
     virtual void SetColor(const Vector4& color) = 0;
     virtual const Vector4& GetColor() const = 0;
+	const WorldTransform& GetWorldTransform(){ return worldTransform_; }
 
 protected:
     //=============
@@ -61,7 +58,6 @@ protected:
     D3D12_INDEX_BUFFER_VIEW  indexBufferView_ {};
 
 	DxConstantBuffer<Material> materialBuffer_;
-	DxConstantBuffer<TransformationMatrix> wvpBuffer_;
 
     //=============
     // テクスチャ
@@ -72,9 +68,10 @@ protected:
     // モデルデータ・マテリアル
     //=============
 	std::string fileName_;
-    std::shared_ptr<ModelData> modelData_;
-    Material* materialData_ = nullptr;
-    TransformationMatrix* matrixData_ = nullptr;
+    std::optional<ModelData> modelData_;
+    Material materialData_;
+    Material materialParameter_;
+    TransformationMatrix matrixData_;
 public:
     //=============
     // 各種パラメータ
@@ -84,16 +81,8 @@ public:
     EulerTransform  uvTransform {{1.0f, 1.0f, 1.0f},
                              {0.0f, 0.0f, 0.0f},
                              {0.0f, 0.0f, 0.0f}};
-    EulerTransform  transform {{1.0f, 1.0f, 1.0f},
-                           {0.0f, 0.0f, 0.0f},
-                           {0.0f, 0.0f, 0.0f}};
-    Matrix4x4  worldMatrix {};
 
-
-public:
-    EulerTransform* parent_;
-
-    Material materialParameter_;
+    WorldTransform worldTransform_;
 
 protected:
     // 既存のメンバ変数やメソッドの他に以下を追加
@@ -113,8 +102,5 @@ protected:
     // バッファ作成/マッピング(派生先で使う)
     //============
     virtual void CreateMaterialBuffer() = 0;
-    virtual void CreateMatrixBuffer() = 0;
-
     virtual void MaterialBufferMap() = 0;
-    virtual void MatrixBufferMap() = 0;
 };

@@ -96,5 +96,5 @@ private:
 	//==================================================================*//
 	ComPtr<ID3D12Resource> constBuffer_;			//< 定数バッファ
 	DxConstantBuffer<Camera3dForGPU> cameraBuffer_;	//< 定数バッファデータ
-	Camera3dForGPU* cameraData_;					//< カメラのデータ
+	Camera3dForGPU cameraData_;					//< カメラのデータ
 };

@@ -14,14 +14,11 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 		if (extension == ".obj"){
 			objectModelType_ = ObjectModelType::ModelType_Static;
 			model_ = std::make_unique<Model>(modelName);
-			model_->transform.Initialize();
-			model_->UpdateMatrix();
 		}
 		// gltf
 		else if (extension == ".gltf"){
 			objectModelType_ = ObjectModelType::ModelType_Animation;
 			model_ = std::make_unique<AnimationModel>(modelName);
-			model_->transform.Initialize();
 		}
 		// その他の拡張子の場合はここに追加
 		else{

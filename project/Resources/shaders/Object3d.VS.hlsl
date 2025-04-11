@@ -11,7 +11,7 @@ VertexShaderOutput main(VertexShaderInput input){
     // ワールド、ビュー、プロジェクション変換
     output.position = mul(input.position, gTransformationMat.WVP);
     output.texcoord = input.texcoord;
-    output.normal = normalize(mul(input.normal, (float3x3) gTransformationMat.world));
+    output.normal = normalize(mul(input.normal, (float3x3) gTransformationMat.worldInverseTranspose));
     output.worldPosition = mul(input.position, gTransformationMat.world).xyz;
 
     return output;

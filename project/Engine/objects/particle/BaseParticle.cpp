@@ -38,10 +38,9 @@ void BaseParticle::Update(){
    // ▼ もしまだ modelData_ が無ければ、ロード完了したかを確認
    // ----------------------------------------
     if (!modelData_){
-        auto loaded = ModelManager::GetInstance()->GetModelData(modelName_);
-        if (loaded){
+        if (ModelManager::GetInstance()->IsModelLoaded(modelName_)){
             // GPUリソース作成済みの ModelData をゲットした！
-            modelData_ = loaded;
+            auto loaded = ModelManager::GetInstance()->GetModelData(modelName_);
 
             // 頂点バッファの作成/マッピング/SRV作成を初回だけ行う
             CreateBuffer();

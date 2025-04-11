@@ -46,14 +46,14 @@ void ModelManager::Finalize(){
 //----------------------------------------------------------------------------
 // 非同期ロード開始
 //----------------------------------------------------------------------------
-std::future<std::shared_ptr<ModelData>> ModelManager::LoadModel(const std::string& fileName){
+std::future<ModelData> ModelManager::LoadModel(const std::string& fileName){
     // 既にロード済みかどうかチェック
     {
         std::lock_guard<std::mutex> lock(instance_->modelDataMutex_);
         auto it = instance_->modelDatas_.find(fileName);
         if (it != instance_->modelDatas_.end()){
             // 既にロード済みなら、即座に value を設定した future を返す
-            std::promise<std::shared_ptr<ModelData>> promise;
+            std::promise<ModelData> promise;
             promise.set_value(it->second);
             return promise.get_future();
         }
@@ -62,7 +62,7 @@ std::future<std::shared_ptr<ModelData>> ModelManager::LoadModel(const std::strin
     // キューに新しいリクエストを積む
     LoadRequest request;
     request.fileName = fileName;
-    std::future<std::shared_ptr<ModelData>> fut = request.promise.get_future();
+    std::future<ModelData> fut = request.promise.get_future();
 
     {
         std::lock_guard<std::mutex> lock(instance_->taskQueueMutex_);
@@ -95,9 +95,7 @@ void ModelManager::WorkerMain(){
         }
 
         // ファイルを読み込み
-        std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(
-            LoadModelFile(directoryPath_, currentRequest.fileName)
-        );
+        ModelData newModel = LoadModelFile(directoryPath_, currentRequest.fileName);
 
         // (B) GPUリソース作成はメインスレッドで行うため、一旦 pendingTasks_ に格納
         {
@@ -140,13 +138,22 @@ void ModelManager::ProcessLoadingTasks(){
 //----------------------------------------------------------------------------
 // ロード済みモデルを取得（まだロード中なら nullptr）
 //----------------------------------------------------------------------------
-std::shared_ptr<ModelData> ModelManager::GetModelData(const std::string& fileName){
+ModelData ModelManager::GetModelData(const std::string& fileName){
     std::lock_guard<std::mutex> lock(modelDataMutex_);
     auto it = modelDatas_.find(fileName);
     if (it != modelDatas_.end()){
         return it->second;
     }
-    return nullptr;
+
+	// ロード中のモデルは plane を返す
+	const std::string defaltModel = "plane.obj";
+	auto lodingModel = modelDatas_.find(defaltModel);
+    return lodingModel->second;
+}
+
+bool ModelManager::IsModelLoaded(const std::string& fileName) const{
+    std::lock_guard<std::mutex> lock(modelDataMutex_);
+    return modelDatas_.find(fileName) != modelDatas_.end();
 }
 
 //----------------------------------------------------------------------------
@@ -295,16 +302,16 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
 //----------------------------------------------------------------------------
 // GPUリソース作成 (ProcessLoadingTasksから呼ばれる)
 //----------------------------------------------------------------------------
-void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileName, std::shared_ptr<ModelData> model){
+void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileName, ModelData model){
     auto device = GraphicsGroup::GetInstance()->GetDevice();
 
     DxVertexBuffer<VertexData> new_vertexBuffer;
-    new_vertexBuffer.Initialize(device, ( UINT ) model->vertices.size());
+    new_vertexBuffer.Initialize(device);
 	DxIndexBuffer<uint32_t> new_indexBuffer;
-    new_indexBuffer.Initialize(device, ( UINT ) model->indices.size());
+    new_indexBuffer.Initialize(device);
 
-    model->vertexBuffer = new_vertexBuffer;
-    model->indexBuffer = new_indexBuffer;
+    model.vertexBuffer = new_vertexBuffer;
+    model.indexBuffer = new_indexBuffer;
 }
 
 //----------------------------------------------------------------------------
