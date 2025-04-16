@@ -44,7 +44,7 @@ void SparkParticle::Update(){
 		Vector3 forward = Vector3(0.0f, 0.0f, 1.0f);
 
 		// forward → direction への回転を求める
-		Quaternion rotation = Quaternion::FlomToQuaternion(forward, direction);
+		Quaternion rotation = Quaternion::FromToQuaternion(forward, direction);
 
 		// 計算した回転を適用
 		particle.transform.rotate = Quaternion::ToEuler(rotation);

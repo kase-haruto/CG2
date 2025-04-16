@@ -86,9 +86,9 @@ Quaternion Quaternion::MakeRotateAxisQuaternion(const Vector3& axis, float angle
     float sinHalfAngle = std::sin(halfAngle);
 
     return {
-        normalizedAxis.x * sinHalfAngle,
-        normalizedAxis.y * sinHalfAngle,
-        normalizedAxis.z * sinHalfAngle,
+        -normalizedAxis.x * sinHalfAngle,
+        -normalizedAxis.y * sinHalfAngle,
+        -normalizedAxis.z * sinHalfAngle,
         std::cos(halfAngle)
     };
 }
@@ -127,6 +127,7 @@ Matrix4x4 Quaternion::ToMatrix(const Quaternion& quaternion){
     result.m[3][3] = 1.0f;
 
     return result;
+
 }
 
 Vector3 Quaternion::RotateVector(const Vector3& vector, const Quaternion& quaternion){
@@ -145,7 +146,7 @@ Quaternion Quaternion::EulerToQuaternion(const Vector3& euler){
     Quaternion qx = Quaternion::MakeRotateX(euler.x);
     Quaternion qy = Quaternion::MakeRotateY(euler.y);
     Quaternion qz = Quaternion::MakeRotateZ(euler.z);
-    return qz * qy * qx; // ZYX順（一般的）
+    return qz * qy * qx;
 }
 
 Quaternion Quaternion::MakeRotateX(float radian){
@@ -163,65 +164,71 @@ Quaternion Quaternion::MakeRotateZ(float radian){
     return {0.0f, 0.0f, std::sin(half), std::cos(half)};
 }
 
+
+
 Vector3 Quaternion::ToEuler(const Quaternion& q){
     Vector3 euler;
 
-    // roll (X軸回転)
+    const double xx = q.x * q.x;
+    const double yy = q.y * q.y;
+    const double zz = q.z * q.z;
+    const double ww = q.w * q.w;
+
+    // Roll (X軸回転)
     {
         double sinr_cosp = 2.0 * (q.w * q.x + q.y * q.z);
-        double cosr_cosp = 1.0 - 2.0 * (q.x * q.x + q.y * q.y);
+        double cosr_cosp = ww - yy - zz + xx;
         euler.x = static_cast< float >(std::atan2(sinr_cosp, cosr_cosp));
     }
 
-    // pitch (Y軸回転)
+    // Pitch (Y軸回転)
     {
         double sinp = 2.0 * (q.w * q.y - q.z * q.x);
         if (std::abs(sinp) >= 1.0){
-            // -90° または +90° にクランプ
-            euler.y = static_cast< float >(std::copysign(float(std::numbers::pi) / 2.0, sinp));
+            euler.y = static_cast< float >(std::copysign(std::numbers::pi_v<float> / 2.0f, sinp)); // ±90°
         } else{
             euler.y = static_cast< float >(std::asin(sinp));
         }
     }
 
-    // yaw (Z軸回転)
+    // Yaw (Z軸回転)
     {
         double siny_cosp = 2.0 * (q.w * q.z + q.x * q.y);
-        double cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z);
+        double cosy_cosp = ww - xx - yy + zz;
         euler.z = static_cast< float >(std::atan2(siny_cosp, cosy_cosp));
     }
 
     return euler;
 }
 
-Quaternion Quaternion::FlomToQuaternion(const Vector3& from, const Vector3& to){
+
+Quaternion Quaternion::FromToQuaternion(const Vector3& from, const Vector3& to){
     Vector3 fromNorm = from.Normalize();
     Vector3 toNorm = to.Normalize();
 
-    float dot = Vector3::Dot(fromNorm,toNorm); // 内積を計算
-    Vector3 axis; // 回転軸
+    float dot = Vector3::Dot(fromNorm, toNorm);
+    Vector3 axis;
 
-    // ほぼ同じ方向の場合（回転不要）
     if (dot > 0.9999f){
         return Quaternion::MakeIdentity();
     }
 
-    // ほぼ反対方向の場合（180度回転）
     if (dot < -0.9999f){
-        // 任意の直交ベクトルを求める
-        axis = Vector3::Cross(Vector3(1, 0, 0),fromNorm);
+        // 180度回転
+        axis = Vector3::Cross(Vector3(1, 0, 0), fromNorm);
         if (axis.LengthSquared() < 0.0001f){
-            axis = Vector3::Cross(Vector3(0, 1, 0),fromNorm);
+            axis = Vector3::Cross(Vector3(0, 1, 0), fromNorm);
         }
         axis = axis.Normalize();
-        return Quaternion::MakeRotateAxisQuaternion(axis, 3.14159265358979323846f); // 180度回転
+        return Quaternion::MakeRotateAxisQuaternion(axis, std::numbers::pi_v<float>);
     }
 
-    // 通常の回転処理
-    axis = Vector3::Cross(fromNorm,toNorm); // 回転軸
-    float angle = std::acos(dot);  // 回転角
+    // 左手座標系なので Cross(to, from)
+    axis = Vector3::Cross(toNorm, fromNorm);
+    float angle = std::acos(dot);
     return Quaternion::MakeRotateAxisQuaternion(axis, angle);
 }
+
 
 ///////////////////////////////////////////////////////////////////////////
 //              演算子オーバーロード

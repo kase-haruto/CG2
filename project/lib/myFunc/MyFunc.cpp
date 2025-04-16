@@ -92,12 +92,17 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate){
-	Matrix4x4 affineMatrix;
-	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
-	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
-	// Quaternionを行列に変換
-	Matrix4x4 rotateMatrix = Quaternion::ToMatrix(rotate);
-	affineMatrix = Matrix4x4::Multiply(Matrix4x4::Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+	// 各種変換行列を生成
+	const Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	const Matrix4x4 rotationMatrix = Quaternion::ToMatrix(rotate);
+	const Matrix4x4 translationMatrix = MakeTranslateMatrix(translate);
+
+	// スケーリング → 回転 → 平行移動 の順で合成
+	Matrix4x4 affineMatrix = Matrix4x4::Multiply(
+		Matrix4x4::Multiply(scaleMatrix, rotationMatrix),
+		translationMatrix
+	);
+
 	return affineMatrix;
 }
 

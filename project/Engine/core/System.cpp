@@ -254,7 +254,7 @@ void System::Object3DPipelines(){
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;
     rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
     // DepthStencilStateの設定
@@ -417,7 +417,7 @@ void System::SkinningObject3dPipeline(){
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizeDesc {};
-    rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
+    rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;
     rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
     // DepthStencilStateの設定

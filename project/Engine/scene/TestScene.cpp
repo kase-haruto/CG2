@@ -52,7 +52,7 @@ void TestScene::Initialize(){
 	teapot_->SetName("teapot");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
-	walkHuman_ = std::make_unique<AnimationModel>("walk.gltf");
+	walkHuman_ = std::make_unique<AnimationModel>("simpleSkin.gltf");
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
