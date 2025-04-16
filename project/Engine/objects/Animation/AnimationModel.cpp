@@ -65,32 +65,32 @@ void AnimationModel::Initialize(){
 // アニメーションの再生
 //-----------------------------------------------------------------------------
 void AnimationModel::PlayAnimation(){
-	// duration <= 0 の場合はアニメーションなしとみなす
-	if (modelData_->animation.duration <= 0.0f){
-		return;
-	}
+	if (modelData_->animation.duration <= 0.0f) return;
 
-	// 時間を進める（アニメーション速度を考慮）
+	// 時間を進める
 	animationTime_ += ClockManager::GetInstance()->GetDeltaTime() * animationSpeed_;
-	// ループ
 	animationTime_ = std::fmod(animationTime_, modelData_->animation.duration);
 
-	// 「先頭ノードのアニメーション」を適用
-	if (!modelData_->animation.nodeAnimations.empty()){
-		auto it = modelData_->animation.nodeAnimations.begin();
-		NodeAnimation& nodeAnimation = it->second;
+	// 全ての NodeAnimation を適用
+	for (const auto& [name, nodeAnimation] : modelData_->animation.nodeAnimations){
+		auto it = modelData_->skeleton.jointMap.find(name);
+		if (it == modelData_->skeleton.jointMap.end()) continue;
 
-		// 補間値を取得
-		Vector3    newTrans = CalculateValue(nodeAnimation.translate, animationTime_);
-		Quaternion newRot = CalculateValue(nodeAnimation.rotate, animationTime_);
-		Vector3    newScale = CalculateValue(nodeAnimation.scale, animationTime_);
+		int jointIndex = it->second;
+		Joint& joint = modelData_->skeleton.joints[jointIndex];
 
-		// 「アニメーション用」のtransformのみ更新する
-		worldTransform_.translation = newTrans;
-		worldTransform_.eulerRotation = Quaternion::ToEuler(newRot);
-		worldTransform_.scale = newScale;
+		// キーフレームから補間して transform に反映
+		if (!nodeAnimation.translate.keyframes.empty())
+			joint.transform.translate = CalculateValue(nodeAnimation.translate, animationTime_);
+
+		if (!nodeAnimation.rotate.keyframes.empty())
+			joint.transform.rotate = CalculateValue(nodeAnimation.rotate, animationTime_);
+
+		if (!nodeAnimation.scale.keyframes.empty())
+			joint.transform.scale = CalculateValue(nodeAnimation.scale, animationTime_);
 	}
 }
+
 
 Quaternion AnimationModel::CalculateValue(const AnimationCurve<Quaternion>& curve, float time){
 	if (curve.keyframes.empty()){
@@ -143,12 +143,11 @@ Vector3 AnimationModel::CalculateValue(const AnimationCurve<Vector3>& curve, flo
 //-----------------------------------------------------------------------------
 void AnimationModel::AnimationUpdate(){
 	if (modelData_){
-		// (1) アニメーションを再生（animationTransform_ を更新）
+		// (1) アニメーションを再生
 		PlayAnimation();
 		SkeletonUpdate();
 		SkinClusterUpdate();
 		// (4) ワールド行列の更新
-		//   ここで「手動transform + アニメーションtransform」 を合成する
 		//Matrix4x4 manualMat = MakeAffineMatrix(
 		//	worldTransform_.scale,
 		//	worldTransform_.eulerRotation,

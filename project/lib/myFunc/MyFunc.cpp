@@ -216,20 +216,24 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 		std::string jointName = bone->mName.C_Str();
 		JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
 
-		aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+		// AssimpのOffsetMatrixは逆バインドポーズ行列として正しい（逆にしない！）
+		aiMatrix4x4 offsetMatrixAssimp = bone->mOffsetMatrix;
 		aiVector3D scale, translate;
 		aiQuaternion rotate;
-		bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
-		Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
+		offsetMatrixAssimp.Decompose(scale, rotate, translate);
+
+		Matrix4x4 inverseBindPoseMatrix = MakeAffineMatrix(
 			{scale.x, scale.y, scale.z},
-			{rotate.x, -rotate.y, -rotate.z,rotate.w},
-			{-translate.x, translate.y, translate.z}
+			{rotate.x, -rotate.y, -rotate.z, rotate.w}, // 左手変換
+			{-translate.x, translate.y, translate.z}     // 左手変換
 		);
-		jointWeightData.inverseBindPoseMatrix = Matrix4x4::Inverse(bindPoseMatrix);
+		jointWeightData.inverseBindPoseMatrix = inverseBindPoseMatrix;
 
 		for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex){
-			jointWeightData.vertexWeights.push_back({bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId});
-
+			jointWeightData.vertexWeights.push_back({
+				bone->mWeights[weightIndex].mWeight,
+				bone->mWeights[weightIndex].mVertexId
+													});
 		}
 	}
 
@@ -593,33 +597,21 @@ int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std:
 Node ConvertAssimpNode(const aiNode* node){
 	Node result;
 
-	// nodeのlocalMatrixを取得
-	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
-
-	// 列ベクトル形式を行ベクトル形式に転置
-	aiLocalMatrix.Transpose();
-
 	aiVector3D scale, translate;
 	aiQuaternion rotate;
-
-	// assimpの行列からSRTを抽出する関数
 	node->mTransformation.Decompose(scale, rotate, translate);
-	result.transform.scale = {scale.x,scale.y ,scale.z};
-	// X軸を反転、さらに回転方向が逆なので軸を反転させる
-	result.transform.rotate = {rotate.x,-rotate.y ,-rotate.z,rotate.w};
-	// X軸を反転
-	result.transform.translate = {-translate.x,translate.y ,translate.z};
+
+	result.transform.scale = { scale.x, scale.y, scale.z };
+	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; // 左手系
+	result.transform.translate = { -translate.x, translate.y, translate.z }; // 左手系
+
 	result.localMatrix =
 		MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 
-	// Node名を格納
 	result.name = node->mName.C_Str();
-	// 子どもの数だけ確保
 	result.children.resize(node->mNumChildren);
 
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex){
-
-		// 再帰的に読んで階層構造を作っていく
 		result.children[childIndex] = ConvertAssimpNode(node->mChildren[childIndex]);
 	}
 

@@ -224,12 +224,8 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
         const aiMesh* mesh = scene->mMeshes[meshIndex];
         LoadMesh(mesh, modelData);
 
-        // skinCluster構築用のデータ取得
-        // 頂点ごとのインフルエンスデータを集計
-        std::vector<std::vector<std::pair<uint32_t, float>>> vertexInfluences(mesh->mNumVertices);
-
         // ボーンごとの影響を集約
-        for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
+        for(uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
 
             aiBone* bone = mesh->mBones[boneIndex];
             std::string jointName = bone->mName.C_Str();
@@ -323,6 +319,10 @@ void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileNam
 // メッシュ読み込み
 //----------------------------------------------------------------------------
 void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
+    // 今の時点での頂点数を取得しておく
+    uint32_t baseVertex = static_cast< uint32_t >(modelData.vertices.size());
+
+    // 頂点追加
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i){
         VertexData vertex {};
         vertex.position = {mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
@@ -336,14 +336,15 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
         modelData.vertices.push_back(vertex);
     }
 
+    // インデックス追加（baseVertexオフセットを加算）
     for (unsigned int i = 0; i < mesh->mNumFaces; ++i){
         const aiFace& face = mesh->mFaces[i];
-        // 三角形想定
-        modelData.indices.push_back(face.mIndices[0]);
-        modelData.indices.push_back(face.mIndices[1]);
-        modelData.indices.push_back(face.mIndices[2]);
+        modelData.indices.push_back(baseVertex + face.mIndices[0]);
+        modelData.indices.push_back(baseVertex + face.mIndices[1]);
+        modelData.indices.push_back(baseVertex + face.mIndices[2]);
     }
 }
+
 
 //----------------------------------------------------------------------------
 // マテリアル読み込み

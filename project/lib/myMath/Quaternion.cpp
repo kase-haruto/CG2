@@ -25,7 +25,7 @@ Quaternion Quaternion::MakeIdentity(){
 }
 
 Quaternion Quaternion::Slerp(Quaternion q0, const Quaternion& q1, float t){
-    /// q0とq1の内積
+    // q0とq1の内積
     float dot = Dot(q0, q1);
 
     if (dot < 0.0f){

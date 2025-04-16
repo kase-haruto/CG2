@@ -29,6 +29,8 @@ public:
 	virtual void Initialize(ComPtr<ID3D12Device> device, UINT elementCount = 1) = 0;
 	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex);
 	virtual void TransferData(const T& data);
+	virtual void TransferData(const T* data, UINT count);
+	void TransferVectorData(const std::vector<T>& data);
 
 	// リソースの取得 ===================================================================*/
 	ComPtr<ID3D12Resource> GetResource() const{ return resource_; }
@@ -66,6 +68,18 @@ template<typename T>
 void DxBuffer<T>::TransferData(const T& data){
 	assert(mappedPtr_ && "Resource is not mapped!");
 	std::memcpy(mappedPtr_, &data, sizeof(T) * elementCount_);
+}
+
+template<typename T>
+inline void DxBuffer<T>::TransferData(const T* data, UINT count){
+	assert(mappedPtr_ && "Resource is not mapped!");
+	std::memcpy(mappedPtr_, data, sizeof(T) * count);
+}
+
+template<typename T>
+inline void DxBuffer<T>::TransferVectorData(const std::vector<T>& data){
+	assert(!data.empty());
+	this->TransferData(data.data(), static_cast< UINT >(data.size()));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

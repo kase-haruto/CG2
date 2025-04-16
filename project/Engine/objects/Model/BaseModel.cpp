@@ -50,6 +50,8 @@ void BaseModel::Update(){
 		materialBuffer_.TransferData(materialData_);
 		// カメラ行列との掛け合わせ
 		UpdateMatrix();
+		modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
+		modelData_->indexBuffer.TransferVectorData(modelData_->indices);
 		Map();
 	}
 }
@@ -57,8 +59,7 @@ void BaseModel::Update(){
 void BaseModel::OnModelLoaded(){
 	modelData_->vertexBuffer.Initialize(device_, UINT(modelData_->vertices.size()));
 	modelData_->indexBuffer.Initialize(device_, UINT(modelData_->indices.size()));
-	modelData_->vertexBuffer.TransferData(*modelData_->vertices.data());
-	modelData_->indexBuffer.TransferData(*modelData_->indices.data());
+
 
 	// テクスチャ設定
 	if (!handle_){

@@ -402,6 +402,7 @@ void System::SkinningObject3dPipeline(){
     inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	inputElementDescs[3].SemanticName = "WEIGHT";
 	inputElementDescs[3].SemanticIndex = 0;
+    inputElementDescs[3].InputSlot = 1;
 	inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;//float4
 	inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	inputElementDescs[4].SemanticName = "INDEX";
