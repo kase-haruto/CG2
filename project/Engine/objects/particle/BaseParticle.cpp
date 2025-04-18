@@ -258,6 +258,22 @@ void BaseParticle::VisualSettingGui(){
 		ImGui::EndCombo();
 	}
 
+	// ===== ブレンドモード ===== //
+	//ブレンドモードの選択
+	const char* blendModeNames[] = {
+		"NONE",
+		"ALPHA",
+		"ADD",
+		"SUB",
+		"MUL",
+		"NORMAL",
+		"SCREEN"
+	};
+	int currentBlendMode = static_cast< int >(blendMode_);
+	if (ImGui::Combo("Blend Mode", &currentBlendMode, blendModeNames, IM_ARRAYSIZE(blendModeNames))){
+		blendMode_ = static_cast< BlendMode >(currentBlendMode);
+	}
+
 #pragma endregion
 
 	/* color settings =======================*/
@@ -288,6 +304,19 @@ void BaseParticle::ParameterGui(){
 	ImGui::Checkbox("isStatic", &isStatic_);
 	ImGui::Checkbox("isBillboard", &isBillboard_);
 
+	//サイズの設定
+	ImGui::SeparatorText("Particle Size");
+	ImGui::Checkbox("Use Random Scale", &useRandomScale_);
+	if (useRandomScale_){
+		ImGui::DragFloat("Min Scale", &randomScaleMin_, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat("Max Scale", &randomScaleMax_, 0.01f, 0.0f, 10.0f);
+		// minとmaxの順序を保証
+		if (randomScaleMin_ > randomScaleMax_){
+			std::swap(randomScaleMin_, randomScaleMax_);
+		}
+	} else{
+		ImGui::DragFloat("Max Scale", &fixedMaxScale_, 0.01f, 0.0f, 10.0f);
+	}
 }
 
 void BaseParticle::EmitterGui(){

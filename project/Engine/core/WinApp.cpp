@@ -87,13 +87,16 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
     // このウィンドウに対応するWinAppインスタンスを取得
     WinApp* pThis = reinterpret_cast< WinApp* >(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     if (pThis){
-        // 必要に応じて pThis->～ な処理を書く
     }
 
     switch (msg){
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;
+
+        case WM_SIZE:
+
+			return 0;
     }
 
     return DefWindowProc(hwnd, msg, wparam, lparam);

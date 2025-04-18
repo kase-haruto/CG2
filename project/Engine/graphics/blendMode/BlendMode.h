@@ -42,8 +42,8 @@ inline D3D12_BLEND_DESC CreateBlendDesc(BlendMode mode){
             rt0.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
             rt0.BlendOp = D3D12_BLEND_OP_ADD;
             // アルファの合成は上書き
-            rt0.SrcBlendAlpha = D3D12_BLEND_ONE;
-            rt0.DestBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.SrcBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.DestBlendAlpha = D3D12_BLEND_ONE;
             rt0.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             break;
 
@@ -73,8 +73,8 @@ inline D3D12_BLEND_DESC CreateBlendDesc(BlendMode mode){
             //        REV_SUBTRACT で (Dst - Src)
             rt0.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
             // アルファは上書き
-            rt0.SrcBlendAlpha = D3D12_BLEND_ONE;
-            rt0.DestBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.SrcBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.DestBlendAlpha = D3D12_BLEND_ONE;
             rt0.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             break;
 
@@ -87,8 +87,8 @@ inline D3D12_BLEND_DESC CreateBlendDesc(BlendMode mode){
             rt0.DestBlend = D3D12_BLEND_ZERO;
             rt0.BlendOp = D3D12_BLEND_OP_ADD;
             // アルファは上書き
-            rt0.SrcBlendAlpha = D3D12_BLEND_ONE;
-            rt0.DestBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.SrcBlendAlpha = D3D12_BLEND_ZERO;
+            rt0.DestBlendAlpha = D3D12_BLEND_ONE;
             rt0.BlendOpAlpha = D3D12_BLEND_OP_ADD;
             break;
 

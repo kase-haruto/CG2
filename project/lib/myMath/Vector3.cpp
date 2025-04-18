@@ -13,6 +13,13 @@ void Vector3::Initialize(const Vector3& value){
 	z = value.z;
 }
 
+void Vector3::Initialize(float v){
+	//値で初期化
+	x = v;
+	y = v;
+	z = v;
+}
+
 float Vector3::Length()const{
 	return sqrtf(x * x + y * y + z * z);
 }

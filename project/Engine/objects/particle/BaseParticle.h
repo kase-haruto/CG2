@@ -129,7 +129,6 @@ public:
 	int32_t kMaxInstanceNum_ = 512;
 	int32_t instanceNum_ = 0;
 
-
 	bool useRandomScale_ = false;	// ランダムスケールを使用するかのフラグ
 	float fixedMaxScale_ = 1.0f;	// 固定スケール値
 	float randomScaleMin_ = 1.0f;	// ランダムスケールの最小値
@@ -145,8 +144,6 @@ protected:
 	//===================================================================*/
 	//					protected methods
 	//===================================================================*/
-
-
 	D3D12_GPU_DESCRIPTOR_HANDLE textureHandle; // テクスチャハンドル
 
 	//反対側に回す回転行列
@@ -181,5 +178,4 @@ protected:
 
 	// blend
 	BlendMode blendMode_ = BlendMode::ADD;
-
 };

@@ -11,6 +11,7 @@ struct Vector3 final{
     float z;
 
     void Initialize(const Vector3& value = {0.0f,0.0f,0.0f});
+    void Initialize(float v);
 
     float Length()const;
     Vector3 Normalize()const;
