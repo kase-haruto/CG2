@@ -7,6 +7,8 @@
 #include "../graphics/PipelineStateManager.h"
 
 #include "lib/ImGuiManager.h"
+#include <Engine/objects/particle/ParticleManager.h>
+#include <Engine/Editor/ParticleEditor.h>
 
 //リークチェック
 #include "LeakChecker.h"
@@ -78,6 +80,9 @@ private:
 	// engineEditors
 	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
 	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
-
+	std::unique_ptr<ParticleEditor> particleEditor_;	//パーティクルエディタ
+	
+	// particle
+	std::unique_ptr<ParticleManager> particleContainer_;
 };
 

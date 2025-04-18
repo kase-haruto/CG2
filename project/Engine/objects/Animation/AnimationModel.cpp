@@ -147,19 +147,6 @@ void AnimationModel::AnimationUpdate(){
 		PlayAnimation();
 		SkeletonUpdate();
 		SkinClusterUpdate();
-		// (4) ワールド行列の更新
-		//Matrix4x4 manualMat = MakeAffineMatrix(
-		//	worldTransform_.scale,
-		//	worldTransform_.eulerRotation,
-		//	worldTransform_.translation
-		//);
-		//Matrix4x4 animMat = MakeAffineMatrix(
-		//	animationTransform_.scale,
-		//	animationTransform_.rotate,
-		//	animationTransform_.translate
-		//);
-		// ワールド行列を更新
-		//worldMatrix = Matrix4x4::Multiply(manualMat, animMat);
 	}
 
 	BaseModel::Update();
@@ -171,7 +158,7 @@ void AnimationModel::SkeletonUpdate(){
 		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 
 		// 親の行列がある場合は、親の行列を掛け合わせる
-		if (joint.parent.has_value()){
+		if (joint.parent){
 			joint.skeletonSpaceMatrix = joint.localMatrix * modelData_->skeleton.joints[*joint.parent].skeletonSpaceMatrix;
 		} else{
 			joint.skeletonSpaceMatrix = joint.localMatrix;
@@ -191,7 +178,7 @@ void AnimationModel::SkinClusterUpdate(){
 }
 
 void AnimationModel::DrawSkeleton(){
-	modelData_->skeleton.Draw(0.05f, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f});
+	modelData_->skeleton.Draw();
 }
 
 void AnimationModel::Update(){
@@ -227,7 +214,7 @@ void AnimationModel::Draw(){
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
 	BaseModel::Draw();
 
-	//modelData_->skeleton.Draw(0.05f, {1.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f});
+	modelData_->skeleton.Draw();
 }
 
 //-----------------------------------------------------------------------------

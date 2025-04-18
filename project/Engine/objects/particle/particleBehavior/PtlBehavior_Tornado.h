@@ -16,7 +16,7 @@ public:
     PtlBehavior_Tornado(const Vector3& center, const float rotateSpeed,const float upSpeed);
     ~PtlBehavior_Tornado()override = default;
 
-    void ApplyBehavior(ParticleSystem& system)override;
+    void ApplyBehavior(Particle& system)override;
 
     void ShowImGui()override;
 

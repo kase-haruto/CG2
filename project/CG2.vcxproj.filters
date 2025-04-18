@@ -192,9 +192,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include=".editorconfig.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
       <Filter>Engine\externals\ImGui</Filter>
     </ClCompile>
@@ -358,9 +355,8 @@
     <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
-    <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
+    <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
-    <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
@@ -406,6 +402,7 @@
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
     <ClCompile Include="Engine\graphics\Material.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
+    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -604,7 +601,7 @@
     <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
-    <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
+    <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
     <ClInclude Include="Game\demo\GameObject_Demo.h" />
@@ -658,6 +655,8 @@
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
     <ClInclude Include="Engine\scene\SceneType.h" />
+    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
@@ -679,6 +678,7 @@
     <None Include="Resources\shaders\Particle.hlsli" />
     <None Include="Resources\shaders\Effect.hlsli" />
     <None Include="Resources\shaders\SkinningObject3d.hlsli" />
+    <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\graphics\shaders\Fragment.PS.hlsl">

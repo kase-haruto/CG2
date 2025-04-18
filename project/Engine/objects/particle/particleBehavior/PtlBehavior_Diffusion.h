@@ -9,6 +9,6 @@ public:
     //===================================================================*/
     ~PtlBehavior_Diffusion()override = default;
 
-    void ApplyBehavior(ParticleSystem& particle)override;
+    void ApplyBehavior(Particle& particle)override;
 };
 

@@ -76,7 +76,6 @@ void GameScene::Draw(){
 	modelField_->Draw();
 
 	PrimitiveDrawer::GetInstance()->Render();
-	ParticleManager::GetInstance()->Draw();
 #pragma endregion
 
 	/////////////////////////////////////////////////////////////////////////////////////////

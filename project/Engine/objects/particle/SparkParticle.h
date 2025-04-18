@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Engine/objects/particle/ParticleSystem.h"
+#include "Engine/objects/particle/Particle.h"
 #include "Engine/objects/particle/particleBehavior/PtlBehavior_Diffusion.h"
 
 class SparkParticle
-	:public ParticleSystem{
+	:public Particle{
 public:
 	//===================================================================*/
 	//                   public methods

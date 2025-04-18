@@ -48,11 +48,10 @@ void TestScene::Initialize(){
 	//test用
 	bunny_ = std::make_unique<BaseGameObject>("bunny.obj");
 	bunny_->SetName("bunny");
+	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 	teapot_ = std::make_unique<BaseGameObject>("teapot.obj");
 	teapot_->SetName("teapot");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
-
-	walkHuman_ = std::make_unique<AnimationModel>("simpleSkin.gltf");
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
@@ -73,12 +72,11 @@ void TestScene::Update(){
 	CameraManager::Update();
 
 	//地面
-	modelField_->Update();
+	//modelField_->Update();
 
 	//test
 	bunny_->Update();
 	teapot_->Update();
-	walkHuman_->AnimationUpdate();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -128,17 +126,15 @@ void TestScene::Draw3dObject(){
 	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
 	//地面の描画
-	//modelField_->Draw();
+	modelField_->Draw();
 
 	//test
 	bunny_->Draw();
 	teapot_->Draw();
-	walkHuman_->Draw();
 
 	/* =======================================================================================
 				particleの描画
 	========================================================================================*/
-	ParticleManager::GetInstance()->Draw();
 
 	/* =======================================================================================
 				プリミティブな図形の描画

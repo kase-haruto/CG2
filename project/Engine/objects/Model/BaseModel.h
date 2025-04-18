@@ -70,6 +70,7 @@ protected:
     Material materialData_;
     Material materialParameter_;
     TransformationMatrix matrixData_;
+
 public:
     //=============
     // 各種パラメータ

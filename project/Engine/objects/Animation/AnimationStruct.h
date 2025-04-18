@@ -75,23 +75,60 @@ struct Skeleton{
 	std::map<std::string, int32_t> jointMap;
 	std::vector<Joint> joints;
 
-	void Draw(float jointRadius = 0.05f,
-			  const Vector4& jointColor = {1.0f, 0.0f, 0.0f, 1.0f},
-			  const Vector4& boneColor = {1.0f, 1.0f, 0.0f, 1.0f}) const{
+	void JointDraw(const Matrix4x4& m){
+		Vector3 jointCube[8] = {
+			Vector3(0.075f, 0.075f, 0.075f),
+			Vector3(-0.075f, 0.075f, 0.075f),
+			Vector3(-0.075f, 0.075f,-0.075f),
+			Vector3(0.075f, 0.075f,-0.075f),
 
-		for (size_t i = 0; i < joints.size(); ++i){
-			const Joint& joint = joints[i];
+			Vector3(0.075f,-0.075f, 0.075f),
+			Vector3(-0.075f,-0.075f, 0.075f),
+			Vector3(-0.075f,-0.075f,-0.075f),
+			Vector3(0.075f,-0.075f,-0.075f),
+		};
 
-			// ジョイント位置を球で描画
-			PrimitiveDrawer::GetInstance()->DrawSphere(joint.transform.translate, jointRadius, 8, jointColor);
+		for (int i = 0; i < 8; i++){
+			jointCube[i] = Vector3::Transform(jointCube[i], m);
+		}
 
-			// 親が存在するなら線で接続
-			if (joint.parent.has_value()){
-				int parentIndex = joint.parent.value();
-				if (parentIndex >= 0 && static_cast< size_t >(parentIndex) < joints.size()){
-					const Joint& parentJoint = joints[parentIndex];
-					PrimitiveDrawer::GetInstance()->DrawLine3d(parentJoint.transform.translate, joint.transform.translate, boneColor);
-				}
+		int p1 = 0;
+		int p2 = 1;
+		for (int i = 0; i < 4; i++){
+			PrimitiveDrawer::GetInstance()->DrawLine3d(jointCube[p1], jointCube[p2], {1.0f,1.0f,1.0f,1.0f});
+
+			p1++;
+			p2++;
+			p1 = int(fmod(p1, 4));
+			p2 = int(fmod(p2, 4));
+		}
+		p1 = 4;
+		p2 = 5;
+		for (int i = 0; i < 4; i++){
+			PrimitiveDrawer::GetInstance()->DrawLine3d(jointCube[p1], jointCube[p2], {1.0f,1.0f,1.0f,1.0f});
+
+			p1++;
+			p2++;
+			p1 = 4 + int(fmod(p1, 4));
+			p2 = 4 + int(fmod(p2, 4));
+		}
+		p1 = 0;
+		p2 = 4;
+		for (int i = 0; i < 4; i++){
+			PrimitiveDrawer::GetInstance()->DrawLine3d(jointCube[p1], jointCube[p2], {1.0f,1.0f,1.0f,1.0f});
+
+			p1++;
+			p2++;
+		}
+	}
+
+	void Draw(){
+		for (Joint& joint : joints){
+			Vector3 jointPos = {joint.skeletonSpaceMatrix.m[3][0],joint.skeletonSpaceMatrix.m[3][1],joint.skeletonSpaceMatrix.m[3][2]};
+			JointDraw(joint.skeletonSpaceMatrix);
+			if (joint.parent){
+				Vector3 parentPos = {joints[*joint.parent].skeletonSpaceMatrix.m[3][0],joints[*joint.parent].skeletonSpaceMatrix.m[3][1] ,joints[*joint.parent].skeletonSpaceMatrix.m[3][2]};
+				PrimitiveDrawer::GetInstance()->DrawLine3d(jointPos, parentPos, {1.0f,1.0f,1.0f,1.0f});
 			}
 		}
 	}

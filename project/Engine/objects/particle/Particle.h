@@ -5,23 +5,15 @@
 #include <string>
 #include "particleBehavior/ParticleBehavior.h"
 
-class ParticleSystem 
+class Particle 
     : public BaseParticle{
-protected:
-    // カラーモード用のenumを定義
-    enum class ColorMode{
-        Random,
-        SingleColor,
-        SimilarColor
-    };
-
 public:
     //===================================================================*/
     //                    public methods
     //===================================================================*/
 
-    ParticleSystem();
-    ~ParticleSystem() override;
+    Particle();
+    ~Particle() override;
 
     virtual void Initialize(const std::string& modelName, const std::string& texturePath);
 
@@ -34,16 +26,7 @@ protected:
     //===================================================================*/
     //                    private methods
     //===================================================================*/
-    std::string name_;                                  // システム名
-    bool useRandomColor_ = true;                        // ランダムカラーを使用するか
-    Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色
-
     std::string fileDirectoryPath = "./Resources/json/particle/";
-
-    ColorMode colorMode_ = ColorMode::Random; // 現在のカラー方式
-    //Vector4 selectedColor_ = {1.0f,1.0f,1.0f,1.0f}; // SINGLEまたはSIMILAR用の基準色
-    float colorVariation_ = 0.1f; // 類似色モードでのバラつき度合い(0.0f〜1.0f程度)
-
 
 protected:
     //===================================================================*/

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ParticleSystem.h"
+#include "Particle.h"
 #include "particleBehavior/PtlBehavior_Diffusion.h"
 
 //* c++
 #include <memory>
 
 class DemoParticle 
-    : public ParticleSystem{
+    : public Particle{
 
 public:
     //===================================================================*/

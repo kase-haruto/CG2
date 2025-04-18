@@ -32,24 +32,28 @@ void PrimitiveDrawer::Finalize(){
 
 }
 
-void PrimitiveDrawer::DrawGrid(){
+void PrimitiveDrawer::DrawGrid() {
 	const uint32_t kSubdivision = 32;
 	const float kGridHalfWidth = 32.0f;
 	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision);
 
-	for (uint32_t index = 0; index <= kSubdivision; ++index){
-
+	for (uint32_t index = 0; index <= kSubdivision; ++index) {
 		float offset = -kGridHalfWidth + index * kGridEvery;
 
-		// 縦線
+		// --- 縦線（Z軸方向） ---
 		Vector3 verticalStart(offset, 0.0f, kGridHalfWidth);
 		Vector3 verticalEnd(offset, 0.0f, -kGridHalfWidth);
-		DrawLine3d(verticalStart, verticalEnd, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
-		// 横線
+		Vector4 verticalColor = (std::abs(offset) < 0.001f) ? Vector4(0.0f, 1.0f, 0.0f, 1.0f) // X=0 line
+		                                                    : Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		DrawLine3d(verticalStart, verticalEnd, verticalColor);
+
 		Vector3 horizontalStart(-kGridHalfWidth, 0.0f, offset);
 		Vector3 horizontalEnd(kGridHalfWidth, 0.0f, offset);
-		DrawLine3d(horizontalStart, horizontalEnd, Vector4(1.0f, 1.0f, 1.0f, 1.0f)); // ←ここを修正
+
+		Vector4 horizontalColor = (std::abs(offset) < 0.001f) ? Vector4(1.0f, 0.0f, 0.0f, 1.0f) // Z=0 line
+		                                                      : Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		DrawLine3d(horizontalStart, horizontalEnd, horizontalColor);
 	}
 }
 

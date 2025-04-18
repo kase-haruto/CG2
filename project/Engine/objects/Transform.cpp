@@ -61,10 +61,6 @@ Vector3 BaseTransform::GetWorldPosition() const{
 //	worldTransformの更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void WorldTransform::Update(const Matrix4x4& viewProMatrix){
-	// eulerRotationを
-	// 
-	// 
-	// に変換
 	rotation = Quaternion::EulerToQuaternion(eulerRotation);
 
 	Matrix4x4 scaleMat = MakeScaleMatrix(scale);

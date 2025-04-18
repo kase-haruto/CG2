@@ -327,9 +327,9 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
     // 頂点追加
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i){
         VertexData vertex {};
-        vertex.position = {mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
+        vertex.position = {-mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
         if (mesh->HasNormals()){
-            vertex.normal = {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
+            vertex.normal = {-mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
         }
         if (mesh->HasTextureCoords(0)){
             vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
@@ -342,8 +342,8 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
     for (unsigned int i = 0; i < mesh->mNumFaces; ++i){
         const aiFace& face = mesh->mFaces[i];
         modelData.indices.push_back(baseVertex + face.mIndices[0]);
-        modelData.indices.push_back(baseVertex + face.mIndices[1]);
         modelData.indices.push_back(baseVertex + face.mIndices[2]);
+        modelData.indices.push_back(baseVertex + face.mIndices[1]);
     }
 }
 
