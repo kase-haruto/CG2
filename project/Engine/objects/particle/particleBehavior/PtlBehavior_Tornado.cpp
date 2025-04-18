@@ -1,6 +1,6 @@
 #include "PtlBehavior_Tornado.h"
 #include "Engine/core/System.h"
-#include "../ParticleSystem.h"
+#include "../Particle.h"
 #include "Engine/core/Clock/ClockManager.h"
 #include "lib/myFunc/MyFunc.h"
 
@@ -9,7 +9,7 @@
 PtlBehavior_Tornado::PtlBehavior_Tornado(const Vector3& center, const float rotateSpeed, const float upSpeed)
 :center_(center),rotationSpeed_(rotateSpeed),upwardSpeed_(upSpeed){}
 
-void PtlBehavior_Tornado::ApplyBehavior(ParticleSystem& system){
+void PtlBehavior_Tornado::ApplyBehavior(Particle& system){
     center_ = system.GetEmitterPos();
     auto& particles = system.particles_;
 

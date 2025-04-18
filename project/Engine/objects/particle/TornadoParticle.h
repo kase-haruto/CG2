@@ -1,9 +1,9 @@
 #pragma once
-#include "ParticleSystem.h"
+#include "Particle.h"
 
 
 class TornadoParticle :
-    public ParticleSystem{
+    public Particle{
 
 public:
     //===================================================================*/

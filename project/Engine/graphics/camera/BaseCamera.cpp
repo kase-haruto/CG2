@@ -41,7 +41,7 @@ void BaseCamera::Update(){
 		}
 	}
 
-	cameraBuffer_.TransferData(cameraData_, 1);
+	cameraBuffer_.TransferData(cameraData_);
 	UpdateMatrix();
 
 }
@@ -123,8 +123,7 @@ const Vector3& BaseCamera::GetTranslate() const{
 #pragma region バッファの生成とマッピング
 void BaseCamera::CreateBuffer(){
 	ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-	cameraData_ = new Camera3dForGPU();
-	cameraBuffer_.Initialize(device.Get(), 1,cameraData_);
+	cameraBuffer_.Initialize(device.Get());
 }
 
 void BaseCamera::Map(){
@@ -137,7 +136,7 @@ void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	command->SetGraphicsRootSignature(rootSignature.Get());
 
 	uint32_t rootParameterIndex = 0;
-	if (pipelineType == PipelineType::Object3D){
+	if (pipelineType == PipelineType::Object3D||PipelineType::SkinningObject3D){
 		rootParameterIndex = 5;
 	}
 	cameraBuffer_.SetCommand(command, rootParameterIndex);

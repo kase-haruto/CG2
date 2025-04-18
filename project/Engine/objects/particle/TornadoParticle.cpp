@@ -4,7 +4,7 @@
 
 TornadoParticle::TornadoParticle(){
 
-	ParticleSystem::SetName("tornadoParticle");
+	Particle::SetName("tornadoParticle");
 
 	behavior_ = std::make_unique<PtlBehavior_Tornado>(emitter_.transform.translate,1.2f,0.9f);
 
@@ -23,7 +23,7 @@ void TornadoParticle::Initialize(const std::string& modelName, const std::string
 	particleNum_ = 0;
 	emitter_.Initialize(particleNum_);
 
-	ParticleSystem::Initialize(modelName,texturePath);
+	Particle::Initialize(modelName,texturePath);
 
 }
 

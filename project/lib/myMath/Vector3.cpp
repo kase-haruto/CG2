@@ -1,10 +1,24 @@
-﻿#include "lib/myMath/Vector3.h"
+#include "lib/myMath/Vector3.h"
 #include "lib/myMath/Matrix4x4.h"
 #include "lib/myfunc/MyFunc.h"
 
 /* c++ */
 #include <algorithm>
 #include <cmath>
+
+void Vector3::Initialize(const Vector3& value){
+	//値で初期化
+	x = value.x;
+	y = value.y;
+	z = value.z;
+}
+
+void Vector3::Initialize(float v){
+	//値で初期化
+	x = v;
+	y = v;
+	z = v;
+}
 
 float Vector3::Length()const{
 	return sqrtf(x * x + y * y + z * z);

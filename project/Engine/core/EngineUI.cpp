@@ -68,12 +68,12 @@ void EngineUI::Render(){
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::RenderMainViewport(){
+	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
 
-	ImGui::SetNextWindowSize(ImVec2(700, 400));
+	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
 	ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 	if (mainViewportTextureID_){
-		ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
 
 		// Image描画開始位置（スクリーン座標）を取得
 		ImVec2 imagePos = ImGui::GetCursorScreenPos();

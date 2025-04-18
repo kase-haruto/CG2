@@ -46,14 +46,14 @@ void ModelManager::Finalize(){
 //----------------------------------------------------------------------------
 // 非同期ロード開始
 //----------------------------------------------------------------------------
-std::future<std::shared_ptr<ModelData>> ModelManager::LoadModel(const std::string& fileName){
+std::future<ModelData> ModelManager::LoadModel(const std::string& fileName){
     // 既にロード済みかどうかチェック
     {
         std::lock_guard<std::mutex> lock(instance_->modelDataMutex_);
         auto it = instance_->modelDatas_.find(fileName);
         if (it != instance_->modelDatas_.end()){
             // 既にロード済みなら、即座に value を設定した future を返す
-            std::promise<std::shared_ptr<ModelData>> promise;
+            std::promise<ModelData> promise;
             promise.set_value(it->second);
             return promise.get_future();
         }
@@ -62,7 +62,7 @@ std::future<std::shared_ptr<ModelData>> ModelManager::LoadModel(const std::strin
     // キューに新しいリクエストを積む
     LoadRequest request;
     request.fileName = fileName;
-    std::future<std::shared_ptr<ModelData>> fut = request.promise.get_future();
+    std::future<ModelData> fut = request.promise.get_future();
 
     {
         std::lock_guard<std::mutex> lock(instance_->taskQueueMutex_);
@@ -95,9 +95,7 @@ void ModelManager::WorkerMain(){
         }
 
         // ファイルを読み込み
-        std::shared_ptr<ModelData> newModel = std::make_shared<ModelData>(
-            LoadModelFile(directoryPath_, currentRequest.fileName)
-        );
+        ModelData newModel = LoadModelFile(directoryPath_, currentRequest.fileName);
 
         // (B) GPUリソース作成はメインスレッドで行うため、一旦 pendingTasks_ に格納
         {
@@ -140,13 +138,22 @@ void ModelManager::ProcessLoadingTasks(){
 //----------------------------------------------------------------------------
 // ロード済みモデルを取得（まだロード中なら nullptr）
 //----------------------------------------------------------------------------
-std::shared_ptr<ModelData> ModelManager::GetModelData(const std::string& fileName){
+ModelData ModelManager::GetModelData(const std::string& fileName){
     std::lock_guard<std::mutex> lock(modelDataMutex_);
     auto it = modelDatas_.find(fileName);
     if (it != modelDatas_.end()){
         return it->second;
     }
-    return nullptr;
+
+	// ロード中のモデルは plane を返す
+	const std::string defaltModel = "plane.obj";
+	auto lodingModel = modelDatas_.find(defaltModel);
+    return lodingModel->second;
+}
+
+bool ModelManager::IsModelLoaded(const std::string& fileName) const{
+    std::lock_guard<std::mutex> lock(modelDataMutex_);
+    return modelDatas_.find(fileName) != modelDatas_.end();
 }
 
 //----------------------------------------------------------------------------
@@ -169,6 +176,10 @@ void ModelManager::StartUpLoad(){
     LoadModel("plane.obj");
     LoadModel("teapot.obj");
     LoadModel("terrain.obj");
+	LoadModel("AnimatedCube.gltf");
+	LoadModel("walk.gltf");
+	LoadModel("sneakWalk.gltf");
+	LoadModel("simpleSkin.gltf");
     LoadModel("bunny.obj");
 }
 
@@ -214,6 +225,30 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
     for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex){
         const aiMesh* mesh = scene->mMeshes[meshIndex];
         LoadMesh(mesh, modelData);
+
+        // ボーンごとの影響を集約
+        for(uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
+
+            aiBone* bone = mesh->mBones[boneIndex];
+            std::string jointName = bone->mName.C_Str();
+            JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+
+            aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+            aiVector3D scale, translate;
+            aiQuaternion rotate;
+            bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+
+            Matrix4x4 bindPoseMatrix =
+                MakeAffineMatrix({scale.x,scale.y,scale.z}, {rotate.x,-rotate.y,-rotate.z,rotate.w}, {-translate.x,translate.y,translate.z});
+            jointWeightData.inverseBindPoseMatrix = Matrix4x4::Inverse(bindPoseMatrix);
+
+            for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex){
+
+                jointWeightData.vertexWeights.push_back({bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId});
+            }
+        }
+
+
         LoadMaterial(scene, mesh, modelData);
     }
 
@@ -228,23 +263,31 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
             aiNodeAnim* nodeAnim = aiAnim->mChannels[channelIdx];
             NodeAnimation nodeAnimation;
 
-            // Translation
-            for (unsigned int i = 0; i < nodeAnim->mNumPositionKeys; ++i){
-                float time = ( float ) (nodeAnim->mPositionKeys[i].mTime / ticksPerSecond);
-                aiVector3D aiPos = nodeAnim->mPositionKeys[i].mValue;
-                nodeAnimation.translate.keyframes.push_back({time, Vector3{aiPos.x, aiPos.y, aiPos.z}});
+            // Translation Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumPositionKeys; ++keyIndex){
+                aiVectorKey& keyAssimp = nodeAnim->mPositionKeys[keyIndex];
+                KeyframeVector3 keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {-keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}; // 右手→左手
+                nodeAnimation.translate.keyframes.push_back(keyframe);
             }
-            // Rotation
-            for (unsigned int i = 0; i < nodeAnim->mNumRotationKeys; ++i){
-                float time = ( float ) (nodeAnim->mRotationKeys[i].mTime / ticksPerSecond);
-                aiQuaternion aiRot = nodeAnim->mRotationKeys[i].mValue;
-                nodeAnimation.rotate.keyframes.push_back({time, Quaternion{aiRot.x, aiRot.y, aiRot.z, aiRot.w}});
+
+            // Rotation Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumRotationKeys; ++keyIndex){
+                aiQuatKey& keyAssimp = nodeAnim->mRotationKeys[keyIndex];
+                KeyframeQuaternion keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w}; // 右手→左手
+                nodeAnimation.rotate.keyframes.push_back(keyframe);
             }
-            // Scaling
-            for (unsigned int i = 0; i < nodeAnim->mNumScalingKeys; ++i){
-                float time = ( float ) (nodeAnim->mScalingKeys[i].mTime / ticksPerSecond);
-                aiVector3D aiScale = nodeAnim->mScalingKeys[i].mValue;
-                nodeAnimation.scale.keyframes.push_back({time, Vector3{aiScale.x, aiScale.y, aiScale.z}});
+
+            // Scaling Key
+            for (uint32_t keyIndex = 0; keyIndex < nodeAnim->mNumScalingKeys; ++keyIndex){
+                aiVectorKey& keyAssimp = nodeAnim->mScalingKeys[keyIndex];
+                KeyframeVector3 keyframe;
+                keyframe.time = static_cast< float >(keyAssimp.mTime / aiAnim->mTicksPerSecond);
+                keyframe.value = {keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z}; // スケールはそのまま
+                nodeAnimation.scale.keyframes.push_back(keyframe);
             }
             std::string nodeName(nodeAnim->mNodeName.C_Str());
             animation.nodeAnimations[nodeName] = nodeAnimation;
@@ -252,33 +295,41 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
         modelData.animation = animation;
     }
 
+    // スケルトン構築
+    Node rootNode = ConvertAssimpNode(scene->mRootNode);
+    modelData.skeleton = CreateSkeleton(rootNode);
+
     return modelData;
 }
 
 //----------------------------------------------------------------------------
 // GPUリソース作成 (ProcessLoadingTasksから呼ばれる)
 //----------------------------------------------------------------------------
-void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileName, std::shared_ptr<ModelData> model){
+void ModelManager::CreateGpuResources([[maybe_unused]]const std::string& fileName, ModelData model){
     auto device = GraphicsGroup::GetInstance()->GetDevice();
 
     DxVertexBuffer<VertexData> new_vertexBuffer;
-    new_vertexBuffer.Initialize(device, ( UINT ) model->vertices.size());
+    new_vertexBuffer.Initialize(device);
 	DxIndexBuffer<uint32_t> new_indexBuffer;
-    new_indexBuffer.Initialize(device, ( UINT ) model->indices.size());
+    new_indexBuffer.Initialize(device);
 
-    model->vertexBuffer = new_vertexBuffer;
-    model->indexBuffer = new_indexBuffer;
+    model.vertexBuffer = new_vertexBuffer;
+    model.indexBuffer = new_indexBuffer;
 }
 
 //----------------------------------------------------------------------------
 // メッシュ読み込み
 //----------------------------------------------------------------------------
 void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
+    // 今の時点での頂点数を取得しておく
+    uint32_t baseVertex = static_cast< uint32_t >(modelData.vertices.size());
+
+    // 頂点追加
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i){
         VertexData vertex {};
-        vertex.position = {mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
+        vertex.position = {-mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
         if (mesh->HasNormals()){
-            vertex.normal = {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
+            vertex.normal = {-mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
         }
         if (mesh->HasTextureCoords(0)){
             vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
@@ -287,14 +338,15 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
         modelData.vertices.push_back(vertex);
     }
 
+    // インデックス追加（baseVertexオフセットを加算）
     for (unsigned int i = 0; i < mesh->mNumFaces; ++i){
         const aiFace& face = mesh->mFaces[i];
-        // 三角形想定
-        modelData.indices.push_back(face.mIndices[0]);
-        modelData.indices.push_back(face.mIndices[1]);
-        modelData.indices.push_back(face.mIndices[2]);
+        modelData.indices.push_back(baseVertex + face.mIndices[0]);
+        modelData.indices.push_back(baseVertex + face.mIndices[2]);
+        modelData.indices.push_back(baseVertex + face.mIndices[1]);
     }
 }
+
 
 //----------------------------------------------------------------------------
 // マテリアル読み込み
@@ -332,6 +384,10 @@ void ModelManager::LoadUVTransform(const aiMaterial* material, MaterialData& out
         outMaterial.uv_offset = {0, 0, 0};
         outMaterial.uv_scale = {1, 1, 1};
     }
+}
+
+void ModelManager::LoadSkinData( [[maybe_unused]]const aiMesh* mesh, [[maybe_unused]] ModelData& modelData){
+   
 }
 
 //----------------------------------------------------------------------------

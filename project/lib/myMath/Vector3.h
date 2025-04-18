@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "lib/myMath/Matrix4x4.h"
 
@@ -9,6 +9,9 @@ struct Vector3 final{
     float x;
     float y;
     float z;
+
+    void Initialize(const Vector3& value = {0.0f,0.0f,0.0f});
+    void Initialize(float v);
 
     float Length()const;
     Vector3 Normalize()const;

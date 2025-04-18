@@ -19,21 +19,23 @@ struct Quaternion{
     // ========================== 演算子オーバーロード ==========================
 
     // クォータニオン同士の加算
-    Quaternion operator+(const Quaternion& q) const;
-
-    // クォータニオン同士の減算
-    Quaternion operator-(const Quaternion& q) const;
+    Quaternion operator+(const Quaternion& other) const;
 
     // クォータニオン同士の乗算
-    Quaternion operator*(const Quaternion& q) const;
+    Quaternion operator*(const Quaternion& other) const;
+
+    Quaternion operator-() const;
 
     // クォータニオン同士の除算
     Quaternion operator/(const Quaternion& q) const;
 
+    Quaternion operator*(float scalar) const;
+    friend Quaternion operator*(float scalar, const Quaternion& q);
+
     // ========================== 静的関数 ==========================
 
     // 球面線形補間(SLERP)を行う
-    static Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
+    static Quaternion Slerp(Quaternion q0, const Quaternion& q1, float t);
 
     // 単位クォータニオンを生成する
     static Quaternion MakeIdentity();
@@ -66,5 +68,13 @@ struct Quaternion{
 	static Vector3 ToEuler(const Quaternion& q);
 
 	// オイラー角からクォータニオンを生成する
-	static Quaternion FromEuler(const Vector3& from, const Vector3& to);
+	static Quaternion FromToQuaternion(const Vector3& from, const Vector3& to);
+	static Quaternion EulerToQuaternion(const Vector3& euler);
+
+    // X軸回転
+    static Quaternion MakeRotateX(float radian);
+    // Y軸回転
+    static Quaternion MakeRotateY(float radian);
+    // Z軸回転
+    static Quaternion MakeRotateZ(float radian);
 };

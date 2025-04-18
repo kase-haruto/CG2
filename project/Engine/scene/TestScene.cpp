@@ -6,9 +6,9 @@
 #include "../scene/TestScene.h"
 
 // engine
-#include "../core/Input.h"
-#include "../core/Audio/Audio.h"
-#include "../graphics/camera/CameraManager.h"
+#include "Engine/core/Input.h"
+#include "Engine/core/Audio/Audio.h"
+#include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/objects/particle/ParticleManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/core/DirectX/DxCore.h"
@@ -48,6 +48,7 @@ void TestScene::Initialize(){
 	//test用
 	bunny_ = std::make_unique<BaseGameObject>("bunny.obj");
 	bunny_->SetName("bunny");
+	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 	teapot_ = std::make_unique<BaseGameObject>("teapot.obj");
 	teapot_->SetName("teapot");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
@@ -71,7 +72,7 @@ void TestScene::Update(){
 	CameraManager::Update();
 
 	//地面
-	modelField_->Update();
+	//modelField_->Update();
 
 	//test
 	bunny_->Update();
@@ -131,14 +132,13 @@ void TestScene::Draw3dObject(){
 	bunny_->Draw();
 	teapot_->Draw();
 
-
 	/* =======================================================================================
 				particleの描画
 	========================================================================================*/
-	ParticleManager::GetInstance()->Draw();
 
 	/* =======================================================================================
 				プリミティブな図形の描画
 	========================================================================================*/
+	PrimitiveDrawer::GetInstance()->DrawGrid();
 	PrimitiveDrawer::GetInstance()->Render();
 }

@@ -2,9 +2,6 @@
 
 #include <string>
 
-/// <summary>
-/// editor
-/// </summary>
 class BaseEditor{
 public:
     virtual void ShowImGuiInterface() = 0; // 純粋仮想関数

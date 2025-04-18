@@ -32,6 +32,32 @@ void PrimitiveDrawer::Finalize(){
 
 }
 
+void PrimitiveDrawer::DrawGrid() {
+	const uint32_t kSubdivision = 32;
+	const float kGridHalfWidth = 32.0f;
+	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision);
+
+	for (uint32_t index = 0; index <= kSubdivision; ++index) {
+		float offset = -kGridHalfWidth + index * kGridEvery;
+
+		// --- 縦線（Z軸方向） ---
+		Vector3 verticalStart(offset, 0.0f, kGridHalfWidth);
+		Vector3 verticalEnd(offset, 0.0f, -kGridHalfWidth);
+
+		Vector4 verticalColor = (std::abs(offset) < 0.001f) ? Vector4(0.0f, 1.0f, 0.0f, 1.0f) // X=0 line
+		                                                    : Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		DrawLine3d(verticalStart, verticalEnd, verticalColor);
+
+		Vector3 horizontalStart(-kGridHalfWidth, 0.0f, offset);
+		Vector3 horizontalEnd(kGridHalfWidth, 0.0f, offset);
+
+		Vector4 horizontalColor = (std::abs(offset) < 0.001f) ? Vector4(1.0f, 0.0f, 0.0f, 1.0f) // Z=0 line
+		                                                      : Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		DrawLine3d(horizontalStart, horizontalEnd, horizontalColor);
+	}
+}
+
+
 void PrimitiveDrawer::CreateMeshes(){
 	// 最大の線の数を想定してメッシュを作成
 	const UINT maxVertices = kMaxLineCount * kVertexCountLine; // ラインは2頂点で構成
@@ -183,7 +209,7 @@ void PrimitiveDrawer::Render(){
 
 	UpdateMatrixBuffer();
 
-	GraphicsGroup::GetInstance()->SetCommand(commandList_,PipelineType::Line,BlendMode::NORMAL);
+	GraphicsGroup::GetInstance()->SetCommand(commandList_, PipelineType::Line, BlendMode::NORMAL);
 
 	// プリミティブトポロジをラインリストに設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);

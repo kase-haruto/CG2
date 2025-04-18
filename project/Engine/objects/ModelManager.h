@@ -37,7 +37,7 @@ public:
     /// </summary>
     /// <param name="fileName">モデルのファイル名(例: "suzanne.obj")</param>
     /// <returns>ロード完了時の ModelData を指す future</returns>
-    static std::future<std::shared_ptr<ModelData>> LoadModel(const std::string& fileName);
+    static std::future<ModelData> LoadModel(const std::string& fileName);
 
     /// <summary>
     /// ロードが完了したモデルの GPUリソース作成をまとめて行う
@@ -48,7 +48,10 @@ public:
     /// <summary>
     /// ロード済みのモデルを取得(非同期ロード中の場合は nullptr の可能性もある)
     /// </summary>
-    std::shared_ptr<ModelData> GetModelData(const std::string& fileName);
+    ModelData GetModelData(const std::string& fileName);
+
+    //ロード済みのモデルをを判定
+    bool IsModelLoaded(const std::string& fileName) const;
 
     /// <summary>
     /// ロード完了時に呼ばれるコールバックを設定する
@@ -73,13 +76,13 @@ private:
     ModelData LoadModelFile(const std::string& directoryPath, const std::string& fileNameWithExt);
 
     /// 頂点/インデックスバッファを GPU上に作成し、ModelData に登録
-    void CreateGpuResources(const std::string& fileName, std::shared_ptr<ModelData> model);
+    void CreateGpuResources(const std::string& fileName, ModelData model);
 
     // メッシュやマテリアルなどの細かい読み込み
     void LoadMesh(const aiMesh* mesh, ModelData& modelData);
     void LoadMaterial(const aiScene* scene, const aiMesh* mesh, ModelData& modelData);
     void LoadUVTransform(const aiMaterial* material, MaterialData& outMaterial);
-
+    void LoadSkinData(const aiMesh* mesh, ModelData& modelData);
     // アニメーション評価関連
     Vector3 Evaluate(const AnimationCurve<Vector3>& curve, float time);
     Quaternion Evaluate(const AnimationCurve<Quaternion>& curve, float time);
@@ -92,7 +95,7 @@ private:
     // ------------------------------------------------------
     // モデルデータマップ (ファイル名 -> ModelData)
     // ------------------------------------------------------
-    std::unordered_map<std::string, std::shared_ptr<ModelData>> modelDatas_;
+    std::unordered_map<std::string, ModelData> modelDatas_;
     mutable std::mutex modelDataMutex_;
 
     // ------------------------------------------------------
@@ -106,7 +109,7 @@ private:
     // ロードリクエスト
     struct LoadRequest{
         std::string fileName;
-        std::promise<std::shared_ptr<ModelData>> promise;
+        std::promise<ModelData> promise;
     };
     std::queue<LoadRequest> requestQueue_; // リクエスト待ち行列
 
@@ -115,7 +118,7 @@ private:
     // ------------------------------------------------------
     struct LoadingTask{
         std::string fileName;
-        std::shared_ptr<ModelData> modelData;
+        ModelData modelData;
     };
     std::vector<LoadingTask> pendingTasks_;
     std::mutex pendingTasksMutex_;

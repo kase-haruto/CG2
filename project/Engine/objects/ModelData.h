@@ -8,9 +8,10 @@
 #include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
 
 /* c++ */
-#include<vector>
+#include <vector>
 #include <d3d12.h>
 #include <wrl.h>
+#include <map>
 
 struct ModelData{
     std::vector<VertexData> vertices;
@@ -19,11 +20,11 @@ struct ModelData{
     MaterialData material;
 
     //-----------------------------------------------------------
-    // アニメーション情報 (単体例)
+    // アニメーション情報
     //-----------------------------------------------------------
+	std::map<std::string, JointWeightData> skinClusterData;
     Animation animation;
-
-    // あるいは複数アニメーション対応例:
+	Skeleton skeleton;
     // std::vector<Animation> animations;
 	DxVertexBuffer<VertexData> vertexBuffer;
 	DxIndexBuffer<uint32_t> indexBuffer;

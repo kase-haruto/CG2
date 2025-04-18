@@ -59,6 +59,7 @@ private:
     std::unique_ptr<Model> modelField_ = nullptr;
 	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
+	std::unique_ptr<AnimationModel> walkHuman_ = nullptr;
 
 	/* editor =====================================================*/
     std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;

@@ -6,11 +6,11 @@
 SparkParticle::SparkParticle(){}
 
 void SparkParticle::Initialize(const std::string& modelName, const std::string& texturePath){
-	ParticleSystem::SetName("SparkParticle");
+	Particle::SetName("SparkParticle");
 	particleNum_ = 0;
 	emitter_.Initialize(particleNum_);
 	behavior_ = std::make_unique<PtlBehavior_Diffusion>();
-	ParticleSystem::Initialize(modelName, texturePath);
+	Particle::Initialize(modelName, texturePath);
 	isStatic_ = false;
 	autoEmit_ = false;
 	isBillboard_ = false;
@@ -44,7 +44,7 @@ void SparkParticle::Update(){
 		Vector3 forward = Vector3(0.0f, 0.0f, 1.0f);
 
 		// forward → direction への回転を求める
-		Quaternion rotation = Quaternion::FromEuler(forward, direction);
+		Quaternion rotation = Quaternion::FromToQuaternion(forward, direction);
 
 		// 計算した回転を適用
 		particle.transform.rotate = Quaternion::ToEuler(rotation);

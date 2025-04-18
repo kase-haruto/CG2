@@ -3,11 +3,11 @@
 EnemyDeadParticle::EnemyDeadParticle(){}
 
 void EnemyDeadParticle::Initialize(const std::string& modelName, const std::string& texturePath){
-	ParticleSystem::SetName("EnemyDeadParticle");
+	Particle::SetName("EnemyDeadParticle");
 	particleNum_ = 0;
 	emitter_.Initialize(particleNum_);
 	behavior_ = std::make_unique<PtlBehavior_Tornado>();
-	ParticleSystem::Initialize(modelName, texturePath);
+	Particle::Initialize(modelName, texturePath);
 	isStatic_ = false;
 	autoEmit_ = false;
 	isBillboard_ = true;

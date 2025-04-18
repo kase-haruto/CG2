@@ -8,7 +8,7 @@
 
 DemoParticle::DemoParticle(){
 
-	ParticleSystem::SetName("demoParticle");
+	Particle::SetName("demoParticle");
 
 	behavior_ = std::make_unique<PtlBehavior_Diffusion>();
 
@@ -20,7 +20,7 @@ void DemoParticle::Initialize(const std::string& modelName, const std::string& t
 	particleNum_ = 10;
 	emitter_.Initialize(particleNum_);
 
-	ParticleSystem::Initialize(modelName, texturePath);
+	Particle::Initialize(modelName, texturePath);
 
 }
 
@@ -33,7 +33,7 @@ void DemoParticle::Update(){
 
 	// パーティクルが消えた分、新たに生成
 	//if (particles_.size() < emitter_.count){
-	//	ParticleSystem::Emit(emitter_.count - sizeof(particles_.size()));
+	//	Particle::Emit(emitter_.count - sizeof(particles_.size()));
 	//}
 
 	// 座標などの更新

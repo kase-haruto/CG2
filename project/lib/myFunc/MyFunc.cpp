@@ -2,13 +2,14 @@
 #include"ConvertString.h"
 
 #include "Engine/objects/Model/Model.h"
+#include <Engine/graphics/SrvLocator.h>
 
 #include<cmath>
 #include<fstream>
 #include<sstream>
 #include<cassert>
 #include<assimp/Importer.hpp>
-#include<assimp/scene.h>
+
 #include<assimp/postprocess.h>
 #include <numbers>
 
@@ -90,6 +91,21 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return affineMatrix;
 }
 
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate){
+	// 各種変換行列を生成
+	const Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	const Matrix4x4 rotationMatrix = Quaternion::ToMatrix(rotate);
+	const Matrix4x4 translationMatrix = MakeTranslateMatrix(translate);
+
+	// スケーリング → 回転 → 平行移動 の順で合成
+	Matrix4x4 affineMatrix = Matrix4x4::Multiply(
+		Matrix4x4::Multiply(scaleMatrix, rotationMatrix),
+		translationMatrix
+	);
+
+	return affineMatrix;
+}
+
 Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float nearClip, float farClip){
 	Matrix4x4 result;
 	result = {
@@ -142,9 +158,18 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename){
 	Assimp::Importer importer;
 
-	// ファイルパスを作成
-	std::string filePath = directoryPath + "/" + filename + "/" + filename + ".obj";
+	const std::vector<std::string> extensions = {".gltf", ".obj"};
+	std::string filePath;
+	for (const auto& ext : extensions){
+		std::string tryPath = directoryPath + "/" + filename + "/" + filename + ext;
+		std::ifstream file(tryPath);
+		if (file.good()){
+			filePath = tryPath;
+			break;
+		}
+	}
 
+	assert(!filePath.empty() && "モデルファイル（.obj/.gltf）が見つかりません");
 	// Assimpによるシーンの読み込み
 	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	assert(scene && scene->HasMeshes()); // 読み込みエラーやメッシュの有無を確認
@@ -190,6 +215,33 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 		modelData.indices.push_back(face.mIndices[2]);
 	}
 
+	// skinCluster構築用のデータ取得
+	for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex){
+		aiBone* bone = mesh->mBones[boneIndex];
+		std::string jointName = bone->mName.C_Str();
+		JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+
+		// AssimpのOffsetMatrixは逆バインドポーズ行列として正しい（逆にしない！）
+		aiMatrix4x4 offsetMatrixAssimp = bone->mOffsetMatrix;
+		aiVector3D scale, translate;
+		aiQuaternion rotate;
+		offsetMatrixAssimp.Decompose(scale, rotate, translate);
+
+		Matrix4x4 inverseBindPoseMatrix = MakeAffineMatrix(
+			{scale.x, scale.y, scale.z},
+			{rotate.x, -rotate.y, -rotate.z, rotate.w}, // 左手変換
+			{-translate.x, translate.y, translate.z}     // 左手変換
+		);
+		jointWeightData.inverseBindPoseMatrix = inverseBindPoseMatrix;
+
+		for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex){
+			jointWeightData.vertexWeights.push_back({
+				bone->mWeights[weightIndex].mWeight,
+				bone->mWeights[weightIndex].mVertexId
+													});
+		}
+	}
+
 	// マテリアルの読み込み
 	if (scene->HasMaterials()){
 		const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -201,9 +253,12 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 		}
 	}
 
+	// スケルトン構築
+	Node rootNode = ConvertAssimpNode(scene->mRootNode);
+	modelData.skeleton = CreateSkeleton(rootNode);
+
 	return modelData;
 }
-
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename){
 
@@ -258,7 +313,6 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 	return materialData;
 }
 
-
 DirectX::ScratchImage LoadTextureImage(const std::string& filePath){
 
 	DirectX::ScratchImage image {};
@@ -292,8 +346,6 @@ DirectX::ScratchImage LoadTextureImage(const std::string& filePath){
 
 	return mipImages;
 }
-
-
 
 bool IsCollision(const AABB& aabb, const Vector3& point){
 	// pointがaabbのminとmaxの範囲内にあるかチェック
@@ -376,7 +428,7 @@ bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos){
 	Matrix4x4 matVP = CameraManager::GetViewProjectionMatrix();
 
 	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
-	Vector4 clipPos = MultiplyMatrixVector(matVP, Vector4(worldPos.x,worldPos.y,worldPos.z, 1));
+	Vector4 clipPos = MultiplyMatrixVector(matVP, Vector4(worldPos.x, worldPos.y, worldPos.z, 1));
 
 	// 正規化デバイス座標（NDC）に変換
 	if (clipPos.w != 0.0f){
@@ -400,65 +452,65 @@ bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos){
 }
 
 void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate, Vector3& outTrans){
-		// ① 平行移動成分の抽出
-		// ※ row-major の場合、4行目（インデックス 3）の 0～2列目に Translation が入っていると仮定
-		outTrans.x = mat.m[3][0];
-		outTrans.y = mat.m[3][1];
-		outTrans.z = mat.m[3][2];
+	// ① 平行移動成分の抽出
+	// ※ row-major の場合、4行目（インデックス 3）の 0～2列目に Translation が入っていると仮定
+	outTrans.x = mat.m[3][0];
+	outTrans.y = mat.m[3][1];
+	outTrans.z = mat.m[3][2];
 
-		// ② スケール成分の抽出
-		// 各行の上位３成分の長さが各軸方向のスケール（シアーがない前提）
-		outScale.x = std::sqrt(mat.m[0][0] * mat.m[0][0] +
-							   mat.m[0][1] * mat.m[0][1] +
-							   mat.m[0][2] * mat.m[0][2]);
+	// ② スケール成分の抽出
+	// 各行の上位３成分の長さが各軸方向のスケール（シアーがない前提）
+	outScale.x = std::sqrt(mat.m[0][0] * mat.m[0][0] +
+						   mat.m[0][1] * mat.m[0][1] +
+						   mat.m[0][2] * mat.m[0][2]);
 
-		outScale.y = std::sqrt(mat.m[1][0] * mat.m[1][0] +
-							   mat.m[1][1] * mat.m[1][1] +
-							   mat.m[1][2] * mat.m[1][2]);
+	outScale.y = std::sqrt(mat.m[1][0] * mat.m[1][0] +
+						   mat.m[1][1] * mat.m[1][1] +
+						   mat.m[1][2] * mat.m[1][2]);
 
-		outScale.z = std::sqrt(mat.m[2][0] * mat.m[2][0] +
-							   mat.m[2][1] * mat.m[2][1] +
-							   mat.m[2][2] * mat.m[2][2]);
+	outScale.z = std::sqrt(mat.m[2][0] * mat.m[2][0] +
+						   mat.m[2][1] * mat.m[2][1] +
+						   mat.m[2][2] * mat.m[2][2]);
 
-		// ③ 回転成分の抽出
-		// 上位3×3 部分からスケール成分を除く（各行を正規化）
-		// ※ここでは rXY は「行 X, 列 Y」の要素
-		float r00 = mat.m[0][0] / outScale.x;
-		/*float r01 = mat.m[0][1] / outScale.x;
-		float r02 = mat.m[0][2] / outScale.x;*/
+	// ③ 回転成分の抽出
+	// 上位3×3 部分からスケール成分を除く（各行を正規化）
+	// ※ここでは rXY は「行 X, 列 Y」の要素
+	float r00 = mat.m[0][0] / outScale.x;
+	/*float r01 = mat.m[0][1] / outScale.x;
+	float r02 = mat.m[0][2] / outScale.x;*/
 
-		float r10 = mat.m[1][0] / outScale.y;
-		float r11 = mat.m[1][1] / outScale.y;
-		float r12 = mat.m[1][2] / outScale.y;
+	float r10 = mat.m[1][0] / outScale.y;
+	float r11 = mat.m[1][1] / outScale.y;
+	float r12 = mat.m[1][2] / outScale.y;
 
-		float r20 = mat.m[2][0] / outScale.z;
-		float r21 = mat.m[2][1] / outScale.z;
-		float r22 = mat.m[2][2] / outScale.z;
+	float r20 = mat.m[2][0] / outScale.z;
+	float r21 = mat.m[2][1] / outScale.z;
+	float r22 = mat.m[2][2] / outScale.z;
 
-		// オイラー角抽出（回転順序：X→Y→Z、つまり outRotate.x = pitch, outRotate.y = yaw, outRotate.z = roll）
-		// ※以下は一般的な Tait-Bryan 角の抽出例です。※
-		// まず sy = sqrt(r00² + r10²) を求め、特異点（ジンバルロック）をチェックします。
-		float sy = std::sqrt(r00 * r00 + r10 * r10);
-		const float EPSILON = 1e-6f;
-		bool singular = sy < EPSILON;
+	// オイラー角抽出（回転順序：X→Y→Z、つまり outRotate.x = pitch, outRotate.y = yaw, outRotate.z = roll）
+	// ※以下は一般的な Tait-Bryan 角の抽出例です。※
+	// まず sy = sqrt(r00² + r10²) を求め、特異点（ジンバルロック）をチェックします。
+	float sy = std::sqrt(r00 * r00 + r10 * r10);
+	const float EPSILON = 1e-6f;
+	bool singular = sy < EPSILON;
 
-		if (!singular){
-			// 通常ケース
-			outRotate.x = std::atan2(r21, r22);   // ピッチ（X軸回り）
-			outRotate.y = std::atan2(-r20, sy);     // ヨー（Y軸回り）
-			outRotate.z = std::atan2(r10, r00);     // ロール（Z軸回り）
-		} else{
-			// 特異点（ジンバルロック）の場合
-			outRotate.x = std::atan2(-r12, r11);
-			outRotate.y = std::atan2(-r20, sy);
-			outRotate.z = 0.0f;
-		}
+	if (!singular){
+		// 通常ケース
+		outRotate.x = std::atan2(r21, r22);   // ピッチ（X軸回り）
+		outRotate.y = std::atan2(-r20, sy);     // ヨー（Y軸回り）
+		outRotate.z = std::atan2(r10, r00);     // ロール（Z軸回り）
+	} else{
+		// 特異点（ジンバルロック）の場合
+		outRotate.x = std::atan2(-r12, r11);
+		outRotate.y = std::atan2(-r20, sy);
+		outRotate.z = 0.0f;
+	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //							Animation
 /////////////////////////////////////////////////////////////////////////////////////////////
+//アニメーションデータを読み込む関数
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename){
 	Animation animation;// アニメーションデータ
 	Assimp::Importer importer;
@@ -475,7 +527,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
 	for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex){
 		aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];// channelを取得
 		NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];// ノードアニメーションを取得
-		
+
 		//translate
 		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex){
 			aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];// キーフレームを取得
@@ -502,7 +554,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
 		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex){
 			aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
 			KeyframeVector3 keyframe;
-		
+
 			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);
 			keyframe.value = {keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z};
 			nodeAnimation.scale.keyframes.push_back(keyframe);
@@ -510,4 +562,159 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
 
 	}
 	return animation;
+}
+
+//ノードの情報を取得する関数
+Skeleton CreateSkeleton(const Node& rootNode){
+	Skeleton skeleton;
+	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+
+	//名前とindexのマッピングを行いアクセスしやすくする
+	for (const Joint& joint : skeleton.joints){
+		skeleton.jointMap.emplace(joint.name, joint.index);
+	}
+	return skeleton;
+}
+
+//ノードの情報を取得する関数
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints){
+
+	Joint joint;
+	joint.name = node.name;
+	joint.localMatrix = node.localMatrix;
+	joint.skeletonSpaceMatrix = Matrix4x4::MakeIdentity();
+	joint.transform = node.transform;
+	joint.index = static_cast< int32_t >(joints.size());	//現在登録されているjointの数をindexにする
+	joint.parent = parent;
+
+	//skeletonのjoint列に追加
+	joints.push_back(joint);
+
+	for (const Node& child : node.children){
+		//子jointを作成し、そのindexを登録
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+	//自身のindexを返す
+	return joint.index;
+}
+
+Node ConvertAssimpNode(const aiNode* node){
+	Node result;
+
+	aiVector3D scale, translate;
+	aiQuaternion rotate;
+	node->mTransformation.Decompose(scale, rotate, translate);
+
+	result.transform.scale = { scale.x, scale.y, scale.z };
+	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; // 左手系
+	result.transform.translate = { -translate.x, translate.y, translate.z }; // 左手系
+
+	result.localMatrix =
+		MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
+
+	result.name = node->mName.C_Str();
+	result.children.resize(node->mNumChildren);
+
+	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex){
+		result.children[childIndex] = ConvertAssimpNode(node->mChildren[childIndex]);
+	}
+
+	return result;
+}
+
+
+SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device,
+							  const Skeleton& skeleton, const ModelData& modelData){
+	SkinCluster skinCluster;
+
+	//===================================================================*/
+	//	palette用のリソースの確保
+	//===================================================================*/
+	skinCluster.paletteResource = CreateBufferResource(device, sizeof(WellForGPU) * skeleton.joints.size());
+	// マップしてCPU側から書き込めるようにする
+	WellForGPU* mappedPalette = nullptr;
+	skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast< void** >(&mappedPalette));
+	skinCluster.mappedPalette = {mappedPalette, skeleton.joints.size()}; // spanでアクセス
+
+	skinCluster.paletteSrvHandle = SrvLocator::AllocateSrv();
+
+	//===================================================================*/
+	//	palette用のsrvの作成structedBufferアクセス可能にする
+	//===================================================================*/
+	D3D12_SHADER_RESOURCE_VIEW_DESC paletteSrvDesc {};
+	paletteSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	paletteSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	paletteSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	paletteSrvDesc.Buffer.FirstElement = 0;
+	paletteSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	paletteSrvDesc.Buffer.NumElements = static_cast< UINT >(skeleton.joints.size());
+	paletteSrvDesc.Buffer.StructureByteStride = sizeof(WellForGPU);
+
+	// SRVの作成（CPUハンドル側）
+	device->CreateShaderResourceView(
+		skinCluster.paletteResource.Get(),
+		&paletteSrvDesc,
+		skinCluster.paletteSrvHandle.first
+	);
+
+	//===================================================================*/
+	//	influence用のresourceを確保。頂点ごとにinfluence情報を追加できるようにする
+	//===================================================================*/
+	skinCluster.influenceResource = CreateBufferResource(device, sizeof(VertexInfluence) * modelData.vertices.size());
+	VertexInfluence* mappedInfluence = nullptr;
+	skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast< void** >(&mappedInfluence));
+	std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//weightを0にしておく
+	skinCluster.mappedInfluence = {mappedInfluence, modelData.vertices.size()}; // spanでアクセス
+
+	//===================================================================*/
+	//	incluence用のvbvの作成
+	//===================================================================*/
+	skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
+	skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
+	skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
+
+	//===================================================================*/
+	//	inverseBindPoseMatrixを格納する場所を作成して、単位行列を埋める
+	//===================================================================*/
+	skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
+
+	/* ===============================================================
+		std::generate
+	==================================================================
+	シーケンスの各要素に対して、指定された関数を適用し、結果を新しいシーケンスに格納。
+	ここでは、skinCluster.inverseBindPoseMatricesの各要素に対して、
+	Matrix4x4::MakeIdentity()を適用しています。
+	skinCluster.inverseBindPoseMatricesの各要素は単位行列になります。
+	=============================================================== */
+	std::generate(
+		skinCluster.inverseBindPoseMatrices.begin(),
+		skinCluster.inverseBindPoseMatrices.end(),
+		[] (){ return Matrix4x4::MakeIdentity(); }
+	);
+
+
+	//===================================================================*/
+	//	modelDataを解析してinfluenceを埋める
+	//===================================================================*/
+	for (const auto& jointWeight : modelData.skinClusterData){//modelのskinClusterの情報を解析
+		auto it = skeleton.jointMap.find(jointWeight.first);//jointの名前からindexを取得
+		if (it == skeleton.jointMap.end()){//jointの名前が存在しないため次に回す
+			continue;
+		}
+
+		//(*it).secondはjointのindexが入っているので、該当のindexのinverseBindPoseMatを代入
+		skinCluster.inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
+		for (const auto& vertexWeight : jointWeight.second.vertexWeights){
+			auto& currentInfluence = skinCluster.mappedInfluence[vertexWeight.vertexIndex];//該当のvertexIndexのinfluence情報を参照
+			for (uint32_t index = 0; index < kNumMaxInfluence; ++index){//開いているところに入れる
+				if (currentInfluence.weights[index] == 0.0f){
+					currentInfluence.weights[index] = vertexWeight.weight;//weightを代入
+					currentInfluence.jointIndices[index] = (*it).second;//jointのindexを代入
+					break;
+				}
+			}
+		}
+	}
+	return skinCluster;
 }

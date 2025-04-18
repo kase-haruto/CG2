@@ -111,9 +111,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include=".editorconfig.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
     <ClCompile Include="Engine\graphics\Material.cpp" />
@@ -139,7 +136,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
     <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
-    <ClCompile Include="ENGINE\OBJECTS\PARTICLE.CPP" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
@@ -211,7 +207,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
-    <ClCompile Include="Engine\objects\particle\ParticleSystem.cpp" />
+    <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
     <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
@@ -225,11 +221,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
+    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
@@ -336,7 +334,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myMath\Vector4.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
-    <ClInclude Include="Engine\objects\particle\ParticleSystem.h" />
+    <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
     <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
@@ -351,6 +349,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
     <ClInclude Include="Engine\core\UI\SelectionManager.h" />
+    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -358,6 +357,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -394,6 +394,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Resources\shaders\Particle.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Resources\shaders\SkinningObject3d.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
@@ -480,6 +484,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

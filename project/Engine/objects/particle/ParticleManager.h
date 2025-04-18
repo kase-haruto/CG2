@@ -2,43 +2,41 @@
 
 #include <vector>
 #include <memory>
-#include "ParticleSystem.h"
+#include "Particle.h"
 
 class ParticleManager{
 public:
-    //===================================================================*/
-    //                   singleton
-    //===================================================================*/
-    static ParticleManager* GetInstance();
-
-    // コピーコンストラクタと代入演算子を削除
-    ParticleManager(const ParticleManager&) = delete;
-    ParticleManager& operator=(const ParticleManager&) = delete;
+	//===================================================================*/
+	//                   private Methods
+	//===================================================================*/
+	ParticleManager();
+	~ParticleManager() = default;
 
 public:
-    //===================================================================*/
-    //                   public Methods
-    //===================================================================*/
+	//===================================================================*/
+	//                   public Methods
+	//===================================================================*/
 
-    // 粒子システムを追加
-    void AddSystem(ParticleSystem* system);
-    void RemoveSystem(ParticleSystem* system);
-    // 描画処理
-    void Draw();
+	// 粒子システムを追加
+	void AddParticle(std::unique_ptr<Particle>&& particle);
+	// インデックス指定で削除
+	bool RemoveParticleAt(int index);
 
-    void Finalize();
+	// ポインタ指定で削除（Particle* と一致するものを探す）
+	bool RemoveParticle(Particle* target);
 
-    void ShowDebugUI();
+	void Update();
+	// 描画処理
+	void Draw();
+
+	void Finalize();
+
+	void ShowDebugUI();
+
+	//--------- accessor -----------------------------------------------------
+	const std::vector<std::unique_ptr<Particle>>& GetParticles() const{return particles_;} // 粒子システムの取得
+	Particle* GetParticle(int index){ return particles_[index].get(); } // 指定したインデックスの粒子システムを取得
 
 private:
-    //===================================================================*/
-    //                   private Methods
-    //===================================================================*/
-
-    ParticleManager();
-    ~ParticleManager() = default;
-
-
-private:
-    std::vector<ParticleSystem*> systems_; // 管理する粒子システム
+	std::vector<std::unique_ptr<Particle>> particles_; // 管理する粒子システム
 };

@@ -2,9 +2,9 @@
 
 //* lib
 #include "lib/myFunc/Random.h"
-#include "../ParticleSystem.h"
+#include "../Particle.h"
 
 
-void PtlBehavior_Diffusion::ApplyBehavior([[maybe_unused]] ParticleSystem& particle){
+void PtlBehavior_Diffusion::ApplyBehavior([[maybe_unused]] Particle& particle){
 	// パーティクルの位置をランダムに変更
 }
