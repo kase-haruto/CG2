@@ -48,11 +48,7 @@ void BaseParticle::Update(){
 
 			ComPtr<ID3D12Device>device = GraphicsGroup::GetInstance()->GetDevice();
 			//=== 頂点バッファ初期化 ===//
-			size_t vertexCount = modelData_ ? modelData_->vertices.size() : 0;
-			if (vertexCount == 0){
-				throw std::runtime_error("ModelData has no vertices.");
-			}
-			modelData_->vertexBuffer.Initialize(device, static_cast< UINT >(vertexCount));
+			modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
 			modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
 		}
 	} else{
@@ -135,8 +131,6 @@ void BaseParticle::Update(){
 
 }
 
-
-
 void BaseParticle::Draw(){
 	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
 
@@ -212,19 +206,27 @@ void BaseParticle::ImGui(){
 void BaseParticle::VisualSettingGui(){
 
 	/* model/texture settings =======================*/
-
+#pragma region model/texture settings
 	//テクスチャの変更
-	ImGui::Text("Texture Name");
+	// ===== 表示：現在のモデルとテクスチャ ===== //
+	ImGui::Text("Model Name:");
 	ImGui::SameLine();
 	ImGui::Text(modelName_.c_str());
-	ImGui::SeparatorText("Chose Texture");
+
+	ImGui::Text("Texture Name:");
+	ImGui::SameLine();
+	ImGui::Text(textureName_.c_str()); // ※ 新しくメンバ変数にしてもOK
+
+	// ===== テクスチャ選択 UI ===== //
+	ImGui::SeparatorText("Choose Texture");
 	auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
-	if (ImGui::BeginCombo("Texture", modelName_.c_str())){
+	if (ImGui::BeginCombo("Texture", textureName_.c_str())){
 		for (const auto& texture : textures){
-			bool is_selected = (modelName_ == texture.first);
+			bool is_selected = (textureName_ == texture.first);
 			if (ImGui::Selectable(texture.first.c_str(), is_selected)){
-				modelName_ = texture.first; // 選択したテクスチャ名を更新
-				textureHandle = TextureManager::GetInstance()->LoadTexture(texture.first); // テクスチャを変更
+				textureName_ = texture.first;
+				textureHandle = TextureManager::GetInstance()->LoadTexture(textureName_);
+
 			}
 			if (is_selected){
 				ImGui::SetItemDefaultFocus();
@@ -233,10 +235,30 @@ void BaseParticle::VisualSettingGui(){
 		ImGui::EndCombo();
 	}
 
-	//モデルの変更
-	ImGui::SeparatorText("Chose Model");
-	//const std::string modelName = ModelManager::GetInstance()->GetLoadedModelNames();
-	//auto& models = ;
+	// ===== モデル選択 UI ===== //
+	ImGui::SeparatorText("Choose Model");
+	const auto& models = ModelManager::GetInstance()->GetLoadedModelNames(); // 仮にこの関数があれば
+	if (ImGui::BeginCombo("Model", modelName_.c_str())){
+		for (const auto& model : models){
+			bool is_selected = (modelName_ == model);
+			if (ImGui::Selectable(model.c_str(), is_selected)){
+				modelName_ = model;
+				modelData_ = ModelManager::GetInstance()->GetModelData(modelName_);
+				if (modelData_.has_value()){
+					// モデルデータがある場合、テクスチャを更新
+					const auto& device = GraphicsGroup::GetInstance()->GetDevice();
+					modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
+					modelData_->indexBuffer.Initialize(device, UINT(modelData_->indices.size()));
+				}
+			}
+			if (is_selected){
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+#pragma endregion
 
 	/* color settings =======================*/
 #pragma region color settings
