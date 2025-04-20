@@ -53,6 +53,7 @@ void TestScene::Initialize(){
 	teapot_->SetName("teapot");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
+	walkHuman_ = std::make_unique<AnimationModel>("sneakWalk.gltf");
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ void TestScene::Update(){
 	//test
 	bunny_->Update();
 	teapot_->Update();
+	walkHuman_->AnimationUpdate();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -131,6 +133,7 @@ void TestScene::Draw3dObject(){
 	//test
 	bunny_->Draw();
 	teapot_->Draw();
+	walkHuman_->Draw();
 
 	/* =======================================================================================
 				particleの描画

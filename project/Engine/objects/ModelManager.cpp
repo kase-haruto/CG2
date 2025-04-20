@@ -177,6 +177,7 @@ void ModelManager::StartUpLoad(){
     LoadModel("teapot.obj");
     LoadModel("terrain.obj");
 	LoadModel("AnimatedCube.gltf");
+	LoadModel("dance.gltf");
 	LoadModel("walk.gltf");
 	LoadModel("sneakWalk.gltf");
 	LoadModel("simpleSkin.gltf");
