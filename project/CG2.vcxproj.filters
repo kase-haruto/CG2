@@ -401,6 +401,9 @@
     <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -653,6 +656,9 @@
     <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\scene\Context\SceneContext.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

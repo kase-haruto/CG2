@@ -22,6 +22,4 @@ void BaseScene::Draw(){
 	// 3Dオブジェクトの描画
 	sceneContext_->meshRenderer_->DrawAll();
 
-	// プリミティブオブジェクトの描画
-	PrimitiveDrawer::GetInstance()->Render();
 }

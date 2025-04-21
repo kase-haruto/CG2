@@ -8,3 +8,8 @@ struct VertexData{
 	Vector2 texcoord;
 	Vector3 normal;
 };
+
+struct VertexPosColor{
+	Vector3 pos;   // xyz座標
+	Vector4 color; // RGBA
+};

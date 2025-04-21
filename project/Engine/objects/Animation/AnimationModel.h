@@ -13,7 +13,6 @@ public:
 	~AnimationModel() override = default;
 
 	void Initialize() override;
-	void AnimationUpdate() override;
 	void Update() override;
 	void OnModelLoaded() override;
 	void Draw();
@@ -57,13 +56,14 @@ private:
 	//===================================================================*/
 	//                    private variables
 	//===================================================================*/
-	float animationTime_ = 0.0f;        //< アニメーションの経過時間
+	float animationTime_ = 0.0f;		//< アニメーションの経過時間
 
-	Animation animationData_;               //< アニメーションデータ
+	Animation animationData_;			//< アニメーションデータ
 
-	SkinCluster skinCluster_;           //< スキンクラスター
-	D3D12_VERTEX_BUFFER_VIEW vbvs_[2]; //< スキンクラスター用のバッファビュー
+	SkinCluster skinCluster_;			//< スキンクラスター
+	D3D12_VERTEX_BUFFER_VIEW vbvs_[2];	//< スキンクラスター用のバッファビュー
 
 public:
-	float animationSpeed_ = 1.0f;       //< アニメーションの再生速度
+	float animationSpeed_ = 1.0f;		//< アニメーションの再生速度
+	bool isDrawSkeleton_ = false;		//< スケルトンを描画するかどうか
 };

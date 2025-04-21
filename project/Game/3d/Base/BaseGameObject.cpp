@@ -29,7 +29,9 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 	}
 }
 
-BaseGameObject::BaseGameObject(const std::string& modelName, std::function<void(IMeshRenderable*)> registerCB){
+BaseGameObject::BaseGameObject(const std::string& modelName,
+							   std::optional<std::string> objectName,
+							   std::function<void(IMeshRenderable*)> registerCB){
 	auto dotPos = modelName.find_last_of('.');
 	if (dotPos != std::string::npos){
 		std::string extension = modelName.substr(dotPos);
@@ -44,12 +46,19 @@ BaseGameObject::BaseGameObject(const std::string& modelName, std::function<void(
 			objectModelType_ = ObjectModelType::ModelType_Animation;
 			model_ = std::make_unique<AnimationModel>(modelName);
 		}
-		// その他の拡張子の場合はここに追加
 		else{
-			// Handle other extensions or set a default type
 			objectModelType_ = ObjectModelType::ModelType_Unknown;
 		}
 
+	}
+
+	// 名前を設定
+	if (objectName.has_value()){
+		SetName(objectName.value());
+	} else{
+		// 名前が指定されていない場合は、デフォルトの名前を設定
+		const std::string defaultName = modelName + "object";
+		SetName(defaultName);
 	}
 
 	//モデル登録コールバック
@@ -65,30 +74,10 @@ void BaseGameObject::Update(){
 
 	if (objectModelType_ != ObjectModelType::ModelType_Unknown){
 
-		// staticModel
-		if (objectModelType_ == ObjectModelType::ModelType_Static){
-			StaticModelUpdate();
-		}
-
-		// animationModel
-		else if (objectModelType_ == ObjectModelType::ModelType_Animation){
-			AnimationModelUpdate();
-		}
-
-	}
-
-}
-
-void BaseGameObject::AnimationModelUpdate(){
-	if (model_){
-		model_->AnimationUpdate();
-	}
-}
-
-void BaseGameObject::StaticModelUpdate(){
-	if (model_){
 		model_->Update();
+
 	}
+
 }
 
 void BaseGameObject::Draw(){

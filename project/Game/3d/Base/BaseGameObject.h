@@ -24,7 +24,9 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
-	BaseGameObject(const std::string& modelName, std::function<void(IMeshRenderable*)>registerCB);
+	BaseGameObject(const std::string& modelName,
+				   std::optional<std::string> objectName,
+				   std::function<void(IMeshRenderable*)>registerCB);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
@@ -37,15 +39,8 @@ protected:
 	//===================================================================*/
 	//                    protected methods
 	//===================================================================*/
-	void AnimationModelUpdate();
-	void StaticModelUpdate();
-
-protected:
-	//===================================================================*/
-	//                    protected methods
-	//===================================================================*/
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
-	std::unique_ptr<AnimationModel> animationModel_ = nullptr;	// アニメーションモデル
+	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
 protected:
 	//===================================================================*/

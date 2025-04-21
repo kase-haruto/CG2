@@ -201,6 +201,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -220,6 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
@@ -346,6 +349,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\scene\Context\SceneContext.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

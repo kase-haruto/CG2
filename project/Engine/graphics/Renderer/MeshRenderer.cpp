@@ -1,4 +1,5 @@
 #include "MeshRenderer.h"
+#include <lib/myFunc/PrimitiveDrawer.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録
@@ -21,4 +22,6 @@ void MeshRenderer::DrawAll(){
 	for (auto* mesh : renderables_){
 		if (mesh) mesh->Draw();
 	}
+
+	PrimitiveDrawer::GetInstance()->Render();
 }

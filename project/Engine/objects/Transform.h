@@ -1,5 +1,6 @@
 #pragma once
 #include"lib/myMath/Vector3.h"
+#include <lib/myMath/Vector2.h>
 #include "lib/myMath/Quaternion.h"
 
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
@@ -24,6 +25,18 @@ struct EulerTransform{
 		translate = {0.0f,0.0f,0.0f};
 	}
 
+	void ShowImGui(const std::string& lavel = "Transform");
+};
+
+struct Transform2D{
+	Vector2 scale;
+	float rotate;
+	Vector2 translate;
+	void Initialize(){
+		scale = {1.0f,1.0f};
+		rotate =0.0f;
+		translate = {0.0f,0.0f};
+	}
 	void ShowImGui(const std::string& lavel = "Transform");
 };
 
