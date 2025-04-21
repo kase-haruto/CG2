@@ -234,7 +234,7 @@
     <ClCompile Include="Engine\scene\GameScene.cpp">
       <Filter>Engine\project\scene\game_scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\IScene.cpp">
+    <ClCompile Include="Engine\scene\Interface\IScene.cpp">
       <Filter>Engine\project\scene\interface_scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\scene\TestScene.cpp">
@@ -352,9 +352,7 @@
     <ClCompile Include="Engine\graphics\camera\Camera3d.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
-    <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
-    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
@@ -366,8 +364,6 @@
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
-    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
-    <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\core\EngineUI.cpp" />
@@ -393,8 +389,6 @@
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
-    <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
-    <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
@@ -403,6 +397,10 @@
     <ClCompile Include="Engine\graphics\Material.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
+    <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
+    <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -426,7 +424,7 @@
     <ClInclude Include="Engine\scene\GameScene.h">
       <Filter>Engine\project\scene\game_scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\IScene.h">
+    <ClInclude Include="Engine\scene\Interface\IScene.h">
       <Filter>Engine\project\scene\interface_scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\scene\TestScene.h">
@@ -598,9 +596,7 @@
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
     <ClInclude Include="lib\myFunc\Random.h" />
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
@@ -612,8 +608,6 @@
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
-    <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\core\EngineUI.h" />
@@ -644,8 +638,6 @@
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\physics\light\LightData.h" />
-    <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
-    <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
@@ -657,6 +649,10 @@
     <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
+    <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
+    <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
+    <ClInclude Include="Engine\scene\Context\SceneContext.h" />
+    <ClInclude Include="Engine\scene\Base\BaseScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

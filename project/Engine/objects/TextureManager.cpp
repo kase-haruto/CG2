@@ -2,7 +2,7 @@
 
 /* engine */
 #include "../graphics/GraphicsGroup.h"
-#include "engine/graphics/SrvLocator.h"
+#include <Engine/graphics/SrvLocator.h>
 #include "lib/ImGuiManager.h"
 
 /* c++ */
@@ -17,6 +17,7 @@ TextureManager* TextureManager::GetInstance(){
 void TextureManager::StartUpLoad(){
     LoadTexture("uvChecker.png");
     LoadTexture("MonsterBall.png");
+
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{

@@ -3,21 +3,22 @@
 ////////////////////////////////////////////////////////////
 //	include
 ////////////////////////////////////////////////////////////
-#include "IScene.h"
+#include "Engine/scene/Base/BaseScene.h"
 
 /* objects */
-#include "engine/objects/ModelBuilder.h"
-#include "engine/Editor/UiEditor.h"
-#include "Engine/core/UI/ParticleEditPanel.h"
-#include "Engine/objects/Sprite.h"  
+#include <Engine/objects/ModelBuilder.h>
+#include <Engine/Editor/UiEditor.h>
+#include <Engine/core/UI/ParticleEditPanel.h>
+#include <Engine/objects/Sprite.h>  
+
 
 /* graphics */
-#include "engine/physics/light/DirectionalLight.h"
-#include "engine/physics/light/PointLight.h"
-#include "engine/graphics/FogEffect.h"
+#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/physics/light/PointLight.h>
+#include <Engine/graphics/FogEffect.h>
 
 /* object */
-#include "lib/myFunc/PrimitiveDrawer.h"
+#include <lib/myFunc/PrimitiveDrawer.h>
 
 /* c++ */
 #include <vector>
@@ -26,12 +27,12 @@
 
 //デバッグ関連//
 #ifdef _DEBUG
-#include"lib/ImGuiManager.h"
-#include"externals/imgui/imgui.h"
+#include<lib/ImGuiManager.h>
+#include<Externals/imgui/imgui.h>
 #endif // _DEBUG
 
 class GameScene final :
-	public IScene{
+	public BaseScene{
 public:
 	GameScene();
 	GameScene(DxCore* dxCore);
@@ -39,17 +40,16 @@ public:
 
 	void Initialize()override;
 	void Update()override;
-	void Draw()override;
 	void CleanUp()override;
 
 private:
 	/* graphics =====================================================*/
 	std::unique_ptr<FogEffect>fog_ = nullptr;
 
-	/* objects ====================================================*/
+	/* objects ======================================================*/
 	std::unique_ptr<Model> modelField_ = nullptr;
 
-	/* editor =====================================================*/
+	/* editor =======================================================*/
 	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
 	std::unique_ptr<UIEditor> uiEditor_ = nullptr;
 };

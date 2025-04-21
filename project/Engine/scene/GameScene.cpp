@@ -21,15 +21,21 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 GameScene::GameScene(){}
 
-GameScene::GameScene(DxCore* dxCore) : IScene(dxCore){
+GameScene::GameScene(DxCore* dxCore) 
+	: BaseScene(dxCore){
 	// シーン名を設定
-	IScene::SetSceneName("GameScene");
+	//IScene::SetSceneName("GameScene");
+	SetSceneName("GameScene");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
+	auto registerToRenderer = [this] (IMeshRenderable* mesh){
+		sceneContext_->meshRenderer_->Register(mesh);
+		};
+
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	//=========================
 	// グラフィック関連
@@ -39,6 +45,7 @@ void GameScene::Initialize(){
 	modelField_ = std::make_unique<Model>("ground.obj");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
+	sceneContext_->meshRenderer_->Register(modelField_.get());
 
 	//===================================================================*/
 	//                    editor
@@ -60,32 +67,6 @@ void GameScene::Update(){
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 }
 
-void GameScene::Draw(){
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					3dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 3Dオブジェクト描画
-	auto commandList_ = pDxCore_->GetCommandList();
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
-	//地面の描画
-	modelField_->Draw();
-
-	PrimitiveDrawer::GetInstance()->Render();
-#pragma endregion
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					2dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 2Dオブジェクト描画
-
-	
-#pragma endregion
-}
 
 void GameScene::CleanUp(){
 }

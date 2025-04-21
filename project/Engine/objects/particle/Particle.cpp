@@ -1,7 +1,7 @@
 #include "Particle.h"
 
 #include "ParticleManager.h"
-#include "lib/myFunc/Random.h"
+#include <lib/myFunc/Random.h>
 
 // lib
 #include <externals/imgui/imgui.h>
@@ -38,13 +38,13 @@ void Particle::ImGui(){
 	}
 
 	// Emitterセクション
-	if (ImGui::TreeNode("Emitter Parameter")){
+	if (ImGui::TreeNode(" Emitter Parameter")){
 		ImGui::Checkbox("isBillboard", &isBillboard_);
-		ImGui::DragFloat3("emitter:pos", &emitter_.transform.translate.x, 0.01f);
-		ImGui::DragFloat3("emitter:rotate", &emitter_.transform.rotate.x, 0.01f);
-		ImGui::DragFloat("emitter:frequencyTime", &emitter_.frequency, 0.1f);
+		ImGui::DragFloat3(" Emitter:pos", &emitter_.transform.translate.x, 0.01f);
+		ImGui::DragFloat3(" Emitter:rotate", &emitter_.transform.rotate.x, 0.01f);
+		ImGui::DragFloat(" Emitter:frequencyTime", &emitter_.frequency, 0.1f);
 		int count = emitter_.count;
-		ImGui::DragInt("emitter:count", &count, 1);
+		ImGui::DragInt(" Emitter:count", &count, 1);
 		emitter_.count = count;
 		BaseParticle::ImGui();
 
@@ -56,13 +56,6 @@ void Particle::ImGui(){
 		ImGui::TreePop();
 	}
 
-	// Behaviorセクション
-	if (ImGui::TreeNode("Behavior")){
-		if (behavior_){
-			behavior_->ShowImGui();
-		}
-		ImGui::TreePop();
-	}
 }
 
 
@@ -96,22 +89,20 @@ void Particle::Save(const std::string& filename){
 			e["transform"] = t;
 		}
 
-		j["emitter"] = e;
+		j["Emitter"] = e;
 	}
 
 	// 発生面フラグ
 	{
 		json faces;
-		faces["emitPosX"] = emitPosX_;
-		faces["emitNegX"] = emitNegX_;
-		faces["emitPosY"] = emitPosY_;
-		faces["emitNegY"] = emitNegY_;
-		faces["emitPosZ"] = emitPosZ_;
-		faces["emitNegZ"] = emitNegZ_;
-		j["faces"] = faces;
+		faces["EmitPosX"] = emitPosX_;
+			faces["EmitNegX"] = emitNegX_;
+			faces["EmitPosY"] = emitPosY_;
+			faces["EmitNegY"] = emitNegY_;
+			faces["EmitPosZ"] = emitPosZ_;
+			faces["EmitNegZ"] = emitNegZ_;
+			j["faces"] = faces;
 	}
-
-	behavior_->SaveJson(j);
 
 	// ファイルへ書き出し
 	std::ofstream ofs(filename);
@@ -157,54 +148,52 @@ void Particle::Load(const std::string& filename){
 	}
 
 	// emitter
-	if (j.contains("emitter")){
-		auto e = j["emitter"];
+	if (j.contains("Emitter")){
+		auto e = j["Emitter"];
 		if (e.contains("count")){
 			emitter_.count = e["count"].get<uint32_t>();
 		}
-		if (e.contains("frequency")){
-			emitter_.frequency = e["frequency"].get<float>();
-		}
-		if (e.contains("frequencyTime")){
-			emitter_.frequencyTime = e["frequencyTime"].get<float>();
-		}
+	if (e.contains("frequency")){
+		emitter_.frequency = e["frequency"].get<float>();
+	}
+	if (e.contains("frequencyTime")){
+		emitter_.frequencyTime = e["frequencyTime"].get<float>();
+	}
 
-		// Transform
-		if (e.contains("transform")){
-			auto t = e["transform"];
-			if (t.contains("translate")){
-				auto tr = t["translate"].get<std::vector<float>>();
-				if (tr.size() == 3){
-					emitter_.transform.translate = {tr[0], tr[1], tr[2]};
-				}
+	// Transform
+	if (e.contains("transform")){
+		auto t = e["transform"];
+		if (t.contains("translate")){
+			auto tr = t["translate"].get<std::vector<float>>();
+			if (tr.size() == 3){
+				emitter_.transform.translate = {tr[0], tr[1], tr[2]};
 			}
-			if (t.contains("rotate")){
-				auto rr = t["rotate"].get<std::vector<float>>();
-				if (rr.size() == 3){
-					emitter_.transform.rotate = {rr[0], rr[1], rr[2]};
-				}
+		}
+		if (t.contains("rotate")){
+			auto rr = t["rotate"].get<std::vector<float>>();
+			if (rr.size() == 3){
+				emitter_.transform.rotate = {rr[0], rr[1], rr[2]};
 			}
-			if (t.contains("scale")){
-				auto sc = t["scale"].get<std::vector<float>>();
-				if (sc.size() == 3){
-					emitter_.transform.scale = {sc[0], sc[1], sc[2]};
-				}
+		}
+		if (t.contains("scale")){
+			auto sc = t["scale"].get<std::vector<float>>();
+			if (sc.size() == 3){
+				emitter_.transform.scale = {sc[0], sc[1], sc[2]};
 			}
 		}
 	}
+}
 
-	// 発生面フラグの読み込み
-	if (j.contains("faces")){
-		auto f = j["faces"];
-		if (f.contains("emitPosX")) emitPosX_ = f["emitPosX"].get<bool>();
-		if (f.contains("emitNegX")) emitNegX_ = f["emitNegX"].get<bool>();
-		if (f.contains("emitPosY")) emitPosY_ = f["emitPosY"].get<bool>();
-		if (f.contains("emitNegY")) emitNegY_ = f["emitNegY"].get<bool>();
-		if (f.contains("emitPosZ")) emitPosZ_ = f["emitPosZ"].get<bool>();
-		if (f.contains("emitNegZ")) emitNegZ_ = f["emitNegZ"].get<bool>();
-	}
-
-	behavior_->LoadJson(j);
+// 発生面フラグの読み込み
+if (j.contains("faces")){
+	auto f = j["faces"];
+	if (f.contains("EmitPosX")) emitPosX_ = f["EmitPosX"].get<bool>();
+	if (f.contains("EmitNegX")) emitNegX_ = f["EmitNegX"].get<bool>();
+	if (f.contains("EmitPosY")) emitPosY_ = f["EmitPosY"].get<bool>();
+	if (f.contains("EmitNegY")) emitNegY_ = f["EmitNegY"].get<bool>();
+	if (f.contains("EmitPosZ")) emitPosZ_ = f["EmitPosZ"].get<bool>();
+	if (f.contains("EmitNegZ")) emitNegZ_ = f["EmitNegZ"].get<bool>();
+}
 
 }
 

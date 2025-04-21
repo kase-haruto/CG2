@@ -8,6 +8,7 @@
 //* c++ lib *//
 #include <memory>
 #include <string>
+#include <functional>
 
 class BaseGameObject
 	:public SceneObject{
@@ -23,6 +24,7 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
+	BaseGameObject(const std::string& modelName, std::function<void(IMeshRenderable*)>registerCB);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 

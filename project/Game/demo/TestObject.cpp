@@ -4,11 +4,11 @@
 TestObject::TestObject(const std::string& modelName)
 :BaseGameObject(modelName){
 
-	SphereCollider::Initialize(model_->transform.scale.x * 0.5f + 0.1f);
+	SphereCollider::Initialize(model_->worldTransform_.scale.x * 0.5f + 0.1f);
 
 	CollisionManager::GetInstance()->AddCollider(this);
 
-	model_->transform.translate.x = 3.0f;
+	model_->worldTransform_.translation.x = 3.0f;
 }
 
 TestObject::~TestObject(){
@@ -25,7 +25,7 @@ void TestObject::Initialize(){
 
 void TestObject::Update(){
 
-	shape_.center = model_->transform.translate;
+	shape_.center = model_->worldTransform_.translation;
 
 	BaseGameObject::Update();
 

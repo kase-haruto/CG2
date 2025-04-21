@@ -1,4 +1,4 @@
-﻿//#include "Sphere.h"
+//#include "Sphere.h"
 //
 //#include "../physics/DirectionalLight.h"
 //#include "../graphics/GraphicsGroup.h"
@@ -7,8 +7,8 @@
 //#include "lib/myfunc/MyFunc.h"
 //
 ////* externals *//
-//#include "engine/objects/TextureManager.h"
-//#include "externals/imgui/imgui.h"
+//#include <Engine/objects/TextureManager.h"
+//#include <Externals/imgui/imgui.h"
 //
 ///* c++ */
 //#include<numbers>
