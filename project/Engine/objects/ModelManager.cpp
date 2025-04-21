@@ -1,7 +1,7 @@
 #include "ModelManager.h"
 
-#include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
-#include "Engine/core/DirectX/Buffer/DxIndexBuffer.h"
+#include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
+#include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
 
 // static 変数初期化
 ModelManager* ModelManager::instance_ = nullptr;
@@ -177,7 +177,6 @@ void ModelManager::StartUpLoad(){
 	LoadModel("teapot.obj");
 	LoadModel("terrain.obj");
 	LoadModel("AnimatedCube.gltf");
-	LoadModel("dance.gltf");
 	LoadModel("walk.gltf");
 	LoadModel("sneakWalk.gltf");
 	LoadModel("simpleSkin.gltf");

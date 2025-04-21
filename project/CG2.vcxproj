@@ -111,10 +111,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
     <ClCompile Include="Engine\graphics\Material.cpp" />
-    <ClCompile Include="Engine\objects\particle\EnemyDeadParticle.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
@@ -175,7 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\physics\Sphere.cpp" />
     <ClCompile Include="Engine\physics\Triangle.cpp" />
     <ClCompile Include="Engine\scene\GameScene.cpp" />
-    <ClCompile Include="Engine\scene\IScene.cpp" />
+    <ClCompile Include="Engine\scene\Interface\IScene.cpp" />
     <ClCompile Include="Engine\scene\TestScene.cpp" />
     <ClCompile Include="externals\GlobalVariable\GlobalVariables.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -191,6 +191,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -205,32 +206,29 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
       <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MultiThreaded</RuntimeLibrary>
     </ClCompile>
-    <ClCompile Include="Engine\objects\particle\particleBehavior\ParticleBehavior.cpp" />
-    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.cpp" />
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
-    <ClCompile Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.cpp" />
-    <ClCompile Include="Engine\objects\particle\TornadoParticle.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
-    <ClCompile Include="Engine\objects\particle\SparkParticle.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
+    <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\UI\EditorPanel.h" />
-    <ClInclude Include="Engine\objects\particle\EnemyDeadParticle.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
     <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
     <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
@@ -303,7 +301,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\physics\Sphere.h" />
     <ClInclude Include="Engine\physics\Triangle.h" />
     <ClInclude Include="Engine\scene\GameScene.h" />
-    <ClInclude Include="Engine\scene\IScene.h" />
+    <ClInclude Include="Engine\scene\Interface\IScene.h" />
     <ClInclude Include="Engine\scene\TestScene.h" />
     <ClInclude Include="externals\GlobalVariable\GlobalVariables.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -320,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
+    <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -332,13 +331,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myMath\Vector2.h" />
     <ClInclude Include="lib\myMath\Vector3.h" />
     <ClInclude Include="lib\myMath\Vector4.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\ParticleBehavior.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Diffusion.h" />
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
-    <ClInclude Include="Engine\objects\particle\particleBehavior\PtlBehavior_Tornado.h" />
-    <ClInclude Include="Engine\objects\particle\TornadoParticle.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
@@ -346,10 +341,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myMath\Quaternion.h" />
     <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
-    <ClInclude Include="Engine\objects\particle\SparkParticle.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
     <ClInclude Include="Engine\core\UI\SelectionManager.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
+    <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
+    <ClInclude Include="Engine\scene\Context\SceneContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

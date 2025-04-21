@@ -178,14 +178,14 @@ void System::EditorDraw(){
 	/*=======================================================================================
 				モデルの描画
 	========================================================================================*/
-	auto commandList_ = dxCore_->GetCommandList();
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
+	//auto commandList_ = dxCore_->GetCommandList();
+	//// light
+	//LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
+	//LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
+	//// camera
+	//CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
-	modelBuilder_->Draw();
+	//modelBuilder_->Draw();
 
 	/*=======================================================================================
 				ui描画
