@@ -94,6 +94,8 @@ void TestScene::Update(){
 
 
 void TestScene::CleanUp(){
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
 	SceneObjectManager::GetInstance()->ClearAllObject();
 }
 
