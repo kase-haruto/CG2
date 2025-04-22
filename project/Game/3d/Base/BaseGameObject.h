@@ -72,7 +72,11 @@ public:
 		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
 		return worldPos;
 	}
-
+	void SetColor(const Vector4& color){
+		if (model_){
+			model_->SetColor(color);
+		}
+	}
 	BaseModel* GetModel()const{ return model_.get(); }
 };
 

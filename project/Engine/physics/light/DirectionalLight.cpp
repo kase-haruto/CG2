@@ -61,9 +61,12 @@ void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandLi
 
 void DirectionalLight::ShowGui(){
 	SceneObject::ShowGui();
-
+#ifdef _DEBUG
 	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
+#endif // _DEBUG
+
+	
 }
 

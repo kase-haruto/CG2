@@ -13,7 +13,7 @@ SceneManager::SceneManager(DxCore* dxCore)
 	}
 
 	// 最初は TITLE シーンにしておく
-	currentSceneNo_ = static_cast< int >(SceneType::PLAY);
+	currentSceneNo_ = static_cast< int >(SceneType::TEST);
 	nextSceneNo_ = currentSceneNo_;
 }
 

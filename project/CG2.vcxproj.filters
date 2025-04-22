@@ -356,7 +356,6 @@
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
-    <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
@@ -603,7 +602,6 @@
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
-    <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
