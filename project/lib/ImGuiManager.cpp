@@ -4,7 +4,11 @@
 #include "../Engine/core/WinApp.h"
 #include "lib/myFunc/DxFunc.h"
 
+#ifdef _DEBUG
 #include "imgui/ImGuizmo.h"
+
+#endif // _DEBUG
+
 
 #include <externals/imgui/imgui_impl_dx12.h>
 #include <externals/imgui/imgui_impl_win32.h>
@@ -65,7 +69,11 @@ void ImGuiManager::Begin(){
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+#ifdef _DEBUG
 	ImGuizmo::BeginFrame();
+
+#endif // _DEBUG
+
 
 	ComPtr<ID3D12GraphicsCommandList> commandList = pDxCore_->GetCommandList();
 	//でスクリプタヒープの配列をセットする

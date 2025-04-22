@@ -10,6 +10,7 @@
 #include "../core/Input.h"
 #include "Engine/core/Audio/Audio.h"
 #include "../graphics/camera/CameraManager.h"
+#include "Engine/objects/SceneObjectManager.h"
 #include "Engine/objects/particle/ParticleManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/core/DirectX/DxCore.h"
@@ -69,5 +70,7 @@ void GameScene::Update(){
 
 
 void GameScene::CleanUp(){
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
+	SceneObjectManager::GetInstance()->ClearAllObject();
 }
-

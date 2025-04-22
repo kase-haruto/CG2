@@ -59,7 +59,7 @@ void TestScene::Initialize(){
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
 	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf","human", registerToRenderer);
-
+	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +94,8 @@ void TestScene::Update(){
 
 
 void TestScene::CleanUp(){
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
 	SceneObjectManager::GetInstance()->ClearAllObject();
 }
 

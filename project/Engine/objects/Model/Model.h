@@ -23,7 +23,7 @@ public:
 	//=============
 	void SetSize(const Vector3& size){ worldTransform_.scale = size; }
 	void SetUvScale(const Vector3& uvScale) override{ uvTransform.scale = uvScale; }
-	void SetColor(const Vector4& color) override{ RGBa = color; }
+	void SetColor(const Vector4& color) override{ materialData_.color = color; }
 	const Vector4& GetColor() const override{ return RGBa; }
 
 private:

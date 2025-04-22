@@ -126,7 +126,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
-    <ClCompile Include="Engine\scene\DemoScene.cpp" />
+    <ClCompile Include="Engine\scene\DemoScene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Engine\core\EngineUI.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
@@ -134,7 +137,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
-    <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
@@ -248,7 +250,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
-    <ClInclude Include="Engine\scene\DemoScene.h" />
+    <ClInclude Include="Engine\scene\DemoScene.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Engine\core\EngineUI.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
@@ -256,7 +261,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
-    <ClInclude Include="Game\demo\GameObject_Demo.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />

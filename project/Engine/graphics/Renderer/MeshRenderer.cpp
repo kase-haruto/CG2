@@ -25,3 +25,7 @@ void MeshRenderer::DrawAll(){
 
 	PrimitiveDrawer::GetInstance()->Render();
 }
+
+void MeshRenderer::Clear(){
+	renderables_.clear();
+}
