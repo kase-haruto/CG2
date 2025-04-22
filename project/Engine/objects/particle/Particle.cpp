@@ -208,10 +208,6 @@ Vector4 Particle::GetSelectedColor() const{
 		// 単色モードは選択色をそのまま返す
 		return selectedColor_;
 	} else if (colorMode_ == ColorMode::SimilarColor){
-		// 類似色モードの場合、呼ばれるたびにバラつきを反映した色を返す
-		// ここで乱数を使うと、フレームごとに色が変わってしまうため、
-		// Emit()内で色を決めるように変更することも検討してください。
-		// しかし質問文の状況を踏まえ、このままでも機能はします。
 		Vector4 c = selectedColor_;
 		c.x = std::clamp(c.x + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
 		c.y = std::clamp(c.y + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
@@ -219,6 +215,5 @@ Vector4 Particle::GetSelectedColor() const{
 		return c;
 	}
 
-	// デフォルトはランダムでも単色でもない場合用
 	return Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
