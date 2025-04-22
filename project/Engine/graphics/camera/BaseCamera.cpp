@@ -7,8 +7,7 @@
 #include "BaseCamera.h"
 
 BaseCamera::BaseCamera()
-	: ICamera(),
-	viewMatrix_(Matrix4x4::Inverse(worldMatrix_)),
+	:viewMatrix_(Matrix4x4::Inverse(worldMatrix_)),
 	projectionMatrix_(MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_)){
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
 
@@ -124,6 +123,7 @@ const Vector3& BaseCamera::GetTranslate() const{
 void BaseCamera::CreateBuffer(){
 	ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 	cameraBuffer_.Initialize(device.Get());
+	cameraBuffer_.TransferData(cameraData_);
 }
 
 void BaseCamera::Map(){
