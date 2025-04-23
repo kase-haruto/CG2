@@ -25,15 +25,20 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 TestScene::TestScene(){}
 
-TestScene::TestScene(DxCore* dxCore) : IScene(dxCore){
+TestScene::TestScene(DxCore* dxCore) 
+	: BaseScene(dxCore){
 	// シーン名を設定
-	IScene::SetSceneName("testScene");
+	BaseScene::SetSceneName("TestScene");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize(){
+	auto registerToRenderer = [this] (IMeshRenderable* mesh){
+		sceneContext_->meshRenderer_->Register(mesh);
+		};
+
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	//=========================
 	// グラフィック関連
@@ -44,16 +49,17 @@ void TestScene::Initialize(){
 	modelField_ = std::make_unique<Model>("ground.obj");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
 	modelField_->SetUvScale({15.0f,15.0f,0.0f});
+	sceneContext_->meshRenderer_->Register(modelField_.get());
 
 	//test用
-	bunny_ = std::make_unique<BaseGameObject>("bunny.obj");
-	bunny_->SetName("bunny");
+	bunny_ = std::make_unique<BaseGameObject>("bunny.obj","bunny", registerToRenderer);
 	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
-	teapot_ = std::make_unique<BaseGameObject>("teapot.obj");
-	teapot_->SetName("teapot");
+
+	teapot_ = std::make_unique<BaseGameObject>("teapot.obj","teapot", registerToRenderer);
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
-	walkHuman_ = std::make_unique<AnimationModel>("sneakWalk.gltf");
+	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf","human", registerToRenderer);
+	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -78,70 +84,18 @@ void TestScene::Update(){
 	//test
 	bunny_->Update();
 	teapot_->Update();
-	walkHuman_->AnimationUpdate();
+	walkHuman_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
+
+	PrimitiveDrawer::GetInstance()->DrawGrid();
 }
 
-void TestScene::Draw(){
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					2dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 2Dオブジェクト背景描画
-
-#pragma endregion
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					3dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 3Dオブジェクト描画
-
-	Draw3dObject();
-
-#pragma endregion
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//					2dオブジェクトの描画
-	/////////////////////////////////////////////////////////////////////////////////////////
-#pragma region 2Dオブジェクト描画
-
-#pragma endregion
-}
 
 void TestScene::CleanUp(){
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
 	SceneObjectManager::GetInstance()->ClearAllObject();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//					3dオブジェクト描画
-/////////////////////////////////////////////////////////////////////////////////////////
-void TestScene::Draw3dObject(){
-	/*=======================================================================================
-				モデルの描画
-	========================================================================================*/
-	auto commandList_ = pDxCore_->GetCommandList();
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
-	//地面の描画
-	modelField_->Draw();
-
-	//test
-	bunny_->Draw();
-	teapot_->Draw();
-	walkHuman_->Draw();
-
-	/* =======================================================================================
-				particleの描画
-	========================================================================================*/
-
-	/* =======================================================================================
-				プリミティブな図形の描画
-	========================================================================================*/
-	PrimitiveDrawer::GetInstance()->DrawGrid();
-	PrimitiveDrawer::GetInstance()->Render();
-}

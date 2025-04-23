@@ -8,6 +8,7 @@
 //* c++ lib *//
 #include <memory>
 #include <string>
+#include <functional>
 
 class BaseGameObject
 	:public SceneObject{
@@ -23,6 +24,9 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
+	BaseGameObject(const std::string& modelName,
+				   std::optional<std::string> objectName,
+				   std::function<void(IMeshRenderable*)>registerCB);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
@@ -35,15 +39,8 @@ protected:
 	//===================================================================*/
 	//                    protected methods
 	//===================================================================*/
-	void AnimationModelUpdate();
-	void StaticModelUpdate();
-
-protected:
-	//===================================================================*/
-	//                    protected methods
-	//===================================================================*/
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
-	std::unique_ptr<AnimationModel> animationModel_ = nullptr;	// アニメーションモデル
+	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
 protected:
 	//===================================================================*/
@@ -75,7 +72,11 @@ public:
 		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
 		return worldPos;
 	}
-
+	void SetColor(const Vector4& color){
+		if (model_){
+			model_->SetColor(color);
+		}
+	}
 	BaseModel* GetModel()const{ return model_.get(); }
 };
 

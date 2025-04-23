@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <array>
-#include "IScene.h"
+#include <Engine/scene/Base/BaseScene.h>
 #include "Engine/core/EngineUI.h"
 #include "Engine/core/DirectX/DxCore.h"
 #include "Engine/core/UI/SceneSwitcherPanel.h"

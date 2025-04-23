@@ -5,14 +5,14 @@
 
 
 class Camera3d
-    : public BaseCamera{
+	: public BaseCamera{
 public:
 	//==================================================================*//
 	//			public functions
-    //==================================================================*//
-    Camera3d();
-    ~Camera3d() = default;
+	//==================================================================*//
+	Camera3d();
+	~Camera3d() = default;
 
-    void Update() override;  //< 更新
+	void Update() override;  //< 更新
 	void ShowGui() override; //< ImGuiによるGUI表示
 };

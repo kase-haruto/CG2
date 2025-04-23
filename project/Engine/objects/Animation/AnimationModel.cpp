@@ -141,17 +141,6 @@ Vector3 AnimationModel::CalculateValue(const AnimationCurve<Vector3>& curve, flo
 //-----------------------------------------------------------------------------
 // 毎フレームの更新
 //-----------------------------------------------------------------------------
-void AnimationModel::AnimationUpdate(){
-	if (modelData_){
-		// (1) アニメーションを再生
-		PlayAnimation();
-		SkeletonUpdate();
-		SkinClusterUpdate();
-	}
-
-	BaseModel::Update();
-}
-
 void AnimationModel::SkeletonUpdate(){
 	// すべてのjointを更新
 	for (Joint& joint : modelData_->skeleton.joints){
@@ -182,14 +171,21 @@ void AnimationModel::DrawSkeleton(){
 }
 
 void AnimationModel::Update(){
-	// 必要に応じて処理を入れる
+	if (modelData_){
+		// (1) アニメーションを再生
+		PlayAnimation();
+		SkeletonUpdate();
+		SkinClusterUpdate();
+	}
+
+	BaseModel::Update();
 }
 
 void AnimationModel::OnModelLoaded(){
 	BaseModel::OnModelLoaded();
 
 	modelData_->animation = animationData_;
-	
+
 	// スキンクラスターのリソースを確保
 	skinCluster_ = CreateSkinCluster(device_, modelData_->skeleton, *modelData_);
 
@@ -214,7 +210,9 @@ void AnimationModel::Draw(){
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
 	BaseModel::Draw();
 
-	modelData_->skeleton.Draw();
+	if (isDrawSkeleton_){
+		modelData_->skeleton.Draw();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -237,18 +235,8 @@ void AnimationModel::UpdateMatrix(){
 void AnimationModel::ShowImGuiInterface(){
 #ifdef _DEBUG
 
-	// もし複数ノードを選択可能にしたいなら、以下のようにnodeAnimationsのキー一覧をUI表示など
-	// for (auto &pair : animation_.nodeAnimations) {
-	//     ImGui::Text("Node: %s", pair.first.c_str());
-	// }
-
-	// アニメーション用transformを直接UI操作したい場合は下記のように追加してもOK
-	// if (ImGui::TreeNode("AnimationTransform")) {
-	//     ImGui::DragFloat3("Anim Translation", &animationTransform_.translate.x, 0.01f);
-	//     ImGui::DragFloat3("Anim Rotation",    &animationTransform_.rotate.x,    0.01f);
-	//     ImGui::DragFloat3("Anim Scale",       &animationTransform_.scale.x,     0.01f);
-	//     ImGui::TreePop();
-	// }
+	ImGui::Checkbox("Draw Skeleton", &isDrawSkeleton_);
+	BaseModel::ShowImGuiInterface();
 
 #endif
 }
