@@ -33,7 +33,8 @@ public:
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	virtual void ShowGui()override;
+	void ShowGui()override;
+	virtual void DerivativeGui();
 
 	void SaveToJson(const std::string& fileName)const;
 	void LoadFromJson(const std::string& fileName);

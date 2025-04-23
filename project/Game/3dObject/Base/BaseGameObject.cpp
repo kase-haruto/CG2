@@ -109,6 +109,12 @@ void BaseGameObject::ShowGui(){
 	model_->ShowImGuiInterface();
 
 	ImGui::Spacing();
+
+	DerivativeGui();
+}
+
+void BaseGameObject::DerivativeGui(){
+	ImGui::SeparatorText("derivative");
 }
 
 //===================================================================*/

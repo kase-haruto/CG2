@@ -14,9 +14,9 @@ public:
 	//			public functions
 	//==================================================================*//
 	virtual ~SceneObject();
-	SceneObject();
+	SceneObject() = default;
 	virtual void ShowGui();
-
+	void EnableGuiList();	//GUIのリストに追加するかどうか
 protected:
 	//==================================================================*//
 	//			protected functions
@@ -32,7 +32,6 @@ public:
 		name_ = name;
 		objectType_ = type;
 	}
-
 	const std::string& GetName()const{ return name_; }
 	ObjectType GetObjectType()const{ return objectType_; }
 };

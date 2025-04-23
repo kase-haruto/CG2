@@ -59,6 +59,7 @@ nlohmann::json Particle::SaveToJson() const{
 	json["model"] = modelName_;
 	json["texture"] = textureName_;
 	json["isStatic"] = isStatic_;
+	json["isAutoEmit"] = autoEmit_;
 	json["isBillboard"] = isBillboard_;
 	json["useRotation"] = useRotation_;
 	json["useRandomScale"] = useRandomScale_;
@@ -101,6 +102,7 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	name_ = j.value("name", "");
 	modelName_ = j.value("model", "plane.obj");
 	textureName_ = j.value("texture", "particle");
+	autoEmit_ = j.value("isAutoEmit", true);
 	isBillboard_ = j.value("isBillboard", true);
 	useRotation_ = j.value("useRotation", false);
 	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));

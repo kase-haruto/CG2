@@ -49,6 +49,7 @@
                 1.0,
                 1.0
             ],
+            "isAutoEmit": false,
             "isBillboard": true,
             "isStatic": true,
             "lifeTime": 1.6307673454284668,

@@ -374,6 +374,13 @@ void BaseParticle::EmitterGui(){
 			ImGui::PushID(emitterIndex);
 			std::string label = "Emitter " + std::to_string(emitterIndex);
 			if (ImGui::TreeNode(label.c_str())){
+				ImGui::Checkbox("Auto Emit", &autoEmit_);
+				if (!autoEmit_){
+					if (ImGui::Button("emit")){
+						Emit(emitter);
+					}
+				}
+
 				int shapeIndex = static_cast< int >(emitter.shape);
 				const char* shapeNames[] = {"OBB", "Sphere"};
 				if (ImGui::Combo("Shape", &shapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames))){

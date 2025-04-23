@@ -4,7 +4,7 @@
 /* include space
 /* ===================================================================== */
 #include "engine/objects/Sprite.h"
-#include "Game/3d/Base/BaseGameObject.h"
+#include "Game/3dObject/Base/BaseGameObject.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"

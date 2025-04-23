@@ -10,7 +10,9 @@
 #endif // _DEBUG
 
 
-PointLight::PointLight(){}
+PointLight::PointLight(){
+	SceneObject::EnableGuiList();
+}
 
 PointLight::~PointLight(){}
 

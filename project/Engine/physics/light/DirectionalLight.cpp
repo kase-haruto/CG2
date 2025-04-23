@@ -12,7 +12,9 @@
 #endif // _DEBUG
 
 
-DirectionalLight::DirectionalLight(){}
+DirectionalLight::DirectionalLight(){
+	SceneObject::EnableGuiList();
+}
 
 DirectionalLight::~DirectionalLight(){}
 

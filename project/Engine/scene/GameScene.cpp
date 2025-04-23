@@ -46,8 +46,15 @@ void GameScene::Initialize(){
 	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field", registerToRenderer);
 	modelField_->SetScale({50.0f,50.0f,50.0f});
 	modelField_->GetModel()->SetUvScale({30.0f,30.0f,0.0f});
+	modelField_->EnableGuiList();
 	//modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
+
+	//player
+	player_ = std::make_unique<Player>("teapot.obj", registerToRenderer);
+	player_->Initialize();
+
+	
 	//===================================================================*/
 	//                    editor
 	//===================================================================*/
@@ -63,6 +70,8 @@ void GameScene::Update(){
 	//地面の更新
 	modelField_->Update();
 	
+	//プレイヤーの更新
+	player_->Update();
 	/* その他 ============================*/
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
