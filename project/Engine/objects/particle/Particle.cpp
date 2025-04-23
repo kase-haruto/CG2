@@ -66,6 +66,9 @@ nlohmann::json Particle::SaveToJson() const{
 	json["fixedMaxScale"] = {fixedMaxScale_.x, fixedMaxScale_.y, fixedMaxScale_.z};
 	json["randomScaleMin"] = {randomScaleMin_.x, randomScaleMin_.y, randomScaleMin_.z};
 	json["randomScaleMax"] = {randomScaleMax_.x, randomScaleMax_.y, randomScaleMax_.z};
+	json["isRandomLifeTime"] = isRandomLifeTime_;
+	json["minLifeTime"] = minLifeTime_;
+	json["maxLifeTime"] = maxLifeTime_;
 	json["blendMode"] = static_cast< int >(blendMode_);
 	json["colorMode"] = static_cast< int >(colorMode_);
 	json["selectedColor"] = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
@@ -119,6 +122,10 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	auto col = j.value("selectedColor", std::vector<float>{1.0f, 1.0f, 1.0f, 1.0f});
 	if (col.size() == 4) selectedColor_ = {col[0], col[1], col[2], col[3]};
 	colorVariation_ = j.value("colorVariation", 0.1f);
+
+	isRandomLifeTime_ = j.value("isRandomLifeTime", false);
+	minLifeTime_ = j.value("minLifeTime", 0.1f);
+	maxLifeTime_ = j.value("maxLifeTime", 3.0f);
 
 	emitters_.clear();
 	for (const auto& ej : j["emitters"]){

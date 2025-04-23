@@ -16,8 +16,7 @@ namespace fs = std::filesystem;
 /////////////////////////////////////////////////////////////////////////////////////////
 //		コンストラクタ
 /////////////////////////////////////////////////////////////////////////////////////////
-EffectEditor::EffectEditor(ParticleEffectCollection* collection)
-	: effectCollection_(collection){
+EffectEditor::EffectEditor(){
 	editorName_ = "EffectEditor";
 }
 
@@ -47,13 +46,12 @@ void EffectEditor::LoadFromJson([[maybe_unused]] const std::string& filePath){
 }
 
 void EffectEditor::LoadFromJsonAll(const std::string& directoryPath){
-	effectCollection_->Clear(); // 一旦リストを初期化（必要に応じて）
-
+	ParticleEffectCollection::GetInstance()->Clear();
 	for (const auto& entry : fs::directory_iterator(directoryPath)){
 		if (entry.is_regular_file() && entry.path().extension() == ".json"){
 			auto effect = std::make_unique<ParticleEffect>();
 			effect->Load(entry.path().string());
-			effectCollection_->AddEffect(std::move(effect));
+			ParticleEffectCollection::GetInstance()->AddEffect(std::move(effect));
 		}
 	}
 }
@@ -68,7 +66,7 @@ void EffectEditor::ShowParticleMakingGui(){
 		auto newEffect = std::make_unique<ParticleEffect>();
 		newEffect->AddParticle(std::make_unique<Particle>());
 		newEffect->SetName(effectName);
-		effectCollection_->AddEffect(std::move(newEffect));
+		ParticleEffectCollection::GetInstance()->AddEffect(std::move(newEffect));
 		effectName[0] = '\0';
 	}
 	ImGui::SameLine();
@@ -91,7 +89,7 @@ void EffectEditor::ShowEffectListAndProperty(){
 	ImGui::BeginChild("Effect List Pane", ImVec2(leftPaneWidth, 0), true);
 	ImGui::Text("Effect List");
 	ImGui::Separator();
-	auto& effects = effectCollection_->GetEffects();
+	auto& effects = ParticleEffectCollection::GetInstance()->GetEffects();
 	static int renameIndex = -1; // リネーム対象のインデックス
 	static char newName[128] = "";
 
@@ -161,10 +159,10 @@ void EffectEditor::ShowEffectListAndProperty(){
 //		effect追加
 /////////////////////////////////////////////////////////////////////////////////////////
 void EffectEditor::AddEffect(std::unique_ptr<ParticleEffect> effect){
-	effectCollection_->AddEffect(std::move(effect));
+	ParticleEffectCollection::GetInstance()->AddEffect(std::move(effect));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effect削除
 /////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::RemoveEffect(int index){ effectCollection_->RemoveEffect(index); }
+void EffectEditor::RemoveEffect(int index){ ParticleEffectCollection::GetInstance()->RemoveEffect(index); }

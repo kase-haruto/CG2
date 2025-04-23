@@ -5,7 +5,7 @@
 /* ===================================================================== */
 #include <Engine/core/Input.h>
 #include "Engine/core/Clock/ClockManager.h"
-
+#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 //externals
 #include <externals/imgui/imgui.h>
 
@@ -14,6 +14,7 @@ Player::Player(const std::string& modelName,
 :Actor::Actor(modelName,"player",registerCB){
 	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer",registerCB);
 	SceneObject::EnableGuiList();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +82,9 @@ void Player::Move(){
 void Player::Shoot(){
 	//弾を追加
 	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 offset = {0.0f, 0.0f, 0.5f};
 	//発射方向
 	Vector3 shootDir = Vector3::Forward();
 	bulletContainer_->AddBullet("debugCube.obj", wPos, shootDir);
+	ParticleEffectCollection::GetInstance()->PlayByName("shootEffect",wPos+offset);
 }

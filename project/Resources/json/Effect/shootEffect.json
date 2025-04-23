@@ -7,8 +7,8 @@
             "colorVariation": 0.10999999940395355,
             "emitters": [
                 {
-                    "count": 9,
-                    "frequency": 0.6700000166893005,
+                    "count": 10,
+                    "frequency": 0.0,
                     "rotationParm": {
                         "initialRotation": [
                             0.0,
@@ -37,8 +37,45 @@
                             1.0
                         ],
                         "translate": [
+                            -0.3375585675239563,
+                            2.532992124557495,
+                            0.0
+                        ]
+                    }
+                },
+                {
+                    "count": 1,
+                    "frequency": 0.5,
+                    "rotationParm": {
+                        "initialRotation": [
                             0.0,
                             0.0,
+                            0.0
+                        ],
+                        "randomizeInitialRotation": true,
+                        "rotateContinuously": false,
+                        "rotationSpeed": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "useRotation": true
+                    },
+                    "shape": 1,
+                    "transform": {
+                        "rotate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "translate": [
+                            -0.3375585675239563,
+                            2.532992124557495,
                             0.0
                         ]
                     }
@@ -51,18 +88,21 @@
             ],
             "isAutoEmit": false,
             "isBillboard": true,
+            "isRandomLifeTime": false,
             "isStatic": true,
-            "lifeTime": 1.6307673454284668,
+            "lifeTime": 0.21699999272823334,
+            "maxLifeTime": 3.0,
+            "minLifeTime": 0.10000000149011612,
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                0.23999999463558197,
-                1.6200000047683716,
+                1.2100000381469727,
+                3.0899999141693115,
                 1.0
             ],
             "randomScaleMin": [
-                0.09000000357627869,
-                1.0,
+                0.8100000023841858,
+                2.7300000190734863,
                 1.0
             ],
             "selectedColor": [

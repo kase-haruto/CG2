@@ -27,6 +27,7 @@ public:
 	void Draw();
 	void ImGui();
 	bool IsFinished()const;
+	void Play(const Vector3& pos);
 
 	//--------- add/remove -----------------------------------------------
 	void AddParticle(std::unique_ptr<Particle> system);
@@ -39,7 +40,11 @@ public:
 	void SetName(const std::string& name){ name_ = name; }
 	const std::string& GetName()const { return name_; }
 	void SetPendingDelete(bool pendingDelete){ pendingDelete_ = pendingDelete; }
-
+	void SetPosition(const Vector3& position){
+		for (auto& particle : particles_){
+			particle->SetEmitPos(position);
+		}
+	}
 private:
 	//===================================================================*/
 	//		private func

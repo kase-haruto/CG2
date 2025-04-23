@@ -354,15 +354,12 @@ void BaseParticle::ParameterGui(){
 	}
 
 	ImGui::SeparatorText("lifeTime");
-	static bool isRandomLifeTime = true;
-	ImGui::Checkbox("Random LifeTime", &isRandomLifeTime);
-	if (isRandomLifeTime){
-		static float maxLifeTime = 10.0f;
-		static float minLifeTime = 1.0f;
-		ImGui::DragFloat("Max", &maxLifeTime, 0.01f, 0.0f, 10.0f);
-		ImGui::DragFloat("Min", &minLifeTime, 0.01f, 0.0f, 10.0f);
-		if (minLifeTime > maxLifeTime) std::swap(minLifeTime, maxLifeTime);
-		lifeTime_ = Random::Generate<float>(minLifeTime, maxLifeTime);
+	ImGui::Checkbox("Random LifeTime", &isRandomLifeTime_);
+	if (isRandomLifeTime_){
+		ImGui::DragFloat("Max", &maxLifeTime_, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat("Min", &minLifeTime_, 0.01f, 0.0f, 10.0f);
+		if (minLifeTime_ > maxLifeTime_) std::swap(minLifeTime_, maxLifeTime_);
+		lifeTime_ = Random::Generate<float>(minLifeTime_, maxLifeTime_);
 	} else{
 		ImGui::DragFloat("lifeTime", &lifeTime_, 0.01f, 0.0f, 10.0f);
 	}
@@ -474,11 +471,23 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
+void BaseParticle::Emit(){
+	for (auto& emitter:emitters_){
+		Emit(emitter);
+	}
+}
+
 
 Vector3 BaseParticle::GenerateVelocity(float speed){
 	// デフォルトのランダムな方向の速度生成
 	Vector3 velocity = Random::GenerateVector3(-1.0f, 1.0f);
 	return velocity * speed;
+}
+
+void BaseParticle::SetEmitPos(const Vector3& pos){
+	for (auto& emitter:emitters_){
+		emitter.transform.translate = pos;
+	}
 }
 
 void BaseParticle::CreateBuffer(){

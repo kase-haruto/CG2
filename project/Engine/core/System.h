@@ -81,8 +81,5 @@ private:
 	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
 	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
 	std::unique_ptr<EffectEditor> effectEditor_;	//パーティクルエディタ
-	
-	// particle
-	std::unique_ptr<ParticleEffectCollection> particleEffectCollection_;
 };
 

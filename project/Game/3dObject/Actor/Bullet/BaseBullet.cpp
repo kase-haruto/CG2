@@ -32,13 +32,16 @@ void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::Update(){
-	model_->worldTransform_.translation += velocity_ * moveSpeed_ * ClockManager::GetInstance()->GetDeltaTime();
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+	model_->worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
 	BaseGameObject::Update();
 
-	if (life_ <= 0){
-		isAlive_ = false;
-	}
+	// 時間カウント
+	//currentTime_ += deltaTime;
+	//if (currentTime_ >= lifeTime_){
+	//	isAlive_ = false;
+	//}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

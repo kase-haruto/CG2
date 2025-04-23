@@ -119,6 +119,7 @@ public:
 	void EmitterGui();
 
 	virtual void Emit(ParticleData::Emitter& emitter);
+	void Emit();
 
 	//--------- accessor -----------------------------------------------------
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
@@ -133,6 +134,7 @@ public:
 		randomScaleMax_ = maxScale;
 	}
 	void SetEmitterShape(EmitterShape shape){ currentShape_ = shape; }
+	void SetEmitPos(const Vector3& pos);
 	//--------- json -----------------------------------------------------
 	virtual nlohmann::json SaveToJson() const = 0;
 	virtual void LoadFromJson(const nlohmann::json& j) = 0;
@@ -164,6 +166,10 @@ public:
 	Vector3 randomScaleMax_ = {6.0f, 6.0f, 6.0f};
 
 	float lifeTime_ = 1.0f; // パーティクルの寿命
+
+	bool isRandomLifeTime_ = true;
+	float maxLifeTime_ = 3.0f;
+	float minLifeTime_ = 1.0f;
 
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
