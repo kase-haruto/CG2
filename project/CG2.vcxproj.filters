@@ -403,6 +403,8 @@
     <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
+    <ClCompile Include="ParticleEffectCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -657,6 +659,8 @@
     <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
+    <ClInclude Include="ParticleEffectCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

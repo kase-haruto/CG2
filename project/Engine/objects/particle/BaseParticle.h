@@ -53,7 +53,7 @@ namespace ParticleData{
 	struct Emitter{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
 		uint32_t count = 1;				//発生数
-		float frequency;				//発生頻度
+		float frequency = 0.1f;			//発生頻度
 		float frequencyTime = 0.1f;		//頻度用時刻
 		EmitterShape shape = EmitterShape::Sphere; // エミッタの形状
 
@@ -87,22 +87,14 @@ public:
 	void ParameterGui();
 	void EmitterGui();
 
-	virtual void Emit(uint32_t count);
-
-	// ライフタイム設定用の仮想関数
+	virtual void Emit(ParticleData::Emitter& emitter);
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
-
-
-	// 派生クラスでオーバーライド可能な速度生成
 	virtual Vector3 GenerateVelocity(float speed);
-
-	virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
+	virtual bool GetUseRandomColor() const{ return true; }
 	virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
 
-	// 色合成取得
 	BlendMode GetBlendMode() const{ return blendMode_; }
 
-	// maxScale設定のためのインターフェース
 	void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
 	void SetFixedMaxScale(float scale){ fixedMaxScale_ = scale; }
 	void SetRandomScaleRange(float minScale, float maxScale){
@@ -110,7 +102,7 @@ public:
 		randomScaleMax_ = maxScale;
 	}
 	void SetEmitterShape(EmitterShape shape){ currentShape_ = shape; }
-	void SetEmitter(const ParticleData::Emitter& emitter){ emitter_ = emitter; }
+
 private:
 	//===================================================================*/
 	//                    private methods
@@ -126,7 +118,7 @@ public:
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
 	bool autoEmit_ = true;
-	int32_t kMaxInstanceNum_ = 512;
+	int32_t kMaxInstanceNum_ = 1024;
 	int32_t instanceNum_ = 0;
 
 	bool useRandomScale_ = false;	// ランダムスケールを使用するかのフラグ
@@ -161,7 +153,7 @@ protected:
 	std::vector<ParticleData::ParticleForGPU> instanceDataList_;
 
 	/* emitter ------------------------------------*/
-	ParticleData::Emitter emitter_ {};
+	std::vector<ParticleData::Emitter> emitters_;
 
 	bool emitPosX_ = true;
 	bool emitNegX_ = true;

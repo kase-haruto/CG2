@@ -15,10 +15,10 @@ Particle::Particle(){}
 
 Particle::~Particle(){}
 
-void Particle::Initialize(const std::string& modelName, const std::string& texturePath){
+void Particle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
 	//Load(fileDirectoryPath + GetName() + ".json");
 
-	BaseParticle::Initialize(modelName, texturePath, emitter_.count);
+	BaseParticle::Initialize(modelName, texturePath, count);
 
 }
 
@@ -30,182 +30,95 @@ void Particle::ImGui(){
 		Save(fileDirectoryPath + GetName() + ".json");
 	}
 
-	// Particle Colorセクション
 	if (ImGui::TreeNode("Visual Setting")){
 		BaseParticle::VisualSettingGui();
-
-		ImGui::TreePop(); // 折りたたみ終了
-	}
-
-	// Emitterセクション
-	if (ImGui::TreeNode(" Emitter Parameter")){
-		ImGui::Checkbox("isBillboard", &isBillboard_);
-		ImGui::DragFloat3(" Emitter:pos", &emitter_.transform.translate.x, 0.01f);
-		ImGui::DragFloat3(" Emitter:rotate", &emitter_.transform.rotate.x, 0.01f);
-		ImGui::DragFloat(" Emitter:frequencyTime", &emitter_.frequency, 0.1f);
-		int count = emitter_.count;
-		ImGui::DragInt(" Emitter:count", &count, 1);
-		emitter_.count = count;
-		BaseParticle::ImGui();
-
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("particle Parameter")){
+	if (ImGui::TreeNode("Emitter Parameter")){
+		BaseParticle::EmitterGui();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Particle Parameter")){
 		BaseParticle::ParameterGui();
 		ImGui::TreePop();
 	}
-
 }
 
-
 void Particle::Save(const std::string& filename){
-
 	json j;
-
-	// 基本情報
 	j["name"] = name_;
-
-	// カラーモードとカラー関連
 	j["colorMode"] = static_cast< int >(colorMode_);
-
-	std::vector<float> colorVec = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
-	j["selectedColor"] = colorVec;
+	j["selectedColor"] = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
 	j["colorVariation"] = colorVariation_;
 
-	// emitter
-	{
+	json emitterArray = json::array();
+	for (const auto& emitter : emitters_){
 		json e;
-		e["count"] = emitter_.count;
-		e["frequency"] = emitter_.frequency;
-		e["frequencyTime"] = emitter_.frequencyTime;
-
-		// Transform
-		{
-			json t;
-			t["translate"] = {emitter_.transform.translate.x, emitter_.transform.translate.y, emitter_.transform.translate.z};
-			t["rotate"] = {emitter_.transform.rotate.x, emitter_.transform.rotate.y, emitter_.transform.rotate.z};
-			t["scale"] = {emitter_.transform.scale.x, emitter_.transform.scale.y, emitter_.transform.scale.z};
-			e["transform"] = t;
-		}
-
-		j["Emitter"] = e;
+		e["count"] = emitter.count;
+		e["frequency"] = emitter.frequency;
+		e["frequencyTime"] = emitter.frequencyTime;
+		e["shape"] = static_cast< int >(emitter.shape);
+		e["transform"] = {
+			{"translate", {emitter.transform.translate.x, emitter.transform.translate.y, emitter.transform.translate.z}},
+			{"rotate", {emitter.transform.rotate.x, emitter.transform.rotate.y, emitter.transform.rotate.z}},
+			{"scale", {emitter.transform.scale.x, emitter.transform.scale.y, emitter.transform.scale.z}}
+		};
+		emitterArray.push_back(e);
 	}
+	j["Emitters"] = emitterArray;
 
-	// 発生面フラグ
-	{
-		json faces;
-		faces["EmitPosX"] = emitPosX_;
-			faces["EmitNegX"] = emitNegX_;
-			faces["EmitPosY"] = emitPosY_;
-			faces["EmitNegY"] = emitNegY_;
-			faces["EmitPosZ"] = emitPosZ_;
-			faces["EmitNegZ"] = emitNegZ_;
-			j["faces"] = faces;
-	}
-
-	// ファイルへ書き出し
 	std::ofstream ofs(filename);
 	if (ofs){
 		ofs << j.dump(4);
 	}
 }
 
-
 void Particle::Load(const std::string& filename){
-
 	std::ifstream ifs(filename);
-	if (!ifs){
-		// ファイルがない場合などは何もしない
-		return;
-	}
+	if (!ifs) return;
 
 	json j;
 	ifs >> j;
 
-	// 基本情報
-	if (j.contains("name")){
-		name_ = j["name"].get<std::string>();
-	}
-
-	// カラーモードとカラー関連
-	if (j.contains("colorMode")){
-		colorMode_ = static_cast< ColorMode >(j["colorMode"].get<int>());
-	}
-
+	if (j.contains("name")) name_ = j["name"].get<std::string>();
+	if (j.contains("colorMode")) colorMode_ = static_cast< ColorMode >(j["colorMode"].get<int>());
 	if (j.contains("selectedColor")){
-		auto colorVec = j["selectedColor"].get<std::vector<float>>();
-		if (colorVec.size() == 4){
-			selectedColor_.x = colorVec[0];
-			selectedColor_.y = colorVec[1];
-			selectedColor_.z = colorVec[2];
-			selectedColor_.w = colorVec[3];
-		}
+		auto col = j["selectedColor"].get<std::vector<float>>();
+		if (col.size() == 4) selectedColor_ = {col[0], col[1], col[2], col[3]};
 	}
+	if (j.contains("colorVariation")) colorVariation_ = j["colorVariation"].get<float>();
 
-	if (j.contains("colorVariation")){
-		colorVariation_ = j["colorVariation"].get<float>();
-	}
-
-	// emitter
-	if (j.contains("Emitter")){
-		auto e = j["Emitter"];
-		if (e.contains("count")){
-			emitter_.count = e["count"].get<uint32_t>();
-		}
-	if (e.contains("frequency")){
-		emitter_.frequency = e["frequency"].get<float>();
-	}
-	if (e.contains("frequencyTime")){
-		emitter_.frequencyTime = e["frequencyTime"].get<float>();
-	}
-
-	// Transform
-	if (e.contains("transform")){
-		auto t = e["transform"];
-		if (t.contains("translate")){
-			auto tr = t["translate"].get<std::vector<float>>();
-			if (tr.size() == 3){
-				emitter_.transform.translate = {tr[0], tr[1], tr[2]};
+	emitters_.clear();
+	if (j.contains("Emitters")){
+		for (const auto& e : j["Emitters"]){
+			ParticleData::Emitter emitter;
+			emitter.count = e.value("count", 10);
+			emitter.frequency = e.value("frequency", 0.5f);
+			emitter.frequencyTime = e.value("frequencyTime", 0.0f);
+			emitter.shape = static_cast< EmitterShape >(e.value("shape", 1));
+			if (e.contains("transform")){
+				auto t = e["transform"];
+				auto tr = t.value("translate", std::vector<float>{0, 0, 0});
+				auto ro = t.value("rotate", std::vector<float>{0, 0, 0});
+				auto sc = t.value("scale", std::vector<float>{1, 1, 1});
+				if (tr.size() == 3) emitter.transform.translate = {tr[0], tr[1], tr[2]};
+				if (ro.size() == 3) emitter.transform.rotate = {ro[0], ro[1], ro[2]};
+				if (sc.size() == 3) emitter.transform.scale = {sc[0], sc[1], sc[2]};
 			}
-		}
-		if (t.contains("rotate")){
-			auto rr = t["rotate"].get<std::vector<float>>();
-			if (rr.size() == 3){
-				emitter_.transform.rotate = {rr[0], rr[1], rr[2]};
-			}
-		}
-		if (t.contains("scale")){
-			auto sc = t["scale"].get<std::vector<float>>();
-			if (sc.size() == 3){
-				emitter_.transform.scale = {sc[0], sc[1], sc[2]};
-			}
+			emitters_.push_back(emitter);
 		}
 	}
-}
-
-// 発生面フラグの読み込み
-if (j.contains("faces")){
-	auto f = j["faces"];
-	if (f.contains("EmitPosX")) emitPosX_ = f["EmitPosX"].get<bool>();
-	if (f.contains("EmitNegX")) emitNegX_ = f["EmitNegX"].get<bool>();
-	if (f.contains("EmitPosY")) emitPosY_ = f["EmitPosY"].get<bool>();
-	if (f.contains("EmitNegY")) emitNegY_ = f["EmitNegY"].get<bool>();
-	if (f.contains("EmitPosZ")) emitPosZ_ = f["EmitPosZ"].get<bool>();
-	if (f.contains("EmitNegZ")) emitNegZ_ = f["EmitNegZ"].get<bool>();
-}
-
 }
 
 
 bool Particle::GetUseRandomColor() const{
-	// ランダムモードのときのみtrueを返す
 	return (colorMode_ == ColorMode::Random);
 }
 
 Vector4 Particle::GetSelectedColor() const{
 	if (colorMode_ == ColorMode::SingleColor){
-		// 単色モードは選択色をそのまま返す
 		return selectedColor_;
 	} else if (colorMode_ == ColorMode::SimilarColor){
 		Vector4 c = selectedColor_;
@@ -214,6 +127,5 @@ Vector4 Particle::GetSelectedColor() const{
 		c.z = std::clamp(c.z + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
 		return c;
 	}
-
-	return Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	return {1.0f, 1.0f, 1.0f, 1.0f};
 }

@@ -96,7 +96,7 @@ void ParticleEditor::ShowParticleMakingGui(){
 			// 仮モデル/テクスチャを初期化
 			const std::string defaultModelName = "plane.obj";
 			const std::string defaultTextureName = "particle.png";
-			newParticle->Initialize(defaultModelName, defaultTextureName);
+			newParticle->Initialize(defaultModelName, defaultTextureName,1);
 
 			// リストへ登録（所有権を渡す）
 			AddParticle(std::move(newParticle));

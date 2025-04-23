@@ -138,7 +138,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
-    <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
+    <ClCompile Include="Engine\objects\particle\DemoParticle.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
     <ClCompile Include="Engine\core\DirectX\DxCommand.cpp" />
@@ -225,6 +228,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
+    <ClCompile Include="ParticleEffectCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
@@ -262,7 +267,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
-    <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
+    <ClInclude Include="Engine\objects\particle\DemoParticle.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
     <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
     <ClInclude Include="Engine\core\DirectX\DxCommand.h" />
@@ -356,6 +364,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
+    <ClInclude Include="ParticleEffectCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
