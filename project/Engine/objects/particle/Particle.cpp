@@ -1,13 +1,16 @@
 #include "Particle.h"
 
-#include "ParticleManager.h"
+#include "Engine/objects/TextureManager.h"
 #include <lib/myFunc/Random.h>
+#include <lib/myFunc/MyFunc.h>
 
 // lib
 #include <externals/imgui/imgui.h>
 #include <externals/nlohmann/json.hpp>
 #include <fstream>
 #include <algorithm>
+#include <numbers>
+
 using json = nlohmann::json;
 
 
@@ -15,210 +18,156 @@ Particle::Particle(){}
 
 Particle::~Particle(){}
 
-void Particle::Initialize(const std::string& modelName, const std::string& texturePath){
+void Particle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
 	//Load(fileDirectoryPath + GetName() + ".json");
 
-	BaseParticle::Initialize(modelName, texturePath, emitter_.count);
+	BaseParticle::Initialize(modelName, texturePath, count);
 
+}
+
+void Particle::LoadInitialize(){
+	textureHandle = TextureManager::GetInstance()->LoadTexture(textureName_);
+	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
+	instanceDataList_.reserve(kMaxInstanceNum_);
+	BaseParticle::CreateBuffer();
 }
 
 //===================================================================*/
 //                    json/ui
 //===================================================================*/
 void Particle::ImGui(){
-	if (ImGui::Button("Save to JSON")){
-		Save(fileDirectoryPath + GetName() + ".json");
-	}
 
-	// Particle Colorセクション
 	if (ImGui::TreeNode("Visual Setting")){
 		BaseParticle::VisualSettingGui();
-
-		ImGui::TreePop(); // 折りたたみ終了
-	}
-
-	// Emitterセクション
-	if (ImGui::TreeNode(" Emitter Parameter")){
-		ImGui::Checkbox("isBillboard", &isBillboard_);
-		ImGui::DragFloat3(" Emitter:pos", &emitter_.transform.translate.x, 0.01f);
-		ImGui::DragFloat3(" Emitter:rotate", &emitter_.transform.rotate.x, 0.01f);
-		ImGui::DragFloat(" Emitter:frequencyTime", &emitter_.frequency, 0.1f);
-		int count = emitter_.count;
-		ImGui::DragInt(" Emitter:count", &count, 1);
-		emitter_.count = count;
-		BaseParticle::ImGui();
-
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("particle Parameter")){
+	if (ImGui::TreeNode("Emitter Parameter")){
+		BaseParticle::EmitterGui();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Particle Parameter")){
 		BaseParticle::ParameterGui();
 		ImGui::TreePop();
 	}
-
 }
 
+nlohmann::json Particle::SaveToJson() const{
+	nlohmann::json json;
+	json["name"] = name_;
+	json["model"] = modelName_;
+	json["texture"] = textureName_;
+	json["isStatic"] = isStatic_;
+	json["isAutoEmit"] = autoEmit_;
+	json["isBillboard"] = isBillboard_;
+	json["useRotation"] = useRotation_;
+	json["useRandomScale"] = useRandomScale_;
+	json["fixedMaxScale"] = {fixedMaxScale_.x, fixedMaxScale_.y, fixedMaxScale_.z};
+	json["randomScaleMin"] = {randomScaleMin_.x, randomScaleMin_.y, randomScaleMin_.z};
+	json["randomScaleMax"] = {randomScaleMax_.x, randomScaleMax_.y, randomScaleMax_.z};
+	json["isRandomLifeTime"] = isRandomLifeTime_;
+	json["minLifeTime"] = minLifeTime_;
+	json["maxLifeTime"] = maxLifeTime_;
+	json["blendMode"] = static_cast< int >(blendMode_);
+	json["colorMode"] = static_cast< int >(colorMode_);
+	json["selectedColor"] = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
+	json["colorVariation"] = colorVariation_;
+	json["lifeTime"] = lifeTime_;
 
-void Particle::Save(const std::string& filename){
-
-	json j;
-
-	// 基本情報
-	j["name"] = name_;
-
-	// カラーモードとカラー関連
-	j["colorMode"] = static_cast< int >(colorMode_);
-
-	std::vector<float> colorVec = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
-	j["selectedColor"] = colorVec;
-	j["colorVariation"] = colorVariation_;
-
-	// emitter
-	{
-		json e;
-		e["count"] = emitter_.count;
-		e["frequency"] = emitter_.frequency;
-		e["frequencyTime"] = emitter_.frequencyTime;
-
-		// Transform
-		{
-			json t;
-			t["translate"] = {emitter_.transform.translate.x, emitter_.transform.translate.y, emitter_.transform.translate.z};
-			t["rotate"] = {emitter_.transform.rotate.x, emitter_.transform.rotate.y, emitter_.transform.rotate.z};
-			t["scale"] = {emitter_.transform.scale.x, emitter_.transform.scale.y, emitter_.transform.scale.z};
-			e["transform"] = t;
-		}
-
-		j["Emitter"] = e;
+	// Emitters
+	nlohmann::json emittersJson = nlohmann::json::array();
+	for (const auto& e : emitters_){
+		nlohmann::json emitterJson;
+		emitterJson["count"] = e.count;
+		emitterJson["frequency"] = e.frequency;
+		emitterJson["shape"] = static_cast< int >(e.shape);
+		emitterJson["transform"] = {
+			{"translate", {e.transform.translate.x, e.transform.translate.y, e.transform.translate.z}},
+			{"scale", {e.transform.scale.x, e.transform.scale.y, e.transform.scale.z}},
+			{"rotate", {e.transform.rotate.x, e.transform.rotate.y, e.transform.rotate.z}},
+		};
+		emitterJson["rotationParm"] = {
+			{"useRotation", e.parmData.useRotation},
+			{"rotateContinuously", e.parmData.rotateContinuously},
+			{"randomizeInitialRotation", e.parmData.randomizeInitialRotation},
+			{"initialRotation", {e.parmData.initialRotation.x, e.parmData.initialRotation.y, e.parmData.initialRotation.z}},
+			{"rotationSpeed", {e.parmData.rotationSpeed.x, e.parmData.rotationSpeed.y, e.parmData.rotationSpeed.z}}
+		};
+		emittersJson.push_back(emitterJson);
 	}
+	json["emitters"] = emittersJson;
 
-	// 発生面フラグ
-	{
-		json faces;
-		faces["EmitPosX"] = emitPosX_;
-			faces["EmitNegX"] = emitNegX_;
-			faces["EmitPosY"] = emitPosY_;
-			faces["EmitNegY"] = emitNegY_;
-			faces["EmitPosZ"] = emitPosZ_;
-			faces["EmitNegZ"] = emitNegZ_;
-			j["faces"] = faces;
-	}
-
-	// ファイルへ書き出し
-	std::ofstream ofs(filename);
-	if (ofs){
-		ofs << j.dump(4);
-	}
+	return json;
 }
 
+void Particle::LoadFromJson(const nlohmann::json& j){
+	name_ = j.value("name", "");
+	modelName_ = j.value("model", "plane.obj");
+	textureName_ = j.value("texture", "particle");
+	autoEmit_ = j.value("isAutoEmit", true);
+	isBillboard_ = j.value("isBillboard", true);
+	useRotation_ = j.value("useRotation", false);
+	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));
+	colorMode_ = static_cast< ColorMode >(j.value("colorMode", 0));
+	lifeTime_ = j.value("lifeTime", 1.0f);
+	isStatic_ = j.value("isStatic", false);
+	useRandomScale_ = j.value("useRandomScale", false);
+	randomScaleMin_ = {j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[0],
+		j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[1],
+		j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[2]};
+	randomScaleMax_ = {j.value("randomScaleMax", std::vector<float>{1.0f, 1.0f, 1.0f})[0],
+		j.value("randomScaleMax", std::vector<float>{1.0f, 1.0f, 1.0f})[1],
+		j.value("randomScaleMax", std::vector<float>{1.0f, 1.0f, 1.0f})[2]};
+	auto col = j.value("selectedColor", std::vector<float>{1.0f, 1.0f, 1.0f, 1.0f});
+	if (col.size() == 4) selectedColor_ = {col[0], col[1], col[2], col[3]};
+	colorVariation_ = j.value("colorVariation", 0.1f);
 
-void Particle::Load(const std::string& filename){
+	isRandomLifeTime_ = j.value("isRandomLifeTime", false);
+	minLifeTime_ = j.value("minLifeTime", 0.1f);
+	maxLifeTime_ = j.value("maxLifeTime", 3.0f);
 
-	std::ifstream ifs(filename);
-	if (!ifs){
-		// ファイルがない場合などは何もしない
-		return;
+	emitters_.clear();
+	for (const auto& ej : j["emitters"]){
+		ParticleData::Emitter emitter;
+		emitter.count = ej["count"];
+		emitter.frequency = ej["frequency"];
+		emitter.shape = static_cast< EmitterShape >(ej["shape"]);
+
+		auto tr = ej["transform"]["translate"];
+		auto sc = ej["transform"]["scale"];
+		auto ro = ej["transform"]["rotate"];
+		emitter.transform.translate = {tr[0], tr[1], tr[2]};
+		emitter.transform.scale = {sc[0], sc[1], sc[2]};
+		emitter.transform.rotate = {ro[0], ro[1], ro[2]};
+
+		auto rp = ej["rotationParm"];
+		emitter.parmData.useRotation = rp["useRotation"];
+		emitter.parmData.rotateContinuously = rp["rotateContinuously"];
+		emitter.parmData.randomizeInitialRotation = rp["randomizeInitialRotation"];
+		auto ir = rp["initialRotation"];
+		emitter.parmData.initialRotation = {ir[0], ir[1], ir[2]};
+		auto rs = rp["rotationSpeed"];
+		emitter.parmData.rotationSpeed = {rs[0], rs[1], rs[2]};
+
+		emitters_.push_back(emitter);
 	}
-
-	json j;
-	ifs >> j;
-
-	// 基本情報
-	if (j.contains("name")){
-		name_ = j["name"].get<std::string>();
-	}
-
-	// カラーモードとカラー関連
-	if (j.contains("colorMode")){
-		colorMode_ = static_cast< ColorMode >(j["colorMode"].get<int>());
-	}
-
-	if (j.contains("selectedColor")){
-		auto colorVec = j["selectedColor"].get<std::vector<float>>();
-		if (colorVec.size() == 4){
-			selectedColor_.x = colorVec[0];
-			selectedColor_.y = colorVec[1];
-			selectedColor_.z = colorVec[2];
-			selectedColor_.w = colorVec[3];
-		}
-	}
-
-	if (j.contains("colorVariation")){
-		colorVariation_ = j["colorVariation"].get<float>();
-	}
-
-	// emitter
-	if (j.contains("Emitter")){
-		auto e = j["Emitter"];
-		if (e.contains("count")){
-			emitter_.count = e["count"].get<uint32_t>();
-		}
-	if (e.contains("frequency")){
-		emitter_.frequency = e["frequency"].get<float>();
-	}
-	if (e.contains("frequencyTime")){
-		emitter_.frequencyTime = e["frequencyTime"].get<float>();
-	}
-
-	// Transform
-	if (e.contains("transform")){
-		auto t = e["transform"];
-		if (t.contains("translate")){
-			auto tr = t["translate"].get<std::vector<float>>();
-			if (tr.size() == 3){
-				emitter_.transform.translate = {tr[0], tr[1], tr[2]};
-			}
-		}
-		if (t.contains("rotate")){
-			auto rr = t["rotate"].get<std::vector<float>>();
-			if (rr.size() == 3){
-				emitter_.transform.rotate = {rr[0], rr[1], rr[2]};
-			}
-		}
-		if (t.contains("scale")){
-			auto sc = t["scale"].get<std::vector<float>>();
-			if (sc.size() == 3){
-				emitter_.transform.scale = {sc[0], sc[1], sc[2]};
-			}
-		}
-	}
-}
-
-// 発生面フラグの読み込み
-if (j.contains("faces")){
-	auto f = j["faces"];
-	if (f.contains("EmitPosX")) emitPosX_ = f["EmitPosX"].get<bool>();
-	if (f.contains("EmitNegX")) emitNegX_ = f["EmitNegX"].get<bool>();
-	if (f.contains("EmitPosY")) emitPosY_ = f["EmitPosY"].get<bool>();
-	if (f.contains("EmitNegY")) emitNegY_ = f["EmitNegY"].get<bool>();
-	if (f.contains("EmitPosZ")) emitPosZ_ = f["EmitPosZ"].get<bool>();
-	if (f.contains("EmitNegZ")) emitNegZ_ = f["EmitNegZ"].get<bool>();
-}
-
 }
 
 
 bool Particle::GetUseRandomColor() const{
-	// ランダムモードのときのみtrueを返す
 	return (colorMode_ == ColorMode::Random);
 }
 
 Vector4 Particle::GetSelectedColor() const{
 	if (colorMode_ == ColorMode::SingleColor){
-		// 単色モードは選択色をそのまま返す
 		return selectedColor_;
 	} else if (colorMode_ == ColorMode::SimilarColor){
-		// 類似色モードの場合、呼ばれるたびにバラつきを反映した色を返す
-		// ここで乱数を使うと、フレームごとに色が変わってしまうため、
-		// Emit()内で色を決めるように変更することも検討してください。
-		// しかし質問文の状況を踏まえ、このままでも機能はします。
 		Vector4 c = selectedColor_;
 		c.x = std::clamp(c.x + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
 		c.y = std::clamp(c.y + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
 		c.z = std::clamp(c.z + Random::Generate(-colorVariation_, colorVariation_), 0.0f, 1.0f);
 		return c;
 	}
-
-	// デフォルトはランダムでも単色でもない場合用
-	return Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	return {1.0f, 1.0f, 1.0f, 1.0f};
 }

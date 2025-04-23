@@ -6,11 +6,11 @@
 
 
 void EulerTransform::ShowImGui(const std::string& lavel){
-    if (ImGui::CollapsingHeader(lavel.c_str())){
-        ImGui::DragFloat3("scale", &scale.x, 0.01f);
-        ImGui::DragFloat3("rotation", &rotate.x, 0.01f);
-        ImGui::DragFloat3("translate", &translate.x, 0.01f);
-    }
+	if (ImGui::CollapsingHeader(lavel.c_str())){
+		ImGui::DragFloat3("scale", &scale.x, 0.01f);
+		ImGui::DragFloat3("rotation", &rotate.x, 0.01f);
+		ImGui::DragFloat3("translate", &translate.x, 0.01f);
+	}
 }
 
 /* ========================================================================
@@ -61,9 +61,11 @@ Vector3 BaseTransform::GetWorldPosition() const{
 //	worldTransformの更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void WorldTransform::Update(const Matrix4x4& viewProMatrix){
-	rotation = Quaternion::EulerToQuaternion(eulerRotation);
 
 	Matrix4x4 scaleMat = MakeScaleMatrix(scale);
+	if (eulerRotation != Vector3 {0.0f, 0.0f, 0.0f}){
+		rotation = Quaternion::EulerToQuaternion(eulerRotation);
+	}
 	Matrix4x4 rotateMat = Quaternion::ToMatrix(rotation);
 	Matrix4x4 translateMat = MakeTranslateMatrix(translation);
 
@@ -81,4 +83,12 @@ void WorldTransform::Update(const Matrix4x4& viewProMatrix){
 
 	// 定数バッファに反映
 	TransferData(matrix);
+}
+
+void Transform2D::ShowImGui(const std::string& lavel){
+	if (ImGui::CollapsingHeader(lavel.c_str())){
+		ImGui::DragFloat2("scale", &scale.x, 0.01f);
+		ImGui::DragFloat("rotation", &rotate, 0.01f);
+		ImGui::DragFloat2("translate", &translate.x, 0.01f);
+	}
 }

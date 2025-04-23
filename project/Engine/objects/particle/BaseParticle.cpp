@@ -24,10 +24,13 @@ BaseParticle::BaseParticle(){
 }
 
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
-	Emit(count);
+	// 初期エミッターを1つ作って即時Emit（任意）
+	ParticleData::Emitter emitter;
+	emitter.Initialize(count);
+	emitters_.push_back(emitter);
 
 	modelName_ = modelName;
-
+	textureName_ = texturePath;
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -37,96 +40,124 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 }
 
 void BaseParticle::Update(){
+	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
+
 	const float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
-	// ----------------------------------------
-	// ▼ モデルが未取得ならチェック
-	// ----------------------------------------
 	if (!modelData_){
 		if (ModelManager::GetInstance()->IsModelLoaded(modelName_)){
 			modelData_ = ModelManager::GetInstance()->GetModelData(modelName_);
-
-			ComPtr<ID3D12Device>device = GraphicsGroup::GetInstance()->GetDevice();
-			//=== 頂点バッファ初期化 ===//
+			auto device = GraphicsGroup::GetInstance()->GetDevice();
 			modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
 			modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
 		}
-	} else{
-		// ----------------------------------------
-		// ▼ パーティクルの更新
-		// ----------------------------------------
-		instanceDataList_.clear();
-		instanceNum_ = 0;
+		return;
+	}
 
-		for (auto it = particles_.begin(); it != particles_.end();){
-			if (instanceNum_ >= kMaxInstanceNum_) break;
-
-			if (it->lifeTime <= it->currentTime){
-				it = particles_.erase(it);
-				continue;
-			}
-
-			// 行列計算
-			Matrix4x4 worldMatrix;
-			if (isBillboard_){
-				Matrix4x4 billboard = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetWorldMatrix());
-				billboard.m[3][0] = billboard.m[3][1] = billboard.m[3][2] = 0.0f;
-				worldMatrix = Matrix4x4::Multiply(
-					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), billboard),
-					MakeTranslateMatrix(it->transform.translate));
-			} else{
-				worldMatrix = Matrix4x4::Multiply(
-					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), EulerToMatrix(it->transform.rotate)),
-					MakeTranslateMatrix(it->transform.translate));
-			}
-
-			Matrix4x4 wvp = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-
-			// GPU転送用インスタンスデータ作成
-			ParticleData::ParticleForGPU instance;
-			instance.wvp = wvp;
-			instance.world = worldMatrix;
-			instance.color = it->color;
-
-			// アルファ設定
-			if (isFixationAlpha_){
-				instance.color.w = 1.0f;
-			} else{
-				float ratio = std::clamp(it->currentTime / it->lifeTime, 0.0f, 1.0f);
-				instance.color.w = 1.0f - ratio;
-			}
-
-			instanceDataList_.push_back(instance);
-
-			// パーティクル更新
-			it->currentTime += deltaTime;
-			if (!isStatic_){
-				it->transform.translate += it->velocity * deltaTime;
-			}
-
-			++instanceNum_;
-			++it;
-		}
-
-		// ----------------------------------------
-		// ▼ GPUバッファ転送
-		// ----------------------------------------
-		if (instanceNum_ > 0){
-			instancingBuffer_.TransferVectorData(instanceDataList_);
-		}
-		modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
-		materialBuffer_.TransferData(materialData_);
-		// ----------------------------------------
-		// ▼ 自動生成
-		// ----------------------------------------
-		if (autoEmit_){
-			emitter_.frequencyTime += deltaTime;
-			if (emitter_.frequencyTime >= emitter_.frequency){
-				Emit(emitter_.count);
-				emitter_.frequencyTime = 0.0f;
+	if (autoEmit_){
+		for (auto& emitter : emitters_){
+			emitter.frequencyTime += deltaTime;
+			if (emitter.frequencyTime >= emitter.frequency){
+				Emit(emitter);
+				emitter.frequencyTime = 0.0f;
 			}
 		}
 	}
+
+	// パーティクル更新
+	instanceDataList_.clear();
+	instanceNum_ = 0;
+
+	for (auto it = particles_.begin(); it != particles_.end();){
+		if (instanceNum_ >= kMaxInstanceNum_) break;
+
+		if (it->lifeTime <= it->currentTime){
+			it = particles_.erase(it);
+			continue;
+		}
+
+		//回転させる
+		if (it->rotationSpeed.x > 0.0f ||
+			it->rotationSpeed.y > 0.0f ||
+			it->rotationSpeed.z > 0.0f){
+			it->transform.rotate += it->rotationSpeed * deltaTime;
+		}
+
+		// 行列計算
+		Matrix4x4 worldMatrix;
+		if (isBillboard_){
+			// ビルボード用ワールド行列の構築
+			Matrix4x4 billboard = CameraManager::GetWorldMatrix();
+			billboard.m[3][0] = billboard.m[3][1] = billboard.m[3][2] = 0.0f;
+
+			switch (billboardAxis_){
+				case BillboardAxis::AllAxis:
+					billboard = Matrix4x4::Multiply(backToFrontMatrix_, billboard);
+					break;
+				case BillboardAxis::YAxis:
+					billboard = MakeYAxisBillboard(billboard);
+					break;
+				case BillboardAxis::XAxis:
+					billboard = MakeXAxisBillboard(billboard);
+					break;
+				case BillboardAxis::ZAxis:
+					billboard = MakeZAxisBillboard(billboard);
+					break;
+			}
+
+			if (useRotation_){
+				worldMatrix = Matrix4x4::Multiply(
+					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale),
+					Matrix4x4::Multiply(EulerToMatrix(it->transform.rotate), billboard)),
+					MakeTranslateMatrix(it->transform.translate));
+			} else{
+				worldMatrix = Matrix4x4::Multiply(
+					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), billboard),
+					MakeTranslateMatrix(it->transform.translate));
+			}
+		} else{
+			// 通常の回転付き行列
+			worldMatrix = Matrix4x4::Multiply(
+				Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale),
+				useRotation_ ? EulerToMatrix(it->transform.rotate) : Matrix4x4::MakeIdentity()),
+				MakeTranslateMatrix(it->transform.translate));
+		}
+
+
+		Matrix4x4 wvp = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
+
+		// GPU転送用インスタンスデータ作成
+		ParticleData::ParticleForGPU instance;
+		instance.wvp = wvp;
+		instance.world = worldMatrix;
+		instance.color = it->color;
+
+		// アルファ設定
+		if (isFixationAlpha_){
+			instance.color.w = 1.0f;
+		} else{
+			float ratio = std::clamp(it->currentTime / it->lifeTime, 0.0f, 1.0f);
+			instance.color.w = 1.0f - ratio;
+		}
+
+		instanceDataList_.push_back(instance);
+
+		// パーティクル更新
+		it->currentTime += deltaTime;
+		if (!isStatic_){
+			it->transform.translate += it->velocity * deltaTime;
+		}
+
+		++instanceNum_;
+		++it;
+	}
+
+
+	if (instanceNum_ > 0){
+		instancingBuffer_.TransferVectorData(instanceDataList_);
+	}
+	modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
+	materialBuffer_.TransferData(materialData_);
 
 
 }
@@ -139,14 +170,11 @@ void BaseParticle::Draw(){
 
 	modelData_->vertexBuffer.SetCommand(commandList);
 
-	// 定数バッファ（マテリアル）をルートパラメータ1にバインド
 	materialBuffer_.SetCommand(commandList, 0);
-
-	// インスタンスバッファ（StructuredBuffer SRV）をルートパラメータ2にバインド
+	//t0
 	commandList->SetGraphicsRootDescriptorTable(1, instancingBuffer_.GetGpuHandle());
-
-	// テクスチャ（SRV）をルートパラメータ3にバインド（想定：ImTextureIDをSRVとして使っている場合）
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle); // 以前と同様
+	//t1
+	commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
 	// 描画コマンド（インスタンシング）
 	commandList->DrawInstanced(
@@ -157,7 +185,7 @@ void BaseParticle::Draw(){
 
 #ifdef _DEBUG
 	// デバッグ用：エミッタの形状を描画
-	if (currentShape_ == EmitterShape::OBB){
+	/*if (currentShape_ == EmitterShape::OBB){
 		PrimitiveDrawer::GetInstance()->DrawOBB(
 			emitter_.transform.translate,
 			emitter_.transform.rotate,
@@ -171,7 +199,7 @@ void BaseParticle::Draw(){
 			8,
 			{1.0f, 1.0f, 1.0f, 1.0f}
 		);
-	}
+	}*/
 #endif
 }
 
@@ -187,19 +215,19 @@ void BaseParticle::ImGui(){
 			currentShape_ = ( EmitterShape ) shapeIndex;
 		}
 
-		if (currentShape_ == EmitterShape::OBB){
-			ImGui::DragFloat3("size", &emitter_.transform.scale.x, 0.01f);
-			ImGui::Checkbox("Emit +X Face", &emitPosX_);
-			ImGui::Checkbox("Emit -X Face", &emitNegX_);
-			ImGui::Checkbox("Emit +Y Face", &emitPosY_);
-			ImGui::Checkbox("Emit -Y Face", &emitNegY_);
-			ImGui::Checkbox("Emit +Z Face", &emitPosZ_);
-			ImGui::Checkbox("Emit -Z Face", &emitNegZ_);
-		}
+		//if (currentShape_ == EmitterShape::OBB){
+		//	ImGui::DragFloat3("size", &emitter_.transform.scale.x, 0.01f);
+		//	ImGui::Checkbox("Emit +X Face", &emitPosX_);
+		//	ImGui::Checkbox("Emit -X Face", &emitNegX_);
+		//	ImGui::Checkbox("Emit +Y Face", &emitPosY_);
+		//	ImGui::Checkbox("Emit -Y Face", &emitNegY_);
+		//	ImGui::Checkbox("Emit +Z Face", &emitPosZ_);
+		//	ImGui::Checkbox("Emit -Z Face", &emitNegZ_);
+		//}
 
-		if (currentShape_ == EmitterShape::Sphere){
-			ImGui::DragFloat("radius", &emitter_.transform.scale.x, 0.01f);
-		}
+		//if (currentShape_ == EmitterShape::Sphere){
+		//	ImGui::DragFloat("radius", &emitter_.transform.scale.x, 0.01f);
+		//}
 	}
 }
 
@@ -215,7 +243,7 @@ void BaseParticle::VisualSettingGui(){
 
 	ImGui::Text("Texture Name:");
 	ImGui::SameLine();
-	ImGui::Text(textureName_.c_str()); // ※ 新しくメンバ変数にしてもOK
+	ImGui::Text(textureName_.c_str());
 
 	// ===== テクスチャ選択 UI ===== //
 	ImGui::SeparatorText("Choose Texture");
@@ -237,7 +265,7 @@ void BaseParticle::VisualSettingGui(){
 
 	// ===== モデル選択 UI ===== //
 	ImGui::SeparatorText("Choose Model");
-	const auto& models = ModelManager::GetInstance()->GetLoadedModelNames(); // 仮にこの関数があれば
+	const auto& models = ModelManager::GetInstance()->GetLoadedModelNames();
 	if (ImGui::BeginCombo("Model", modelName_.c_str())){
 		for (const auto& model : models){
 			bool is_selected = (modelName_ == model);
@@ -303,111 +331,163 @@ void BaseParticle::VisualSettingGui(){
 void BaseParticle::ParameterGui(){
 	ImGui::Checkbox("isStatic", &isStatic_);
 	ImGui::Checkbox("isBillboard", &isBillboard_);
+	ImGui::Checkbox("useRotation", &useRotation_);
 
-	//サイズの設定
+	if (isBillboard_){
+		const char* axisNames[] = {"All-Axis", "Y-Axis", "X-Axis", "Z-Axis"};
+		int axis = static_cast< int >(billboardAxis_);
+		if (ImGui::Combo("Billboard Axis", &axis, axisNames, IM_ARRAYSIZE(axisNames))){
+			billboardAxis_ = static_cast< BillboardAxis >(axis);
+		}
+	}
+
 	ImGui::SeparatorText("Particle Size");
 	ImGui::Checkbox("Use Random Scale", &useRandomScale_);
 	if (useRandomScale_){
-		ImGui::DragFloat("Min Scale", &randomScaleMin_, 0.01f, 0.0f, 10.0f);
-		ImGui::DragFloat("Max Scale", &randomScaleMax_, 0.01f, 0.0f, 10.0f);
-		// minとmaxの順序を保証
-		if (randomScaleMin_ > randomScaleMax_){
-			std::swap(randomScaleMin_, randomScaleMax_);
-		}
+		ImGui::DragFloat3("Min Scale", &randomScaleMin_.x, 0.01f);
+		ImGui::DragFloat3("Max Scale", &randomScaleMax_.x, 0.01f);
+		if (randomScaleMin_.x > randomScaleMax_.x) std::swap(randomScaleMin_.x, randomScaleMax_.x);
+		if (randomScaleMin_.y > randomScaleMax_.y) std::swap(randomScaleMin_.y, randomScaleMax_.y);
+		if (randomScaleMin_.z > randomScaleMax_.z) std::swap(randomScaleMin_.z, randomScaleMax_.z);
 	} else{
-		ImGui::DragFloat("Max Scale", &fixedMaxScale_, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat3("scale", &fixedMaxScale_.x, 0.01f, 0.0f, 10.0f);
+	}
+
+	ImGui::SeparatorText("lifeTime");
+	ImGui::Checkbox("Random LifeTime", &isRandomLifeTime_);
+	if (isRandomLifeTime_){
+		ImGui::DragFloat("Max", &maxLifeTime_, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat("Min", &minLifeTime_, 0.01f, 0.0f, 10.0f);
+		if (minLifeTime_ > maxLifeTime_) std::swap(minLifeTime_, maxLifeTime_);
+		lifeTime_ = Random::Generate<float>(minLifeTime_, maxLifeTime_);
+	} else{
+		ImGui::DragFloat("lifeTime", &lifeTime_, 0.01f, 0.0f, 10.0f);
 	}
 }
+
 
 void BaseParticle::EmitterGui(){
-	if (ImGui::CollapsingHeader("emitterType")){
+	if (ImGui::CollapsingHeader("Emitters", ImGuiTreeNodeFlags_DefaultOpen)){
+		int emitterIndex = 0;
+		for (auto& emitter : emitters_){
+			ImGui::PushID(emitterIndex);
+			std::string label = "Emitter " + std::to_string(emitterIndex);
+			if (ImGui::TreeNode(label.c_str())){
+				ImGui::Checkbox("Auto Emit", &autoEmit_);
+				if (!autoEmit_){
+					if (ImGui::Button("emit")){
+						Emit(emitter);
+					}
+				}
 
-		// 形状選択UI
-		int shapeIndex = ( int ) currentShape_;
-		const char* shapeNames[] = {"OBB", "Sphere"};
-		if (ImGui::Combo("Emitter Shape", &shapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames))){
-			currentShape_ = ( EmitterShape ) shapeIndex;
+				int shapeIndex = static_cast< int >(emitter.shape);
+				const char* shapeNames[] = {"OBB", "Sphere"};
+				if (ImGui::Combo("Shape", &shapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames))){
+					emitter.shape = static_cast< EmitterShape >(shapeIndex);
+				}
+				ImGui::DragFloat3("Position", &emitter.transform.translate.x, 0.01f);
+				ImGui::DragFloat3("Scale", &emitter.transform.scale.x, 0.01f);
+				ImGui::DragFloat("Frequency", &emitter.frequency, 0.01f, 0.0f);
+				ImGui::DragInt("Count", reinterpret_cast< int* >(&emitter.count), 1, 1, 100);
+
+				ImGui::SeparatorText("emitedParticleParm");
+				ImGui::Checkbox("Use Rotation", &emitter.parmData.useRotation);
+				ImGui::Checkbox("Rotate Continuously", &emitter.parmData.rotateContinuously);
+				ImGui::Checkbox("Random Initial Rotation", &emitter.parmData.randomizeInitialRotation);
+
+				if (!emitter.parmData.randomizeInitialRotation){
+					ImGui::DragFloat3("Initial Rotation (Euler)", &emitter.parmData.initialRotation.x, 0.1f);
+				}
+
+				if (emitter.parmData.rotateContinuously){
+					ImGui::DragFloat3("Rotation Speed", &emitter.parmData.rotationSpeed.x, 0.1f);
+				}
+
+
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+			emitterIndex++;
 		}
-
-		if (currentShape_ == EmitterShape::OBB){
-			ImGui::DragFloat3("size", &emitter_.transform.scale.x, 0.01f);
-			ImGui::Checkbox("Emit +X Face", &emitPosX_);
-			ImGui::Checkbox("Emit -X Face", &emitNegX_);
-			ImGui::Checkbox("Emit +Y Face", &emitPosY_);
-			ImGui::Checkbox("Emit -Y Face", &emitNegY_);
-			ImGui::Checkbox("Emit +Z Face", &emitPosZ_);
-			ImGui::Checkbox("Emit -Z Face", &emitNegZ_);
-		}
-
-		if (currentShape_ == EmitterShape::Sphere){
-			ImGui::DragFloat("radius", &emitter_.transform.scale.x, 0.01f);
+		if (ImGui::Button("Add Emitter")){
+			ParticleData::Emitter newEmitter;
+			newEmitter.Initialize(10);
+			emitters_.push_back(newEmitter);
 		}
 	}
 }
 
-void BaseParticle::Emit(uint32_t count){
-	for (uint32_t i = 0; i < count; ++i){
-		if (particles_.size() >= static_cast< size_t >(kMaxInstanceNum_)){
-			break;
-		}
 
+void BaseParticle::Emit(ParticleData::Emitter& emitter){
+	for (uint32_t i = 0; i < emitter.count && particles_.size() < static_cast< size_t >(kMaxInstanceNum_); ++i){
 		ParticleData::Parameters particle;
+
+		// カラー
 		if (GetUseRandomColor()){
 			particle.SetColorRandom();
 		} else{
 			particle.color = GetSelectedColor();
 		}
 
+		// ポジション・速度・寿命
 		float speed = Random::Generate(0.5f, 2.0f);
+		Vector3 localPoint = emitter.transform.translate;
+		particle.transform.translate = localPoint;
+		particle.velocity = GenerateVelocity(speed);
+		particle.lifeTime = lifeTime_;
+		particle.currentTime = 0.0f;
 
-		Vector3 localPoint {};
-		Vector3 localNormal {};
+		// スケール
+		particle.transform.scale = useRandomScale_
+			? Vector3(
+			Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
+			Random::Generate(randomScaleMin_.y, randomScaleMax_.y),
+			Random::Generate(randomScaleMin_.z, randomScaleMax_.z))
+			: fixedMaxScale_;
+		particle.maxScale = particle.transform.scale;
 
-		// パーティクルの初期位置と速度の設定
-		if (currentShape_ == EmitterShape::OBB){
-			FaceInfo fi = GetRandomPointAndNormalOnOBBSurface(emitter_.transform,
-															  emitPosX_, emitNegX_,
-															  emitPosY_, emitNegY_,
-															  emitPosZ_, emitNegZ_);
-			localPoint = fi.localPoint;
-			localNormal = fi.localNormal;
-			particle.velocity = TransformNormal(localNormal, Matrix4x4::MakeIdentity()) * speed;
+		// 回転
+		if (emitter.parmData.useRotation){
+			if (emitter.parmData.randomizeInitialRotation){
+				particle.transform.rotate = {
+					Random::Generate(0.0f, 360.0f),
+					Random::Generate(0.0f, 360.0f),
+					Random::Generate(0.0f, 360.0f)
+				};
+			} else{
+				particle.transform.rotate = emitter.parmData.initialRotation;
+			}
 
-		} else if (currentShape_ == EmitterShape::Sphere){
-			Vector3 si = GetRandomPointOnSphere(emitter_.transform);
-			localPoint = si;
-			particle.SetVelocityRandom(-1.0f, 1.0f);
-		}
-
-		Vector3 worldPos = Vector3::Transform(localPoint, Matrix4x4::MakeIdentity()) + emitter_.transform.translate;
-		particle.transform.translate = worldPos;
-		particle.maxScale = fixedMaxScale_;
-		// maxScaleの設定（ランダムまたは固定値）
-		if (useRandomScale_){
-
-			particle.transform.scale = Random::GenerateVector3(randomScaleMin_, randomScaleMax_); // ランダム値を設定
+			if (emitter.parmData.rotateContinuously){
+				particle.rotationSpeed = emitter.parmData.rotationSpeed;
+			}
 		} else{
-			particle.transform.scale = Vector3(fixedMaxScale_, fixedMaxScale_, fixedMaxScale_); // 固定値を設定
+			particle.transform.rotate = {0.0f, 0.0f, 0.0f};
 		}
 
-		if (!isBillboard_){
-			// 非ビルボードモードでは発生時にカメラの方向を設定
-			Matrix4x4 cameraMatrix = CameraManager::GetWorldMatrix();
-			particle.transform.rotate = Matrix4x4::ToEuler(cameraMatrix);
-		}
-
-		// ライフタイムの設定
-		particle.lifeTime = SetParticleLifeTime();
 		particles_.push_back(particle);
 	}
 
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
+void BaseParticle::Emit(){
+	for (auto& emitter:emitters_){
+		Emit(emitter);
+	}
+}
+
+
 Vector3 BaseParticle::GenerateVelocity(float speed){
 	// デフォルトのランダムな方向の速度生成
 	Vector3 velocity = Random::GenerateVector3(-1.0f, 1.0f);
 	return velocity * speed;
+}
+
+void BaseParticle::SetEmitPos(const Vector3& pos){
+	for (auto& emitter:emitters_){
+		emitter.transform.translate = pos;
+	}
 }
 
 void BaseParticle::CreateBuffer(){

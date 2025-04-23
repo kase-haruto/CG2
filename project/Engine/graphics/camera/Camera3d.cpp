@@ -8,7 +8,7 @@
 Camera3d::Camera3d()
     : BaseCamera(){
 	BaseCamera::SetName("MainCamera");
-
+	transform_.translate = {0.0f, 2.0f, -10.0f};
 }
 
 void Camera3d::Update(){

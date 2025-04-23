@@ -15,7 +15,7 @@ public:
 	DemoParticle();
 	~DemoParticle() override = default;
 
-	void Initialize(const std::string& modelName, const std::string& texturePath) override;
+	void Initialize(const std::string& modelName, const std::string& texturePath,int32_t count = 1) ;
 	void Update() override;
 
 private:

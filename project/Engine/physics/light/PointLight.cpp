@@ -10,7 +10,9 @@
 #endif // _DEBUG
 
 
-PointLight::PointLight(){}
+PointLight::PointLight(){
+	SceneObject::EnableGuiList();
+}
 
 PointLight::~PointLight(){}
 
@@ -44,12 +46,15 @@ void PointLight::Map(){
 
 void PointLight::ShowGui(){
 	SceneObject::ShowGui();
-
+#ifdef _DEBUG
 	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
 	ImGui::DragFloat("radius", &data_->radius, 0.01f);
 	ImGui::DragFloat("decay", &data_->decay, 0.01f);
+#endif // _DEBUG
+
+
 }
 
 void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type){

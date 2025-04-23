@@ -1,50 +1,32 @@
 #pragma once
 
 #include "BaseParticle.h"
-
 #include <string>
 
 class Particle
 	: public BaseParticle{
 public:
-	//===================================================================*/
-	//                    public methods
-	//===================================================================*/
-
 	Particle();
 	~Particle() override;
 
-	virtual void Initialize(const std::string& modelName, const std::string& texturePath);
-
+	void Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count) override;
+	void LoadInitialize();
 	/* ui ===============================================*/
-	virtual void ImGui();
-	void Load(const std::string& filename);
-	void Save(const std::string& filename);
+	void ImGui() override;
 
-protected:
-	//===================================================================*/
-	//                    private methods
-	//===================================================================*/
-	std::string fileDirectoryPath = "./Resources/json/particle/";
+	/* json =============================================*/
+	nlohmann::json SaveToJson() const override;
+	void LoadFromJson(const nlohmann::json& j)override;
 
-protected:
-	//===================================================================*/
-	//                    protected methods
-	//===================================================================*/
 
-public:
-	//===================================================================*/
-	//                    getter/setter
-	//===================================================================*/
-
+	// getter/setter
 	const std::string& GetName() const{ return name_; }
 	void SetName(const std::string& name){ name_ = name; }
-	void SetEmitPos(const Vector3& pos){ emitter_.transform.translate = pos; }
-	void SetEmitRotate(const Vector3& rotate){ emitter_.transform.rotate = rotate; }
-	// BaseParticleの仮想関数をオーバーライド
+	const std::string& GetModelName() const{ return modelName_; }
+	const std::string& GetTextureName() const{ return textureName_; }
 	bool GetUseRandomColor() const override;
 	Vector4 GetSelectedColor() const override;
 
-	const Vector3& GetEmitterPos()const{ return emitter_.transform.translate; }
-
+private:
+	std::string fileDirectoryPath = "./Resources/json/particle/";
 };

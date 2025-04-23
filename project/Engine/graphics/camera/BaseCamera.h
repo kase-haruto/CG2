@@ -31,7 +31,7 @@ public:
 	virtual ~BaseCamera() = default;
 
 	virtual void Update();  // 更新
-
+	void ShowImGui();		// ImGui表示
 	virtual void UpdateMatrix();  // 行列の更新
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType);
@@ -62,17 +62,22 @@ public:
 	void SetCamera(const Vector3& pos, const Vector3& rotate);
 
 	// Getter
+	const Matrix4x4& GetWorldMat() const{ return worldMatrix_; }
 	const Matrix4x4& GetViewMatrix() const;
 	const Matrix4x4& GetProjectionMatrix() const;
 	const Matrix4x4& GetViewProjectionMatrix() const;
 	const Vector3& GetRotate() const;
 	const Vector3& GetTranslate() const;
+	bool IsActive()const{ return isActive_; }
+	void SetActive(bool isActive){ isActive_ = isActive; }
+
+	Matrix4x4 GetViewProjection()const{ return viewProjectionMatrix_; }
 
 protected:
 	//==================================================================*//
 	//			protected variables
 	//==================================================================*//
-	
+
 	Matrix4x4 viewMatrix_;          // ビュー行列
 	Matrix4x4 projectionMatrix_;    // プロジェクション行列
 
@@ -89,7 +94,19 @@ protected:
 	float shakeIntensity_ = 0.0f;  // シェイクの強さ
 	Vector3 originalPosition_;     // シェイク前の元のカメラ位置
 
+protected:
+	//==================================================================*//
+	//			protected variables
+	//==================================================================*//
+	EulerTransform transform_ = {
+		{1.0f, 1.0f, 1.0f},			// scale
+		{0.0f, 0.0f, 0.0f},			// rotate
+		{0.0f, 4.0f, -15.0f}		// translate
+	};
 
+	bool isActive_ = true;				//アクティブかどうか
+	Matrix4x4 viewProjectionMatrix_;	// ビュープロジェクション行列
+	Matrix4x4 worldMatrix_;				// ワールド行列
 private:
 	//==================================================================*//
 	//			private variables

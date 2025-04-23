@@ -24,28 +24,27 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
-	BaseGameObject(const std::string& modelName, std::function<void(IMeshRenderable*)>registerCB);
+	BaseGameObject(const std::string& modelName,
+				   std::optional<std::string> objectName,
+				   std::function<void(IMeshRenderable*)>registerCB);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	virtual void ShowGui()override;
+	void ShowGui()override;
+	virtual void DerivativeGui();
 
-protected:
-	//===================================================================*/
-	//                    protected methods
-	//===================================================================*/
-	void AnimationModelUpdate();
-	void StaticModelUpdate();
+	void SaveToJson(const std::string& fileName)const;
+	void LoadFromJson(const std::string& fileName);
 
 protected:
 	//===================================================================*/
 	//                    protected methods
 	//===================================================================*/
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
-	std::unique_ptr<AnimationModel> animationModel_ = nullptr;	// アニメーションモデル
+	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
 protected:
 	//===================================================================*/
@@ -72,12 +71,22 @@ public:
 		}
 	}
 
+	void SetScale(const Vector3& scale){
+		if (model_){
+			model_->worldTransform_.scale = scale;
+		}
+	}
+
 	virtual const Vector3 GetCenterPos()const{
 		const Vector3 offset = {0.0f, 1.0f, 0.0f};
 		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
 		return worldPos;
 	}
-
+	void SetColor(const Vector4& color){
+		if (model_){
+			model_->SetColor(color);
+		}
+	}
 	BaseModel* GetModel()const{ return model_.get(); }
 };
 

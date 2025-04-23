@@ -15,7 +15,7 @@ public:
 	//			methods
 	//===================================================================*/
 	SceneContext();
-	~SceneContext() = default;
+	~SceneContext();
 	std::unique_ptr<MeshRenderer> meshRenderer_;
 };
 

@@ -4,7 +4,7 @@
 /* include space
 /* ===================================================================== */
 #include "engine/objects/Sprite.h"
-#include "Game/3d/Base/BaseGameObject.h"
+#include "Game/3dObject/Base/BaseGameObject.h"
 #include "engine/physics/Triangle.h"
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
@@ -56,7 +56,7 @@ private:
 	std::unique_ptr<Model> modelField_ = nullptr;
 	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
-	std::unique_ptr<AnimationModel> walkHuman_ = nullptr;
+	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
 
 	/* editor =====================================================*/
 	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;

@@ -52,17 +52,14 @@ void TestScene::Initialize(){
 	sceneContext_->meshRenderer_->Register(modelField_.get());
 
 	//test用
-	bunny_ = std::make_unique<BaseGameObject>("bunny.obj",registerToRenderer);
-	bunny_->SetName("bunny");
+	bunny_ = std::make_unique<BaseGameObject>("bunny.obj","bunny", registerToRenderer);
 	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 
-	teapot_ = std::make_unique<BaseGameObject>("teapot.obj", registerToRenderer);
-	teapot_->SetName("teapot");
+	teapot_ = std::make_unique<BaseGameObject>("teapot.obj","teapot", registerToRenderer);
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
-	walkHuman_ = std::make_unique<AnimationModel>("sneakWalk.gltf");
-	sceneContext_->meshRenderer_->Register(walkHuman_.get());
-
+	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf","human", registerToRenderer);
+	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +84,7 @@ void TestScene::Update(){
 	//test
 	bunny_->Update();
 	teapot_->Update();
-	walkHuman_->AnimationUpdate();
+	walkHuman_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -97,6 +94,8 @@ void TestScene::Update(){
 
 
 void TestScene::CleanUp(){
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
 	SceneObjectManager::GetInstance()->ClearAllObject();
 }
 

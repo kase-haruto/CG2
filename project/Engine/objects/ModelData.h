@@ -14,18 +14,18 @@
 #include <map>
 
 struct ModelData{
-    std::vector<VertexData> vertices;
-    std::vector<uint32_t> indices;
+	std::vector<VertexData> vertices;
+	std::vector<uint32_t> indices;
 
-    MaterialData material;
+	MaterialData material;
 
-    //-----------------------------------------------------------
-    // アニメーション情報
-    //-----------------------------------------------------------
+	//-----------------------------------------------------------
+	// アニメーション情報
+	//-----------------------------------------------------------
 	std::map<std::string, JointWeightData> skinClusterData;
-    Animation animation;
+	Animation animation;
 	Skeleton skeleton;
-    // std::vector<Animation> animations;
+	// std::vector<Animation> animations;
 	DxVertexBuffer<VertexData> vertexBuffer;
 	DxIndexBuffer<uint32_t> indexBuffer;
 };

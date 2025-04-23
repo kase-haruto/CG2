@@ -1,4 +1,7 @@
 #pragma once
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 
 /* engine */
 #include "engine/objects/ModelData.h"
@@ -24,19 +27,26 @@
 #include <d3d12.h>
 #include <wrl.h>
 
+/* externals */
+#include <externals/nlohmann/json.hpp>
+
 enum class EmitterShape{
 	OBB,
 	Sphere
 };
 
+/* ========================================================================
+/*	namespace
+/* ===================================================================== */
 namespace ParticleData{
 	struct Parameters{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+		Vector3 rotationSpeed {0.0f,0.0f,0.0f};
 		Vector3 velocity {};
 		Vector4 color {1.0f, 1.0f, 1.0f, 1.0f};
 		float lifeTime = 1.0f;
 		float currentTime = 0.0f;
-		float maxScale = 1.0f;
+		Vector3 maxScale = {1.0f, 1.0f, 1.0f};
 
 		void SetColorRandom();          // 色をランダムで初期化
 		void SetColorInitialize();      // 色を初期化する(白)
@@ -50,19 +60,32 @@ namespace ParticleData{
 		Vector4 color;
 	};
 
+	struct EmittedPtlData{
+
+		// 回転
+		bool useRotation = true;              // 回転を使用するか
+		bool rotateContinuously = false;      // 回転し続けるか（毎フレーム加算）
+		bool randomizeInitialRotation = true; // 初期回転をランダムにするか
+		Vector3 initialRotation = {0.0f, 0.0f, 0.0f}; // 初期回転（ランダムでなければ使用）
+		Vector3 rotationSpeed = {0.0f, 0.0f, 0.0f};   // 連続回転する場合の速度（度/秒など）
+	};
+
 	struct Emitter{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
 		uint32_t count = 1;				//発生数
-		float frequency;				//発生頻度
+		float frequency = 0.1f;			//発生頻度
 		float frequencyTime = 0.1f;		//頻度用時刻
 		EmitterShape shape = EmitterShape::Sphere; // エミッタの形状
+		ParticleData::EmittedPtlData parmData;		//発生させるパーティクルのデータ
 
 		void Initialize(uint32_t count);
 		void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
 	};
 }
 
-
+/* ========================================================================
+/* base class
+/* ===================================================================== */
 class BaseParticle{
 protected:
 	// カラーモード用のenumを定義
@@ -71,6 +94,14 @@ protected:
 		SingleColor,
 		SimilarColor
 	};
+
+	enum class BillboardAxis{
+		AllAxis,
+		YAxis,
+		XAxis,
+		ZAxis
+	};
+
 public:
 	//===================================================================*/
 	//                    public methods
@@ -87,33 +118,30 @@ public:
 	void ParameterGui();
 	void EmitterGui();
 
-	virtual void Emit(uint32_t count);
+	virtual void Emit(ParticleData::Emitter& emitter);
+	void Emit();
 
-	// ライフタイム設定用の仮想関数
+	//--------- accessor -----------------------------------------------------
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
-
-
-	// 派生クラスでオーバーライド可能な速度生成
 	virtual Vector3 GenerateVelocity(float speed);
-
-	virtual bool GetUseRandomColor() const{ return true; } // デフォルトではランダム使用
+	virtual bool GetUseRandomColor() const{ return true; }
 	virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
-
-	// 色合成取得
 	BlendMode GetBlendMode() const{ return blendMode_; }
-
-	// maxScale設定のためのインターフェース
 	void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
-	void SetFixedMaxScale(float scale){ fixedMaxScale_ = scale; }
-	void SetRandomScaleRange(float minScale, float maxScale){
+	void SetFixedMaxScale(Vector3 scale){ fixedMaxScale_ = scale; }
+	void SetRandomScaleRange(Vector3 minScale, Vector3 maxScale){
 		randomScaleMin_ = minScale;
 		randomScaleMax_ = maxScale;
 	}
 	void SetEmitterShape(EmitterShape shape){ currentShape_ = shape; }
-	void SetEmitter(const ParticleData::Emitter& emitter){ emitter_ = emitter; }
-private:
+	void SetEmitPos(const Vector3& pos);
+	//--------- json -----------------------------------------------------
+	virtual nlohmann::json SaveToJson() const = 0;
+	virtual void LoadFromJson(const nlohmann::json& j) = 0;
+
+protected:
 	//===================================================================*/
-	//                    private methods
+	//                    protected methods
 	//===================================================================*/
 
 	/* resources =======================*/
@@ -123,16 +151,25 @@ public:
 	//===================================================================*/
 	//				public methods
 	//===================================================================*/
+	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
 	bool autoEmit_ = true;
-	int32_t kMaxInstanceNum_ = 512;
+	int32_t kMaxInstanceNum_ = 1024;
 	int32_t instanceNum_ = 0;
 
-	bool useRandomScale_ = false;	// ランダムスケールを使用するかのフラグ
-	float fixedMaxScale_ = 1.0f;	// 固定スケール値
-	float randomScaleMin_ = 1.0f;	// ランダムスケールの最小値
-	float randomScaleMax_ = 6.0f;	// ランダムスケールの最大値
+	bool useRotation_ = false;
+
+	bool useRandomScale_ = false;
+	Vector3 fixedMaxScale_ = {1.0f, 1.0f, 1.0f};
+	Vector3 randomScaleMin_ = {1.0f, 1.0f, 1.0f};
+	Vector3 randomScaleMax_ = {6.0f, 6.0f, 6.0f};
+
+	float lifeTime_ = 1.0f; // パーティクルの寿命
+
+	bool isRandomLifeTime_ = true;
+	float maxLifeTime_ = 3.0f;
+	float minLifeTime_ = 1.0f;
 
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
@@ -155,13 +192,13 @@ protected:
 
 	/* data =======================*/
 	std::string modelName_;                           // ▼ロードするファイル名を保持
-	std::string textureName_;                        // ▼テクスチャのパスを保持
+	std::string textureName_ = "particle.png";        // ▼テクスチャのパスを保持
 	std::optional<ModelData> modelData_;              // ▼取得後に代入
 	Material materialData_;
 	std::vector<ParticleData::ParticleForGPU> instanceDataList_;
 
 	/* emitter ------------------------------------*/
-	ParticleData::Emitter emitter_ {};
+	std::vector<ParticleData::Emitter> emitters_;
 
 	bool emitPosX_ = true;
 	bool emitNegX_ = true;

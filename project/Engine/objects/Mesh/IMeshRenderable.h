@@ -16,6 +16,5 @@ public:
 	virtual ~IMeshRenderable() = default;
 
 	virtual void Draw() = 0;
-
 };
 

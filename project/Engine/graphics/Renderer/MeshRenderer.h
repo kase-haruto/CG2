@@ -20,6 +20,7 @@ public:
 	void Register(IMeshRenderable* renderable);
 	void Unregister(IMeshRenderable* renderable);
 	void DrawAll();
+	void Clear();
 
 private:
 	//===================================================================*/

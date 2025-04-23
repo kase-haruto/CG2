@@ -355,8 +355,7 @@
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleManager.cpp" />
-    <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
-    <ClCompile Include="Game\demo\GameObject_Demo.cpp" />
+    <ClCompile Include="Game\3dObject\Base\BaseGameObject.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
@@ -376,7 +375,7 @@
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
-    <ClCompile Include="Game\3d\Base\Character.cpp" />
+    <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
@@ -401,6 +400,16 @@
     <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
+    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
+    <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -599,8 +608,7 @@
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\particle\ParticleManager.h" />
-    <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
-    <ClInclude Include="Game\demo\GameObject_Demo.h" />
+    <ClInclude Include="Game\3dObject\Base\BaseGameObject.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
@@ -620,7 +628,7 @@
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
     <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
-    <ClInclude Include="Game\3d\Base\Character.h" />
+    <ClInclude Include="Game\3dObject\Base\Actor.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
@@ -653,6 +661,16 @@
     <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\scene\Context\SceneContext.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
+    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
+    <ClInclude Include="Engine\Editor\EffectEditor.h" />
+    <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -32,7 +32,6 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update();
 	virtual void OnModelLoaded();
-	virtual void AnimationUpdate(){}
 	virtual void UpdateMatrix();
 	void UpdateTexture();
 	virtual void Map() = 0;
@@ -64,7 +63,7 @@ protected:
 
 public:
 	BlendMode blendMode_ = BlendMode::NORMAL;
-	Vector4    RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
+	Vector4 RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 	EulerTransform  uvTransform {{1.0f, 1.0f, 1.0f},
 							 {0.0f, 0.0f, 0.0f},
 							 {0.0f, 0.0f, 0.0f}};
