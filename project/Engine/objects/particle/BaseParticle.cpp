@@ -40,6 +40,8 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 }
 
 void BaseParticle::Update(){
+	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
+
 	const float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
 	if (!modelData_){

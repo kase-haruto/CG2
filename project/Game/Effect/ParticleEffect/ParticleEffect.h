@@ -26,6 +26,7 @@ public:
 	void Update();
 	void Draw();
 	void ImGui();
+	bool IsFinished()const;
 
 	//--------- add/remove -----------------------------------------------
 	void AddParticle(std::unique_ptr<Particle> system);
