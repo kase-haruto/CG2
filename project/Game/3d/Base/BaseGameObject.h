@@ -35,6 +35,9 @@ public:
 	virtual void Draw();
 	virtual void ShowGui()override;
 
+	void SaveToJson(const std::string& fileName)const;
+	void LoadFromJson(const std::string& fileName);
+
 protected:
 	//===================================================================*/
 	//                    protected methods
@@ -64,6 +67,12 @@ public:
 	void SetTranslate(const Vector3& pos){
 		if (model_){
 			model_->worldTransform_.translation = pos;
+		}
+	}
+
+	void SetScale(const Vector3& scale){
+		if (model_){
+			model_->worldTransform_.scale = scale;
 		}
 	}
 

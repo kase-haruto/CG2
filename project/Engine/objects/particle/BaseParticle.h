@@ -32,11 +32,12 @@ enum class EmitterShape{
 namespace ParticleData{
 	struct Parameters{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
+		Vector3 rotationSpeed {0.0f,0.0f,0.0f};
 		Vector3 velocity {};
 		Vector4 color {1.0f, 1.0f, 1.0f, 1.0f};
 		float lifeTime = 1.0f;
 		float currentTime = 0.0f;
-		float maxScale = 1.0f;
+		Vector3 maxScale = {1.0f, 1.0f, 1.0f};
 
 		void SetColorRandom();          // 色をランダムで初期化
 		void SetColorInitialize();      // 色を初期化する(白)
@@ -50,12 +51,23 @@ namespace ParticleData{
 		Vector4 color;
 	};
 
+	struct EmittedPtlData{
+
+		// 回転
+		bool useRotation = true;              // 回転を使用するか
+		bool rotateContinuously = false;      // 回転し続けるか（毎フレーム加算）
+		bool randomizeInitialRotation = true; // 初期回転をランダムにするか
+		Vector3 initialRotation = {0.0f, 0.0f, 0.0f}; // 初期回転（ランダムでなければ使用）
+		Vector3 rotationSpeed = {0.0f, 0.0f, 0.0f};   // 連続回転する場合の速度（度/秒など）
+	};
+
 	struct Emitter{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};    //エミッタのtransform
 		uint32_t count = 1;				//発生数
 		float frequency = 0.1f;			//発生頻度
 		float frequencyTime = 0.1f;		//頻度用時刻
 		EmitterShape shape = EmitterShape::Sphere; // エミッタの形状
+		ParticleData::EmittedPtlData parmData;		//発生させるパーティクルのデータ
 
 		void Initialize(uint32_t count);
 		void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
@@ -71,6 +83,14 @@ protected:
 		SingleColor,
 		SimilarColor
 	};
+
+	enum class BillboardAxis{
+		AllAxis,
+		YAxis,
+		XAxis,
+		ZAxis
+	};
+
 public:
 	//===================================================================*/
 	//                    public methods
@@ -96,8 +116,8 @@ public:
 	BlendMode GetBlendMode() const{ return blendMode_; }
 
 	void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
-	void SetFixedMaxScale(float scale){ fixedMaxScale_ = scale; }
-	void SetRandomScaleRange(float minScale, float maxScale){
+	void SetFixedMaxScale(Vector3 scale){ fixedMaxScale_ = scale; }
+	void SetRandomScaleRange(Vector3 minScale, Vector3 maxScale){
 		randomScaleMin_ = minScale;
 		randomScaleMax_ = maxScale;
 	}
@@ -115,16 +135,21 @@ public:
 	//===================================================================*/
 	//				public methods
 	//===================================================================*/
+	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
 	bool autoEmit_ = true;
 	int32_t kMaxInstanceNum_ = 1024;
 	int32_t instanceNum_ = 0;
 
-	bool useRandomScale_ = false;	// ランダムスケールを使用するかのフラグ
-	float fixedMaxScale_ = 1.0f;	// 固定スケール値
-	float randomScaleMin_ = 1.0f;	// ランダムスケールの最小値
-	float randomScaleMax_ = 6.0f;	// ランダムスケールの最大値
+	bool useRotation_ = false;
+
+	bool useRandomScale_ = false;
+	Vector3 fixedMaxScale_ = {1.0f, 1.0f, 1.0f};
+	Vector3 randomScaleMin_ = {1.0f, 1.0f, 1.0f};
+	Vector3 randomScaleMax_ = {6.0f, 6.0f, 6.0f};
+
+	float lifeTime_ = 1.0f; // パーティクルの寿命
 
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか

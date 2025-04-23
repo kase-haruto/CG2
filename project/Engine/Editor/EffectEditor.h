@@ -27,6 +27,7 @@ private:
 	//===================================================================*/
 	void ShowParticleMakingGui();
 	void ShowEffectList();
+	void ShowEffectListAndProperty();
 	void ShowEffectProperty();
 	void AddEffect(std::unique_ptr<ParticleEffect> effect);
 	void RemoveEffect(int index);

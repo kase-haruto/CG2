@@ -35,6 +35,9 @@ public:
 	void Save(const std::string& filename);
 	void Load(const std::string& filename);
 
+	void SetName(const std::string& name){ name_ = name; }
+	const std::string& GetName()const { return name_; }
+
 private:
 	//===================================================================*/
 	//		private func

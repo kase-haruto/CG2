@@ -14,6 +14,8 @@ public:
 
 	/* ui ===============================================*/
 	void ImGui() override;
+
+	/* json =============================================*/
 	void Load(const std::string& filename);
 	void Save(const std::string& filename);
 

@@ -10,7 +10,7 @@
 #include <Engine/Editor/UiEditor.h>
 #include <Engine/core/UI/ParticleEditPanel.h>
 #include <Engine/objects/Sprite.h>  
-
+#include <Game/3d/Base/BaseGameObject.h>
 
 /* graphics */
 #include <Engine/physics/light/DirectionalLight.h>
@@ -47,7 +47,7 @@ private:
 	std::unique_ptr<FogEffect>fog_ = nullptr;
 
 	/* objects ======================================================*/
-	std::unique_ptr<Model> modelField_ = nullptr;
+	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
 
 	/* editor =======================================================*/
 	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
