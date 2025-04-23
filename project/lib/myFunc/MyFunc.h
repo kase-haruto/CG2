@@ -89,3 +89,10 @@ Node ConvertAssimpNode(const aiNode* assimpNode);
 // skinClusterの作成
 SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device,
 							  const Skeleton& skeleton,const ModelData& modelData);
+
+
+//ビルボードの関数
+Matrix4x4 MakeYAxisBillboard(const Matrix4x4& cameraMatrix);
+
+Matrix4x4 MakeXAxisBillboard(const Matrix4x4& cameraMatrix);
+Matrix4x4 MakeZAxisBillboard(const Matrix4x4& cameraMatrix);

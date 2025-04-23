@@ -718,3 +718,30 @@ SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device
 	}
 	return skinCluster;
 }
+
+Matrix4x4 MakeYAxisBillboard(const Matrix4x4& cameraMatrix){
+	Vector3 camZ = {cameraMatrix.m[0][2], 0.0f, cameraMatrix.m[2][2]};
+	camZ =  camZ.Normalize();
+	Vector3 camX = Vector3::Cross({0, 1, 0}, camZ).Normalize();
+	Vector3 camY = Vector3::Cross(camZ, camX);
+	Vector3 cam = (camX, camY, camZ);
+	return MakeAffineMatrix(Vector3::One(), cam, {});
+}
+
+Matrix4x4 MakeXAxisBillboard(const Matrix4x4& cameraMatrix){
+	Vector3 camZ = {0.0f, cameraMatrix.m[1][2], cameraMatrix.m[2][2]};
+	camZ = camZ.Normalize();
+	Vector3 camY = Vector3::Cross(camZ, {1, 0, 0}).Normalize();
+	Vector3 camX = Vector3::Cross(camY, camZ);
+	Vector3 cam = (camX, camY, camZ);
+	return MakeAffineMatrix(Vector3::One(), cam, {});
+}
+
+Matrix4x4 MakeZAxisBillboard(const Matrix4x4& cameraMatrix){
+	Vector3 camY = {cameraMatrix.m[0][1], cameraMatrix.m[1][1], 0.0f};
+	camY = camY.Normalize();
+	Vector3 camX = Vector3::Cross(camY, {0, 0, 1}).Normalize();
+	Vector3 camZ = Vector3::Cross(camX, camY);
+	Vector3 cam = (camX, camY, camZ);
+	return MakeAffineMatrix(Vector3::One(), cam, {});
+}

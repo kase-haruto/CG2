@@ -159,6 +159,7 @@ void DebugCamera::Move(){
 // ズーム処理 (Ctrl + MMBドラッグ or マウスホイール): カメラの距離を変更
 //-----------------------------------------------------------------------
 void DebugCamera::Zoom(){
+
 	// ホイールクリックが押されている場合はズームを無視
 	if (Input::PushMouseButton(2)){
 		return;

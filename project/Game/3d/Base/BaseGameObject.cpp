@@ -110,3 +110,10 @@ void BaseGameObject::ShowGui(){
 
 	ImGui::Spacing();
 }
+
+//===================================================================*/
+//                    load/save
+//===================================================================*/
+//void BaseGameObject::SaveToJson(const std::string& fileName) const{}
+//
+//void BaseGameObject::LoadFromJson(const std::string& fileName){}

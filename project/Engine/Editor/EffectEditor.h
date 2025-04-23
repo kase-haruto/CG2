@@ -20,14 +20,13 @@ public:
 	void ShowImGuiInterface();
 	void SaveToJson(const std::string& filePath);
 	void LoadFromJson(const std::string& filePath);
-
+	void LoadFromJsonAll(const std::string& directoryPath);
 private:
 	//===================================================================*/
 	// private functions
 	//===================================================================*/
 	void ShowParticleMakingGui();
-	void ShowEffectList();
-	void ShowEffectProperty();
+	void ShowEffectListAndProperty();
 	void AddEffect(std::unique_ptr<ParticleEffect> effect);
 	void RemoveEffect(int index);
 
@@ -37,7 +36,7 @@ private:
 	//===================================================================*/
 	int selectedEffectIndex_ = -1;
 	ParticleEffectCollection* effectCollection_ = nullptr;
-
+	ParticleEffect* currentEffect_ = nullptr;
 private:
 	const std::string directoryPath_ = "Resources/Json/Effect";
 };

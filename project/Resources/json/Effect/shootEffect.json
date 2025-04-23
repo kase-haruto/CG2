@@ -1,0 +1,78 @@
+{
+    "name": "shootEffect",
+    "particles": [
+        {
+            "blendMode": 2,
+            "colorMode": 2,
+            "colorVariation": 0.10999999940395355,
+            "emitters": [
+                {
+                    "count": 9,
+                    "frequency": 0.6700000166893005,
+                    "rotationParm": {
+                        "initialRotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "randomizeInitialRotation": true,
+                        "rotateContinuously": false,
+                        "rotationSpeed": [
+                            0.0,
+                            1.2000000476837158,
+                            0.30000001192092896
+                        ],
+                        "useRotation": true
+                    },
+                    "shape": 1,
+                    "transform": {
+                        "rotate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "translate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                }
+            ],
+            "fixedMaxScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "isBillboard": true,
+            "isStatic": true,
+            "lifeTime": 1.6307673454284668,
+            "model": "plane.obj",
+            "name": "",
+            "randomScaleMax": [
+                0.23999999463558197,
+                1.6200000047683716,
+                1.0
+            ],
+            "randomScaleMin": [
+                0.09000000357627869,
+                1.0,
+                1.0
+            ],
+            "selectedColor": [
+                0.8803088665008545,
+                0.8774349093437195,
+                0.1359550505876541,
+                1.0
+            ],
+            "texture": "particle.png",
+            "useRandomScale": true,
+            "useRotation": true
+        }
+    ]
+}

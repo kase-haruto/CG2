@@ -30,6 +30,7 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 	emitters_.push_back(emitter);
 
 	modelName_ = modelName;
+	textureName_ = texturePath;
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -73,19 +74,53 @@ void BaseParticle::Update(){
 			continue;
 		}
 
+		//回転させる
+		if (it->rotationSpeed.x > 0.0f ||
+			it->rotationSpeed.y > 0.0f ||
+			it->rotationSpeed.z > 0.0f){
+			it->transform.rotate += it->rotationSpeed * deltaTime;
+		}
+
 		// 行列計算
 		Matrix4x4 worldMatrix;
 		if (isBillboard_){
-			Matrix4x4 billboard = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetWorldMatrix());
+			// ビルボード用ワールド行列の構築
+			Matrix4x4 billboard = CameraManager::GetWorldMatrix();
 			billboard.m[3][0] = billboard.m[3][1] = billboard.m[3][2] = 0.0f;
-			worldMatrix = Matrix4x4::Multiply(
-				Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), billboard),
-				MakeTranslateMatrix(it->transform.translate));
+
+			switch (billboardAxis_){
+				case BillboardAxis::AllAxis:
+					billboard = Matrix4x4::Multiply(backToFrontMatrix_, billboard);
+					break;
+				case BillboardAxis::YAxis:
+					billboard = MakeYAxisBillboard(billboard);
+					break;
+				case BillboardAxis::XAxis:
+					billboard = MakeXAxisBillboard(billboard);
+					break;
+				case BillboardAxis::ZAxis:
+					billboard = MakeZAxisBillboard(billboard);
+					break;
+			}
+
+			if (useRotation_){
+				worldMatrix = Matrix4x4::Multiply(
+					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale),
+					Matrix4x4::Multiply(EulerToMatrix(it->transform.rotate), billboard)),
+					MakeTranslateMatrix(it->transform.translate));
+			} else{
+				worldMatrix = Matrix4x4::Multiply(
+					Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), billboard),
+					MakeTranslateMatrix(it->transform.translate));
+			}
 		} else{
+			// 通常の回転付き行列
 			worldMatrix = Matrix4x4::Multiply(
-				Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), EulerToMatrix(it->transform.rotate)),
+				Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale),
+				useRotation_ ? EulerToMatrix(it->transform.rotate) : Matrix4x4::MakeIdentity()),
 				MakeTranslateMatrix(it->transform.translate));
 		}
+
 
 		Matrix4x4 wvp = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
 
@@ -137,7 +172,7 @@ void BaseParticle::Draw(){
 	//t0
 	commandList->SetGraphicsRootDescriptorTable(1, instancingBuffer_.GetGpuHandle());
 	//t1
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle); 
+	commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
 
 	// 描画コマンド（インスタンシング）
 	commandList->DrawInstanced(
@@ -206,7 +241,7 @@ void BaseParticle::VisualSettingGui(){
 
 	ImGui::Text("Texture Name:");
 	ImGui::SameLine();
-	ImGui::Text(textureName_.c_str()); // ※ 新しくメンバ変数にしてもOK
+	ImGui::Text(textureName_.c_str());
 
 	// ===== テクスチャ選択 UI ===== //
 	ImGui::SeparatorText("Choose Texture");
@@ -294,21 +329,43 @@ void BaseParticle::VisualSettingGui(){
 void BaseParticle::ParameterGui(){
 	ImGui::Checkbox("isStatic", &isStatic_);
 	ImGui::Checkbox("isBillboard", &isBillboard_);
+	ImGui::Checkbox("useRotation", &useRotation_);
 
-	//サイズの設定
+	if (isBillboard_){
+		const char* axisNames[] = {"All-Axis", "Y-Axis", "X-Axis", "Z-Axis"};
+		int axis = static_cast< int >(billboardAxis_);
+		if (ImGui::Combo("Billboard Axis", &axis, axisNames, IM_ARRAYSIZE(axisNames))){
+			billboardAxis_ = static_cast< BillboardAxis >(axis);
+		}
+	}
+
 	ImGui::SeparatorText("Particle Size");
 	ImGui::Checkbox("Use Random Scale", &useRandomScale_);
 	if (useRandomScale_){
-		ImGui::DragFloat("Min Scale", &randomScaleMin_, 0.01f, 0.0f, 10.0f);
-		ImGui::DragFloat("Max Scale", &randomScaleMax_, 0.01f, 0.0f, 10.0f);
-		// minとmaxの順序を保証
-		if (randomScaleMin_ > randomScaleMax_){
-			std::swap(randomScaleMin_, randomScaleMax_);
-		}
+		ImGui::DragFloat3("Min Scale", &randomScaleMin_.x, 0.01f);
+		ImGui::DragFloat3("Max Scale", &randomScaleMax_.x, 0.01f);
+		if (randomScaleMin_.x > randomScaleMax_.x) std::swap(randomScaleMin_.x, randomScaleMax_.x);
+		if (randomScaleMin_.y > randomScaleMax_.y) std::swap(randomScaleMin_.y, randomScaleMax_.y);
+		if (randomScaleMin_.z > randomScaleMax_.z) std::swap(randomScaleMin_.z, randomScaleMax_.z);
 	} else{
-		ImGui::DragFloat("Max Scale", &fixedMaxScale_, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat3("scale", &fixedMaxScale_.x, 0.01f, 0.0f, 10.0f);
+	}
+
+	ImGui::SeparatorText("lifeTime");
+	static bool isRandomLifeTime = true;
+	ImGui::Checkbox("Random LifeTime", &isRandomLifeTime);
+	if (isRandomLifeTime){
+		static float maxLifeTime = 10.0f;
+		static float minLifeTime = 1.0f;
+		ImGui::DragFloat("Max", &maxLifeTime, 0.01f, 0.0f, 10.0f);
+		ImGui::DragFloat("Min", &minLifeTime, 0.01f, 0.0f, 10.0f);
+		if (minLifeTime > maxLifeTime) std::swap(minLifeTime, maxLifeTime);
+		lifeTime_ = Random::Generate<float>(minLifeTime, maxLifeTime);
+	} else{
+		ImGui::DragFloat("lifeTime", &lifeTime_, 0.01f, 0.0f, 10.0f);
 	}
 }
+
 
 void BaseParticle::EmitterGui(){
 	if (ImGui::CollapsingHeader("Emitters", ImGuiTreeNodeFlags_DefaultOpen)){
@@ -326,6 +383,21 @@ void BaseParticle::EmitterGui(){
 				ImGui::DragFloat3("Scale", &emitter.transform.scale.x, 0.01f);
 				ImGui::DragFloat("Frequency", &emitter.frequency, 0.01f, 0.0f);
 				ImGui::DragInt("Count", reinterpret_cast< int* >(&emitter.count), 1, 1, 100);
+
+				ImGui::SeparatorText("emitedParticleParm");
+				ImGui::Checkbox("Use Rotation", &emitter.parmData.useRotation);
+				ImGui::Checkbox("Rotate Continuously", &emitter.parmData.rotateContinuously);
+				ImGui::Checkbox("Random Initial Rotation", &emitter.parmData.randomizeInitialRotation);
+
+				if (!emitter.parmData.randomizeInitialRotation){
+					ImGui::DragFloat3("Initial Rotation (Euler)", &emitter.parmData.initialRotation.x, 0.1f);
+				}
+
+				if (emitter.parmData.rotateContinuously){
+					ImGui::DragFloat3("Rotation Speed", &emitter.parmData.rotationSpeed.x, 0.1f);
+				}
+
+
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
@@ -343,26 +415,56 @@ void BaseParticle::EmitterGui(){
 void BaseParticle::Emit(ParticleData::Emitter& emitter){
 	for (uint32_t i = 0; i < emitter.count && particles_.size() < static_cast< size_t >(kMaxInstanceNum_); ++i){
 		ParticleData::Parameters particle;
+
+		// カラー
 		if (GetUseRandomColor()){
 			particle.SetColorRandom();
 		} else{
 			particle.color = GetSelectedColor();
 		}
+
+		// ポジション・速度・寿命
 		float speed = Random::Generate(0.5f, 2.0f);
-		Vector3 localPoint = emitter.transform.translate; // 例：中心から
+		Vector3 localPoint = emitter.transform.translate;
 		particle.transform.translate = localPoint;
 		particle.velocity = GenerateVelocity(speed);
-		particle.lifeTime = SetParticleLifeTime();
-		particle.transform.scale = useRandomScale_ ? Random::GenerateVector3(randomScaleMin_, randomScaleMax_)
-			: Vector3(fixedMaxScale_);
-		if (!isBillboard_){
-			Matrix4x4 cam = CameraManager::GetWorldMatrix();
-			particle.transform.rotate = Matrix4x4::ToEuler(cam);
+		particle.lifeTime = lifeTime_;
+		particle.currentTime = 0.0f;
+
+		// スケール
+		particle.transform.scale = useRandomScale_
+			? Vector3(
+			Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
+			Random::Generate(randomScaleMin_.y, randomScaleMax_.y),
+			Random::Generate(randomScaleMin_.z, randomScaleMax_.z))
+			: fixedMaxScale_;
+		particle.maxScale = particle.transform.scale;
+
+		// 回転
+		if (emitter.parmData.useRotation){
+			if (emitter.parmData.randomizeInitialRotation){
+				particle.transform.rotate = {
+					Random::Generate(0.0f, 360.0f),
+					Random::Generate(0.0f, 360.0f),
+					Random::Generate(0.0f, 360.0f)
+				};
+			} else{
+				particle.transform.rotate = emitter.parmData.initialRotation;
+			}
+
+			if (emitter.parmData.rotateContinuously){
+				particle.rotationSpeed = emitter.parmData.rotationSpeed;
+			}
+		} else{
+			particle.transform.rotate = {0.0f, 0.0f, 0.0f};
 		}
+
 		particles_.push_back(particle);
 	}
+
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
+
 
 Vector3 BaseParticle::GenerateVelocity(float speed){
 	// デフォルトのランダムな方向の速度生成

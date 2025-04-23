@@ -43,10 +43,10 @@ void GameScene::Initialize(){
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 	
-	modelField_ = std::make_unique<Model>("ground.obj");
-	modelField_->SetSize({100.0f,1.0f,100.0f});
-	modelField_->SetUvScale({15.0f,15.0f,0.0f});
-	sceneContext_->meshRenderer_->Register(modelField_.get());
+	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field", registerToRenderer);
+	modelField_->SetScale({50.0f,50.0f,50.0f});
+	modelField_->GetModel()->SetUvScale({30.0f,30.0f,0.0f});
+	//modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
 	//===================================================================*/
 	//                    editor
