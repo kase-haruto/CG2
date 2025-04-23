@@ -2,7 +2,7 @@
 /* ========================================================================
 /*	include space
 /* ===================================================================== */
-
+#include <Engine/graphics/GraphicsGroup.h>
 // externals
 #include <externals/imgui/imgui.h>
 
@@ -19,7 +19,22 @@ void ParticleEffectCollection::Update(){
 //		描画
 ///////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffectCollection::Draw(){
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>commandList = GraphicsGroup::GetInstance()->GetCommandList();
+
+	// プリミティブトポロジーを設定（ここでは三角形リストを指定）
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	for (auto& effect : effects_){
+		BlendMode blendMode = BlendMode::ADD;
+		Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject, blendMode);
+		Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject, blendMode);
+
+		// ルートシグネチャを設定
+		commandList->SetGraphicsRootSignature(rootSignature.Get());
+
+		// パイプラインステートを設定
+		commandList->SetPipelineState(pipelineState.Get());
+
 		effect->Draw();
 	}
 }

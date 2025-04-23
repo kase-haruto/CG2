@@ -61,6 +61,7 @@ void ParticleEffect::ImGui(){
 //		追加
 /////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::AddParticle(std::unique_ptr<Particle> particle){
+	particle->Initialize("plane.obj", "particle.png", 1);
 	particles_.emplace_back(std::move(particle));
 }
 

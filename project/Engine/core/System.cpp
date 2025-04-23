@@ -92,7 +92,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	TextureManager::GetInstance()->StartUpLoad();
 
 	//パーティクルコンテナの初期化
-	particleContainer_ = std::make_unique<ParticleManager>();
+	particleEffectCollection_ = std::make_unique<ParticleEffectCollection>();
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
@@ -105,12 +105,12 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	uiEditor_ = std::make_unique<UIEditor>();
 
 	//パーティクル
-	particleEditor_ = std::make_unique<ParticleEditor>(particleContainer_.get());
+	effectEditor_ = std::make_unique<EffectEditor>(particleEffectCollection_.get());
 
 	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
 	editorPanel->AddEditor(modelBuilder_.get());
 	editorPanel->AddEditor(uiEditor_.get());
-	editorPanel->AddEditor(particleEditor_.get());
+	editorPanel->AddEditor(effectEditor_.get());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ void System::EndFrame(){
 void System::EditorUpdate(){
 	modelBuilder_->Update();
 	uiEditor_->Update();
-	particleContainer_->Update();
+	particleEffectCollection_->Update();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +195,7 @@ void System::EditorDraw(){
 	/*=======================================================================================
 				particalの描画
    ========================================================================================*/
-	particleContainer_->Draw();
+	particleEffectCollection_->Draw();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -726,29 +726,36 @@ void System::StructuredObjectPipeline(){
 		return;
 	}
 
-	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[3] = {};
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;
-	descriptorRange[0].NumDescriptors = 1;
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	D3D12_DESCRIPTOR_RANGE descriptorRangeVS[1] = {};
+	descriptorRangeVS[0].BaseShaderRegister = 0; // t0 にバインド
+	descriptorRangeVS[0].NumDescriptors = 1;
+	descriptorRangeVS[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeVS[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	D3D12_DESCRIPTOR_RANGE descriptorRangePS[1] = {};
+	descriptorRangePS[0].BaseShaderRegister = 1; // t1 にバインド
+	descriptorRangePS[0].NumDescriptors = 1;
+	descriptorRangePS[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangePS[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	D3D12_ROOT_PARAMETER rootParameters[3] = {};
+
+	// 定数バッファ (Material)
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
 
+	// 頂点シェーダ用SRV (InstancingBuffer)
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange;
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeVS;
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = 1;
 
-
+	// ピクセルシェーダ用SRV (Textureなど)
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
-
+	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangePS;
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = 1;
 
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;

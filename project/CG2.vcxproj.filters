@@ -404,7 +404,8 @@
     <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
-    <ClCompile Include="ParticleEffectCollection.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
+    <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -660,7 +661,8 @@
     <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
-    <ClInclude Include="ParticleEffectCollection.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
+    <ClInclude Include="Engine\Editor\EffectEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

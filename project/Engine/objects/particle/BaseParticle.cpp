@@ -30,7 +30,6 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 	emitters_.push_back(emitter);
 
 	modelName_ = modelName;
-	textureName_ = texturePath;
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -52,24 +51,29 @@ void BaseParticle::Update(){
 		return;
 	}
 
-	// エミッター更新・自動Emit
-	for (auto& emitter : emitters_){
-		emitter.frequencyTime += deltaTime;
-		if (autoEmit_ && emitter.frequencyTime >= emitter.frequency){
-			Emit(emitter);
-			emitter.frequencyTime = 0.0f;
+	if (autoEmit_){
+		for (auto& emitter : emitters_){
+			emitter.frequencyTime += deltaTime;
+			if (emitter.frequencyTime >= emitter.frequency){
+				Emit(emitter);
+				emitter.frequencyTime = 0.0f;
+			}
 		}
 	}
 
 	// パーティクル更新
 	instanceDataList_.clear();
 	instanceNum_ = 0;
+
 	for (auto it = particles_.begin(); it != particles_.end();){
 		if (instanceNum_ >= kMaxInstanceNum_) break;
+
 		if (it->lifeTime <= it->currentTime){
 			it = particles_.erase(it);
 			continue;
 		}
+
+		// 行列計算
 		Matrix4x4 worldMatrix;
 		if (isBillboard_){
 			Matrix4x4 billboard = Matrix4x4::Multiply(backToFrontMatrix_, CameraManager::GetWorldMatrix());
@@ -82,25 +86,35 @@ void BaseParticle::Update(){
 				Matrix4x4::Multiply(MakeScaleMatrix(it->transform.scale), EulerToMatrix(it->transform.rotate)),
 				MakeTranslateMatrix(it->transform.translate));
 		}
+
 		Matrix4x4 wvp = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
+
+		// GPU転送用インスタンスデータ作成
 		ParticleData::ParticleForGPU instance;
 		instance.wvp = wvp;
 		instance.world = worldMatrix;
 		instance.color = it->color;
+
+		// アルファ設定
 		if (isFixationAlpha_){
 			instance.color.w = 1.0f;
 		} else{
 			float ratio = std::clamp(it->currentTime / it->lifeTime, 0.0f, 1.0f);
 			instance.color.w = 1.0f - ratio;
 		}
+
 		instanceDataList_.push_back(instance);
+
+		// パーティクル更新
 		it->currentTime += deltaTime;
 		if (!isStatic_){
 			it->transform.translate += it->velocity * deltaTime;
 		}
+
 		++instanceNum_;
 		++it;
 	}
+
 
 	if (instanceNum_ > 0){
 		instancingBuffer_.TransferVectorData(instanceDataList_);
@@ -108,15 +122,7 @@ void BaseParticle::Update(){
 	modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
 	materialBuffer_.TransferData(materialData_);
 
-	if (autoEmit_){
-		for (auto& emitter : emitters_){
-			emitter.frequencyTime += deltaTime;
-			if (emitter.frequencyTime >= emitter.frequency){
-				Emit(emitter);
-				emitter.frequencyTime = 0.0f;
-			}
-		}
-	}
+
 }
 
 void BaseParticle::Draw(){
@@ -127,14 +133,11 @@ void BaseParticle::Draw(){
 
 	modelData_->vertexBuffer.SetCommand(commandList);
 
-	// 定数バッファ（マテリアル）をルートパラメータ1にバインド
 	materialBuffer_.SetCommand(commandList, 0);
-
-	// インスタンスバッファ（StructuredBuffer SRV）をルートパラメータ2にバインド
+	//t0
 	commandList->SetGraphicsRootDescriptorTable(1, instancingBuffer_.GetGpuHandle());
-
-	// テクスチャ（SRV）をルートパラメータ3にバインド（想定：ImTextureIDをSRVとして使っている場合）
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle); // 以前と同様
+	//t1
+	commandList->SetGraphicsRootDescriptorTable(2, textureHandle); 
 
 	// 描画コマンド（インスタンシング）
 	commandList->DrawInstanced(
@@ -225,7 +228,7 @@ void BaseParticle::VisualSettingGui(){
 
 	// ===== モデル選択 UI ===== //
 	ImGui::SeparatorText("Choose Model");
-	const auto& models = ModelManager::GetInstance()->GetLoadedModelNames(); // 仮にこの関数があれば
+	const auto& models = ModelManager::GetInstance()->GetLoadedModelNames();
 	if (ImGui::BeginCombo("Model", modelName_.c_str())){
 		for (const auto& model : models){
 			bool is_selected = (modelName_ == model);

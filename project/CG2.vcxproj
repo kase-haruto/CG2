@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
@@ -229,9 +230,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
-    <ClCompile Include="ParticleEffectCollection.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
@@ -365,7 +367,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
     <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
-    <ClInclude Include="ParticleEffectCollection.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
