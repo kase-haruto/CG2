@@ -37,6 +37,7 @@ public:
 
 	void SetName(const std::string& name){ name_ = name; }
 	const std::string& GetName()const { return name_; }
+	void SetPendingDelete(bool pendingDelete){ pendingDelete_ = pendingDelete; }
 
 private:
 	//===================================================================*/
@@ -44,5 +45,6 @@ private:
 	//===================================================================*/
 	std::string name_ = "UnnamedEffect";
 	std::vector<std::unique_ptr<Particle>> particles_;
+	bool pendingDelete_ = false;
 };
 

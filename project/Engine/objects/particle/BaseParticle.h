@@ -1,4 +1,7 @@
 #pragma once
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 
 /* engine */
 #include "engine/objects/ModelData.h"
@@ -24,11 +27,17 @@
 #include <d3d12.h>
 #include <wrl.h>
 
+/* externals */
+#include <externals/nlohmann/json.hpp>
+
 enum class EmitterShape{
 	OBB,
 	Sphere
 };
 
+/* ========================================================================
+/*	namespace
+/* ===================================================================== */
 namespace ParticleData{
 	struct Parameters{
 		EulerTransform transform {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};
@@ -74,7 +83,9 @@ namespace ParticleData{
 	};
 }
 
-
+/* ========================================================================
+/* base class
+/* ===================================================================== */
 class BaseParticle{
 protected:
 	// カラーモード用のenumを定義
@@ -108,13 +119,13 @@ public:
 	void EmitterGui();
 
 	virtual void Emit(ParticleData::Emitter& emitter);
+
+	//--------- accessor -----------------------------------------------------
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
 	virtual Vector3 GenerateVelocity(float speed);
 	virtual bool GetUseRandomColor() const{ return true; }
 	virtual Vector4 GetSelectedColor() const{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
-
 	BlendMode GetBlendMode() const{ return blendMode_; }
-
 	void SetUseRandomScale(bool useRandom){ useRandomScale_ = useRandom; }
 	void SetFixedMaxScale(Vector3 scale){ fixedMaxScale_ = scale; }
 	void SetRandomScaleRange(Vector3 minScale, Vector3 maxScale){
@@ -122,10 +133,13 @@ public:
 		randomScaleMax_ = maxScale;
 	}
 	void SetEmitterShape(EmitterShape shape){ currentShape_ = shape; }
+	//--------- json -----------------------------------------------------
+	virtual nlohmann::json SaveToJson() const = 0;
+	virtual void LoadFromJson(const nlohmann::json& j) = 0;
 
-private:
+protected:
 	//===================================================================*/
-	//                    private methods
+	//                    protected methods
 	//===================================================================*/
 
 	/* resources =======================*/
@@ -172,7 +186,7 @@ protected:
 
 	/* data =======================*/
 	std::string modelName_;                           // ▼ロードするファイル名を保持
-	std::string textureName_;                        // ▼テクスチャのパスを保持
+	std::string textureName_ = "particle.png";        // ▼テクスチャのパスを保持
 	std::optional<ModelData> modelData_;              // ▼取得後に代入
 	Material materialData_;
 	std::vector<ParticleData::ParticleForGPU> instanceDataList_;

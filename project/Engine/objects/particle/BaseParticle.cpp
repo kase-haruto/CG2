@@ -30,6 +30,7 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 	emitters_.push_back(emitter);
 
 	modelName_ = modelName;
+	textureName_ = texturePath;
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -240,7 +241,7 @@ void BaseParticle::VisualSettingGui(){
 
 	ImGui::Text("Texture Name:");
 	ImGui::SameLine();
-	ImGui::Text(textureName_.c_str()); // ※ 新しくメンバ変数にしてもOK
+	ImGui::Text(textureName_.c_str());
 
 	// ===== テクスチャ選択 UI ===== //
 	ImGui::SeparatorText("Choose Texture");

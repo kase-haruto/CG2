@@ -7,6 +7,9 @@
 #include <externals/nlohmann/json.hpp>
 #include <fstream>
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -77,9 +80,42 @@ void ParticleEffect::RemoveParticle(size_t index){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		保存
 /////////////////////////////////////////////////////////////////////////////////////////
-void ParticleEffect::Save([[maybe_unused]]const std::string& filename){}
+void ParticleEffect::Save(const std::string& filename){
+	fs::path path(filename);
+	if (path.has_parent_path()){
+		fs::create_directories(path.parent_path());
+	}
+	nlohmann::json root;
+	root["name"] = name_;
+	nlohmann::json particleArray = nlohmann::json::array();
+
+	for (const auto& p : particles_){
+		particleArray.push_back(p->SaveToJson());
+	}
+
+	root["particles"] = particleArray;
+
+	std::ofstream ofs(filename);
+	if (ofs) ofs << root.dump(4);
+}
+
+void ParticleEffect::Load(const std::string& filename){
+	std::ifstream ifs(filename);
+	if (!ifs) return;
+
+	nlohmann::json root;
+	ifs >> root;
+	name_ = root.value("name", "UnnamedEffect");
+
+	particles_.clear();
+	for (const auto& j : root["particles"]){
+		auto p = std::make_unique<Particle>();
+		p->LoadFromJson(j);        // JSONパラメータを読み込む（modelName_, textureName_などを反映）
+		p->LoadInitialize();       // 読み込み用初期化（バッファ類のみ構築）
+		particles_.push_back(std::move(p));
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		読み込み
 /////////////////////////////////////////////////////////////////////////////////////////
-void ParticleEffect::Load([[maybe_unused]] const std::string& filename){}

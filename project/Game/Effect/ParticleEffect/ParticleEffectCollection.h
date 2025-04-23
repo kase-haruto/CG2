@@ -17,6 +17,7 @@ public:
 	void Update();
 	void Draw();
 	void ImGui();
+	void Clear(){ effects_.clear(); }
 
 	//--------- add/remove ------------------------------------------------
 	void AddEffect(std::unique_ptr<ParticleEffect> effect);

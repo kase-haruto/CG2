@@ -9,6 +9,10 @@
 // externals
 #include <externals/imgui/imgui.h>
 
+// c++
+#include <filesystem>
+namespace fs = std::filesystem;
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		コンストラクタ
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -30,12 +34,29 @@ void EffectEditor::ShowImGuiInterface(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		jsonファイルに保存
 /////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::SaveToJson([[maybe_unused]] const std::string& filePath){}
+void EffectEditor::SaveToJson([[maybe_unused]] const std::string& filePath){
+	if (currentEffect_){
+		currentEffect_->Save(filePath);
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		jsonファイルから読み込み
 /////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::LoadFromJson([[maybe_unused]] const std::string& filePath){}
+void EffectEditor::LoadFromJson([[maybe_unused]] const std::string& filePath){
+}
+
+void EffectEditor::LoadFromJsonAll(const std::string& directoryPath){
+	effectCollection_->Clear(); // 一旦リストを初期化（必要に応じて）
+
+	for (const auto& entry : fs::directory_iterator(directoryPath)){
+		if (entry.is_regular_file() && entry.path().extension() == ".json"){
+			auto effect = std::make_unique<ParticleEffect>();
+			effect->Load(entry.path().string());
+			effectCollection_->AddEffect(std::move(effect));
+		}
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		particle作成gui
@@ -50,54 +71,15 @@ void EffectEditor::ShowParticleMakingGui(){
 		effectCollection_->AddEffect(std::move(newEffect));
 		effectName[0] = '\0';
 	}
+	ImGui::SameLine();
+	//ロード
+	if (ImGui::Button("Load Effect")){
+		LoadFromJsonAll(directoryPath_);
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effectリスト表示
 /////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::ShowEffectList(){
-	auto& effects = effectCollection_->GetEffects();
-	for (int i = 0; i < effects.size(); ++i){
-		bool isSelected = (selectedEffectIndex_ == static_cast< int >(i));
-		ImGui::PushID(i);
-
-		if (ImGui::Selectable((effects[i]->GetName() + std::to_string(i)).c_str(), isSelected)){
-			selectedEffectIndex_ = i;
-		}
-
-		// 右クリックでポップアップメニューを開く
-		if (ImGui::BeginPopupContextItem()){
-			if (ImGui::MenuItem("Rename")){
-				ImGui::OpenPopup("RenameEffectPopup");
-			}
-			if (ImGui::MenuItem("Delete")){
-				RemoveEffect(i);
-				selectedEffectIndex_ = -1;
-				ImGui::EndPopup();
-				ImGui::PopID();
-				break;
-			}
-			ImGui::EndPopup();
-		}
-
-		// Rename 用ポップアップ
-		if (ImGui::BeginPopup("RenameEffectPopup")){
-			static char newName[128] = "";
-			ImGui::InputText("New Name", newName, IM_ARRAYSIZE(newName));
-			if (ImGui::Button("OK")){
-				effects[i]->SetName(newName);
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel")){
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-
-		ImGui::PopID();
-	}
-}
-
 void EffectEditor::ShowEffectListAndProperty(){
 
 	// 全体を水平に分割
@@ -130,6 +112,7 @@ void EffectEditor::ShowEffectListAndProperty(){
 			ImGui::PopStyleVar();
 		} else{
 			if (ImGui::Selectable((effects[i]->GetName() + std::to_string(i)).c_str(), isSelected)){
+				currentEffect_ = effects[i].get();
 				selectedEffectIndex_ = i;
 			}
 		}
@@ -160,23 +143,19 @@ void EffectEditor::ShowEffectListAndProperty(){
 	// 右カラム: 選択中のエフェクトのプロパティ
 	ImGui::BeginChild("Effect Property Pane", ImVec2(rightPaneWidth, 0), true);
 	ImGui::Text("Effect Properties");
+	if (ImGui::Button("saveEffect")){
+		const std::string filePath = directoryPath_ +"/" + currentEffect_->GetName() + ".json";
+
+		SaveToJson(filePath);
+	}
 	ImGui::Separator();
-	if (selectedEffectIndex_ >= 0 && selectedEffectIndex_ < static_cast< int >(effectCollection_->GetEffects().size())){
-		effectCollection_->GetEffects()[selectedEffectIndex_]->ImGui();
+	if (currentEffect_){
+		currentEffect_->ImGui();
 	}
 	ImGui::EndChild();
 
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//		effectプロパティ表示
-/////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::ShowEffectProperty(){
-	if (selectedEffectIndex_ >= 0 && selectedEffectIndex_ < static_cast< int >(effectCollection_->GetEffects().size())){
-		effectCollection_->GetEffects()[selectedEffectIndex_]->ImGui();
-	}
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effect追加
