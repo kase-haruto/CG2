@@ -51,7 +51,7 @@ void GameScene::Initialize(){
 
 
 	//player
-	player_ = std::make_unique<Player>("teapot.obj", registerToRenderer);
+	player_ = std::make_unique<Player>("player.obj", registerToRenderer);
 	player_->Initialize();
 
 	

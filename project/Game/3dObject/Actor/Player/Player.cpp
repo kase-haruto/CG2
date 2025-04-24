@@ -8,11 +8,14 @@
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 //externals
 #include <externals/imgui/imgui.h>
+#include <lib/myFunc/MyFunc.h>
+
+#include <numbers>
 
 Player::Player(const std::string& modelName,
 			   std::function<void(IMeshRenderable*)> registerCB)
-:Actor::Actor(modelName,"player",registerCB){
-	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer",registerCB);
+	:Actor::Actor(modelName, "player", registerCB){
+	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer", registerCB);
 	SceneObject::EnableGuiList();
 
 }
@@ -21,7 +24,7 @@ Player::Player(const std::string& modelName,
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::Initialize(){
-	moveSpeed_ = 6.0f;
+	moveSpeed_ = 10.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +33,24 @@ void Player::Initialize(){
 void Player::Update(){
 	//移動
 	Move();
+
+
+	if (rollSet_.isRolling_){
+		rollSet_.rollTimer_ += ClockManager::GetInstance()->GetDeltaTime();
+		float t = rollSet_.rollTimer_ / rollSet_.rollDuration_;
+		if (t >= 1.0f){
+			t = 1.0f;
+			rollSet_.isRolling_ = false;
+		}
+		// Z軸に±360°の回転を与える
+		float angleOffset = rollSet_.rollDirection_ * std::numbers::pi_v<float> *2.0f;
+		model_->worldTransform_.eulerRotation.z =
+			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, t);
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)){
+		BarrelRoll();
+	}
 
 	shootInterval_ -= ClockManager::GetInstance()->GetDeltaTime();
 	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f){
@@ -53,11 +74,12 @@ void Player::DerivativeGui(){
 //		移動
 ///////////////////////////////////////////////////////////////////////////////////
 void Player::Move(){
+	if (rollSet_.isRolling_) return;
 	Vector3 moveVector = {0.0f, 0.0f, 0.0f};;
 	//キーボード移動
 	if (Input::GetInstance()->PushKey(DIK_A)){
 		moveVector.x -= 1.0f;
-	} else if(Input::GetInstance()->PushKey(DIK_D)){
+	} else if (Input::GetInstance()->PushKey(DIK_D)){
 		moveVector.x += 1.0f;
 	}
 
@@ -77,14 +99,55 @@ void Player::Move(){
 
 	//移動ベクトルを加算
 	model_->worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
+
+	UpdateTilt(moveVector);
+
+	//effect
+	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 offset = {0.0f, 0.0f, -2.0f};
+	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
 }
 
 void Player::Shoot(){
 	//弾を追加
 	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
-	Vector3 offset = {0.0f, 0.0f, 0.5f};
+	Vector3 offset = {0.0f, 0.7f, 2.0f};
 	//発射方向
 	Vector3 shootDir = Vector3::Forward();
 	bulletContainer_->AddBullet("debugCube.obj", wPos, shootDir);
-	ParticleEffectCollection::GetInstance()->PlayByName("shootEffect",wPos+offset);
+	ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
+}
+
+void Player::UpdateTilt(const Vector3& moveVector){
+	// 停止時は角度を戻す
+	if (moveVector.Length() <= 0.001f){
+		model_->worldTransform_.eulerRotation.z *= 0.9f; // 緩やかに戻す
+		return;
+	}
+
+	const float maxTilt = 0.3f; // 最大30度まで
+	float normalizedX = moveVector.Normalize().x;
+	float targetTilt = -normalizedX * maxTilt;
+
+	// 滑らかに傾ける
+	model_->worldTransform_.eulerRotation.z =
+		Lerp(model_->worldTransform_.eulerRotation.z, targetTilt, 0.2f);
+	lastMoveVector_ = moveVector; // 最後の移動ベクトルを保存
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+//		バレルロール
+///////////////////////////////////////////////////////////////////////////////////
+void Player::BarrelRoll(){
+	if (rollSet_.isRolling_) return;
+
+	// 現在の移動方向を取得（前回移動量などがあればそこから）
+	Vector3 moveVec = lastMoveVector_; // または別途保持しておく（Move() 内でセット）
+
+	// 左なら左回転、右なら右回転
+	rollSet_.rollDirection_ = (moveVec.x < 0.0f) ? 1.0f : -1.0f;
+
+	rollSet_.isRolling_ = true;
+	rollSet_.rollTimer_ = 0.0f;
+	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
 }

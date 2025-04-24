@@ -59,10 +59,10 @@ void ParticleEffectCollection::Draw(){
 //===================================================================*/
 //			名前から再生
 //===================================================================*/
-void ParticleEffectCollection::PlayByName(const std::string& name, const Vector3& position){
+void ParticleEffectCollection::PlayByName(const std::string& name, const Vector3& position, EmitType emitType){
 	for (auto& effect : effects_){
 		if (effect->GetName() == name){
-			effect->Play(position);  // ← ParticleEffect に Play を用意する
+			effect->Play(position,emitType);  // ← ParticleEffect に Play を用意する
 			break;
 		}
 	}

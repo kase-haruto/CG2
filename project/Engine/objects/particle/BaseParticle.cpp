@@ -23,11 +23,9 @@ BaseParticle::BaseParticle(){
 	particles_.clear();
 }
 
-void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
+void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
-	ParticleData::Emitter emitter;
-	emitter.Initialize(count);
-	emitters_.push_back(emitter);
+
 
 	modelName_ = modelName;
 	textureName_ = texturePath;
@@ -40,7 +38,6 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 }
 
 void BaseParticle::Update(){
-	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
 
 	const float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
@@ -54,7 +51,8 @@ void BaseParticle::Update(){
 		return;
 	}
 
-	if (autoEmit_){
+	// EmitType に応じた発生処理（Auto, Both）
+	if (emitType_ == EmitType::Auto || emitType_ == EmitType::Both){
 		for (auto& emitter : emitters_){
 			emitter.frequencyTime += deltaTime;
 			if (emitter.frequencyTime >= emitter.frequency){
@@ -64,6 +62,7 @@ void BaseParticle::Update(){
 		}
 	}
 
+	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
 	// パーティクル更新
 	instanceDataList_.clear();
 	instanceNum_ = 0;
@@ -373,10 +372,16 @@ void BaseParticle::EmitterGui(){
 			ImGui::PushID(emitterIndex);
 			std::string label = "Emitter " + std::to_string(emitterIndex);
 			if (ImGui::TreeNode(label.c_str())){
-				ImGui::Checkbox("Auto Emit", &autoEmit_);
-				if (!autoEmit_){
-					if (ImGui::Button("emit")){
-						Emit(emitter);
+				const char* emitTypeNames[] = {"Once", "Auto", "Both"};
+				int emitTypeIndex = static_cast< int >(emitType_);
+				if (ImGui::Combo("Emit Type", &emitTypeIndex, emitTypeNames, IM_ARRAYSIZE(emitTypeNames))){
+					emitType_ = static_cast< EmitType >(emitTypeIndex);
+				}
+
+				// Emit ボタン（EmitType::Auto 以外のときのみ表示）
+				if (emitType_ == EmitType::Once || emitType_ == EmitType::Both){
+					if (ImGui::Button("Emit Now")){
+						EmitAll(); // 全エミッタに対してEmit
 					}
 				}
 
@@ -471,9 +476,16 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
-void BaseParticle::Emit(){
+void BaseParticle::EmitAll(){
 	for (auto& emitter:emitters_){
 		Emit(emitter);
+	}
+}
+
+void BaseParticle::Play(EmitType emitType){
+	emitType_ = emitType;
+	if (emitType_ == EmitType::Once || emitType_ == EmitType::Both){
+		EmitAll();
 	}
 }
 

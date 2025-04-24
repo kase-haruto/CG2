@@ -410,6 +410,7 @@
     <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
+    <ClCompile Include="RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -671,6 +672,7 @@
     <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
+    <ClInclude Include="RailCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

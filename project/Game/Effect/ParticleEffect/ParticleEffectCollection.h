@@ -21,7 +21,7 @@ public:
 	void StartupLoad();
 	void Update();
 	void Draw();
-	void PlayByName(const std::string& name, const Vector3& position);
+	void PlayByName(const std::string& name, const Vector3& position, EmitType emitType = EmitType::Once);
 
 	//--------- Add / Remove -----------------------------
 	void AddEffect(std::unique_ptr<ParticleEffect> effect); // エフェクトを追加（初期化含む）

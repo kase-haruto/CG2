@@ -54,12 +54,16 @@ void TestScene::Initialize(){
 	//test用
 	bunny_ = std::make_unique<BaseGameObject>("bunny.obj","bunny", registerToRenderer);
 	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
+	registerToRenderer(bunny_->GetModel());
 
 	teapot_ = std::make_unique<BaseGameObject>("teapot.obj","teapot", registerToRenderer);
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
+	registerToRenderer(teapot_->GetModel());
 
 	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf","human", registerToRenderer);
 	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
+	registerToRenderer(walkHuman_->GetModel());
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//							editor
 	/////////////////////////////////////////////////////////////////////////////////////////

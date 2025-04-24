@@ -15,7 +15,7 @@ namespace fs = std::filesystem;
 /////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::Initialize(){
 	for (auto& ps : particles_){
-		ps->Initialize("plane.obj", "particle.png", 1);
+		ps->Initialize(ps->GetModelName(), ps->GetTextureName(), 1);
 	}
 }
 
@@ -69,10 +69,10 @@ bool ParticleEffect::IsFinished() const{
 	return true;
 }
 
-void ParticleEffect::Play(const Vector3& pos){
+void ParticleEffect::Play(const Vector3& pos, EmitType emitType){
 	for (auto& p: particles_){
 		p->SetEmitPos(pos);
-		p->Emit();
+		p->Play(emitType);
 	}
 }
 

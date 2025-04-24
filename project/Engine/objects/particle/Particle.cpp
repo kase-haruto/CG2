@@ -59,7 +59,7 @@ nlohmann::json Particle::SaveToJson() const{
 	json["model"] = modelName_;
 	json["texture"] = textureName_;
 	json["isStatic"] = isStatic_;
-	json["isAutoEmit"] = autoEmit_;
+	json["emitType"] = static_cast< int >(emitType_);
 	json["isBillboard"] = isBillboard_;
 	json["useRotation"] = useRotation_;
 	json["useRandomScale"] = useRandomScale_;
@@ -105,8 +105,8 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	name_ = j.value("name", "");
 	modelName_ = j.value("model", "plane.obj");
 	textureName_ = j.value("texture", "particle");
-	autoEmit_ = j.value("isAutoEmit", true);
 	isBillboard_ = j.value("isBillboard", true);
+	emitType_ = static_cast< EmitType >(j.value("emitType", static_cast< int >(EmitType::Once)));
 	useRotation_ = j.value("useRotation", false);
 	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));
 	colorMode_ = static_cast< ColorMode >(j.value("colorMode", 0));
@@ -153,7 +153,6 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 		emitters_.push_back(emitter);
 	}
 }
-
 
 bool Particle::GetUseRandomColor() const{
 	return (colorMode_ == ColorMode::Random);

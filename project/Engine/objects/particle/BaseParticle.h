@@ -83,6 +83,8 @@ namespace ParticleData{
 	};
 }
 
+enum class EmitType{ Once, Auto, Both };
+
 /* ========================================================================
 /* base class
 /* ===================================================================== */
@@ -119,7 +121,8 @@ public:
 	void EmitterGui();
 
 	virtual void Emit(ParticleData::Emitter& emitter);
-	void Emit();
+	void EmitAll();
+	void Play(EmitType emitType);
 
 	//--------- accessor -----------------------------------------------------
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
@@ -154,7 +157,6 @@ public:
 	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
-	bool autoEmit_ = true;
 	int32_t kMaxInstanceNum_ = 1024;
 	int32_t instanceNum_ = 0;
 
@@ -199,7 +201,7 @@ protected:
 
 	/* emitter ------------------------------------*/
 	std::vector<ParticleData::Emitter> emitters_;
-
+	EmitType emitType_ = EmitType::Auto; // 発生タイプ（自動、手動、両方）
 	bool emitPosX_ = true;
 	bool emitNegX_ = true;
 	bool emitPosY_ = true;

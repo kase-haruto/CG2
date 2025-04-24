@@ -27,7 +27,7 @@ public:
 	void Draw();
 	void ImGui();
 	bool IsFinished()const;
-	void Play(const Vector3& pos);
+	void Play(const Vector3& pos, EmitType emitType);
 
 	//--------- add/remove -----------------------------------------------
 	void AddParticle(std::unique_ptr<Particle> system);
