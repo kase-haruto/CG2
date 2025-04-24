@@ -235,7 +235,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
-    <ClCompile Include="RailCamera.cpp" />
+    <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
@@ -377,7 +377,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
     <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
-    <ClInclude Include="RailCamera.h" />
+    <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
