@@ -111,6 +111,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
@@ -211,6 +213,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
     <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
+    <ClCompile Include="lib\myMath\Vector4.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -238,6 +241,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />

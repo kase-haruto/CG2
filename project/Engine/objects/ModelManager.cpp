@@ -167,16 +167,14 @@ void ModelManager::SetOnModelLoadedCallback(std::function<void(const std::string
 // 複数ファイルをまとめてロード (サンプル)
 //----------------------------------------------------------------------------
 void ModelManager::StartUpLoad(){
-	LoadModel("suzanne.obj");
+	LoadModel("terrain.obj");
 	LoadModel("debugCube.obj");
+	LoadModel("plane.obj");
+	LoadModel("player.obj");
+	LoadModel("suzanne.obj");
 	LoadModel("fence.obj");
 	LoadModel("ground.obj");
-	LoadModel("multiMaterial.obj");
-	LoadModel("multiMesh.obj");
-	LoadModel("plane.obj");
 	LoadModel("teapot.obj");
-	LoadModel("terrain.obj");
-	LoadModel("player.obj");
 	LoadModel("AnimatedCube.gltf");
 	LoadModel("walk.gltf");
 	LoadModel("sneakWalk.gltf");

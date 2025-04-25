@@ -6,6 +6,10 @@
 #include <Engine/core/Input.h>
 #include "Engine/core/Clock/ClockManager.h"
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Engine/graphics/camera/CameraManager.h>
+#include <Engine/core/Enviroment.h>
+#include <Engine/core/Math/Ease.h>
+
 //externals
 #include <externals/imgui/imgui.h>
 #include <lib/myFunc/MyFunc.h>
@@ -17,7 +21,7 @@ Player::Player(const std::string& modelName,
 	:Actor::Actor(modelName, "player", registerCB){
 	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer", registerCB);
 	SceneObject::EnableGuiList();
-
+	model_->worldTransform_.translation = {0.0f, 0.0f, -6.0f};
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +46,12 @@ void Player::Update(){
 			t = 1.0f;
 			rollSet_.isRolling_ = false;
 		}
-		// Z軸に±360°の回転を与える
+
+		float easedT = EvoEase::EaseInOutSine(t); // ← イージングをここで適用
 		float angleOffset = rollSet_.rollDirection_ * std::numbers::pi_v<float> *2.0f;
+
 		model_->worldTransform_.eulerRotation.z =
-			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, t);
+			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, easedT);
 	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)){
@@ -74,7 +80,6 @@ void Player::DerivativeGui(){
 //		移動
 ///////////////////////////////////////////////////////////////////////////////////
 void Player::Move(){
-	if (rollSet_.isRolling_) return;
 	Vector3 moveVector = {0.0f, 0.0f, 0.0f};;
 	//キーボード移動
 	if (Input::GetInstance()->PushKey(DIK_A)){
@@ -93,6 +98,9 @@ void Player::Move(){
 	if (moveVector.Length() > 0.0f){
 		moveVector.Normalize();
 	}
+	//effect
+	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 offset = {0.0f, 0.0f, -2.0f};
 
 	//移動速度を掛ける
 	moveVector *= moveSpeed_;
@@ -100,12 +108,11 @@ void Player::Move(){
 	//移動ベクトルを加算
 	model_->worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
+	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
+	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
 
-	//effect
-	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
-	Vector3 offset = {0.0f, 0.0f, -2.0f};
-	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
+
 }
 
 void Player::Shoot(){
@@ -113,10 +120,25 @@ void Player::Shoot(){
 	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
 	Vector3 offset = {0.0f, 0.7f, 2.0f};
 	//発射方向
-	Vector3 shootDir = Vector3::Forward();
-	bulletContainer_->AddBullet("debugCube.obj", wPos, shootDir);
+
+	//Vector2 mousePos = Input::GetInstance()->GetMousePosition();
+	//Matrix4x4 viewProjMatrix = CameraManager::GetViewProjectionMatrix();
+	//Matrix4x4 matviewPort = Matrix4x4::MakeViewportMatrix(0, 0, 1280,720, 0, 1);
+	//Matrix4x4 matVPV = Matrix4x4::Multiply(viewProjMatrix, matviewPort);
+	//Matrix4x4 matInvVPV = Matrix4x4::Inverse(matVPV);
+
+	//Vector3 posNear = Vector3(mousePos.x, mousePos.y, 0.0f);
+	//Vector3 posFar = Vector3(mousePos.x, mousePos.y, 1.0f);
+
+	//posNear = Matrix4x4::Transform(posNear, matInvVPV);
+	//posFar = Matrix4x4::Transform(posFar, matInvVPV);
+
+	//Vector3 shootDir = (posFar - posNear).Normalize();
+	Vector3 dir = Vector3 {0.0f,0.0f,1.0f};
+	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
 	ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
 }
+
 
 void Player::UpdateTilt(const Vector3& moveVector){
 	// 停止時は角度を戻す
@@ -131,7 +153,7 @@ void Player::UpdateTilt(const Vector3& moveVector){
 
 	// 滑らかに傾ける
 	model_->worldTransform_.eulerRotation.z =
-		Lerp(model_->worldTransform_.eulerRotation.z, targetTilt, 0.2f);
+		LerpShortAngle(model_->worldTransform_.eulerRotation.z, targetTilt, 0.2f);
 	lastMoveVector_ = moveVector; // 最後の移動ベクトルを保存
 }
 
@@ -150,4 +172,7 @@ void Player::BarrelRoll(){
 	rollSet_.isRolling_ = true;
 	rollSet_.rollTimer_ = 0.0f;
 	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
+
+	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	ParticleEffectCollection::GetInstance()->PlayByName("reloadParticle", wPos, EmitType::Once);
 }

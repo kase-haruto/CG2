@@ -61,6 +61,7 @@ nlohmann::json Particle::SaveToJson() const{
 	json["isStatic"] = isStatic_;
 	json["emitType"] = static_cast< int >(emitType_);
 	json["isBillboard"] = isBillboard_;
+	json["flyToEmitter"] = flyToEmitter_;
 	json["useRotation"] = useRotation_;
 	json["useRandomScale"] = useRandomScale_;
 	json["fixedMaxScale"] = {fixedMaxScale_.x, fixedMaxScale_.y, fixedMaxScale_.z};
@@ -111,6 +112,7 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));
 	colorMode_ = static_cast< ColorMode >(j.value("colorMode", 0));
 	lifeTime_ = j.value("lifeTime", 1.0f);
+	flyToEmitter_ = j.value("flyToEmitter", false);
 	isStatic_ = j.value("isStatic", false);
 	useRandomScale_ = j.value("useRandomScale", false);
 	randomScaleMin_ = {j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[0],

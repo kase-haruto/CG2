@@ -15,4 +15,9 @@ public:
 
 	void Update() override;  //< 更新
 	void ShowGui() override; //< ImGuiによるGUI表示
+
+	void SetCamera(const Vector3& pos, const Vector3& rotate){
+		transform_.translate = pos;
+		transform_.rotate = rotate;
+	}
 };

@@ -411,6 +411,9 @@
     <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
     <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
+    <ClCompile Include="lib\myMath\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -673,6 +676,8 @@
     <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
     <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

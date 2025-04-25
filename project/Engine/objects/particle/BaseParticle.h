@@ -172,7 +172,7 @@ public:
 	bool isRandomLifeTime_ = true;
 	float maxLifeTime_ = 3.0f;
 	float minLifeTime_ = 1.0f;
-
+	bool flyToEmitter_ = false; // エミッタに向かうかどうか
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
 	Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色

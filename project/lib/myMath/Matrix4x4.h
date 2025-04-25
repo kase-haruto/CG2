@@ -19,6 +19,8 @@ struct Matrix4x4 final{
 	//転置
 	static Matrix4x4 Transpose(const Matrix4x4& mat);
 
+	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+	static Matrix4x4 MakeLookRotationMatrix(const Vector3& forward, const Vector3& up);
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth){
 
 		Matrix4x4 matrix = {};

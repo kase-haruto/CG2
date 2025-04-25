@@ -68,6 +68,7 @@ float LerpShortAngle(float a, float b, float t);
 Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix);
 
 Vector2 WorldToScreen(const Vector3& worldPos);
+Vector3 ScreenToWorld(const Vector2& screenPos, float depth = 100.0f);
 
 Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec);
 

@@ -33,6 +33,10 @@ public:
 	/* ui =========================================*/
 	void DerivativeGui()override;
 
+	void SetParent(const WorldTransform* parent){
+		model_->worldTransform_.parent = parent;
+	}
+
 private:
 	//===================================================================*/
 	//                   private methods

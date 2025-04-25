@@ -45,13 +45,7 @@ void ParticleEffectCollection::Draw(){
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto& effect : effects_){
-		auto blendMode = BlendMode::ADD;
-		auto rs = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject, blendMode);
-		auto ps = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject, blendMode);
-
-		cmdList->SetGraphicsRootSignature(rs.Get());
-		cmdList->SetPipelineState(ps.Get());
-
+		
 		effect->Draw();
 	}
 }

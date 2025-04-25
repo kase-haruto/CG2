@@ -71,7 +71,6 @@ public:
 
 	//--------- accessor -------------------------------------------------
 	virtual Vector3 GetWorldPosition()const;
-
 public:
 	//========================================================================*/
 	//	public variables

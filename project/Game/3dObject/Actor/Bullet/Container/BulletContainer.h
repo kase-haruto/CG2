@@ -43,6 +43,6 @@ private:
 	//			adjustment variables
 	//===================================================================*/
 	float bulletSpeed_ = 40.0f;	// 弾速
-	Vector3 bulletScale_ {0.2f,0.2f,1.5f};		// 弾のスケール
+	Vector3 bulletScale_ {0.3f,0.3f,0.3f};		// 弾のスケール
 };
 

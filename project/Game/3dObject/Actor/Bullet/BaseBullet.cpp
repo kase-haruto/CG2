@@ -13,6 +13,10 @@
 BaseBullet::BaseBullet(const std::string& modelName,
 					   std::function<void(IMeshRenderable*)> registerCB)
 	:Actor::Actor(modelName, "bullet", registerCB){
+	SphereCollider::name_ = "playerBullet";
+	SphereCollider::Initialize(model_->worldTransform_.scale.x * 2.0f + 0.1f);
+	Collider::targetType_ = ColliderType::Type_PlayerAttack;
+	Collider::type_ = ColliderType::Type_PlayerAttack;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

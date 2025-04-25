@@ -1,8 +1,10 @@
 #include "SphereCollider.h"
 #include "lib/myFunc/PrimitiveDrawer.h"
+#include <Engine/Collision/CollisionManager.h>
 
 #include "engine/core/Json/JsonCoordinator.h"
 #include <externals/imgui/imgui.h>
+
 
 #include <sstream> 
 
@@ -16,6 +18,8 @@ void SphereCollider::Initialize(float radius){
 
 	collisionShape_ = Sphere {shape_};
 	shape_.radius = radius;
+
+	CollisionManager::GetInstance()->AddCollider(this);
 
 }
 

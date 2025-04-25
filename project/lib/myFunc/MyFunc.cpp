@@ -411,6 +411,8 @@ Vector2 WorldToScreen(const Vector3& worldPos){
 	return Vector2(screenPos.x, screenPos.y);
 }
 
+
+
 Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec){
 	return Vector4(
 		mat.m[0][0] * vec.x + mat.m[1][0] * vec.y + mat.m[2][0] * vec.z + mat.m[3][0] * vec.w,

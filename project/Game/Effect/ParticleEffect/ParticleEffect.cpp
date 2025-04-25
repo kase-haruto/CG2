@@ -2,6 +2,9 @@
 /* ========================================================================
 /*		include space
 /* ===================================================================== */
+// engine
+#include "Engine/graphics/GraphicsGroup.h"
+
 // c++/lib
 #include <externals/imgui/imgui.h>
 #include <externals/nlohmann/json.hpp>
@@ -32,8 +35,15 @@ void ParticleEffect::Update(){
 //		描画
 ///////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::Draw(){
-	for (auto& ps : particles_){
-		ps->Draw();
+	for (auto& p : particles_){
+		auto blendMode = p->GetBlendMode();
+		auto rs = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::StructuredObject, blendMode);
+		auto ps = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::StructuredObject, blendMode);
+		auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
+		cmdList->SetGraphicsRootSignature(rs.Get());
+		cmdList->SetPipelineState(ps.Get());
+
+		p->Draw();
 	}
 }
 
