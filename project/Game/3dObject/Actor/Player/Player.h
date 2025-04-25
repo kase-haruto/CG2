@@ -1,0 +1,59 @@
+#pragma once
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+#include <Game/3dObject/Base/Actor.h>
+#include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
+/* ========================================================================
+/* Player
+/* ===================================================================== */
+class Player :
+	public Actor{
+	struct RollSet{
+		bool isRolling_ = false;
+		float rollTimer_ = 0.0f;
+		float rollDuration_ = 0.5f;
+		float rollStartAngle_ = 0.0f;
+		float rollTargetAngle_ = 0.0f;
+		float rollDirection_ = 1.0f; // +1 or -1：右回転 or 左回転
+	};
+
+public:
+	//===================================================================*/
+	//                   public methods
+	//===================================================================*/
+	Player() = default;
+	Player(const std::string& modelName,
+		   std::function<void(IMeshRenderable*)> registerCB);
+	virtual ~Player() = default;
+
+	void Initialize()override;
+	void Update()override;
+
+	/* ui =========================================*/
+	void DerivativeGui()override;
+
+	void SetParent(const WorldTransform* parent){
+		model_->worldTransform_.parent = parent;
+	}
+
+private:
+	//===================================================================*/
+	//                   private methods
+	//===================================================================*/
+	void Move();
+	void Shoot();
+	void UpdateTilt(const Vector3& moveVector);
+	void BarrelRoll();
+private:
+	//===================================================================*/
+	//                   private variables
+	//===================================================================*/
+	std::unique_ptr<BulletContainer> bulletContainer_ = nullptr;	// 弾コンテナ
+	float shootInterval_ = 0.3f;	// 発射間隔
+	const float kMaxShootInterval_ = 0.3f;	// 最大発射間隔
+	Vector3 lastMoveVector_;
+	// ローリング関連
+	RollSet rollSet_ = {};
+};
+
