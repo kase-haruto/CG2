@@ -18,6 +18,8 @@ void TextureManager::StartUpLoad(){
 	LoadTexture("uvChecker.png");
 	LoadTexture("MonsterBall.png");
 	LoadTexture("flower.png");
+	LoadTexture("ring.png");
+	LoadTexture("smoke.png");
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{

@@ -23,11 +23,9 @@ BaseParticle::BaseParticle(){
 	particles_.clear();
 }
 
-void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
+void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
-	ParticleData::Emitter emitter;
-	emitter.Initialize(count);
-	emitters_.push_back(emitter);
+
 
 	modelName_ = modelName;
 	textureName_ = texturePath;
@@ -40,7 +38,6 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 }
 
 void BaseParticle::Update(){
-	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
 
 	const float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
@@ -54,7 +51,8 @@ void BaseParticle::Update(){
 		return;
 	}
 
-	if (autoEmit_){
+	// EmitType に応じた発生処理（Auto, Both）
+	if (emitType_ == EmitType::Auto || emitType_ == EmitType::Both){
 		for (auto& emitter : emitters_){
 			emitter.frequencyTime += deltaTime;
 			if (emitter.frequencyTime >= emitter.frequency){
@@ -64,6 +62,7 @@ void BaseParticle::Update(){
 		}
 	}
 
+	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
 	// パーティクル更新
 	instanceDataList_.clear();
 	instanceNum_ = 0;
@@ -373,10 +372,16 @@ void BaseParticle::EmitterGui(){
 			ImGui::PushID(emitterIndex);
 			std::string label = "Emitter " + std::to_string(emitterIndex);
 			if (ImGui::TreeNode(label.c_str())){
-				ImGui::Checkbox("Auto Emit", &autoEmit_);
-				if (!autoEmit_){
-					if (ImGui::Button("emit")){
-						Emit(emitter);
+				const char* emitTypeNames[] = {"Once", "Auto", "Both"};
+				int emitTypeIndex = static_cast< int >(emitType_);
+				if (ImGui::Combo("Emit Type", &emitTypeIndex, emitTypeNames, IM_ARRAYSIZE(emitTypeNames))){
+					emitType_ = static_cast< EmitType >(emitTypeIndex);
+				}
+
+				// Emit ボタン（EmitType::Auto 以外のときのみ表示）
+				if (emitType_ == EmitType::Once || emitType_ == EmitType::Both){
+					if (ImGui::Button("Emit Now")){
+						EmitAll(); // 全エミッタに対してEmit
 					}
 				}
 
@@ -394,7 +399,7 @@ void BaseParticle::EmitterGui(){
 				ImGui::Checkbox("Use Rotation", &emitter.parmData.useRotation);
 				ImGui::Checkbox("Rotate Continuously", &emitter.parmData.rotateContinuously);
 				ImGui::Checkbox("Random Initial Rotation", &emitter.parmData.randomizeInitialRotation);
-
+				ImGui::Checkbox("flyToEmitter", &flyToEmitter_);
 				if (!emitter.parmData.randomizeInitialRotation){
 					ImGui::DragFloat3("Initial Rotation (Euler)", &emitter.parmData.initialRotation.x, 0.1f);
 				}
@@ -422,22 +427,54 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 	for (uint32_t i = 0; i < emitter.count && particles_.size() < static_cast< size_t >(kMaxInstanceNum_); ++i){
 		ParticleData::Parameters particle;
 
-		// カラー
+		// カラー設定
 		if (GetUseRandomColor()){
 			particle.SetColorRandom();
 		} else{
 			particle.color = GetSelectedColor();
 		}
 
-		// ポジション・速度・寿命
-		float speed = Random::Generate(0.5f, 2.0f);
+		// ポジションと速度
 		Vector3 localPoint = emitter.transform.translate;
+
+		//=== ① 発生位置
 		particle.transform.translate = localPoint;
-		particle.velocity = GenerateVelocity(speed);
+		//=== ② 速度決定：エミッターに向かう or ランダム
+		if (flyToEmitter_){
+			// ランダムな周囲の点を生成（球形範囲）
+			Vector3 offset = Random::GenerateVector3(-5.0f, 5.0f); // 立方体範囲でもOK
+			Vector3 spawnPos = emitter.transform.translate + offset;
+			particle.transform.translate = spawnPos;
+
+			// 速度ベクトル：emitter に向かう方向
+			Vector3 toEmitter = emitter.transform.translate - spawnPos;
+			toEmitter.Normalize();
+			float speed = Random::Generate(0.5f, 2.0f);
+			particle.velocity = toEmitter * speed;
+
+			// 回転：velocity ベクトルの方向を向かせる
+			Vector3 forward = toEmitter;
+			Vector3 up = Vector3(0.0f,1.0f,0.0f);
+			Vector3 right = Vector3::Cross(up, forward);
+			up = Vector3::Cross(forward, right);
+
+			Matrix4x4 rotationMatrix = Matrix4x4::MakeLookRotationMatrix(forward,up);
+			particle.transform.rotate = Matrix4x4::ToEuler(rotationMatrix);
+		} else{
+			particle.transform.translate = emitter.transform.translate;
+			float speed = Random::Generate(0.5f, 2.0f);
+			particle.velocity = GenerateVelocity(speed);
+			if (!isBillboard_){
+				Matrix4x4 cam = CameraManager::GetWorldMatrix();
+				particle.transform.rotate = Matrix4x4::ToEuler(cam);
+			}
+		}
+
+		//=== ③ 寿命
 		particle.lifeTime = lifeTime_;
 		particle.currentTime = 0.0f;
 
-		// スケール
+		//=== ④ スケール
 		particle.transform.scale = useRandomScale_
 			? Vector3(
 			Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
@@ -446,7 +483,7 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 			: fixedMaxScale_;
 		particle.maxScale = particle.transform.scale;
 
-		// 回転
+		//=== ⑤ 回転
 		if (emitter.parmData.useRotation){
 			if (emitter.parmData.randomizeInitialRotation){
 				particle.transform.rotate = {
@@ -457,7 +494,6 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 			} else{
 				particle.transform.rotate = emitter.parmData.initialRotation;
 			}
-
 			if (emitter.parmData.rotateContinuously){
 				particle.rotationSpeed = emitter.parmData.rotationSpeed;
 			}
@@ -467,13 +503,20 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 
 		particles_.push_back(particle);
 	}
-
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
 
-void BaseParticle::Emit(){
+
+void BaseParticle::EmitAll(){
 	for (auto& emitter:emitters_){
 		Emit(emitter);
+	}
+}
+
+void BaseParticle::Play(EmitType emitType){
+	emitType_ = emitType;
+	if (emitType_ == EmitType::Once || emitType_ == EmitType::Both){
+		EmitAll();
 	}
 }
 

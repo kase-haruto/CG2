@@ -30,9 +30,9 @@ public:
 	BaseCamera();
 	virtual ~BaseCamera() = default;
 
-	virtual void Update();  // 更新
-	void ShowImGui();		// ImGui表示
-	virtual void UpdateMatrix();  // 行列の更新
+	virtual void Update();			// 更新
+	void ShowImGui();				// ImGui表示
+	virtual void UpdateMatrix();	// 行列の更新
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType);
 

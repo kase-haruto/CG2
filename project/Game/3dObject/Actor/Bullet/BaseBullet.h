@@ -3,12 +3,13 @@
 /* include space
 /* ===================================================================== */
 #include <Game/3dObject/Base/Actor.h>
+#include <Engine/objects/Collider/SphereCollider.h>
 
 /* ========================================================================
 /* bullet 基底クラス
 /* ===================================================================== */
 class BaseBullet :
-	public Actor{
+	public Actor,SphereCollider{
 public:
 	//===================================================================*/
 	//			public function

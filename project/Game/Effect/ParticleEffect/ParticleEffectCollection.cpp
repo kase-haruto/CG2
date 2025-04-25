@@ -45,13 +45,7 @@ void ParticleEffectCollection::Draw(){
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto& effect : effects_){
-		auto blendMode = BlendMode::ADD;
-		auto rs = GraphicsGroup::GetInstance()->GetRootSignature(StructuredObject, blendMode);
-		auto ps = GraphicsGroup::GetInstance()->GetPipelineState(StructuredObject, blendMode);
-
-		cmdList->SetGraphicsRootSignature(rs.Get());
-		cmdList->SetPipelineState(ps.Get());
-
+		
 		effect->Draw();
 	}
 }
@@ -59,10 +53,10 @@ void ParticleEffectCollection::Draw(){
 //===================================================================*/
 //			名前から再生
 //===================================================================*/
-void ParticleEffectCollection::PlayByName(const std::string& name, const Vector3& position){
+void ParticleEffectCollection::PlayByName(const std::string& name, const Vector3& position, EmitType emitType){
 	for (auto& effect : effects_){
 		if (effect->GetName() == name){
-			effect->Play(position);  // ← ParticleEffect に Play を用意する
+			effect->Play(position,emitType);  // ← ParticleEffect に Play を用意する
 			break;
 		}
 	}

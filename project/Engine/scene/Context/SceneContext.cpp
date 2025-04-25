@@ -8,4 +8,5 @@ SceneContext::SceneContext(){
 SceneContext::~SceneContext(){
 	// 3Dオブジェクトの描画を終了
 	meshRenderer_->Clear();
+	
 }

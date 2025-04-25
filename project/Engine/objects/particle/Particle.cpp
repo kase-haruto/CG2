@@ -59,8 +59,9 @@ nlohmann::json Particle::SaveToJson() const{
 	json["model"] = modelName_;
 	json["texture"] = textureName_;
 	json["isStatic"] = isStatic_;
-	json["isAutoEmit"] = autoEmit_;
+	json["emitType"] = static_cast< int >(emitType_);
 	json["isBillboard"] = isBillboard_;
+	json["flyToEmitter"] = flyToEmitter_;
 	json["useRotation"] = useRotation_;
 	json["useRandomScale"] = useRandomScale_;
 	json["fixedMaxScale"] = {fixedMaxScale_.x, fixedMaxScale_.y, fixedMaxScale_.z};
@@ -105,12 +106,13 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	name_ = j.value("name", "");
 	modelName_ = j.value("model", "plane.obj");
 	textureName_ = j.value("texture", "particle");
-	autoEmit_ = j.value("isAutoEmit", true);
 	isBillboard_ = j.value("isBillboard", true);
+	emitType_ = static_cast< EmitType >(j.value("emitType", static_cast< int >(EmitType::Once)));
 	useRotation_ = j.value("useRotation", false);
 	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));
 	colorMode_ = static_cast< ColorMode >(j.value("colorMode", 0));
 	lifeTime_ = j.value("lifeTime", 1.0f);
+	flyToEmitter_ = j.value("flyToEmitter", false);
 	isStatic_ = j.value("isStatic", false);
 	useRandomScale_ = j.value("useRandomScale", false);
 	randomScaleMin_ = {j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[0],
@@ -153,7 +155,6 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 		emitters_.push_back(emitter);
 	}
 }
-
 
 bool Particle::GetUseRandomColor() const{
 	return (colorMode_ == ColorMode::Random);
