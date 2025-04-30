@@ -23,6 +23,33 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	sceneManager_->Initialize();
 }
 
+bool EngineController::Update(){
+
+	if (system_->ProcessMessage()){
+		return false;
+	}
+
+	system_->BeginFrame();
+
+	// UI描画
+	EngineUI::Render();
+
+	// シーン更新
+	sceneManager_->Update();
+
+	// ESCキーで終了
+	if (Input::TriggerKey(DIK_ESCAPE)){
+		return false;
+	}
+
+	return true;
+}
+
+void EngineController::Render(){
+	sceneManager_->Draw();
+	system_->EndFrame();
+}
+
 //===================================================================*/
 // メインループ処理
 //===================================================================*/

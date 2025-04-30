@@ -9,17 +9,19 @@
 
 class EngineController{
 public:
-    EngineController() = default;
-    ~EngineController() = default;
+	EngineController() = default;
+	~EngineController() = default;
 
-    void Initialize(HINSTANCE hInstance);
-    void Run();
-    void Finalize();
+	void Initialize(HINSTANCE hInstance);
+	bool Update();
+	void Render();
+	void Run();
+	void Finalize();
 
 private:
-    std::unique_ptr<System> system_;
+	std::unique_ptr<System> system_;
 
-    //scene
+	//scene
 	std::unique_ptr<SceneManager> sceneManager_;
 
 };
