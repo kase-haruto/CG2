@@ -13,6 +13,8 @@ public:
     ~EngineController() = default;
 
     void Initialize(HINSTANCE hInstance);
+	bool Update();
+	void Render();
     void Run();
     void Finalize();
 

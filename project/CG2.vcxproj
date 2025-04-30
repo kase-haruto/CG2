@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EngineMain.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
@@ -241,6 +242,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EngineAPI.h" />
+    <ClInclude Include="EngineMain.h" />
     <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
     <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />

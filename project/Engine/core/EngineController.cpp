@@ -6,7 +6,7 @@
 //===================================================================*/
 // Engine全体の初期化処理
 //===================================================================*/
-void EngineController::Initialize(HINSTANCE hInstance){
+void EngineController::Initialize(HINSTANCE hInstance) {
 	// comの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
@@ -23,12 +23,37 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	sceneManager_->Initialize();
 }
 
+bool EngineController::Update() {
+	if (system_->ProcessMessage()) {
+		return false;
+	}
+	system_->BeginFrame();
+
+	// UI描画
+	EngineUI::Render();
+
+	// シーン更新
+	sceneManager_->Update();
+
+	// ESCキーで終了
+	if (Input::TriggerKey(DIK_ESCAPE)) {
+		return false;
+	}
+
+	return true;
+}
+
+void EngineController::Render() {
+	sceneManager_->Draw();
+	system_->EndFrame();
+}
+
 //===================================================================*/
 // メインループ処理
 //===================================================================*/
-void EngineController::Run(){
+void EngineController::Run() {
 	// メインループ
-	while (!system_->ProcessMessage()){
+	while (!system_->ProcessMessage()) {
 		// 描画前処理
 		system_->BeginFrame();
 
@@ -44,7 +69,7 @@ void EngineController::Run(){
 		// 描画後処理
 		system_->EndFrame();
 
-		if (Input::TriggerKey(DIK_ESCAPE)){
+		if (Input::TriggerKey(DIK_ESCAPE)) {
 			break;
 		}
 	}
@@ -53,7 +78,7 @@ void EngineController::Run(){
 //===================================================================*/
 // 終了処理
 //===================================================================*/
-void EngineController::Finalize(){
+void EngineController::Finalize() {
 	//終了処理
 	system_->Finalize();
 	sceneManager_.reset();
