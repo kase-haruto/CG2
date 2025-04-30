@@ -417,7 +417,7 @@
     <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
     <ClCompile Include="lib\myMath\Vector4.cpp" />
-    <ClCompile Include="EngineMain.cpp">
+    <ClCompile Include="Engine\core\Main\EngineMain.cpp">
       <Filter>Engine\main</Filter>
     </ClCompile>
   </ItemGroup>
@@ -684,10 +684,10 @@
     <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
     <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
-    <ClInclude Include="EngineAPI.h">
+    <ClInclude Include="Engine\core\Main\EngineAPI.h">
       <Filter>Engine\main</Filter>
     </ClInclude>
-    <ClInclude Include="EngineMain.h">
+    <ClInclude Include="Engine\core\Main\EngineMain.h">
       <Filter>Engine\main</Filter>
     </ClInclude>
   </ItemGroup>
