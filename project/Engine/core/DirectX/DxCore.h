@@ -6,7 +6,7 @@
 #include "engine/core/DirectX/DxFence.h"
 #include "engine/core/DirectX/DxSwapChain.h"
 #include "engine/core/DirectX/RenderTarget.h"
-#include "engine/core/DirectX/ResourceStateTracker.h"
+#include "engine/core/DirectX/ResourceStateTracker/ResourceStateTracker.h"
 #include <memory>
 
 using Microsoft::WRL::ComPtr;

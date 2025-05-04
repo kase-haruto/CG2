@@ -217,7 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Game\demo\TestObject.cpp" />
-    <ClCompile Include="Engine\core\DirectX\ResourceStateTracker.cpp" />
+    <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
@@ -351,7 +351,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
     <ClInclude Include="Game\demo\TestObject.h" />
-    <ClInclude Include="Engine\core\DirectX\ResourceStateTracker.h" />
+    <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
     <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
