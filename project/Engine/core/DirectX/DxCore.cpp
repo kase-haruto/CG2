@@ -163,13 +163,24 @@ void DxCore::SetViewPortAndScissor(uint32_t width, uint32_t height){
 }
 
 void DxCore::TransitionResource(ID3D12GraphicsCommandList* commandList, ID3D12Resource* resource, D3D12_RESOURCE_STATES afterState){
+	if (resource == nullptr){
+		OutputDebugStringA("Warning: TransitionResource called with nullptr.\n");
+		return;
+	}
+
+	// 現在のステートを取得（未登録なら初期状態COMMONとする）
 	D3D12_RESOURCE_STATES beforeState = resourceStateTracker_.GetResourceState(resource);
 
-	if (beforeState != afterState){
-		D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, beforeState, afterState);
-		commandList->ResourceBarrier(1, &barrier);
-		resourceStateTracker_.SetResourceState(resource, afterState);
+	if (beforeState == afterState){
+		return; // 不要な遷移はしない
 	}
+
+	// バリア作成
+	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, beforeState, afterState);
+	commandList->ResourceBarrier(1, &barrier);
+
+	// 状態更新
+	resourceStateTracker_.SetResourceState(resource, afterState);
 }
 
 void DxCore::RenderEngineUI(){
