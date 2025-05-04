@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
@@ -233,6 +234,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />

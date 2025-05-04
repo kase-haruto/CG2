@@ -406,6 +406,7 @@
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
+    <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -663,6 +664,7 @@
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
+    <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
