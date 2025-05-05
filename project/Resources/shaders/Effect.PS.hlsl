@@ -8,12 +8,17 @@ SamplerState gSampler : register(s0);
 /////////////////////////////////////////////////////////////////////////
 //                      main
 /////////////////////////////////////////////////////////////////////////
-float4 main(VSOutput input) : SV_TARGET
-{
+float4 main(VSOutput input) : SV_TARGET{
     float4 texColor = gTexture.Sample(gSampler, input.texcoord);
 
-    // アルファチャンネルを正しく適用する
-    float alpha = texColor.a * input.color.a;
+    float4 baseColor = float4(texColor.rgb * input.color.rgb, texColor.a * input.color.a);
 
-    return float4(texColor.rgb * input.color.rgb, alpha);
+    // 繝医�ｼ繝ｳ繝槭ャ繝斐Φ繧ｰ
+    float exposure = 1.0f;
+    float3 toneMapped = baseColor.rgb * exposure / (baseColor.rgb * exposure + 1.0f);
+
+    // 繧ｬ繝ｳ繝櫁｣懈ｭ｣
+    float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
+
+    return float4(gammaCorrected, baseColor.a);
 }

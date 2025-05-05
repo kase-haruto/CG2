@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
@@ -231,8 +232,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
@@ -336,6 +341,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -368,6 +374,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -4,76 +4,76 @@
 //                      Material
 /////////////////////////////////////////////////////////////////////////
 struct Material{
-    float4 color;         // F
-    int enableLighting;   // ƒ‰ƒCƒeƒBƒ“ƒO‚Ìí—Ş
-    float4x4 uvTransform; // UVÀ•W‚Ì•ÏŠ·s—ñ
-    float shiniess;      // Œõ‘ò“x
+    float4 color;         // è‰²
+    int enableLighting;   // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã®ç¨®é¡
+    float4x4 uvTransform; // UVåº§æ¨™ã®å¤‰æ›è¡Œåˆ—
+    float shiniess;      // å…‰æ²¢åº¦
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      camera
 /////////////////////////////////////////////////////////////////////////
 struct Camera{
-    float3 worldPosition; // ƒJƒƒ‰‚Ìƒ[ƒ‹ƒhÀ•W
+    float3 worldPosition; // ã‚«ãƒ¡ãƒ©ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      DirectionalLight
 /////////////////////////////////////////////////////////////////////////
 struct DirectionalLight{
-    float4 color;       // ƒ‰ƒCƒg‚ÌF
-    float3 direction;   // ƒ‰ƒCƒg‚Ì•ûŒü
-    float intensity;    // Œõ“x
+    float4 color;       // ãƒ©ã‚¤ãƒˆã®è‰²
+    float3 direction;   // ãƒ©ã‚¤ãƒˆã®æ–¹å‘
+    float intensity;    // å…‰åº¦
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      PointLight
 /////////////////////////////////////////////////////////////////////////
 struct PointLight{
-    float4 color;       // ƒ‰ƒCƒg‚ÌF
-    float3 position;    // ƒ‰ƒCƒg‚ÌˆÊ’u
-    float intensity;    // Œõ“x
-    float radius;       // ƒ‰ƒCƒg‚Ì“Í‚­Å‘å‹——£
-    float decay;        // Œ¸Š—¦
+    float4 color;       // ãƒ©ã‚¤ãƒˆã®è‰²
+    float3 position;    // ãƒ©ã‚¤ãƒˆã®ä½ç½®
+    float intensity;    // å…‰åº¦
+    float radius;       // ãƒ©ã‚¤ãƒˆã®å±Šãæœ€å¤§è·é›¢
+    float decay;        // æ¸›è¡°ç‡
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                     Fogeffect
 /////////////////////////////////////////////////////////////////////////
 struct Fog{
-    float start;    //ŠJnˆÊ’u
-    float end;      //I—¹ˆÊ’u
-    float4 color;   //F
+    float start;    //é–‹å§‹ä½ç½®
+    float end;      //çµ‚äº†ä½ç½®
+    float4 color;   //è‰²
 };
 
-// ƒ}ƒeƒŠƒAƒ‹
+// ãƒãƒ†ãƒªã‚¢ãƒ«
 cbuffer MaterialConstants : register(b0){
     Material gMaterial;
 }
 
-// ƒJƒƒ‰
+// ã‚«ãƒ¡ãƒ©
 cbuffer CameraConstants : register(b3){
     Camera gCamera;
 }
 
-// ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒg
+// ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
 cbuffer DirectionalLightConstants : register(b2){
     DirectionalLight gDirectionalLight;
 }
 
-// ƒ|ƒCƒ“ƒgƒ‰ƒCƒg
+// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
 cbuffer PointLightConstants : register(b4){
     PointLight gPointLight;
 }
 
-// ƒtƒHƒOî•ñ
+// ãƒ•ã‚©ã‚°æƒ…å ±
 cbuffer FogConstants : register(b5){
     float fogStart;
     float fogEnd;
     float4 fogColor;
 }
 
-// ƒeƒNƒXƒ`ƒƒ‚ÆƒTƒ“ƒvƒ‰[
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨ã‚µãƒ³ãƒ—ãƒ©ãƒ¼
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
@@ -86,103 +86,85 @@ struct PixelShaderOutput{
 /*                             main                                          */
 //////////////////////////////////////////////////////////////////////////////
 
-PixelShaderOutput main(VertexShaderOutput input){
+PixelShaderOutput main(VertexShaderOutput input)
+{
     PixelShaderOutput output;
 
-    // UVÀ•W‚ğ•ÏŠ·
+    // UVåº§æ¨™ã‚’å¤‰æ›
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
-
-    // ƒeƒNƒXƒ`ƒƒƒTƒ“ƒvƒ‹‚ğæ“¾
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     
     float3 normal = normalize(input.normal);
-
-    ////////////////////////////////////////////////////////////////////
-    //          DirectionalLight
-    ////////////////////////////////////////////////////////////////////
-    // –‘O‚É•K—v‚È•Ï”‚ğéŒ¾
     float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
-    float NdotL = 0.0f;
-    float halfLambertTerm = 0.0f;
-    float lambertTerm = 0.0f;
-    
-    float3 directionalHalfVector = normalize(-gDirectionalLight.direction + toEye);
-    float directionalNdotH = dot(normal, directionalHalfVector);
-    float DirectionalSpecularPow = pow(saturate(directionalNdotH), gMaterial.shiniess);
+
+    ////////////////////////////////////////////////////////
+    // Directional Light
+    ////////////////////////////////////////////////////////
     float3 directionalDiffuse = float3(0.0f, 0.0f, 0.0f);
     float3 directionalSpecular = float3(0.0f, 0.0f, 0.0f);
 
-    // ƒ‰ƒCƒg‚Ìİ’è: Half-Lambert, Lambert, or No Lighting
-    if (gMaterial.enableLighting == 0) {
-        // Half-Lambert shading
-        NdotL = saturate(dot(normal, -gDirectionalLight.direction));
-        halfLambertTerm = pow(NdotL * 0.5f + 0.5f, 2.0f);
-        directionalDiffuse = textureColor.rgb * gDirectionalLight.color.rgb * halfLambertTerm * gDirectionalLight.intensity;
-        directionalSpecular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * DirectionalSpecularPow * float3(1.0f, 1.0f, 1.0f);
+    if (gMaterial.enableLighting == 0)
+    {
+        float NdotL = saturate(dot(normal, -gDirectionalLight.direction));
+        float halfLambert = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        directionalDiffuse = textureColor.rgb * gDirectionalLight.color.rgb * halfLambert * gDirectionalLight.intensity;
+
+        float3 halfVec = normalize(-gDirectionalLight.direction + toEye);
+        float NdotH = dot(normal, halfVec);
+        directionalSpecular = gDirectionalLight.color.rgb * pow(saturate(NdotH), gMaterial.shiniess) * gDirectionalLight.intensity;
     }
-    else if (gMaterial.enableLighting == 1) {
-        // Lambert shading
-        NdotL = saturate(dot(normal, -gDirectionalLight.direction));
+    else if (gMaterial.enableLighting == 1)
+    {
+        float NdotL = saturate(dot(normal, -gDirectionalLight.direction));
         directionalDiffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * NdotL * gDirectionalLight.intensity;
-    }else{
-        // ƒ‰ƒCƒeƒBƒ“ƒO‚È‚µ
-        output.color = gMaterial.color * textureColor;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //          PointLight
-    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    // Point Light
+    ////////////////////////////////////////////////////////
+    float3 pointDiffuse = float3(0.0f, 0.0f, 0.0f);
+    float3 pointSpecular = float3(0.0f, 0.0f, 0.0f);
 
-    // ƒ‰ƒCƒg‚Ì•ûŒü‚ğ³‹K‰»
-    float3 pointLightDir = normalize(input.worldPosition - gPointLight.position);
-
-      // ‹——£Œ¸Š‚ÌŒvZ
+    float3 lightDir = normalize(input.worldPosition - gPointLight.position);
     float distance = length(gPointLight.position - input.worldPosition);
     float attenuation = pow(saturate(1.0f - distance / gPointLight.radius), gPointLight.decay);
-  
-    // ŠgU”½Ë‚ÌŒvZ
-    float pointLightNdotL = saturate(dot(normal, -pointLightDir));
-    float3 pointLightDiffuse = gMaterial.color.rgb * gPointLight.color.rgb * textureColor.rgb * pointLightNdotL * gPointLight.intensity * attenuation;
 
-    
-    // ‹¾–Ê”½Ë‚ÌŒvZ
-    float3 pointLightHalfVector = normalize(-pointLightDir + toEye);
-    float pointLightNDotH = dot(normal, pointLightHalfVector);
-    float pointLightSpecularPow = pow(saturate(pointLightNDotH), gMaterial.shiniess); // 'shiniess' ‚ğ 'shininess' ‚ÉC³
-    float3 pointLightSpecular = gPointLight.color.rgb * pointLightSpecularPow * gPointLight.intensity * attenuation;
-    
-    // ŠgU”½Ë‚Æ‹¾–Ê”½Ë‚ğŠù‘¶‚Ìo—ÍƒJƒ‰[‚É’Ç‰Á
-    float3 diffuse = directionalDiffuse + pointLightDiffuse;
-    float3 specular = directionalSpecular + pointLightSpecular;
-    
-    
-    ////////////////////////////////////////////////////////////////////
-    //          fog
-    ////////////////////////////////////////////////////////////////////
-    float4 baseColor;
-    baseColor.rgb = diffuse + specular;
-    // ƒg[ƒ“ƒ}ƒbƒsƒ“ƒO
-    baseColor.rgb = baseColor.rgb / (baseColor.rgb + float3(1.0, 1.0, 1.0));
+    float NdotL = saturate(dot(normal, -lightDir));
+    pointDiffuse = gMaterial.color.rgb * gPointLight.color.rgb * textureColor.rgb * NdotL * gPointLight.intensity * attenuation;
 
-    // ƒKƒ“ƒ}•â³
-    output.color.rgb = pow(baseColor.rgb, 1.0 / 2.2);
-    baseColor.a = gMaterial.color.a * textureColor.a;
-    
-    //ƒJƒƒ‰‚©‚ç‚Ì‹——£
-    float distanceToCamera = length(input.worldPosition.xyz - gCamera.worldPosition);
-    
-    //ƒtƒHƒO‚Ì–§“x‚ğŒvZ(–¶‚Ì’†‚Å‚Í0ŠO‚Å‚Í1)
-    float fogFactor = saturate((distanceToCamera - fogStart) / (fogEnd - fogStart));
-    
-    //ƒtƒHƒO‚ÌF‚ğƒuƒŒƒ“ƒh
-   // float4 foggedColor = lerp(baseColor, fogColor, fogFactor);
-    
-    output.color = gMaterial.color * baseColor;
-    
-    // ƒAƒ‹ƒtƒ@’l‚ª0‚Ìê‡AƒsƒNƒZƒ‹‚ğ”jŠü
-    if (output.color.a == 0.1){
+    float3 halfVec = normalize(-lightDir + toEye);
+    float NdotH = dot(normal, halfVec);
+    pointSpecular = gPointLight.color.rgb * pow(saturate(NdotH), gMaterial.shiniess) * gPointLight.intensity * attenuation;
+
+    ////////////////////////////////////////////////////////
+    // åˆæˆ + ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚° + ã‚¬ãƒ³ãƒè£œæ­£
+    ////////////////////////////////////////////////////////
+    float3 litColor = directionalDiffuse + directionalSpecular + pointDiffuse + pointSpecular;
+
+    // Exposureä»˜ãReinhardãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚°
+    float exposure = 1.0f;
+    float3 toneMapped = litColor * exposure / (litColor * exposure + 1.0f);
+
+    // ã‚¬ãƒ³ãƒè£œæ­£
+    float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
+
+    ////////////////////////////////////////////////////////
+    // ãƒ•ã‚©ã‚°
+    ////////////////////////////////////////////////////////
+    /*
+    float fogFactor = saturate((distance - fogStart) / (fogEnd - fogStart));
+    float3 finalColor = lerp(gammaCorrected, fogColor.rgb, fogFactor);
+    */
+    float3 finalColor = gammaCorrected;
+
+    ////////////////////////////////////////////////////////
+    // ã‚¢ãƒ«ãƒ•ã‚¡åˆæˆ + å‡ºåŠ›
+    ////////////////////////////////////////////////////////
+    float alpha = gMaterial.color.a * textureColor.a;
+
+    if (alpha <= 0.01f)
         discard;
-    }
 
+    output.color = float4(finalColor, alpha);
     return output;
 }

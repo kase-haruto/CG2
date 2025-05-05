@@ -38,7 +38,7 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(pDxCore_->GetDevice().Get(),
 						pDxCore_->GetSwapChain().GetSwapChainDesc().BufferCount,
-						pDxCore_->GetRenderTarget().rtvDesc_.Format,
+						pDxCore_->GetFormat(),
 						srvHeap_.Get(),
 						srvHeap_.Get()->GetCPUDescriptorHandleForHeapStart(),
 						srvHeap_.Get()->GetGPUDescriptorHandleForHeapStart()
