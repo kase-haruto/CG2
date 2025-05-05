@@ -46,8 +46,6 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
 	dxCommand_->Initialize(dxDevice_->GetDevice());
 	dxSwapChain_->Initialize(dxDevice_->GetDXGIFactory(), dxCommand_->GetCommandQueue(), winApp_->GetHWND(), width, height);
 	dxFence_->Initialize(dxDevice_->GetDevice());
-
-
 }
 
 void DxCore::RendererInitialize(uint32_t width, uint32_t height){
@@ -83,7 +81,6 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 		dxSwapChain_->SetBackBuffer(i, backBuffer); // バッファ保持
 	}
 
-	// SwapChainRenderTarget 登録（RTV作成責務を DxCore 側に統一）
 	auto swapchainRT = std::make_unique<SwapChainRenderTarget>();
 	swapchainRT->Initialize(dxSwapChain_.get(), rtvHeap_.Get(), rtvDescriptorSize_);
 	renderTargetCollection_->Add("BackBuffer", std::move(swapchainRT));
@@ -141,8 +138,8 @@ void DxCore::DrawOffscreenTexture(){
 	if (offscreenTarget){
 		offscreenTarget->TransitionTo(commandList.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-		auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
-		auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
+		auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(GrayScale, BlendMode::NONE);
+		auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(GrayScale, BlendMode::NONE);
 
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		commandList->SetGraphicsRootSignature(rootSignature.Get());

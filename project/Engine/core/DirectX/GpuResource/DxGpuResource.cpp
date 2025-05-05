@@ -23,9 +23,9 @@ void DxGpuResource::InitializeAsRenderTarget(ID3D12Device* device,
 
 	D3D12_CLEAR_VALUE clearValue = {};
 	clearValue.Format = format;
-	clearValue.Color[0] = 0.2f;
-	clearValue.Color[1] = 0.2f;
-	clearValue.Color[2] = 0.2f;
+	clearValue.Color[0] = 0.1f;
+	clearValue.Color[1] = 0.1f;
+	clearValue.Color[2] = 0.1f;
 	clearValue.Color[3] = 1.0f;
 
 	HRESULT hr = device->CreateCommittedResource(

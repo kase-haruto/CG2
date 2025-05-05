@@ -83,7 +83,7 @@ D3D12_RECT OffscreenRenderTarget::GetScissorRect() const{
 
 void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
 	resource_->Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET); // ← 必須
-	float clearColor[] = {0.2f, 0.2f, 0.2f, 1.0f};
+	float clearColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	commandList->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
 	commandList->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }

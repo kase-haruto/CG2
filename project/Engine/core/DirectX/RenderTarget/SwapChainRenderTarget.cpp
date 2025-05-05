@@ -32,7 +32,7 @@ void SwapChainRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandLi
 
 void SwapChainRenderTarget::Clear(ID3D12GraphicsCommandList* cmdList){
 	TransitionTo(cmdList, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	float clearColor[] = {0.02f, 0.02f, 0.02f, 1.0f};
+	float clearColor[] = {1.02f, 0.02f, 0.02f, 1.0f};
 	cmdList->ClearRenderTargetView(GetRTV(), clearColor, 0, nullptr);
 }
 

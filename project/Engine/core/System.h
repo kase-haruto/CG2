@@ -48,9 +48,10 @@ public:
 	void Object2DPipelines();
 	void StructuredObjectPipeline();
 	void LinePipeline();
-	void CopyImagePipeline();
 	void EffectPipeline();
 
+	void CopyImagePipeline();
+	void GrayScalePipeline();
 	//===================================================================*/
 	//                    getter / setter
 	//===================================================================*/

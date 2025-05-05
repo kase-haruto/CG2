@@ -2,8 +2,8 @@
 #include <Engine/PostProcess/FullscreenDrawer.h>
 
 void GrayScaleEffect::Initialize(PipelineStateManager* pipelineMgr){
-	pso_ = pipelineMgr->GetPipelineState(PipelineType::copyImage, BlendMode::NONE);
-	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::copyImage, BlendMode::NONE);
+	pso_ = pipelineMgr->GetPipelineState(PipelineType::GrayScale, BlendMode::NONE);
+	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::GrayScale, BlendMode::NONE);
 }
 
 void GrayScaleEffect::Apply(ID3D12GraphicsCommandList* cmd,

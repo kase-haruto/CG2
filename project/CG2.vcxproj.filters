@@ -743,5 +743,6 @@
     <FxCompile Include="Resources\shaders\Effect.VS.hlsl" />
     <FxCompile Include="Resources\shaders\Effect.PS.hlsl" />
     <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl" />
+    <FxCompile Include="Resources\shaders\Grayscale.PS.hlsl" />
   </ItemGroup>
 </Project>
