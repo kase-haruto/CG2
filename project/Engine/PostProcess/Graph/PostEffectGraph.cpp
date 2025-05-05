@@ -8,6 +8,7 @@ void PostEffectGraph::AddPass(IPostEffectPass* pass){
 void PostEffectGraph::Execute(ID3D12GraphicsCommandList* cmd,
 							  DxGpuResource* input,
 							  IRenderTarget* finalTarget){
+	input->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	D3D12_GPU_DESCRIPTOR_HANDLE currentInput = input->GetSRVGpuHandle();
 	IRenderTarget* currentOutput = finalTarget;
 

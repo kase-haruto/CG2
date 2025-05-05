@@ -2,12 +2,13 @@
 #include "IRenderTarget.h"
 #include "engine/core/DirectX/DxSwapChain.h"
 
-class SwapChainRenderTarget : public IRenderTarget{
+class SwapChainRenderTarget 
+	: public IRenderTarget{
 public:
 	void Initialize(DxSwapChain* swapChain, ID3D12DescriptorHeap* rtvHeap, UINT rtvDescriptorSize);
 	void SetBufferIndex(UINT index);
 
-	ID3D12Resource* GetResource() const override;
+	DxGpuResource* GetResource() const override{ return nullptr; };
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const override;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const override{ return {}; }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRV() const override{ return {}; }

@@ -11,7 +11,7 @@ public:
 					D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
 					D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 
-	ID3D12Resource* GetResource() const override;
+	DxGpuResource* GetResource() const override;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const override;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const override;
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRV() const override;
@@ -23,7 +23,7 @@ public:
 	void TransitionTo(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState);
 
 private:
-	DxGpuResource resource_;
+	std::unique_ptr<DxGpuResource> resource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer_;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ {};
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ {};

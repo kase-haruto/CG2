@@ -11,12 +11,13 @@ void OffscreenRenderTarget::Initialize(ID3D12Device* device, uint32_t width, uin
 	viewport_ = {0.0f, 0.0f, static_cast< float >(width), static_cast< float >(height), 0.0f, 1.0f};
 	scissorRect_ = {0, 0, static_cast< LONG >(width), static_cast< LONG >(height)};
 
-	resource_.InitializeAsRenderTarget(device, width, height, format);
-	resource_.CreateRTV(device, rtvHandle);
-	resource_.CreateSRV(device);
+	resource_ = std::make_unique<DxGpuResource>();
+	resource_->InitializeAsRenderTarget(device, width, height, format);
+	resource_->CreateRTV(device, rtvHandle);
+	resource_->CreateSRV(device);
 
 	// 初期状態を保存（RENDER_TARGET）
-	resource_.SetCurrentState(D3D12_RESOURCE_STATE_RENDER_TARGET);
+	resource_->SetCurrentState(D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// Depthバッファ作成
 	D3D12_RESOURCE_DESC depthDesc = {};
@@ -56,8 +57,8 @@ void OffscreenRenderTarget::Initialize(ID3D12Device* device, uint32_t width, uin
 	device->CreateDepthStencilView(depthBuffer_.Get(), &dsvDesc, dsvHandle);
 }
 
-ID3D12Resource* OffscreenRenderTarget::GetResource() const{
-	return resource_.Get();
+DxGpuResource* OffscreenRenderTarget::GetResource() const{
+	return resource_.get();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetRTV() const{
@@ -69,7 +70,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetDSV() const{
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetSRV() const{
-	return resource_.GetSRVGpuHandle();
+	return resource_->GetSRVGpuHandle();
 }
 
 D3D12_VIEWPORT OffscreenRenderTarget::GetViewport() const{
@@ -81,17 +82,17 @@ D3D12_RECT OffscreenRenderTarget::GetScissorRect() const{
 }
 
 void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
-	resource_.Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET); // ← 必須
+	resource_->Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET); // ← 必須
 	float clearColor[] = {0.2f, 0.2f, 0.2f, 1.0f};
 	commandList->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
 	commandList->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void OffscreenRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandList){
-	resource_.Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	resource_->Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	commandList->OMSetRenderTargets(1, &rtvHandle_, FALSE, &dsvHandle_);
 }
 
 void OffscreenRenderTarget::TransitionTo(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState){
-	resource_.Transition(cmdList, newState);
+	resource_->Transition(cmdList, newState);
 }

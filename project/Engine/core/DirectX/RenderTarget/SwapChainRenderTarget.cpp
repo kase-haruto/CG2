@@ -17,10 +17,6 @@ void SwapChainRenderTarget::SetBufferIndex(UINT index){
 	bufferIndex_ = index;
 }
 
-ID3D12Resource* SwapChainRenderTarget::GetResource() const{
-	return swapChain_->GetBackBuffer(bufferIndex_).Get();
-}
-
 D3D12_CPU_DESCRIPTOR_HANDLE SwapChainRenderTarget::GetRTV() const{
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += rtvDescriptorSize_ * bufferIndex_;
@@ -49,7 +45,7 @@ void SwapChainRenderTarget::TransitionTo(ID3D12GraphicsCommandList* commandList,
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = GetResource();
+	barrier.Transition.pResource = swapChain_->GetBackBuffer(bufferIndex_).Get();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = currentState;
 	barrier.Transition.StateAfter = newState;

@@ -165,11 +165,15 @@ void System::BeginFrame(){
 void System::EndFrame(){
 	EditorDraw();
 
-	// メインレンダーターゲットに再設定
+
 	dxCore_->PreDraw();
 
-	// オフスクリーンレンダーターゲットの終了
-	dxCore_->DrawOffscreenTexture();
+	// ポストエフェクト適用：Offscreen → BackBuffer
+	postEffectGraph_->Execute(
+		dxCore_->GetCommandList().Get(),
+		dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource(),
+		dxCore_->GetRenderTargetCollection().Get("BackBuffer")
+	);
 
 	// ImGuiのコマンドを積む
 	imguiManager_->End();

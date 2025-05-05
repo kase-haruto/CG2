@@ -1,10 +1,13 @@
 #pragma once
+
+#include <Engine/core/DirectX/GpuResource/DxGpuResource.h>
+
 #include <d3d12.h>
 
 class IRenderTarget{
 public:
 	virtual ~IRenderTarget() = default;
-	virtual ID3D12Resource* GetResource() const = 0;
+	virtual DxGpuResource* GetResource() const = 0;
 	virtual D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const = 0;
 	virtual D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const = 0;
 	virtual D3D12_GPU_DESCRIPTOR_HANDLE GetSRV() const = 0;
