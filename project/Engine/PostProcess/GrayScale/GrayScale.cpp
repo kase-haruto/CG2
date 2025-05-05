@@ -17,5 +17,6 @@ void GrayScaleEffect::Apply(ID3D12GraphicsCommandList* cmd,
 
 	auto viewport = outputRT->GetViewport();
 	auto scissor = outputRT->GetScissorRect();
+	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	cmd->DrawInstanced(3, 1, 0, 0);
 }

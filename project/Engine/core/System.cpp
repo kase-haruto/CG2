@@ -11,6 +11,7 @@
 #include "Engine/core/EngineUI.h"
 #include "Engine/graphics/blendMode/BlendMode.h"
 #include "Engine/core/UI/EditorPanel.h"
+#include <Engine/core/DirectX/RenderTarget/SwapChainRenderTarget.h>
 
 // manager
 #include "../objects/TextureManager.h"
@@ -165,15 +166,17 @@ void System::BeginFrame(){
 void System::EndFrame(){
 	EditorDraw();
 
+	if (auto* backBuffer = dynamic_cast< SwapChainRenderTarget* >(
+		dxCore_->GetRenderTargetCollection().Get("BackBuffer"))){
+		backBuffer->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
+	}
 
-	dxCore_->DrawOffscreenTexture();
-	dxCore_->PreDraw();
-	//// ポストエフェクト適用：Offscreen → BackBuffer
-	//postEffectGraph_->Execute(
-	//	dxCore_->GetCommandList().Get(),
-	//	dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource(),
-	//	dxCore_->GetRenderTargetCollection().Get("BackBuffer")
-	//);
+	// ポストエフェクト適用：Offscreen → BackBuffer
+	postEffectGraph_->Execute(
+		dxCore_->GetCommandList().Get(),
+		dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource(),
+		dxCore_->GetRenderTargetCollection().Get("BackBuffer")
+	);
 
 	// ImGuiのコマンドを積む
 	imguiManager_->End();
@@ -1110,7 +1113,7 @@ void System::GrayScalePipeline(){
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.pRootSignature = rootSignature.Get();
 	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.VS = {shaderManager_->GetVertexShader(copyImage)->GetBufferPointer(), shaderManager_->GetVertexShader(copyImage)->GetBufferSize()};
+	psoDesc.VS = {shaderManager_->GetVertexShader(GrayScale)->GetBufferPointer(), shaderManager_->GetVertexShader(GrayScale)->GetBufferSize()};
 	psoDesc.PS = {shaderManager_->GetPixelShader(GrayScale)->GetBufferPointer(), shaderManager_->GetPixelShader(GrayScale)->GetBufferSize()};
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;

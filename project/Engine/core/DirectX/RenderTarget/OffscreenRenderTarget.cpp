@@ -91,6 +91,8 @@ void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
 void OffscreenRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandList){
 	resource_->Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	commandList->OMSetRenderTargets(1, &rtvHandle_, FALSE, &dsvHandle_);
+	commandList->RSSetViewports(1, &viewport_);
+	commandList->RSSetScissorRects(1, &scissorRect_);
 }
 
 void OffscreenRenderTarget::TransitionTo(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState){
