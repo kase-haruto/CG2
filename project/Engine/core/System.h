@@ -9,6 +9,8 @@
 #include "lib/ImGuiManager.h"
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Editor/EffectEditor.h>
+#include <Engine/PostProcess/Collection/PostProcessCollection.h>
+#include <Engine/PostProcess/Graph/PostEffectGraph.h>
 
 //リークチェック
 #include "LeakChecker.h"
@@ -84,5 +86,9 @@ private:
 	
 	// particle
 	std::unique_ptr<ParticleEffectCollection> particleEffectCollection_;
+
+	// postprocess
+	std::unique_ptr<PostProcessCollection> postProcessCollection_;
+	std::unique_ptr<PostEffectGraph> postEffectGraph_;
 };
 

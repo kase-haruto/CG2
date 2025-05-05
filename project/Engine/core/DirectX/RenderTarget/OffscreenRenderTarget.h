@@ -15,6 +15,8 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const override;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const override;
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRV() const override;
+	D3D12_VIEWPORT GetViewport() const override;
+	D3D12_RECT GetScissorRect() const override;
 	void Clear(ID3D12GraphicsCommandList* cmdList) override;
 	void SetRenderTarget(ID3D12GraphicsCommandList* commandList)override;
 
@@ -25,4 +27,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer_;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ {};
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ {};
+
+	D3D12_VIEWPORT viewport_ {};
+	D3D12_RECT scissorRect_ {};
 };

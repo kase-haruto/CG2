@@ -96,6 +96,16 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//パーティクルコンテナの初期化
 	particleEffectCollection_ = std::make_unique<ParticleEffectCollection>();
 
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	/*                     postProcessの描画処理                                             */
+	/////////////////////////////////////////////////////////////////////////////////////////
+	postProcessCollection_ = std::make_unique<PostProcessCollection>();
+	postProcessCollection_->Initialize(pipelineStateManager_.get());
+
+	postEffectGraph_ = std::make_unique<PostEffectGraph>();
+	postEffectGraph_->AddPass(postProcessCollection_->GetGrayScale());
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
 	/////////////////////////////////////////////////////////////////////////////////////////

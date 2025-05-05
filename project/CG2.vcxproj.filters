@@ -410,6 +410,11 @@
     <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
     <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
     <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
+    <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
+    <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
+    <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
+    <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
+    <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -672,6 +677,11 @@
     <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
     <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
     <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
+    <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
+    <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
+    <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
+    <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
+    <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

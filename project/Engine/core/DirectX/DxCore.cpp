@@ -5,6 +5,8 @@
 #include "Engine/core/DirectX/RenderTarget/SwapChainRenderTarget.h"
 #include "Engine/graphics/GraphicsGroup.h"
 #include "engine/core/Enviroment.h"
+#include <Engine/PostProcess/FullscreenDrawer.h>
+
 #include <cassert>
 #include <dxgidebug.h>
 #include <d3dx12.h>
@@ -44,6 +46,7 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
 	dxCommand_->Initialize(dxDevice_->GetDevice());
 	dxSwapChain_->Initialize(dxDevice_->GetDXGIFactory(), dxCommand_->GetCommandQueue(), winApp_->GetHWND(), width, height);
 	dxFence_->Initialize(dxDevice_->GetDevice());
+
 
 }
 
@@ -117,7 +120,6 @@ void DxCore::PreDrawOffscreen(){
 		offscreenTarget->Clear(dxCommand_->GetCommandList().Get());
 		offscreenTarget->SetRenderTarget(dxCommand_->GetCommandList().Get());
 
-		// ★ ビューポートとシザー矩形の設定を忘れずに！
 		dxCommand_->GetCommandList()->RSSetViewports(1, &viewport_);
 		dxCommand_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 	}

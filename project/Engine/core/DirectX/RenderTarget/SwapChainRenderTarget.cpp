@@ -6,9 +6,11 @@ void SwapChainRenderTarget::Initialize(DxSwapChain* swapChain, ID3D12DescriptorH
 	rtvHeap_ = rtvHeap;
 	rtvDescriptorSize_ = rtvDescriptorSize;
 
-	// バックバッファの数（仮に2）
 	UINT backBufferCount = 2;
-	currentStates_.resize(backBufferCount, D3D12_RESOURCE_STATE_PRESENT); // ← 追加
+	currentStates_.resize(backBufferCount, D3D12_RESOURCE_STATE_PRESENT);
+
+	viewport_ = {0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 1.0f};
+	scissorRect_ = {0, 0, 1280, 720};
 }
 
 void SwapChainRenderTarget::SetBufferIndex(UINT index){

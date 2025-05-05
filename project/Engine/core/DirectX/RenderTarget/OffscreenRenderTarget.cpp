@@ -7,6 +7,10 @@ void OffscreenRenderTarget::Initialize(ID3D12Device* device, uint32_t width, uin
 	rtvHandle_ = rtvHandle;
 	dsvHandle_ = dsvHandle;
 
+	// リソースの初期化
+	viewport_ = {0.0f, 0.0f, static_cast< float >(width), static_cast< float >(height), 0.0f, 1.0f};
+	scissorRect_ = {0, 0, static_cast< LONG >(width), static_cast< LONG >(height)};
+
 	resource_.InitializeAsRenderTarget(device, width, height, format);
 	resource_.CreateRTV(device, rtvHandle);
 	resource_.CreateSRV(device);
@@ -66,6 +70,14 @@ D3D12_CPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetDSV() const{
 
 D3D12_GPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetSRV() const{
 	return resource_.GetSRVGpuHandle();
+}
+
+D3D12_VIEWPORT OffscreenRenderTarget::GetViewport() const{
+	return D3D12_VIEWPORT();
+}
+
+D3D12_RECT OffscreenRenderTarget::GetScissorRect() const{
+	return D3D12_RECT();
 }
 
 void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
