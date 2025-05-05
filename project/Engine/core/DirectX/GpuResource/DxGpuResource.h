@@ -23,6 +23,10 @@ public:
 	void CreateSRV(ID3D12Device* device);
 	void CreateRTV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE handle);
 
+	void Transition(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState);
+	void SetCurrentState(D3D12_RESOURCE_STATES state);
+	D3D12_RESOURCE_STATES GetCurrentState() const;
+
 	// アクセサ
 	ID3D12Resource* Get() const{ return resource_.Get(); }
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCpuHandle() const{ return cpuSrvHandle_; }
@@ -30,6 +34,7 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCpuHandle() const{ return cpuRtvHandle_; }
 
 private:
+	D3D12_RESOURCE_STATES currentState_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	ComPtr<ID3D12Resource> resource_;
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuSrvHandle_ {};
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuSrvHandle_ {};

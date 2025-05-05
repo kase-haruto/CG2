@@ -23,9 +23,9 @@ void DxGpuResource::InitializeAsRenderTarget(ID3D12Device* device,
 
 	D3D12_CLEAR_VALUE clearValue = {};
 	clearValue.Format = format;
-	clearValue.Color[0] = 0.02f;
-	clearValue.Color[1] = 0.02f;
-	clearValue.Color[2] = 0.02f;
+	clearValue.Color[0] = 0.2f;
+	clearValue.Color[1] = 0.2f;
+	clearValue.Color[2] = 0.2f;
 	clearValue.Color[3] = 1.0f;
 
 	HRESULT hr = device->CreateCommittedResource(
@@ -44,6 +44,28 @@ void DxGpuResource::InitializeAsRenderTarget(ID3D12Device* device,
 	if (name.has_value()){
 		resource_->SetName(name->c_str());
 	}
+}
+
+void DxGpuResource::SetCurrentState(D3D12_RESOURCE_STATES state){
+	currentState_ = state;
+}
+
+D3D12_RESOURCE_STATES DxGpuResource::GetCurrentState() const{
+	return currentState_;
+}
+
+void DxGpuResource::Transition(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState){
+	if (!resource_ || currentState_ == newState) return;
+
+	D3D12_RESOURCE_BARRIER barrier {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource = resource_.Get();
+	barrier.Transition.StateBefore = currentState_;
+	barrier.Transition.StateAfter = newState;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	cmdList->ResourceBarrier(1, &barrier);
+	currentState_ = newState;
 }
 
 void DxGpuResource::CreateSRV(ID3D12Device* device){

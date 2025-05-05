@@ -57,8 +57,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//audioの初期化
 	Audio::Initialize();
 
-	//uiの初期化
-	InitializeEngineUI();
 
 	//管理クラスの初期化
 	shaderManager_ = std::make_shared<ShaderManager>();
@@ -77,6 +75,10 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	//srvの先頭をimguiが使用するためそのあとに初期化
 	dxCore_->RendererInitialize(clientWidth, clientHeight);
+
+	//uiの初期化
+	InitializeEngineUI();
+
 
 	// カメラの生成
 	CameraManager::Initialize();
@@ -119,7 +121,10 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 void System::InitializeEngineUI(){
 	EngineUI::Initialize();
 
-	EngineUI::SetMainViewportTexture(dxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr);
+	auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
+	if (offscreen){
+		EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
+	}
 
 }
 
@@ -129,7 +134,10 @@ void System::InitializeEngineUI(){
 void System::BeginFrame(){
 	ClockManager::GetInstance()->Update();
 
-	EngineUI::SetMainViewportTexture(dxCore_->GetRenderTarget().offscreenSrvGpuDescriptorHandle_.ptr);
+	auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
+	if (offscreen){
+		EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
+	}
 	// ImGui受付開始
 	imguiManager_->Begin();
 	// インプットの更新
@@ -372,7 +380,7 @@ void System::Object3DPipelines(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -545,7 +553,7 @@ void System::SkinningObject3dPipeline(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -676,7 +684,7 @@ void System::Object2DPipelines(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -804,7 +812,7 @@ void System::StructuredObjectPipeline(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -907,7 +915,7 @@ void System::LinePipeline(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE; // 線描画用に設定
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -1000,7 +1008,7 @@ void System::CopyImagePipeline(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -1116,7 +1124,7 @@ void System::EffectPipeline(){
 	psoDesc.RasterizerState = rasterizeDesc;
 	psoDesc.DepthStencilState = depthStencilDesc;
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;

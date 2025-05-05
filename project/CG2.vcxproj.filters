@@ -407,6 +407,9 @@
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
+    <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -665,6 +668,10 @@
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
+    <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
