@@ -126,6 +126,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
+    <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
     <ClCompile Include="Engine\scene\DemoScene.cpp">
@@ -199,6 +200,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
     <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
+    <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
+    <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -235,6 +238,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
     <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
     <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
+    <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
+    <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
+    <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
@@ -260,6 +266,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
     <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
+    <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
     <ClInclude Include="Engine\scene\DemoScene.h">
@@ -342,6 +349,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\graphics\camera\ICamera.h" />
     <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
     <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
+    <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
+    <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -377,6 +386,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
     <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
     <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
+    <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
+    <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
+    <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -490,6 +502,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\Grayscale.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\shaders\Object2d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -513,6 +528,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\RadialBlur.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

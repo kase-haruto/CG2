@@ -7,5 +7,7 @@ enum PipelineType{
 	StructuredObject,
 	Line,
 	copyImage,
+	GrayScale,
+	RadialBlur,
 	Effect,
 };

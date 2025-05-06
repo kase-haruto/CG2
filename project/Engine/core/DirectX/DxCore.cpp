@@ -5,6 +5,8 @@
 #include "Engine/core/DirectX/RenderTarget/SwapChainRenderTarget.h"
 #include "Engine/graphics/GraphicsGroup.h"
 #include "engine/core/Enviroment.h"
+#include <Engine/PostProcess/FullscreenDrawer.h>
+
 #include <cassert>
 #include <dxgidebug.h>
 #include <d3dx12.h>
@@ -44,7 +46,6 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
 	dxCommand_->Initialize(dxDevice_->GetDevice());
 	dxSwapChain_->Initialize(dxDevice_->GetDXGIFactory(), dxCommand_->GetCommandQueue(), winApp_->GetHWND(), width, height);
 	dxFence_->Initialize(dxDevice_->GetDevice());
-
 }
 
 void DxCore::RendererInitialize(uint32_t width, uint32_t height){
@@ -54,7 +55,7 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	// RTV heap（SwapChain用に2つ、Offscreen用に1つ = 合計3つ）
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDesc = {};
 	rtvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDesc.NumDescriptors = 3;
+	rtvDesc.NumDescriptors = 4;
 	rtvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	device->CreateDescriptorHeap(&rtvDesc, IID_PPV_ARGS(&rtvHeap_));
 	rtvDescriptorSize_ = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -80,7 +81,6 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 		dxSwapChain_->SetBackBuffer(i, backBuffer); // バッファ保持
 	}
 
-	// SwapChainRenderTarget 登録（RTV作成責務を DxCore 側に統一）
 	auto swapchainRT = std::make_unique<SwapChainRenderTarget>();
 	swapchainRT->Initialize(dxSwapChain_.get(), rtvHeap_.Get(), rtvDescriptorSize_);
 	renderTargetCollection_->Add("BackBuffer", std::move(swapchainRT));
@@ -92,6 +92,13 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	auto offscreenRT = std::make_unique<OffscreenRenderTarget>();
 	offscreenRT->Initialize(device.Get(), width, height, format_, offscreenRTVHandle, dsvHandle);
 	renderTargetCollection_->Add("Offscreen", std::move(offscreenRT));
+
+	D3D12_CPU_DESCRIPTOR_HANDLE postEffectRTVHandle = baseRTVHandle;
+	postEffectRTVHandle.ptr += rtvDescriptorSize_ * 3;
+	auto postEffectRT = std::make_unique<OffscreenRenderTarget>();
+	postEffectRT->Initialize(device.Get(), width, height, format_, /*RTV*/ postEffectRTVHandle, /*DSV*/ dsvHandle);
+	renderTargetCollection_->Add("PostEffectOutput", std::move(postEffectRT));
+
 }
 
 
@@ -117,7 +124,6 @@ void DxCore::PreDrawOffscreen(){
 		offscreenTarget->Clear(dxCommand_->GetCommandList().Get());
 		offscreenTarget->SetRenderTarget(dxCommand_->GetCommandList().Get());
 
-		// ★ ビューポートとシザー矩形の設定を忘れずに！
 		dxCommand_->GetCommandList()->RSSetViewports(1, &viewport_);
 		dxCommand_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 	}
@@ -139,8 +145,8 @@ void DxCore::DrawOffscreenTexture(){
 	if (offscreenTarget){
 		offscreenTarget->TransitionTo(commandList.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-		auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
-		auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
+		auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(GrayScale, BlendMode::NONE);
+		auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(GrayScale, BlendMode::NONE);
 
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		commandList->SetGraphicsRootSignature(rootSignature.Get());

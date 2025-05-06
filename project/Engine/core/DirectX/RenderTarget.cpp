@@ -69,7 +69,7 @@ void RenderTarget::ClearRenderTarget(ComPtr<ID3D12GraphicsCommandList> commandLi
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 	// クリアカラーの設定
-	float clearColor[] = {0.02f, 0.02f, 0.02f, 1.0f};
+	float clearColor[] = {1.02f, 0.02f, 0.02f, 1.0f};
 
 
 	// レンダーターゲットのクリア
