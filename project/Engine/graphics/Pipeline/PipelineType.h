@@ -8,5 +8,6 @@ enum PipelineType{
 	Line,
 	copyImage,
 	GrayScale,
+	RadialBlur,
 	Effect,
 };

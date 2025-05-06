@@ -415,6 +415,7 @@
     <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
     <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
+    <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -682,6 +683,7 @@
     <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
     <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
+    <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
@@ -744,5 +746,6 @@
     <FxCompile Include="Resources\shaders\Effect.PS.hlsl" />
     <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl" />
     <FxCompile Include="Resources\shaders\Grayscale.PS.hlsl" />
+    <FxCompile Include="Resources\shaders\RadialBlur.PS.hlsl" />
   </ItemGroup>
 </Project>

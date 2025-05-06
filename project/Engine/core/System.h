@@ -52,6 +52,7 @@ public:
 
 	void CopyImagePipeline();
 	void GrayScalePipeline();
+	void RadialBlurPipeline();
 	//===================================================================*/
 	//                    getter / setter
 	//===================================================================*/
