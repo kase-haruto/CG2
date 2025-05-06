@@ -37,17 +37,30 @@ void GameScene::Initialize(){
 		sceneContext_->meshRenderer_->Register(mesh);
 		};
 
-	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
+	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
 	//=========================
 	// グラフィック関連
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
+
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Initialize();
 	
 	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field", registerToRenderer);
-	modelField_->SetScale({50.0f,50.0f,50.0f});
-	modelField_->GetModel()->SetUvScale({30.0f,30.0f,0.0f});
+	modelField_->SetScale({300.0f,300.0f,300.0f});
+	modelField_->GetModel()->SetUvScale({290.0f,290.0f,0.0f});
+	//modelField_->EnableGuiList();
 	//modelField_->SetUvScale({15.0f,15.0f,0.0f});
 
+
+	//player
+	player_ = std::make_unique<Player>("player.obj", registerToRenderer);
+	player_->Initialize();
+	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	enemyCollection_ = std::make_unique<EnemyCollection>(registerToRenderer);
+
+	
 	//===================================================================*/
 	//                    editor
 	//===================================================================*/
@@ -57,12 +70,18 @@ void GameScene::Update(){
 	LightManager::GetInstance()->ShowImGui();
 
 	/* カメラ関連更新 ============================*/
+	railCamera_->Update();
+	CameraManager::GetCamera3d()->SetCamera(railCamera_->GetPosition(), railCamera_->GetRotation());
 	CameraManager::Update();
 	
 	/* 3dObject ============================*/
 	//地面の更新
 	modelField_->Update();
 	
+	//プレイヤーの更新
+	player_->Update();
+
+	enemyCollection_->Update();
 	/* その他 ============================*/
 
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();

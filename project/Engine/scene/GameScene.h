@@ -10,12 +10,15 @@
 #include <Engine/Editor/UiEditor.h>
 #include <Engine/core/UI/ParticleEditPanel.h>
 #include <Engine/objects/Sprite.h>  
-#include <Game/3d/Base/BaseGameObject.h>
+#include <Game/3dObject/Base/BaseGameObject.h>
+#include <Game/3dObject/Actor/Player/Player.h>
+#include <Game/3dObject/Actor/Enemy/Collection/EnemyCollection.h>
 
 /* graphics */
 #include <Engine/physics/light/DirectionalLight.h>
 #include <Engine/physics/light/PointLight.h>
 #include <Engine/graphics/FogEffect.h>
+#include <Game/3d/GameCamera/RailCamera.h>
 
 /* object */
 #include <lib/myFunc/PrimitiveDrawer.h>
@@ -48,9 +51,15 @@ private:
 
 	/* objects ======================================================*/
 	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<EnemyCollection> enemyCollection_ = nullptr;
+
+	// カメラ
+	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 
 	/* editor =======================================================*/
 	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
 	std::unique_ptr<UIEditor> uiEditor_ = nullptr;
+
 };
 
