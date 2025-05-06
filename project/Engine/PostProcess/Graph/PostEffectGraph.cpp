@@ -14,7 +14,11 @@ void PostEffectGraph::Execute(ID3D12GraphicsCommandList* cmd,
 
 	for (auto* pass : passes_){
 		pass->Apply(cmd, currentInput, currentOutput);
+
+		// 🔺 次のパス用に SRV 状態に戻す（Apply内ではRENDER_TARGETになっているので）
+		currentOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
 		currentInput = currentOutput->GetSRV();
-		// ※ Ping-Pong バッファが必要ならここで切り替え
 	}
+
 }

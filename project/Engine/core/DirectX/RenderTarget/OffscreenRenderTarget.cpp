@@ -1,4 +1,6 @@
 #include "OffscreenRenderTarget.h"
+#include <Engine/core/Enviroment.h>
+
 #include <cassert>
 #include <d3dx12.h>
 #include <stdexcept>
@@ -74,11 +76,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetSRV() const{
 }
 
 D3D12_VIEWPORT OffscreenRenderTarget::GetViewport() const{
-	return D3D12_VIEWPORT();
+	D3D12_VIEWPORT viewport = {0.0f, 0.0f, kWindowWidth, kWindowHeight, 0.0f, 1.0f};
+	return 	viewport;
 }
 
 D3D12_RECT OffscreenRenderTarget::GetScissorRect() const{
-	return D3D12_RECT();
+	D3D12_RECT scissorRect = {0, 0, kWindowWidth, kWindowHeight};
+	return scissorRect;
 }
 
 void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){

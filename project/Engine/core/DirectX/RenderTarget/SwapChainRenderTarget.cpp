@@ -1,4 +1,5 @@
 #include "SwapChainRenderTarget.h"
+#include <Engine/core/Enviroment.h>
 #include <cassert>
 
 void SwapChainRenderTarget::Initialize(DxSwapChain* swapChain, ID3D12DescriptorHeap* rtvHeap, UINT rtvDescriptorSize){
@@ -9,8 +10,8 @@ void SwapChainRenderTarget::Initialize(DxSwapChain* swapChain, ID3D12DescriptorH
 	UINT backBufferCount = 2;
 	currentStates_.resize(backBufferCount, D3D12_RESOURCE_STATE_PRESENT);
 
-	viewport_ = {0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 1.0f};
-	scissorRect_ = {0, 0, 1280, 720};
+	viewport_ = {0.0f, 0.0f,kWindowWidth , kWindowHeight, 0.0f, 1.0f};
+	scissorRect_ = {0, 0, kWindowWidth, kWindowHeight};
 }
 
 void SwapChainRenderTarget::SetBufferIndex(UINT index){

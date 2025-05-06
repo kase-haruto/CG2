@@ -12,6 +12,8 @@
 #include "Engine/graphics/blendMode/BlendMode.h"
 #include "Engine/core/UI/EditorPanel.h"
 #include <Engine/core/DirectX/RenderTarget/SwapChainRenderTarget.h>
+#include <Engine/PostProcess/FullscreenDrawer.h>
+#include <lib/myFunc/DxFunc.h>
 
 // manager
 #include "../objects/TextureManager.h"
@@ -132,10 +134,10 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 void System::InitializeEngineUI(){
 	EngineUI::Initialize();
 
-	auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
-	if (offscreen){
-		EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
-	}
+	//auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
+	//if (offscreen){
+	//	EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
+	//}
 
 }
 
@@ -145,10 +147,7 @@ void System::InitializeEngineUI(){
 void System::BeginFrame(){
 	ClockManager::GetInstance()->Update();
 
-	auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
-	if (offscreen){
-		EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
-	}
+
 	// ImGui受付開始
 	imguiManager_->Begin();
 	// インプットの更新
@@ -166,26 +165,46 @@ void System::BeginFrame(){
 void System::EndFrame(){
 	EditorDraw();
 
-	if (auto* backBuffer = dynamic_cast< SwapChainRenderTarget* >(
-		dxCore_->GetRenderTargetCollection().Get("BackBuffer"))){
-		backBuffer->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
+	// SwapChainのバッファを更新
+	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
+	if (auto* scTarget = dynamic_cast< SwapChainRenderTarget* >(backBuffer)){
+		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
 	}
 
-	// ポストエフェクト適用：Offscreen → BackBuffer
-	postEffectGraph_->Execute(
-		dxCore_->GetCommandList().Get(),
-		dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource(),
-		dxCore_->GetRenderTargetCollection().Get("BackBuffer")
+	auto* cmd = dxCore_->GetCommandList().Get();
+
+	// リソース取得
+	auto* offscreenRes = dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource();
+	auto* postOutput = dxCore_->GetRenderTargetCollection().Get("PostEffectOutput");
+
+	// ポストプロセス実行: Offscreen → PostEffectOutput
+	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
+
+	// ✅ ImGuiプレビュー用（※ ImGui描画前に行う）
+	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	EngineUI::SetMainViewportTexture(postOutput->GetSRV().ptr);
+
+	// ✅ PostEffectOutput → BackBuffer に描画（ImGui前）
+	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
+	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
+
+	DrawTextureToRenderTarget(
+		cmd,
+		postOutput->GetSRV(),
+		backBuffer,
+		pipelineState.Get(),
+		rootSignature.Get()
 	);
 
-	// ImGuiのコマンドを積む
+	// ✅ ImGui描画（BackBuffer上に描く）
 	imguiManager_->End();
-	// ImGui描画（メインレンダーターゲットに描画）
 	imguiManager_->Draw();
 
-	// フレームの終了
+	// Present
 	dxCore_->PostDraw();
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  Editorの更新

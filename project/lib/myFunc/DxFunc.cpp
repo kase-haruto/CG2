@@ -1,5 +1,7 @@
 #include "DxFunc.h"
 
+#include <Engine/core/DirectX/RenderTarget/IRenderTarget.h>
+
 ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 	ComPtr<ID3D12Device> device,
 	D3D12_DESCRIPTOR_HEAP_TYPE heapType,
@@ -16,4 +18,32 @@ ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 	// Releaseビルドで未使用警告を抑える
 	( void ) hr;
 	return descriptorHeap;
+}
+
+void DrawTextureToRenderTarget(
+	ID3D12GraphicsCommandList* cmd,
+	D3D12_GPU_DESCRIPTOR_HANDLE inputSRV,
+	IRenderTarget* output,
+	ID3D12PipelineState* pso,
+	ID3D12RootSignature* rootSig
+){
+	if (!cmd || !output || !pso || !rootSig) return;
+
+	output->SetRenderTarget(cmd);
+
+	cmd->SetPipelineState(pso);
+	cmd->SetGraphicsRootSignature(rootSig);
+	cmd->SetGraphicsRootDescriptorTable(0, inputSRV);
+
+	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Viewport & Scissor が固定ならここで設定してもOK
+	
+	D3D12_VIEWPORT viewport = output->GetViewport();
+	D3D12_RECT scissorRect = output->GetScissorRect();
+
+	cmd->RSSetViewports(1, &viewport);
+	cmd->RSSetScissorRects(1, &scissorRect);
+
+	cmd->DrawInstanced(3, 1, 0, 0);
 }
