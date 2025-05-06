@@ -10,7 +10,7 @@
 #include <Engine/Editor/UiEditor.h>
 #include <Engine/core/UI/ParticleEditPanel.h>
 #include <Engine/objects/Sprite.h>  
-#include <Game/3dObject/Base/BaseGameObject.h>
+#include <Game/3d/Base/BaseGameObject.h>
 #include <Game/3dObject/Actor/Player/Player.h>
 #include <Game/3dObject/Actor/Enemy/Collection/EnemyCollection.h>
 

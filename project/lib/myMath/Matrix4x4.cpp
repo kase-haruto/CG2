@@ -260,3 +260,45 @@ Matrix4x4 Matrix4x4::Transpose(const Matrix4x4& mat){
 	}
 	return result;
 }
+
+Vector3 Matrix4x4::Transform(const Vector3& vector, const Matrix4x4& matrix){
+	Vector3 result = {0, 0, 0};
+
+	// 同次座標系への変換
+	// 変換行列を適用
+	Vector4 homogeneousCoordinate(
+		vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0],
+		vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1],
+		vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2],
+		vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3]);
+
+	// 同次座標系から3次元座標系に戻す
+	float w = homogeneousCoordinate.w;
+	result.x = homogeneousCoordinate.x / w;
+	result.y = homogeneousCoordinate.y / w;
+	result.z = homogeneousCoordinate.z / w;
+
+	return result;
+}
+
+Matrix4x4 Matrix4x4::MakeLookRotationMatrix(const Vector3& forward, const Vector3& up){
+	Vector3 zAxis = forward.Normalize(); // 前方方向
+	Vector3 xAxis = Vector3::Cross(up, zAxis).Normalize(); // 右方向
+	Vector3 yAxis = Vector3::Cross(zAxis, xAxis); // 上方向
+
+	Matrix4x4 result = Matrix4x4::MakeIdentity();
+
+	result.m[0][0] = xAxis.x;
+	result.m[1][0] = xAxis.y;
+	result.m[2][0] = xAxis.z;
+
+	result.m[0][1] = yAxis.x;
+	result.m[1][1] = yAxis.y;
+	result.m[2][1] = yAxis.z;
+
+	result.m[0][2] = zAxis.x;
+	result.m[1][2] = zAxis.y;
+	result.m[2][2] = zAxis.z;
+
+	return result;
+}

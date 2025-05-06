@@ -83,6 +83,8 @@ namespace ParticleData{
 	};
 }
 
+enum class EmitType{ Once, Auto, Both };
+
 /* ========================================================================
 /* base class
 /* ===================================================================== */
@@ -119,6 +121,8 @@ public:
 	void EmitterGui();
 
 	virtual void Emit(ParticleData::Emitter& emitter);
+	void EmitAll();
+	void Play(EmitType emitType);
 
 	//--------- accessor -----------------------------------------------------
 	virtual float SetParticleLifeTime() const{ return Random::Generate(0.5f, 1.0f); }
@@ -133,6 +137,7 @@ public:
 		randomScaleMax_ = maxScale;
 	}
 	void SetEmitterShape(EmitterShape shape){ currentShape_ = shape; }
+	void SetEmitPos(const Vector3& pos);
 	//--------- json -----------------------------------------------------
 	virtual nlohmann::json SaveToJson() const = 0;
 	virtual void LoadFromJson(const nlohmann::json& j) = 0;
@@ -152,7 +157,6 @@ public:
 	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
-	bool autoEmit_ = true;
 	int32_t kMaxInstanceNum_ = 1024;
 	int32_t instanceNum_ = 0;
 
@@ -165,6 +169,10 @@ public:
 
 	float lifeTime_ = 1.0f; // パーティクルの寿命
 
+	bool isRandomLifeTime_ = true;
+	float maxLifeTime_ = 3.0f;
+	float minLifeTime_ = 1.0f;
+	bool flyToEmitter_ = false; // エミッタに向かうかどうか
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
 	Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色
@@ -193,7 +201,7 @@ protected:
 
 	/* emitter ------------------------------------*/
 	std::vector<ParticleData::Emitter> emitters_;
-
+	EmitType emitType_ = EmitType::Auto; // 発生タイプ（自動、手動、両方）
 	bool emitPosX_ = true;
 	bool emitNegX_ = true;
 	bool emitPosY_ = true;

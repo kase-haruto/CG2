@@ -361,7 +361,6 @@
     <ClCompile Include="Engine\objects\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
-    <ClCompile Include="Game\demo\TestObject.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
@@ -416,6 +415,14 @@
     <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
     <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
+    <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
+    <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -620,7 +627,6 @@
     <ClInclude Include="Engine\objects\Collider\BoxCollider.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
-    <ClInclude Include="Game\demo\TestObject.h" />
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
@@ -684,6 +690,14 @@
     <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
     <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
+    <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
+    <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
+    <ClInclude Include="Game\3dObject\Base\Actor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

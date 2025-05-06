@@ -127,6 +127,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Transform.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
+    <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
     <ClCompile Include="Engine\scene\DemoScene.cpp">
@@ -202,6 +209,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
     <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
+    <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
     <ClCompile Include="lib\ImGuiManager.cpp" />
     <ClCompile Include="lib\myFunc\ConvertString.cpp" />
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
@@ -220,7 +228,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
     <ClCompile Include="Engine\objects\Collider\SphereCollider.cpp" />
-    <ClCompile Include="Game\demo\TestObject.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
@@ -267,6 +274,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
+    <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Collection\EnemyCollection.h" />
+    <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
+    <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
+    <ClInclude Include="Game\3dObject\Base\Actor.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
     <ClInclude Include="Engine\scene\DemoScene.h">
@@ -351,6 +365,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
     <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
     <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
+    <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
     <ClInclude Include="lib\ImGuiManager.h" />
     <ClInclude Include="lib\myFunc\ConvertString.h" />
     <ClInclude Include="lib\myFunc\DxFunc.h" />
@@ -365,7 +380,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myMath\Vector4.h" />
     <ClInclude Include="Engine\objects\particle\Particle.h" />
     <ClInclude Include="Engine\objects\Collider\SphereCollider.h" />
-    <ClInclude Include="Game\demo\TestObject.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />

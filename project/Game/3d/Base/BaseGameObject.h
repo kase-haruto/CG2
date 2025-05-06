@@ -11,9 +11,9 @@
 #include <functional>
 
 class BaseGameObject
-	:public SceneObject{
+	:public SceneObject {
 
-	enum ObjectModelType{
+	enum ObjectModelType {
 		ModelType_Static,		// 静的モデル
 		ModelType_Animation,	// アニメーションモデル
 		ModelType_Unknown,		// 不明
@@ -33,7 +33,8 @@ public:
 	virtual void Initialize();
 	virtual void Update();
 	virtual void Draw();
-	virtual void ShowGui()override;
+	void ShowGui()override;
+	virtual void DerivativeGui();
 
 	void SaveToJson(const std::string& fileName)const;
 	void LoadFromJson(const std::string& fileName);
@@ -62,30 +63,29 @@ public:
 	//                    getter/setter
 	//===================================================================*/
 	void SetName(const std::string& name);
-	const std::string& GetName()const{ return name_; }
+	const std::string& GetName()const { return name_; }
 
-	void SetTranslate(const Vector3& pos){
-		if (model_){
+	void SetTranslate(const Vector3& pos) {
+		if (model_) {
 			model_->worldTransform_.translation = pos;
 		}
 	}
 
-	void SetScale(const Vector3& scale){
-		if (model_){
+	void SetScale(const Vector3& scale) {
+		if (model_) {
 			model_->worldTransform_.scale = scale;
 		}
 	}
 
-	virtual const Vector3 GetCenterPos()const{
-		const Vector3 offset = {0.0f, 1.0f, 0.0f};
+	virtual const Vector3 GetCenterPos()const {
+		const Vector3 offset = { 0.0f, 1.0f, 0.0f };
 		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
 		return worldPos;
 	}
-	void SetColor(const Vector4& color){
-		if (model_){
+	void SetColor(const Vector4& color) {
+		if (model_) {
 			model_->SetColor(color);
 		}
 	}
-	BaseModel* GetModel()const{ return model_.get(); }
+	BaseModel* GetModel()const { return model_.get(); }
 };
-

@@ -86,9 +86,6 @@ private:
 	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
 	std::unique_ptr<EffectEditor> effectEditor_;	//パーティクルエディタ
 	
-	// particle
-	std::unique_ptr<ParticleEffectCollection> particleEffectCollection_;
-
 	// postprocess
 	std::unique_ptr<PostProcessCollection> postProcessCollection_;
 	std::unique_ptr<PostEffectGraph> postEffectGraph_;

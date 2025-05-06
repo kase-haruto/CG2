@@ -97,7 +97,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	TextureManager::GetInstance()->StartUpLoad();
 
 	//パーティクルコンテナの初期化
-	particleEffectCollection_ = std::make_unique<ParticleEffectCollection>();
+	ParticleEffectCollection::GetInstance()->StartupLoad();
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +108,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	postEffectGraph_ = std::make_unique<PostEffectGraph>();
 	postEffectGraph_->AddPass(postProcessCollection_->GetGrayScale());
+	postEffectGraph_->AddPass(postProcessCollection_->GetRadialBlur());
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
@@ -120,7 +121,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	uiEditor_ = std::make_unique<UIEditor>();
 
 	//パーティクル
-	effectEditor_ = std::make_unique<EffectEditor>(particleEffectCollection_.get());
+	effectEditor_ = std::make_unique<EffectEditor>();
 
 	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
 	editorPanel->AddEditor(modelBuilder_.get());
@@ -211,7 +212,7 @@ void System::EndFrame(){
 void System::EditorUpdate(){
 	modelBuilder_->Update();
 	uiEditor_->Update();
-	particleEffectCollection_->Update();
+	ParticleEffectCollection::GetInstance()->Update();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +239,7 @@ void System::EditorDraw(){
 	/*=======================================================================================
 				particalの描画
    ========================================================================================*/
-	particleEffectCollection_->Draw();
+	ParticleEffectCollection::GetInstance()->Draw();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

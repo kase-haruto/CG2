@@ -4,24 +4,24 @@
 #include "Engine/core/Json/JsonCoordinator.h"
 
 
-BaseGameObject::BaseGameObject(const std::string& modelName){
+BaseGameObject::BaseGameObject(const std::string& modelName) {
 
 	auto dotPos = modelName.find_last_of('.');
-	if (dotPos != std::string::npos){
+	if (dotPos != std::string::npos) {
 		std::string extension = modelName.substr(dotPos);
 
 		// obj
-		if (extension == ".obj"){
+		if (extension == ".obj") {
 			objectModelType_ = ObjectModelType::ModelType_Static;
 			model_ = std::make_unique<Model>(modelName);
 		}
 		// gltf
-		else if (extension == ".gltf"){
+		else if (extension == ".gltf") {
 			objectModelType_ = ObjectModelType::ModelType_Animation;
 			model_ = std::make_unique<AnimationModel>(modelName);
 		}
 		// その他の拡張子の場合はここに追加
-		else{
+		else {
 			// Handle other extensions or set a default type
 			objectModelType_ = ObjectModelType::ModelType_Unknown;
 		}
@@ -31,31 +31,30 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 
 BaseGameObject::BaseGameObject(const std::string& modelName,
 							   std::optional<std::string> objectName,
-							   std::function<void(IMeshRenderable*)> registerCB){
+							   std::function<void(IMeshRenderable*)> registerCB) {
 	auto dotPos = modelName.find_last_of('.');
-	if (dotPos != std::string::npos){
+	if (dotPos != std::string::npos) {
 		std::string extension = modelName.substr(dotPos);
 
 		// obj
-		if (extension == ".obj"){
+		if (extension == ".obj") {
 			objectModelType_ = ObjectModelType::ModelType_Static;
 			model_ = std::make_unique<Model>(modelName);
 		}
 		// gltf
-		else if (extension == ".gltf"){
+		else if (extension == ".gltf") {
 			objectModelType_ = ObjectModelType::ModelType_Animation;
 			model_ = std::make_unique<AnimationModel>(modelName);
-		}
-		else{
+		} else {
 			objectModelType_ = ObjectModelType::ModelType_Unknown;
 		}
 
 	}
 
 	// 名前を設定
-	if (objectName.has_value()){
+	if (objectName.has_value()) {
 		SetName(objectName.value());
-	} else{
+	} else {
 		// 名前が指定されていない場合は、デフォルトの名前を設定
 		const std::string defaultName = modelName + "object";
 		SetName(defaultName);
@@ -65,14 +64,14 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	registerCB(model_.get());
 }
 
-BaseGameObject::~BaseGameObject(){}
+BaseGameObject::~BaseGameObject() {}
 
 
-void BaseGameObject::Initialize(){}
+void BaseGameObject::Initialize() {}
 
-void BaseGameObject::Update(){
+void BaseGameObject::Update() {
 
-	if (objectModelType_ != ObjectModelType::ModelType_Unknown){
+	if (objectModelType_ != ObjectModelType::ModelType_Unknown) {
 
 		model_->Update();
 
@@ -80,9 +79,9 @@ void BaseGameObject::Update(){
 
 }
 
-void BaseGameObject::Draw(){
+void BaseGameObject::Draw() {
 
-	if (objectModelType_ != ObjectModelType::ModelType_Unknown){
+	if (objectModelType_ != ObjectModelType::ModelType_Unknown) {
 
 		model_->Draw();
 
@@ -94,7 +93,7 @@ void BaseGameObject::Draw(){
 //===================================================================*/
 //                   getter/setter
 //===================================================================*/
-void BaseGameObject::SetName(const std::string& name){
+void BaseGameObject::SetName(const std::string& name) {
 	SceneObject::SetName(name, ObjectType::GameObject);
 }
 
@@ -103,12 +102,18 @@ void BaseGameObject::SetName(const std::string& name){
 //===================================================================*/
 //                    imgui/ui
 //===================================================================*/
-void BaseGameObject::ShowGui(){
+void BaseGameObject::ShowGui() {
 	ImGui::Spacing();
 
 	model_->ShowImGuiInterface();
 
 	ImGui::Spacing();
+
+	DerivativeGui();
+}
+
+void BaseGameObject::DerivativeGui() {
+	ImGui::SeparatorText("derivative");
 }
 
 //===================================================================*/

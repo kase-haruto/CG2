@@ -59,12 +59,17 @@ nlohmann::json Particle::SaveToJson() const{
 	json["model"] = modelName_;
 	json["texture"] = textureName_;
 	json["isStatic"] = isStatic_;
+	json["emitType"] = static_cast< int >(emitType_);
 	json["isBillboard"] = isBillboard_;
+	json["flyToEmitter"] = flyToEmitter_;
 	json["useRotation"] = useRotation_;
 	json["useRandomScale"] = useRandomScale_;
 	json["fixedMaxScale"] = {fixedMaxScale_.x, fixedMaxScale_.y, fixedMaxScale_.z};
 	json["randomScaleMin"] = {randomScaleMin_.x, randomScaleMin_.y, randomScaleMin_.z};
 	json["randomScaleMax"] = {randomScaleMax_.x, randomScaleMax_.y, randomScaleMax_.z};
+	json["isRandomLifeTime"] = isRandomLifeTime_;
+	json["minLifeTime"] = minLifeTime_;
+	json["maxLifeTime"] = maxLifeTime_;
 	json["blendMode"] = static_cast< int >(blendMode_);
 	json["colorMode"] = static_cast< int >(colorMode_);
 	json["selectedColor"] = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
@@ -102,10 +107,12 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	modelName_ = j.value("model", "plane.obj");
 	textureName_ = j.value("texture", "particle");
 	isBillboard_ = j.value("isBillboard", true);
+	emitType_ = static_cast< EmitType >(j.value("emitType", static_cast< int >(EmitType::Once)));
 	useRotation_ = j.value("useRotation", false);
 	blendMode_ = static_cast< BlendMode >(j.value("blendMode", static_cast< int >(BlendMode::ADD)));
 	colorMode_ = static_cast< ColorMode >(j.value("colorMode", 0));
 	lifeTime_ = j.value("lifeTime", 1.0f);
+	flyToEmitter_ = j.value("flyToEmitter", false);
 	isStatic_ = j.value("isStatic", false);
 	useRandomScale_ = j.value("useRandomScale", false);
 	randomScaleMin_ = {j.value("randomScaleMin", std::vector<float>{1.0f, 1.0f, 1.0f})[0],
@@ -117,6 +124,10 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	auto col = j.value("selectedColor", std::vector<float>{1.0f, 1.0f, 1.0f, 1.0f});
 	if (col.size() == 4) selectedColor_ = {col[0], col[1], col[2], col[3]};
 	colorVariation_ = j.value("colorVariation", 0.1f);
+
+	isRandomLifeTime_ = j.value("isRandomLifeTime", false);
+	minLifeTime_ = j.value("minLifeTime", 0.1f);
+	maxLifeTime_ = j.value("maxLifeTime", 3.0f);
 
 	emitters_.clear();
 	for (const auto& ej : j["emitters"]){
@@ -144,7 +155,6 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 		emitters_.push_back(emitter);
 	}
 }
-
 
 bool Particle::GetUseRandomColor() const{
 	return (colorMode_ == ColorMode::Random);

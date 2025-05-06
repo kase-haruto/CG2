@@ -16,6 +16,7 @@ public:
 	virtual ~SceneObject();
 	SceneObject();
 	virtual void ShowGui();
+	void EnableGuiList(); //GUIのリストに追加するかどうか
 
 protected:
 	//==================================================================*//

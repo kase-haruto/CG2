@@ -19,3 +19,8 @@ void SceneObject::ShowGui(){
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	ImGui::Separator();
 }
+
+void SceneObject::EnableGuiList() {
+	//リストに追加
+	SceneObjectManager::GetInstance()->AddObject(this);
+}

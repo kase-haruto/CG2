@@ -1,26 +1,26 @@
 #pragma once
-#include "../Base/BaseGameObject.h"
+#include <Game/3d/Base/BaseGameObject.h>
 
 #include <cstdint>
 #include <string>
 
 class Actor :
-	public BaseGameObject{
+	public BaseGameObject {
 public:
 	//===================================================================*/
 	//                   public methods
 	//===================================================================*/
 	Actor() = default;
 	Actor(const std::string& modelName,
-			  std::optional<std::string> objectName,
-			  std::function<void(IMeshRenderable*)>registerCB);
+		  std::optional<std::string> objectName,
+		  std::function<void(IMeshRenderable*)>registerCB);
 	virtual ~Actor() override = default;
 
 	virtual void Initialize() override;
 	virtual void Update() override;
 
 
-	void SetMoveSpeed(float moveSpeed){ moveSpeed_ = moveSpeed; }
+	void SetMoveSpeed(float moveSpeed) { moveSpeed_ = moveSpeed; }
 	/* ui =========================================*/
 
 protected:
@@ -37,13 +37,13 @@ protected:
 	//                   getter/setter
 	//===================================================================*/
 public:
-	void velocity(const Vector3& velocity){ velocity_ = velocity; }
+	void velocity(const Vector3& velocity) { velocity_ = velocity; }
 
-	bool GetIsAlive() const{ return isAlive_; }
+	bool GetIsAlive() const { return isAlive_; }
 
-	void SetPosition(const Vector3& position){ model_->worldTransform_.translation = position; };
+	void SetPosition(const Vector3& position) { model_->worldTransform_.translation = position; };
 
-	void SetVelocity(const Vector3& velocity){ velocity_ = velocity; }
+	void SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
 
-	const Vector3 GetVelocity()const{ return velocity_; }
+	const Vector3 GetVelocity()const { return velocity_; }
 };
