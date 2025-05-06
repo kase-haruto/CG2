@@ -180,11 +180,11 @@ void System::EndFrame(){
 	// ポストプロセス実行: Offscreen → PostEffectOutput
 	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
 
-	// ✅ ImGuiプレビュー用（※ ImGui描画前に行う）
+	// ImGuiプレビュー用
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	EngineUI::SetMainViewportTexture(postOutput->GetSRV().ptr);
 
-	// ✅ PostEffectOutput → BackBuffer に描画（ImGui前）
+	// PostEffectOutput → BackBuffer に描画
 	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
 	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
 
@@ -196,7 +196,6 @@ void System::EndFrame(){
 		rootSignature.Get()
 	);
 
-	// ✅ ImGui描画（BackBuffer上に描く）
 	imguiManager_->End();
 	imguiManager_->Draw();
 
