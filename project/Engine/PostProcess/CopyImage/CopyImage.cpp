@@ -1,12 +1,13 @@
-#include "RadialBlur.h"
+#include "CopyImage.h"
+
 #include <Engine/PostProcess/FullscreenDrawer.h>
 
-void RadialBlurEffect::Initialize(PipelineStateManager* pipelineMgr) {
-	pso_ = pipelineMgr->GetPipelineState(PipelineType::RadialBlur, BlendMode::NONE);
-	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::RadialBlur, BlendMode::NONE);
+void CopyImageEffect::Initialize(PipelineStateManager* pipelineMgr) {
+	pso_ = pipelineMgr->GetPipelineState(PipelineType::copyImage, BlendMode::NONE);
+	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::copyImage, BlendMode::NONE);
 }
 
-void RadialBlurEffect::Apply(ID3D12GraphicsCommandList* cmd,
+void CopyImageEffect::Apply(ID3D12GraphicsCommandList* cmd,
 							D3D12_GPU_DESCRIPTOR_HANDLE inputSRV,
 							IRenderTarget* outputRT) {
 	outputRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_RENDER_TARGET);

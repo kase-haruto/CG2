@@ -111,8 +111,6 @@ void Player::Move(){
 	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
 	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
-
-
 }
 
 void Player::Shoot(){

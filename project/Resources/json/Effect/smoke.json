@@ -8,7 +8,7 @@
             "emitType": 1,
             "emitters": [
                 {
-                    "count": 32,
+                    "count": 5,
                     "frequency": 0.05000000074505806,
                     "rotationParm": {
                         "initialRotation": [
@@ -38,9 +38,9 @@
                             1.0
                         ],
                         "translate": [
-                            7.302875518798828,
-                            5.908882141113281,
-                            -2.0
+                            0.1659107357263565,
+                            10.341838836669922,
+                            223.0
                         ]
                     }
                 }
@@ -50,6 +50,7 @@
                 1.0,
                 1.0
             ],
+            "flyToEmitter": false,
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": false,
@@ -115,9 +116,9 @@
                             0.4399999976158142
                         ],
                         "translate": [
-                            7.302875518798828,
-                            5.908882141113281,
-                            -2.0
+                            0.1659107357263565,
+                            10.341838836669922,
+                            223.0
                         ]
                     }
                 }
@@ -127,6 +128,7 @@
                 1.0,
                 1.0
             ],
+            "flyToEmitter": false,
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": true,
@@ -192,9 +194,9 @@
                             1.0
                         ],
                         "translate": [
-                            7.302875518798828,
-                            5.908882141113281,
-                            -2.0
+                            0.1659107357263565,
+                            10.341838836669922,
+                            223.0
                         ]
                     }
                 }
@@ -204,6 +206,7 @@
                 1.0,
                 1.0
             ],
+            "flyToEmitter": false,
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": true,

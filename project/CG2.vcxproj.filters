@@ -423,6 +423,7 @@
     <ClCompile Include="Game\3dObject\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
     <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
+    <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -698,6 +699,7 @@
     <ClInclude Include="Game\3dObject\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
     <ClInclude Include="Game\3dObject\Base\Actor.h" />
+    <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

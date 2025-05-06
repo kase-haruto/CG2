@@ -16,7 +16,7 @@ RailCamera::RailCamera(){
 void RailCamera::Initialize(){
 	transform_.translate = {0.0f, 10.0f, 0.0f};
 	transform_.scale = {1.0f, 1.0f, 1.0f};
-	transform_.rotate = {0.4f, 0.0f, 0.0f};
+	transform_.rotate = {0.5f, 0.0f, 0.0f};
 
 	//ワールドトランスフォームに設定
 	worldTransform_.Initialize();

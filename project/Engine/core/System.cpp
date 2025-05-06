@@ -107,8 +107,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	postProcessCollection_->Initialize(pipelineStateManager_.get());
 
 	postEffectGraph_ = std::make_unique<PostEffectGraph>();
-	postEffectGraph_->AddPass(postProcessCollection_->GetGrayScale());
-	postEffectGraph_->AddPass(postProcessCollection_->GetRadialBlur());
+	postEffectGraph_->AddPass(postProcessCollection_->GetCopyImage());
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
@@ -286,6 +285,7 @@ void System::CreatePipelines(){
 	LinePipeline();
 	CopyImagePipeline();
 	GrayScalePipeline();
+	RadialBlurPipeline();
 	EffectPipeline();
 }
 
@@ -1172,23 +1172,18 @@ void System::RadialBlurPipeline(){
 	D3D12_DESCRIPTOR_RANGE descriptorRanges[1] = {};
 	descriptorRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRanges[0].NumDescriptors = 1;
-	descriptorRanges[0].BaseShaderRegister = 0;
+	descriptorRanges[0].BaseShaderRegister = 0; // t0
 	descriptorRanges[0].RegisterSpace = 0;
 	descriptorRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	// 定数バッファ + SRV の2つを使うため、ルートパラメータを2つにする
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
 
-	// [0] 定数バッファ（BlurParmeter用）
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].Descriptor.ShaderRegister = 0; // b0
-	rootParameters[0].Descriptor.RegisterSpace = 0;
+	// [0] SRV（gTexture用）
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRanges);
+	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRanges);
-	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRanges;
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 	D3D12_STATIC_SAMPLER_DESC staticSampler = {};
 	staticSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;

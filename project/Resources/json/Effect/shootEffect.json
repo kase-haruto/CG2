@@ -4,11 +4,12 @@
         {
             "blendMode": 2,
             "colorMode": 2,
-            "colorVariation": 0.10999999940395355,
+            "colorVariation": 0.2199999988079071,
+            "emitType": 0,
             "emitters": [
                 {
-                    "count": 9,
-                    "frequency": 0.6700000166893005,
+                    "count": 10,
+                    "frequency": 0.0,
                     "rotationParm": {
                         "initialRotation": [
                             0.0,
@@ -37,9 +38,9 @@
                             1.0
                         ],
                         "translate": [
-                            0.0,
-                            0.0,
-                            0.0
+                            -2.5554158687591553,
+                            8.400415420532227,
+                            2.0
                         ]
                     }
                 }
@@ -50,24 +51,27 @@
                 1.0
             ],
             "isBillboard": true,
+            "isRandomLifeTime": false,
             "isStatic": true,
-            "lifeTime": 1.6307673454284668,
+            "lifeTime": 0.21699999272823334,
+            "maxLifeTime": 3.0,
+            "minLifeTime": 0.10000000149011612,
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                0.23999999463558197,
-                1.6200000047683716,
+                1.3200000524520874,
+                7.590000152587891,
                 1.0
             ],
             "randomScaleMin": [
-                0.09000000357627869,
-                1.0,
+                0.9800000190734863,
+                3.5,
                 1.0
             ],
             "selectedColor": [
                 0.8803088665008545,
-                0.8774349093437195,
-                0.1359550505876541,
+                0.2692198157310486,
+                0.08497187495231628,
                 1.0
             ],
             "texture": "particle.png",
