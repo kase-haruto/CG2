@@ -11,6 +11,7 @@
 #include <Engine/Editor/EffectEditor.h>
 #include <Engine/PostProcess/Collection/PostProcessCollection.h>
 #include <Engine/PostProcess/Graph/PostEffectGraph.h>
+#include <Engine/PostProcess/Slot/PostEffectSlot.h>
 
 //リークチェック
 #include "LeakChecker.h"
@@ -89,5 +90,10 @@ private:
 	// postprocess
 	std::unique_ptr<PostProcessCollection> postProcessCollection_;
 	std::unique_ptr<PostEffectGraph> postEffectGraph_;
+	std::vector<PostEffectSlot> postEffectSlots_;
+
+	float radialTimer_ = 0.0f;
+	const float kRadialDurationSec_ = 1.0f;
+	bool isRadialActive_ = false;
 };
 

@@ -39,19 +39,25 @@ void Player::Update(){
 	Move();
 
 
-	if (rollSet_.isRolling_){
+	if (rollSet_.isRolling_) {
 		rollSet_.rollTimer_ += ClockManager::GetInstance()->GetDeltaTime();
 		float t = rollSet_.rollTimer_ / rollSet_.rollDuration_;
-		if (t >= 1.0f){
-			t = 1.0f;
+		t = std::clamp(t, 0.0f, 1.0f);
+
+		if (t >= 1.0f) {
 			rollSet_.isRolling_ = false;
 		}
 
-		float easedT = EvoEase::EaseInOutSine(t); // ← イージングをここで適用
+		// Z軸回転（2秒で1回転）
 		float angleOffset = rollSet_.rollDirection_ * std::numbers::pi_v<float> *2.0f;
-
 		model_->worldTransform_.eulerRotation.z =
-			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, easedT);
+			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, t);
+
+		// Z移動（前進→戻る）
+		float zRatio = EaseForwardThenReturn(t); // 0→1→0
+		float zOffset = rollSet_.rollOffset_.z * zRatio;
+		model_->worldTransform_.translation =
+			rollSet_.rollStartPos_ + Vector3(0.0f, 0.0f, zOffset);
 	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)){
@@ -167,10 +173,27 @@ void Player::BarrelRoll(){
 	// 左なら左回転、右なら右回転
 	rollSet_.rollDirection_ = (moveVec.x < 0.0f) ? 1.0f : -1.0f;
 
+	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
+	rollSet_.rollStartPos_ = model_->worldTransform_.translation;
+
+	// 前方へ飛ぶオフセット（例：Z方向へ +2.0f）
+	rollSet_.rollOffset_ = Vector3(0.0f, 0.0f, 7.0f); // 最大前進距離
+	rollSet_.rollDuration_ = 0.5f;
+
 	rollSet_.isRolling_ = true;
 	rollSet_.rollTimer_ = 0.0f;
 	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
 
 	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
 	ParticleEffectCollection::GetInstance()->PlayByName("reloadParticle", wPos, EmitType::Once);
+}
+
+float Player::EaseForwardThenReturn(float t) {
+	if (t < 0.5f) {
+		float x = t / 0.5f;
+		return x * (2 - x); // EaseOutQuad
+	} else {
+		float x = (t - 0.5f) / 0.5f;
+		return 1.0f - (x * x); // EaseInQuad (逆補間)
+	}
 }
