@@ -4,6 +4,10 @@
 #include "SceneFactory.h"
 
 #include "engine/objects/SceneObjectManager.h"
+#include <Engine/graphics/camera/BaseCamera.h>
+#include <Engine/core/DirectX/RenderTarget/IRenderTarget.h>
+#include <Engine/physics/light/LightManager.h>
+#include <Engine/graphics/camera/CameraManager.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
 	: pDxCore_(dxCore){
@@ -58,9 +62,36 @@ void SceneManager::Update(){
 }
 
 void SceneManager::Draw(){
+		// MainCamera は既存の Draw() に任せる（CameraManager::SetType(Type_Default) が内部で使われる）
+	CameraManager::GetInstance()->SetType(Type_Default);
 	// 現在のシーンを描画
 	scenes_[currentSceneNo_]->Draw();
+
+		// DebugCamera を明示的に描画
+	auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
+	auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
+	DrawToCamera(debugCam, debugRT);
 }
+
+void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target) {
+	auto* cmd = pDxCore_->GetCommandList().Get();
+
+	// 出力先RT設定
+	target->SetRenderTarget(cmd);
+
+	// 指定カメラでパイプライン設定
+	camera->SetCommand(cmd, PipelineType::Object3D);
+
+	// ライト設定（共通）
+	LightManager::GetInstance()->SetCommand(cmd, LightType::Directional, PipelineType::Object3D);
+	LightManager::GetInstance()->SetCommand(cmd, LightType::Point, PipelineType::Object3D);
+
+	if (auto* baseScene = dynamic_cast<BaseScene*>(scenes_[currentSceneNo_].get())) {
+		baseScene->GetSceneContext()->meshRenderer_->DrawAll();
+	}
+
+}
+
 
 void SceneManager::RequestSceneChange(SceneType nextScene){
 	nextSceneNo_ = static_cast< int >(nextScene);
