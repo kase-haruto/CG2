@@ -176,7 +176,13 @@ void DxCore::PostDraw(){
 	}
 
 	HRESULT hr = commandList->Close();
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)){
+		// ログを出力するか、デバッグ用にブレークポイントを設定
+		OutputDebugStringA("commandList->Close() failed.\n");
+
+		// エラーハンドリング
+		throw std::runtime_error("Failed to close command list.");
+	}
 
 	ID3D12CommandList* commandLists[] = {commandList.Get()};
 	dxCommand_->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
