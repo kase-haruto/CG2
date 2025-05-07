@@ -11,13 +11,15 @@
 #include <Engine/objects/Transform.h>
 
 struct Vector3;
+struct Matrix4x4;
 
-class LineMesh : public IPrimitiveMesh{
+class LineMesh 
+	: public IPrimitiveMesh{
 public:
 	LineMesh(const Vector3& start, const Vector3& end);
 	~LineMesh() = default;
 
-	void Draw() override;
+	void Draw(const Matrix4x4&) override;
 
 	void SetColor(const Vector4& color) override;
 	const Matrix4x4& GetWorldMatrix() const override;

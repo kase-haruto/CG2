@@ -18,9 +18,9 @@ void ModelBuilder::Update(){
     }
 }
 
-void ModelBuilder::Draw(){
+void ModelBuilder::Draw(const Matrix4x4& vp){
     for (auto& pair : models_){
-        pair.second.second->Draw();
+        pair.second.second->Draw(vp);
     }
 }
 

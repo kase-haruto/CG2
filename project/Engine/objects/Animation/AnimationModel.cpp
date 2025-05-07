@@ -55,7 +55,6 @@ void AnimationModel::Initialize(){
 	materialParameter_.enableLighting = HalfLambert;
 
 	worldTransform_.Initialize();
-	UpdateMatrix();
 	// バッファ生成
 	CreateMaterialBuffer();
 	Map();
@@ -191,7 +190,7 @@ void AnimationModel::OnModelLoaded(){
 
 }
 
-void AnimationModel::Draw(){
+void AnimationModel::Draw(const Matrix4x4& vp){
 	// もしモデルデータが読み込まれていない場合は何もしない
 	if (!modelData_){ return; }
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, SkinningObject3D, blendMode_);
@@ -208,12 +207,13 @@ void AnimationModel::Draw(){
 	vbvs_[1] = skinCluster_.influenceBufferView;				//influenceDataのvbv
 	modelData_->indexBuffer.SetCommand(commandList_);
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
-	BaseModel::Draw();
+	BaseModel::Draw(vp);
 
 	if (isDrawSkeleton_){
 		modelData_->skeleton.Draw();
 	}
 }
+
 
 //-----------------------------------------------------------------------------
 // 描画
@@ -222,12 +222,10 @@ void AnimationModel::Draw(){
 //-----------------------------------------------------------------------------
 // 行列のみ更新
 //-----------------------------------------------------------------------------
-void AnimationModel::UpdateMatrix(){
-	// 親の行列がある場合は親の行列を掛け合わせる
-
-	worldTransform_.Update(CameraManager::GetViewProjectionMatrix());
-
+void AnimationModel::UpdateMatrix(const Matrix4x4& vp){
+	worldTransform_.Update(vp);
 }
+
 
 //-----------------------------------------------------------------------------
 // ImGui などUIの表示

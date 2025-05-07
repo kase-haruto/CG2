@@ -12,6 +12,7 @@
 
 class DxCore;
 class SceneManager;
+class BaseCamera;
 
 /* ========================================================================
 /* シーンインターフェース
@@ -27,7 +28,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
-	virtual void Draw(){}
+	virtual void Draw([[maybe_unused]]BaseCamera* camera){}
 	virtual void CleanUp() = 0;
 
 	//--------- accessor -----------------------------------------------------

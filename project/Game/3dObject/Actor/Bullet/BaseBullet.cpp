@@ -28,8 +28,6 @@ void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
 	moveSpeed_ = 15.0f;
 	life_ = 1;
 	isAlive_ = true;
-
-	model_->UpdateMatrix();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

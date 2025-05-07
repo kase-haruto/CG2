@@ -49,7 +49,6 @@ void BaseModel::Update(){
 		materialData_.uvTransform = uvTransformMatrix;
 		materialBuffer_.TransferData(materialData_);
 		// カメラ行列との掛け合わせ
-		UpdateMatrix();
 		modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
 		modelData_->indexBuffer.TransferVectorData(modelData_->indices);
 		Map();
@@ -66,13 +65,10 @@ void BaseModel::OnModelLoaded(){
 		handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
 	}
 
-	UpdateMatrix();
 }
 
-void BaseModel::UpdateMatrix(){
-
-	worldTransform_.Update(CameraManager::GetViewProjectionMatrix());
-
+void BaseModel::UpdateMatrix(const Matrix4x4& vp){
+	worldTransform_.Update(vp);
 }
 
 void BaseModel::UpdateTexture(){
@@ -267,7 +263,10 @@ void BaseModel::ShowImGuiInterface(){
 
 }
 
-void BaseModel::Draw(){
+void BaseModel::Draw(const Matrix4x4& vp){
+
+	//行列の更新
+	UpdateMatrix(vp);
 
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

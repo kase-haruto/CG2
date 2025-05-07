@@ -11,7 +11,7 @@ IScene(dxCore){
 	sceneContext_ = std::make_unique<SceneContext>();
 }
 
-void BaseScene::Draw(){
+void BaseScene::Draw(BaseCamera* camera){
 	auto commandList_ = pDxCore_->GetCommandList();
 	// light
 	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
@@ -20,6 +20,7 @@ void BaseScene::Draw(){
 	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
 	// 3Dオブジェクトの描画
-	sceneContext_->meshRenderer_->DrawAll();
+	Matrix4x4 viewProjection = camera->GetViewProjection();
+	sceneContext_->meshRenderer_->DrawAll(viewProjection);
 
 }

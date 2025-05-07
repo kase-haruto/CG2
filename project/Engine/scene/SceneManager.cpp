@@ -62,18 +62,19 @@ void SceneManager::Update(){
 }
 
 void SceneManager::Draw(){
-		// MainCamera は既存の Draw() に任せる（CameraManager::SetType(Type_Default) が内部で使われる）
+	// MainCamera は既存の Draw() に任せる（CameraManager::SetType(Type_Default) が内部で使われる）
 	CameraManager::GetInstance()->SetType(Type_Default);
+	BaseCamera* mainCam = CameraManager::GetInstance()->GetCamera3d();
 	// 現在のシーンを描画
-	scenes_[currentSceneNo_]->Draw();
+	scenes_[currentSceneNo_]->Draw(mainCam);
 
-		// DebugCamera を明示的に描画
-	//auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
-	//auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
-	//DrawToCamera(debugCam, debugRT);
+	// DebugCamera を明示的に描画
+//auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
+//auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
+//DrawToCamera(debugCam, debugRT);
 }
 
-void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target) {
+void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target){
 	auto* cmd = pDxCore_->GetCommandList().Get();
 
 	// 出力先RT設定
@@ -86,8 +87,10 @@ void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target) {
 	LightManager::GetInstance()->SetCommand(cmd, LightType::Directional, PipelineType::Object3D);
 	LightManager::GetInstance()->SetCommand(cmd, LightType::Point, PipelineType::Object3D);
 
-	if (auto* baseScene = dynamic_cast<BaseScene*>(scenes_[currentSceneNo_].get())) {
-		baseScene->GetSceneContext()->meshRenderer_->DrawAll();
+	Matrix4x4 viewProjection = camera->GetViewProjection();
+
+	if (auto* baseScene = dynamic_cast< BaseScene* >(scenes_[currentSceneNo_].get())){
+		baseScene->GetSceneContext()->meshRenderer_->DrawAll(viewProjection);
 	}
 
 }

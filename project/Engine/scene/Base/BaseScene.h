@@ -24,7 +24,7 @@ public:
 
 	virtual void Initialize()override{}
 	virtual void Update()override{}
-	void Draw()override;
+	void Draw(BaseCamera* camera)override;
 	void CleanUp()override{};
 public:
 	SceneContext* GetSceneContext() const { return sceneContext_.get(); }

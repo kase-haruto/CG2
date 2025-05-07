@@ -41,7 +41,6 @@ void Model::Initialize(){
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	worldTransform_.Initialize();
-	UpdateMatrix();
 
 	materialParameter_.shininess = 20.0f;
 
@@ -60,15 +59,16 @@ void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths)
 	}
 }
 
-void Model::Draw(){
+void Model::Draw(const Matrix4x4& vp){
 	if (!modelData_){
 		return;
 	}
+
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
 	// 頂点バッファ/インデックスバッファをセット
 	modelData_->vertexBuffer.SetCommand(commandList_);
 	modelData_->indexBuffer.SetCommand(commandList_);
-	BaseModel::Draw();
+	BaseModel::Draw(vp);
 }
 
 void Model::Map(){

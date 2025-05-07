@@ -1,6 +1,8 @@
 #include "LineDrawer.h"
+
 #include <lib/myMath/Vector3.h>
 #include <lib/myMath/Vector4.h>
+#include <lib/myMath/Matrix4x4.h>
 #include <Engine/graphics/GraphicsGroup.h>
 #include <Engine/graphics/camera/CameraManager.h>
 
@@ -16,7 +18,7 @@ void LineDrawer::DrawLine(const Vector3& start, const Vector3& end, const Vector
 	vertices_.emplace_back(VertexPosColor {end, color});
 }
 
-void LineDrawer::Render(){
+void LineDrawer::Render(const Matrix4x4& vp){
 	if (vertices_.empty()) return;
 
 	auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
@@ -29,7 +31,6 @@ void LineDrawer::Render(){
 	vertexBuffer_.SetCommand(cmdList);
 
 	// WVP定数バッファ更新
-	Matrix4x4 vp = CameraManager::GetViewProjectionMatrix();
 	Matrix4x4 identity = Matrix4x4::MakeIdentity();
 
 	TransformationMatrix wvpData;

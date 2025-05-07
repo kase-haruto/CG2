@@ -2,6 +2,8 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
+#include <lib/myMath/Matrix4x4.h>
+
 #include <d3d12.h>
 #include <wrl.h>
 
@@ -15,6 +17,6 @@ public:
 	//===================================================================*/
 	virtual ~IMeshRenderable() = default;
 
-	virtual void Draw() = 0;
+	virtual void Draw(const Matrix4x4& vp) = 0;
 };
 

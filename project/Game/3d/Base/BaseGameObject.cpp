@@ -81,11 +81,6 @@ void BaseGameObject::Update() {
 
 void BaseGameObject::Draw() {
 
-	if (objectModelType_ != ObjectModelType::ModelType_Unknown) {
-
-		model_->Draw();
-
-	}
 
 }
 
