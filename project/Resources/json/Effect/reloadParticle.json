@@ -38,9 +38,9 @@
                             0.2800000011920929
                         ],
                         "translate": [
-                            0.0,
-                            0.0,
-                            0.0
+                            6.462028980255127,
+                            8.469999313354492,
+                            225.0
                         ]
                     }
                 }
@@ -116,9 +116,9 @@
                             1.0
                         ],
                         "translate": [
-                            0.0,
-                            0.0,
-                            0.0
+                            6.462028980255127,
+                            8.469999313354492,
+                            225.0
                         ]
                     }
                 },
@@ -153,9 +153,9 @@
                             1.0
                         ],
                         "translate": [
-                            0.0,
-                            0.0,
-                            0.0
+                            6.462028980255127,
+                            8.469999313354492,
+                            225.0
                         ]
                     }
                 }
@@ -168,8 +168,8 @@
             "flyToEmitter": true,
             "isBillboard": true,
             "isRandomLifeTime": true,
-            "isStatic": false,
-            "lifeTime": 0.5067457556724548,
+            "isStatic": true,
+            "lifeTime": 0.5595706105232239,
             "maxLifeTime": 0.75,
             "minLifeTime": 0.4300000071525574,
             "model": "plane.obj",
@@ -198,7 +198,7 @@
             "blendMode": 2,
             "colorMode": 0,
             "colorVariation": 0.10000000149011612,
-            "emitType": 1,
+            "emitType": 0,
             "emitters": [],
             "fixedMaxScale": [
                 1.0,

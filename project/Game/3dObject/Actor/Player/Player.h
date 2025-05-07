@@ -16,6 +16,8 @@ class Player :
 		float rollStartAngle_ = 0.0f;
 		float rollTargetAngle_ = 0.0f;
 		float rollDirection_ = 1.0f; // +1 or -1：右回転 or 左回転
+		Vector3 rollStartPos_{ 0.0f, 0.0f, 25.0f };
+		Vector3 rollOffset_; // 例：奥に進む方向
 	};
 
 public:
@@ -45,6 +47,7 @@ private:
 	void Shoot();
 	void UpdateTilt(const Vector3& moveVector);
 	void BarrelRoll();
+	float EaseForwardThenReturn(float t);
 private:
 	//===================================================================*/
 	//                   private variables

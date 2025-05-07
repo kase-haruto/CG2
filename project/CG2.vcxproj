@@ -254,6 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
+    <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />

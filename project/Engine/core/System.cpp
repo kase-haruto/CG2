@@ -109,6 +109,13 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	postEffectGraph_ = std::make_unique<PostEffectGraph>();
 	postEffectGraph_->AddPass(postProcessCollection_->GetCopyImage());
 
+
+	postEffectSlots_ = {
+		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
+		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
+		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
+	};
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -157,49 +164,73 @@ void System::BeginFrame(){
 	dxCore_->PreDrawOffscreen();
 
 	EditorUpdate();
+
+
+	/////////////////////////////////////////////////////////////////
+	float dt = ClockManager::GetInstance()->GetDeltaTime();
+
+	// スペースキーでブラー発動
+	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
+		radialTimer_ = 0.0f;
+		isRadialActive_ = true;
+
+		// スロット切り替え
+		for (auto& slot : postEffectSlots_) {
+			slot.enabled = (slot.name == "RadialBlur");
+		}
+	}
+
+	// ブラー中の時間経過
+	if (isRadialActive_) {
+		radialTimer_ += dt;
+		if (radialTimer_ >= kRadialDurationSec_) {
+			isRadialActive_ = false;
+
+			// CopyImage のみ有効に戻す
+			for (auto& slot : postEffectSlots_) {
+				slot.enabled = (slot.name == "CopyImage");
+			}
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム終了処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void System::EndFrame(){
+void System::EndFrame() {
 	EditorDraw();
-
-	// SwapChainのバッファを更新
-	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
-	if (auto* scTarget = dynamic_cast< SwapChainRenderTarget* >(backBuffer)){
-		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
-	}
 
 	auto* cmd = dxCore_->GetCommandList().Get();
 
-	// リソース取得
+	// RenderTarget取得
+	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
 	auto* offscreenRes = dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource();
 	auto* postOutput = dxCore_->GetRenderTargetCollection().Get("PostEffectOutput");
 
-	// ポストプロセス実行: Offscreen → PostEffectOutput
+	// スワップチェイン更新
+	if (auto* scTarget = dynamic_cast<SwapChainRenderTarget*>(backBuffer)) {
+		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
+	}
+
+	postEffectGraph_->SetPassesFromList(postEffectSlots_); // ← この行が追加
 	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
 
-	// ImGuiプレビュー用
+	// ImGui表示用テクスチャ
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	EngineUI::SetMainViewportTexture(postOutput->GetSRV().ptr);
 
-	// PostEffectOutput → BackBuffer に描画
+	// BackBufferに最終出力（CopyImage前提）
 	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
 	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
 
 	DrawTextureToRenderTarget(
-		cmd,
-		postOutput->GetSRV(),
-		backBuffer,
-		pipelineState.Get(),
-		rootSignature.Get()
+		cmd, postOutput->GetSRV(), backBuffer,
+		pipelineState.Get(), rootSignature.Get()
 	);
 
 	imguiManager_->End();
 	imguiManager_->Draw();
 
-	// Present
 	dxCore_->PostDraw();
 }
 
@@ -259,6 +290,7 @@ void System::Finalize(){
 	CameraManager::Finalize();
 	//pipelineの終了処理
 	pipelineStateManager_->Finalize();
+	ParticleEffectCollection::GetInstance()->Clear();
 	SrvLocator::Finalize();
 	Input::Finalize();
 	Audio::Finalize();

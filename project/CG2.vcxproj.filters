@@ -700,6 +700,7 @@
     <ClInclude Include="Game\3dObject\Actor\Player\Player.h" />
     <ClInclude Include="Game\3dObject\Base\Actor.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
+    <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -14,7 +14,7 @@ float4 main(VertexShaderOutput input) : SV_TARGET
 
     // ✅ ここがべた書きパラメータ
     float2 centerPos = float2(0.5f, 0.5f);
-    float width = 0.1f;
+    float width = 0.08f;
 
     float2 dir = input.texcoord - centerPos;
     float2 step = dir * width / kNumSamples;
