@@ -29,6 +29,7 @@ public:
     void RemovePanel(const std::string& panelName);
 
     static void SetMainViewportTexture(UINT64 textureID);
+	static void SetDebugViewportTexture(UINT64 textureID);
 
     //パネルの取得
 	template<class Panel>
@@ -49,6 +50,7 @@ private:
     ~EngineUI() = default;      // デストラクタ
 
     void RenderMainViewport();  // メインビューポートの描画
+	void RenderDefaultViewport(); // デフォルトビューポートの描画
 	void RenderMenue();         // メニューの描画
 
 private:
@@ -59,6 +61,7 @@ private:
     std::vector<std::unique_ptr<IEngineUI>> panels_;
 
     UINT64 mainViewportTextureID_ = 0;
+	UINT64 debugViewportTextureID_ = 0;
 
 };
 

@@ -61,6 +61,7 @@ void EngineUI::Render(){
 	}
 
 	pInstance_->RenderMainViewport();
+	pInstance_->RenderDefaultViewport();
 #endif // _DEBUG
 }
 
@@ -98,6 +99,18 @@ void EngineUI::RenderMainViewport(){
 		ImGui::Text("Viewport texture not set.");
 	}
 
+	ImGui::End();
+}
+
+void EngineUI::RenderDefaultViewport() {
+	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
+	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
+	ImGui::Begin("Debug Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+	if (debugViewportTextureID_) {
+		ImGui::Image(reinterpret_cast<ImTextureID>(debugViewportTextureID_), viewportSize);
+	} else {
+		ImGui::Text("Viewport texture not set.");
+	}
 	ImGui::End();
 }
 
@@ -181,4 +194,11 @@ void EngineUI::RemovePanel(const std::string& panelName){
 void EngineUI::SetMainViewportTexture(UINT64 textureID){
 	if (pInstance_->mainViewportTextureID_){ return; }
 	pInstance_->mainViewportTextureID_ = textureID;
+}
+
+void EngineUI::SetDebugViewportTexture(UINT64 textureID) {
+	if (pInstance_->debugViewportTextureID_) {
+		return;
+	}
+	pInstance_->debugViewportTextureID_ = textureID;
 }

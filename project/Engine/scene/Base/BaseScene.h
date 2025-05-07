@@ -26,7 +26,8 @@ public:
 	virtual void Update()override{}
 	void Draw()override;
 	void CleanUp()override{};
-
+public:
+	SceneContext* GetSceneContext() const { return sceneContext_.get(); }
 	void SetSceneName(const std::string& name){ sceneName_ = name; }
 protected:
 	//===================================================================*/

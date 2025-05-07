@@ -55,7 +55,7 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	// RTV heap（SwapChain用に2つ、Offscreen用に1つ = 合計3つ）
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDesc = {};
 	rtvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDesc.NumDescriptors = 4;
+	rtvDesc.NumDescriptors = 5;
 	rtvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	device->CreateDescriptorHeap(&rtvDesc, IID_PPV_ARGS(&rtvHeap_));
 	rtvDescriptorSize_ = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -99,6 +99,15 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	postEffectRT->Initialize(device.Get(), width, height, format_, /*RTV*/ postEffectRTVHandle, /*DSV*/ dsvHandle);
 	renderTargetCollection_->Add("PostEffectOutput", std::move(postEffectRT));
 
+
+	// debug
+	D3D12_CPU_DESCRIPTOR_HANDLE debugRTVHandle = baseRTVHandle;
+	debugRTVHandle.ptr += rtvDescriptorSize_ * 4;
+
+	auto debugRT = std::make_unique<OffscreenRenderTarget>();
+	debugRT->Initialize(device.Get(), width, height, format_, debugRTVHandle, dsvHandle);
+
+	renderTargetCollection_->Add("DebugView", std::move(debugRT));
 }
 
 

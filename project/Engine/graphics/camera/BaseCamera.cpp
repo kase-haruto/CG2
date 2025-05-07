@@ -20,7 +20,7 @@ BaseCamera::BaseCamera()
 //  更新
 /////////////////////////////////////////////////////////////////////////
 void BaseCamera::Update(){
-	if (!isActive_){ return; }//アクティブでない場合は処理しない
+	//if (!isActive_){ return; }//アクティブでない場合は処理しない
 
 	// シェイク処理
 	if (isShaking_){

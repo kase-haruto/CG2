@@ -202,31 +202,31 @@ void System::EndFrame() {
 
 	auto* cmd = dxCore_->GetCommandList().Get();
 
-	// RenderTarget取得
 	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
 	auto* offscreenRes = dxCore_->GetRenderTargetCollection().Get("Offscreen")->GetResource();
 	auto* postOutput = dxCore_->GetRenderTargetCollection().Get("PostEffectOutput");
+	auto* debugRT = dxCore_->GetRenderTargetCollection().Get("DebugView");
 
-	// スワップチェイン更新
 	if (auto* scTarget = dynamic_cast<SwapChainRenderTarget*>(backBuffer)) {
 		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
 	}
 
-	postEffectGraph_->SetPassesFromList(postEffectSlots_); // ← この行が追加
+	// ポストプロセス
+	postEffectGraph_->SetPassesFromList(postEffectSlots_);
 	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
 
-	// ImGui表示用テクスチャ
+	//  ImGui 表示登録（Game View）
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	EngineUI::SetMainViewportTexture(postOutput->GetSRV().ptr);
 
-	// BackBufferに最終出力（CopyImage前提）
+	//  ImGui 表示登録（Debug View）
+	debugRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	EngineUI::SetDebugViewportTexture(debugRT->GetSRV().ptr);
+
+	// BackBuffer へのコピー
 	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
 	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
-
-	DrawTextureToRenderTarget(
-		cmd, postOutput->GetSRV(), backBuffer,
-		pipelineState.Get(), rootSignature.Get()
-	);
+	DrawTextureToRenderTarget(cmd, postOutput->GetSRV(), backBuffer, pipelineState.Get(), rootSignature.Get());
 
 	imguiManager_->End();
 	imguiManager_->Draw();
