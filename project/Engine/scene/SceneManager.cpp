@@ -68,9 +68,9 @@ void SceneManager::Draw(){
 	scenes_[currentSceneNo_]->Draw();
 
 		// DebugCamera を明示的に描画
-	auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
-	auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
-	DrawToCamera(debugCam, debugRT);
+	//auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
+	//auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
+	//DrawToCamera(debugCam, debugRT);
 }
 
 void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target) {
