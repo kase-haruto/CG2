@@ -9,12 +9,13 @@
 
 struct Vector3;
 struct Vector4;
+struct Matrix4x4;
 
 class LineDrawer{
 public:
 	void Initialize();
 	void DrawLine(const Vector3& start, const Vector3& end, const Vector4& color);
-	void Render();
+	void Render(const Matrix4x4& vp);
 	void Clear();
 
 private:

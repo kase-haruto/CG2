@@ -1,73 +1,61 @@
-#include "Object3d.hlsli"
+#include "Object3D.hlsli"
 
 /////////////////////////////////////////////////////////////////////////
 //                      Material
 /////////////////////////////////////////////////////////////////////////
-struct Material{
-    float4 color;         // 色
-    int enableLighting;   // ライティングの種類
-    float4x4 uvTransform; // UV座標の変換行列
-    float shiniess;      // 光沢度
-};
-
-/////////////////////////////////////////////////////////////////////////
-//                      camera
-/////////////////////////////////////////////////////////////////////////
-struct Camera{
-    float3 worldPosition; // カメラのワールド座標
+struct Material {
+    float4 color;
+    int enableLighting;
+    float4x4 uvTransform;
+    float shiniess;
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      DirectionalLight
 /////////////////////////////////////////////////////////////////////////
-struct DirectionalLight{
-    float4 color;       // ライトの色
-    float3 direction;   // ライトの方向
-    float intensity;    // 光度
+struct DirectionalLight {
+    float4 color;
+    float3 direction;
+    float intensity;
 };
 
 /////////////////////////////////////////////////////////////////////////
 //                      PointLight
 /////////////////////////////////////////////////////////////////////////
-struct PointLight{
-    float4 color;       // ライトの色
-    float3 position;    // ライトの位置
-    float intensity;    // 光度
-    float radius;       // ライトの届く最大距離
-    float decay;        // 減衰率
+struct PointLight {
+    float4 color;
+    float3 position;
+    float intensity;
+    float radius;
+    float decay;
 };
 
 /////////////////////////////////////////////////////////////////////////
-//                     Fogeffect
+//                      Fog
 /////////////////////////////////////////////////////////////////////////
-struct Fog{
-    float start;    //開始位置
-    float end;      //終了位置
-    float4 color;   //色
+struct Fog {
+    float start;
+    float end;
+    float4 color;
 };
 
 // マテリアル
-cbuffer MaterialConstants : register(b0){
+cbuffer MaterialConstants : register(b0) {
     Material gMaterial;
 }
 
-// カメラ
-cbuffer CameraConstants : register(b3){
-    Camera gCamera;
-}
-
 // ディレクショナルライト
-cbuffer DirectionalLightConstants : register(b2){
+cbuffer DirectionalLightConstants : register(b2) {
     DirectionalLight gDirectionalLight;
 }
 
 // ポイントライト
-cbuffer PointLightConstants : register(b4){
+cbuffer PointLightConstants : register(b4) {
     PointLight gPointLight;
 }
 
 // フォグ情報
-cbuffer FogConstants : register(b5){
+cbuffer FogConstants : register(b5) {
     float fogStart;
     float fogEnd;
     float4 fogColor;
@@ -77,25 +65,24 @@ cbuffer FogConstants : register(b5){
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
-struct PixelShaderOutput{
+struct PixelShaderOutput {
     float4 color : SV_TARGET0;
 };
 
-
 ///////////////////////////////////////////////////////////////////////////////
-/*                             main                                          */
-//////////////////////////////////////////////////////////////////////////////
+//                             main
+///////////////////////////////////////////////////////////////////////////////
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
 
-    // UV座標を変換
+    // UV変換
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-    
+
     float3 normal = normalize(input.normal);
-    float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+    float3 toEye = normalize(cameraPosition - input.worldPosition);
 
     ////////////////////////////////////////////////////////
     // Directional Light
@@ -141,15 +128,12 @@ PixelShaderOutput main(VertexShaderOutput input)
     ////////////////////////////////////////////////////////
     float3 litColor = directionalDiffuse + directionalSpecular + pointDiffuse + pointSpecular;
 
-    // Exposure付きReinhardトーンマッピング
     float exposure = 1.0f;
     float3 toneMapped = litColor * exposure / (litColor * exposure + 1.0f);
-
-    // ガンマ補正
     float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
 
     ////////////////////////////////////////////////////////
-    // フォグ
+    // フォグ（有効化する場合はここを開放）
     ////////////////////////////////////////////////////////
     /*
     float fogFactor = saturate((distance - fogStart) / (fogEnd - fogStart));

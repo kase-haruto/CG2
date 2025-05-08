@@ -10,8 +10,8 @@
 
 struct TransformationMatrix{
 	Matrix4x4 world;
-	Matrix4x4 WVP;
 	Matrix4x4 WorldInverseTranspose;
+	Matrix4x4 WVP;
 };
 
 struct EulerTransform{
@@ -99,4 +99,5 @@ public:
 	~WorldTransform()override = default;
 
 	virtual void Update(const Matrix4x4& viewProMatrix) override;
+	void Update();
 };

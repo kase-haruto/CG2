@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(const Matrix4x4& vp);
 
 	/// <summary>
 	/// モデル追加

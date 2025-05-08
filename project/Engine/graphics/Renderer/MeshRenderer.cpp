@@ -1,5 +1,6 @@
 #include "MeshRenderer.h"
 #include <lib/myFunc/PrimitiveDrawer.h>
+#include <lib/myMath/Matrix4x4.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録
@@ -18,12 +19,12 @@ void MeshRenderer::Unregister(IMeshRenderable* renderable){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 /////////////////////////////////////////////////////////////////////////////////////////
-void MeshRenderer::DrawAll(){
+void MeshRenderer::DrawAll(const Matrix4x4& vp){
 	for (auto* mesh : renderables_){
 		if (mesh) mesh->Draw();
 	}
 
-	PrimitiveDrawer::GetInstance()->Render();
+	PrimitiveDrawer::GetInstance()->Render(vp);
 }
 
 void MeshRenderer::Clear(){

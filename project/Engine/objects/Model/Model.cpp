@@ -41,7 +41,6 @@ void Model::Initialize(){
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	worldTransform_.Initialize();
-	UpdateMatrix();
 
 	materialParameter_.shininess = 20.0f;
 
@@ -64,6 +63,7 @@ void Model::Draw(){
 	if (!modelData_){
 		return;
 	}
+
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
 	// 頂点バッファ/インデックスバッファをセット
 	modelData_->vertexBuffer.SetCommand(commandList_);

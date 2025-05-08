@@ -85,6 +85,27 @@ void WorldTransform::Update(const Matrix4x4& viewProMatrix){
 	TransferData(matrix);
 }
 
+void WorldTransform::Update(){
+	Matrix4x4 scaleMat = MakeScaleMatrix(scale);
+	if (eulerRotation != Vector3 {0.0f, 0.0f, 0.0f}){
+		rotation = Quaternion::EulerToQuaternion(eulerRotation);
+	}
+	Matrix4x4 rotateMat = Quaternion::ToMatrix(rotation);
+	Matrix4x4 translateMat = MakeTranslateMatrix(translation);
+
+	Matrix4x4 localMat = scaleMat * rotateMat * translateMat;
+
+	// 親がいれば合成
+	if (parent){
+		matrix.world = localMat * parent->matrix.world;
+	} else{
+		matrix.world = localMat;
+	}
+	matrix.WorldInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(matrix.world));
+
+	TransferData(matrix);
+}
+
 void Transform2D::ShowImGui(const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
 		ImGui::DragFloat2("scale", &scale.x, 0.01f);

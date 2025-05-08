@@ -2,6 +2,7 @@
 
 #include <lib/myMath/Vector3.h>
 #include <lib/myMath/Vector4.h>
+#include <lib/myMath/Matrix4x4.h>
 #include <lib/myFunc/MyFunc.h>
 
 #include <Engine/objects/Mesh/Primitive/Line/LineMesh.h>
@@ -152,8 +153,8 @@ void PrimitiveDrawer::DrawSphere(const Vector3& center, const float radius, int 
 
 }
 
-void PrimitiveDrawer::Render(){
+void PrimitiveDrawer::Render(const Matrix4x4& vp){
 	if (lineDrawer_){
-		lineDrawer_->Render();
+		lineDrawer_->Render(vp);
 	}
 }

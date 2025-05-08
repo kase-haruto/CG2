@@ -55,7 +55,6 @@ void AnimationModel::Initialize(){
 	materialParameter_.enableLighting = HalfLambert;
 
 	worldTransform_.Initialize();
-	UpdateMatrix();
 	// バッファ生成
 	CreateMaterialBuffer();
 	Map();
@@ -215,6 +214,7 @@ void AnimationModel::Draw(){
 	}
 }
 
+
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
@@ -223,11 +223,9 @@ void AnimationModel::Draw(){
 // 行列のみ更新
 //-----------------------------------------------------------------------------
 void AnimationModel::UpdateMatrix(){
-	// 親の行列がある場合は親の行列を掛け合わせる
-
-	worldTransform_.Update(CameraManager::GetViewProjectionMatrix());
-
+	worldTransform_.Update();
 }
+
 
 //-----------------------------------------------------------------------------
 // ImGui などUIの表示

@@ -6,6 +6,8 @@
 
 #include <vector>
 
+struct Matrix4x4;
+
 /* ========================================================================
 /* mesh renderer
 /* ===================================================================== */
@@ -19,7 +21,7 @@ public:
 
 	void Register(IMeshRenderable* renderable);
 	void Unregister(IMeshRenderable* renderable);
-	void DrawAll();
+	void DrawAll(const Matrix4x4& vp);
 	void Clear();
 
 private:

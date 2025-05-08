@@ -1,8 +1,8 @@
 #include "LineMesh.h"
 #include "lib/myMath/Vector3.h"
+#include <lib/myMath/Matrix4x4.h>
 #include "lib/myMath/Quaternion.h"
 #include <Engine/graphics/GraphicsGroup.h>
-#include <Engine/graphics/camera/CameraManager.h>
 
 LineMesh::LineMesh(const Vector3& start, const Vector3& end)
 	: start_(start), end_(end){
@@ -46,8 +46,7 @@ void LineMesh::Draw(){
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	sharedVertexBuffer_.SetCommand(cmdList);
 
-	Matrix4x4 vp = CameraManager::GetViewProjectionMatrix();
-	transform_.Update(vp);
+	transform_.Update();
 	transform_.SetCommand(cmdList, 0);
 	cmdList->DrawInstanced(2, 1, 0, 0);
 }

@@ -15,7 +15,7 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void OnModelLoaded() override;
-	void Draw();
+	void Draw()override;
 	void UpdateMatrix() override;
 	void Map() override;
 	void ShowImGuiInterface() override;
