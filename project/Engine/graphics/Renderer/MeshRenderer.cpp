@@ -19,12 +19,12 @@ void MeshRenderer::Unregister(IMeshRenderable* renderable){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 /////////////////////////////////////////////////////////////////////////////////////////
-void MeshRenderer::DrawAll(const Matrix4x4& vp){
+void MeshRenderer::DrawAll(){
 	for (auto* mesh : renderables_){
 		if (mesh) mesh->Draw();
 	}
 
-	PrimitiveDrawer::GetInstance()->Render(vp);
+	PrimitiveDrawer::GetInstance()->Render();
 }
 
 void MeshRenderer::Clear(){

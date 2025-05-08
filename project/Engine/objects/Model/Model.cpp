@@ -95,7 +95,6 @@ void Model::CreateMaterialBuffer(){
 	materialBuffer_.Initialize(device_.Get());
 }
 
-
 void Model::MaterialBufferMap(){
 	// materialData_ の内容で GPU に転送
 	// マテリアルのデータを転送

@@ -153,8 +153,8 @@ void PrimitiveDrawer::DrawSphere(const Vector3& center, const float radius, int 
 
 }
 
-void PrimitiveDrawer::Render(const Matrix4x4& vp){
+void PrimitiveDrawer::Render(){
 	if (lineDrawer_){
-		lineDrawer_->Render(vp);
+		lineDrawer_->Render();
 	}
 }

@@ -28,7 +28,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
-	virtual void Draw([[maybe_unused]]BaseCamera* camera){}
+	virtual void Draw(){}
 	virtual void CleanUp() = 0;
 
 	//--------- accessor -----------------------------------------------------

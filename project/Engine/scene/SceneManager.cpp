@@ -63,9 +63,8 @@ void SceneManager::Update(){
 
 void SceneManager::Draw(){
 	CameraManager::GetInstance()->SetType(Type_Default);
-	BaseCamera* mainCam = CameraManager::GetInstance()->GetCamera3d();
 	// 現在のシーンを描画
-	scenes_[currentSceneNo_]->Draw(mainCam);
+	scenes_[currentSceneNo_]->Draw();
 
 #ifdef _DEBUG
 	// DebugCamera を明示的に描画
@@ -87,7 +86,7 @@ void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target){
 	camera->SetCommand(cmd, PipelineType::Object3D);
 
 	if (auto* baseScene = dynamic_cast< BaseScene* >(scenes_[currentSceneNo_].get())){
-		scenes_[currentSceneNo_]->Draw(camera);
+		scenes_[currentSceneNo_]->Draw();
 	}
 
 }

@@ -30,6 +30,8 @@ void Camera3DBuffer::SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType
 	uint32_t rootParameterIndex = 0;
 	if (pipelineType == PipelineType::Object3D || PipelineType::SkinningObject3D){
 		rootParameterIndex = 5;
+	} else if (pipelineType == PipelineType::Line){
+		rootParameterIndex = 1;
 	}
 	// コマンドリストにバッファをセット
 	buffer_.SetCommand(cmdList, rootParameterIndex);

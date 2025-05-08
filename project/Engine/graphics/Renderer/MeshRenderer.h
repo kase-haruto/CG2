@@ -21,7 +21,7 @@ public:
 
 	void Register(IMeshRenderable* renderable);
 	void Unregister(IMeshRenderable* renderable);
-	void DrawAll(const Matrix4x4& vp);
+	void DrawAll();
 	void Clear();
 
 private:

@@ -15,13 +15,14 @@ class LineDrawer{
 public:
 	void Initialize();
 	void DrawLine(const Vector3& start, const Vector3& end, const Vector4& color);
-	void Render(const Matrix4x4& vp);
+	void Render();
 	void Clear();
 
 private:
 	std::vector<VertexPosColor> vertices_;
 	DxVertexBuffer<VertexPosColor> vertexBuffer_;
-	DxConstantBuffer<TransformationMatrix> wvpBuffer_;
+	DxConstantBuffer<TransformationMatrix> transformBuffer_;
+
 
 private:
 	static constexpr size_t kMaxLines = 512; // 最大描画数
