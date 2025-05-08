@@ -69,10 +69,10 @@ void EngineUI::Render(){
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUI::RenderMainViewport(){
-	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
+	ImVec2 viewportSize = ImVec2(kGameViewSize.x, kGameViewSize.y);
 
 	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
-	ImGui::Begin("Main Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Game View", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 	if (mainViewportTextureID_){
 
