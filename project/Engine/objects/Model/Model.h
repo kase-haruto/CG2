@@ -15,7 +15,7 @@ public:
 	void Initialize() override;
 	void InitializeTextures(const std::vector<std::string>& textureFilePaths);
 	void Map() override;
-	void Draw(const Matrix4x4& vp)override;
+	void Draw()override;
 	void ShowImGuiInterface() override;
 
 	//=============

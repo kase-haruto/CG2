@@ -19,7 +19,7 @@ public:
 	LineMesh(const Vector3& start, const Vector3& end);
 	~LineMesh() = default;
 
-	void Draw(const Matrix4x4&) override;
+	void Draw() override;
 
 	void SetColor(const Vector4& color) override;
 	const Matrix4x4& GetWorldMatrix() const override;

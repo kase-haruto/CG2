@@ -17,7 +17,7 @@ SceneManager::SceneManager(DxCore* dxCore)
 	}
 
 	// 最初は TITLE シーンにしておく
-	currentSceneNo_ = static_cast< int >(SceneType::PLAY);
+	currentSceneNo_ = static_cast< int >(SceneType::TEST);
 	nextSceneNo_ = currentSceneNo_;
 }
 
@@ -63,8 +63,8 @@ void SceneManager::Update(){
 
 void SceneManager::Draw(){
 	// MainCamera は既存の Draw() に任せる（CameraManager::SetType(Type_Default) が内部で使われる）
-	CameraManager::GetInstance()->SetType(Type_Default);
-	BaseCamera* mainCam = CameraManager::GetInstance()->GetCamera3d();
+	CameraManager::GetInstance()->SetType(Type_Debug);
+	BaseCamera* mainCam = CameraManager::GetInstance()->GetDebugCamera();
 	// 現在のシーンを描画
 	scenes_[currentSceneNo_]->Draw(mainCam);
 

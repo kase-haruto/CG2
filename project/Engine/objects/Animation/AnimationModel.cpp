@@ -190,7 +190,7 @@ void AnimationModel::OnModelLoaded(){
 
 }
 
-void AnimationModel::Draw(const Matrix4x4& vp){
+void AnimationModel::Draw(){
 	// もしモデルデータが読み込まれていない場合は何もしない
 	if (!modelData_){ return; }
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, SkinningObject3D, blendMode_);
@@ -207,7 +207,7 @@ void AnimationModel::Draw(const Matrix4x4& vp){
 	vbvs_[1] = skinCluster_.influenceBufferView;				//influenceDataのvbv
 	modelData_->indexBuffer.SetCommand(commandList_);
 	commandList_->IASetVertexBuffers(0, 2, vbvs_);
-	BaseModel::Draw(vp);
+	BaseModel::Draw();
 
 	if (isDrawSkeleton_){
 		modelData_->skeleton.Draw();
@@ -222,8 +222,8 @@ void AnimationModel::Draw(const Matrix4x4& vp){
 //-----------------------------------------------------------------------------
 // 行列のみ更新
 //-----------------------------------------------------------------------------
-void AnimationModel::UpdateMatrix(const Matrix4x4& vp){
-	worldTransform_.Update(vp);
+void AnimationModel::UpdateMatrix(){
+	worldTransform_.Update();
 }
 
 

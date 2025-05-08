@@ -32,11 +32,11 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update();
 	virtual void OnModelLoaded();
-	virtual void UpdateMatrix(const Matrix4x4& vp);
+	virtual void UpdateMatrix();
 	void UpdateTexture();
 	virtual void Map() = 0;
 	virtual void ShowImGuiInterface();
-	void Draw(const Matrix4x4& vp)override;
+	void Draw()override;
 
 	//--------- accessor -----------------------------------------------------
 	virtual void SetUvScale(const Vector3& uvScale) = 0;

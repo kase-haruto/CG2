@@ -15,8 +15,8 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void OnModelLoaded() override;
-	void Draw(const Matrix4x4& vp)override;
-	void UpdateMatrix(const Matrix4x4& vp) override;
+	void Draw()override;
+	void UpdateMatrix() override;
 	void Map() override;
 	void ShowImGuiInterface() override;
 	void SkeletonUpdate();

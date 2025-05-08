@@ -53,6 +53,9 @@ void BaseModel::Update(){
 		modelData_->indexBuffer.TransferVectorData(modelData_->indices);
 		Map();
 	}
+
+	//行列の更新
+	UpdateMatrix();
 }
 
 void BaseModel::OnModelLoaded(){
@@ -67,8 +70,8 @@ void BaseModel::OnModelLoaded(){
 
 }
 
-void BaseModel::UpdateMatrix(const Matrix4x4& vp){
-	worldTransform_.Update(vp);
+void BaseModel::UpdateMatrix(){
+	worldTransform_.Update();
 }
 
 void BaseModel::UpdateTexture(){
@@ -263,10 +266,9 @@ void BaseModel::ShowImGuiInterface(){
 
 }
 
-void BaseModel::Draw(const Matrix4x4& vp){
+void BaseModel::Draw(){
 
-	//行列の更新
-	UpdateMatrix(vp);
+
 
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

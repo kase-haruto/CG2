@@ -40,13 +40,13 @@ void LineMesh::InitializeSharedBuffer(){
 	sharedVertexBuffer_.TransferVectorData(vertices);
 }
 
-void LineMesh::Draw(const Matrix4x4& vp){
+void LineMesh::Draw(){
 	auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	sharedVertexBuffer_.SetCommand(cmdList);
 
-	transform_.Update(vp);
+	transform_.Update();
 	transform_.SetCommand(cmdList, 0);
 	cmdList->DrawInstanced(2, 1, 0, 0);
 }

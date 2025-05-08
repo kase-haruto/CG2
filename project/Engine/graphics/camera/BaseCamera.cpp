@@ -12,8 +12,7 @@ BaseCamera::BaseCamera()
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
 
 	/* バッファの生成とマッピング =======================*/
-	CreateBuffer();
-
+	cameraBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice().Get());
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -40,7 +39,6 @@ void BaseCamera::Update(){
 		}
 	}
 
-	cameraBuffer_.TransferData(cameraData_);
 	UpdateMatrix();
 
 }
@@ -54,6 +52,8 @@ void BaseCamera::UpdateMatrix(){
 	viewMatrix_ = Matrix4x4::Inverse(worldMatrix_);
 	projectionMatrix_ = MakePerspectiveFovMatrix(fovAngleY_, aspectRatio_, nearZ_, farZ_);
 	viewProjectionMatrix_ = Matrix4x4::Multiply(viewMatrix_, projectionMatrix_);
+
+	cameraBuffer_.Update(viewMatrix_, projectionMatrix_, transform_.translate);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -116,28 +116,9 @@ const Vector3& BaseCamera::GetTranslate() const{
 }
 #pragma endregion
 
-/////////////////////////////////////////////////////////////////////////
-//  バッファの生成とマッピング
-/////////////////////////////////////////////////////////////////////////
-#pragma region バッファの生成とマッピング
-void BaseCamera::CreateBuffer(){
-	ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-	cameraBuffer_.Initialize(device.Get());
-	cameraBuffer_.TransferData(cameraData_);
-}
-
-void BaseCamera::Map(){
-}
-#pragma endregion
-
 
 void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
 	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
 	command->SetGraphicsRootSignature(rootSignature.Get());
-
-	uint32_t rootParameterIndex = 0;
-	if (pipelineType == PipelineType::Object3D||PipelineType::SkinningObject3D){
-		rootParameterIndex = 5;
-	}
-	cameraBuffer_.SetCommand(command, rootParameterIndex);
+	cameraBuffer_.SetCommand(command.Get(), pipelineType);
 }

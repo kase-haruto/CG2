@@ -424,6 +424,7 @@
     <ClCompile Include="Game\3dObject\Actor\Player\Player.cpp" />
     <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
+    <ClCompile Include="Engine\core\DirectX\Buffer\CameraBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -701,6 +702,7 @@
     <ClInclude Include="Game\3dObject\Base\Actor.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
     <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
+    <ClInclude Include="Engine\core\DirectX\Buffer\CameraBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

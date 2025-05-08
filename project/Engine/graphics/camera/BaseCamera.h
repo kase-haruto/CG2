@@ -3,7 +3,7 @@
 
 #include "ICamera.h"
 #include "Engine/objects/Transform.h"
-#include "Engine/core/DirectX/Buffer/DxConstantBuffer.h"
+#include "Engine/core/DirectX/Buffer/CameraBuffer.h"
 #include "lib/myMath/Matrix4x4.h"
 #include "lib/myMath/Vector3.h"
 
@@ -14,12 +14,6 @@
 #include <wrl.h>
 
 using namespace Microsoft::WRL;
-
-// 定数バッファ用データ構造体
-struct Camera3dForGPU{
-	Vector3 worldPosition;
-	float padding;
-};
 
 class BaseCamera :
 	public ICamera{
@@ -34,16 +28,10 @@ public:
 	void ShowImGui();		// ImGui表示
 	virtual void UpdateMatrix();  // 行列の更新
 
-	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType);
+	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command,
+					PipelineType pipelineType);
 
 	void StartShake(float duration, float intensity)override;  // カメラシェイク開始
-
-private:
-	//==================================================================*//
-	//			private functions
-	//==================================================================*//
-	void CreateBuffer();
-	void Map();
 
 
 protected:
@@ -107,11 +95,10 @@ protected:
 	bool isActive_ = true;				//アクティブかどうか
 	Matrix4x4 viewProjectionMatrix_;	// ビュープロジェクション行列
 	Matrix4x4 worldMatrix_;				// ワールド行列
+
 private:
 	//==================================================================*//
 	//			private variables
 	//==================================================================*//
-	ComPtr<ID3D12Resource> constBuffer_;			//< 定数バッファ
-	DxConstantBuffer<Camera3dForGPU> cameraBuffer_;	//< 定数バッファデータ
-	Camera3dForGPU cameraData_;					//< カメラのデータ
+	Camera3DBuffer cameraBuffer_;		// カメラバッファ
 };

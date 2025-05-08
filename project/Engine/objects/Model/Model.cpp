@@ -59,7 +59,7 @@ void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths)
 	}
 }
 
-void Model::Draw(const Matrix4x4& vp){
+void Model::Draw(){
 	if (!modelData_){
 		return;
 	}
@@ -68,7 +68,7 @@ void Model::Draw(const Matrix4x4& vp){
 	// 頂点バッファ/インデックスバッファをセット
 	modelData_->vertexBuffer.SetCommand(commandList_);
 	modelData_->indexBuffer.SetCommand(commandList_);
-	BaseModel::Draw(vp);
+	BaseModel::Draw();
 }
 
 void Model::Map(){

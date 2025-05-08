@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\core\DirectX\Buffer\CameraBuffer.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
     <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
@@ -251,6 +252,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\core\DirectX\Buffer\CameraBuffer.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />

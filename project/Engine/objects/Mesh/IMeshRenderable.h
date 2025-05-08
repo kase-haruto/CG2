@@ -17,6 +17,6 @@ public:
 	//===================================================================*/
 	virtual ~IMeshRenderable() = default;
 
-	virtual void Draw(const Matrix4x4& vp) = 0;
+	virtual void Draw() = 0;
 };
 

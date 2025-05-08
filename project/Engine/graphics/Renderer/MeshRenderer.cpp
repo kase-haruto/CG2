@@ -21,7 +21,7 @@ void MeshRenderer::Unregister(IMeshRenderable* renderable){
 /////////////////////////////////////////////////////////////////////////////////////////
 void MeshRenderer::DrawAll(const Matrix4x4& vp){
 	for (auto* mesh : renderables_){
-		if (mesh) mesh->Draw(vp);
+		if (mesh) mesh->Draw();
 	}
 
 	PrimitiveDrawer::GetInstance()->Render(vp);
