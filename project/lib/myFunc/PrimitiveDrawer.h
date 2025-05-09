@@ -18,6 +18,7 @@ public:
 	void DrawLine3d(const Vector3& start, const Vector3& end, const Vector4& color);
 	void Update(); // 寿命付き対応時など
 	void Render();
+	void ClearMesh();
 
 	void DrawGrid();
 	void DrawOBB(const Vector3& center, const Vector3& rotate, const Vector3& size, const Vector4 color);

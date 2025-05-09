@@ -42,8 +42,6 @@ void LineDrawer::Render(){
 
 	// 描画
 	cmdList->DrawInstanced(static_cast< UINT >(vertices_.size()), 1, 0, 0);
-
-	vertices_.clear();
 }
 
 

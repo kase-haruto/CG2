@@ -158,3 +158,9 @@ void PrimitiveDrawer::Render(){
 		lineDrawer_->Render();
 	}
 }
+
+void PrimitiveDrawer::ClearMesh(){
+	if (lineDrawer_){
+		lineDrawer_->Clear();
+	}
+}

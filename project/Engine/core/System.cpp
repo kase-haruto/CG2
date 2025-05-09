@@ -277,6 +277,9 @@ void System::EditorDraw(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void System::Finalize(){
 
+	//プリミティブのクリア
+	PrimitiveDrawer::GetInstance()->ClearMesh();
+
 	//imgui終了処理
 	imguiManager_->Finalize();
 	//textureの終了処理

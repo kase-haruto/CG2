@@ -85,8 +85,6 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	scenes_[currentSceneNo_]->Draw();
 }
 
-
-
 void SceneManager::RequestSceneChange(SceneType nextScene) {
 	nextSceneNo_ = static_cast<int>(nextScene);
 	SceneObjectManager::GetInstance()->ClearGameObjects();
