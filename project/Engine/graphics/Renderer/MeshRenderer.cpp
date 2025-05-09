@@ -1,5 +1,6 @@
 #include "MeshRenderer.h"
 #include <lib/myFunc/PrimitiveDrawer.h>
+#include <Engine/graphics/camera/CameraManager.h>
 #include <lib/myMath/Matrix4x4.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -23,8 +24,6 @@ void MeshRenderer::DrawAll(){
 	for (auto* mesh : renderables_){
 		if (mesh) mesh->Draw();
 	}
-
-	PrimitiveDrawer::GetInstance()->Render();
 }
 
 void MeshRenderer::Clear(){

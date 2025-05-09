@@ -30,7 +30,6 @@ public:
 	void RenderEngineUI();
 
 private:
-	void SetViewPortAndScissor(uint32_t width, uint32_t height);
 
 	// リソース解放
 	void ReleaseResources();
@@ -47,9 +46,6 @@ private:
 	uint32_t clientWidth_ = 0;
 	uint32_t clientHeight_ = 0;
 
-	// ビューポートとシザー矩形
-	D3D12_VIEWPORT viewport_ {};
-	D3D12_RECT scissorRect_ {};
 
 	// DirectX関連
 	std::unique_ptr<DxDevice> dxDevice_;

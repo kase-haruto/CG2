@@ -5,6 +5,7 @@
 #include <Engine/objects/Mesh/IMeshRenderable.h>
 
 #include <vector>
+#include <d3d12.h>
 
 struct Matrix4x4;
 

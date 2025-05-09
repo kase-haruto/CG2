@@ -76,13 +76,11 @@ D3D12_GPU_DESCRIPTOR_HANDLE OffscreenRenderTarget::GetSRV() const{
 }
 
 D3D12_VIEWPORT OffscreenRenderTarget::GetViewport() const{
-	D3D12_VIEWPORT viewport = {0.0f, 0.0f, kWindowWidth, kWindowHeight, 0.0f, 1.0f};
-	return 	viewport;
+	return viewport_;
 }
 
 D3D12_RECT OffscreenRenderTarget::GetScissorRect() const{
-	D3D12_RECT scissorRect = {0, 0, kWindowWidth, kWindowHeight};
-	return scissorRect;
+	return scissorRect_;
 }
 
 void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
@@ -92,11 +90,10 @@ void OffscreenRenderTarget::Clear(ID3D12GraphicsCommandList* commandList){
 	commandList->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void OffscreenRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandList){
-	resource_->Transition(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	commandList->OMSetRenderTargets(1, &rtvHandle_, FALSE, &dsvHandle_);
+void OffscreenRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandList) {
 	commandList->RSSetViewports(1, &viewport_);
 	commandList->RSSetScissorRects(1, &scissorRect_);
+	commandList->OMSetRenderTargets(1, &rtvHandle_, FALSE, &dsvHandle_);
 }
 
 void OffscreenRenderTarget::TransitionTo(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES newState){

@@ -7,7 +7,6 @@
 #include "Engine/core/DirectX/DxCore.h"
 #include "Engine/core/UI/SceneSwitcherPanel.h"
 
-class BaseCamera;
 class IRenderTarget;
 
 class SceneManager{
@@ -24,7 +23,7 @@ public:
 
     // シーン描画
     void Draw();
-    void DrawToCamera(BaseCamera* camera, IRenderTarget* target);
+	void DrawForRenderTarget(IRenderTarget* target);
 
     // UIをセット
     void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }

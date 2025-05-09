@@ -22,7 +22,7 @@ void LineDrawer::Render(){
 	if (vertices_.empty()) return;
 
 	auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
-	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
+	
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 

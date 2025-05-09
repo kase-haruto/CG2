@@ -37,13 +37,5 @@ void DrawTextureToRenderTarget(
 
 	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Viewport & Scissor が固定ならここで設定してもOK
-	
-	D3D12_VIEWPORT viewport = output->GetViewport();
-	D3D12_RECT scissorRect = output->GetScissorRect();
-
-	cmd->RSSetViewports(1, &viewport);
-	cmd->RSSetScissorRects(1, &scissorRect);
-
 	cmd->DrawInstanced(3, 1, 0, 0);
 }

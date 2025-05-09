@@ -17,11 +17,6 @@ void GrayScaleEffect::Apply(ID3D12GraphicsCommandList* cmd,
 	cmd->SetGraphicsRootSignature(rootSignature_.Get());
 	cmd->SetGraphicsRootDescriptorTable(0, inputSRV);
 
-	auto viewport = outputRT->GetViewport();
-	auto scissor = outputRT->GetScissorRect();
-	cmd->RSSetViewports(1, &viewport);
-	cmd->RSSetScissorRects(1, &scissor);
-
 	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	cmd->DrawInstanced(3, 1, 0, 0);
 }
