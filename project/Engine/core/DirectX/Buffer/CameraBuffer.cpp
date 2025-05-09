@@ -26,11 +26,14 @@ void Camera3DBuffer::Update(const Matrix4x4& view, const Matrix4x4& proj, const 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		コマンドを積む
 /////////////////////////////////////////////////////////////////////////////////////////
-void Camera3DBuffer::SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType pipelineType){
+void Camera3DBuffer::SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType pipelineType) {
 	uint32_t rootParameterIndex = 0;
-	if (pipelineType == PipelineType::Object3D || PipelineType::SkinningObject3D){
+
+	if (pipelineType == PipelineType::Object3D || pipelineType == PipelineType::SkinningObject3D) {
 		rootParameterIndex = 5;
+	} else if (pipelineType == PipelineType::Line) {
+		rootParameterIndex = 1;
 	}
-	// コマンドリストにバッファをセット
+
 	buffer_.SetCommand(cmdList, rootParameterIndex);
 }

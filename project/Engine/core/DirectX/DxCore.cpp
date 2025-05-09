@@ -33,8 +33,6 @@ void DxCore::Initialize(WinApp* winApp, uint32_t width, uint32_t height){
 	clientWidth_ = width;
 	clientHeight_ = height;
 
-	SetViewPortAndScissor(width, height);
-
 	// 各種DirectX関連インスタンスの生成
 	dxDevice_ = std::make_unique<DxDevice>();
 	dxCommand_ = std::make_unique<DxCommand>();
@@ -123,18 +121,14 @@ void DxCore::PreDraw(){
 		swapchainRT->SetRenderTarget(commandList.Get());
 	}
 
-	commandList->RSSetViewports(1, &viewport_);
-	commandList->RSSetScissorRects(1, &scissorRect_);
 }
 
 void DxCore::PreDrawOffscreen(){
 	auto* offscreenTarget = renderTargetCollection_->Get("Offscreen");
 	if (offscreenTarget){
 		offscreenTarget->Clear(dxCommand_->GetCommandList().Get());
+		offscreenTarget->TransitionTo(dxCommand_->GetCommandList().Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 		offscreenTarget->SetRenderTarget(dxCommand_->GetCommandList().Get());
-
-		dxCommand_->GetCommandList()->RSSetViewports(1, &viewport_);
-		dxCommand_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 	}
 }
 
@@ -146,6 +140,7 @@ void DxCore::DrawOffscreenTexture(){
 	if (auto* swapchainRT = dynamic_cast< SwapChainRenderTarget* >(backBufferTarget)){
 		UINT bufferIndex = dxSwapChain_->GetCurrentBackBufferIndex();
 		swapchainRT->SetBufferIndex(bufferIndex);
+		swapchainRT->TransitionTo(commandList.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 		swapchainRT->SetRenderTarget(commandList.Get());
 	}
 
@@ -192,14 +187,6 @@ void DxCore::PostDraw(){
 	dxFence_->Wait();
 	dxCommand_->Reset();
 }
-
-
-void DxCore::SetViewPortAndScissor(uint32_t width, uint32_t height){
-	viewport_ = {0.0f, 0.0f, static_cast< FLOAT >(width), static_cast< FLOAT >(height), 0.0f, 1.0f};
-	scissorRect_ = {0, 0, static_cast< LONG >(width), static_cast< LONG >(height)};
-}
-
-
 
 void DxCore::RenderEngineUI(){
 #ifdef _DEBUG

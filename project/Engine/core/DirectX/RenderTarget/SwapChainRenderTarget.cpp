@@ -24,10 +24,17 @@ D3D12_CPU_DESCRIPTOR_HANDLE SwapChainRenderTarget::GetRTV() const{
 	return handle;
 }
 
-void SwapChainRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* commandList){
-	TransitionTo(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = GetRTV();
-	commandList->OMSetRenderTargets(1, &handle, FALSE, nullptr);
+void SwapChainRenderTarget::SetRenderTarget(ID3D12GraphicsCommandList* cmdList){
+
+	TransitionTo(cmdList, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// ビューポートとシザー設定
+	cmdList->RSSetViewports(1, &viewport_);
+	cmdList->RSSetScissorRects(1, &scissorRect_);
+
+
+	D3D12_CPU_DESCRIPTOR_HANDLE rtv = GetRTV();
+	cmdList->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
 }
 
 

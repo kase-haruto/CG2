@@ -50,7 +50,7 @@ private:
     ~EngineUI() = default;      // デストラクタ
 
     void RenderMainViewport();  // メインビューポートの描画
-	void RenderDefaultViewport(); // デフォルトビューポートの描画
+	void RenderDebugViewPort(); // デフォルトビューポートの描画
 	void RenderMenue();         // メニューの描画
 
 private:

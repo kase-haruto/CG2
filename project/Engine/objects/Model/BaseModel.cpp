@@ -165,6 +165,13 @@ void BaseModel::ShowImGuiInterface(){
 	//===========================
 	// 5. ギズモ操作の結果をモデルに反映
 	//===========================	
+
+	if (ImGuizmo::IsOver()) {
+		int a = 0;
+		a++;
+		
+	}
+
 	if (ImGuizmo::IsUsing()){
 		// `model` はギズモ操作で更新済み → 再び row-major へ戻す	
 		Matrix4x4 updatedCM;

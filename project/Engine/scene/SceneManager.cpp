@@ -10,22 +10,22 @@
 #include <Engine/graphics/camera/CameraManager.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
-	: pDxCore_(dxCore){
+	: pDxCore_(dxCore) {
 	// ここでシーンをすべて生成しておく場合
-	for (int i = 0; i < static_cast< int >(SceneType::count); ++i){
-		scenes_[i] = SceneFactory::CreateScene(static_cast< SceneType >(i), pDxCore_);
+	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
+		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i), pDxCore_);
 	}
 
 	// 最初は TITLE シーンにしておく
-	currentSceneNo_ = static_cast< int >(SceneType::TEST);
+	currentSceneNo_ = static_cast<int>(SceneType::TEST);
 	nextSceneNo_ = currentSceneNo_;
 }
 
-SceneManager::~SceneManager(){}
+SceneManager::~SceneManager() {}
 
-void SceneManager::Initialize(){
+void SceneManager::Initialize() {
 	// シーン切り替えパネルを作成 (UI がある場合)
-	if (pEngineUI_){
+	if (pEngineUI_) {
 		sceneSwitchPanel_ = std::make_unique<SceneSwitcherPanel>(this);
 
 		sceneSwitchPanel_->AddSceneOption("Game Scene", SceneType::PLAY);
@@ -42,9 +42,9 @@ void SceneManager::Initialize(){
 	scenes_[currentSceneNo_]->Initialize();
 }
 
-void SceneManager::Update(){
+void SceneManager::Update() {
 	// シーン切り替えチェック
-	if (currentSceneNo_ != nextSceneNo_){
+	if (currentSceneNo_ != nextSceneNo_) {
 		// いったん現在シーンをクリーンアップ
 		scenes_[currentSceneNo_]->CleanUp();
 
@@ -61,45 +61,37 @@ void SceneManager::Update(){
 	scenes_[currentSceneNo_]->Update();
 }
 
-void SceneManager::Draw(){
+void SceneManager::Draw() {
 	CameraManager::GetInstance()->SetType(Type_Default);
-	BaseCamera* mainCam = CameraManager::GetInstance()->GetCamera3d();
+	auto* gameRT = pDxCore_->GetRenderTargetCollection().Get("Offscreen");
 	// 現在のシーンを描画
-	scenes_[currentSceneNo_]->Draw(mainCam);
+	DrawForRenderTarget(gameRT);
 
 #ifdef _DEBUG
 	// DebugCamera を明示的に描画
-	auto* debugCam = CameraManager::GetInstance()->GetDebugCamera();
 	CameraManager::GetInstance()->SetType(Type_Debug);
 	auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
-	DrawToCamera(debugCam, debugRT);
+	DrawForRenderTarget(debugRT);
 #endif // _DEBUG
 }
 
-void SceneManager::DrawToCamera(BaseCamera* camera, IRenderTarget* target){
+void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	auto* cmd = pDxCore_->GetCommandList().Get();
 
 	// 出力先RT設定
 	target->SetRenderTarget(cmd);
 	target->Clear(cmd);
 
-	// 指定カメラでパイプライン設定
-	camera->SetCommand(cmd, PipelineType::Object3D);
-
-	if (auto* baseScene = dynamic_cast< BaseScene* >(scenes_[currentSceneNo_].get())){
-		scenes_[currentSceneNo_]->Draw(camera);
-	}
-
+	scenes_[currentSceneNo_]->Draw();
 }
 
-
-void SceneManager::RequestSceneChange(SceneType nextScene){
-	nextSceneNo_ = static_cast< int >(nextScene);
+void SceneManager::RequestSceneChange(SceneType nextScene) {
+	nextSceneNo_ = static_cast<int>(nextScene);
 	SceneObjectManager::GetInstance()->ClearGameObjects();
 
 }
 
-void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene){
+void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene) {
 	// いったん現在シーンをクリーンアップ
 	scenes_[currentSceneNo_]->CleanUp();
 

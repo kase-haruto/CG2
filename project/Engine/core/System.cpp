@@ -277,6 +277,9 @@ void System::EditorDraw(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void System::Finalize(){
 
+	//プリミティブのクリア
+	PrimitiveDrawer::GetInstance()->ClearMesh();
+
 	//imgui終了処理
 	imguiManager_->Finalize();
 	//textureの終了処理
@@ -945,12 +948,17 @@ void System::LinePipeline(){
 	}
 
 	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 
 	//wvp/world
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
+
+	//カメラ
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[1].Descriptor.ShaderRegister = 1;
 
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;

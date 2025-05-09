@@ -25,8 +25,8 @@ private:
 	UINT rtvDescriptorSize_ = 0;
 	UINT bufferIndex_ = 0;
 
-	D3D12_VIEWPORT viewport_ {};
-	D3D12_RECT scissorRect_ {};
+	D3D12_VIEWPORT viewport_{};
+	D3D12_RECT scissorRect_{};
 
 	std::vector<D3D12_RESOURCE_STATES> currentStates_;
 };

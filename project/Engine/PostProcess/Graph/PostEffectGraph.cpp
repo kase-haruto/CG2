@@ -13,6 +13,8 @@ void PostEffectGraph::Execute(ID3D12GraphicsCommandList* cmd,
 	IRenderTarget* currentOutput = finalTarget;
 
 	for (auto* pass : passes_){
+		currentOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
 		pass->Apply(cmd, currentInput, currentOutput);
 
 		currentOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);

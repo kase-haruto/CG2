@@ -61,33 +61,25 @@ void EngineUI::Render(){
 	}
 
 	pInstance_->RenderMainViewport();
-	pInstance_->RenderDefaultViewport();
+	pInstance_->RenderDebugViewPort();
 #endif // _DEBUG
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUI::RenderMainViewport(){
+void EngineUI::RenderMainViewport() {
 	ImVec2 viewportSize = ImVec2(kGameViewSize.x, kGameViewSize.y);
 
 	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
 	ImGui::Begin("Game View", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
-	if (mainViewportTextureID_){
-
-		// Image描画開始位置（スクリーン座標）を取得
+	if (mainViewportTextureID_) {
 		ImVec2 imagePos = ImGui::GetCursorScreenPos();
-
-		// Imageを描画
 		ImGui::SetCursorScreenPos(imagePos);
-		// ギズモの描画範囲設定
-		ImGuizmo::SetRect(imagePos.x, imagePos.y, viewportSize.x, viewportSize.y);
-		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
-		ImGuizmo::SetDrawlist();
+		ImGui::Image(reinterpret_cast<ImTextureID>(mainViewportTextureID_), viewportSize);
 
-		//fps表示
-		// 画像描画位置を表示
+		// FPS 表示
 		ImVec2 textPos = ImVec2(imagePos.x, imagePos.y);
 		float fps = ImGui::GetIO().Framerate;
 		ImGui::GetForegroundDrawList()->AddText(
@@ -95,22 +87,55 @@ void EngineUI::RenderMainViewport(){
 			IM_COL32(255, 255, 255, 255),
 			(std::string("fps: ") + std::to_string(fps)).c_str()
 		);
-	} else{
+	} else {
 		ImGui::Text("Viewport texture not set.");
 	}
 
 	ImGui::End();
 }
+constexpr ImGuiWindowFlags kDbgFlags =
+ImGuiWindowFlags_NoTitleBar            // タイトルバー無し
+| ImGuiWindowFlags_NoScrollbar
+| ImGuiWindowFlags_NoScrollWithMouse
+| ImGuiWindowFlags_NoResize
+| ImGuiWindowFlags_NoMove
+| ImGuiWindowFlags_NoCollapse
+| ImGuiWindowFlags_NoBringToFrontOnFocus
+| ImGuiWindowFlags_NoInputs;            // ★ウィンドウが一切入力を捕まえない
+void EngineUI::RenderDebugViewPort() {
+	ImVec2 imgSize{ kExecuteWindowSize.x, kExecuteWindowSize.y };
 
-void EngineUI::RenderDefaultViewport() {
-	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
-	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
-	ImGui::Begin("Debug Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+	ImGui::SetNextWindowSize(imgSize);
+	ImGui::Begin("Debug Viewport",
+				 nullptr,
+				 ImGuiWindowFlags_NoResize |
+				 ImGuiWindowFlags_NoScrollbar);
+
+	//--------------------------------------------
+	// ① ここで BeginFrame ― ウィンドウが決まった直後
+	//--------------------------------------------
+	ImGuizmo::BeginFrame();
+
 	if (debugViewportTextureID_) {
-		ImGui::Image(reinterpret_cast<ImTextureID>(debugViewportTextureID_), viewportSize);
+		//--------------------------------------------
+		// ② 画像を “アイテム無し” で描画
+		//--------------------------------------------
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+		ImDrawList* dl = ImGui::GetWindowDrawList();
+		dl->AddImage((ImTextureID)debugViewportTextureID_,
+					 pos,
+					 ImVec2(pos.x + imgSize.x,
+							pos.y + imgSize.y));
+
+		//--------------------------------------------
+		// ③ ヒット矩形 & DrawList を登録
+		//--------------------------------------------
+		ImGuizmo::SetRect(pos.x, pos.y, imgSize.x, imgSize.y);
+		ImGuizmo::SetDrawlist();            // ← BeginFrame 後なので有効
 	} else {
 		ImGui::Text("Viewport texture not set.");
 	}
+
 	ImGui::End();
 }
 

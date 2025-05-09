@@ -8,7 +8,7 @@
 
 void LineDrawer::Initialize(){
 	vertexBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice(), kMaxLines * 2);
-	wvpBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice(), 1);
+	transformBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice(), 1);
 }
 
 void LineDrawer::DrawLine(const Vector3& start, const Vector3& end, const Vector4& color){
@@ -18,11 +18,11 @@ void LineDrawer::DrawLine(const Vector3& start, const Vector3& end, const Vector
 	vertices_.emplace_back(VertexPosColor {end, color});
 }
 
-void LineDrawer::Render(const Matrix4x4& vp){
+void LineDrawer::Render(){
 	if (vertices_.empty()) return;
 
 	auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
-	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
+	
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
@@ -35,16 +35,13 @@ void LineDrawer::Render(const Matrix4x4& vp){
 
 	TransformationMatrix wvpData;
 	wvpData.world = identity;
-	wvpData.WVP = identity * vp;
 	wvpData.WorldInverseTranspose = Matrix4x4::Transpose(Matrix4x4::Inverse(identity));
 
-	wvpBuffer_.TransferData(wvpData);
-	wvpBuffer_.SetCommand(cmdList, 0); // RootParam 0
+	transformBuffer_.TransferData(wvpData);
+	transformBuffer_.SetCommand(cmdList, 0);
 
 	// 描画
 	cmdList->DrawInstanced(static_cast< UINT >(vertices_.size()), 1, 0, 0);
-
-	vertices_.clear();
 }
 
 

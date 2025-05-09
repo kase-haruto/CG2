@@ -1,7 +1,7 @@
 #include "BaseScene.h"
 #include "Engine/graphics/camera/CameraManager.h"
 #include "Engine/physics/light/LightManager.h"
-
+#include "Engine/graphics/GraphicsGroup.h"
 #include <Engine/core/DirectX/DxCore.h>
 
 #include <lib/myFunc/PrimitiveDrawer.h>
@@ -11,7 +11,7 @@ IScene(dxCore){
 	sceneContext_ = std::make_unique<SceneContext>();
 }
 
-void BaseScene::Draw(BaseCamera* camera){
+void BaseScene::Draw(){
 	auto commandList_ = pDxCore_->GetCommandList();
 	// light
 	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
@@ -20,7 +20,9 @@ void BaseScene::Draw(BaseCamera* camera){
 	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
 
 	// 3Dオブジェクトの描画
-	Matrix4x4 viewProjection = camera->GetViewProjection();
-	sceneContext_->meshRenderer_->DrawAll(viewProjection);
+	sceneContext_->meshRenderer_->DrawAll();
 
+	GraphicsGroup::GetInstance()->SetCommand(commandList_, PipelineType::Line, BlendMode::NORMAL);
+	CameraManager::SetCommand(commandList_, PipelineType::Line);
+	PrimitiveDrawer::GetInstance()->Render();
 }
