@@ -194,12 +194,8 @@ void AnimationModel::Draw(){
 	// もしモデルデータが読み込まれていない場合は何もしない
 	if (!modelData_){ return; }
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, SkinningObject3D, blendMode_);
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::SkinningObject3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::SkinningObject3D);
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::SkinningObject3D);
 
+	
 	commandList_->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 
 	// 頂点バッファ/インデックスバッファをセット

@@ -58,6 +58,9 @@ private:
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
 
+	//テスト用
+	std::vector<std::unique_ptr<BaseGameObject>> humans_;
+
 	/* editor =====================================================*/
 	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
 	std::unique_ptr<UIEditor> uiEditor_ = nullptr;

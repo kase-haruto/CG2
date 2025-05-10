@@ -49,6 +49,8 @@ void EngineUI::Render(){
 #ifdef _DEBUG
 	//pInstance_->RenderMenue();
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+	pInstance_->RenderMainViewport();
+	pInstance_->RenderDebugViewPort();
 	// すべてのパネルをレンダリングし、閉じられたパネルを削除
 	for (auto it = pInstance_->panels_.begin(); it != pInstance_->panels_.end(); ){
 		(*it)->Render();
@@ -60,8 +62,6 @@ void EngineUI::Render(){
 		}
 	}
 
-	pInstance_->RenderMainViewport();
-	pInstance_->RenderDebugViewPort();
 #endif // _DEBUG
 }
 
@@ -93,15 +93,7 @@ void EngineUI::RenderMainViewport() {
 
 	ImGui::End();
 }
-constexpr ImGuiWindowFlags kDbgFlags =
-ImGuiWindowFlags_NoTitleBar            // タイトルバー無し
-| ImGuiWindowFlags_NoScrollbar
-| ImGuiWindowFlags_NoScrollWithMouse
-| ImGuiWindowFlags_NoResize
-| ImGuiWindowFlags_NoMove
-| ImGuiWindowFlags_NoCollapse
-| ImGuiWindowFlags_NoBringToFrontOnFocus
-| ImGuiWindowFlags_NoInputs;            // ★ウィンドウが一切入力を捕まえない
+
 void EngineUI::RenderDebugViewPort() {
 	ImVec2 imgSize{ kExecuteWindowSize.x, kExecuteWindowSize.y };
 
