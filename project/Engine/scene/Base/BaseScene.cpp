@@ -12,14 +12,7 @@ IScene(dxCore){
 }
 
 void BaseScene::Draw(){
-	auto commandList_ = pDxCore_->GetCommandList();
-	// light
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-	// camera
-	CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
-	// 3Dオブジェクトの描画
+	auto commandList_ = pDxCore_->GetCommandList();	
 	sceneContext_->meshRenderer_->DrawAll();
 
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, PipelineType::Line, BlendMode::NORMAL);
