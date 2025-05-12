@@ -19,14 +19,21 @@ PrimitiveDrawer* PrimitiveDrawer::GetInstance(){
 void PrimitiveDrawer::Initialize(){
 	lineDrawer_ = std::make_unique<LineDrawer>();
 	lineDrawer_->Initialize();
+
+	boxDrawer_ = std::make_unique<BoxDrawer>();
+	boxDrawer_->Initialize();
 }
 
 void PrimitiveDrawer::Finalize(){
 	if (lineDrawer_){
 		lineDrawer_->Clear();
 	}
-
 	lineDrawer_.reset();
+
+	if (boxDrawer_) {
+		boxDrawer_->Clear();
+	}
+	boxDrawer_.reset();
 }
 
 
@@ -36,8 +43,10 @@ void PrimitiveDrawer::DrawLine3d(const Vector3& start, const Vector3& end, const
 	}
 }
 
-void PrimitiveDrawer::Update(){
-	// 今は未使用。寿命管理するならここで削除処理
+void PrimitiveDrawer::DrawBox(const Vector3& center, const Vector3& size, const Vector4& color) {
+	if (boxDrawer_) {
+		boxDrawer_->DrawBox(center, size, color);
+	}
 }
 
 void PrimitiveDrawer::DrawGrid(){
@@ -157,10 +166,18 @@ void PrimitiveDrawer::Render(){
 	if (lineDrawer_){
 		lineDrawer_->Render();
 	}
+
+	if (boxDrawer_) {
+		boxDrawer_->Render();
+	}
 }
 
 void PrimitiveDrawer::ClearMesh(){
 	if (lineDrawer_){
 		lineDrawer_->Clear();
+	}
+
+	if (boxDrawer_) {
+		boxDrawer_->Clear();
 	}
 }

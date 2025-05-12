@@ -45,6 +45,9 @@ void TestScene::Initialize(){
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Initialize();
+
 	//objects
 	modelField_ = std::make_unique<Model>("ground.obj");
 	modelField_->SetSize({100.0f,1.0f,100.0f});
@@ -82,6 +85,8 @@ void TestScene::Update(){
 	//地面
 	//modelField_->Update();
 
+	skyBox_->Update({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
+
 	//test
 	bunny_->Update();
 	teapot_->Update();
@@ -91,6 +96,9 @@ void TestScene::Update(){
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	PrimitiveDrawer::GetInstance()->DrawGrid();
+
+	// skyboxの描画
+	skyBox_->Draw();
 }
 
 

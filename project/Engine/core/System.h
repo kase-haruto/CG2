@@ -50,6 +50,7 @@ public:
 	void StructuredObjectPipeline();
 	void LinePipeline();
 	void EffectPipeline();
+	void SkyBoxPipeline();
 
 	void CopyImagePipeline();
 	void GrayScalePipeline();
