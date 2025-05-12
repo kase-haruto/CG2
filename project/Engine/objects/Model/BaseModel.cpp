@@ -275,8 +275,6 @@ void BaseModel::ShowImGuiInterface(){
 
 void BaseModel::Draw(){
 
-
-
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// マテリアル & 行列バッファをセット
@@ -284,6 +282,10 @@ void BaseModel::Draw(){
 	worldTransform_.SetCommand(commandList_, 1);
 
 	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
+
+	//環境マップ
+	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetSrvHandle("rostock_laage_airport_4k.dds");
+	commandList_->SetGraphicsRootDescriptorTable(7, envMapHandle);
 
 	// 描画
 	commandList_->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
