@@ -1,20 +1,20 @@
+#include "GameScene.h"
 /////////////////////////////////////////////////////////////////////////////////////////
 //	include
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // scene
-#include "GameScene.h"
-#include "SceneManager.h"
+#include <Engine/scene/SceneManager.h>
 
 // engine
-#include "../core/Input.h"
-#include "Engine/core/Audio/Audio.h"
-#include "../graphics/camera/CameraManager.h"
-#include "Engine/objects/SceneObjectManager.h"
-#include "Engine/objects/particle/ParticleManager.h"
-#include "Engine/Collision/CollisionManager.h"
-#include "Engine/core/DirectX/DxCore.h"
-#include "Engine/physics/light/LightManager.h"
+#include <Engine/Application/Input/Input.h>
+#include <Engine/core/Audio/Audio.h>
+#include <Engine/Graphics/camera/CameraManager.h>
+#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/objects/particle/ParticleManager.h>
+#include <Engine/Collision/CollisionManager.h>
+#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/physics/light/LightManager.h>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

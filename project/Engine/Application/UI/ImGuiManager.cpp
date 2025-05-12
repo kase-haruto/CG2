@@ -1,19 +1,20 @@
-#include "lib/ImGuiManager.h"
+#include "ImGuiManager.h"
+/* ========================================================================
+/*		include space
+/* ===================================================================== */
+// engine
+#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/core/WinApp.h>
+#include <lib/myFunc/DxFunc.h>
+#include <Engine/Graphics/SrvLocator.h>
 
-#include "engine/core/DirectX/DxCore.h"
-#include "../Engine/core/WinApp.h"
-#include "lib/myFunc/DxFunc.h"
-
+// externals
 #ifdef _DEBUG
 #include "imgui/ImGuizmo.h"
-
 #endif // _DEBUG
-
-
 #include <externals/imgui/imgui_impl_dx12.h>
 #include <externals/imgui/imgui_impl_win32.h>
 
-#include"engine/graphics/SrvLocator.h"
 
 void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	pDxCore_ = dxCore;

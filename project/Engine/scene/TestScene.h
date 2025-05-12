@@ -1,15 +1,12 @@
 #pragma once
-#include <Engine/scene/Base/BaseScene.h>
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-#include "engine/objects/Sprite.h"
-#include "Game/3d/Base/BaseGameObject.h"
-#include "engine/physics/Triangle.h"
-#include "engine/graphics/ViewProjection.h"
-#include "engine/objects/ModelBuilder.h"
-#include "engine/Editor/UiEditor.h"
-#include "Engine/objects/SkyBox/SkyBox.h"
+/* engine */
+#include <Engine/scene/Base/BaseScene.h>
+#include <Engine/objects/Sprite.h>
+#include <Game/3d/Base/BaseGameObject.h>
+#include <Engine/objects/SkyBox/SkyBox.h>
 
 /* graphics */
 #include "engine/physics/light/DirectionalLight.h"
@@ -27,8 +24,8 @@
 
 ///デバッグ関連///
 #ifdef _DEBUG
-#include"lib/ImGuiManager.h"
-#include"externals/imgui/imgui.h"
+#include <Engine/Application/UI/ImGuiManager.h>
+#include <externals/imgui/imgui.h>
 #endif // _DEBUG
 
 /* ========================================================================
@@ -62,10 +59,6 @@ private:
 
 	//テスト用
 	std::vector<std::unique_ptr<BaseGameObject>> humans_;
-
-	/* editor =====================================================*/
-	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
-	std::unique_ptr<UIEditor> uiEditor_ = nullptr;
 
 };
 

@@ -1,7 +1,11 @@
-#include "engine/core/EngineController.h"
-#include "engine/core/Enviroment.h"
-#include "../scene/SceneManager.h"
-#include <Engine/core/Input.h>
+#include "EngineController.h"
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+// engine
+#include <Engine/core/Enviroment.h>
+#include <Engine/scene/SceneManager.h>
+#include <Engine/Application/Input/Input.h>
 
 //===================================================================*/
 // Engine全体の初期化処理

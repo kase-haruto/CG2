@@ -1,14 +1,19 @@
 #pragma once
-#include"WinApp.h"
 
-//グラフィック関係
-#include "engine/core/DirectX/DxCore.h"
-#include "../graphics/ShaderManager.h"
-#include "../graphics/PipelineStateManager.h"
-
-#include "lib/ImGuiManager.h"
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+// engine
+#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/Graphics/ShaderManager.h>
+#include <Engine/Graphics/PipelineStateManager.h>
+#include <Engine/Application/UI/ImGuiManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Editor/EffectEditor.h>
+#include <engine/objects/ModelBuilder.h>
+#include <Engine/Editor/UiEditor.h>
+
+// postprocess
 #include <Engine/PostProcess/Collection/PostProcessCollection.h>
 #include <Engine/PostProcess/Graph/PostEffectGraph.h>
 #include <Engine/PostProcess/Slot/PostEffectSlot.h>
@@ -19,10 +24,6 @@
 /* c++ */
 #include<stdint.h>
 
-// forward
-class UIEditor;
-class ModelBuilder;
-
 class System{
 public:
 	//===================================================================*/
@@ -31,7 +32,7 @@ public:
 	System();
 	~System() = default;
 
-	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string windowTitle);
+	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string _windowTitle);
 	void InitializeEngineUI();
 	void Finalize();
 	void BeginFrame();

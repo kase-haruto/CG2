@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //  include
 ////////////////////////////////////////////////////////////////////////////////////////////
-#include "EngineUI.h"
+#include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <Engine/core/Enviroment.h>
 
 // uiPanel
-#include "UI/HierarchyPanel.h"
-#include "UI/EditorPanel.h"
-#include "UI/InspectorPanel.h"
-#include "UI/ConsolePanel.h"
+#include <Engine/Application/UI/Panels/HierarchyPanel.h>
+#include <Engine/Application/UI/Panels/EditorPanel.h>
+#include <Engine/Application/UI/Panels/InspectorPanel.h>
+#include <Engine/Application/UI/Panels/ConsolePanel.h>
 
 // lib
 #include <externals/imgui/imgui.h>

@@ -1,16 +1,15 @@
 #pragma once
-
+/* ========================================================================
+/*      include space
+/* ===================================================================== */
 // engine
-#include "IEngineUI.h"
-#include "Engine/objects/SceneObject.h"
+#include <Engine/Application/UI/EngineUI/IEngineUI.h>
+#include <Engine/objects/SceneObject.h>
 
 // c++
 #include <vector>
 #include <string>
 
-/// <summary>
-/// ヒエラルキーパネル
-/// </summary>
 class HierarchyPanel
     : public IEngineUI{
 public:

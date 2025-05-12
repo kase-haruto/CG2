@@ -1,7 +1,12 @@
-#include "HierarchyPanel.h"
-#include "InspectorPanel.h"
-#include "SelectionManager.h"
-#include "Engine/objects/SceneObjectManager.h"
+/* ========================================================================
+/*  include space
+/* ===================================================================== */
+
+// engine
+#include <Engine/Application/UI/Panels/HierarchyPanel.h>
+#include <Engine/Application/UI/Panels/InspectorPanel.h>
+#include <Engine/core/UI/SelectionManager.h>
+#include <Engine/objects/SceneObjectManager.h>
 
 // lib
 #include <externals/imgui/imgui.h>

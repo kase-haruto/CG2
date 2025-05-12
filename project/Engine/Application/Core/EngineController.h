@@ -1,11 +1,14 @@
 #pragma
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+// engine
+#include <Engine/core/WinApp.h>
+#include <Engine/core/System.h>
+#include <Engine/scene/SceneManager.h>
+
+// c++
 #include <Windows.h>
-#include "WinApp.h"
-#include "System.h"
-#include "../scene/SceneManager.h"
-#include "../scene/GameScene.h"
-#include "../scene/TestScene.h"
-#include "Engine/core/EngineUI.h"
 
 class EngineController{
 public:

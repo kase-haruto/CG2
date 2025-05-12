@@ -1,12 +1,14 @@
 #pragma once
+/* ========================================================================
+/*      include space
+/* ===================================================================== */
+// engine
+#include <Engine/Application/UI/EngineUI/IEngineUI.h>
 
-#include "IEngineUI.h"
+// c++
 #include <vector>
 #include <string>
 
-/// <summary>
-/// コンソールパネル
-/// </summary>
 class ConsolePanel
     : public IEngineUI{
 public:

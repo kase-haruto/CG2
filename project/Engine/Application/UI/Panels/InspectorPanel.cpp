@@ -1,8 +1,14 @@
-#include "InspectorPanel.h"
-#include "SelectionManager.h"
-#include "Engine/objects/SceneObject.h"
-#include "Engine/Editor/BaseEditor.h"
-#include "SelectionManager.h"
+/* ========================================================================
+/*  include Space
+/* ===================================================================== */
+
+// engine
+#include <Engine/Application/UI/Panels/InspectorPanel.h>
+#include <Engine/core/UI/SelectionManager.h>
+#include <Engine/objects/SceneObject.h>
+#include <Engine/Editor/BaseEditor.h>
+
+// externals
 #include <externals/imgui/imgui.h>
 
 InspectorPanel::InspectorPanel()

@@ -1,9 +1,8 @@
 #include "EditorPanel.h"
 
-// panels
-
 // engine
-#include "SelectionManager.h"
+#include <Engine/core/UI/SelectionManager.h>
+
 // lib
 #include <externals/imgui/imgui.h>
 

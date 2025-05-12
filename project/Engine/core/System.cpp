@@ -3,32 +3,33 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // engine
-#include "../core/System.h"
-#include "../graphics/GraphicsGroup.h"
-#include "../graphics/SrvLocator.h"
-#include "../core/Input.h"
-#include "../core/Audio/Audio.h"
-#include "Engine/core/EngineUI.h"
-#include "Engine/graphics/blendMode/BlendMode.h"
-#include "Engine/core/UI/EditorPanel.h"
+#include <Engine/core/System.h>
+#include <Engine/Graphics/GraphicsGroup.h>
+#include <Engine/Graphics/SrvLocator.h>
+#include <Engine/Application/Input/Input.h>
+#include <Engine/core/Audio/Audio.h>
+#include <Engine/core/Enviroment.h>
+#include <Engine/Graphics/blendMode/BlendMode.h>
+#include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/core/DirectX/RenderTarget/SwapChainRenderTarget.h>
 #include <Engine/PostProcess/FullscreenDrawer.h>
+#include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <lib/myFunc/DxFunc.h>
 
 // manager
-#include "../objects/TextureManager.h"
-#include "../objects/ModelManager.h"
-#include "../graphics/camera/CameraManager.h"
-#include "Engine/core/Clock/ClockManager.h"
-#include "Engine/objects/particle/ParticleManager.h"
-#include "Engine/physics/light/LightManager.h"
+#include <Engine/objects/TextureManager.h>
+#include <Engine/objects/ModelManager.h>
+#include <Engine/Graphics/camera/CameraManager.h>
+#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/objects/particle/ParticleManager.h>
+#include <Engine/physics/light/LightManager.h>
 
 // editor
-#include "Engine/Editor/UiEditor.h"
-#include "Engine/objects/ModelBuilder.h"
+#include <Engine/Editor/UiEditor.h>
+#include <Engine/objects/ModelBuilder.h>
 
 // lib
-#include "lib/myFunc/PrimitiveDrawer.h"
+#include <lib/myFunc/PrimitiveDrawer.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  静的変数初期化
@@ -44,8 +45,8 @@ System::System() {}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight, const std::string windowTitle) {
-	winApp_ = std::make_unique<WinApp>(clientWidth, clientHeight, windowTitle);
+void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight, const std::string _windowTitle) {
+	winApp_ = std::make_unique<WinApp>(clientWidth, clientHeight, _windowTitle);
 	hInstance_ = hInstance;
 	hwnd_ = winApp_->GetHWND();
 

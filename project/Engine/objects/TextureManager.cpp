@@ -1,9 +1,11 @@
 #include "TextureManager.h"
-
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
 /* engine */
-#include "../graphics/GraphicsGroup.h"
+#include <Engine/Graphics/GraphicsGroup.h>
 #include <Engine/graphics/SrvLocator.h>
-#include "lib/ImGuiManager.h"
+#include <Engine/Application/UI/ImGuiManager.h>
 
 /* c++ */
 #include <cassert>

@@ -1,15 +1,18 @@
 #include "DebugCamera.h"
-
-// lib
-#include "lib/myFunc/MyFunc.h"
-#include "Engine/core/Input.h"
-
+/* ========================================================================
+/*		include space
+/* ===================================================================== */
 // Engine
+#include <lib/myFunc/MyFunc.h>
+#include <Engine/Application/Input/Input.h>
 #include "Engine/graphics/camera/CameraManager.h"
+#include <Engine/Graphics/camera/CameraManager.h>
+
+// externals
 #include <externals/imgui/imgui.h>
+
 // C++
 #include <algorithm>  // std::clamp
-#undef max
 #include <numbers>    // std::numbers::pi
 
 DebugCamera::DebugCamera()
@@ -169,6 +172,6 @@ void DebugCamera::Zoom(){
 	float wheel = Input::GetMouseWheel(); // 1フレーム当たりのホイール回転量
 	if (wheel != 0.0f){
 		distance_ -= wheel * (zoomSpeed_ * 5.0f);
-		distance_ = std::max(0.01f, distance_);
+		distance_ = (std::max)(0.01f, distance_);
 	}
 }

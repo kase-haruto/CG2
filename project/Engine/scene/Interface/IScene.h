@@ -3,13 +3,14 @@
 /* include space
 /* ===================================================================== */
 // engine
-#include <Engine/core/EngineUI.h>
+#include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <Engine/objects/SceneObject.h>
-#include "../SceneType.h"
+#include <Engine/scene/SceneType.h>
 
 // lib
 #include <vector>
 
+// forward declaration
 class DxCore;
 class SceneManager;
 class BaseCamera;

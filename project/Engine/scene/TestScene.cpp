@@ -3,22 +3,22 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // scene
-#include "../scene/TestScene.h"
+#include <Engine/scene/TestScene.h>
 
 // engine
-#include "Engine/core/Input.h"
-#include "Engine/core/Audio/Audio.h"
-#include "Engine/graphics/camera/CameraManager.h"
-#include "Engine/objects/particle/ParticleManager.h"
-#include "Engine/Collision/CollisionManager.h"
-#include "Engine/core/DirectX/DxCore.h"
-#include "Engine/objects/SceneObjectManager.h"
-#include "Engine/core/UI/EditorPanel.h"
-#include "Engine/physics/light/LightManager.h"
-#include "Engine/graphics/GraphicsGroup.h"
+#include <Engine/Application/Input/Input.h>
+#include <Engine/core/Audio/Audio.h>
+#include <Engine/graphics/camera/CameraManager.h>
+#include <Engine/objects/particle/ParticleManager.h>
+#include <Engine/Collision/CollisionManager.h>
+#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/Application/UI/Panels/EditorPanel.h>
+#include <Engine/physics/light/LightManager.h>
+#include <Engine/graphics/GraphicsGroup.h>
 
 // lib
-#include "lib/myFunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ
