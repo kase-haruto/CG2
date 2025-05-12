@@ -5,16 +5,18 @@
 #include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-
+#include <Engine/objects/Mesh/IMeshRenderable.h>
 #include <array> 
-
+#include <functional>
 struct Vector3;
 
-class SkyBox {
+class SkyBox :
+	public IMeshRenderable {
 public:
+	SkyBox(std::function<void(IMeshRenderable*)>);
 	void Initialize();
 	void Update(const Vector3& center, const Vector3& size);
-	void Draw();
+	void Draw()override;
 
 private:
 	std::array<VertexData, 8> vertices_;

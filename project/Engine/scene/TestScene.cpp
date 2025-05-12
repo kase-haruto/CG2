@@ -45,7 +45,7 @@ void TestScene::Initialize(){
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_ = std::make_unique<SkyBox>(registerToRenderer);
 	skyBox_->Initialize();
 
 	//objects
@@ -96,9 +96,6 @@ void TestScene::Update(){
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	PrimitiveDrawer::GetInstance()->DrawGrid();
-
-	// skyboxの描画
-	skyBox_->Draw();
 }
 
 

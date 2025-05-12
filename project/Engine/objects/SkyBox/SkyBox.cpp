@@ -6,6 +6,11 @@
 #include <Engine/graphics/camera/BaseCamera.h>
 #include <Engine/objects/TextureManager.h>
 
+
+SkyBox::SkyBox(std::function<void(IMeshRenderable*)>cb) {
+	cb(this);
+}
+
 void SkyBox::Initialize() {
 	auto device = GraphicsGroup::GetInstance()->GetDevice();
 	vertexBuffer_.Initialize(device, static_cast<UINT>(vertices_.size()));
