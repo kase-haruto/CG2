@@ -15,7 +15,5 @@ void BaseScene::Draw(){
 	auto commandList_ = pDxCore_->GetCommandList();	
 	sceneContext_->meshRenderer_->DrawAll();
 
-	GraphicsGroup::GetInstance()->SetCommand(commandList_, PipelineType::Line, BlendMode::NORMAL);
-	CameraManager::SetCommand(commandList_, PipelineType::Line);
-	PrimitiveDrawer::GetInstance()->Render();
+	
 }

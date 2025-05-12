@@ -9,13 +9,10 @@ public:
 	//==================================================================*//
 	//			singleton
 	//==================================================================*//
-	//コピー参照禁止
 	SceneObjectManager(const SceneObjectManager&) = delete;
 	SceneObjectManager& operator=(const SceneObjectManager&) = delete;
-	//ムーブ参照禁止
 	SceneObjectManager(SceneObjectManager&&) = delete;
 	SceneObjectManager& operator=(SceneObjectManager&&) = delete;
-	//インスタンス取得
 	static SceneObjectManager* GetInstance();
 
 public:

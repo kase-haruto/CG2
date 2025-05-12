@@ -10,4 +10,5 @@ enum PipelineType{
 	GrayScale,
 	RadialBlur,
 	Effect,
+	Skybox,
 };

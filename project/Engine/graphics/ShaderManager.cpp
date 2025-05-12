@@ -1,4 +1,4 @@
-﻿#include "../graphics/ShaderManager.h"
+#include "../graphics/ShaderManager.h"
 #include "lib/myFunc/ConvertString.h"
 
 /* c++ */
@@ -98,12 +98,13 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 
 bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath){
 	//ファイルパスをワイド文字列として結合
-    ComPtr<IDxcBlob> vertexShader = CompileShader(L"Resources/shaders/" + vsPath, L"vs_6_0");
-    ComPtr<IDxcBlob> pixelShader = CompileShader(L"Resources/shaders/" + psPath, L"ps_6_0");
+	//ファイルパスをワイド文字列として結合
+	ComPtr<IDxcBlob> vertexShader = CompileShader(L"Resources/shaders/" + vsPath, L"vs_6_0");
+	ComPtr<IDxcBlob> pixelShader = CompileShader(L"Resources/shaders/" + psPath, L"ps_6_0");
 
-    vertexShaders[type] = vertexShader;
-    pixelShaders[type] = pixelShader;
-    return true;
+	vertexShaders[type] = vertexShader;
+	pixelShaders[type] = pixelShader;
+	return true;
 }
 
 const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const PipelineType& type) const{

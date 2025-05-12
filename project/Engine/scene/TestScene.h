@@ -9,7 +9,7 @@
 #include "engine/graphics/ViewProjection.h"
 #include "engine/objects/ModelBuilder.h"
 #include "engine/Editor/UiEditor.h"
-#include "Engine/objects/Animation/AnimationModel.h"
+#include "Engine/objects/SkyBox/SkyBox.h"
 
 /* graphics */
 #include "engine/physics/light/DirectionalLight.h"
@@ -57,6 +57,8 @@ private:
 	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
+
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 
 	//テスト用
 	std::vector<std::unique_ptr<BaseGameObject>> humans_;

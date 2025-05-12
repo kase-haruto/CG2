@@ -28,7 +28,8 @@ void MeshRenderer::DrawAll(){
 	std::vector<IMeshRenderable*> staticModels;
 	std::vector<IMeshRenderable*> skinnedModels;
 	ID3D12GraphicsCommandList* commandList = GraphicsGroup::GetInstance()->GetCommandList().Get();
-	
+	LightManager* lightManager = LightManager::GetInstance();
+
 	for (auto* mesh : renderables_){
 		if (auto* skinned = dynamic_cast< AnimationModel* >(mesh)){
 			skinnedModels.push_back(skinned);
@@ -40,10 +41,8 @@ void MeshRenderer::DrawAll(){
 	//===================================================================*/
 	//                    静的モデル描画
 	//===================================================================*/
-	// light
-	LightManager::GetInstance()->SetCommand(commandList, LightType::Directional, PipelineType::Object3D);
-	LightManager::GetInstance()->SetCommand(commandList, LightType::Point, PipelineType::Object3D);
-	// camera
+	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::Object3D);
+	lightManager->SetCommand(commandList, LightType::Point, PipelineType::Object3D);
 	CameraManager::SetCommand(commandList, PipelineType::Object3D);
 
 	for (auto* mesh : staticModels){
@@ -53,13 +52,20 @@ void MeshRenderer::DrawAll(){
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	LightManager::GetInstance()->SetCommand(commandList, LightType::Directional, PipelineType::SkinningObject3D);
-	LightManager::GetInstance()->SetCommand(commandList, LightType::Point, PipelineType::SkinningObject3D);
+	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::SkinningObject3D);
+	lightManager->SetCommand(commandList, LightType::Point, PipelineType::SkinningObject3D);
 	CameraManager::SetCommand(commandList, PipelineType::SkinningObject3D);
 
 	for (auto* mesh : skinnedModels){
 		mesh->Draw();
 	}
+
+	//===================================================================*/
+	//                    プリミティブ描画
+	//===================================================================*/
+	GraphicsGroup::GetInstance()->SetCommand(commandList, PipelineType::Line, BlendMode::NORMAL);
+	CameraManager::SetCommand(commandList, PipelineType::Line);
+	PrimitiveDrawer::GetInstance()->Render();
 }
 
 void MeshRenderer::Clear(){
