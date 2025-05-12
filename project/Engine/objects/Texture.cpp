@@ -5,6 +5,7 @@
 
 /* c++ */
 #include <cassert>
+#include <d3dx12.h>
 
 Texture::Texture(const std::string& filePath) : filePath_(filePath) {}
 
@@ -53,7 +54,24 @@ void Texture::Upload(ID3D12Device* device) {
 	resourceDesc.DepthOrArraySize = UINT16(metadata_.arraySize);
 	resourceDesc.Format = metadata_.format;
 	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata_.dimension);
+	resourceDesc.SampleDesc.Quality = 0;
+	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	// ✅ Dimensionの修正（CubeMapでも2Dとして扱う）
+	switch (metadata_.dimension) {
+		case DirectX::TEX_DIMENSION_TEXTURE1D:
+			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+			break;
+		case DirectX::TEX_DIMENSION_TEXTURE2D:
+			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+			break;
+		case DirectX::TEX_DIMENSION_TEXTURE3D:
+			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+			break;
+		default:
+			assert(false && "Unsupported texture dimension");
+	}
 
 	D3D12_HEAP_PROPERTIES heapProperties = {};
 	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
@@ -66,21 +84,36 @@ void Texture::Upload(ID3D12Device* device) {
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&resource_));
+		IID_PPV_ARGS(&resource_)
+	);
 	assert(SUCCEEDED(hr));
 
-	for (size_t mipLevel = 0; mipLevel < metadata_.mipLevels; mipLevel++) {
-		const DirectX::Image* img = image_.GetImage(mipLevel, 0, 0);
-		hr = resource_->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
-		assert(SUCCEEDED(hr));
+	// ✅ mip + arraySize 両方に対応した書き込み
+	for (size_t item = 0; item < metadata_.arraySize; ++item) {
+		for (size_t mip = 0; mip < metadata_.mipLevels; ++mip) {
+			const DirectX::Image* img = image_.GetImage(mip, item, 0);
+			assert(img != nullptr);
+
+			UINT subresourceIndex = D3D12CalcSubresource(
+				UINT(mip),
+				UINT(item),
+				0,
+				UINT(metadata_.mipLevels),
+				UINT(metadata_.arraySize)
+			);
+
+			hr = resource_->WriteToSubresource(
+				subresourceIndex,
+				nullptr,
+				img->pixels,
+				UINT(img->rowPitch),
+				UINT(img->slicePitch)
+			);
+			assert(SUCCEEDED(hr));
+		}
 	}
 }
+
 
 void Texture::CreateShaderResourceView(ID3D12Device* device) {
 	auto srvHandle = SrvLocator::AllocateSrv();

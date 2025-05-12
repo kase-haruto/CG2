@@ -1432,7 +1432,7 @@ void System::SkyBoxPipeline() {
 
 	// RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizeDesc{};
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
 	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	// DepthStencilStateの設定

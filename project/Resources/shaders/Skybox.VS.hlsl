@@ -12,11 +12,13 @@ cbuffer ObjectConstants : register(b0){
 VertexShaderOutput main(VertexShaderInput input){
     VertexShaderOutput output;
 
-    
-    output.position = mul(input.position, ViewProjection).xyww;
+    float4 worldPos = mul(input.position, World);
+    float4 clipPos = mul(worldPos, ViewProjection);
+    clipPos.z = clipPos.w; // z = w にして奥行き最大
+    output.position = clipPos;
 
     // テクスチャ座標をそのまま出力
-    output.texcoord = input.position.xyz;
-
+    output.texcoord = normalize(input.position.xyz);
+    
     return output;
 }
