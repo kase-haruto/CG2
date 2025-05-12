@@ -45,7 +45,7 @@ void TestScene::Initialize(){
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_ = std::make_unique<SkyBox>("rostock_laage_airport_4k.dds",registerToRenderer);
 	skyBox_->Initialize();
 
 	//objects
@@ -85,7 +85,7 @@ void TestScene::Update(){
 	//地面
 	//modelField_->Update();
 
-	skyBox_->Update({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
+	skyBox_->Update({ 0.0f, 0.0f, 0.0f }, { 20.0f, 20.0f, 20.0f });
 
 	//test
 	bunny_->Update();
@@ -96,9 +96,6 @@ void TestScene::Update(){
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	PrimitiveDrawer::GetInstance()->DrawGrid();
-
-	// skyboxの描画
-	skyBox_->Draw();
 }
 
 
