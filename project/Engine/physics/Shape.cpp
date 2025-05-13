@@ -1,8 +1,12 @@
 #include "Shape.h"
+/* ========================================================================
+/*include Space
+/* ===================================================================== */
+// engine
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <lib/MyFunc/MyFunc.h>
 
-#include "lib/myFunc/PrimitiveDrawer.h"
-#include "lib/myFunc/myfunc.h"
-
+// c++
 #include <numbers>
 
 std::array<Vector3, 8> OBB::GetVertices() const{

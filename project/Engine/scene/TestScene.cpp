@@ -8,14 +8,14 @@
 // engine
 #include <Engine/Application/Input/Input.h>
 #include <Engine/core/Audio/Audio.h>
-#include <Engine/graphics/camera/CameraManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/objects/particle/ParticleManager.h>
 #include <Engine/Collision/CollisionManager.h>
-#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/objects/SceneObjectManager.h>
 #include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/physics/light/LightManager.h>
-#include <Engine/graphics/GraphicsGroup.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 // lib
 #include <lib/myFunc/MyFunc.h>

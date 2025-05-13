@@ -1,9 +1,9 @@
 #include "DirectionalLight.h"
 
 /* engine */
-#include "lib/myFunc/MyFunc.h"
-#include "engine/core/DirectX/DxCore.h"
-#include "engine/graphics/GraphicsGroup.h"
+#include <lib/myFunc/MyFunc.h>
+#include <Engine/Graphics/Device/DxCore.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 
 /* externals */

@@ -1,7 +1,7 @@
 #include "IScene.h"
 
 /* core */
-#include <Engine/core/DirectX/DxCore.h>
+#include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/objects/SceneObjectManager.h>
 
 

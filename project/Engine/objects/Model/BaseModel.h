@@ -8,9 +8,9 @@
 #include <engine/graphics/Material.h>
 #include <engine/objects/Transform.h>
 #include <lib/myMath/Vector4.h>
-#include <Engine/graphics/blendMode/BlendMode.h>
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-#include <Engine/graphics/Renderer/MeshRenderer.h>
+#include <Engine/Graphics/Renderer/MeshRenderer.h>
 
 /* c++ */
 #include <d3d12.h>

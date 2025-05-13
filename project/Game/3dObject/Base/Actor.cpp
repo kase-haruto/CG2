@@ -1,10 +1,10 @@
 #include "Actor.h"
 
-#include "Engine/core/System.h"
-#include "lib/myFunc/MyFunc.h"
-#include "Engine/core/Json/JsonCoordinator.h"
-#include "Engine/core/Clock/ClockManager.h"
-#include "Engine/objects/Mesh/IMeshRenderable.h"
+#include <Engine/core/System.h>
+#include <lib/myFunc/MyFunc.h>
+#include <engine/core/Json/JsonCoordinator.h>
+#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Graphics/Renderer/IMeshRenderable.h>
 
 Actor::Actor(const std::string& modelName,
 			 std::optional<std::string> objectName,

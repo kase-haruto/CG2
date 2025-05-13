@@ -1,11 +1,11 @@
 #include "BaseModel.h"
 
-#include "lib/myFunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 #include "../ModelManager.h"
 #include "../TextureManager.h"
 
-#include "Engine/graphics/camera/CameraManager.h"
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 #include "externals/imgui/imgui.h"
 #define IMGUIZMO_USE_LH

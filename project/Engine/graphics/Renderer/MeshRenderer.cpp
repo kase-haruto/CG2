@@ -1,11 +1,11 @@
 #include "MeshRenderer.h"
-#include <lib/myFunc/PrimitiveDrawer.h>
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/objects/Animation/AnimationModel.h>
 #include <Engine/objects/Model/Model.h>
 #include <Engine/objects/SkyBox/SkyBox.h>
-#include <Engine/graphics/camera/CameraManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <lib/myMath/Matrix4x4.h>
-#include <Engine/graphics/GraphicsGroup.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/physics/light/LightManager.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 #include "ParticleEmitShape.h"
 
 #include "lib/myFunc/Random.h"
-#include "lib/myFunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 #include <numbers>
 

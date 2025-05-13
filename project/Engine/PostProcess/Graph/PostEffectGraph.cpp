@@ -1,5 +1,5 @@
 #include "PostEffectGraph.h"
-#include <Engine/core/DirectX/RenderTarget/IRenderTarget.h>
+#include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 
 void PostEffectGraph::AddPass(IPostEffectPass* pass){
 	passes_.push_back(pass);

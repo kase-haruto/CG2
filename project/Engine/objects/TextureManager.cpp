@@ -3,8 +3,8 @@
 /*	include space
 /* ===================================================================== */
 /* engine */
-#include <Engine/Graphics/GraphicsGroup.h>
-#include <Engine/graphics/SrvLocator.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
 #include <Engine/Application/UI/ImGuiManager.h>
 
 /* c++ */

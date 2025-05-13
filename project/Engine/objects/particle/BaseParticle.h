@@ -4,11 +4,11 @@
 /* ===================================================================== */
 
 /* engine */
-#include "engine/objects/ModelData.h"
-#include "engine/graphics/Material.h"
-#include "engine/objects/TransformationMatrix.h"
-#include "engine/objects/Transform.h"
-#include "Engine/graphics/blendMode/BlendMode.h"
+#include <Engine/objects/ModelData.h>
+#include <Engine/Graphics/Material.h>
+#include <Engine/objects/TransformationMatrix.h>
+#include <Engine/objects/Transform.h>
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxStructuredBuffer.h>

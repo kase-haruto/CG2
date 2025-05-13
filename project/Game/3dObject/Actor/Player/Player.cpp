@@ -8,7 +8,7 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/core/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
-#include <Engine/graphics/camera/CameraManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/core/Enviroment.h>
 #include <Engine/core/Math/Ease.h>
 

@@ -4,7 +4,7 @@
 //#include "../graphics/GraphicsGroup.h"
 //#include "../graphics/camera/CameraManager.h"
 //
-//#include "lib/myfunc/MyFunc.h"
+//#include <lib/myFunc/MyFunc.h>
 //
 ////* externals *//
 //#include <Engine/objects/TextureManager.h"

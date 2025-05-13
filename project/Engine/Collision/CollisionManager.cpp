@@ -1,6 +1,6 @@
 #include "CollisionManager.h"
 
-#include "lib/myFunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 #include <externals/imgui/imgui.h>
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DxBuffer.h"
-#include <Engine/graphics/SrvLocator.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
 
 template<typename T>
 class DxStructuredBuffer

@@ -9,14 +9,13 @@
 #include <Engine/objects/SkyBox/SkyBox.h>
 
 /* graphics */
-#include "engine/physics/light/DirectionalLight.h"
-#include "engine/physics/light/PointLight.h"
-#include "engine/graphics/FogEffect.h"
+#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/physics/light/PointLight.h>
+#include <Engine/Graphics/Effect/FogEffect.h>
 
 /* object */
-#include "lib/myFunc/PrimitiveDrawer.h"
-#include "Engine/objects/particle/DemoParticle.h"
-#include "lib/myMath/Quaternion.h"
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <lib/myMath/Quaternion.h>
 
 /* c++ */
 #include <vector>

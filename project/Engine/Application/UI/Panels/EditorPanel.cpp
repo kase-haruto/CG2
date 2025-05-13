@@ -1,7 +1,9 @@
 #include "EditorPanel.h"
-
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
 // engine
-#include <Engine/core/UI/SelectionManager.h>
+#include <Engine/Application/UI/EngineUI/SelectionManager.h>
 
 // lib
 #include <externals/imgui/imgui.h>

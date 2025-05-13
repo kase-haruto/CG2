@@ -6,11 +6,11 @@
 #include "engine/objects/Transform.h"
 #include "lib/myMath/Vector4.h"
 
-#include "engine/graphics/GraphicsGroup.h"
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include "engine/objects/TextureManager.h"
 #include "engine/objects/ModelManager.h"
 #include "engine/graphics/VertexData.h"
-#include "Engine/graphics/camera/CameraManager.h"
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include "Engine/core/System.h"
 #include "Engine/core/Clock/ClockManager.h"
 
@@ -20,7 +20,7 @@
 #include "externals/imgui/imgui.h"
 #endif
 
-#include "lib/myfunc/MyFunc.h" // 必要に応じて
+#include <lib/myFunc/MyFunc.h> // 必要に応じて
 
 Model::Model(const std::string& fileName){
 	fileName_ = fileName;

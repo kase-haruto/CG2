@@ -1,8 +1,8 @@
 #include "Character.h"
 
 #include "Engine/core/System.h"
-#include "lib/myFunc/MyFunc.h"
-#include "Engine/core/Json/JsonCoordinator.h"
+#include <lib/myFunc/MyFunc.h>
+#include <engine/core/Json/JsonCoordinator.h>
 #include "Engine/core/Clock/ClockManager.h"
 
 Character::Character(const std::string& modelName)

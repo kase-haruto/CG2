@@ -111,7 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\BoxDrawer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\BoxDrawer.cpp" />
     <ClCompile Include="Engine\core\DirectX\Buffer\CameraBuffer.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
     <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
@@ -123,8 +123,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\DebugCamera.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\BaseCamera.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\DebugCamera.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\Base\BaseCamera.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
@@ -149,37 +149,35 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\Collider\Collider.cpp" />
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\physics\Shape.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\FollowCamera.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\FollowCamera.cpp" />
     <ClCompile Include="Game\3d\Base\BaseGameObject.cpp" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\CameraManager.cpp" />
-    <ClCompile Include="Engine\core\DirectX\DxCommand.cpp" />
-    <ClCompile Include="Engine\core\DirectX\DxCore.cpp" />
-    <ClCompile Include="Engine\core\DirectX\DxDevice.cpp" />
-    <ClCompile Include="Engine\core\DirectX\DxFence.cpp" />
-    <ClCompile Include="Engine\core\DirectX\DxSwapChain.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\Manager\CameraManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Context\DxCommand.cpp" />
+    <ClCompile Include="Engine\Graphics\Device\DxCore.cpp" />
+    <ClCompile Include="Engine\Graphics\Device\DxDevice.cpp" />
+    <ClCompile Include="Engine\Graphics\Context\DxFence.cpp" />
+    <ClCompile Include="Engine\Graphics\SwapChain\DxSwapChain.cpp" />
     <ClCompile Include="Engine\Application\Core\EngineController.cpp" />
     <ClCompile Include="Engine\Application\Input\Input.cpp" />
     <ClCompile Include="Engine\core\LeakChecker.cpp" />
     <ClCompile Include="Engine\core\System.cpp" />
     <ClCompile Include="Engine\core\WinApp.cpp" />
     <ClCompile Include="Engine\Editor\UiEditor.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\Camera3d.cpp" />
-    <ClCompile Include="Engine\Graphics\FogEffect.cpp" />
-    <ClCompile Include="Engine\Graphics\GraphicsGroup.cpp" />
-    <ClCompile Include="Engine\Graphics\PipelineState.cpp" />
-    <ClCompile Include="Engine\Graphics\PipelineStateManager.cpp" />
-    <ClCompile Include="Engine\Graphics\PipelineStateObject.cpp" />
-    <ClCompile Include="Engine\Graphics\RootSignatureManager.cpp" />
-    <ClCompile Include="Engine\Graphics\ShaderManager.cpp" />
-    <ClCompile Include="Engine\Graphics\shaders\ShaderCompiler.cpp" />
-    <ClCompile Include="Engine\Graphics\SrvLocator.cpp" />
-    <ClCompile Include="Engine\Graphics\ViewProjection.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\Camera3d.cpp" />
+    <ClCompile Include="Engine\Graphics\Effect\FogEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\Context\GraphicsGroup.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Pso\PipelineState.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Pso\PipelineStateObject.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\RootSig\RootSignatureManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Shader\ShaderManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Shader\ShaderCompiler.cpp" />
+    <ClCompile Include="Engine\Graphics\Descriptor\SrvLocator.cpp" />
     <ClCompile Include="Engine\objects\Model\Model.cpp" />
     <ClCompile Include="Engine\objects\ModelBuilder.cpp" />
     <ClCompile Include="Engine\objects\ModelManager.cpp" />
@@ -208,8 +206,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\InspectorPanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
-    <ClCompile Include="Engine\Graphics\camera\ICamera.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
     <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
     <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
@@ -218,12 +215,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myFunc\DxFunc.cpp" />
     <ClCompile Include="lib\myFunc\MathFunc.cpp" />
     <ClCompile Include="lib\myFunc\MyFunc.cpp" />
-    <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\PrimitiveDrawer.cpp" />
     <ClCompile Include="lib\myMath\Matrix4x4.cpp" />
     <ClCompile Include="lib\myMath\Vector3.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\LineMesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -238,23 +235,23 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
-    <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\SelectionManager.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\SwapChainRT\SwapChainRenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\OffscreenRT\OffscreenRenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\Collection\RenderTargetCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
     <ClCompile Include="Engine\objects\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\BoxDrawer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\BoxDrawer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\CameraBuffer.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
@@ -268,14 +265,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
-    <ClInclude Include="Engine\Graphics\blendMode\BlendMode.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\BlendMode\BlendMode.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineType.h" />
     <ClInclude Include="Engine\physics\light\LightData.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />
     <ClInclude Include="Engine\core\Math\Ease.h" />
-    <ClInclude Include="Engine\Graphics\camera\DebugCamera.h" />
-    <ClInclude Include="Engine\Graphics\camera\BaseCamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\DebugCamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Base\BaseCamera.h" />
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
@@ -301,20 +298,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\Collider\Collider.h" />
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\physics\Shape.h" />
-    <ClInclude Include="Engine\Graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\FollowCamera.h" />
     <ClInclude Include="Game\3d\Base\BaseGameObject.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
-    <ClInclude Include="Engine\Graphics\camera\CameraManager.h" />
-    <ClInclude Include="Engine\core\DirectX\DxCommand.h" />
-    <ClInclude Include="Engine\core\DirectX\DxCore.h" />
-    <ClInclude Include="Engine\core\DirectX\DxDevice.h" />
-    <ClInclude Include="Engine\core\DirectX\DxFence.h" />
-    <ClInclude Include="Engine\core\DirectX\DxSwapChain.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Manager\CameraManager.h" />
+    <ClInclude Include="Engine\Graphics\Context\DxCommand.h" />
+    <ClInclude Include="Engine\Graphics\Device\DxCore.h" />
+    <ClInclude Include="Engine\Graphics\Device\DxDevice.h" />
+    <ClInclude Include="Engine\Graphics\Context\DxFence.h" />
+    <ClInclude Include="Engine\Graphics\SwapChain\DxSwapChain.h" />
     <ClInclude Include="Engine\Application\Core\EngineController.h" />
     <ClInclude Include="Engine\core\Enviroment.h" />
     <ClInclude Include="Engine\Application\Input\Input.h" />
@@ -323,19 +319,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\core\WinApp.h" />
     <ClInclude Include="Engine\Editor\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\UiEditor.h" />
-    <ClInclude Include="Engine\Graphics\camera\Camera3d.h" />
-    <ClInclude Include="Engine\Graphics\FogEffect.h" />
-    <ClInclude Include="Engine\Graphics\GraphicsGroup.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\Camera3d.h" />
+    <ClInclude Include="Engine\Graphics\Effect\FogEffect.h" />
+    <ClInclude Include="Engine\Graphics\Context\GraphicsGroup.h" />
     <ClInclude Include="Engine\Graphics\Material.h" />
-    <ClInclude Include="Engine\Graphics\PipelineState.h" />
-    <ClInclude Include="Engine\Graphics\PipelineStateManager.h" />
-    <ClInclude Include="Engine\Graphics\PipelineStateObject.h" />
-    <ClInclude Include="Engine\Graphics\RootSignatureManager.h" />
-    <ClInclude Include="Engine\Graphics\ShaderManager.h" />
-    <ClInclude Include="Engine\Graphics\shaders\ShaderCompiler.h" />
-    <ClInclude Include="Engine\Graphics\SrvLocator.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Pso\PipelineState.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Pso\PipelineStateObject.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\RootSig\RootSignatureManager.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Shader\ShaderManager.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Shader\ShaderCompiler.h" />
+    <ClInclude Include="Engine\Graphics\Descriptor\SrvLocator.h" />
     <ClInclude Include="Engine\Graphics\VertexData.h" />
-    <ClInclude Include="Engine\Graphics\ViewProjection.h" />
     <ClInclude Include="Engine\objects\Model\Model.h" />
     <ClInclude Include="Engine\objects\ModelBuilder.h" />
     <ClInclude Include="Engine\objects\ModelData.h" />
@@ -368,9 +363,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />
     <ClInclude Include="Engine\Application\UI\Panels\InspectorPanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
-    <ClInclude Include="Engine\Graphics\camera\ICamera.h" />
-    <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\IMeshRenderable.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\Interface\IRenderTarget.h" />
     <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
     <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
     <ClInclude Include="Game\3d\GameCamera\RailCamera.h" />
@@ -379,7 +374,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="lib\myFunc\DxFunc.h" />
     <ClInclude Include="lib\myFunc\MathFunc.h" />
     <ClInclude Include="lib\myFunc\MyFunc.h" />
-    <ClInclude Include="lib\myFunc\PrimitiveDrawer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\PrimitiveDrawer.h" />
     <ClInclude Include="lib\myFunc\Random.h" />
     <ClInclude Include="lib\myMath\Mat3.h" />
     <ClInclude Include="lib\myMath\Matrix4x4.h" />
@@ -396,18 +391,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
-    <ClInclude Include="Engine\core\UI\SelectionManager.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\SelectionManager.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\Graphics\Renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\scene\Context\SceneContext.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\PrimitiveMesh.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\LineMesh.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\SwapChainRT\SwapChainRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\OffscreenRT\OffscreenRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\Collection\RenderTargetCollection.h" />
     <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
     <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
     <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />

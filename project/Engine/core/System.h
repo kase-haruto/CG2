@@ -4,9 +4,8 @@
 /*	include space
 /* ===================================================================== */
 // engine
-#include <Engine/core/DirectX/DxCore.h>
-#include <Engine/Graphics/ShaderManager.h>
-#include <Engine/Graphics/PipelineStateManager.h>
+#include <Engine/Graphics/Device/DxCore.h>
+#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 #include <Engine/Application/UI/ImGuiManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Editor/EffectEditor.h>

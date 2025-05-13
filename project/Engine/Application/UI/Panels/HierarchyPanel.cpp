@@ -5,7 +5,7 @@
 // engine
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>
 #include <Engine/Application/UI/Panels/InspectorPanel.h>
-#include <Engine/core/UI/SelectionManager.h>
+#include <Engine/Application/UI/EngineUI/SelectionManager.h>
 #include <Engine/objects/SceneObjectManager.h>
 
 // lib
