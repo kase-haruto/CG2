@@ -20,7 +20,7 @@ public:
 	~SkyBox()override = default;
 	void Initialize();
 	void ShowGui()override;
-	void Update(const Vector3& center, const Vector3& size);
+	void Update();
 	void Draw()override;
 
 private:
