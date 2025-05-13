@@ -1,7 +1,7 @@
 #pragma once
 
 // engine
-#include "Engine/core/DirectX/DxCore.h"
+#include <Engine/Graphics/Device/DxCore.h>
 
 // scene
 #include <Engine/scene/Interface/IScene.h>

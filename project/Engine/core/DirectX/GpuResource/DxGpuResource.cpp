@@ -1,6 +1,12 @@
 #include "DxGpuResource.h"
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+// engine
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
+
+// c++
 #include <stdexcept>
-#include "Engine/graphics/SrvLocator.h"
 
 void DxGpuResource::InitializeAsRenderTarget(ID3D12Device* device,
 											 uint32_t width,

@@ -1,6 +1,12 @@
 #include "Transform.h"
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 
-#include <Engine/graphics/GraphicsGroup.h>
+// engine
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+
+// lib
 #include <lib/myFunc/MyFunc.h>
 #include <externals/imgui/imgui.h>
 
@@ -13,9 +19,6 @@ void EulerTransform::ShowImGui(const std::string& lavel){
 	}
 }
 
-/* ========================================================================
-/* baseTransform class
-/* ===================================================================== */
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +31,6 @@ void BaseTransform::Initialize(){
 	//バッファの作成
 	DxConstantBuffer::Initialize(GraphicsGroup::GetInstance()->GetDevice());
 }
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	imgui

@@ -246,7 +246,7 @@
     <ClCompile Include="Engine\core\System.cpp">
       <Filter>Engine\project\base\framework</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\EngineController.cpp">
+    <ClCompile Include="Engine\Application\Core\EngineController.cpp">
       <Filter>Engine\project\base\framework</Filter>
     </ClCompile>
     <ClCompile Include="lib\myFunc\MyFunc.cpp">
@@ -264,43 +264,40 @@
     <ClCompile Include="Engine\objects\Sprite.cpp">
       <Filter>Engine\project\2d\sprite</Filter>
     </ClCompile>
-    <ClCompile Include="lib\ImGuiManager.cpp">
+    <ClCompile Include="Engine\Application\UI\ImGuiManager.cpp">
       <Filter>Engine\project\manager\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\objects\ModelManager.cpp">
       <Filter>Engine\project\manager\model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\PipelineStateManager.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.cpp">
       <Filter>Engine\project\manager\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\RootSignatureManager.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\RootSig\RootSignatureManager.cpp">
       <Filter>Engine\project\manager\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\ShaderManager.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Shader\ShaderManager.cpp">
       <Filter>Engine\project\manager\shader</Filter>
     </ClCompile>
     <ClCompile Include="Engine\objects\TextureManager.cpp">
       <Filter>Engine\project\manager\texture</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\Input.cpp">
+    <ClCompile Include="Engine\Application\Input\Input.cpp">
       <Filter>Engine\project\input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\DxCore.cpp">
+    <ClCompile Include="Engine\Graphics\Device\DxCore.cpp">
       <Filter>Engine\project\base\directX\core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\DxDevice.cpp">
+    <ClCompile Include="Engine\Graphics\Device\DxDevice.cpp">
       <Filter>Engine\project\base\directX\device</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\DxFence.cpp">
+    <ClCompile Include="Engine\Graphics\Context\DxFence.cpp">
       <Filter>Engine\project\base\directX\fence</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\DxSwapChain.cpp">
+    <ClCompile Include="Engine\Graphics\SwapChain\DxSwapChain.cpp">
       <Filter>Engine\project\base\directX\swapChain</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\RenderTarget.cpp">
-      <Filter>Engine\project\base\directX\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\core\DirectX\DxCommand.cpp">
+    <ClCompile Include="Engine\Graphics\Context\DxCommand.cpp">
       <Filter>Engine\project\base\directX\command</Filter>
     </ClCompile>
     <ClCompile Include="lib\myFunc\DxFunc.cpp">
@@ -309,22 +306,19 @@
     <ClCompile Include="lib\myMath\Matrix4x4.cpp">
       <Filter>Engine\project\math\matrix</Filter>
     </ClCompile>
-    <ClCompile Include="lib\myFunc\PrimitiveDrawer.cpp">
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\PrimitiveDrawer.cpp">
       <Filter>Engine\project\3d\objects\primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\PipelineState.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Pso\PipelineState.cpp">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\PipelineStateObject.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Pso\PipelineStateObject.cpp">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClCompile>
     <ClCompile Include="lib\myFunc\MathFunc.cpp">
       <Filter>Engine\project\math\function</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\ViewProjection.cpp">
-      <Filter>Engine\project\3d\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\graphics\shaders\ShaderCompiler.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Shader\ShaderCompiler.cpp">
       <Filter>Engine\project\lib\shaderCompiler</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Editor\UiEditor.cpp">
@@ -339,18 +333,18 @@
     <ClCompile Include="Engine\core\WinApp.cpp">
       <Filter>Engine\project\base\window</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\FogEffect.cpp">
+    <ClCompile Include="Engine\Graphics\Effect\FogEffect.cpp">
       <Filter>Engine\project\3d\graphics\fog</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\GraphicsGroup.cpp">
+    <ClCompile Include="Engine\Graphics\Context\GraphicsGroup.cpp">
       <Filter>Engine\project\3d\graphics\graphicLocator</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\graphics\SrvLocator.cpp">
+    <ClCompile Include="Engine\Graphics\Descriptor\SrvLocator.cpp">
       <Filter>Engine\project\3d\graphics\srv</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\graphics\camera\Camera3d.cpp" />
-    <ClCompile Include="Engine\graphics\camera\CameraManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\Camera3d.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\Manager\CameraManager.cpp" />
     <ClCompile Include="Engine\objects\particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\objects\particle\Particle.cpp" />
@@ -364,51 +358,50 @@
     <ClCompile Include="Engine\objects\particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
-    <ClCompile Include="Engine\core\EngineUI.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\EngineUI.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
     <ClCompile Include="Engine\scene\DemoScene.cpp" />
-    <ClCompile Include="Engine\core\UI\IEngineUI.cpp" />
-    <ClCompile Include="Engine\core\UI\HierarchyPanel.cpp" />
-    <ClCompile Include="Engine\core\UI\InspectorPanel.cpp" />
-    <ClCompile Include="Engine\core\UI\ConsolePanel.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\IEngineUI.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\InspectorPanel.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\ConsolePanel.cpp" />
     <ClCompile Include="Engine\objects\SceneObject.cpp" />
     <ClCompile Include="Engine\objects\SceneObjectManager.cpp" />
-    <ClCompile Include="Engine\graphics\camera\FollowCamera.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\FollowCamera.cpp" />
     <ClCompile Include="Game\3d\Base\Character.cpp" />
-    <ClCompile Include="Engine\core\UI\SceneSwitcherPanel.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
     <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
     <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
-    <ClCompile Include="Engine\graphics\camera\ICamera.cpp" />
-    <ClCompile Include="Engine\graphics\camera\BaseCamera.cpp" />
-    <ClCompile Include="Engine\graphics\camera\DebugCamera.cpp" />
-    <ClCompile Include="Engine\core\UI\ParticleEditPanel.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\Base\BaseCamera.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera\3d\DebugCamera.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\core\Math\Ease.cpp" />
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
     <ClCompile Include="Engine\scene\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
-    <ClCompile Include="Engine\core\UI\EditorPanel.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
-    <ClCompile Include="Engine\core\UI\SelectionManager.cpp" />
-    <ClCompile Include="Engine\graphics\Material.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\SelectionManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Material.cpp" />
     <ClCompile Include="Engine\objects\Transform.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\IMeshRenderable.cpp" />
-    <ClCompile Include="Engine\graphics\Renderer\MeshRenderer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\IMeshRenderable.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Line\LineMesh.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\PrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\LineMesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectCollection.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.cpp" />
-    <ClCompile Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\SwapChainRT\SwapChainRenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\OffscreenRT\OffscreenRenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\RenderTarget\Collection\RenderTargetCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
     <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
     <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
@@ -425,7 +418,7 @@
     <ClCompile Include="Game\3dObject\Base\Actor.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
     <ClCompile Include="Engine\core\DirectX\Buffer\CameraBuffer.cpp" />
-    <ClCompile Include="Engine\objects\Mesh\Primitive\Drawer\BoxDrawer.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer\Primitive\BoxDrawer.cpp" />
     <ClCompile Include="Engine\objects\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -465,7 +458,7 @@
     <ClInclude Include="Engine\core\System.h">
       <Filter>Engine\project\base\framework</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\EngineController.h">
+    <ClInclude Include="Engine\Application\Core\EngineController.h">
       <Filter>Engine\project\base\framework</Filter>
     </ClInclude>
     <ClInclude Include="Engine\physics\AABB.h">
@@ -483,19 +476,19 @@
     <ClInclude Include="Engine\objects\Sprite.h">
       <Filter>Engine\project\2d\sprite</Filter>
     </ClInclude>
-    <ClInclude Include="lib\ImGuiManager.h">
+    <ClInclude Include="Engine\Application\UI\ImGuiManager.h">
       <Filter>Engine\project\manager\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\objects\ModelManager.h">
       <Filter>Engine\project\manager\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\PipelineStateManager.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.h">
       <Filter>Engine\project\manager\pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\RootSignatureManager.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\RootSig\RootSignatureManager.h">
       <Filter>Engine\project\manager\pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\ShaderManager.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Shader\ShaderManager.h">
       <Filter>Engine\project\manager\shader</Filter>
     </ClInclude>
     <ClInclude Include="Engine\objects\TextureManager.h">
@@ -507,26 +500,23 @@
     <ClInclude Include="externals\GlobalVariable\GlobalVariables.h">
       <Filter>Engine\project\lib</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\Input.h">
+    <ClInclude Include="Engine\Application\Input\Input.h">
       <Filter>Engine\project\input</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\DxCore.h">
+    <ClInclude Include="Engine\Graphics\Device\DxCore.h">
       <Filter>Engine\project\base\directX\core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\DxDevice.h">
+    <ClInclude Include="Engine\Graphics\Device\DxDevice.h">
       <Filter>Engine\project\base\directX\device</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\DxFence.h">
+    <ClInclude Include="Engine\Graphics\Context\DxFence.h">
       <Filter>Engine\project\base\directX\fence</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\DxSwapChain.h">
+    <ClInclude Include="Engine\Graphics\SwapChain\DxSwapChain.h">
       <Filter>Engine\project\base\directX\swapChain</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\DxCommand.h">
+    <ClInclude Include="Engine\Graphics\Context\DxCommand.h">
       <Filter>Engine\project\base\directX\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\core\DirectX\RenderTarget.h">
-      <Filter>Engine\project\base\directX\renderer</Filter>
     </ClInclude>
     <ClInclude Include="lib\myFunc\DxFunc.h">
       <Filter>Engine\project\lib\function</Filter>
@@ -546,13 +536,13 @@
     <ClInclude Include="lib\myMath\Mat3.h">
       <Filter>Engine\project\math\matrix</Filter>
     </ClInclude>
-    <ClInclude Include="lib\myFunc\PrimitiveDrawer.h">
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\PrimitiveDrawer.h">
       <Filter>Engine\project\3d\objects\primitive</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\PipelineState.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Pso\PipelineState.h">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\PipelineStateObject.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Pso\PipelineStateObject.h">
       <Filter>Engine\project\base\directX\pipeline</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
@@ -570,10 +560,7 @@
     <ClInclude Include="lib\myFunc\MathFunc.h">
       <Filter>Engine\project\math\function</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\ViewProjection.h">
-      <Filter>Engine\project\3d\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\graphics\shaders\ShaderCompiler.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Shader\ShaderCompiler.h">
       <Filter>Engine\project\lib\shaderCompiler</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Editor\UiEditor.h">
@@ -591,7 +578,7 @@
     <ClInclude Include="Engine\core\LeakChecker.h">
       <Filter>Engine\project\lib\debug</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\VertexData.h">
+    <ClInclude Include="Engine\Graphics\VertexData.h">
       <Filter>Engine\project\structs</Filter>
     </ClInclude>
     <ClInclude Include="Engine\objects\TransformationMatrix.h">
@@ -600,7 +587,7 @@
     <ClInclude Include="Engine\objects\Transform.h">
       <Filter>Engine\project\structs</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\Material.h">
+    <ClInclude Include="Engine\Graphics\Material.h">
       <Filter>Engine\project\structs</Filter>
     </ClInclude>
     <ClInclude Include="Engine\core\Enviroment.h">
@@ -609,17 +596,17 @@
     <ClInclude Include="Engine\core\WinApp.h">
       <Filter>Engine\project\base\window</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\FogEffect.h">
+    <ClInclude Include="Engine\Graphics\Effect\FogEffect.h">
       <Filter>Engine\project\3d\graphics\fog</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\GraphicsGroup.h">
+    <ClInclude Include="Engine\Graphics\Context\GraphicsGroup.h">
       <Filter>Engine\project\3d\graphics\graphicLocator</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\SrvLocator.h">
+    <ClInclude Include="Engine\Graphics\Descriptor\SrvLocator.h">
       <Filter>Engine\project\3d\graphics\srv</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\graphics\camera\Camera3d.h" />
-    <ClInclude Include="Engine\graphics\camera\CameraManager.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\Camera3d.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Manager\CameraManager.h" />
     <ClInclude Include="lib\myFunc\Random.h" />
     <ClInclude Include="Engine\objects\particle\BaseParticle.h" />
     <ClInclude Include="Engine\objects\particle\DemoParticle.h" />
@@ -634,38 +621,38 @@
     <ClInclude Include="Engine\objects\particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
-    <ClInclude Include="Engine\core\EngineUI.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\EngineUI.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
     <ClInclude Include="Engine\scene\DemoScene.h" />
-    <ClInclude Include="Engine\core\UI\IEngineUI.h" />
-    <ClInclude Include="Engine\core\UI\HierarchyPanel.h" />
-    <ClInclude Include="Engine\core\UI\InspectorPanel.h" />
-    <ClInclude Include="Engine\core\UI\ConsolePanel.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\IEngineUI.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\InspectorPanel.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\ConsolePanel.h" />
     <ClInclude Include="Engine\objects\SceneObject.h" />
     <ClInclude Include="Engine\objects\SceneObjectManager.h" />
-    <ClInclude Include="Engine\graphics\camera\FollowCamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\FollowCamera.h" />
     <ClInclude Include="Game\3d\Base\Character.h" />
-    <ClInclude Include="Engine\core\UI\SceneSwitcherPanel.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
     <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\objects\Model\BaseModel.h" />
-    <ClInclude Include="Engine\graphics\camera\ICamera.h" />
-    <ClInclude Include="Engine\graphics\camera\BaseCamera.h" />
-    <ClInclude Include="Engine\graphics\camera\DebugCamera.h" />
-    <ClInclude Include="Engine\core\UI\ParticleEditPanel.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\Base\BaseCamera.h" />
+    <ClInclude Include="Engine\Graphics\Camera\3d\DebugCamera.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\core\Math\Ease.h" />
     <ClInclude Include="Engine\core\Audio\Audio.h" />
     <ClInclude Include="Engine\core\Clock\ClockManager.h" />
-    <ClInclude Include="Engine\graphics\blendMode\BlendMode.h" />
-    <ClInclude Include="Engine\graphics\Pipeline\PipelineType.h" />
-    <ClInclude Include="Engine\graphics\Pipeline\PipelineKey.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\BlendMode\BlendMode.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\PipelineType.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\physics\light\LightData.h" />
     <ClInclude Include="Engine\scene\SceneFactory.h" />
-    <ClInclude Include="Engine\core\UI\EditorPanel.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
-    <ClInclude Include="Engine\core\UI\SelectionManager.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\SelectionManager.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
@@ -673,21 +660,21 @@
     <ClInclude Include="Engine\scene\SceneType.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
-    <ClInclude Include="Engine\objects\Mesh\IMeshRenderable.h" />
-    <ClInclude Include="Engine\graphics\Renderer\MeshRenderer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\IMeshRenderable.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\MeshRenderer.h" />
     <ClInclude Include="Engine\scene\Context\SceneContext.h" />
     <ClInclude Include="Engine\scene\Base\BaseScene.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\PrimitiveMesh.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Line\LineMesh.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\LineDrawer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\PrimitiveMesh.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\LineMesh.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectCollection.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\IRenderTarget.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\SwapChainRenderTarget.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\OffscreenRenderTarget.h" />
-    <ClInclude Include="Engine\core\DirectX\RenderTarget\RenderTargetCollection.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\Interface\IRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\SwapChainRT\SwapChainRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\OffscreenRT\OffscreenRenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\RenderTarget\Collection\RenderTargetCollection.h" />
     <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
     <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
     <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
@@ -705,7 +692,7 @@
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
     <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\CameraBuffer.h" />
-    <ClInclude Include="Engine\objects\Mesh\Primitive\Drawer\BoxDrawer.h" />
+    <ClInclude Include="Engine\Graphics\Renderer\Primitive\BoxDrawer.h" />
     <ClInclude Include="Engine\objects\SkyBox\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>

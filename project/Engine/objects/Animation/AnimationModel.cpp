@@ -6,14 +6,14 @@
 #include <engine/objects/Transform.h>
 #include <lib/myMath/Vector4.h>
 
-#include <engine/graphics/GraphicsGroup.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <engine/core/System.h>
 #include <Engine/core/Clock/ClockManager.h>
 #include <engine/objects/TextureManager.h>
 #include <engine/objects/ModelManager.h>
 #include <engine/graphics/VertexData.h>
 #include <engine/physics/light/DirectionalLight.h>
-#include <engine/graphics/camera/CameraManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <engine/physics/light/LightManager.h>
 
 #ifdef _DEBUG

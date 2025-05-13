@@ -3,12 +3,11 @@
 ////////////////////////////////////////////////////////////
 //	include
 ////////////////////////////////////////////////////////////
-#include "Engine/scene/Base/BaseScene.h"
+#include <Engine/scene/Base/BaseScene.h>
 
 /* objects */
 #include <Engine/objects/ModelBuilder.h>
 #include <Engine/Editor/UiEditor.h>
-#include <Engine/core/UI/ParticleEditPanel.h>
 #include <Engine/objects/Sprite.h>  
 #include <Game/3d/Base/BaseGameObject.h>
 #include <Game/3dObject/Actor/Player/Player.h>
@@ -17,11 +16,11 @@
 /* graphics */
 #include <Engine/physics/light/DirectionalLight.h>
 #include <Engine/physics/light/PointLight.h>
-#include <Engine/graphics/FogEffect.h>
+#include <Engine/Graphics/Effect/FogEffect.h>
 #include <Game/3d/GameCamera/RailCamera.h>
 
 /* object */
-#include <lib/myFunc/PrimitiveDrawer.h>
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
 
 /* c++ */
 #include <vector>
@@ -30,7 +29,7 @@
 
 //デバッグ関連//
 #ifdef _DEBUG
-#include<lib/ImGuiManager.h>
+#include <Engine/Application/UI/ImGuiManager.h>
 #include<Externals/imgui/imgui.h>
 #endif // _DEBUG
 

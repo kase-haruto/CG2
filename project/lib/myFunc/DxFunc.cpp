@@ -1,6 +1,6 @@
 #include "DxFunc.h"
 
-#include <Engine/core/DirectX/RenderTarget/IRenderTarget.h>
+#include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 
 ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 	ComPtr<ID3D12Device> device,

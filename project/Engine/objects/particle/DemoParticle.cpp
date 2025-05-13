@@ -1,9 +1,9 @@
 #include "DemoParticle.h"
 
-#include "lib/myFunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 #include "lib/myFunc/Random.h"
 
-#include "Engine/graphics/GraphicsGroup.h"
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 
 DemoParticle::DemoParticle(){

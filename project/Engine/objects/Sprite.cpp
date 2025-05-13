@@ -1,12 +1,12 @@
-﻿#include "engine/objects/Sprite.h"
-#include "engine/graphics/VertexData.h"
-#include "engine/objects/TextureManager.h"
-#include "engine/objects/TransformationMatrix.h"
-#include "engine/graphics/GraphicsGroup.h"
-#include "engine/physics/light/DirectionalLight.h"
+#include <Engine/objects/Sprite.h>
+#include <Engine/Graphics/VertexData.h>
+#include <Engine/objects/TextureManager.h>
+#include <Engine/objects/TransformationMatrix.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/physics/light/DirectionalLight.h>
 
 /* math */
-#include "lib/myfunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 /* c++ */
 #include <stdint.h>

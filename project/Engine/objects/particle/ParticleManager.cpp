@@ -1,6 +1,6 @@
 #include "ParticleManager.h"
 
-#include "Engine/graphics/GraphicsGroup.h"
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 // external
 #include <externals/imgui/imgui.h>

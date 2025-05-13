@@ -1,12 +1,12 @@
-﻿#include "Triangle.h"
-#include "engine/objects/TextureManager.h"
-#include "externals/imgui/imgui.h"
-#include "engine/physics/light/DirectionalLight.h"
-#include "Engine/graphics/camera/CameraManager.h"
+#include "Triangle.h"
+#include <Engine/objects/TextureManager.h>
+#include <externals/imgui/imgui.h>
+#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 		 
 /* math */
-#include "lib/myfunc/MyFunc.h"
-#include "engine/graphics/GraphicsGroup.h"
+#include <lib/myFunc/MyFunc.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 /* c++ */
 #include <numbers>

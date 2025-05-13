@@ -1,11 +1,15 @@
 #pragma once
 
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+
 #include <Engine/graphics/VertexData.h>
 #include <Engine/objects/Transform.h>
 #include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-#include <Engine/objects/Mesh/IMeshRenderable.h>
+#include <Engine/Graphics/Renderer/IMeshRenderable.h>
 #include <Engine/objects/SceneObject.h>
 
 #include <string>

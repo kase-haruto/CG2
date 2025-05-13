@@ -3,7 +3,7 @@
 /*		include space
 /* ===================================================================== */
 // engine
-#include "Engine/graphics/GraphicsGroup.h"
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 // c++/lib
 #include <externals/imgui/imgui.h>

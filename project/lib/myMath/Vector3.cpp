@@ -1,6 +1,6 @@
 #include "lib/myMath/Vector3.h"
 #include "lib/myMath/Matrix4x4.h"
-#include "lib/myfunc/MyFunc.h"
+#include <lib/myFunc/MyFunc.h>
 
 /* c++ */
 #include <algorithm>

@@ -1,11 +1,16 @@
 #pragma once
+/* ========================================================================
+/*  include space
+/* ===================================================================== */
+// engine
+#include <Engine/scene/Base/BaseScene.h>
+#include <Engine/Application/UI/EngineUI/EngineUI.h>
+#include <Engine/Graphics/Device/DxCore.h>
+#include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 
+// c++
 #include <memory>
 #include <array>
-#include <Engine/scene/Base/BaseScene.h>
-#include "Engine/core/EngineUI.h"
-#include "Engine/core/DirectX/DxCore.h"
-#include "Engine/core/UI/SceneSwitcherPanel.h"
 
 class IRenderTarget;
 

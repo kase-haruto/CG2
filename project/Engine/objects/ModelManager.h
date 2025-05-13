@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Engine/objects/ModelData.h>
-#include <Engine/graphics/GraphicsGroup.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/objects/Animation/AnimationStruct.h>
 #include <lib/myMath/Quaternion.h>
 #include <lib/myFunc/MyFunc.h>

@@ -1,19 +1,21 @@
 #include "BaseParticle.h"
-
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 //* engine
-#include "Engine/core/System.h"
-#include "Engine/graphics/GraphicsGroup.h"
-#include "Engine/physics/light/DirectionalLight.h"
-#include "Engine/graphics/SrvLocator.h"
-#include "Engine/objects/ModelManager.h"
-#include "Engine/objects/TextureManager.h"
-#include "Engine/graphics/camera/CameraManager.h"
-#include "ParticleEmitShape.h"
-#include "Engine/core/Clock/ClockManager.h"
+#include <Engine/core/System.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
+#include <Engine/objects/ModelManager.h>
+#include <Engine/objects/TextureManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/objects/particle/ParticleEmitShape.h>
+#include <Engine/core/Clock/ClockManager.h>
 
 //* lib
-#include "lib/myFunc/MyFunc.h"
-#include "lib/myFunc/PrimitiveDrawer.h"
+#include <lib/myFunc/MyFunc.h>
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
 #include "lib/myFunc/Random.h"
 #include "lib/myFunc/MathFunc.h"
 

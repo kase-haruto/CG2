@@ -2,7 +2,7 @@
 #include"ConvertString.h"
 
 #include "Engine/objects/Model/Model.h"
-#include <Engine/graphics/SrvLocator.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
 
 #include<cmath>
 #include<fstream>
@@ -13,7 +13,7 @@
 #include<assimp/postprocess.h>
 #include <numbers>
 
-#include "Engine/graphics/camera/CameraManager.h"
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 //平行移動行列
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {

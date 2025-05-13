@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include <lib/myFunc/ConvertString.h>
-#include <Engine/graphics/SrvLocator.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
 #include <lib/myFunc/MyFunc.h>
 
 /* c++ */

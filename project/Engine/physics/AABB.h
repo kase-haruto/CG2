@@ -1,11 +1,13 @@
-﻿#pragma once 
-#include"lib/myMath/Vector3.h"
-#include"engine/graphics/ViewProjection.h"
+#pragma once 
+
+/* engine */
+#include <lib/myMath/Vector3.h>
 
 /* c++ */
 #include<stdint.h>
 #include<string>
 
+struct Vector3;
 
 class AABB{
 

@@ -1,7 +1,7 @@
 #include "SphereCollider.h"
-#include "lib/myFunc/PrimitiveDrawer.h"
+#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
 
-#include "engine/core/Json/JsonCoordinator.h"
+#include <engine/core/Json/JsonCoordinator.h>
 #include <externals/imgui/imgui.h>
 
 #include <sstream> 
