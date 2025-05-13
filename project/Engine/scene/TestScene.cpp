@@ -45,7 +45,7 @@ void TestScene::Initialize(){
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	skyBox_ = std::make_unique<SkyBox>("rostock_laage_airport_4k.dds",registerToRenderer);
+	skyBox_ = std::make_unique<SkyBox>("sky.dds",registerToRenderer);
 	skyBox_->Initialize();
 
 	//objects
