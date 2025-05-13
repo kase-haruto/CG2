@@ -12,6 +12,7 @@ SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*)>cb) {
 	SceneObject::EnableGuiList();
 
 	textureName_ = fileName;
+
 }
 
 void SkyBox::Initialize() {
@@ -19,14 +20,15 @@ void SkyBox::Initialize() {
 	vertexBuffer_.Initialize(device, static_cast<UINT>(vertices_.size()));
 	indexBuffer_.Initialize(device, static_cast<UINT>(indices_.size()));
 	worldTransform_.Initialize();
+	worldTransform_.scale = {300.0f, 300.0f, 300.0f};
 }
 
 void SkyBox::ShowGui() {
 	worldTransform_.ShowImGui();
 }
 
-void SkyBox::Update(const Vector3& center, const Vector3& size) {
-	Vector3 half = size * 0.5f;
+void SkyBox::Update() {
+	Vector3 half = worldTransform_.scale * 0.5f;
 
 	// --- 頂点データ設定 ---
 	vertices_[0].position = { +1.0f, +1.0f, +1.0f, 1.0f }; // 右
@@ -65,7 +67,7 @@ void SkyBox::Update(const Vector3& center, const Vector3& size) {
 			vertices_[i].position.y,
 			vertices_[i].position.z
 		};
-		Vector3 world = local * half + center;
+		Vector3 world = local * half;
 		vertices_[i].position = { world.x, world.y, world.z, 1.0f };
 	/*	vertices_[i].texcoord = { 0.0f, 0.0f };
 		vertices_[i].normal = { 0.0f, 0.0f, 0.0f };*/
@@ -85,8 +87,6 @@ void SkyBox::Update(const Vector3& center, const Vector3& size) {
 	vertexBuffer_.TransferData(vertices_.data(), static_cast<UINT>(vertices_.size()));
 	indexBuffer_.TransferData(indices_.data(), static_cast<UINT>(indices_.size()));
 
-	worldTransform_.scale = size;
-	worldTransform_.translation = center;
 	worldTransform_.Update();
 }
 

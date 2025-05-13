@@ -284,7 +284,7 @@ void BaseModel::Draw(){
 	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
 	//環境マップ
-	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetSrvHandle("rostock_laage_airport_4k.dds");
+	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetSrvHandle("sky.dds");
 	commandList_->SetGraphicsRootDescriptorTable(7, envMapHandle);
 
 	// 描画
