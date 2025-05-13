@@ -196,7 +196,7 @@ void AnimationModel::Draw(){
 	GraphicsGroup::GetInstance()->SetCommand(commandList_, SkinningObject3D, blendMode_);
 
 	
-	commandList_->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
+	commandList_->SetGraphicsRootDescriptorTable(8, skinCluster_.paletteSrvHandle.second);
 
 	// 頂点バッファ/インデックスバッファをセット
 	vbvs_[0] = modelData_->vertexBuffer.GetVertexBufferView();	//vertexDataのvbv

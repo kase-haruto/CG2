@@ -362,55 +362,82 @@ void System::Object3DPipelines() {
 		return;
 	}
 
-	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[7] = {};
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;
-	descriptorRange[0].NumDescriptors = 1;
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	// ================================
+// RootSignatureの設定
+// ================================
+	D3D12_ROOT_PARAMETER rootParameters[8] = {};
 
-	//マテリアル
+	//-------------------------
+	// 通常テクスチャ用 (t0)
+	//-------------------------
+	D3D12_DESCRIPTOR_RANGE texRange[1] = {};
+	texRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	texRange[0].NumDescriptors = 1;
+	texRange[0].BaseShaderRegister = 0; // t0
+	texRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	//-------------------------
+	// 環境マップ用 (t1)
+	//-------------------------
+	D3D12_DESCRIPTOR_RANGE envMapRange[1] = {};
+	envMapRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	envMapRange[0].NumDescriptors = 1;
+	envMapRange[0].BaseShaderRegister = 1; // t1
+	envMapRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// マテリアル CBV (b0)
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
 
-	//wvp/world
+	// WVP / World行列 (b0)
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[1].Descriptor.ShaderRegister = 0;
 
-	//フォグ
+	// フォグ CBV (b5)
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[2].Descriptor.ShaderRegister = 5;
 
-	//テクスチャ
+	// 通常テクスチャ SRV (t0)
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	rootParameters[3].DescriptorTable.pDescriptorRanges = texRange;
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(texRange);
 
-	//DirectionalLight
+	// Directional Light CBV (b2)
 	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[4].Descriptor.ShaderRegister = 2;
 
-	//カメラ
+	// カメラ CBV (b1)
 	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	rootParameters[5].Descriptor.ShaderRegister = 1;
 
-	//pointLight
+	// Point Light CBV (b4)
 	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[6].Descriptor.ShaderRegister = 4;
 
+	// 環境マップ SRV (t1)
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[7].DescriptorTable.pDescriptorRanges = envMapRange;
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
+
+	// ================================
+	// Root Signature 全体
+	// ================================
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = rootParameters;
 	rootSignatureDesc.NumParameters = _countof(rootParameters);
 
+	// ================================
+	// Static Sampler (s0)
+	// ================================
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -423,6 +450,7 @@ void System::Object3DPipelines() {
 
 	rootSignatureDesc.pStaticSamplers = staticSamplers;
 	rootSignatureDesc.NumStaticSamplers = _countof(staticSamplers);
+
 
 	// RootSignatureの作成
 	ComPtr<ID3DBlob> signatureBlob;
@@ -530,59 +558,83 @@ void System::SkinningObject3dPipeline() {
 	}
 
 	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[8] = {};
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;
-	descriptorRange[0].NumDescriptors = 1;
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	D3D12_ROOT_PARAMETER rootParameters[9] = {};
 
-	//マテリアル
+	// テクスチャ用 (t0)
+	D3D12_DESCRIPTOR_RANGE texRange[1] = {};
+	texRange[0].BaseShaderRegister = 0; // t0
+	texRange[0].NumDescriptors = 1;
+	texRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	texRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// 環境マップ用 (t1)
+	D3D12_DESCRIPTOR_RANGE envMapRange[1] = {};
+	envMapRange[0].BaseShaderRegister = 1; // t1
+	envMapRange[0].NumDescriptors = 1;
+	envMapRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	envMapRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// スキニング用 (t2)
+	D3D12_DESCRIPTOR_RANGE skinningRange[1] = {};
+	skinningRange[0].BaseShaderRegister = 0; // t2
+	skinningRange[0].NumDescriptors = 1;
+	skinningRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	skinningRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// マテリアル CBV (b0)
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
 
-	//wvp/world
+	// WVP / World CBV (b0)
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[1].Descriptor.ShaderRegister = 0;
 
-	//フォグ
+	// フォグ CBV (b5)
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[2].Descriptor.ShaderRegister = 5;
 
-	//テクスチャ
+	// テクスチャ SRV (t0)
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = descriptorRange;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	rootParameters[3].DescriptorTable.pDescriptorRanges = texRange;
+	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(texRange);
 
-	//DirectionalLight
+	// Directional Light CBV (b2)
 	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[4].Descriptor.ShaderRegister = 2;
 
-	//カメラ
+	// カメラ CBV (b1)
 	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	rootParameters[5].Descriptor.ShaderRegister = 1;
 
-	//pointLight
+	// Point Light CBV (b4)
 	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[6].Descriptor.ShaderRegister = 4;
 
-	//Skinning
+	// 環境マップ SRV (t1)
 	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRange;
-	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[7].DescriptorTable.pDescriptorRanges = envMapRange;
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
 
+	// スキニングパレット SRV (t2)
+	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[8].DescriptorTable.pDescriptorRanges = skinningRange;
+	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(skinningRange);
+
+	// RootSignature全体
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = rootParameters;
 	rootSignatureDesc.NumParameters = _countof(rootParameters);
+
 
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;

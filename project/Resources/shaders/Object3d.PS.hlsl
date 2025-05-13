@@ -30,14 +30,6 @@ struct PointLight {
     float decay;
 };
 
-/////////////////////////////////////////////////////////////////////////
-//                      Fog
-/////////////////////////////////////////////////////////////////////////
-struct Fog {
-    float start;
-    float end;
-    float4 color;
-};
 
 // マテリアル
 cbuffer MaterialConstants : register(b0) {
@@ -54,16 +46,14 @@ cbuffer PointLightConstants : register(b4) {
     PointLight gPointLight;
 }
 
-// フォグ情報
-cbuffer FogConstants : register(b5) {
-    float fogStart;
-    float fogEnd;
-    float4 fogColor;
-}
-
+/////////////////////////////////////////////////////////////////////////
+//                      環境マップ
+/////////////////////////////////////////////////////////////////////////
+TextureCube<float4> gEnvironmentMap : register(t1);
 // テクスチャとサンプラー
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
+
 
 struct PixelShaderOutput {
     float4 color : SV_TARGET0;
@@ -73,8 +63,7 @@ struct PixelShaderOutput {
 //                             main
 ///////////////////////////////////////////////////////////////////////////////
 
-PixelShaderOutput main(VertexShaderOutput input)
-{
+PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
 
     // UV変換
@@ -132,15 +121,17 @@ PixelShaderOutput main(VertexShaderOutput input)
     float3 toneMapped = litColor * exposure / (litColor * exposure + 1.0f);
     float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
 
-    ////////////////////////////////////////////////////////
-    // フォグ（有効化する場合はここを開放）
-    ////////////////////////////////////////////////////////
-    /*
-    float fogFactor = saturate((distance - fogStart) / (fogEnd - fogStart));
-    float3 finalColor = lerp(gammaCorrected, fogColor.rgb, fogFactor);
-    */
     float3 finalColor = gammaCorrected;
-
+    
+    ////////////////////////////////////////////////////////
+    // 環境マップ
+    ////////////////////////////////////////////////////////
+    float3 cameraToPosition = normalize(input.worldPosition - cameraPosition);
+    float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+    float4 enviromentColor = gEnvironmentMap.Sample(gSampler, reflectedVector);
+    
+    finalColor.rgb += enviromentColor.rgb;    
+    
     ////////////////////////////////////////////////////////
     // アルファ合成 + 出力
     ////////////////////////////////////////////////////////
