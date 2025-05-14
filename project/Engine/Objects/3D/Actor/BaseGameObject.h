@@ -61,7 +61,7 @@ private:
 	//===================================================================*/
 	//                    private methods
 	//===================================================================*/
-	void SwitchCollider(ColliderKind kind);
+	void SwitchCollider(ColliderKind kind,bool isCollisionEnubled = true);
 
 protected:
 	//===================================================================*/

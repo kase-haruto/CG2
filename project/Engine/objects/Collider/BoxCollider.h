@@ -10,6 +10,7 @@ public:
 	//                   public methods
 	//===================================================================*/
 	BoxCollider() = default;
+	BoxCollider(bool isEnuble);
 	~BoxCollider()override = default;
 
 	void Update(const Vector3& position, const Quaternion& rotate)override;

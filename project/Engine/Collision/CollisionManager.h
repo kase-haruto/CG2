@@ -27,8 +27,8 @@ public:
 
 	Collider* FindColliderByName(const std::string& name);
 
-	void AddCollider(Collider* collider);		// コライダーリストに追加
-	void RemoveCollider(Collider* collider);	// コライダーリストから削除
+	void Register(Collider* collider);		// コライダーリストに追加
+	void Unregister(Collider* collider);	// コライダーリストから削除
 	void DebugLog();
 
 private:

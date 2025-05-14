@@ -10,6 +10,7 @@ public:
 	//                   public methods
 	//===================================================================*/
 	SphereCollider() = default;
+	SphereCollider(bool isEnuble);
 	~SphereCollider()override = default;
 
 	void Initialize(float radius);

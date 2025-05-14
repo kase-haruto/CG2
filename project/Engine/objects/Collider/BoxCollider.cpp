@@ -3,17 +3,17 @@
 /*	include space
 /* ===================================================================== */
 // engine
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/Foundation/Json/JsonCoordinator.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 // externals
 #include <externals/imgui/imgui.h>
 // c++
 #include <sstream> 
 
-void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
+void BoxCollider::Initialize([[maybe_unused]] const Vector3& size) {
 
-	if (name_.empty()){
+	if (name_.empty()) {
 		std::stringstream ss;
 		ss << "box" << "_" << this; // 形状とアドレスを組み合わせ
 		name_ = ss.str();
@@ -25,35 +25,35 @@ void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 	shape_.size = size;
 }
 
-void BoxCollider::Update(const Vector3& position, const Quaternion& rotate){
+BoxCollider::BoxCollider(bool isEnuble):
+Collider::Collider(isEnuble){}
+
+void BoxCollider::Update(const Vector3& position, const Quaternion& rotate) {
 	// 位置を更新
 	shape_.center = position;
 	shape_.rotate = rotate;
 }
 
 
-void BoxCollider::Draw(){
+void BoxCollider::Draw() {
 
 #ifdef _DEBUG
-
-	PrimitiveDrawer::GetInstance()->DrawOBB(shape_.center,shape_.rotate,shape_.size, color_);
+	if (isDraw_ && isCollisionEnabled_) {
+		PrimitiveDrawer::GetInstance()->DrawOBB(shape_.center, shape_.rotate, shape_.size, color_);
+	}
 #endif // DEBUG
 
 }
 
-void BoxCollider::ShowGui(){
+void BoxCollider::ShowGui() {
 
-#ifdef _DEBUG
-	if (ImGui::CollapsingHeader(GetName().c_str())){
-
+	if(ImGui::CollapsingHeader("Collider")) {
+		Collider::ShowGui();
+		ImGui::DragFloat3("Size", &shape_.size.x, 0.1f, 0.0f, 10.0f);
 	}
-	ImGui::Spacing();
-#endif // _DEBUG
-
-
 }
 
-const Vector3& BoxCollider::GetCenter() const{
+const Vector3& BoxCollider::GetCenter() const {
 	return shape_.center;
 }
 
