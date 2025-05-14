@@ -17,7 +17,7 @@ HierarchyPanel::HierarchyPanel()
     :IEngineUI("Hierarchy"){}
 
 void HierarchyPanel::Render(){
-    ImGui::Begin(panelName_.c_str());
+    ImGui::Begin(panelName_.c_str(),nullptr, ImGuiWindowFlags_NoDecoration);
     ImGui::Text("Scene Hierarchy");
 
     // 全オブジェクトを取得
