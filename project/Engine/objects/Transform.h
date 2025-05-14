@@ -1,7 +1,7 @@
 #pragma once
-#include"lib/myMath/Vector3.h"
-#include <lib/myMath/Vector2.h>
-#include "lib/myMath/Quaternion.h"
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector2.h>
+#include <Engine/Foundation/Math/Quaternion.h>
 
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
 

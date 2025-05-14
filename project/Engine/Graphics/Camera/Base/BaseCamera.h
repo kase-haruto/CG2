@@ -4,8 +4,8 @@
 #include "ICamera.h"
 #include "Engine/objects/Transform.h"
 #include "Engine/core/DirectX/Buffer/CameraBuffer.h"
-#include "lib/myMath/Matrix4x4.h"
-#include "lib/myMath/Vector3.h"
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector3.h>
 
 /* lib */
 #include <numbers>

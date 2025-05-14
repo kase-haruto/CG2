@@ -12,7 +12,7 @@
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 // lib
-#include <lib/myMath/Matrix4x4.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録

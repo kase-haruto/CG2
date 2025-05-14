@@ -4,8 +4,8 @@
 #include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
-#include <lib/myFunc/MyFunc.h>
-#include <lib/myMath/Quaternion.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+#include <Engine/Foundation/Math/Quaternion.h>
 
 // Assimp
 #include <assimp/Importer.hpp>

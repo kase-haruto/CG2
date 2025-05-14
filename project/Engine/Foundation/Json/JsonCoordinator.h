@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <externals/nlohmann/json.hpp>
-#include "lib/myMath/Vector3.h"
+#include <Engine/Foundation/Math/Vector3.h>
 
 using json = nlohmann::ordered_json;
 using AdjustableValue = std::variant<int, float, Vector3>;

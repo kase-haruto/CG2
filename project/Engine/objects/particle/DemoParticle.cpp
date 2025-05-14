@@ -1,7 +1,7 @@
 #include "DemoParticle.h"
 
-#include <lib/myFunc/MyFunc.h>
-#include "lib/myFunc/Random.h"
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
 
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 

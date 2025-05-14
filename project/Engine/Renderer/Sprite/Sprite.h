@@ -2,9 +2,9 @@
 
 /* engine */
 #include "engine/objects/Transform.h"
-#include "lib/myMath/Matrix4x4.h"
-#include "lib/myMath/Vector2.h"
-#include "lib/myMath/Vector4.h"
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector2.h>
+#include <Engine/Foundation/Math/Vector4.h>
 #include <Engine/Graphics/Material.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
 

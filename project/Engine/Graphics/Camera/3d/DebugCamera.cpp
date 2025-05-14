@@ -3,7 +3,7 @@
 /*		include space
 /* ===================================================================== */
 // Engine
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 

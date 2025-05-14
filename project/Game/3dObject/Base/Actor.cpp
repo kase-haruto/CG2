@@ -1,9 +1,9 @@
 #include "Actor.h"
 
 #include <Engine/core/System.h>
-#include <lib/myFunc/MyFunc.h>
-#include <engine/core/Json/JsonCoordinator.h>
-#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+#include <Engine/Foundation/Json/JsonCoordinator.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Renderer/Mesh/IMeshRenderable.h>
 
 Actor::Actor(const std::string& modelName,

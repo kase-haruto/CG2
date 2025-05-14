@@ -1,8 +1,8 @@
 #pragma once
 
 /* math */
-#include"lib/myMath/Vector4.h"
-#include"lib/myMath/Vector3.h"
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
 #include "Engine/objects/SceneObject.h"
@@ -12,8 +12,8 @@
 #include "LightData.h"
 
 /* c++ */
-#include<wrl.h>
 #include<d3d12.h>
+#include<wrl.h>
 
 struct DirectionalLightData{
 	Vector4 color;		//ライトの色

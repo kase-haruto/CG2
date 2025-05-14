@@ -7,7 +7,7 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
 // lib
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <externals/imgui/imgui.h>
 
 

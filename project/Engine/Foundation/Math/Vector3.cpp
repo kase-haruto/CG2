@@ -1,6 +1,9 @@
-#include "lib/myMath/Vector3.h"
-#include "lib/myMath/Matrix4x4.h"
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Math/Vector3.h>
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 /* c++ */
 #include <algorithm>

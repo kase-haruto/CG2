@@ -1,8 +1,10 @@
 #include "ParticleEmitShape.h"
 
-#include "lib/myFunc/Random.h"
-#include <lib/myFunc/MyFunc.h>
+// utility
+#include <Engine/Foundation/Utility/Random/Random.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
+// c++
 #include <numbers>
 
 FaceInfo GetRandomPointAndNormalOnOBBSurface(const EulerTransform& transform,

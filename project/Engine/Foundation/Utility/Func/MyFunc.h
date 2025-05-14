@@ -1,10 +1,10 @@
 #pragma once
 
 /* math */
-#include "lib/myMath/Matrix4x4.h"
-#include "lib/myMath/Vector2.h"
-#include "lib/myMath/Vector3.h"
-#include "lib/myMath/Vector4.h"
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector2.h>
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
 #include <Engine/Assets/Animation/AnimationStruct.h>

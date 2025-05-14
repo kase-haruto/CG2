@@ -1,9 +1,12 @@
 #pragma once
 
+//engine
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-#include <lib/myMath/Vector3.h>
-#include <lib/myMath/Matrix4x4.h>
 #include <Engine/graphics/Pipeline/PipelineType.h>
+
+//math
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector3.h>
 
 // 定数バッファ用データ構造体
 struct Camera3DForGPU{

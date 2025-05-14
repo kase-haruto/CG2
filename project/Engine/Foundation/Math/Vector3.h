@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/myMath/Matrix4x4.h"
+struct Matrix4x4;
 
 /// <summary>
 /// 3次元ベクトル

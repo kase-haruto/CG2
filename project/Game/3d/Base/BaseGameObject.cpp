@@ -1,7 +1,7 @@
 #include "BaseGameObject.h"
 
 #include "externals/imgui/imgui.h"
-#include <engine/core/Json/JsonCoordinator.h>
+#include <Engine/Foundation/Json/JsonCoordinator.h>
 
 
 BaseGameObject::BaseGameObject(const std::string& modelName) {

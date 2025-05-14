@@ -6,15 +6,15 @@
 
 // engine
 #include <Engine/Application/Input/Input.h>
-#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/core/Enviroment.h>
-#include <Engine/core/Math/Ease.h>
+#include <Engine/Foundation/Utility/Ease/Ease.h>
 
 // externals
 #include <externals/imgui/imgui.h>
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // c++
 #include <numbers>

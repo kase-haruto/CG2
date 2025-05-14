@@ -14,10 +14,10 @@
 #include <Engine/core/DirectX/Buffer/DxStructuredBuffer.h>
 
 /* math */
-#include "lib/myMath/Vector4.h"
+#include <Engine/Foundation/Math/Vector4.h>
 #include "engine/physics/AABB.h"
 #include "Engine/physics/Shape.h"
-#include "lib/myFunc/Random.h"
+#include <Engine/Foundation/Utility/Random/Random.h>
 
 /* c++ */
 #include <list>

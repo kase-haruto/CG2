@@ -4,11 +4,11 @@
 #include <engine/graphics/Material.h>
 #include <engine/objects/Transform.h>
 #include <engine/objects/TransformationMatrix.h>
-#include <lib/myMath/Vector4.h>
+#include <Engine/Foundation/Math/Vector4.h>
 
 #include <Engine/Assets/Model/ModelManager.h>
 #include <Engine/Assets/Texture/TextureManager.h>
-#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include <engine/core/System.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
@@ -20,7 +20,7 @@
 #include <externals/imgui/imgui.h>
 #endif
 
-#include <lib/myfunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // 追加: アニメーション読み込み関数
 extern Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename);

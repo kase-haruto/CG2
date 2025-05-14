@@ -15,7 +15,7 @@
 
 /* object */
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
-#include <lib/myMath/Quaternion.h>
+#include <Engine/Foundation/Math/Quaternion.h>
 
 /* c++ */
 #include <vector>

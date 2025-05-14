@@ -1,7 +1,7 @@
 #include "PointLight.h"
 
 /* engine */
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 

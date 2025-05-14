@@ -6,8 +6,8 @@
 #include <Engine/Renderer/Mesh/IMeshRenderable.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 
-#include <lib/myMath/Vector4.h>
-#include <lib/myMath/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector4.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
 /* ========================================================================
 /* primitiveObject
 /* ===================================================================== */

@@ -1,8 +1,8 @@
 #pragma once
 
 /* math */
-#include "lib/myMath/Vector3.h"
-#include "lib/myMath/Vector4.h"
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
 #include "Engine/graphics/Pipeline/PipelineType.h"

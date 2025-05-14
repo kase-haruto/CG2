@@ -2,7 +2,7 @@
 
 #define DIRECTINPUT_VERSION 0x0800 
 
-#include "lib/myMath/Vector2.h" // 必要に応じて実装をリンク
+#include <Engine/Foundation/Math/Vector2.h> // 必要に応じて実装をリンク
 #include <wrl.h>
 #include <array>
 #include <dinput.h>

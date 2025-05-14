@@ -1,9 +1,9 @@
 #include "PrimitiveDrawer.h"
 
-#include <lib/myMath/Vector3.h>
-#include <lib/myMath/Vector4.h>
-#include <lib/myMath/Matrix4x4.h>
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 

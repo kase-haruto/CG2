@@ -2,10 +2,10 @@
 /* ========================================================================
 /*	include space
 /* ===================================================================== */
-#include "lib/myFunc/ConvertString.h"
+#include <Engine/Foundation/Utility/ConvertString/ConvertString.h>
 
 // lib
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 /* c++ */
 #include <dxgidebug.h>

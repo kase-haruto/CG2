@@ -2,22 +2,22 @@
 /* ========================================================================
 /*	include space
 /* ===================================================================== */
-// c++
+// engine
 #include <Engine/objects/Transform.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
-// lib
-#include <lib/myMath/Vector3.h>
-#include <lib/myMath/Quaternion.h>
+// math
+#include <Engine/Foundation/Math/Quaternion.h>
+#include <Engine/Foundation/Math/Vector3.h>
 
 // C++
-#include <vector>
-#include <map>
-#include <string>
+#include <array>
 #include <cstdint>
+#include <map>
 #include <optional>
 #include <span>
-#include <array>
+#include <string>
+#include <vector>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //          keyframe

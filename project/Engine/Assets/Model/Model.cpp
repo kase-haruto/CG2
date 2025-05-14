@@ -3,13 +3,13 @@
 /* include space
 /* ===================================================================== */
 // engine
-#include "Engine/core/Clock/ClockManager.h"
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include "Engine/core/System.h"
 #include "engine/graphics/Material.h"
 #include "engine/objects/Transform.h"
 #include "engine/objects/TransformationMatrix.h"
 #include "Engine/physics/light/LightManager.h"
-#include "lib/myMath/Vector4.h"
+#include <Engine/Foundation/Math/Vector4.h>
 #include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Assets/Model/ModelManager.h>
 #include <Engine/Assets/Texture/TextureManager.h>
@@ -21,7 +21,7 @@
 #include "externals/imgui/imgui.h"
 #endif
 
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 Model::Model(const std::string& fileName){
 	fileName_ = fileName;

@@ -4,10 +4,10 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Graphics/Context/GraphicsGroup.h>
-#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 
 // lib
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // c++
 #include <cmath>

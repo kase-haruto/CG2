@@ -1,7 +1,7 @@
 #include "EnemyCollection.h"
 
-#include "Engine/core/Clock/ClockManager.h"
-#include <lib/myFunc/Random.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
 #include <externals/imgui/imgui.h>
 
 EnemyCollection::EnemyCollection(std::function<void(IMeshRenderable*)> registerCB)

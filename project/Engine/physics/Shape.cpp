@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
-#include <lib/MyFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // c++
 #include <numbers>

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "lib/myMath/Vector3.h"
-#include "lib/myMath/Vector4.h"
-#include "lib/myMath/Matrix4x4.h"
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
 
 
 #include <array>

@@ -5,7 +5,7 @@
 /* ===================================================================== */
 
 /* engine */
-#include <Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 
 /* external */
 #include <externals/imgui/imgui.h>

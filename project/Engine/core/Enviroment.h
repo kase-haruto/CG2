@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string>
 
-#include <lib/myMath/Vector2.h>
+#include <Engine/Foundation/Math/Vector2.h>
 
 static const std::string windowTitle = "Engine";
 

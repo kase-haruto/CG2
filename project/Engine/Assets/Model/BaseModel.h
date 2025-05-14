@@ -5,18 +5,20 @@
 
 /* engine */
 #include <Engine/Assets/Model/ModelData.h>
-#include <engine/graphics/Material.h>
-#include <engine/objects/Transform.h>
-#include <lib/myMath/Vector4.h>
-#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+#include <engine/graphics/Material.h>
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
+#include <engine/objects/Transform.h>
 #include <Engine/Renderer/Mesh/IMeshRenderable.h>
+
+/* math */
+#include <Engine/Foundation/Math/Vector4.h>
 
 /* c++ */
 #include <d3d12.h>
-#include <wrl.h>
-#include <string>
 #include <memory>
+#include <string>
+#include <wrl.h>
 
 /* ========================================================================
 /*		model

@@ -9,7 +9,7 @@
 #include <Engine/physics/light/DirectionalLight.h>
 
 /* math */
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 /* c++ */
 #include <stdint.h>
 /* externals */

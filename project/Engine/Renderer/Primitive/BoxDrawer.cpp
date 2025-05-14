@@ -5,9 +5,9 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 // lib
-#include <lib/myMath/Vector3.h>
-#include <lib/myMath/Vector4.h>
-#include <lib/myMath/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
 
 void BoxDrawer::Initialize() {
 	vertexBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice(), kMaxBoxes * 36); // 1 box = 12 triangles = 36 vertices

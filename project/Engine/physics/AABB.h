@@ -1,7 +1,7 @@
 #pragma once 
 
 /* engine */
-#include <lib/myMath/Vector3.h>
+#include <Engine/Foundation/Math/Vector3.h>
 
 /* c++ */
 #include<stdint.h>

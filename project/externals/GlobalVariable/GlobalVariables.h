@@ -1,5 +1,5 @@
 #pragma once
-#include "lib/myMath/Vector3.h"
+#include <Engine/Foundation/Math/Vector3.h>
 
 #ifdef _DEBUG
 #include <externals/imgui/imgui.h>

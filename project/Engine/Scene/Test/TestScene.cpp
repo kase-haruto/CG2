@@ -9,7 +9,6 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/Collision/CollisionManager.h>
-#include <Engine/core/Audio/Audio.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
@@ -18,7 +17,7 @@
 #include <Engine/physics/light/LightManager.h>
 
 // lib
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ

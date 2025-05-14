@@ -1,7 +1,14 @@
 #include "Texture.h"
-#include <lib/myFunc/ConvertString.h>
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+
+/* engine */
 #include <Engine/Graphics/Descriptor/SrvLocator.h>
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+
+/* lib */
+#include <Engine/Foundation/Utility/ConvertString/ConvertString.h>
 
 /* c++ */
 #include <cassert>
