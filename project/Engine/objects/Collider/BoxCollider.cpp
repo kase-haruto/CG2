@@ -11,12 +11,6 @@
 // c++
 #include <sstream> 
 
-void BoxCollider::Update(const Vector3& position, const Quaternion& rotate){
-	// 位置を更新
-	shape_.center = position;
-	shape_.rotate = rotate;
-}
-
 void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 
 	if (name_.empty()){
@@ -30,6 +24,13 @@ void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 	collisionShape_ = shape_;
 	shape_.size = size;
 }
+
+void BoxCollider::Update(const Vector3& position, const Quaternion& rotate){
+	// 位置を更新
+	shape_.center = position;
+	shape_.rotate = rotate;
+}
+
 
 void BoxCollider::Draw(){
 

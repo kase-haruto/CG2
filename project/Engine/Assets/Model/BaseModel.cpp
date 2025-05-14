@@ -223,8 +223,8 @@ void BaseModel::ShowImGuiInterface(){
 
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)){
-		worldTransform_.ShowImGui("worldTransform");
-		uvTransform.ShowImGui("UV Transform");
+		worldTransform_.ShowImGui("world");
+		uvTransform.ShowImGui("uv");
 	}
 
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)){
