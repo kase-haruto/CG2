@@ -6,6 +6,7 @@
 
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
+#include <Engine/Application/UI/Panels/Controller/PanelController.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 
 // c++
