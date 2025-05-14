@@ -18,6 +18,8 @@ void Collider::ShowGui() {
         SetCollisionEnabled(enabled); // 状態が変わったときだけ反映
     }
 
+    if (!isCollisionEnabled_) return;
+
     ImGui::Checkbox("Draw Collider", &isDraw_);
     ImGui::ColorEdit4("Collider Color", &color_.x);
 }

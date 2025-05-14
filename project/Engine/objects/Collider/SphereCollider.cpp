@@ -40,6 +40,7 @@ void SphereCollider::Draw(){
 void SphereCollider::ShowGui(){
 	if(ImGui::CollapsingHeader("Collider")) {
 		Collider::ShowGui();
+		if (!isCollisionEnabled_) return;
 		ImGui::DragFloat("Radius", &shape_.radius, 0.1f, 0.0f, 10.0f);
 	}
 }

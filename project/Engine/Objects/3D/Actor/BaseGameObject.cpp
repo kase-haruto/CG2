@@ -74,8 +74,6 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 BaseGameObject::~BaseGameObject(){}
 
 
-void BaseGameObject::Initialize(){}
-
 void BaseGameObject::Update(){
 
 	if (objectModelType_ != ObjectModelType::ModelType_Unknown){
@@ -94,10 +92,6 @@ void BaseGameObject::Update(){
 
 }
 
-void BaseGameObject::Draw(){
-
-
-}
 
 //===================================================================*/
 //                    コライダー形状の変更

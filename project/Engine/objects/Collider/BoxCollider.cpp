@@ -49,6 +49,7 @@ void BoxCollider::ShowGui() {
 
 	if(ImGui::CollapsingHeader("Collider")) {
 		Collider::ShowGui();
+		if (!isCollisionEnabled_) return;
 		ImGui::DragFloat3("Size", &shape_.size.x, 0.1f, 0.0f, 10.0f);
 	}
 }

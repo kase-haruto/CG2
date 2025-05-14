@@ -39,13 +39,21 @@ public:
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
-	virtual void Initialize();
+	virtual void Initialize() {};
 	virtual void Update();
-	virtual void Draw();
+	virtual void Draw() {};
+
+	//--------- ui/gui --------------------------------------------------
 	void ShowGui()override;
 	virtual void DerivativeGui();
 
-	//--------- accessor -----------------------------------------------------
+	//--------- Collision -----------------------------------------------
+	virtual void OnCollisionEnter([[maybe_unused]]Collider* other) {};
+	virtual void OnCollisionStay([[maybe_unused]] Collider* other) {};
+	virtual void OnCollisionExit([[maybe_unused]] Collider* other){};
+
+
+	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);
 	void SetTranslate(const Vector3& pos);
 	void SetScale(const Vector3& scale);
