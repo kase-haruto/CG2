@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
-#include<lib/myFunc/Random.h>
-#include<Engine/core/Clock/ClockManager.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 
 /* ========================================================================

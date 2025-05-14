@@ -1,5 +1,5 @@
 #include "SceneContext.h"
-#include <lib/myFunc/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 SceneContext::SceneContext(){
 	meshRenderer_ = std::make_unique<MeshRenderer>();

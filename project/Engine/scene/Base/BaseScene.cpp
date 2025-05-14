@@ -1,10 +1,12 @@
 #include "BaseScene.h"
-#include "Engine/graphics/camera/CameraManager.h"
-#include "Engine/physics/light/LightManager.h"
-#include "Engine/graphics/GraphicsGroup.h"
-#include <Engine/core/DirectX/DxCore.h>
-
-#include <lib/myFunc/PrimitiveDrawer.h>
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Lighting/LightManager.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Graphics/Device/DxCore.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 BaseScene::BaseScene(DxCore* dxCore):
 IScene(dxCore){

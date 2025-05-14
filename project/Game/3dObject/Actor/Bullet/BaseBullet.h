@@ -2,7 +2,7 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-#include <Game/3dObject/Base/Actor.h>
+#include <Engine/Objects/3D/Actor/Actor.h>
 #include <Engine/objects/Collider/SphereCollider.h>
 
 /* ========================================================================

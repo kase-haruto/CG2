@@ -3,8 +3,8 @@
 /* include space
 /* ===================================================================== */
 // engine
-#include <Engine/scene/Interface/IScene.h>
-#include <Engine/scene/Context/SceneContext.h>
+#include <Engine/Scene/Base/IScene.h>
+#include <Engine/Scene/Context/SceneContext.h>
 
 // c++
 #include <string>

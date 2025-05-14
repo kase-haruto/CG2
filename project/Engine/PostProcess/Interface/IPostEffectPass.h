@@ -1,7 +1,9 @@
 #pragma once
-
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
 //engine
-#include "Engine/core/DirectX/RenderTarget/IRenderTarget.h"
+#include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 
 //c++
 #include <d3d12.h>

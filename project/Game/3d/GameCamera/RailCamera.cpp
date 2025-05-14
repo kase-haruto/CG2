@@ -1,8 +1,10 @@
 #include "RailCamera.h"
 
-#include <lib/myFunc/MyFunc.h>
-#include <Engine/core/Clock/ClockManager.h>
-#include <lib/myFunc/MathFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Foundation/Utility/Func/MathFunc.h>
+
+//c++
 #include <cmath>
 #include <algorithm>
 

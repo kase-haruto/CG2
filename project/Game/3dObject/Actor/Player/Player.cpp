@@ -1,19 +1,22 @@
 #include "Player.h"
 
 /* ========================================================================
-/* Collision
+/* include space
 /* ===================================================================== */
-#include <Engine/core/Input.h>
-#include "Engine/core/Clock/ClockManager.h"
+
+// engine
+#include <Engine/Application/Input/Input.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
-#include <Engine/graphics/camera/CameraManager.h>
-#include <Engine/core/Enviroment.h>
-#include <Engine/core/Math/Ease.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Application/System/Enviroment.h>
+#include <Engine/Foundation/Utility/Ease/Ease.h>
 
-//externals
+// externals
 #include <externals/imgui/imgui.h>
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
+// c++
 #include <numbers>
 
 Player::Player(const std::string& modelName,

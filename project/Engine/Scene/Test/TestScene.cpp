@@ -1,0 +1,106 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+//	include
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// scene
+#include <Engine/Scene/Test/TestScene.h>
+
+// engine
+#include <Engine/Application/Input/Input.h>
+#include <Engine/Application/UI/Panels/EditorPanel.h>
+#include <Engine/Collision/CollisionManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Graphics/Device/DxCore.h>
+#include <Engine/objects/particle/ParticleManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Lighting/LightManager.h>
+
+// lib
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	コンストラクタ/デストラクタ
+/////////////////////////////////////////////////////////////////////////////////////////
+TestScene::TestScene() {}
+
+TestScene::TestScene(DxCore* dxCore)
+	: BaseScene(dxCore) {
+	// シーン名を設定
+	BaseScene::SetSceneName("TestScene");
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	初期化処理
+/////////////////////////////////////////////////////////////////////////////////////////
+void TestScene::Initialize() {
+	auto registerToRenderer = [this](IMeshRenderable* mesh) {
+		sceneContext_->meshRenderer_->Register(mesh);
+	};
+
+	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
+	//=========================
+	// グラフィック関連
+	//=========================
+	fog_ = std::make_unique<FogEffect>(pDxCore_);
+
+	skyBox_ = std::make_unique<SkyBox>("sky.dds", registerToRenderer);
+	skyBox_->Initialize();
+
+	//objects
+	modelField_ = std::make_unique<Model>("ground.obj");
+	modelField_->SetSize({ 100.0f,1.0f,100.0f });
+	modelField_->SetUvScale({ 15.0f,15.0f,0.0f });
+	sceneContext_->meshRenderer_->Register(modelField_.get());
+
+	//test用
+	bunny_ = std::make_unique<BaseGameObject>("bunny.obj", "bunny", registerToRenderer);
+	bunny_->SetTranslate({ -10.0f, 0.0f, 0.0f });
+
+	teapot_ = std::make_unique<BaseGameObject>("teapot.obj", "teapot", registerToRenderer);
+	teapot_->SetTranslate({ 5.0f, 0.0f, 0.0f });
+
+	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf", "human", registerToRenderer);
+	walkHuman_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	//							editor
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	更新処理
+/////////////////////////////////////////////////////////////////////////////////////////
+void TestScene::Update() {
+#ifdef _DEBUG
+
+	Input::ShowImGui();
+
+#endif //  _DEBUG
+
+	CameraManager::Update();
+
+	//地面
+	//modelField_->Update();
+
+	skyBox_->Update();
+
+	//test
+	bunny_->Update();
+	teapot_->Update();
+	walkHuman_->Update();
+
+	//衝突判定
+	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
+
+	PrimitiveDrawer::GetInstance()->DrawGrid();
+}
+
+
+void TestScene::CleanUp() {
+	// 3Dオブジェクトの描画を終了
+	sceneContext_->meshRenderer_->Clear();
+	SceneObjectManager::GetInstance()->ClearAllObject();
+}
+

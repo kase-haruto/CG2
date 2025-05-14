@@ -1,9 +1,10 @@
 #include "CollisionManager.h"
 
-#include "lib/myFunc/MyFunc.h"
+// engine
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
+//lib
 #include <externals/imgui/imgui.h>
-
 #include <algorithm>
 
 CollisionManager* CollisionManager::GetInstance(){

@@ -2,8 +2,8 @@
 /* ========================================================================
 /* include
 /* ===================================================================== */
-#include <Engine/graphics/camera/Camera3d.h>
-#include <Engine/objects/Transform.h>
+#include <Engine/Graphics/Camera/3d/Camera3d.h>
+#include <Engine/Objects/Transform/Transform.h>
 
 class RailCamera :
 	public Camera3d{

@@ -1,4 +1,4 @@
-#include "engine/core/EngineController.h"
+#include <Engine/Application/Framework/EngineController.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int){
 	EngineController EngineController;

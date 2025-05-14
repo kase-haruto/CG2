@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/PostProcess/Interface/IPostEffectPass.h>
-#include <Engine/core/DirectX/GpuResource/DxGpuResource.h>
+#include <Engine/Graphics/GpuResource/DxGpuResource.h>
 #include <Engine/PostProcess/Slot/PostEffectSlot.h>
 #include <vector>
 

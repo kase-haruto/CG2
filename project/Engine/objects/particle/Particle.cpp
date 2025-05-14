@@ -1,8 +1,8 @@
 #include "Particle.h"
 
-#include "Engine/objects/TextureManager.h"
-#include <lib/myFunc/Random.h>
-#include <lib/myFunc/MyFunc.h>
+#include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // lib
 #include <externals/imgui/imgui.h>

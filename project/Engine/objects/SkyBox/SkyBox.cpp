@@ -1,10 +1,10 @@
 #include "SkyBox.h"
 
-#include <lib/myMath/Matrix4x4.h>
-#include <Engine/graphics/GraphicsGroup.h>
-#include <Engine/graphics/camera/CameraManager.h>
-#include <Engine/graphics/camera/BaseCamera.h>
-#include <Engine/objects/TextureManager.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Graphics/Camera/Base/BaseCamera.h>
+#include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
 
 SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*)>cb) {
 	cb(this);

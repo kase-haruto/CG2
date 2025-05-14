@@ -1,10 +1,14 @@
 #include "BoxCollider.h"
-#include "lib/myFunc/PrimitiveDrawer.h"
+/* ========================================================================
+/*	include space
+/* ===================================================================== */
+// engine
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Foundation/Json/JsonCoordinator.h>
 
-#include "engine/core/Json/JsonCoordinator.h"
-
+// externals
 #include <externals/imgui/imgui.h>
-
+// c++
 #include <sstream> 
 
 void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){

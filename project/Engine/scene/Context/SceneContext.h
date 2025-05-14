@@ -4,7 +4,7 @@
 /* ===================================================================== */
 
 // engine
-#include <Engine/graphics/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/Mesh/MeshRenderer.h>
 
 // c++
 #include <memory>

@@ -1,8 +1,8 @@
 #pragma once
 
 //* engine
-#include "lib/myMath/Vector3.h"
-#include "Engine/physics/Shape.h"
+#include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Objects/3D/Geometory/Shape.h>
 
 #include <variant>
 #include <string>

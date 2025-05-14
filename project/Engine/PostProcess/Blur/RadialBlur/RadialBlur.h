@@ -1,10 +1,10 @@
 #pragma once
 #include <Engine/PostProcess/Interface/IPostEffectPass.h>
-#include <Engine/graphics/PipelineStateManager.h>
+#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 
-#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 
-#include <lib/myMath/Vector2.h>
+#include <Engine/Foundation/Math/Vector2.h>
 
 class RadialBlurEffect :
     public IPostEffectPass{
