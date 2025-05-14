@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // engine
 #include <Engine/scene/Base/BaseScene.h>
-#include <Engine/Application/UI/EngineUI/EngineUI.h>
+#include <Engine/Application/UI/EngineUI/Renderer/EngineUIRenderer.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 
@@ -31,7 +31,7 @@ public:
 	void DrawForRenderTarget(IRenderTarget* target);
 
     // UIをセット
-    void SetEngineUI(EngineUI* ui){ pEngineUI_ = ui; }
+    void SetEngineUI(EngineUIRenderer* ui){ pEngineUI_ = ui; }
 
     // 切り替えリクエスト用メソッド (UI などから呼び出す)
     void RequestSceneChange(SceneType nextScene);
@@ -48,7 +48,7 @@ private:
 
     // UIパネルなど
     std::unique_ptr<SceneSwitcherPanel> sceneSwitchPanel_ = nullptr;
-    EngineUI* pEngineUI_ = nullptr;
+    EngineUIRenderer* pEngineUI_ = nullptr;
     DxCore* pDxCore_ = nullptr;
 
 public:
