@@ -6,12 +6,12 @@
 #include <Engine/scene/Base/BaseScene.h>
 #include <Engine/Renderer/Sprite/Sprite.h>
 #include <Engine/Objects/3D/Actor/BaseGameObject.h>
-#include <Engine/objects/SkyBox/SkyBox.h>
+#include <Engine/Extensions/SkyBox/SkyBox.h>
+#include <Engine/Extensions/Fog/FogEffect.h>
 
 /* graphics */
 #include <Engine/Objects/LightObject/DirectionalLight.h>
 #include <Engine/Objects/LightObject/PointLight.h>
-#include <Engine/Graphics/Effect/FogEffect.h>
 
 /* object */
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>

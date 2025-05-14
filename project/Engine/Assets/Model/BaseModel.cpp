@@ -288,7 +288,7 @@ void BaseModel::Draw(){
 	commandList_->SetGraphicsRootDescriptorTable(3, handle_.value());
 
 	//環境マップ
-	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetSrvHandle("sky.dds");
+	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetEnvironmentTextureSrvHandle();
 	commandList_->SetGraphicsRootDescriptorTable(7, envMapHandle);
 
 	// 描画

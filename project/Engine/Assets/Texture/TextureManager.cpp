@@ -34,6 +34,26 @@ const std::unordered_map<std::string, Texture>& TextureManager::GetLoadedTexture
 	return textures_;
 }
 
+void TextureManager::SetEnvironmentTexture(const std::string& filePath){
+	// 環境テクスチャの読み込み
+	environmentTextureName_ = filePath;
+	if (textures_.find(filePath) == textures_.end()){
+		Texture texture(filePath);
+		texture.Load(device_.Get());
+		texture.Upload(device_.Get());
+		texture.CreateShaderResourceView(device_.Get());
+		textures_[filePath] = std::move(texture);
+	}
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetEnvironmentTextureSrvHandle() const{
+	auto it = textures_.find(environmentTextureName_);
+	if (it != textures_.end()){
+		return it->second.GetSrvHandle();
+	}
+	return {};
+}
+
 void TextureManager::Initialize(ImGuiManager* imgui){
 	device_ = GraphicsGroup::GetInstance()->GetDevice();
 	imgui_ = imgui;

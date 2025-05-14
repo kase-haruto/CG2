@@ -167,7 +167,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\Platform\WinApp.cpp" />
     <ClCompile Include="Engine\Editor\UiEditor.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\3d\Camera3d.cpp" />
-    <ClCompile Include="Engine\Graphics\Effect\FogEffect.cpp" />
+    <ClCompile Include="Engine\Extensions\Fog\FogEffect.cpp" />
     <ClCompile Include="Engine\Graphics\Context\GraphicsGroup.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Pso\PipelineState.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.cpp" />
@@ -245,7 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\PostProcess\Collection\PostProcessCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
-    <ClCompile Include="Engine\Objects\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\Extensions\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\API\EngineAPI.h" />
@@ -315,7 +315,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Editor\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\UiEditor.h" />
     <ClInclude Include="Engine\Graphics\Camera\3d\Camera3d.h" />
-    <ClInclude Include="Engine\Graphics\Effect\FogEffect.h" />
+    <ClInclude Include="Engine\Extensions\Fog\FogEffect.h" />
     <ClInclude Include="Engine\Graphics\Context\GraphicsGroup.h" />
     <ClInclude Include="Engine\Graphics\Material.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Pso\PipelineState.h" />
@@ -400,7 +400,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\PostProcess\Collection\PostProcessCollection.h" />
     <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
     <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
-    <ClInclude Include="Engine\Objects\SkyBox\SkyBox.h" />
+    <ClInclude Include="Engine\Extensions\SkyBox\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
