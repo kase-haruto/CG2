@@ -1,10 +1,8 @@
 #include "BaseModel.h"
 
-#include <lib/myFunc/MyFunc.h>
 
-#include "../ModelManager.h"
-#include "../TextureManager.h"
-
+#include <Engine/Assets/Model/ModelManager.h>
+#include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 #include "externals/imgui/imgui.h"
@@ -12,6 +10,7 @@
 #define IMGUIZMO_USE_D3D9_CLIP_SPACE
 #include "externals/imgui/ImGuizmo.h"
 
+#include <lib/myFunc/MyFunc.h>
 #include "Engine/core/Clock/ClockManager.h"
 
 const std::string BaseModel::directoryPath_ = "Resource/models";

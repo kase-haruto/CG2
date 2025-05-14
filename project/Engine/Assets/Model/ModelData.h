@@ -1,9 +1,9 @@
 #pragma once
 
 /* engine */
-#include"../graphics/VertexData.h"
-#include"../graphics/Material.h"
-#include"../objects/Animation/AnimationStruct.h"
+#include <Engine/Renderer/Mesh/VertexData.h>
+#include <Engine/Graphics/Material.h>
+#include <Engine/Assets/Animation/AnimationStruct.h>
 #include "Engine/core/DirectX/Buffer/DxIndexBuffer.h"
 #include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
 

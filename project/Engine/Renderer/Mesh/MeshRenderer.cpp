@@ -1,12 +1,18 @@
 #include "MeshRenderer.h"
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
-#include <Engine/objects/Animation/AnimationModel.h>
-#include <Engine/objects/Model/Model.h>
-#include <Engine/objects/SkyBox/SkyBox.h>
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+// engine
+#include <Engine/Assets/Animation/AnimationModel.h>
+#include <Engine/Assets/Model/Model.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <lib/myMath/Matrix4x4.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/objects/SkyBox/SkyBox.h>
 #include <Engine/physics/light/LightManager.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+
+// lib
+#include <lib/myMath/Matrix4x4.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録

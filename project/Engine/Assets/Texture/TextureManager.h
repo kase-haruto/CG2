@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "../objects/Texture.h"
+#pragma once
+#include <Engine/Assets/Texture/Texture.h>
 
 /* c++ */
 #include <unordered_map>

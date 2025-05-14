@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <Engine/graphics/VertexData.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
 #include <Engine/objects/Transform.h>

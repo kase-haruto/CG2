@@ -1,5 +1,5 @@
 #include "Triangle.h"
-#include <Engine/objects/TextureManager.h>
+#include <Engine/Assets/Texture/TextureManager.h>
 #include <externals/imgui/imgui.h>
 #include <Engine/physics/light/DirectionalLight.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>

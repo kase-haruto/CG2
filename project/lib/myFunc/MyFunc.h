@@ -1,17 +1,17 @@
 #pragma once
 
 /* math */
-#include"lib/myMath/Matrix4x4.h"
-#include"lib/myMath/Vector2.h"
-#include"lib/myMath/Vector3.h"
-#include"lib/myMath/Vector4.h"
+#include "lib/myMath/Matrix4x4.h"
+#include "lib/myMath/Vector2.h"
+#include "lib/myMath/Vector3.h"
+#include "lib/myMath/Vector4.h"
 
 /* engine */
-#include "engine/objects/ModelData.h"
-#include "engine/graphics/VertexData.h"
+#include <Engine/Assets/Animation/AnimationStruct.h>
+#include <Engine/Assets/Model/ModelData.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 #include "engine/graphics/Material.h"
 #include "engine/physics/AABB.h"
-#include "Engine/objects/Animation/AnimationStruct.h"
 
 /* c++ */
 #include <list>

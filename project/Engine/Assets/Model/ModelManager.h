@@ -1,32 +1,33 @@
 #pragma once
 
-#include <Engine/objects/ModelData.h>
+#include <Engine/Assets/Animation/AnimationStruct.h>
+#include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
-#include <Engine/objects/Animation/AnimationStruct.h>
-#include <lib/myMath/Quaternion.h>
+
 #include <lib/myFunc/MyFunc.h>
+#include <lib/myMath/Quaternion.h>
 
 // Assimp
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 // DX12
 #include <d3d12.h>
 #include <wrl.h>
 
 // STL
-#include <unordered_map>
-#include <string>
+#include <condition_variable>
+#include <functional>
+#include <future>
 #include <memory>
 #include <mutex>
-#include <condition_variable>
-#include <thread>
 #include <queue>
-#include <future>
-#include <functional>
+#include <string>
+#include <thread>
+#include <unordered_map>
 
-class ModelManager{
+class ModelManager {
 public:
 	static ModelManager* GetInstance();
 	static void Initialize();
@@ -107,7 +108,7 @@ private:
 	std::condition_variable taskQueueCv_;
 
 	// ロードリクエスト
-	struct LoadRequest{
+	struct LoadRequest {
 		std::string fileName;
 		std::promise<ModelData> promise;
 	};
@@ -116,7 +117,7 @@ private:
 	// ------------------------------------------------------
 	// CPUロード完了後のタスク (GPUリソース化待ち)
 	// ------------------------------------------------------
-	struct LoadingTask{
+	struct LoadingTask {
 		std::string fileName;
 		ModelData modelData;
 	};

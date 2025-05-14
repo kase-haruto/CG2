@@ -1,8 +1,10 @@
 #pragma once
-
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 //* engine *//
-#include "Engine/objects/Model/Model.h"
-#include "Engine/objects/Animation/AnimationModel.h"
+#include <Engine/Assets/Model/Model.h>
+#include <Engine/Assets/Animation/AnimationModel.h>
 #include "Engine/objects/SceneObject.h"
 
 //* c++ lib *//

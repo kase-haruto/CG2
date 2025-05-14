@@ -4,7 +4,7 @@
 /* ===================================================================== */
 
 /* engine */
-#include <Engine/objects/ModelData.h>
+#include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Graphics/Material.h>
 #include <Engine/objects/TransformationMatrix.h>
 #include <Engine/objects/Transform.h>

@@ -6,8 +6,6 @@
 #include <Engine/scene/Base/BaseScene.h>
 
 /* objects */
-#include <Engine/objects/ModelBuilder.h>
-#include <Engine/Editor/UiEditor.h>
 #include <Engine/Renderer/Sprite/Sprite.h>
 #include <Game/3d/Base/BaseGameObject.h>
 #include <Game/3dObject/Actor/Player/Player.h>
@@ -55,10 +53,6 @@ private:
 
 	// カメラ
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
-
-	/* editor =======================================================*/
-	std::unique_ptr<ModelBuilder>modelBuilder_ = nullptr;
-	std::unique_ptr<UIEditor> uiEditor_ = nullptr;
 
 };
 

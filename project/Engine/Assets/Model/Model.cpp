@@ -1,26 +1,27 @@
 #include "Model.h"
-
-#include "engine/objects/ModelData.h"
-#include "engine/graphics/Material.h"
-#include "engine/objects/TransformationMatrix.h"
-#include "engine/objects/Transform.h"
-#include "lib/myMath/Vector4.h"
-
-#include <Engine/Graphics/Context/GraphicsGroup.h>
-#include "engine/objects/TextureManager.h"
-#include "engine/objects/ModelManager.h"
-#include "engine/graphics/VertexData.h"
-#include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include "Engine/core/System.h"
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+// engine
 #include "Engine/core/Clock/ClockManager.h"
-
+#include "Engine/core/System.h"
+#include "engine/graphics/Material.h"
+#include "engine/objects/Transform.h"
+#include "engine/objects/TransformationMatrix.h"
 #include "Engine/physics/light/LightManager.h"
+#include "lib/myMath/Vector4.h"
+#include <Engine/Assets/Model/ModelData.h>
+#include <Engine/Assets/Model/ModelManager.h>
+#include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
 #endif
 
-#include <lib/myFunc/MyFunc.h> // 必要に応じて
+#include <lib/myFunc/MyFunc.h>
 
 Model::Model(const std::string& fileName){
 	fileName_ = fileName;

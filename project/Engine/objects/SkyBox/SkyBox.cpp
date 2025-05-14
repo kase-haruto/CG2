@@ -3,7 +3,7 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Camera/Base/BaseCamera.h>
-#include <Engine/objects/TextureManager.h>
+#include <Engine/Assets/Texture/TextureManager.h>
 #include <lib/myMath/Matrix4x4.h>
 
 SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*)>cb) {

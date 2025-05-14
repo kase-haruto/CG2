@@ -240,7 +240,7 @@
     <ClCompile Include="Engine\scene\TestScene.cpp">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\Model\Model.cpp">
+    <ClCompile Include="Engine\Assets\Model\Model.cpp">
       <Filter>Engine\project\3d\objects\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\core\System.cpp">
@@ -258,7 +258,7 @@
     <ClCompile Include="Engine\core\LeakChecker.cpp">
       <Filter>Engine\project\lib\debug</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\Texture.cpp">
+    <ClCompile Include="Engine\Assets\Texture\Texture.cpp">
       <Filter>Engine\project\2d\texture</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Renderer\Sprite\Sprite.cpp">
@@ -267,7 +267,7 @@
     <ClCompile Include="Engine\Application\UI\ImGuiManager.cpp">
       <Filter>Engine\project\manager\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\ModelManager.cpp">
+    <ClCompile Include="Engine\Assets\Model\ModelManager.cpp">
       <Filter>Engine\project\manager\model</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.cpp">
@@ -279,7 +279,7 @@
     <ClCompile Include="Engine\Graphics\Pipeline\Shader\ShaderManager.cpp">
       <Filter>Engine\project\manager\shader</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\TextureManager.cpp">
+    <ClCompile Include="Engine\Assets\Texture\TextureManager.cpp">
       <Filter>Engine\project\manager\texture</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Application\Input\Input.cpp">
@@ -324,7 +324,7 @@
     <ClCompile Include="Engine\Editor\UiEditor.cpp">
       <Filter>Engine\project\editor\ui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\objects\ModelBuilder.cpp">
+    <ClCompile Include="Engine\Assets\Model\ModelBuilder.cpp">
       <Filter>Engine\project\editor\model</Filter>
     </ClCompile>
     <ClCompile Include="lib\myMath\Vector3.cpp">
@@ -371,8 +371,8 @@
     <ClCompile Include="Game\3d\Base\Character.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\SceneSwitcherPanel.cpp" />
     <ClCompile Include="lib\myMath\Quaternion.cpp" />
-    <ClCompile Include="Engine\objects\Animation\AnimationModel.cpp" />
-    <ClCompile Include="Engine\objects\Model\BaseModel.cpp" />
+    <ClCompile Include="Engine\Assets\Animation\AnimationModel.cpp" />
+    <ClCompile Include="Engine\Assets\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\Base\BaseCamera.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\3d\DebugCamera.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
@@ -448,10 +448,10 @@
     <ClInclude Include="Engine\scene\TestScene.h">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\Model\Model.h">
+    <ClInclude Include="Engine\Assets\Model\Model.h">
       <Filter>Engine\project\3d\objects\model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\ModelData.h">
+    <ClInclude Include="Engine\Assets\Model\ModelData.h">
       <Filter>Engine\project\3d\objects\model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\core\System.h">
@@ -469,7 +469,7 @@
     <ClInclude Include="Engine\physics\Triangle.h">
       <Filter>Engine\project\math\shape</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\Texture.h">
+    <ClInclude Include="Engine\Assets\Texture\Texture.h">
       <Filter>Engine\project\2d\texture</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Renderer\Sprite\Sprite.h">
@@ -478,7 +478,7 @@
     <ClInclude Include="Engine\Application\UI\ImGuiManager.h">
       <Filter>Engine\project\manager\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\ModelManager.h">
+    <ClInclude Include="Engine\Assets\Model\ModelManager.h">
       <Filter>Engine\project\manager\model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Pipeline\Manager\PipelineStateManager.h">
@@ -490,7 +490,7 @@
     <ClInclude Include="Engine\Graphics\Pipeline\Shader\ShaderManager.h">
       <Filter>Engine\project\manager\shader</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\TextureManager.h">
+    <ClInclude Include="Engine\Assets\Texture\TextureManager.h">
       <Filter>Engine\project\manager\texture</Filter>
     </ClInclude>
     <ClInclude Include="lib\myFunc\MyFunc.h">
@@ -565,7 +565,7 @@
     <ClInclude Include="Engine\Editor\UiEditor.h">
       <Filter>Engine\project\editor\ui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\objects\ModelBuilder.h">
+    <ClInclude Include="Engine\Assets\Model\ModelBuilder.h">
       <Filter>Engine\project\editor\model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Editor\BaseEditor.h">
@@ -577,7 +577,7 @@
     <ClInclude Include="Engine\core\LeakChecker.h">
       <Filter>Engine\project\lib\debug</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\VertexData.h">
+    <ClInclude Include="Engine\Renderer\Mesh\VertexData.h">
       <Filter>Engine\project\structs</Filter>
     </ClInclude>
     <ClInclude Include="Engine\objects\TransformationMatrix.h">
@@ -633,9 +633,9 @@
     <ClInclude Include="Game\3d\Base\Character.h" />
     <ClInclude Include="Engine\Application\UI\Panels\SceneSwitcherPanel.h" />
     <ClInclude Include="lib\myMath\Quaternion.h" />
-    <ClInclude Include="Engine\objects\Animation\AnimationStruct.h" />
-    <ClInclude Include="Engine\objects\Animation\AnimationModel.h" />
-    <ClInclude Include="Engine\objects\Model\BaseModel.h" />
+    <ClInclude Include="Engine\Assets\Animation\AnimationStruct.h" />
+    <ClInclude Include="Engine\Assets\Animation\AnimationModel.h" />
+    <ClInclude Include="Engine\Assets\Model\BaseModel.h" />
     <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\Base\BaseCamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\3d\DebugCamera.h" />

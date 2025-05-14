@@ -6,7 +6,7 @@
 #include "lib/myMath/Vector2.h"
 #include "lib/myMath/Vector4.h"
 #include <Engine/Graphics/Material.h>
-#include <Engine/Graphics/VertexData.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 
 /* c++ */
 #include <d3d12.h>

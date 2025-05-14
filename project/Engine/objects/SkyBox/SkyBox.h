@@ -4,7 +4,7 @@
 /* include space
 /* ===================================================================== */
 
-#include <Engine/graphics/VertexData.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 #include <Engine/objects/Transform.h>
 #include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>

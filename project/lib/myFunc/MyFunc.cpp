@@ -1,7 +1,7 @@
 #include"MyFunc.h"
 #include"ConvertString.h"
 
-#include "Engine/objects/Model/Model.h"
+#include <Engine/Assets/Model/Model.h>
 #include <Engine/Graphics/Descriptor/SrvLocator.h>
 
 #include<cmath>

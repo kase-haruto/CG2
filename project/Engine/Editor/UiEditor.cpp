@@ -1,9 +1,12 @@
 #include "engine/Editor/UiEditor.h"
-
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 /* engine */
-#include "engine/objects/Sprite.h"
-#include "engine/objects/TextureManager.h"
+#include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Renderer/Sprite/Sprite.h>
 
+// external
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"
 #endif // _DEBUG
