@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Engine/Foundation/Math/Vector3.h>
 
 #include<vector>
+
+struct Vector3;
 
 /// <summary>
 /// CatmullRom補完

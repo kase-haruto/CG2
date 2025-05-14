@@ -3,7 +3,7 @@
 /*	include space
 /* ===================================================================== */
 // engine
-#include <Engine/core/Enviroment.h>
+#include <Engine/Application/System/Enviroment.h>
 #include <Engine/Scene/System/SceneManager.h>
 #include <Engine/Application/Input/Input.h>
 
@@ -26,6 +26,12 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	sceneManager_->SetEngineUI(ui);
 	sceneManager_->Initialize();
 }
+
+bool EngineController::Update() {
+	return false;
+}
+
+void EngineController::Render() {}
 
 //===================================================================*/
 // メインループ処理

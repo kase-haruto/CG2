@@ -1,6 +1,8 @@
 #define ENGINE_EXPORTS
 #include "EngineMain.h"
-#include "../Engine/core/EngineController.h"
+#include <Engine/Application/Framework/EngineController.h>
+
+// c++
 #include <memory>
 
 static std::unique_ptr<EngineController> engine;

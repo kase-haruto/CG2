@@ -2,7 +2,7 @@
 //  include
 ////////////////////////////////////////////////////////////////////////////////////////////
 #include <Engine/Application/UI/EngineUI/EngineUI.h>
-#include <Engine/core/Enviroment.h>
+#include <Engine/Application/System/Enviroment.h>
 
 // uiPanel
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>

@@ -3,7 +3,7 @@
 #include <Engine/Foundation/Math/Vector2.h>
 #include <Engine/Foundation/Math/Quaternion.h>
 
-#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 
 // c++
 #include <string>

@@ -5,7 +5,7 @@
 
 /* engine */
 #include <Engine/Assets/Model/ModelData.h>
-#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 #include <engine/graphics/Material.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/Objects/Transform/Transform.h>

@@ -2,13 +2,15 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-#include <Engine/core/WinApp.h>
+#include <Engine/Application/Platform/WinApp.h>
 #include <Engine/Graphics/Device/DxDevice.h>
 #include <Engine/Graphics/Context/DxCommand.h>
 #include <Engine/Graphics/Context/DxFence.h>
 #include <Engine/Graphics/SwapChain/DxSwapChain.h>
 #include <Engine/Graphics/RenderTarget/Collection/RenderTargetCollection.h>
-#include "engine/core/DirectX/ResourceStateTracker/ResourceStateTracker.h"
+#include <Engine/Graphics/ResourceStateTracker/ResourceStateTracker.h>
+
+// c++
 #include <memory>
 
 using Microsoft::WRL::ComPtr;

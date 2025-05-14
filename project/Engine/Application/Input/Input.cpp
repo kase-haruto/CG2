@@ -1,10 +1,13 @@
-// Input.cpp
-
 #include "Input.h"
-#include "engine/core/System.h" // System::GetHinstance() と System::GetHWND() を使用
+// engine
+#include <Engine/Application/System/System.h>
+#include <Engine/Application/System/Enviroment.h>
+
+// c++
 #include <algorithm>
+
+// externals
 #include <externals/imgui/imgui.h>
-#include <Engine/core/Enviroment.h>
 
 // シングルトンインスタンスの初期化
 Input* Input::instance_ = nullptr;

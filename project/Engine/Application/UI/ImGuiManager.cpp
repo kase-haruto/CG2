@@ -3,10 +3,10 @@
 /*		include space
 /* ===================================================================== */
 // engine
-#include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/core/WinApp.h>
-#include <lib/myFunc/DxFunc.h>
+#include <Engine/Application/Platform/WinApp.h>
+#include <Engine/Foundation/Utility/Func/DxFunc.h>
 #include <Engine/Graphics/Descriptor/SrvLocator.h>
+#include <Engine/Graphics/Device/DxCore.h>
 
 // externals
 #ifdef _DEBUG

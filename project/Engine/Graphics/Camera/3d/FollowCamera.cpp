@@ -5,7 +5,7 @@
 // engine
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Application/Input/Input.h>
-#include <Engine/core/System.h>
+#include <Engine/Application/System/System.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 

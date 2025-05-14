@@ -1,17 +1,17 @@
 #pragma once
 
 /* engine */
-#include <Engine/Renderer/Mesh/VertexData.h>
-#include <Engine/Graphics/Material.h>
 #include <Engine/Assets/Animation/AnimationStruct.h>
-#include "Engine/core/DirectX/Buffer/DxIndexBuffer.h"
-#include "Engine/core/DirectX/Buffer/DxVertexBuffer.h"
+#include <Engine/Graphics/Buffer/DxIndexBuffer.h>
+#include <Engine/Graphics/Buffer/DxVertexBuffer.h>
+#include <Engine/Graphics/Material.h>
+#include <Engine/Renderer/Mesh/VertexData.h>
 
 /* c++ */
-#include <vector>
 #include <d3d12.h>
-#include <wrl.h>
 #include <map>
+#include <vector>
+#include <wrl.h>
 
 struct ModelData{
 	std::vector<VertexData> vertices;

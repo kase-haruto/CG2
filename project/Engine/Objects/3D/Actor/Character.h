@@ -1,6 +1,11 @@
 #pragma once
-#include "../Base/BaseGameObject.h"
+/* ========================================================================
+/* include space
+/* ===================================================================== */
+// engine
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 
+// c++
 #include <cstdint>
 #include <string>
 

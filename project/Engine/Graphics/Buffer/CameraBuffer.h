@@ -1,8 +1,8 @@
 #pragma once
 
 //engine
-#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-#include <Engine/graphics/Pipeline/PipelineType.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Pipeline/PipelineType.h>
 
 //math
 #include <Engine/Foundation/Math/Matrix4x4.h>

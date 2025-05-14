@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/core/DirectX/GpuResource/DxGpuResource.h>
+#include <Engine/Graphics/GpuResource/DxGpuResource.h>
 
 #include <d3d12.h>
 

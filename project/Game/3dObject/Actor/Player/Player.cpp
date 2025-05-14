@@ -9,7 +9,7 @@
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/core/Enviroment.h>
+#include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 
 // externals

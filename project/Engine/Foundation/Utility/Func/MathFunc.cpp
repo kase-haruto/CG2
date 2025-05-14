@@ -1,5 +1,5 @@
-#include"lib/myFunc/MathFunc.h"
-
+#include <Engine/Foundation/Utility/Func/MathFunc.h>
+#include <Engine/Foundation/Math/Vector3.h>
 /* c++ */
 #include<cassert>
 #include<cmath>

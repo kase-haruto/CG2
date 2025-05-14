@@ -1,7 +1,7 @@
 #include "ModelManager.h"
 
-#include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
-#include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
+#include <Engine/Graphics/Buffer/DxVertexBuffer.h>
+#include <Engine/Graphics/Buffer/DxIndexBuffer.h>
 
 // static 変数初期化
 ModelManager* ModelManager::instance_ = nullptr;

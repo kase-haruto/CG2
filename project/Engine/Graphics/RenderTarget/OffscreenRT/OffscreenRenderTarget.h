@@ -3,7 +3,7 @@
 /*	include space
 /* ===================================================================== */
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
-#include <Engine/core/DirectX/GpuResource/DxGpuResource.h>
+#include <Engine/Graphics/GpuResource/DxGpuResource.h>
 
 #include <memory>
 

@@ -1,6 +1,6 @@
 #pragma once
+#include <Engine/API/EngineAPI.h>
 #include <Windows.h>
-#include "EngineAPI.h"
 
 extern "C" {
     ENGINE_API void Engine_Initialize(HINSTANCE hInstance);

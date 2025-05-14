@@ -6,8 +6,8 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <Engine/Application/UI/Panels/EditorPanel.h>
-#include <Engine/core/Enviroment.h>
-#include <Engine/core/System.h>
+#include <Engine/Application/System/Enviroment.h>
+#include <Engine/Application/System/System.h>
 #include <Engine/Foundation/Audio/Audio.h>
 #include <Engine/Foundation/Utility/Func/DxFunc.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>

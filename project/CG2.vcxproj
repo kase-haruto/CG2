@@ -111,10 +111,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
+    <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\BoxDrawer.cpp" />
-    <ClCompile Include="Engine\core\DirectX\Buffer\CameraBuffer.cpp" />
+    <ClCompile Include="Engine\Graphics\Buffer\CameraBuffer.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
-    <ClCompile Include="Engine\core\DirectX\GpuResource\DxGpuResource.cpp" />
+    <ClCompile Include="Engine\Graphics\GpuResource\DxGpuResource.cpp" />
     <ClCompile Include="Engine\Editor\EffectEditor.cpp" />
     <ClCompile Include="Engine\Scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
@@ -158,11 +160,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Device\DxDevice.cpp" />
     <ClCompile Include="Engine\Graphics\Context\DxFence.cpp" />
     <ClCompile Include="Engine\Graphics\SwapChain\DxSwapChain.cpp" />
-    <ClCompile Include="Engine\Application\Core\EngineController.cpp" />
+    <ClCompile Include="Engine\Application\Framework\EngineController.cpp" />
     <ClCompile Include="Engine\Application\Input\Input.cpp" />
-    <ClCompile Include="Engine\core\LeakChecker.cpp" />
-    <ClCompile Include="Engine\core\System.cpp" />
-    <ClCompile Include="Engine\core\WinApp.cpp" />
+    <ClCompile Include="Engine\Foundation\Utility\LeakChecker\LeakChecker.cpp" />
+    <ClCompile Include="Engine\Application\System\System.cpp" />
+    <ClCompile Include="Engine\Application\Platform\WinApp.cpp" />
     <ClCompile Include="Engine\Editor\UiEditor.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\3d\Camera3d.cpp" />
     <ClCompile Include="Engine\Graphics\Effect\FogEffect.cpp" />
@@ -223,7 +225,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
     <ClCompile Include="Engine\Objects\Particle\Particle.cpp" />
     <ClCompile Include="Engine\Objects\Collider\SphereCollider.cpp" />
-    <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
+    <ClCompile Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneManager.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\SceneSwitcherPanel.cpp" />
@@ -246,18 +248,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Objects\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\API\EngineAPI.h" />
+    <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
     <ClInclude Include="Engine\Renderer\Primitive\BoxDrawer.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\CameraBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\CameraBuffer.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
-    <ClInclude Include="Engine\core\DirectX\GpuResource\DxGpuResource.h" />
+    <ClInclude Include="Engine\Graphics\GpuResource\DxGpuResource.h" />
     <ClInclude Include="Engine\Editor\EffectEditor.h" />
     <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
     <ClInclude Include="Engine\Scene\Base\BaseScene.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\DxBuffer.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
-    <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\DxBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\DxConstantBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\DxIndexBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\DxStructuredBuffer.h" />
+    <ClInclude Include="Engine\Graphics\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
     <ClInclude Include="Engine\Foundation\Clock\ClockManager.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\BlendMode\BlendMode.h" />
@@ -302,12 +306,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Device\DxDevice.h" />
     <ClInclude Include="Engine\Graphics\Context\DxFence.h" />
     <ClInclude Include="Engine\Graphics\SwapChain\DxSwapChain.h" />
-    <ClInclude Include="Engine\Application\Core\EngineController.h" />
-    <ClInclude Include="Engine\core\Enviroment.h" />
+    <ClInclude Include="Engine\Application\Framework\EngineController.h" />
+    <ClInclude Include="Engine\Application\System\Enviroment.h" />
     <ClInclude Include="Engine\Application\Input\Input.h" />
-    <ClInclude Include="Engine\core\LeakChecker.h" />
-    <ClInclude Include="Engine\core\System.h" />
-    <ClInclude Include="Engine\core\WinApp.h" />
+    <ClInclude Include="Engine\Foundation\Utility\LeakChecker\LeakChecker.h" />
+    <ClInclude Include="Engine\Application\System\System.h" />
+    <ClInclude Include="Engine\Application\Platform\WinApp.h" />
     <ClInclude Include="Engine\Editor\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\UiEditor.h" />
     <ClInclude Include="Engine\Graphics\Camera\3d\Camera3d.h" />
@@ -374,7 +378,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Foundation\Math\Vector4.h" />
     <ClInclude Include="Engine\Objects\Particle\Particle.h" />
     <ClInclude Include="Engine\Objects\Collider\SphereCollider.h" />
-    <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
+    <ClInclude Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Engine\Scene\System\SceneManager.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\SceneObjectManager.h" />
     <ClInclude Include="Engine\Application\UI\Panels\SceneSwitcherPanel.h" />

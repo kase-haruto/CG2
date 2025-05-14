@@ -18,7 +18,7 @@
 #include <Engine/PostProcess/Slot/PostEffectSlot.h>
 
 //リークチェック
-#include "LeakChecker.h"
+#include <Engine/Foundation/Utility/LeakChecker/LeakChecker.h>
 
 /* c++ */
 #include<stdint.h>

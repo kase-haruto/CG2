@@ -3,7 +3,7 @@
 
 #include "ICamera.h"
 #include <Engine/Objects/Transform/Transform.h>
-#include "Engine/core/DirectX/Buffer/CameraBuffer.h"
+#include <Engine/Graphics/Buffer/CameraBuffer.h>
 #include <Engine/Foundation/Math/Matrix4x4.h>
 #include <Engine/Foundation/Math/Vector3.h>
 

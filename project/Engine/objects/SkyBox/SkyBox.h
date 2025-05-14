@@ -6,9 +6,9 @@
 
 #include <Engine/Renderer/Mesh/VertexData.h>
 #include <Engine/Objects/Transform/Transform.h>
-#include <Engine/core/DirectX/Buffer/DxIndexBuffer.h>
-#include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
-#include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Buffer/DxIndexBuffer.h>
+#include <Engine/Graphics/Buffer/DxVertexBuffer.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 #include <Engine/Renderer/Mesh/IMeshRenderable.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 
