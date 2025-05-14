@@ -15,15 +15,16 @@
 #include <string>
 #include <array> 
 #include <functional>
+
 struct Vector3;
 
 class SkyBox :
-	public IMeshRenderable,SceneObject {
+	public IMeshRenderable {
 public:
 	SkyBox(std::string fileName,std::function<void(IMeshRenderable*)>);
 	~SkyBox()override = default;
 	void Initialize();
-	void ShowGui()override;
+	void ShowGui();
 	void Update();
 	void Draw()override;
 

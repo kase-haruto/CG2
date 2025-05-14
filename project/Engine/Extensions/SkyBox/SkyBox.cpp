@@ -8,11 +8,9 @@
 
 SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*)>cb) {
 	cb(this);
-	SceneObject::SetName("skyBox", ObjectType::GameObject);
-	SceneObject::EnableGuiList();
 
 	textureName_ = fileName;
-
+	TextureManager::GetInstance()->SetEnvironmentTexture(fileName);
 }
 
 void SkyBox::Initialize() {
@@ -95,7 +93,7 @@ void SkyBox::Draw() {
 	ID3D12GraphicsCommandList* cmd = GraphicsGroup::GetInstance()->GetCommandList().Get();
 	CameraManager::SetCommand(cmd, PipelineType::Skybox);
 
-	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->LoadTexture(textureName_);
+	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->GetEnvironmentTextureSrvHandle();
 
 	GraphicsGroup::GetInstance()->SetCommand(cmd, PipelineType::Skybox, BlendMode::NORMAL);
 	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
