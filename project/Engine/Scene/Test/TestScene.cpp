@@ -57,7 +57,7 @@ void TestScene::Initialize() {
 	bunny_ = std::make_unique<BaseGameObject>("bunny.obj", "bunny", registerToRenderer);
 	bunny_->SetTranslate({ -10.0f, 0.0f, 0.0f });
 
-	teapot_ = std::make_unique<BaseGameObject>("teapot.obj", "teapot", registerToRenderer);
+	teapot_ = std::make_unique<BaseGameObject>("debugSphere.obj", "sphere", registerToRenderer);
 	teapot_->SetTranslate({ 5.0f, 0.0f, 0.0f });
 
 	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf", "human", registerToRenderer);

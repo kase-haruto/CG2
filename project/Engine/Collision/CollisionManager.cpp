@@ -190,42 +190,35 @@ bool CollisionManager::SphereToSphere(const Sphere& sphereA, const Sphere& spher
 }
 
 bool CollisionManager::SphereToOBB(const Sphere& sphere, const OBB obb){
-	// Sphereの中心
 	const Vector3& sphereCenter = sphere.center;
 
-	// OBBの軸方向（X, Y, Z）の取得
-	Matrix4x4 rotationMatrix = EulerToMatrix(obb.rotate);
+	// Quaternion から回転行列を作成
+	Matrix4x4 rotationMatrix = Quaternion::ToMatrix(obb.rotate);
+
+	// OBBの軸方向（ローカル軸 X, Y, Z）
 	Vector3 obbAxes[3] = {
 		Vector3::Transform(Vector3(1.0f, 0.0f, 0.0f), rotationMatrix),
 		Vector3::Transform(Vector3(0.0f, 1.0f, 0.0f), rotationMatrix),
 		Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), rotationMatrix),
 	};
 
-	// Sphereの中心とOBBの中心の差分
 	Vector3 diff = sphereCenter - obb.center;
 	Vector3 closestPoint = obb.center;
 
-	// 各軸でクランプ処理
 	for (int i = 0; i < 3; ++i){
-		// diffをOBB軸方向に投影して距離を取得
 		float distance = Vector3::Dot(diff, obbAxes[i]);
-		// OBBの半サイズ（軸方向の幅）
 		float halfExtent = (i == 0) ? obb.size.x * 0.5f :
 			(i == 1) ? obb.size.y * 0.5f :
 			obb.size.z * 0.5f;
-
-		// クランプして最近接点を計算
 		distance = std::clamp(distance, -halfExtent, halfExtent);
 		closestPoint += distance * obbAxes[i];
 	}
 
-	// 最近接点とSphere中心の距離を計算
 	Vector3 closestToSphere = closestPoint - sphereCenter;
 	float distanceSquared = closestToSphere.LengthSquared();
-
-	// 衝突判定
 	return distanceSquared <= (sphere.radius * sphere.radius);
 }
+
 
 bool CollisionManager::OBBToOBB([[maybe_unused]] const OBB& obbA, [[maybe_unused]] const OBB& obbB){
 	// 1) A, B それぞれの 3軸ベクトル を求める
@@ -262,16 +255,12 @@ bool CollisionManager::OBBToOBB([[maybe_unused]] const OBB& obbA, [[maybe_unused
 }
 
 void CollisionManager::ComputeOBBAxes(const OBB& obb, Vector3 outAxis[3]){
-	Matrix4x4 rot = EulerToMatrix(obb.rotate);
+	Matrix4x4 rot = Quaternion::ToMatrix(obb.rotate); // Quaternion → 回転行列
 
-	// 行列の1行(or1列)が軸ベクトルになる
-	// 行列の並びは実装に応じて違うので要調整
-	// ここでは row-major として書く一例
 	outAxis[0] = Vector3(rot.m[0][0], rot.m[0][1], rot.m[0][2]); // X軸
 	outAxis[1] = Vector3(rot.m[1][0], rot.m[1][1], rot.m[1][2]); // Y軸
 	outAxis[2] = Vector3(rot.m[2][0], rot.m[2][1], rot.m[2][2]); // Z軸
 
-	// 念のため正規化 (回転行列なら本来長さ1だが、積算順序等で誤差が出るかも)
 	outAxis[0].Normalize();
 	outAxis[1].Normalize();
 	outAxis[2].Normalize();

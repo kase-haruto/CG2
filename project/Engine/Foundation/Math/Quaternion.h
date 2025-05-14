@@ -10,6 +10,9 @@ struct Quaternion{
 	float z; //< Z成分
 	float w; //< W成分
 
+	Quaternion();
+	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w){}
+
 	// 単位クォータニオンで初期化する
 	void Initialize();
 

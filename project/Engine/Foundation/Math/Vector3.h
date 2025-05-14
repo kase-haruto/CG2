@@ -1,7 +1,7 @@
 #pragma once
 
 struct Matrix4x4;
-
+struct Quaternion;
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
@@ -74,4 +74,6 @@ struct Vector3 final{
 
 
 	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
+	static Vector3 Transform(const Vector3& v, const Quaternion& q);
 };

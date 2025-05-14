@@ -169,6 +169,7 @@ void ModelManager::SetOnModelLoadedCallback(std::function<void(const std::string
 void ModelManager::StartUpLoad(){
 	LoadModel("suzanne.obj");
 	LoadModel("player.obj");
+	LoadModel("debugSphere.obj");
 	LoadModel("debugCube.obj");
 	LoadModel("fence.obj");
 	LoadModel("ground.obj");

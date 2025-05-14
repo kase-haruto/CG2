@@ -42,9 +42,9 @@ void PrimitiveDrawer::DrawLine3d(const Vector3& start, const Vector3& end, const
 	}
 }
 
-void PrimitiveDrawer::DrawBox(const Vector3& center, const Vector3& size, const Vector4& color) {
+void PrimitiveDrawer::DrawBox(const Vector3& center, Quaternion& rotate, const Vector3& size, const Vector4& color) {
 	if (boxDrawer_) {
-		boxDrawer_->DrawBox(center, size, color);
+		boxDrawer_->DrawBox(center, rotate,size, color);
 	}
 }
 
@@ -73,17 +73,13 @@ void PrimitiveDrawer::DrawGrid(){
 	}
 }
 
-void PrimitiveDrawer::DrawOBB(const Vector3& center, const Vector3& rotate, const Vector3& size, const Vector4 color){
-
+void PrimitiveDrawer::DrawOBB(const Vector3& center, const Quaternion& rotate, const Vector3& size, const Vector4& color){
 	const uint32_t vertexNum = 8;
 
-	// 回転行列を計算
-	Matrix4x4 rotationMatrix = EulerToMatrix(rotate);
-
-	// 各軸の半サイズを回転
-	Vector3 halfSizeX = Vector3::Transform({1.0f, 0.0f, 0.0f}, rotationMatrix) * size.x * 0.5f;
-	Vector3 halfSizeY = Vector3::Transform({0.0f, 1.0f, 0.0f}, rotationMatrix) * size.y * 0.5f;
-	Vector3 halfSizeZ = Vector3::Transform({0.0f, 0.0f, 1.0f}, rotationMatrix) * size.z * 0.5f;
+	// 各軸の半サイズをクォータニオンで回転
+	Vector3 halfSizeX = Vector3::Transform({1.0f, 0.0f, 0.0f}, rotate) * (size.x * 0.5f);
+	Vector3 halfSizeY = Vector3::Transform({0.0f, 1.0f, 0.0f}, rotate) * (size.y * 0.5f);
+	Vector3 halfSizeZ = Vector3::Transform({0.0f, 0.0f, 1.0f}, rotate) * (size.z * 0.5f);
 
 	// 頂点を計算
 	Vector3 vertices[vertexNum];
@@ -93,7 +89,8 @@ void PrimitiveDrawer::DrawOBB(const Vector3& center, const Vector3& rotate, cons
 	};
 
 	for (int i = 0; i < vertexNum; ++i){
-		Vector3 localVertex = offsets[i].x * halfSizeX +
+		Vector3 localVertex =
+			offsets[i].x * halfSizeX +
 			offsets[i].y * halfSizeY +
 			offsets[i].z * halfSizeZ;
 		vertices[i] = center + localVertex;
@@ -107,11 +104,8 @@ void PrimitiveDrawer::DrawOBB(const Vector3& center, const Vector3& rotate, cons
 	};
 
 	for (int i = 0; i < 12; ++i){
-		int start = edges[i][0];
-		int end = edges[i][1];
-		DrawLine3d(vertices[start], vertices[end], color);
+		DrawLine3d(vertices[edges[i][0]], vertices[edges[i][1]], color);
 	}
-
 }
 
 void PrimitiveDrawer::DrawSphere(const Vector3& center, const float radius, int subdivision, Vector4 color){

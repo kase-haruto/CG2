@@ -12,7 +12,7 @@ struct Matrix4x4;
 class BoxDrawer {
 public:
 	void Initialize();
-	void DrawBox(const Vector3& center, const Vector3& size, const Vector4& color);
+	void DrawBox(const Vector3& center, const Quaternion& rotate, const Vector3& size, const Vector4& color);
 	void Render();
 	void Clear();
 

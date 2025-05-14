@@ -6,6 +6,7 @@
 #include <Engine/Assets/Model/Model.h>
 #include <Engine/Assets/Animation/AnimationModel.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/objects/Collider/Collider.h>
 
 //* c++ lib *//
 #include <memory>
@@ -19,6 +20,12 @@ class BaseGameObject
 		ModelType_Static,		// 静的モデル
 		ModelType_Animation,	// アニメーションモデル
 		ModelType_Unknown,		// 不明
+	};
+
+	enum class ColliderKind{
+		None,
+		Box,
+		Sphere,
 	};
 
 public:
@@ -38,8 +45,23 @@ public:
 	void ShowGui()override;
 	virtual void DerivativeGui();
 
-	void SaveToJson(const std::string& fileName)const;
-	void LoadFromJson(const std::string& fileName);
+	//--------- accessor -----------------------------------------------------
+	void SetName(const std::string& name);
+	void SetTranslate(const Vector3& pos);
+	void SetScale(const Vector3& scale);
+	virtual const Vector3 GetCenterPos()const;
+	void SetColor(const Vector4& color);
+	void SetUvScale(const Vector3& uvScale);
+	Vector3 GetWorldPosition()const{ return model_->worldTransform_.GetWorldPosition(); }
+
+	void SetCollider(std::unique_ptr<Collider> collider);
+	Collider* GetCollider();
+
+private:
+	//===================================================================*/
+	//                    private methods
+	//===================================================================*/
+	void SwitchCollider(ColliderKind kind);
 
 protected:
 	//===================================================================*/
@@ -48,46 +70,12 @@ protected:
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
 	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
-protected:
-	//===================================================================*/
-	//                    private methods
-	//===================================================================*/
-	std::string jsonPath = "gameObjects";
-
 private:
 	//===================================================================*/
 	//                    private variables
 	//===================================================================*/
 	ObjectModelType objectModelType_ = ModelType_Static;
 
-public:
-	//===================================================================*/
-	//                    getter/setter
-	//===================================================================*/
-	void SetName(const std::string& name);
-	const std::string& GetName()const { return name_; }
-
-	void SetTranslate(const Vector3& pos) {
-		if (model_) {
-			model_->worldTransform_.translation = pos;
-		}
-	}
-
-	void SetScale(const Vector3& scale) {
-		if (model_) {
-			model_->worldTransform_.scale = scale;
-		}
-	}
-
-	virtual const Vector3 GetCenterPos()const {
-		const Vector3 offset = { 0.0f, 1.0f, 0.0f };
-		Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
-		return worldPos;
-	}
-	void SetColor(const Vector4& color) {
-		if (model_) {
-			model_->SetColor(color);
-		}
-	}
-	BaseModel* GetModel()const { return model_.get(); }
+	std::unique_ptr<Collider> collider_;
+	ColliderKind currentColliderKind_ = ColliderKind::None;	// コライダーの種類
 };

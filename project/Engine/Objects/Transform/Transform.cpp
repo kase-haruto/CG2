@@ -11,12 +11,14 @@
 #include <externals/imgui/imgui.h>
 
 
-void EulerTransform::ShowImGui(const std::string& lavel){
-	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat3("scale", &scale.x, 0.01f);
-		ImGui::DragFloat3("rotation", &rotate.x, 0.01f);
-		ImGui::DragFloat3("translate", &translate.x, 0.01f);
-	}
+void EulerTransform::ShowImGui(const std::string& label){
+	ImGui::SeparatorText(label.c_str());
+	std::string scaleLabel = label + "_scale";
+	std::string rotationLabel = label + "_rotation";
+	std::string translationLabel = label + "_translate";
+	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
+	ImGui::DragFloat3(rotationLabel.c_str(), &rotate.x, 0.01f);
+	ImGui::DragFloat3(translationLabel.c_str(), &translate.x, 0.01f);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -35,12 +37,14 @@ void BaseTransform::Initialize(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	imgui
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseTransform::ShowImGui(const std::string& lavel){
-	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat3("scale", &scale.x, 0.01f);
-		ImGui::DragFloat3("rotation", &eulerRotation.x, 0.01f);
-		ImGui::DragFloat3("translate", &translation.x, 0.01f);
-	}
+void BaseTransform::ShowImGui(const std::string& label){
+	ImGui::SeparatorText(label.c_str());
+	std::string scaleLabel = label + "_scale";
+	std::string rotationLabel = label + "_rotation";
+	std::string translationLabel = label + "_translate";
+	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
+	ImGui::DragFloat3(rotationLabel.c_str(), &eulerRotation.x, 0.01f);
+	ImGui::DragFloat3(translationLabel.c_str(), &translation.x, 0.01f);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
