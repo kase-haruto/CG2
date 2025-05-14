@@ -333,7 +333,7 @@
     <ClCompile Include="Engine\Application\Platform\WinApp.cpp">
       <Filter>Engine\project\base\window</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Effect\FogEffect.cpp">
+    <ClCompile Include="Engine\Extensions\Fog\FogEffect.cpp">
       <Filter>Engine\project\3d\graphics\fog</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Context\GraphicsGroup.cpp">
@@ -417,7 +417,7 @@
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
     <ClCompile Include="Engine\Graphics\Buffer\CameraBuffer.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\BoxDrawer.cpp" />
-    <ClCompile Include="Engine\Objects\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\Extensions\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
   </ItemGroup>
@@ -596,7 +596,7 @@
     <ClInclude Include="Engine\Application\Platform\WinApp.h">
       <Filter>Engine\project\base\window</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Effect\FogEffect.h">
+    <ClInclude Include="Engine\Extensions\Fog\FogEffect.h">
       <Filter>Engine\project\3d\graphics\fog</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Context\GraphicsGroup.h">
@@ -691,7 +691,7 @@
     <ClInclude Include="Engine\PostProcess\Slot\PostEffectSlot.h" />
     <ClInclude Include="Engine\Graphics\Buffer\CameraBuffer.h" />
     <ClInclude Include="Engine\Renderer\Primitive\BoxDrawer.h" />
-    <ClInclude Include="Engine\Objects\SkyBox\SkyBox.h" />
+    <ClInclude Include="Engine\Extensions\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\API\EngineAPI.h" />
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
   </ItemGroup>

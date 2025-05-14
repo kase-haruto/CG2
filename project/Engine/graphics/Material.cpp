@@ -4,10 +4,10 @@
 #include <externals/imgui/imgui.h>
 
 void Material::ShowImGui(){
+
+	// lighting
+	ImGui::SeparatorText("Lighting");
 	ImGui::DragFloat("shininess", &shininess, 0.01f);
-
-	ImGui::ColorPicker4("Color", &color.x);
-
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){
 		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
@@ -22,4 +22,17 @@ void Material::ShowImGui(){
 		}
 		ImGui::EndCombo();
 	}
+
+	// color
+	ImGui::SeparatorText("Color");
+	ImGui::ColorEdit3("color", &color.x);
+
+	ImGui::SeparatorText("EnviromentCoefficient");
+	//環境マップ
+	ImGui::Checkbox("isReflect", &isReflect);	
+	if (isReflect){
+		ImGui::SliderFloat("enviromentCoefficient", &enviromentCoefficient, 0.0f, 1.0f);
+	}
+
+
 }

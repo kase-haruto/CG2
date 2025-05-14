@@ -40,8 +40,6 @@ void GameScene::Initialize(){
 	//=========================
 	// グラフィック関連
 	//=========================
-	fog_ = std::make_unique<FogEffect>(pDxCore_);
-
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
 	

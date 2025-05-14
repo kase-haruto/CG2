@@ -8,6 +8,8 @@ struct Material {
     int enableLighting;
     float4x4 uvTransform;
     float shiniess;
+	bool isReflect;
+    float enviromentCoefficient;
 };
 
 /////////////////////////////////////////////////////////////////////////
@@ -122,16 +124,18 @@ PixelShaderOutput main(VertexShaderOutput input){
     float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
 
     float3 finalColor = gammaCorrected;
-    
+
     ////////////////////////////////////////////////////////
     // 環境マップ
     ////////////////////////////////////////////////////////
-    float3 cameraToPosition = normalize(input.worldPosition - cameraPosition);
-    float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
-    float4 enviromentColor = gEnvironmentMap.Sample(gSampler, reflectedVector);
+    if (gMaterial.isReflect){
+        float3 cameraToPosition = normalize(input.worldPosition - cameraPosition);
+        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+        float4 enviromentColor = gEnvironmentMap.Sample(gSampler, reflectedVector);
     
-    finalColor.rgb += enviromentColor.rgb;    
-    
+        finalColor.rgb += enviromentColor.rgb * gMaterial.enviromentCoefficient;
+    }
+
     ////////////////////////////////////////////////////////
     // アルファ合成 + 出力
     ////////////////////////////////////////////////////////

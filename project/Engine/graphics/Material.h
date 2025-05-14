@@ -17,7 +17,8 @@ struct Material{
 	float pad[3];
 	Matrix4x4 uvTransform;
 	float shininess;
-
+	bool isReflect = false;
+	float enviromentCoefficient = 0.5f;
 	int currentLightingMode_ = 0;
 
 	void ShowImGui();

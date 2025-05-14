@@ -14,7 +14,6 @@
 /* graphics */
 #include <Engine/Objects/LightObject/DirectionalLight.h>
 #include <Engine/Objects/LightObject/PointLight.h>
-#include <Engine/Graphics/Effect/FogEffect.h>
 #include <Game/3d/GameCamera/RailCamera.h>
 
 /* object */
@@ -43,9 +42,6 @@ public:
 	void CleanUp()override;
 
 private:
-	/* graphics =====================================================*/
-	std::unique_ptr<FogEffect>fog_ = nullptr;
-
 	/* objects ======================================================*/
 	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
