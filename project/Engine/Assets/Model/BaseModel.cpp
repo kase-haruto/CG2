@@ -222,57 +222,42 @@ void BaseModel::ShowImGuiInterface(){
 	}
 
 
-	if (ImGui::BeginTabBar("##InspectorTabs")){
-
-		if (ImGui::BeginTabItem("Transform")){
-			worldTransform_.ShowImGui();
-			uvTransform.ShowImGui("UV Transform");
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem("Material")){
-			materialData_.ShowImGui();
-			static std::string selectedTextureName = modelData_->material.textureFilePath;
-			//テクスチャの切り替え
-			auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
-			if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())){
-				for (const auto& texture : textures){
-					bool is_selected = (selectedTextureName == texture.first);
-					if (ImGui::Selectable(texture.first.c_str(), is_selected)){
-						selectedTextureName = texture.first; // 選択したテクスチャ名を更新
-						handle_ = TextureManager::GetInstance()->LoadTexture(texture.first); // テクスチャを変更
-					}
-					if (is_selected){
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-				ImGui::EndCombo();
-			}
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem("Draw")){
-			static const char* blendModeNames[] = {
-				"NONE",
-				"ALPHA",
-				"ADD",
-				"SUB",
-				"MUL",
-				"NORMAL",
-				"SCREEN"
-			};
-
-			int currentBlendMode = static_cast< int >(blendMode_);
-			if (ImGui::Combo("Blend Mode", &currentBlendMode, blendModeNames, IM_ARRAYSIZE(blendModeNames))){
-				blendMode_ = static_cast< BlendMode >(currentBlendMode);
-			}
-
-			ImGui::EndTabItem();
-		}
-
-
-		ImGui::EndTabBar();
+	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)){
+		worldTransform_.ShowImGui("worldTransform");
+		uvTransform.ShowImGui("UV Transform");
 	}
+
+	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)){
+		materialData_.ShowImGui();
+		static std::string selectedTextureName = modelData_->material.textureFilePath;
+
+		auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
+		if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())){
+			for (const auto& texture : textures){
+				bool is_selected = (selectedTextureName == texture.first);
+				if (ImGui::Selectable(texture.first.c_str(), is_selected)){
+					selectedTextureName = texture.first;
+					handle_ = TextureManager::GetInstance()->LoadTexture(texture.first);
+				}
+				if (is_selected){
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Draw", ImGuiTreeNodeFlags_DefaultOpen)){
+		static const char* blendModeNames[] = {
+			"NONE", "ALPHA", "ADD", "SUB", "MUL", "NORMAL", "SCREEN"
+		};
+
+		int currentBlendMode = static_cast< int >(blendMode_);
+		if (ImGui::Combo("Blend Mode", &currentBlendMode, blendModeNames, IM_ARRAYSIZE(blendModeNames))){
+			blendMode_ = static_cast< BlendMode >(currentBlendMode);
+		}
+	}
+
 
 
 }

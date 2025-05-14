@@ -3,13 +3,13 @@
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>
 #include <Engine/Foundation/Math/Matrix4x4.h>
-
+#include <Engine/Foundation/Math/Quaternion.h>
 
 #include <array>
 
 struct OBB{
 	Vector3 size;
-	Vector3 rotate;
+	Quaternion rotate;
 	Vector3 center;
 
 	// 8頂点を返す関数

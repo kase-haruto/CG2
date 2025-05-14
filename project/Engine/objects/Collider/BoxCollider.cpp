@@ -11,6 +11,12 @@
 // c++
 #include <sstream> 
 
+void BoxCollider::Update(const Vector3& position, const Quaternion& rotate){
+	// 位置を更新
+	shape_.center = position;
+	shape_.rotate = rotate;
+}
+
 void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 
 	if (name_.empty()){
@@ -19,18 +25,17 @@ void BoxCollider::Initialize([[maybe_unused]]const Vector3& size){
 		name_ = ss.str();
 	}
 
-	JsonCoordinator::RegisterItem(name_, "ColliderSize", shape_.size);
+	//JsonCoordinator::RegisterItem(name_, "ColliderSize", shape_.size);
 
 	collisionShape_ = shape_;
-
-	//shape_.size = size;
-
+	shape_.size = size;
 }
 
 void BoxCollider::Draw(){
 
 #ifdef _DEBUG
-	shape_.Draw();
+
+	PrimitiveDrawer::GetInstance()->DrawOBB(shape_.center,shape_.rotate,shape_.size, color_);
 #endif // DEBUG
 
 }
@@ -38,10 +43,8 @@ void BoxCollider::Draw(){
 void BoxCollider::ShowGui(){
 
 #ifdef _DEBUG
-	ImGui::Spacing(); // 少しスペースを追加
-	std::string headerName = GetName() + "Collider";
-	if (ImGui::CollapsingHeader(headerName.c_str())){
-		JsonCoordinator::RenderGroupUI(name_);
+	if (ImGui::CollapsingHeader(GetName().c_str())){
+
 	}
 	ImGui::Spacing();
 #endif // _DEBUG

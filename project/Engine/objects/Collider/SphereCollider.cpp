@@ -19,6 +19,11 @@ void SphereCollider::Initialize(float radius){
 
 }
 
+void SphereCollider::Update(const Vector3& position,[[maybe_unused]] const Quaternion& rotate){
+	// 位置を更新
+	shape_.center = position;
+}
+
 void SphereCollider::Draw(){
 
 #ifdef _DEBUG

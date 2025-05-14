@@ -45,7 +45,7 @@ void GameScene::Initialize(){
 	
 	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field", registerToRenderer);
 	modelField_->SetScale({300.0f,300.0f,300.0f});
-	modelField_->GetModel()->SetUvScale({290.0f,290.0f,0.0f});
+	modelField_->SetUvScale({290.0f,290.0f,0.0f});
 	//modelField_->EnableGuiList();
 	//modelField_->SetUvScale({15.0f,15.0f,0.0f});
 

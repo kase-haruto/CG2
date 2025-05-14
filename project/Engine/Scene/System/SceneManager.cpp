@@ -75,6 +75,8 @@ void SceneManager::Draw() {
 	auto* debugRT = pDxCore_->GetRenderTargetCollection().Get("DebugView");
 	DrawForRenderTarget(debugRT);
 #endif // _DEBUG
+
+	PrimitiveDrawer::GetInstance()->ClearMesh();
 }
 
 void SceneManager::DrawForRenderTarget(IRenderTarget* target) {

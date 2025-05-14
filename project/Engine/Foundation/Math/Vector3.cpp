@@ -3,6 +3,7 @@
 /* include space
 /* ===================================================================== */
 #include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Quaternion.h>
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 /* c++ */
@@ -202,6 +203,16 @@ Vector3 Vector3::Transform(const Vector3& vector, const Matrix4x4& matrix){
 	return result;
 }
 
+Vector3 Vector3::Transform(const Vector3& v, const Quaternion& q){
+	Quaternion normQ = Quaternion::Normalize(q); // 安全
+	Vector3 u(normQ.x, normQ.y, normQ.z);
+	float s = normQ.w;
+
+	return
+		u * (2.0f * Vector3::Dot(u, v)) +
+		v * (s * s - Vector3::Dot(u, u)) +
+		Vector3::Cross(u, v) * (2.0f * s);
+}
 
 Vector3 operator-(float scalar, const Vector3& vec){
 	return Vector3(vec.x - scalar, vec.y - scalar, vec.z - scalar);
