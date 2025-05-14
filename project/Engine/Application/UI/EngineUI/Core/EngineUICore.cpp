@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //  include
 ////////////////////////////////////////////////////////////////////////////////////////////
-#include <Engine/Application/UI/EngineUI/Renderer/EngineUIRenderer.h>
+#include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 #include <Engine/Application/System/Enviroment.h>
 
 // uiPanel
@@ -17,39 +17,30 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   初期化
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::Initialize() {
-	panels_.emplace_back(std::make_unique<HierarchyPanel>());
-	panels_.emplace_back(std::make_unique<EditorPanel>());
-	panels_.emplace_back(std::make_unique<InspectorPanel>());
-	panels_.emplace_back(std::make_unique<ConsolePanel>());
+void EngineUICore::Initialize() {
+	panelController_ = std::make_unique<PanelController>();
+	panelController_->Initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   レンダリング
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::Render() {
+void EngineUICore::Render() {
 #ifdef _DEBUG
 	RenderMenue();
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 	RenderMainViewport();
 	RenderDebugViewPort();
-	// すべてのパネルをレンダリングし、閉じられたパネルを削除
-	for (auto it = panels_.begin(); it != panels_.end();) {
-		(*it)->Render();
-		if (!(*it)->IsShow()) {
-			// パネルを削除
-			it = panels_.erase(it);
-		} else {
-			++it;
-		}
-	}
+
+	// すべてのパネルをレンダリング
+	panelController_->RenderPanels();
 #endif // _DEBUG
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::RenderMainViewport() {
+void EngineUICore::RenderMainViewport() {
 	ImVec2 viewportSize = ImVec2(kGameViewSize.x, kGameViewSize.y);
 
 	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
@@ -69,7 +60,7 @@ void EngineUIRenderer::RenderMainViewport() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   デバッグビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::RenderDebugViewPort() {
+void EngineUICore::RenderDebugViewPort() {
 	ImVec2 imgSize{ kExecuteWindowSize.x, kExecuteWindowSize.y };
 
 	ImGui::SetNextWindowSize(imgSize);
@@ -109,7 +100,7 @@ void EngineUIRenderer::RenderDebugViewPort() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   メニューの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::RenderMenue() {
+void EngineUICore::RenderMenue() {
 	// メニューバーを開始
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("file(F)")) {
@@ -143,32 +134,20 @@ void EngineUIRenderer::RenderMenue() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   パネル追加
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::AddPanel(std::unique_ptr<IEngineUI> panel) {
-	panels_.push_back(std::move(panel));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-//                   パネルの削除
-////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::RemovePanel(const std::string& panelName) {
-	panels_.erase(
-		std::remove_if(panels_.begin(), panels_.end(),
-					   [&panelName](const std::unique_ptr<IEngineUI>& panel) -> bool {
-		return panel->GetPanelName() == panelName;
-	}),
-		panels_.end()
-	);
+void EngineUICore::AddPanel(std::unique_ptr<IEngineUI> panel) {
+	const std::string& name = panel->GetPanelName(); // 先に名前を取り出す
+	panelController_->RegisterPanel(name, std::move(panel));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   メインビューポート用のテクスチャを設定
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUIRenderer::SetMainViewportTexture(UINT64 textureID) {
+void EngineUICore::SetMainViewportTexture(UINT64 textureID) {
 	if (mainViewportTextureID_) { return; }
 	mainViewportTextureID_ = textureID;
 }
 
-void EngineUIRenderer::SetDebugViewportTexture(UINT64 textureID) {
+void EngineUICore::SetDebugViewportTexture(UINT64 textureID) {
 	if (debugViewportTextureID_) {
 		return;
 	}

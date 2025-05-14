@@ -27,10 +27,10 @@ IEngineUI* PanelController::GetPanel(const std::string& name) {
 /////////////////////////////////////////////////////////////////////////////////////////
 void PanelController::Initialize() {
 	// 既存のパネルを追加
-	panels_.emplace("HierarchyPanel", std::make_unique<HierarchyPanel>());
-	panels_.emplace("EditorPanel", std::make_unique<EditorPanel>());
-	panels_.emplace("InspectorPanel", std::make_unique<InspectorPanel>());
-	panels_.emplace("ConsolePanel", std::make_unique<ConsolePanel>());
+	panels_.emplace("Hierarchy", std::make_unique<HierarchyPanel>());
+	panels_.emplace("Editor", std::make_unique<EditorPanel>());
+	panels_.emplace("Inspector", std::make_unique<InspectorPanel>());
+	panels_.emplace("Console", std::make_unique<ConsolePanel>());
 }
 
 

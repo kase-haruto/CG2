@@ -6,7 +6,7 @@
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Scene/System/SceneManager.h>
 #include <Engine/Application/Input/Input.h>
-#include <Engine/Application/UI/EngineUI/Renderer/EngineUIRenderer.h>
+#include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 
 //===================================================================*/
 // Engine全体の初期化処理
@@ -21,16 +21,16 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
 	// engineUIの初期化
-	engineUIRenderer_ = std::make_unique<EngineUIRenderer>();
-	engineUIRenderer_->Initialize();
+	engineUICore_ = std::make_unique<EngineUICore>();
+	engineUICore_->Initialize();
 
-	system_->SetEngineUIRenderer(engineUIRenderer_.get());
+	system_->SetEngineUICore(engineUICore_.get());
 	system_->InitializeEditor();
 
 
 	// シーンマネージャ初期化
 	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
-	sceneManager_->SetEngineUI(engineUIRenderer_.get());
+	sceneManager_->SetEngineUI(engineUICore_.get());
 	sceneManager_->Initialize();
 }
 
@@ -50,7 +50,7 @@ void EngineController::Run(){
 		system_->BeginFrame();
 
 		// UI描画
-		engineUIRenderer_->Render();
+		engineUICore_->Render();
 
 		// シーンの更新
 		sceneManager_->Update();

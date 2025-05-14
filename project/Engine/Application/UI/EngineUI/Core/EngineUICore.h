@@ -15,35 +15,25 @@
 #include <functional>
 #include <d3d12.h>
 
-class EngineUIRenderer {
+class EngineUICore {
 public:
 	//===================================================================*/
 	//					public function
 	//===================================================================*/
-	EngineUIRenderer() = default;       // コンストラクタ
-	~EngineUIRenderer() = default;      // デストラクタ
+	EngineUICore() = default;       // コンストラクタ
+	~EngineUICore() = default;      // デストラクタ
 
 	void Initialize();					 // 初期化
 	void Render();						 // レンダリング
-	void Finalize();					 // 終了処理
 
 	void AddPanel(std::unique_ptr<IEngineUI> panel); // パネル追加
-	void RemovePanel(const std::string& panelName); // パネル削除
 
 	void SetMainViewportTexture(UINT64 textureID);  // メインビューポート用のテクスチャを設定
 	void SetDebugViewportTexture(UINT64 textureID); // デバッグビューポート用のテクスチャを設定
 
 	//パネルの取得
 	template<class Panel>
-	Panel* GetPanel() {
-		for (auto& panel : panels_) {
-			if (auto p = dynamic_cast<Panel*>(panel.get())) {
-				return p;
-			}
-		}
-		return nullptr;
-	}
-
+	Panel* GetPanel();
 private:
 	//===================================================================*/
 	//					private function
@@ -56,8 +46,15 @@ private:
 	//===================================================================*/
 	//					private variable
 	//===================================================================*/
-	std::vector<std::unique_ptr<IEngineUI>> panels_;
-
+	std::unique_ptr<PanelController> panelController_ = nullptr;
 	UINT64 mainViewportTextureID_ = 0;
 	UINT64 debugViewportTextureID_ = 0;
 };
+
+template<class Panel>
+Panel* EngineUICore::GetPanel() {
+	Panel temp;
+	const std::string& name = temp.GetPanelName();
+	IEngineUI* base = panelController_->GetPanel(name);
+	return dynamic_cast<Panel*>(base);
+}

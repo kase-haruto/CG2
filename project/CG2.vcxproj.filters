@@ -358,7 +358,7 @@
     <ClCompile Include="Engine\Objects\Particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\Foundation\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.cpp" />
-    <ClCompile Include="Engine\Application\UI\EngineUI\Renderer\EngineUIRenderer.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\Core\EngineUICore.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneManager.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\IEngineUI.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
@@ -622,7 +622,7 @@
     <ClInclude Include="Engine\Objects\Particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\Foundation\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.h" />
-    <ClInclude Include="Engine\Application\UI\EngineUI\Renderer\EngineUIRenderer.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\Core\EngineUICore.h" />
     <ClInclude Include="Engine\Scene\System\SceneManager.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IEngineUI.h" />
     <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />

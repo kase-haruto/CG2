@@ -10,6 +10,7 @@
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Lighting/LightManager.h>
+#include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
 	: pDxCore_(dxCore) {
@@ -28,14 +29,13 @@ SceneManager::~SceneManager() {}
 void SceneManager::Initialize() {
 	// シーン切り替えパネルを作成 (UI がある場合)
 	if (pEngineUI_) {
-		sceneSwitchPanel_ = std::make_unique<SceneSwitcherPanel>(this);
+		auto sceneSwitchPanel = std::make_unique<SceneSwitcherPanel>(this);
 
-		sceneSwitchPanel_->AddSceneOption("Game Scene", SceneType::PLAY);
-		sceneSwitchPanel_->AddSceneOption("Test Scene", SceneType::TEST);
-		// ... ほかのシーンも必要なら追加 ...
+		//パネルにシーンを追加
+		sceneSwitchPanel->AddSceneOption("Game Scene", SceneType::PLAY);
+		sceneSwitchPanel->AddSceneOption("Test Scene", SceneType::TEST);
 
-		// UIにパネルを追加
-		pEngineUI_->AddPanel(std::move(sceneSwitchPanel_));
+		pEngineUI_->AddPanel(std::move(sceneSwitchPanel));
 	}
 
 	// まずは最初のシーンを初期化
