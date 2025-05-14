@@ -6,8 +6,8 @@
 /* engine */
 #include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Graphics/Material.h>
-#include <Engine/objects/TransformationMatrix.h>
-#include <Engine/objects/Transform.h>
+#include <Engine/Objects/Transform/TransformationMatrix.h>
+#include <Engine/Objects/Transform/Transform.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
 #include <Engine/core/DirectX/Buffer/DxVertexBuffer.h>
@@ -15,8 +15,8 @@
 
 /* math */
 #include <Engine/Foundation/Math/Vector4.h>
-#include "engine/physics/AABB.h"
-#include "Engine/physics/Shape.h"
+#include <Engine/Objects/3D/Geometory/AABB.h>
+#include <Engine/Objects/3D/Geometory/Shape.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 
 /* c++ */

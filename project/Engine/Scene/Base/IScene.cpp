@@ -2,7 +2,7 @@
 
 /* core */
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
 
 IScene::IScene(){

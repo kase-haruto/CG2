@@ -1,10 +1,10 @@
 #pragma once
 
 // engine 
-#include "engine/graphics/Pipeline/PipelineType.h"
-#include "LightData.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
+#include <Engine/Graphics/Pipeline/PipelineType.h>
+#include <Engine/Lighting/LightData.h>
+#include <Engine/Objects/LightObject/DirectionalLight.h>
+#include <Engine/Objects/LightObject/PointLight.h>
 
 // lib
 #include <memory>

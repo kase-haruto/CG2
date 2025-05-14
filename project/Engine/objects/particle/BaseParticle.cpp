@@ -11,7 +11,7 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Descriptor/SrvLocator.h>
 #include <Engine/objects/particle/ParticleEmitShape.h>
-#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/Objects/LightObject/DirectionalLight.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 //* lib

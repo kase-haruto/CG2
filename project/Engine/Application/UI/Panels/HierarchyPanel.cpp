@@ -6,7 +6,7 @@
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>
 #include <Engine/Application/UI/Panels/InspectorPanel.h>
 #include <Engine/Application/UI/EngineUI/SelectionManager.h>
-#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
 // lib
 #include <externals/imgui/imgui.h>

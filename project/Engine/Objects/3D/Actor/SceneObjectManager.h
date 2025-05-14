@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/objects/SceneObject.h"
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 
 #include <vector>
 

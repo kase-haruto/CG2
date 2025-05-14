@@ -6,16 +6,15 @@
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include "Engine/core/System.h"
 #include "engine/graphics/Material.h"
-#include "engine/objects/Transform.h"
-#include "engine/objects/TransformationMatrix.h"
-#include "Engine/physics/light/LightManager.h"
+#include <Engine/Objects/Transform/Transform.h>
+#include <Engine/Objects/Transform/TransformationMatrix.h>
 #include <Engine/Foundation/Math/Vector4.h>
 #include <Engine/Assets/Model/ModelData.h>
 #include <Engine/Assets/Model/ModelManager.h>
 #include <Engine/Assets/Texture/TextureManager.h>
-#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
+#include <Engine/Lighting/LightData.h>
 
 #ifdef _DEBUG
 #include "externals/imgui/imgui.h"

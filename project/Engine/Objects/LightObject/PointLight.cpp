@@ -1,4 +1,4 @@
-#include "PointLight.h"
+#include <Engine/Objects/LightObject/PointLight.h>
 
 /* engine */
 #include <Engine/Foundation/Utility/Func/MyFunc.h>

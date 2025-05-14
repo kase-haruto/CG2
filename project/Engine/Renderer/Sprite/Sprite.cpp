@@ -4,9 +4,9 @@
 /* ===================================================================== */
 #include <Engine/Renderer/Mesh/VertexData.h>
 #include <Engine/Assets/Texture/TextureManager.h>
-#include <Engine/objects/TransformationMatrix.h>
+#include <Engine/Objects/Transform/TransformationMatrix.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
-#include <Engine/physics/light/DirectionalLight.h>
+#include <Engine/Objects/LightObject/DirectionalLight.h>
 
 /* math */
 #include <Engine/Foundation/Utility/Func/MyFunc.h>

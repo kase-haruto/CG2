@@ -1,6 +1,9 @@
 #pragma once
-#include <Game/3d/Base/BaseGameObject.h>
 
+// engine
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
+
+// c++
 #include <cstdint>
 #include <string>
 

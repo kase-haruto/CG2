@@ -4,7 +4,7 @@
 /* ===================================================================== */
 
 #include <Game/3dObject/Actor/Bullet/BaseBullet.h>
-#include <Engine/objects/SceneObject.h>
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 
 /* ========================================================================
 /* bullet コンテナ

@@ -8,7 +8,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/objects/SkyBox/SkyBox.h>
-#include <Engine/physics/light/LightManager.h>
+#include <Engine/Lighting/LightManager.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 // lib

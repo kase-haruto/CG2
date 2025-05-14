@@ -1,5 +1,5 @@
 #include "SelectionManager.h"
-#include "Engine/objects/SceneObject.h"
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 #include "Engine/Editor/BaseEditor.h"
 
 void SelectionManager::SetSelectedObject(SceneObject* obj){

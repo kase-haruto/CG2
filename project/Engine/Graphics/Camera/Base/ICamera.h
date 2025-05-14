@@ -2,9 +2,12 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-#include "Engine/graphics/Pipeline/PipelineType.h"
-#include "Engine/objects/SceneObject.h"
-#include "Engine/objects/Transform.h" 
+// engine
+#include <Engine/Graphics/Pipeline/PipelineType.h>
+#include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Objects/Transform/Transform.h>
+
+//lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
 
 //c++

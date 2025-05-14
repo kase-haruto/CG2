@@ -22,7 +22,7 @@
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/objects/particle/ParticleManager.h>
-#include <Engine/physics/light/LightManager.h>
+#include <Engine/Lighting/LightManager.h>
 
 // editor
 #include <Engine/Assets/Model/ModelBuilder.h>

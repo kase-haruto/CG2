@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
-#include <Engine/objects/SceneObject.h>
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 
 // c++
 #include <string>

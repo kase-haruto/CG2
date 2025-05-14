@@ -8,8 +8,8 @@
 // engine
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
-#include <Engine/objects/SceneObjectManager.h>
-#include <Engine/physics/light/LightManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Lighting/LightManager.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
 	: pDxCore_(dxCore) {

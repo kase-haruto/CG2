@@ -5,7 +5,7 @@
 //* engine *//
 #include <Engine/Assets/Model/Model.h>
 #include <Engine/Assets/Animation/AnimationModel.h>
-#include "Engine/objects/SceneObject.h"
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 
 //* c++ lib *//
 #include <memory>

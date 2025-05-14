@@ -9,11 +9,11 @@
 // engine
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/objects/particle/ParticleManager.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/physics/light/LightManager.h>
+#include <Engine/Lighting/LightManager.h>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

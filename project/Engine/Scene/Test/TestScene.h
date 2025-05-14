@@ -5,12 +5,12 @@
 /* engine */
 #include <Engine/scene/Base/BaseScene.h>
 #include <Engine/Renderer/Sprite/Sprite.h>
-#include <Game/3d/Base/BaseGameObject.h>
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 #include <Engine/objects/SkyBox/SkyBox.h>
 
 /* graphics */
-#include <Engine/physics/light/DirectionalLight.h>
-#include <Engine/physics/light/PointLight.h>
+#include <Engine/Objects/LightObject/DirectionalLight.h>
+#include <Engine/Objects/LightObject/PointLight.h>
 #include <Engine/Graphics/Effect/FogEffect.h>
 
 /* object */

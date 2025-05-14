@@ -7,13 +7,13 @@
 
 /* objects */
 #include <Engine/Renderer/Sprite/Sprite.h>
-#include <Game/3d/Base/BaseGameObject.h>
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 #include <Game/3dObject/Actor/Player/Player.h>
 #include <Game/3dObject/Actor/Enemy/Collection/EnemyCollection.h>
 
 /* graphics */
-#include <Engine/physics/light/DirectionalLight.h>
-#include <Engine/physics/light/PointLight.h>
+#include <Engine/Objects/LightObject/DirectionalLight.h>
+#include <Engine/Objects/LightObject/PointLight.h>
 #include <Engine/Graphics/Effect/FogEffect.h>
 #include <Game/3d/GameCamera/RailCamera.h>
 

@@ -13,8 +13,8 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/objects/particle/ParticleManager.h>
-#include <Engine/objects/SceneObjectManager.h>
-#include <Engine/physics/light/LightManager.h>
+#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Lighting/LightManager.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>

@@ -2,7 +2,7 @@
 
 
 #include <Engine/Foundation/Math/Vector3.h>
-#include "Engine/objects/Transform.h"
+#include <Engine/Objects/Transform/Transform.h>
 
 
 // ローカル空間で面を選択し、法線方向と位置を決定する関数例

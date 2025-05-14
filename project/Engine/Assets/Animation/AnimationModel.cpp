@@ -1,19 +1,14 @@
 #include "AnimationModel.h"
 
 #include <Engine/Assets/Model/ModelData.h>
-#include <engine/graphics/Material.h>
-#include <engine/objects/Transform.h>
-#include <engine/objects/TransformationMatrix.h>
 #include <Engine/Foundation/Math/Vector4.h>
+#include <engine/graphics/Material.h>
 
 #include <Engine/Assets/Model/ModelManager.h>
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
-#include <engine/core/System.h>
-#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
-#include <engine/physics/light/DirectionalLight.h>
-#include <engine/physics/light/LightManager.h>
+#include <Engine/Lighting/LightData.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
 
 #ifdef _DEBUG

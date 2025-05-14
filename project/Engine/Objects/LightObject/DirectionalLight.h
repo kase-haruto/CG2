@@ -1,15 +1,16 @@
 #pragma once
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 
 /* math */
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
-#include "Engine/objects/SceneObject.h"
-
-/* lib */
-#include "Engine/graphics/Pipeline/PipelineType.h"
-#include "LightData.h"
+#include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Graphics/Pipeline/PipelineType.h>
+#include <Engine/Lighting/LightData.h>
 
 /* c++ */
 #include<d3d12.h>

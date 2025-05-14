@@ -1,4 +1,4 @@
-#include "DirectionalLight.h"
+#include <Engine/Objects/LightObject/DirectionalLight.h>
 
 /* engine */
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
