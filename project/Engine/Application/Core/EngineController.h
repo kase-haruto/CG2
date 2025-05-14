@@ -3,26 +3,26 @@
 /* include space
 /* ===================================================================== */
 // engine
-#include <Engine/core/WinApp.h>
 #include <Engine/core/System.h>
-#include <Engine/scene/SceneManager.h>
+#include <Engine/core/WinApp.h>
+#include <Engine/Scene/System/SceneManager.h>
 
 // c++
 #include <Windows.h>
 
-class EngineController{
+class EngineController {
 public:
-    EngineController() = default;
-    ~EngineController() = default;
+	EngineController() = default;
+	~EngineController() = default;
 
-    void Initialize(HINSTANCE hInstance);
-    void Run();
-    void Finalize();
+	void Initialize(HINSTANCE hInstance);
+	void Run();
+	void Finalize();
 
 private:
-    std::unique_ptr<System> system_;
+	std::unique_ptr<System> system_;
 
-    //scene
+	//scene
 	std::unique_ptr<SceneManager> sceneManager_;
 
 };

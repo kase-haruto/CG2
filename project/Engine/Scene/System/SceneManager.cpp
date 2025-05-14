@@ -1,16 +1,15 @@
 #include "SceneManager.h"
 
 // scene
-#include <Engine/scene/TestScene.h>
-#include <Engine/scene/GameScene.h>
-#include <Engine/scene/SceneFactory.h>
+#include <Engine/Scene/Game/GameScene.h>
+#include <Engine/Scene/System/SceneFactory.h>
+#include <Engine/Scene/Test/TestScene.h>
 
 // engine
-#include <Engine/objects/SceneObjectManager.h>
-#include <Engine/Graphics/Camera/Base/BaseCamera.h>
-#include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
-#include <Engine/physics/light/LightManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
+#include <Engine/objects/SceneObjectManager.h>
+#include <Engine/physics/light/LightManager.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
 	: pDxCore_(dxCore) {

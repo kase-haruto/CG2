@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // scene
-#include <Engine/scene/SceneManager.h>
+#include <Engine/Scene/System/SceneManager.h>
 
 // engine
 #include <Engine/Application/Input/Input.h>

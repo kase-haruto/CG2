@@ -1,8 +1,8 @@
 #include "SceneFactory.h"
 
 //scene
-#include "GameScene.h"
-#include "TestScene.h"
+#include <Engine/Scene/Game/GameScene.h>
+#include <Engine/Scene/Test/TestScene.h>
 
 std::unique_ptr<IScene> SceneFactory::CreateScene(SceneType sceneType, DxCore* dxCore){
     switch (sceneType){

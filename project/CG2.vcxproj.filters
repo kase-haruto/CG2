@@ -231,13 +231,13 @@
     <ClCompile Include="Engine\physics\light\PointLight.cpp">
       <Filter>Engine\project\3d\light\pointLight</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\GameScene.cpp">
+    <ClCompile Include="Engine\Scene\Game\GameScene.cpp">
       <Filter>Engine\project\scene\game_scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\Interface\IScene.cpp">
+    <ClCompile Include="Engine\Scene\Base\IScene.cpp">
       <Filter>Engine\project\scene\interface_scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\scene\TestScene.cpp">
+    <ClCompile Include="Engine\Scene\Test\TestScene.cpp">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Assets\Model\Model.cpp">
@@ -359,8 +359,7 @@
     <ClCompile Include="Engine\core\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\EngineUI.cpp" />
-    <ClCompile Include="Engine\scene\SceneManager.cpp" />
-    <ClCompile Include="Engine\scene\DemoScene.cpp" />
+    <ClCompile Include="Engine\Scene\System\SceneManager.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\IEngineUI.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\InspectorPanel.cpp" />
@@ -380,7 +379,7 @@
     <ClCompile Include="Engine\core\Audio\Audio.cpp" />
     <ClCompile Include="Engine\core\Clock\ClockManager.cpp" />
     <ClCompile Include="Engine\physics\light\LightManager.cpp" />
-    <ClCompile Include="Engine\scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
@@ -390,8 +389,8 @@
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
-    <ClCompile Include="Engine\scene\Context\SceneContext.cpp" />
-    <ClCompile Include="Engine\scene\Base\BaseScene.cpp" />
+    <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
+    <ClCompile Include="Engine\Scene\Base\BaseScene.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffect.cpp" />
@@ -439,13 +438,13 @@
     <ClInclude Include="Engine\physics\light\PointLight.h">
       <Filter>Engine\project\3d\light\pointLight</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\GameScene.h">
+    <ClInclude Include="Engine\Scene\Game\GameScene.h">
       <Filter>Engine\project\scene\game_scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\Interface\IScene.h">
+    <ClInclude Include="Engine\Scene\Base\IScene.h">
       <Filter>Engine\project\scene\interface_scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\scene\TestScene.h">
+    <ClInclude Include="Engine\Scene\Test\TestScene.h">
       <Filter>Engine\project\scene\test_scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Assets\Model\Model.h">
@@ -621,8 +620,7 @@
     <ClInclude Include="Engine\core\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\core\DirectX\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\EngineUI.h" />
-    <ClInclude Include="Engine\scene\SceneManager.h" />
-    <ClInclude Include="Engine\scene\DemoScene.h" />
+    <ClInclude Include="Engine\Scene\System\SceneManager.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IEngineUI.h" />
     <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />
     <ClInclude Include="Engine\Application\UI\Panels\InspectorPanel.h" />
@@ -648,7 +646,7 @@
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineKey.h" />
     <ClInclude Include="Engine\physics\light\LightManager.h" />
     <ClInclude Include="Engine\physics\light\LightData.h" />
-    <ClInclude Include="Engine\scene\SceneFactory.h" />
+    <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\SelectionManager.h" />
@@ -656,13 +654,13 @@
     <ClInclude Include="Engine\core\DirectX\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxIndexBuffer.h" />
-    <ClInclude Include="Engine\scene\SceneType.h" />
+    <ClInclude Include="Engine\Scene\Details\SceneType.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\core\DirectX\Buffer\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\Renderer\Mesh\IMeshRenderable.h" />
     <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />
-    <ClInclude Include="Engine\scene\Context\SceneContext.h" />
-    <ClInclude Include="Engine\scene\Base\BaseScene.h" />
+    <ClInclude Include="Engine\Scene\Context\SceneContext.h" />
+    <ClInclude Include="Engine\Scene\Base\BaseScene.h" />
     <ClInclude Include="Engine\Renderer\Primitive\PrimitiveMesh.h" />
     <ClInclude Include="Engine\Renderer\Primitive\LineDrawer.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffect.h" />

@@ -5,7 +5,7 @@
 // engine
 #include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <Engine/objects/SceneObject.h>
-#include <Engine/scene/SceneType.h>
+#include <Engine/Scene/Details/SceneType.h>
 
 // lib
 #include <vector>

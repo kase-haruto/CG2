@@ -1,5 +1,5 @@
 #include "SceneSwitcherPanel.h"
-#include "Engine/scene/SceneManager.h"
+#include <Engine/Scene/System/SceneManager.h>
 
 #include <externals/imgui/imgui.h>
 

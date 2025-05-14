@@ -2,9 +2,7 @@
 
 // engine
 #include <Engine/Graphics/Device/DxCore.h>
-
-// scene
-#include <Engine/scene/Interface/IScene.h>
+#include <Engine/Scene/Base/IScene.h>
 
 // lib
 #include <memory>
