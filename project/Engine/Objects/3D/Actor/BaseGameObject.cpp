@@ -68,13 +68,11 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	//===================================================================*/
 	//			collider 設定
 	//===================================================================*/
-	SwitchCollider(ColliderKind::Box); // 初期化時にBoxをセット
+	SwitchCollider(ColliderKind::Box,true); // 初期化時にBoxをセット
 }
 
 BaseGameObject::~BaseGameObject(){}
 
-
-void BaseGameObject::Initialize(){}
 
 void BaseGameObject::Update(){
 
@@ -94,21 +92,17 @@ void BaseGameObject::Update(){
 
 }
 
-void BaseGameObject::Draw(){
-
-
-}
 
 //===================================================================*/
 //                    コライダー形状の変更
 //===================================================================*/
-void BaseGameObject::SwitchCollider(ColliderKind kind){
+void BaseGameObject::SwitchCollider(ColliderKind kind, bool isCollisionEnubled){
 	if (kind == currentColliderKind_) return;
 
 	switch (kind){
 		case ColliderKind::Box:
 		{
-			auto box = std::make_unique<BoxCollider>();
+			auto box = std::make_unique<BoxCollider>(isCollisionEnubled);
 			box->SetName(GetName() + "_BoxCollider");
 			box->Initialize(Vector3(1.0f, 1.0f, 1.0f)); // 適当な初期サイズ
 			collider_ = std::move(box);
@@ -116,7 +110,7 @@ void BaseGameObject::SwitchCollider(ColliderKind kind){
 		}
 		case ColliderKind::Sphere:
 		{
-			auto sphere = std::make_unique<SphereCollider>();
+			auto sphere = std::make_unique<SphereCollider>(isCollisionEnubled);
 			sphere->SetName(GetName() + "_SphereCollider");
 			sphere->Initialize(1.0f); // 適当な初期半径
 			collider_ = std::move(sphere);
@@ -136,6 +130,8 @@ void BaseGameObject::ShowGui(){
 	model_->ShowImGuiInterface();
 
 	ImGui::Spacing();
+
+	collider_->ShowGui();
 
 	DerivativeGui();
 }

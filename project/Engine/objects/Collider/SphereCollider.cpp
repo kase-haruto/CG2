@@ -6,6 +6,9 @@
 
 #include <sstream> 
 
+SphereCollider::SphereCollider(bool isEnuble) :
+	Collider::Collider(isEnuble) {}
+
 void SphereCollider::Initialize(float radius){
 
 	std::stringstream ss;
@@ -27,23 +30,19 @@ void SphereCollider::Update(const Vector3& position,[[maybe_unused]] const Quate
 void SphereCollider::Draw(){
 
 #ifdef _DEBUG
-	shape_.Draw();
+	if (isDraw_ && isCollisionEnabled_) {
+		PrimitiveDrawer::GetInstance()->DrawSphere(shape_.center, shape_.radius, 10, color_);
+	}
 #endif // DEBUG
 
 }
 
 void SphereCollider::ShowGui(){
-
-#ifdef _DEBUG
-	ImGui::Spacing(); // 少しスペースを追加
-	std::string headerName = GetName() + "Collider";
-	if (ImGui::CollapsingHeader(headerName.c_str())){
-		JsonCoordinator::RenderGroupUI(name_);
+	if(ImGui::CollapsingHeader("Collider")) {
+		Collider::ShowGui();
+		if (!isCollisionEnabled_) return;
+		ImGui::DragFloat("Radius", &shape_.radius, 0.1f, 0.0f, 10.0f);
 	}
-	ImGui::Spacing();
-#endif // _DEBUG
-
-
 }
 
 const Vector3& SphereCollider::GetCenter() const{

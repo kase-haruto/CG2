@@ -11,6 +11,7 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 
 // postprocess
 #include <Engine/PostProcess/Collection/PostProcessCollection.h>
@@ -32,8 +33,8 @@ public:
 	~System() = default;
 
 	void Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t clientHeight,const std::string _windowTitle);
-	void InitializeEngineUI();
 	void Finalize();
+	void InitializeEditor();
 	void BeginFrame();
 	void EndFrame();
 
@@ -61,6 +62,7 @@ public:
 	static HINSTANCE GetHinstance(){ return hInstance_; }
 	static HWND GetHWND(){ return hwnd_; }
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
+	void SetEngineUICore(EngineUICore* engineUI) { pEngineUICore_ = engineUI; }
 
 private:
 	//===================================================================*/
@@ -84,6 +86,7 @@ private:
 
 private:
 	// engineEditors
+	EngineUICore* pEngineUICore_;			//engineUIの描画
 	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
 	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
 	std::unique_ptr<EffectEditor> effectEditor_;	//パーティクルエディタ

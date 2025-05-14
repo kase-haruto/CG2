@@ -141,7 +141,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Objects\3D\Actor\Actor.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\Character.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\ConsolePanel.cpp" />
-    <ClCompile Include="Engine\Application\UI\EngineUI\EngineUI.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\Core\EngineUICore.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Objects\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\Objects\Collider\Collider.cpp" />
@@ -246,6 +246,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\PostProcess\Graph\PostEffectGraph.cpp" />
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
     <ClCompile Include="Engine\Extensions\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\API\EngineAPI.h" />
@@ -287,7 +288,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Objects\3D\Actor\Actor.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\Character.h" />
     <ClInclude Include="Engine\Application\UI\Panels\ConsolePanel.h" />
-    <ClInclude Include="Engine\Application\UI\EngineUI\EngineUI.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\Core\EngineUICore.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\Objects\Collider\BoxCollider.h" />
     <ClInclude Include="Engine\Objects\Collider\Collider.h" />
@@ -401,6 +402,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\PostProcess\Graph\PostEffectGraph.h" />
     <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
     <ClInclude Include="Engine\Extensions\SkyBox\SkyBox.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

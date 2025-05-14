@@ -6,6 +6,7 @@
 #include <Engine/Application/System/System.h>
 #include <Engine/Application/Platform/WinApp.h>
 #include <Engine/Scene/System/SceneManager.h>
+#include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 
 // c++
 #include <Windows.h>
@@ -23,6 +24,9 @@ public:
 
 private:
 	std::unique_ptr<System> system_;
+
+	//ui
+	std::unique_ptr<EngineUICore> engineUICore_;
 
 	//scene
 	std::unique_ptr<SceneManager> sceneManager_;

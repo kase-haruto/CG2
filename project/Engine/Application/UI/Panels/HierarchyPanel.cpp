@@ -47,7 +47,7 @@ void HierarchyPanel::Render(){
     }
 
     // カメラセクション
-    if (ImGui::CollapsingHeader("Cameras")){
+    if (ImGui::CollapsingHeader("Cameras", ImGuiTreeNodeFlags_DefaultOpen)){
         for (size_t i = 0; i < cameraObjects.size(); ++i){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(i));
             if (ImGui::Selectable(cameraObjects[i]->GetName().c_str(), isSelected)){
@@ -62,7 +62,7 @@ void HierarchyPanel::Render(){
         }
     }
     // ライトセクション
-    if (ImGui::CollapsingHeader("Lights")){
+    if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_DefaultOpen)){
         for (size_t i = 0; i < lightObjects.size(); ++i){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + i));
             if (ImGui::Selectable(lightObjects[i]->GetName().c_str(), isSelected)){
@@ -77,7 +77,7 @@ void HierarchyPanel::Render(){
         }
     }
     // ゲームオブジェクトセクション
-    if (ImGui::CollapsingHeader("Game Objects")){
+    if (ImGui::CollapsingHeader("Game Objects", ImGuiTreeNodeFlags_DefaultOpen)){
         for (size_t i = 0; i < gameObjects.size(); ++i){
             bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + lightObjects.size() + i));
             if (ImGui::Selectable(gameObjects[i]->GetName().c_str(), isSelected)){

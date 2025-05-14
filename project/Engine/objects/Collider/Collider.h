@@ -48,10 +48,11 @@ public:
 	//                   public methods
 	//===================================================================*/
 	Collider() = default;
+	Collider(bool isEnuble);
 	virtual ~Collider() = default;
 	virtual void Update(const Vector3& position,const Quaternion& rotate) = 0;
 	virtual void Draw() = 0;
-	virtual void ShowGui() = 0;
+	virtual void ShowGui();
 
 	virtual void OnCollisionEnter([[maybe_unused]] Collider* other){};
 	virtual void OnCollisionStay([[maybe_unused]] Collider* other){};
@@ -67,7 +68,10 @@ protected:
 	ColliderType type_;							//< 自身のタイプ
 	ColliderType targetType_;					//< 衝突相手のタイプ
 	Vector4 color_ = {1.0, 0.0, 0.0, 1.0};		//< 描画色
-	bool isActive_ = true;						//< 衝突判定を行うかどうか
+
+	bool isCollisionEnabled_ = true;				//< 衝突判定を行うかどうか
+	bool isDraw_ = true;						//< 描画を行うかどうか
+	bool isTrigger_ = false;					//< 押し戻しなどを行うかどうか
 public:
 	//===================================================================*/
 	//                   getter/setter
@@ -82,7 +86,10 @@ public:
 	ColliderType GetTargetType() const{ return targetType_; }
 	void SetColor(const Vector4& color){ color_ = color; }
 
-	bool IsActive()const{ return isActive_; }
+	bool IsCollisionEnubled()const{ return isCollisionEnabled_; }
+	void SetCollisionEnabled(bool isCollisionEnuble);
+
+	void SetIsDrawCollider(bool isDraw) { isDraw_ = isDraw; }
 };
 
 

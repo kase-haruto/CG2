@@ -39,11 +39,11 @@ void CollisionManager::UpdateCollisionAllCollider(){
 
 	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA){
 		// コライダーがアクティブでなければスキップ
-		if (!(*itA)->IsActive()) continue;
+		if (!(*itA)->IsCollisionEnubled()) continue;
 
 		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB){
 			// コライダーがアクティブでなければスキップ
-			if (!(*itB)->IsActive()) continue;
+			if (!(*itB)->IsCollisionEnubled()) continue;
 
 			if (CheckCollisionPair(*itA, *itB)){
 				// 衝突ペアのキーを生成
@@ -96,15 +96,17 @@ Collider* CollisionManager::FindColliderByName(const std::string& name){
 	return nullptr; // 見つからない場合
 }
 
-void CollisionManager::AddCollider(Collider* collider){
+void CollisionManager::Register(Collider* collider){
 
-	colliders_.emplace_back(collider);
+	if (std::find(colliders_.begin(), colliders_.end(), collider) == colliders_.end()) {
+		colliders_.push_back(collider);
+	}
 
 }
 
-void CollisionManager::RemoveCollider(Collider* collider){
+void CollisionManager::Unregister(Collider* collider){
 
-	colliders_.remove(collider);
+	std::erase(colliders_, collider);
 
 }
 

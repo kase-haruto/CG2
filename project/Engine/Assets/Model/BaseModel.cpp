@@ -222,12 +222,12 @@ void BaseModel::ShowImGuiInterface(){
 	}
 
 
-	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)){
+	if (ImGui::CollapsingHeader("Transform")){
 		worldTransform_.ShowImGui("world");
 		uvTransform.ShowImGui("uv");
 	}
 
-	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)){
+	if (ImGui::CollapsingHeader("Material")){
 		materialData_.ShowImGui();
 		static std::string selectedTextureName = modelData_->material.textureFilePath;
 
@@ -247,7 +247,7 @@ void BaseModel::ShowImGuiInterface(){
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Draw", ImGuiTreeNodeFlags_DefaultOpen)){
+	if (ImGui::CollapsingHeader("Draw")){
 		static const char* blendModeNames[] = {
 			"NONE", "ALPHA", "ADD", "SUB", "MUL", "NORMAL", "SCREEN"
 		};

@@ -358,7 +358,7 @@
     <ClCompile Include="Engine\Objects\Particle\ParticleEmitShape.cpp" />
     <ClCompile Include="Engine\Foundation\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.cpp" />
-    <ClCompile Include="Engine\Application\UI\EngineUI\EngineUI.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\Core\EngineUICore.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneManager.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\IEngineUI.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
@@ -420,6 +420,7 @@
     <ClCompile Include="Engine\Extensions\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -621,7 +622,7 @@
     <ClInclude Include="Engine\Objects\Particle\ParticleEmitShape.h" />
     <ClInclude Include="Engine\Foundation\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.h" />
-    <ClInclude Include="Engine\Application\UI\EngineUI\EngineUI.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\Core\EngineUICore.h" />
     <ClInclude Include="Engine\Scene\System\SceneManager.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IEngineUI.h" />
     <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />
@@ -694,6 +695,7 @@
     <ClInclude Include="Engine\Extensions\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\API\EngineAPI.h" />
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

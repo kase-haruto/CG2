@@ -4,7 +4,6 @@
 
 // engine
 #include <Engine/Application/Input/Input.h>
-#include <Engine/Application/UI/EngineUI/EngineUI.h>
 #include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Application/System/System.h>
@@ -80,9 +79,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//srvの先頭をimguiが使用するためそのあとに初期化
 	dxCore_->RendererInitialize(clientWidth, clientHeight);
 
-	//uiの初期化
-	InitializeEngineUI();
-
 
 	// カメラの生成
 	CameraManager::Initialize();
@@ -117,35 +113,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
 	};
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-	/*                     editorの初期化と追加                                              */
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//モデル
-	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->Initialize();
-
-	//sprite
-	uiEditor_ = std::make_unique<UIEditor>();
-
-	//パーティクル
-	effectEditor_ = std::make_unique<EffectEditor>();
-
-	EditorPanel* editorPanel = EngineUI::GetInstance()->GetPanel<EditorPanel>();
-	editorPanel->AddEditor(modelBuilder_.get());
-	editorPanel->AddEditor(uiEditor_.get());
-	editorPanel->AddEditor(effectEditor_.get());
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//  engineUIの初期化
-/////////////////////////////////////////////////////////////////////////////////////////
-void System::InitializeEngineUI() {
-	EngineUI::Initialize();
-
-	//auto offscreen = dxCore_->GetRenderTargetCollection().Get("Offscreen");
-	//if (offscreen){
-	//	EngineUI::SetMainViewportTexture(offscreen->GetSRV().ptr);
-	//}
 
 }
 
@@ -191,11 +158,11 @@ void System::EndFrame() {
 
 	//  ImGui 表示登録（Game View）
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	EngineUI::SetMainViewportTexture(postOutput->GetSRV().ptr);
+	pEngineUICore_->SetMainViewportTexture(postOutput->GetSRV().ptr);
 
 	//  ImGui 表示登録（Debug View）
 	debugRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	EngineUI::SetDebugViewportTexture(debugRT->GetSRV().ptr);
+	pEngineUICore_->SetDebugViewportTexture(debugRT->GetSRV().ptr);
 
 	// BackBuffer へのコピー
 	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
@@ -275,6 +242,27 @@ void System::Finalize() {
 
 	//ウィンドウの破棄
 	winApp_->TerminateGameWindow();
+}
+
+void System::InitializeEditor() {
+	/////////////////////////////////////////////////////////////////////////////////////////
+	/*                     editorの初期化と追加                                              */
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+	//モデル
+	modelBuilder_ = std::make_unique<ModelBuilder>();
+	modelBuilder_->Initialize();
+
+	//sprite
+	uiEditor_ = std::make_unique<UIEditor>();
+
+	//パーティクル
+	effectEditor_ = std::make_unique<EffectEditor>();
+
+	EditorPanel* editorPanel = pEngineUICore_->GetPanel<EditorPanel>();
+	editorPanel->AddEditor(modelBuilder_.get());
+	editorPanel->AddEditor(uiEditor_.get());
+	editorPanel->AddEditor(effectEditor_.get());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
