@@ -29,7 +29,7 @@
 #include <Engine/objects/ModelBuilder.h>
 
 // lib
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  静的変数初期化

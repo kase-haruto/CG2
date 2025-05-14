@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // c++
 #include <Engine/objects/Transform.h>
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 // lib
 #include <lib/myMath/Vector3.h>

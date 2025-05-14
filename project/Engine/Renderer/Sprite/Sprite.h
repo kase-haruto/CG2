@@ -1,12 +1,12 @@
-﻿#pragma once
+#pragma once
 
 /* engine */
 #include "engine/objects/Transform.h"
 #include "lib/myMath/Matrix4x4.h"
 #include "lib/myMath/Vector2.h"
 #include "lib/myMath/Vector4.h"
-#include "../graphics/Material.h"
-#include "../graphics/VertexData.h"
+#include <Engine/Graphics/Material.h>
+#include <Engine/Graphics/VertexData.h>
 
 /* c++ */
 #include <d3d12.h>

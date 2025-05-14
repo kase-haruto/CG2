@@ -6,7 +6,7 @@
 #include <Engine/physics/light/LightManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 BaseScene::BaseScene(DxCore* dxCore):
 IScene(dxCore){

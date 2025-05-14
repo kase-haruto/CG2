@@ -4,7 +4,7 @@
 /* ===================================================================== */
 /* engine */
 #include <Engine/scene/Base/BaseScene.h>
-#include <Engine/objects/Sprite.h>
+#include <Engine/Renderer/Sprite/Sprite.h>
 #include <Game/3d/Base/BaseGameObject.h>
 #include <Engine/objects/SkyBox/SkyBox.h>
 
@@ -14,7 +14,7 @@
 #include <Engine/Graphics/Effect/FogEffect.h>
 
 /* object */
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <lib/myMath/Quaternion.h>
 
 /* c++ */

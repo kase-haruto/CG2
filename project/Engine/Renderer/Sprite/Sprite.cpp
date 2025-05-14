@@ -1,4 +1,4 @@
-#include <Engine/objects/Sprite.h>
+#include <Engine/Renderer/Sprite/Sprite.h>
 #include <Engine/Graphics/VertexData.h>
 #include <Engine/objects/TextureManager.h>
 #include <Engine/objects/TransformationMatrix.h>

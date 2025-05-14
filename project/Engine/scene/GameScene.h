@@ -8,7 +8,7 @@
 /* objects */
 #include <Engine/objects/ModelBuilder.h>
 #include <Engine/Editor/UiEditor.h>
-#include <Engine/objects/Sprite.h>  
+#include <Engine/Renderer/Sprite/Sprite.h>
 #include <Game/3d/Base/BaseGameObject.h>
 #include <Game/3dObject/Actor/Player/Player.h>
 #include <Game/3dObject/Actor/Enemy/Collection/EnemyCollection.h>
@@ -20,7 +20,7 @@
 #include <Game/3d/GameCamera/RailCamera.h>
 
 /* object */
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 /* c++ */
 #include <vector>

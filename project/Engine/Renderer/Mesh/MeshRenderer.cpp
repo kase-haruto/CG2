@@ -1,5 +1,5 @@
 #include "MeshRenderer.h"
-#include <Engine/Graphics/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/objects/Animation/AnimationModel.h>
 #include <Engine/objects/Model/Model.h>
 #include <Engine/objects/SkyBox/SkyBox.h>

@@ -2,34 +2,33 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-// engine
-#include <Engine/Graphics/Renderer/IMeshRenderable.h>
+/* engine */
+#include <Engine/Renderer/Mesh/IMeshRenderable.h>
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 
-// c++
-#include <vector>
-#include <d3d12.h>
-
-struct Matrix4x4;
-
+#include <lib/myMath/Vector4.h>
+#include <lib/myMath/Matrix4x4.h>
 /* ========================================================================
-/* mesh renderer
+/* primitiveObject
 /* ===================================================================== */
-class MeshRenderer{
+class IPrimitiveMesh :
+	public IMeshRenderable{
 public:
 	//===================================================================*/
 	//			public methods
 	//===================================================================*/
-public:
-	MeshRenderer() = default;
+	IPrimitiveMesh() = default;
 
-	void Register(IMeshRenderable* renderable);
-	void Unregister(IMeshRenderable* renderable);
-	void DrawAll();
-	void Clear();
+	//--------- accessor -----------------------------------------------------
+	//material
+	virtual void SetColor(const Vector4& color) = 0;
 
+	virtual void SetBlendMode(BlendMode mode) = 0;
+	virtual BlendMode GetBlendMode() const = 0;
+	virtual const Matrix4x4& GetWorldMatrix() const =0;
 private:
 	//===================================================================*/
-	//			private methods
+	//			private functions
 	//===================================================================*/
-	std::vector<IMeshRenderable*> renderables_;
 };
+

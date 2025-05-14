@@ -5,7 +5,6 @@
 #include <lib/myMath/Matrix4x4.h>
 #include <lib/myFunc/MyFunc.h>
 
-#include <Engine/Graphics/Renderer/Primitive/LineMesh.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
 #include <cmath>

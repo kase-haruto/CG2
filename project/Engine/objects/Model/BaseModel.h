@@ -10,7 +10,7 @@
 #include <lib/myMath/Vector4.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/core/DirectX/Buffer/DxConstantBuffer.h>
-#include <Engine/Graphics/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/Mesh/IMeshRenderable.h>
 
 /* c++ */
 #include <d3d12.h>
