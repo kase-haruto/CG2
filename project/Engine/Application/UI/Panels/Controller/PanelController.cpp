@@ -26,12 +26,27 @@ IEngineUI* PanelController::GetPanel(const std::string& name) {
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
 void PanelController::Initialize() {
-	// 既存のパネルを追加
-	panels_.emplace("Hierarchy", std::make_unique<HierarchyPanel>());
-	panels_.emplace("Editor", std::make_unique<EditorPanel>());
-	panels_.emplace("Inspector", std::make_unique<InspectorPanel>());
-	panels_.emplace("Console", std::make_unique<ConsolePanel>());
+	// EditorContext の生成
+	editorContext_ = std::make_unique<EditorContext>();
+
+	// パネルを生成
+	auto hierarchyPanel = std::make_unique<HierarchyPanel>();
+	auto editorPanel = std::make_unique<EditorPanel>();
+	auto inspectorPanel = std::make_unique<InspectorPanel>();
+	auto consolePanel = std::make_unique<ConsolePanel>();
+
+	// EditorContext をパネルに注入
+	hierarchyPanel->SetEditorContext(editorContext_.get());
+	editorPanel->SetEditorContext(editorContext_.get());
+	inspectorPanel->SetEditorContext(editorContext_.get());
+
+	// パネルを登録
+	panels_.emplace("Hierarchy", std::move(hierarchyPanel));
+	panels_.emplace("Editor", std::move(editorPanel));
+	panels_.emplace("Inspector", std::move(inspectorPanel));
+	panels_.emplace("Console", std::move(consolePanel));
 }
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

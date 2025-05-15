@@ -383,7 +383,6 @@
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
-    <ClCompile Include="Engine\Application\UI\EngineUI\SelectionManager.cpp" />
     <ClCompile Include="Engine\Graphics\Material.cpp" />
     <ClCompile Include="Engine\Objects\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
@@ -421,6 +420,7 @@
     <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -652,7 +652,6 @@
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
-    <ClInclude Include="Engine\Application\UI\EngineUI\SelectionManager.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxBuffer.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxConstantBuffer.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxVertexBuffer.h" />
@@ -696,6 +695,7 @@
     <ClInclude Include="Engine\API\EngineAPI.h" />
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
     <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

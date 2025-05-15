@@ -5,11 +5,11 @@
 // engine
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>
 #include <Engine/Application/UI/Panels/InspectorPanel.h>
-#include <Engine/Application/UI/EngineUI/SelectionManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
 // lib
 #include <externals/imgui/imgui.h>
+#include <map>
 
 int HierarchyPanel::selectedObjectIndex_ = -1;
 
@@ -17,77 +17,43 @@ HierarchyPanel::HierarchyPanel()
     :IEngineUI("Hierarchy"){}
 
 void HierarchyPanel::Render(){
-    ImGui::Begin(panelName_.c_str(),nullptr, ImGuiWindowFlags_NoDecoration);
+    ImGui::Begin(panelName_.c_str(), nullptr, ImGuiWindowFlags_NoDecoration);
     ImGui::Text("Scene Hierarchy");
 
-    // 全オブジェクトを取得
     const auto& allObjects = SceneObjectManager::GetInstance()->GetAllObjects();
 
-    // オブジェクトをカテゴリごとに分類
-    std::vector<SceneObject*> cameraObjects;
-    std::vector<SceneObject*> lightObjects;
-    std::vector<SceneObject*> gameObjects;
+    // カテゴリ分け
+    std::map<std::string, std::vector<SceneObject*>> categorizedObjects = {
+        { "Cameras", {} },
+        { "Lights", {} },
+        { "Game Objects", {} }
+    };
 
-    for (SceneObject* obj : allObjects){
+    for (SceneObject* obj : allObjects) {
         if (!obj) continue;
-
-        switch (obj->GetObjectType()){
-            case ObjectType::Camera:
-                cameraObjects.push_back(obj);
-                break;
-            case ObjectType::Light:
-                lightObjects.push_back(obj);
-                break;
-            case ObjectType::GameObject:
-                gameObjects.push_back(obj);
-                break;
-            default:
-                break;
+        switch (obj->GetObjectType()) {
+            case ObjectType::Camera: categorizedObjects["Cameras"].push_back(obj); break;
+            case ObjectType::Light: categorizedObjects["Lights"].push_back(obj); break;
+            case ObjectType::GameObject: categorizedObjects["Game Objects"].push_back(obj); break;
+            default: break;
         }
     }
 
-    // カメラセクション
-    if (ImGui::CollapsingHeader("Cameras", ImGuiTreeNodeFlags_DefaultOpen)){
-        for (size_t i = 0; i < cameraObjects.size(); ++i){
-            bool isSelected = (selectedObjectIndex_ == static_cast< int >(i));
-            if (ImGui::Selectable(cameraObjects[i]->GetName().c_str(), isSelected)){
-                selectedObjectIndex_ = static_cast< int >(i);
-                SelectionManager::GetInstance()->SetSelectedObject(cameraObjects[i]);
-                // ★Editor の選択をクリア
-                SelectionManager::GetInstance()->ClearSelectedEditor();
-            }
-            if (isSelected){
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-    }
-    // ライトセクション
-    if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_DefaultOpen)){
-        for (size_t i = 0; i < lightObjects.size(); ++i){
-            bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + i));
-            if (ImGui::Selectable(lightObjects[i]->GetName().c_str(), isSelected)){
-                selectedObjectIndex_ = static_cast< int >(cameraObjects.size() + i);
-                SelectionManager::GetInstance()->SetSelectedObject(lightObjects[i]);
-                // ★Editor の選択をクリア
-                SelectionManager::GetInstance()->ClearSelectedEditor();
-            }
-            if (isSelected){
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-    }
-    // ゲームオブジェクトセクション
-    if (ImGui::CollapsingHeader("Game Objects", ImGuiTreeNodeFlags_DefaultOpen)){
-        for (size_t i = 0; i < gameObjects.size(); ++i){
-            bool isSelected = (selectedObjectIndex_ == static_cast< int >(cameraObjects.size() + lightObjects.size() + i));
-            if (ImGui::Selectable(gameObjects[i]->GetName().c_str(), isSelected)){
-                selectedObjectIndex_ = static_cast< int >(cameraObjects.size() + lightObjects.size() + i);
-                SelectionManager::GetInstance()->SetSelectedObject(gameObjects[i]);
-                // ★Editor の選択をクリア
-                SelectionManager::GetInstance()->ClearSelectedEditor();
-            }
-            if (isSelected){
-                ImGui::SetItemDefaultFocus();
+    // 現在の選択
+    SceneObject* selected = pEditorContext_->GetSelectedObject();
+
+    // カテゴリごとの描画
+    for (const auto& [category, objects] : categorizedObjects) {
+        if (ImGui::CollapsingHeader(category.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+            for (SceneObject* obj : objects) {
+                bool isSelected = (selected == obj);
+                if (ImGui::Selectable(obj->GetName().c_str(), isSelected)) {
+                    pEditorContext_->SetSelectedObject(obj);
+                    pEditorContext_->SetSelectedEditor(nullptr); // Editorの選択解除
+                }
+                if (isSelected) {
+                    ImGui::SetItemDefaultFocus();
+                }
             }
         }
     }
@@ -97,4 +63,8 @@ void HierarchyPanel::Render(){
 
 const std::string& HierarchyPanel::GetPanelName() const{
     return panelName_;
+}
+
+void HierarchyPanel::SetEditorContext(EditorContext* context) {
+	pEditorContext_ = context;
 }

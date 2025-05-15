@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
-#include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Application/UI/EngineUI/Context/EditorContext.h>
 
 // c++
 #include <vector>
@@ -22,6 +22,9 @@ public:
     void Render() override; // 描画処理
     const std::string& GetPanelName() const override; // パネル名の取得
 
+    void SetEditorContext(class EditorContext* context);
+
 public:
-    static int selectedObjectIndex_;      // 選択中のオブジェクトのインデックス
+    static int selectedObjectIndex_;            // 選択中のオブジェクトのインデックス
+	EditorContext* pEditorContext_ = nullptr;   // context ポインタ
 };
