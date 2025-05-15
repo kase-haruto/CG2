@@ -15,8 +15,7 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void OnModelLoaded() override;
-	void Draw()override;
-	void UpdateMatrix() override;
+	void Draw(const WorldTransform& transform)override;
 	void Map() override;
 	void ShowImGuiInterface() override;
 	void SkeletonUpdate();

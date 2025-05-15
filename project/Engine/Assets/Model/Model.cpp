@@ -32,15 +32,8 @@ Model::~Model(){
 }
 
 void Model::Initialize(){
-	// Device, CommandListの取得
-	device_ = GraphicsGroup::GetInstance()->GetDevice();
-	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-
-
 	// デフォルト値
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-
-	worldTransform_.Initialize();
 
 	materialParameter_.shininess = 20.0f;
 
@@ -59,16 +52,16 @@ void Model::InitializeTextures(const std::vector<std::string>& textureFilePaths)
 	}
 }
 
-void Model::Draw(){
+void Model::Draw(const WorldTransform& transform){
 	if (!modelData_){
 		return;
 	}
-
-	GraphicsGroup::GetInstance()->SetCommand(commandList_, Object3D, blendMode_);
+	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
+	GraphicsGroup::GetInstance()->SetCommand(cmdList, Object3D, blendMode_);
 	// 頂点バッファ/インデックスバッファをセット
-	modelData_->vertexBuffer.SetCommand(commandList_);
-	modelData_->indexBuffer.SetCommand(commandList_);
-	BaseModel::Draw();
+	modelData_->vertexBuffer.SetCommand(cmdList);
+	modelData_->indexBuffer.SetCommand(cmdList);
+	BaseModel::Draw(transform);
 }
 
 void Model::Map(){
@@ -86,13 +79,14 @@ void Model::ShowImGuiInterface(){
 // バッファ生成/マッピング
 //==============================================================================
 void Model::CreateMaterialBuffer(){
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	// materialData_ に初期値をセットする
 	materialData_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData_.shininess = 20.0f;
 	materialData_.enableLighting = HalfLambert;
 	materialData_.uvTransform = Matrix4x4::MakeIdentity();
 
-	materialBuffer_.Initialize(device_.Get());
+	materialBuffer_.Initialize(device);
 }
 
 void Model::MaterialBufferMap(){

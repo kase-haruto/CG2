@@ -32,8 +32,8 @@ GameScene::GameScene(DxCore* dxCore)
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
-	auto registerToRenderer = [this] (IMeshRenderable* mesh){
-		sceneContext_->meshRenderer_->Register(mesh);
+	auto registerToRenderer = [this] (IMeshRenderable* mesh, const WorldTransform* transform){
+		sceneContext_->meshRenderer_->Register(mesh, transform);
 		};
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);

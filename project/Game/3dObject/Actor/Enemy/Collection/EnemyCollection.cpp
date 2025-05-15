@@ -4,7 +4,7 @@
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <externals/imgui/imgui.h>
 
-EnemyCollection::EnemyCollection(std::function<void(IMeshRenderable*)> registerCB)
+EnemyCollection::EnemyCollection(std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
 	:registerCB_(registerCB){
 	SetName("EnemyCollection", ObjectType::GameObject);
 	SceneObject::EnableGuiList();

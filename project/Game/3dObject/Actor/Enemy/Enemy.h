@@ -16,7 +16,7 @@ public:
 	//===================================================================*/
 	Enemy() = default;
 	Enemy(const std::string& modelName,
-		  std::function<void(IMeshRenderable*)> registerCB);
+		  std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	virtual ~Enemy() = default;
 
 	void Initialize()override;
@@ -24,7 +24,7 @@ public:
 	void Draw()override;
 
 	void SetPosition(const Vector3& position){
-		model_->worldTransform_.translation = position;
+		worldTransform_.translation = position;
 	};
 
 	void OnCollisionEnter(Collider* other)override;

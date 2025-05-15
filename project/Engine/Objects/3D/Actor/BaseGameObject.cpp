@@ -33,7 +33,7 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 
 BaseGameObject::BaseGameObject(const std::string& modelName,
 							   std::optional<std::string> objectName,
-							   std::function<void(IMeshRenderable*)> registerCB){
+							   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB){
 	auto dotPos = modelName.find_last_of('.');
 	if (dotPos != std::string::npos){
 		std::string extension = modelName.substr(dotPos);
@@ -63,7 +63,7 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	}
 
 	//モデル登録コールバック
-	registerCB(model_.get());
+	registerCB(model_.get(),&worldTransform_);
 
 	//===================================================================*/
 	//			collider 設定
@@ -82,10 +82,12 @@ void BaseGameObject::Update(){
 
 	}
 
+	worldTransform_.Update();
+
 	// collider の更新
 	if (collider_){
 		Vector3 worldPos = GetCenterPos();
-		Quaternion worldRot = model_->worldTransform_.rotation;
+		Quaternion worldRot = worldTransform_.rotation;
 		collider_->Update(worldPos, worldRot);
 		collider_->Draw();
 	}
@@ -127,6 +129,8 @@ void BaseGameObject::SwitchCollider(ColliderKind kind, bool isCollisionEnubled){
 void BaseGameObject::ShowGui(){
 	ImGui::Spacing();
 
+	SceneObject::ShowGui();
+
 	model_->ShowImGuiInterface();
 
 	ImGui::Spacing();
@@ -150,19 +154,19 @@ void BaseGameObject::SetName(const std::string& name){
 
 void BaseGameObject::SetTranslate(const Vector3& pos){
 	if (model_){
-		model_->worldTransform_.translation = pos;
+		worldTransform_.translation = pos;
 	}
 }
 
 void BaseGameObject::SetScale(const Vector3& scale){
 	if (model_){
-		model_->worldTransform_.scale = scale;
+		worldTransform_.scale = scale;
 	}
 }
 
 const Vector3 BaseGameObject::GetCenterPos()const{
 	const Vector3 offset = {0.0f, 0.5f, 0.0f};
-	Vector3 worldPos = Vector3::Transform(offset, model_->GetWorldTransform().matrix.world);
+	Vector3 worldPos = Vector3::Transform(offset, worldTransform_.matrix.world);
 	return worldPos;
 }
 

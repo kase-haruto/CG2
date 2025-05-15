@@ -27,7 +27,7 @@ public:
 	virtual ~DxBuffer() = default;
 
 	virtual void Initialize(ComPtr<ID3D12Device> device, UINT elementCount = 1) = 0;
-	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex);
+	virtual void SetCommand(ComPtr<ID3D12GraphicsCommandList>cmdList, UINT rootParameterIndex)const;
 	virtual void TransferData(const T& data);
 	virtual void TransferData(const T* data, UINT count);
 	void TransferVectorData(const std::vector<T>& data);
@@ -53,7 +53,7 @@ protected:
 };
 
 template<typename T>
-inline void DxBuffer<T>::SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT rootParameterIndex){
+inline void DxBuffer<T>::SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT rootParameterIndex)const{
 	if (!resource_){
 		assert(false && "DxBuffer: resource is null.");
 		return;

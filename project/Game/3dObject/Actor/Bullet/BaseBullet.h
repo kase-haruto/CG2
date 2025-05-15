@@ -16,7 +16,7 @@ public:
 	//===================================================================*/
 	BaseBullet() = default;
 	BaseBullet(const std::string& modelName,
-			   std::function<void(IMeshRenderable*)> registerCB);
+			   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	virtual ~BaseBullet() = default;
 
 	virtual void Initialize(const Vector3 initPos,const Vector3 velocity);

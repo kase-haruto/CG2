@@ -35,12 +35,12 @@ public:
 	BaseGameObject(const std::string& modelName);
 	BaseGameObject(const std::string& modelName,
 				   std::optional<std::string> objectName,
-				   std::function<void(IMeshRenderable*)>registerCB);
+				   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
 	virtual void Initialize() {};
-	virtual void Update();
+	virtual void Update()override;
 	virtual void Draw() {};
 
 	//--------- ui/gui --------------------------------------------------
@@ -60,7 +60,7 @@ public:
 	virtual const Vector3 GetCenterPos()const;
 	void SetColor(const Vector4& color);
 	void SetUvScale(const Vector3& uvScale);
-	Vector3 GetWorldPosition()const{ return model_->worldTransform_.GetWorldPosition(); }
+	Vector3 GetWorldPosition()const{ return worldTransform_.GetWorldPosition(); }
 
 	void SetCollider(std::unique_ptr<Collider> collider);
 	Collider* GetCollider();

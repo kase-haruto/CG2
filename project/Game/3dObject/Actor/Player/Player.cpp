@@ -20,11 +20,11 @@
 #include <numbers>
 
 Player::Player(const std::string& modelName,
-			   std::function<void(IMeshRenderable*)> registerCB)
+			   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
 	:Actor::Actor(modelName, "player", registerCB){
 	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer", registerCB);
 	SceneObject::EnableGuiList();
-	model_->worldTransform_.translation = {0.0f, 0.0f, 25.0f};
+	worldTransform_.translation = {0.0f, 0.0f, 25.0f};
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -53,13 +53,13 @@ void Player::Update(){
 
 		// Z軸回転（2秒で1回転）
 		float angleOffset = rollSet_.rollDirection_ * std::numbers::pi_v<float> *2.0f;
-		model_->worldTransform_.eulerRotation.z =
+		worldTransform_.eulerRotation.z =
 			Lerp(rollSet_.rollStartAngle_, rollSet_.rollStartAngle_ + angleOffset, t);
 
 		// Z移動（前進→戻る）
 		float zRatio = EaseForwardThenReturn(t); // 0→1→0
 		float zOffset = rollSet_.rollOffset_.z * zRatio;
-		model_->worldTransform_.translation =
+		worldTransform_.translation =
 			rollSet_.rollStartPos_ + Vector3(0.0f, 0.0f, zOffset);
 	}
 
@@ -108,14 +108,14 @@ void Player::Move(){
 		moveVector.Normalize();
 	}
 	//effect
-	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 wPos = worldTransform_.GetWorldPosition();
 	Vector3 offset = {0.0f, 0.0f, -2.0f};
 
 	//移動速度を掛ける
 	moveVector *= moveSpeed_;
 
 	//移動ベクトルを加算
-	model_->worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
+	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
 	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
 	if (rollSet_.isRolling_) return;
@@ -124,7 +124,7 @@ void Player::Move(){
 
 void Player::Shoot(){
 	//弾を追加
-	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 wPos = worldTransform_.GetWorldPosition();
 	Vector3 offset = {0.0f, 0.7f, 2.0f};
 	//発射方向
 
@@ -150,7 +150,7 @@ void Player::Shoot(){
 void Player::UpdateTilt(const Vector3& moveVector){
 	// 停止時は角度を戻す
 	if (moveVector.Length() <= 0.001f){
-		model_->worldTransform_.eulerRotation.z *= 0.9f; // 緩やかに戻す
+		worldTransform_.eulerRotation.z *= 0.9f; // 緩やかに戻す
 		return;
 	}
 
@@ -159,8 +159,8 @@ void Player::UpdateTilt(const Vector3& moveVector){
 	float targetTilt = -normalizedX * maxTilt;
 
 	// 滑らかに傾ける
-	model_->worldTransform_.eulerRotation.z =
-		LerpShortAngle(model_->worldTransform_.eulerRotation.z, targetTilt, 0.2f);
+	worldTransform_.eulerRotation.z =
+		LerpShortAngle(worldTransform_.eulerRotation.z, targetTilt, 0.2f);
 	lastMoveVector_ = moveVector; // 最後の移動ベクトルを保存
 }
 
@@ -176,8 +176,8 @@ void Player::BarrelRoll(){
 	// 左なら左回転、右なら右回転
 	rollSet_.rollDirection_ = (moveVec.x < 0.0f) ? 1.0f : -1.0f;
 
-	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
-	rollSet_.rollStartPos_ = model_->worldTransform_.translation;
+	rollSet_.rollStartAngle_ = worldTransform_.eulerRotation.z;
+	rollSet_.rollStartPos_ = worldTransform_.translation;
 
 	// 前方へ飛ぶオフセット（例：Z方向へ +2.0f）
 	rollSet_.rollOffset_ = Vector3(0.0f, 0.0f, 7.0f); // 最大前進距離
@@ -185,9 +185,9 @@ void Player::BarrelRoll(){
 
 	rollSet_.isRolling_ = true;
 	rollSet_.rollTimer_ = 0.0f;
-	rollSet_.rollStartAngle_ = model_->worldTransform_.eulerRotation.z;
+	rollSet_.rollStartAngle_ = worldTransform_.eulerRotation.z;
 
-	Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+	Vector3 wPos = worldTransform_.GetWorldPosition();
 	ParticleEffectCollection::GetInstance()->PlayByName("reloadParticle", wPos, EmitType::Once);
 }
 

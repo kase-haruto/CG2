@@ -11,10 +11,10 @@
 #include <externals/imgui/imgui.h>
 
 BaseBullet::BaseBullet(const std::string& modelName,
-					   std::function<void(IMeshRenderable*)> registerCB)
+					   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
 	:Actor::Actor(modelName, "bullet", registerCB){
 	SphereCollider::name_ = "playerBullet";
-	SphereCollider::Initialize(model_->worldTransform_.scale.x * 2.0f + 0.1f);
+	SphereCollider::Initialize(worldTransform_.scale.x * 2.0f + 0.1f);
 	Collider::targetType_ = ColliderType::Type_PlayerAttack;
 	Collider::type_ = ColliderType::Type_PlayerAttack;
 }
@@ -23,7 +23,7 @@ BaseBullet::BaseBullet(const std::string& modelName,
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
-	model_->worldTransform_.translation = initPos;
+	worldTransform_.translation = initPos;
 	velocity_ = velocity;
 	moveSpeed_ = 15.0f;
 	life_ = 1;
@@ -35,7 +35,7 @@ void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::Update(){
 	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
-	model_->worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
+	worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
 	BaseGameObject::Update();
 

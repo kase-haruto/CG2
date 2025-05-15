@@ -27,7 +27,7 @@ public:
 	//===================================================================*/
 	Player() = default;
 	Player(const std::string& modelName,
-		   std::function<void(IMeshRenderable*)> registerCB);
+		   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	virtual ~Player() = default;
 
 	void Initialize()override;
@@ -37,7 +37,7 @@ public:
 	void DerivativeGui()override;
 
 	void SetParent(const WorldTransform* parent){
-		model_->worldTransform_.parent = parent;
+		worldTransform_.parent = parent;
 	}
 
 private:

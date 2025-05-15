@@ -15,7 +15,7 @@ public:
 	//===================================================================*/
 	void Initialize(ComPtr<ID3D12Device> device, UINT elementCount = 1) override;
 
-	void SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT rootParameterIndex) override{
+	void SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT rootParameterIndex)const override{
 		cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, this->resource_->GetGPUVirtualAddress());
 	}
 

@@ -15,13 +15,12 @@ public:
 	void Initialize() override;
 	void InitializeTextures(const std::vector<std::string>& textureFilePaths);
 	void Map() override;
-	void Draw()override;
+	void Draw(const WorldTransform& transform)override;
 	void ShowImGuiInterface() override;
 
 	//=============
 	// Transform関連
 	//=============
-	void SetSize(const Vector3& size){ worldTransform_.scale = size; }
 	void SetUvScale(const Vector3& uvScale) override{ uvTransform.scale = uvScale; }
 	void SetColor(const Vector4& color) override{ materialData_.color = color; }
 	const Vector4& GetColor() const override{ return RGBa; }
@@ -34,8 +33,4 @@ private:
 
 	void MaterialBufferMap()override;
 
-private:
-
-
-public:
 };

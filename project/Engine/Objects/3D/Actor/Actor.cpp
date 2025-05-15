@@ -8,7 +8,7 @@
 
 Actor::Actor(const std::string& modelName,
 			 std::optional<std::string> objectName,
-			 std::function<void(IMeshRenderable*)> registerCB) :
+			 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB) :
 	BaseGameObject::BaseGameObject(modelName, objectName, registerCB) {
 
 }

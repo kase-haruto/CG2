@@ -3,6 +3,7 @@
 /* include space
 /* ===================================================================== */
 #include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/objects/Transform/Transform.h>
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -17,6 +18,6 @@ public:
 	//===================================================================*/
 	virtual ~IMeshRenderable() = default;
 
-	virtual void Draw() = 0;
+	virtual void Draw(const WorldTransform& transform) = 0;
 };
 

@@ -2,8 +2,8 @@
 
 #include <externals/imgui/imgui.h>
 
-BulletContainer::BulletContainer(const std::string& name
-								 , std::function<void(IMeshRenderable*)> registerCB):
+BulletContainer::BulletContainer(const std::string& name,
+								 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB):
 registerCB_(registerCB){
 	bullets_.clear();
 	SceneObject::SetName(name, ObjectType::GameObject);
