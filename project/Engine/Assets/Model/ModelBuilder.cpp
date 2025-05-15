@@ -22,9 +22,7 @@ void ModelBuilder::Update(){
 }
 
 void ModelBuilder::Draw([[maybe_unused]] const Matrix4x4& vp){
-	for (auto& pair : models_){
-		pair.second.second->Draw();
-	}
+
 }
 
 void ModelBuilder::RemoveModel(size_t index){
@@ -133,65 +131,9 @@ std::unique_ptr<Model> ModelBuilder::CreateModel(const std::string& modelName){
 /////////////////////////////////////////////////////////////////////////////////////////
 //                          json
 /////////////////////////////////////////////////////////////////////////////////////////
-void ModelBuilder::SaveModels(const std::string& filePath){
-	json jsonModels;
-	for (const auto& pair : models_){
-		json modelData;
-		modelData["unique_key"] = pair.first;
-		modelData["original_name"] = pair.second.first;
-		modelData["position"] = {
-			pair.second.second->worldTransform_.translation.x,
-			pair.second.second->worldTransform_.translation.y,
-			pair.second.second->worldTransform_.translation.z
-		};
-		modelData["scale"] = {
-			pair.second.second->worldTransform_.scale.x,
-			pair.second.second->worldTransform_.scale.y,
-			pair.second.second->worldTransform_.scale.z
-		};
-		modelData["rotation"] = {
-			pair.second.second->worldTransform_.eulerRotation.x,
-			pair.second.second->worldTransform_.eulerRotation.y,
-			pair.second.second->worldTransform_.eulerRotation.z
-		};
-		jsonModels.push_back(modelData);
-	}
-	json outputJson;
-	outputJson["models"] = jsonModels;
-	std::ofstream file(filePath);
-	if (file.is_open()){
-		file << outputJson.dump(4);
-		file.close();
-	} else{
-		throw std::runtime_error("Failed to open file for saving models.");
-	}
+void ModelBuilder::SaveModels([[maybe_unused]]const std::string& filePath){
+	
 }
-void ModelBuilder::LoadModels(const std::string& filePath){
-	std::ifstream file(filePath);
-	if (!file.is_open()){
-		throw std::runtime_error("Failed to open file for loading models.");
-	}
-	json inputJson;
-	file >> inputJson;
-	models_.clear();
-	for (const auto& modelData : inputJson["models"]){
-		std::string uniqueKey = modelData["unique_key"].get<std::string>();
-		std::string originalName = modelData["original_name"].get<std::string>();
-
-		auto model = CreateModel(originalName);
-
-		if (modelData.contains("position")){
-			auto pos = modelData["position"];
-			model->worldTransform_.translation = Vector3({pos[0], pos[1], pos[2]});
-		}
-		if (modelData.contains("scale")){
-			auto scale = modelData["scale"];
-			model->worldTransform_.scale = Vector3({scale[0], scale[1], scale[2]});
-		}
-		if (modelData.contains("rotation")){
-			auto rot = modelData["rotation"];
-			model->worldTransform_.eulerRotation = Vector3({rot[0], rot[1], rot[2]});
-		}
-		models_.emplace(uniqueKey, std::make_pair(originalName, std::move(model)));
-	}
+void ModelBuilder::LoadModels([[maybe_unused]] const std::string& filePath){
+	
 }

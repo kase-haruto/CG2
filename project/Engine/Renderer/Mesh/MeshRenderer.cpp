@@ -10,6 +10,7 @@
 #include <Engine/Extensions/SkyBox/SkyBox.h>
 #include <Engine/Lighting/LightManager.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/objects/Transform/Transform.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
@@ -17,41 +18,48 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録
 /////////////////////////////////////////////////////////////////////////////////////////
-void MeshRenderer::Register(IMeshRenderable* renderable) {
-	renderables_.push_back(renderable);
+void MeshRenderer::Register(IMeshRenderable* renderable, const WorldTransform* transform){
+	renderables_.emplace_back(DrawEntry {renderable, transform});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		削除
 /////////////////////////////////////////////////////////////////////////////////////////
-void MeshRenderer::Unregister(IMeshRenderable* renderable) {
-	renderables_.erase(std::remove(renderables_.begin(), renderables_.end(), renderable), renderables_.end());
+void MeshRenderer::Unregister(IMeshRenderable* renderable){
+	renderables_.erase(std::remove_if(renderables_.begin(), renderables_.end(),
+					   [&] (const DrawEntry& entry){
+						   return entry.renderable == renderable;
+					   }), renderables_.end());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 /////////////////////////////////////////////////////////////////////////////////////////
 void MeshRenderer::DrawAll() {
-	std::vector<IMeshRenderable*> staticModels;
-	std::vector<IMeshRenderable*> skinnedModels;
-	IMeshRenderable* skyBox = nullptr;
+	std::vector<DrawEntry> staticModels;
+	std::vector<DrawEntry> skinnedModels;
+	DrawEntry* skyBox = nullptr;
+
 	ID3D12GraphicsCommandList* commandList = GraphicsGroup::GetInstance()->GetCommandList().Get();
 	LightManager* lightManager = LightManager::GetInstance();
 
-	for (auto* mesh : renderables_) {
-		if (auto* skinned = dynamic_cast<AnimationModel*>(mesh)) {
-			skinnedModels.push_back(skinned);
-		} else if (auto* staticModel = dynamic_cast<Model*>(mesh)) {
-			staticModels.push_back(mesh);
-		} else if (auto* sky = dynamic_cast<SkyBox*>(mesh)) {
-			skyBox = sky;
+	for (const auto& entry : renderables_){
+		if (dynamic_cast< AnimationModel* >(entry.renderable)){
+			skinnedModels.push_back(entry);
+		} else if (dynamic_cast< Model* >(entry.renderable)){
+			staticModels.push_back(entry);
+		} else if (dynamic_cast< SkyBox* >(entry.renderable)){
+			skyBox = const_cast< DrawEntry* >(&entry);
 		}
 	}
 
 	//===================================================================*/
 	//                    背景オブジェクト描画
 	//===================================================================*/
-	skyBox->Draw();
+	// 背景
+	if (skyBox){
+		skyBox->renderable->Draw(*skyBox->transform);
+	}
 
 	//===================================================================*/
 	//                    静的モデル描画
@@ -59,20 +67,17 @@ void MeshRenderer::DrawAll() {
 	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::Object3D);
 	lightManager->SetCommand(commandList, LightType::Point, PipelineType::Object3D);
 	CameraManager::SetCommand(commandList, PipelineType::Object3D);
-
-	for (auto* mesh : staticModels) {
-		mesh->Draw();
+	for (const auto& entry : staticModels){
+		entry.renderable->Draw(*entry.transform);
 	}
-
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
 	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::SkinningObject3D);
 	lightManager->SetCommand(commandList, LightType::Point, PipelineType::SkinningObject3D);
 	CameraManager::SetCommand(commandList, PipelineType::SkinningObject3D);
-
-	for (auto* mesh : skinnedModels) {
-		mesh->Draw();
+	for (const auto& entry : skinnedModels){
+		entry.renderable->Draw(*entry.transform);
 	}
 
 	//===================================================================*/

@@ -34,9 +34,9 @@ TestScene::TestScene(DxCore* dxCore)
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize() {
-	auto registerToRenderer = [this](IMeshRenderable* mesh) {
-		sceneContext_->meshRenderer_->Register(mesh);
-	};
+	auto registerToRenderer = [this] (IMeshRenderable* mesh, const WorldTransform* transform){
+		sceneContext_->meshRenderer_->Register(mesh, transform);
+		};
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	//=========================
@@ -48,10 +48,6 @@ void TestScene::Initialize() {
 	skyBox_->Initialize();
 
 	//objects
-	modelField_ = std::make_unique<Model>("ground.obj");
-	modelField_->SetSize({ 100.0f,1.0f,100.0f });
-	modelField_->SetUvScale({ 15.0f,15.0f,0.0f });
-	sceneContext_->meshRenderer_->Register(modelField_.get());
 
 	//test用
 	bunny_ = std::make_unique<BaseGameObject>("bunny.obj", "bunny", registerToRenderer);
@@ -80,9 +76,6 @@ void TestScene::Update() {
 #endif //  _DEBUG
 
 	CameraManager::Update();
-
-	//地面
-	//modelField_->Update();
 
 	skyBox_->Update();
 

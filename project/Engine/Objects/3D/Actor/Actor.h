@@ -16,7 +16,7 @@ public:
 	Actor() = default;
 	Actor(const std::string& modelName,
 		  std::optional<std::string> objectName,
-		  std::function<void(IMeshRenderable*)>registerCB);
+		  std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	virtual ~Actor() override = default;
 
 	virtual void Initialize() override;
@@ -44,7 +44,7 @@ public:
 
 	bool GetIsAlive() const { return isAlive_; }
 
-	void SetPosition(const Vector3& position) { model_->worldTransform_.translation = position; };
+	void SetPosition(const Vector3& position) { worldTransform_.translation = position; };
 
 	void SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
 

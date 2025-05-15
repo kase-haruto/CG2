@@ -22,7 +22,7 @@ public:
 	virtual~ICamera() = default;
 	ICamera() = default;
 
-	virtual void Update() = 0;
+	virtual void Update()override = 0;
 	virtual void UpdateMatrix() = 0;
 	virtual void ShowGui()override{}
 	virtual void TransfarToGPU(){}  // GPUへ転送

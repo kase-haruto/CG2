@@ -10,7 +10,7 @@ public:
 	//===================================================================*/
 	//                      Public Methods
 	//===================================================================*/
-	EnemyCollection(std::function<void(IMeshRenderable*)> registerCB);
+	EnemyCollection(std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	~EnemyCollection() = default;
 	void Update();
 	void ShowGui()override;
@@ -28,7 +28,7 @@ private:
 	//                      Private variables
 	//===================================================================*/
 	std::list<std::unique_ptr<Enemy>> enemies_; // 登録された全エネミー
-	std::function<void(IMeshRenderable*)> registerCB_;
+	std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB_;
 
 	float spawnInterval_ = 2.0f; // スポーン間隔
 	float spawnTimer_ = 0.0f;   // スポーンタイマー

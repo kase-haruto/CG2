@@ -15,7 +15,8 @@ public:
 	//===================================================================*/
 	//			public function
 	//===================================================================*/
-	BulletContainer(const std::string& name, std::function<void(IMeshRenderable*)> registerCB);
+	BulletContainer(const std::string& name,
+					std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
 	~BulletContainer() = default;
 
 	void Update();
@@ -36,7 +37,7 @@ private:
 	//			private variables
 	//===================================================================*/
 	std::list<std::unique_ptr<BaseBullet>> bullets_;	// 弾リスト
-	std::function<void(IMeshRenderable*)> registerCB_ = nullptr;	// モデル登録コールバック
+	std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB_ = nullptr;	// モデル登録コールバック
 
 private:
 	//===================================================================*/

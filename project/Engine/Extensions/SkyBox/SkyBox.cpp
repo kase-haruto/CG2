@@ -6,8 +6,8 @@
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Math/Matrix4x4.h>
 
-SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*)>cb) {
-	cb(this);
+SkyBox::SkyBox(std::string fileName, std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB) {
+	registerCB(this, &worldTransform_);
 
 	textureName_ = fileName;
 	TextureManager::GetInstance()->SetEnvironmentTexture(fileName);
@@ -89,7 +89,7 @@ void SkyBox::Update() {
 }
 
 
-void SkyBox::Draw() {
+void SkyBox::Draw(const WorldTransform& transform) {
 	ID3D12GraphicsCommandList* cmd = GraphicsGroup::GetInstance()->GetCommandList().Get();
 	CameraManager::SetCommand(cmd, PipelineType::Skybox);
 
@@ -100,7 +100,7 @@ void SkyBox::Draw() {
 
 	vertexBuffer_.SetCommand(cmd);
 	indexBuffer_.SetCommand(cmd);
-	worldTransform_.SetCommand(cmd, 0);
+	transform.SetCommand(cmd, 0);
 	cmd->SetGraphicsRootDescriptorTable(2, handle);
 
 	cmd->DrawIndexedInstanced(

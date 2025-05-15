@@ -9,12 +9,20 @@
 #include <vector>
 #include <d3d12.h>
 
-struct Matrix4x4;
+class WorldTransform;
 
 /* ========================================================================
 /* mesh renderer
 /* ===================================================================== */
 class MeshRenderer{
+private:
+	//===================================================================*/
+	//			struct
+	//===================================================================*/
+	struct DrawEntry{
+		IMeshRenderable* renderable;
+		const WorldTransform* transform;
+	};
 public:
 	//===================================================================*/
 	//			public methods
@@ -22,7 +30,7 @@ public:
 public:
 	MeshRenderer() = default;
 
-	void Register(IMeshRenderable* renderable);
+	void Register(IMeshRenderable* renderable, const WorldTransform* transform);
 	void Unregister(IMeshRenderable* renderable);
 	void DrawAll();
 	void Clear();
@@ -31,5 +39,5 @@ private:
 	//===================================================================*/
 	//			private methods
 	//===================================================================*/
-	std::vector<IMeshRenderable*> renderables_;
+	std::vector<DrawEntry> renderables_;
 };

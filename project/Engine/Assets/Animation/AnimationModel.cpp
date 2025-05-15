@@ -40,16 +40,11 @@ AnimationModel::AnimationModel(const std::string& fileName){
 // 初期化
 //-----------------------------------------------------------------------------
 void AnimationModel::Initialize(){
-	// Device, CommandListの取得
-	device_ = GraphicsGroup::GetInstance()->GetDevice();
-	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-
 	// デフォルト値
 	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
 	materialParameter_.shininess = 20.0f;
 	materialParameter_.enableLighting = HalfLambert;
 
-	worldTransform_.Initialize();
 	// バッファ生成
 	CreateMaterialBuffer();
 	Map();
@@ -177,46 +172,40 @@ void AnimationModel::Update(){
 
 void AnimationModel::OnModelLoaded(){
 	BaseModel::OnModelLoaded();
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 
 	modelData_->animation = animationData_;
 
 	// スキンクラスターのリソースを確保
-	skinCluster_ = CreateSkinCluster(device_, modelData_->skeleton, *modelData_);
+	skinCluster_ = CreateSkinCluster(device, modelData_->skeleton, *modelData_);
 
 }
 
-void AnimationModel::Draw(){
+//-----------------------------------------------------------------------------
+// 描画
+//-----------------------------------------------------------------------------
+void AnimationModel::Draw(const WorldTransform& transform){
 	// もしモデルデータが読み込まれていない場合は何もしない
 	if (!modelData_){ return; }
-	GraphicsGroup::GetInstance()->SetCommand(commandList_, SkinningObject3D, blendMode_);
 
-	
-	commandList_->SetGraphicsRootDescriptorTable(8, skinCluster_.paletteSrvHandle.second);
+	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
+
+	GraphicsGroup::GetInstance()->SetCommand(cmdList, SkinningObject3D, blendMode_);
+
+
+	cmdList->SetGraphicsRootDescriptorTable(8, skinCluster_.paletteSrvHandle.second);
 
 	// 頂点バッファ/インデックスバッファをセット
 	vbvs_[0] = modelData_->vertexBuffer.GetVertexBufferView();	//vertexDataのvbv
 	vbvs_[1] = skinCluster_.influenceBufferView;				//influenceDataのvbv
-	modelData_->indexBuffer.SetCommand(commandList_);
-	commandList_->IASetVertexBuffers(0, 2, vbvs_);
-	BaseModel::Draw();
+	modelData_->indexBuffer.SetCommand(cmdList);
+	cmdList->IASetVertexBuffers(0, 2, vbvs_);
+	BaseModel::Draw(transform);
 
 	if (isDrawSkeleton_){
 		modelData_->skeleton.Draw();
 	}
 }
-
-
-//-----------------------------------------------------------------------------
-// 描画
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// 行列のみ更新
-//-----------------------------------------------------------------------------
-void AnimationModel::UpdateMatrix(){
-	worldTransform_.Update();
-}
-
 
 //-----------------------------------------------------------------------------
 // ImGui などUIの表示
@@ -238,6 +227,7 @@ void AnimationModel::Map(){
 }
 
 void AnimationModel::CreateMaterialBuffer(){
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	// materialData_ に初期値をセットする
 	materialData_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialData_.shininess = 20.0f;
@@ -245,8 +235,7 @@ void AnimationModel::CreateMaterialBuffer(){
 	materialData_.uvTransform = Matrix4x4::MakeIdentity();
 
 	// materialData_ の内容で GPU に転送
-	materialBuffer_.Initialize(device_.Get());
-
+	materialBuffer_.Initialize(device);
 }
 
 void AnimationModel::MaterialBufferMap(){

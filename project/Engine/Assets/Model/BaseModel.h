@@ -34,25 +34,20 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update();
 	virtual void OnModelLoaded();
-	virtual void UpdateMatrix();
 	void UpdateTexture();
 	virtual void Map() = 0;
 	virtual void ShowImGuiInterface();
-	void Draw()override;
+	void Draw(const WorldTransform& transform)override;
 
 	//--------- accessor -----------------------------------------------------
 	virtual void SetUvScale(const Vector3& uvScale) = 0;
 	virtual void SetColor(const Vector4& color) = 0;
 	virtual const Vector4& GetColor() const = 0;
-	const WorldTransform& GetWorldTransform(){ return worldTransform_; }
 
 protected:
 	//===================================================================*/
 	//			protected methods
 	//===================================================================*/
-	Microsoft::WRL::ComPtr<ID3D12Device>              device_;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-
 	DxConstantBuffer<Material> materialBuffer_;
 
 	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> handle_ {};
@@ -69,8 +64,6 @@ public:
 	EulerTransform  uvTransform {{1.0f, 1.0f, 1.0f},
 							 {0.0f, 0.0f, 0.0f},
 							 {0.0f, 0.0f, 0.0f}};
-
-	WorldTransform worldTransform_;
 
 protected:
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureHandles_; // テクスチャハンドルリスト

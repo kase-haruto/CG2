@@ -8,14 +8,14 @@
 /* include space
 /* ===================================================================== */
 Enemy::Enemy(const std::string& modelName,
-			 std::function<void(IMeshRenderable*)> registerCB) :
+			 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB) :
 	Actor::Actor(modelName, "enemy", registerCB){
 
-	model_->worldTransform_.scale = {5.0f, 5.0f, 5.0f};
+	worldTransform_.scale = {5.0f, 5.0f, 5.0f};
 	moveSpeed_ = Random::Generate<float>(1.0f, 3.0f);
 	velocity_ = Random::GenerateVector3(-1.0f, 1.0f);
 	SphereCollider::name_ = "enemyCollider";
-	SphereCollider::Initialize(model_->worldTransform_.scale.x*0.5f+0.1f);
+	SphereCollider::Initialize(worldTransform_.scale.x*0.5f+0.1f);
 
 	Collider::targetType_ = ColliderType::Type_PlayerAttack;
 	Collider::type_ = ColliderType::Type_Enemy;
@@ -33,14 +33,14 @@ void Enemy::Initialize(){
 void Enemy::Update(){
 
 	if (isHit_){
-		Vector3 wPos = model_->GetWorldTransform().GetWorldPosition();
+		Vector3 wPos = worldTransform_.GetWorldPosition();
 		Vector3 offset = {0.0f, 0.0f, -2.0f};
 		ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
 		isHit_ = false;
 	}
 	
 
-	SphereCollider::shape_.center = model_->worldTransform_.translation;
+	SphereCollider::shape_.center = worldTransform_.translation;
 	BaseGameObject::Update();
 }
 

@@ -62,7 +62,7 @@ public:
 	virtual void Initialize();
 	virtual void Update([[maybe_unused]]const Matrix4x4& viewProMatrix){}
 	virtual void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,
-							UINT rootParameterIndex){
+							UINT rootParameterIndex)const{
 		DxBuffer::SetCommand(commandList, rootParameterIndex);
 	};
 
