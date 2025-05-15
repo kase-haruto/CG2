@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
     <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\BoxDrawer.cpp" />
@@ -232,7 +233,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Foundation\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
-    <ClCompile Include="Engine\Application\UI\EngineUI\SelectionManager.cpp" />
     <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
@@ -249,6 +249,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
     <ClInclude Include="Engine\API\EngineAPI.h" />
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
     <ClInclude Include="Engine\Renderer\Primitive\BoxDrawer.h" />
@@ -387,7 +388,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\Lighting\LightManager.h" />
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
-    <ClInclude Include="Engine\Application\UI\EngineUI\SelectionManager.h" />
     <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />
     <ClInclude Include="Engine\Scene\Context\SceneContext.h" />

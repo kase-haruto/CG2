@@ -10,6 +10,9 @@
 #include <vector>
 #include <string>
 
+// Forward
+class EditorContext;
+
 class EditorPanel
 	:public IEngineUI{
 public:
@@ -19,17 +22,20 @@ public:
 	EditorPanel();
 	~EditorPanel() = default;
 
-	void Render(); // 描画処理
-	const std::string& GetPanelName() const; // パネル名の取得
+	void Render() override;
+	const std::string& GetPanelName() const override;
 
 	void AddEditor(const BaseEditor* editor);
 	void RemoveEditor(const BaseEditor* editor);
+
+	void SetEditorContext(EditorContext* context);
 
 private:
 	//===================================================================*/
 	//                   private variables
 	//===================================================================*/
 	std::vector<BaseEditor*> editors_;	//< エディタのリスト
+	EditorContext* pEditorContext_ = nullptr;
 public:
 	static int selectedEditorIndex;							//< 選択されたエディタ
 };

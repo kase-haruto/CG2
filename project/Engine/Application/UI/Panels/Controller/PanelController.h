@@ -4,7 +4,7 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
-
+#include <Engine/Application/UI/EngineUI/Context/EditorContext.h>
 // c++
 #include <unordered_map>
 #include <memory>
@@ -28,5 +28,6 @@ private:
 	//                   private variables
 	//===================================================================*/
 	std::unordered_map<std::string, std::unique_ptr<IEngineUI>> panels_;
+	std::unique_ptr<EditorContext> editorContext_;
 };
 
