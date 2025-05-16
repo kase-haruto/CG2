@@ -5,17 +5,25 @@
 
 // engine
 #include <Engine/Renderer/Mesh/MeshRenderer.h>
+#include <Engine/objects/3D/Actor/Library/SceneObjectLibrary.h>
 
 // c++
 #include <memory>
 
+
 class SceneContext{
 public:
-	//===================================================================*/
-	//			methods
-	//===================================================================*/
 	SceneContext();
 	~SceneContext();
-	std::unique_ptr<MeshRenderer> meshRenderer_;
+
+	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
+	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
+
+	void RegisterAllToRenderer();
+
+private:
+	std::unique_ptr<MeshRenderer> renderer_;
+	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
 };
+
 

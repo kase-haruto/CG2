@@ -421,6 +421,7 @@
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
+    <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -696,6 +697,8 @@
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
     <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
+    <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
+    <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

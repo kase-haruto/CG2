@@ -2,10 +2,15 @@
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 SceneContext::SceneContext(){
-	meshRenderer_ = std::make_unique<MeshRenderer>();
+	renderer_ = std::make_unique<MeshRenderer>();
+	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
 }
 
 SceneContext::~SceneContext(){
 	// 3Dオブジェクトの描画を終了
-	meshRenderer_->Clear();
+	renderer_->Clear();
+}
+
+void SceneContext::RegisterAllToRenderer(){
+	objectLibrary_->RegisterToRenderer(renderer_.get());
 }

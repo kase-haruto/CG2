@@ -7,9 +7,8 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-Enemy::Enemy(const std::string& modelName,
-			 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB) :
-	Actor::Actor(modelName, "enemy", registerCB){
+Enemy::Enemy(const std::string& modelName) :
+	Actor::Actor(modelName, "enemy"){
 
 	worldTransform_.scale = {5.0f, 5.0f, 5.0f};
 	moveSpeed_ = Random::Generate<float>(1.0f, 3.0f);

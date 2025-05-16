@@ -20,13 +20,11 @@ public:
 	SceneObject();
 	virtual void ShowGui();
 	virtual void Update() =0;
+	virtual void RegisterToRenderer(class MeshRenderer*){}
 	void EnableGuiList(); //GUIのリストに追加するかどうか
 
 	// accessor =======================================================*//
-	virtual void SetName(const std::string& name, ObjectType type){
-		name_ = name;
-		objectType_ = type;
-	}
+	virtual void SetName(const std::string& name, ObjectType type);
 
 	const std::string& GetName()const{ return name_; }
 	ObjectType GetObjectType()const{ return objectType_; }

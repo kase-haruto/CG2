@@ -247,6 +247,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.cpp" />
     <ClCompile Include="Engine\Extensions\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
+    <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
@@ -278,6 +279,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Assets\Animation\AnimationModel.h" />
     <ClInclude Include="Engine\Assets\Animation\AnimationStruct.h" />
     <ClInclude Include="Engine\Scene\Details\SceneType.h" />
+    <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
@@ -403,6 +405,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\PostProcess\Blur\RadialBlur\RadialBlur.h" />
     <ClInclude Include="Engine\Extensions\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
+    <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -4,27 +4,31 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
-#include <Engine/Application/UI/EngineUI/Context/EditorContext.h>
+
+class EditorContext;
+class SceneObjectLibrary;
 
 // c++
 #include <vector>
 #include <string>
 
 class HierarchyPanel
-    : public IEngineUI{
+	: public IEngineUI{
 public:
-    //===================================================================*/
-    //                   public functions
-    //===================================================================*/
-    HierarchyPanel();
-    ~HierarchyPanel() override = default;
+	//===================================================================*/
+	//                   public functions
+	//===================================================================*/
+	HierarchyPanel();
+	~HierarchyPanel() override = default;
 
-    void Render() override; // 描画処理
-    const std::string& GetPanelName() const override; // パネル名の取得
+	void Render() override; // 描画処理
+	const std::string& GetPanelName() const override; // パネル名の取得
 
-    void SetEditorContext(class EditorContext* context);
+	void SetEditorContext(EditorContext* context);
+	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
 
 public:
-    static int selectedObjectIndex_;            // 選択中のオブジェクトのインデックス
-	EditorContext* pEditorContext_ = nullptr;   // context ポインタ
+	static int selectedObjectIndex_;							// 選択中のオブジェクトのインデックス
+	EditorContext* pEditorContext_ = nullptr;				// context ポインタ
+	const SceneObjectLibrary* pSceneObjectLibrary_ = nullptr;	// シーンオブジェクトライブラリポインタ
 };

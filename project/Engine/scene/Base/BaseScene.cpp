@@ -15,7 +15,5 @@ IScene(dxCore){
 
 void BaseScene::Draw(){
 	auto commandList_ = pDxCore_->GetCommandList();	
-	sceneContext_->meshRenderer_->DrawAll();
-
-	
+	sceneContext_->GetMeshRenderer()->DrawAll();
 }

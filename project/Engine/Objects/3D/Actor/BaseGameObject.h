@@ -34,14 +34,14 @@ public:
 	//===================================================================*/
 	BaseGameObject(const std::string& modelName);
 	BaseGameObject(const std::string& modelName,
-				   std::optional<std::string> objectName,
-				   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+				   std::optional<std::string> objectName);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
 	virtual void Initialize() {};
 	virtual void Update()override;
 	virtual void Draw() {};
+	virtual void RegisterToRenderer(MeshRenderer* renderer)override;
 
 	//--------- ui/gui --------------------------------------------------
 	void ShowGui()override;

@@ -19,10 +19,9 @@
 // c++
 #include <numbers>
 
-Player::Player(const std::string& modelName,
-			   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
-	:Actor::Actor(modelName, "player", registerCB){
-	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer", registerCB);
+Player::Player(const std::string& modelName)
+	:Actor::Actor(modelName, "player"){
+	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
 	SceneObject::EnableGuiList();
 	worldTransform_.translation = {0.0f, 0.0f, 25.0f};
 }
