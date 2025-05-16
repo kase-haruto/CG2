@@ -133,6 +133,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Objects\Transform\Transform.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
+    <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileScanner.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\BaseBullet.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.cpp" />
     <ClCompile Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.cpp" />
@@ -218,6 +219,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Foundation\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\Loader\JsonFileLoader.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\Adapter\JsonFileIO.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -279,6 +282,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
+    <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileScanner.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\BaseBullet.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\Container\BulletContainer.h" />
     <ClInclude Include="Game\3dObject\Actor\Bullet\PlayerBullet\PlayerBullet.h" />
@@ -400,6 +404,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
     <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
     <ClInclude Include="Engine\Lighting\LightLibrary.h" />
+    <ClInclude Include="Engine\System\Command\Interface\ICommand.h" />
+    <ClInclude Include="Engine\Foundation\Json\Loader\JsonFileLoader.h" />
+    <ClInclude Include="Engine\Foundation\Json\Adapter\JsonFileIO.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
