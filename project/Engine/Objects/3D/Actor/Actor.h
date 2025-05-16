@@ -15,8 +15,7 @@ public:
 	//===================================================================*/
 	Actor() = default;
 	Actor(const std::string& modelName,
-		  std::optional<std::string> objectName,
-		  std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+		  std::optional<std::string> objectName);
 	virtual ~Actor() override = default;
 
 	virtual void Initialize() override;

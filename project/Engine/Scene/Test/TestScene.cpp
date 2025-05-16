@@ -4,6 +4,7 @@
 
 // scene
 #include <Engine/Scene/Test/TestScene.h>
+#include <Engine/Scene/Utirity/SceneUtility.h>
 
 // engine
 #include <Engine/Application/Input/Input.h>
@@ -12,9 +13,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/objects/particle/ParticleManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-#include <Engine/Lighting/LightManager.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -34,34 +33,31 @@ TestScene::TestScene(DxCore* dxCore)
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize() {
-	auto registerToRenderer = [this] (IMeshRenderable* mesh, const WorldTransform* transform){
-		sceneContext_->meshRenderer_->Register(mesh, transform);
-		};
-
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	//=========================
 	// グラフィック関連
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	skyBox_ = std::make_unique<SkyBox>("sky.dds", registerToRenderer);
+	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
 	skyBox_->Initialize();
 
-	//objects
+	//=========================
+	// オブジェクト生成
+	//=========================
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
+	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 
-	//test用
-	bunny_ = std::make_unique<BaseGameObject>("bunny.obj", "bunny", registerToRenderer);
-	bunny_->SetTranslate({ -10.0f, 0.0f, 0.0f });
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),teapot_,"debugSphere.obj", "sphere");
+	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
-	teapot_ = std::make_unique<BaseGameObject>("debugSphere.obj", "sphere", registerToRenderer);
-	teapot_->SetTranslate({ 5.0f, 0.0f, 0.0f });
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
+	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 
-	walkHuman_ = std::make_unique<BaseGameObject>("sneakWalk.gltf", "human", registerToRenderer);
-	walkHuman_->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	//							editor
-	/////////////////////////////////////////////////////////////////////////////////////////
+	//=========================
+	// 描画登録
+	//=========================
+	sceneContext_->RegisterAllToRenderer();
 
 }
 
@@ -93,7 +89,6 @@ void TestScene::Update() {
 
 void TestScene::CleanUp() {
 	// 3Dオブジェクトの描画を終了
-	sceneContext_->meshRenderer_->Clear();
-	SceneObjectManager::GetInstance()->ClearAllObject();
+	sceneContext_->GetMeshRenderer()->Clear();
 }
 

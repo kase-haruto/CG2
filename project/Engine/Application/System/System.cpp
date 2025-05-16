@@ -20,8 +20,6 @@
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/objects/particle/ParticleManager.h>
-#include <Engine/Lighting/LightManager.h>
 
 // editor
 #include <Engine/Assets/Model/ModelBuilder.h>
@@ -69,9 +67,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	CreatePipelines();
 
 	GraphicsGroup::GetInstance()->Initialize(dxCore_.get(), pipelineStateManager_.get());
-
-	// lightManagerの初期化
-	LightManager::GetInstance()->Initialize(dxCore_.get());
 
 	imguiManager_ = std::make_unique<ImGuiManager>();
 	imguiManager_->Initialize(winApp_.get(), dxCore_.get());
@@ -193,13 +188,6 @@ void System::EditorDraw() {
 	/*=======================================================================================
 				モデルの描画
 	========================================================================================*/
-	//auto commandList_ = dxCore_->GetCommandList();
-	//// light
-	//LightManager::GetInstance()->SetCommand(commandList_, LightType::Directional, PipelineType::Object3D);
-	//LightManager::GetInstance()->SetCommand(commandList_, LightType::Point, PipelineType::Object3D);
-	//// camera
-	//CameraManager::SetCommand(commandList_, PipelineType::Object3D);
-
 	//modelBuilder_->Draw();
 
 	/*=======================================================================================
@@ -218,9 +206,6 @@ void System::EditorDraw() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void System::Finalize() {
 
-	//プリミティブのクリア
-	PrimitiveDrawer::GetInstance()->ClearMesh();
-
 	//imgui終了処理
 	imguiManager_->Finalize();
 	//textureの終了処理
@@ -228,8 +213,6 @@ void System::Finalize() {
 	//モデルマネージャーの開放
 	ModelManager::GetInstance()->Finalize();
 	PrimitiveDrawer::GetInstance()->Finalize();
-	//lightManagerの終了処理
-	LightManager::GetInstance()->Finalize();
 	//カメラの開放
 	CameraManager::Finalize();
 	//pipelineの終了処理

@@ -28,30 +28,16 @@ class DxCore;
 class PointLight
 : public SceneObject{
 public:
-	PointLight();
+	PointLight(const std::string& name);
+	PointLight() = default;
 	~PointLight();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="dxCore"></param>
-	void Initialize(const DxCore* dxCore);
-	/// <summary>
-	/// 更新
-	/// </summary>
+	void Initialize();
 	void Update()override;
-	/// <summary>
-	/// バッファの生成
-	/// </summary>
 	void CreateBuffer();
-	/// <summary>
-	/// マップ
-	/// </summary>
 	void Map();
 
 	void ShowGui()override;
-
-	void SetRootSignature(const Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature);
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
 

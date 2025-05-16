@@ -8,8 +8,7 @@ public:
 	//			public function
 	//===================================================================*/
 	PlayerBullet() = default;
-	PlayerBullet(const std::string& modelName,
-				 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+	PlayerBullet(const std::string& modelName);
 	~PlayerBullet()override = default;
 
 	//--------- accessor ---------------------------------------------------

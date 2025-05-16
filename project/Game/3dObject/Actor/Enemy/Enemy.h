@@ -15,8 +15,7 @@ public:
 	//					public methods
 	//===================================================================*/
 	Enemy() = default;
-	Enemy(const std::string& modelName,
-		  std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+	Enemy(const std::string& modelName);
 	virtual ~Enemy() = default;
 
 	void Initialize()override;

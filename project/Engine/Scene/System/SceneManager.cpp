@@ -6,11 +6,11 @@
 #include <Engine/Scene/Test/TestScene.h>
 
 // engine
+#include <Engine/Application/UI/Panels/HierarchyPanel.h>
+#include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-#include <Engine/Lighting/LightManager.h>
-#include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 
 SceneManager::SceneManager(DxCore* dxCore)
 	: pDxCore_(dxCore) {
@@ -40,8 +40,9 @@ void SceneManager::Initialize() {
 
 	// まずは最初のシーンを初期化
 	scenes_[currentSceneNo_]->SetSceneManager(this);
-	scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
 	scenes_[currentSceneNo_]->Initialize();
+	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
+	pEngineUI_->GetPanel<HierarchyPanel>()->SetSceneObjectLibrary(SceneObjectLibrary);
 }
 
 void SceneManager::Update() {
@@ -55,7 +56,6 @@ void SceneManager::Update() {
 
 		// 新しいシーンに UI と SceneManager をセットして Initialize
 		scenes_[currentSceneNo_]->SetSceneManager(this);
-		scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
 		scenes_[currentSceneNo_]->Initialize();
 	}
 
@@ -91,7 +91,6 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {
 	nextSceneNo_ = static_cast<int>(nextScene);
-	SceneObjectManager::GetInstance()->ClearGameObjects();
 
 }
 
@@ -104,6 +103,7 @@ void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene) {
 
 	// 新しいシーンに UI と SceneManager をセットして Initialize
 	scenes_[currentSceneNo_]->SetSceneManager(this);
-	scenes_[currentSceneNo_]->SetEngineUI(pEngineUI_);
 	scenes_[currentSceneNo_]->Initialize();
+	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
+	pEngineUI_->GetPanel<HierarchyPanel>()->SetSceneObjectLibrary(SceneObjectLibrary);
 }

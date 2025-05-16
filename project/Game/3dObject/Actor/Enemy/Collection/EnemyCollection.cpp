@@ -4,8 +4,7 @@
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <externals/imgui/imgui.h>
 
-EnemyCollection::EnemyCollection(std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
-	:registerCB_(registerCB){
+EnemyCollection::EnemyCollection(){
 	SetName("EnemyCollection", ObjectType::GameObject);
 	SceneObject::EnableGuiList();
 
@@ -38,7 +37,7 @@ void EnemyCollection::ShowGui(){
 void EnemyCollection::Spawn(float deltaTime){
 	if (spawnTimer_ > spawnInterval_){
 		spawnTimer_ = 0.0f;
-		auto enemy = new Enemy("debugCube.obj", registerCB_);
+		auto enemy = new Enemy("debugCube.obj");
 		enemy->SetPosition(spawnPos_);
 		AddEnemy(std::move(enemy));
 	}

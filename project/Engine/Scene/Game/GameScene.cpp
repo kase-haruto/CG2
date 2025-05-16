@@ -10,10 +10,8 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-#include <Engine/objects/particle/ParticleManager.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/Lighting/LightManager.h>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -32,10 +30,6 @@ GameScene::GameScene(DxCore* dxCore)
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
-	auto registerToRenderer = [this] (IMeshRenderable* mesh, const WorldTransform* transform){
-		sceneContext_->meshRenderer_->Register(mesh, transform);
-		};
-
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
 	//=========================
 	// グラフィック関連
@@ -43,7 +37,7 @@ void GameScene::Initialize(){
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
 	
-	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field", registerToRenderer);
+	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
 	modelField_->SetUvScale({290.0f,290.0f,0.0f});
 	//modelField_->EnableGuiList();
@@ -51,11 +45,11 @@ void GameScene::Initialize(){
 
 
 	//player
-	player_ = std::make_unique<Player>("player.obj", registerToRenderer);
+	player_ = std::make_unique<Player>("player.obj");
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	enemyCollection_ = std::make_unique<EnemyCollection>(registerToRenderer);
+	enemyCollection_ = std::make_unique<EnemyCollection>();
 
 	
 	//===================================================================*/
@@ -64,7 +58,6 @@ void GameScene::Initialize(){
 }
 
 void GameScene::Update(){
-	LightManager::GetInstance()->ShowImGui();
 
 	/* カメラ関連更新 ============================*/
 	railCamera_->Update();
@@ -87,6 +80,5 @@ void GameScene::Update(){
 
 void GameScene::CleanUp(){
 	// 3Dオブジェクトの描画を終了
-	sceneContext_->meshRenderer_->Clear();
-	SceneObjectManager::GetInstance()->ClearAllObject();
+	sceneContext_->GetMeshRenderer()->Clear();
 }

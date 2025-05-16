@@ -3,6 +3,7 @@
 #include <Engine/Foundation/Json/JsonCoordinator.h>
 #include <Engine/objects/Collider/BoxCollider.h>
 #include <Engine/objects/Collider/SphereCollider.h>
+#include <Engine/Renderer/Mesh/MeshRenderer.h>
 
 #include "externals/imgui/imgui.h"
 
@@ -32,8 +33,7 @@ BaseGameObject::BaseGameObject(const std::string& modelName){
 }
 
 BaseGameObject::BaseGameObject(const std::string& modelName,
-							   std::optional<std::string> objectName,
-							   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB){
+							   std::optional<std::string> objectName){
 	auto dotPos = modelName.find_last_of('.');
 	if (dotPos != std::string::npos){
 		std::string extension = modelName.substr(dotPos);
@@ -62,9 +62,6 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 		SetName(defaultName);
 	}
 
-	//モデル登録コールバック
-	registerCB(model_.get(),&worldTransform_);
-
 	//===================================================================*/
 	//			collider 設定
 	//===================================================================*/
@@ -92,6 +89,12 @@ void BaseGameObject::Update(){
 		collider_->Draw();
 	}
 
+}
+
+void BaseGameObject::RegisterToRenderer(MeshRenderer* renderer){
+	if (model_){
+		renderer->Register(model_.get(), &worldTransform_);
+	}
 }
 
 

@@ -2,11 +2,7 @@
 /* ========================================================================
 /*	include space
 /* ===================================================================== */
-#include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/Lighting/LightManager.h>
-#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 BaseScene::BaseScene(DxCore* dxCore):
 IScene(dxCore){
@@ -15,7 +11,5 @@ IScene(dxCore){
 
 void BaseScene::Draw(){
 	auto commandList_ = pDxCore_->GetCommandList();	
-	sceneContext_->meshRenderer_->DrawAll();
-
-	
+	sceneContext_->GetMeshRenderer()->DrawAll();
 }

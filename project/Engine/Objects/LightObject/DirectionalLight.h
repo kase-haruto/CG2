@@ -27,14 +27,15 @@ class DxCore;
 class DirectionalLight
 	:public SceneObject{
 public:
-	DirectionalLight();
+	DirectionalLight(const std::string& name);
+	DirectionalLight() = default;
 	~DirectionalLight();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="dxCore"></param>
-	void Initialize(const DxCore* dxCore);
+	void Initialize();
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -58,7 +59,5 @@ private:
 	DirectionalLightData* data_;
 
 	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
-
-	const DxCore* pDxCore_ = nullptr;
 };
 

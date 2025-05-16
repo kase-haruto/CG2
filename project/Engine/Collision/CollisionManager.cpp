@@ -305,3 +305,9 @@ bool CollisionManager::OverlapOnAxis(const OBB& obbA, const Vector3 aAxes[3], co
 	// dist が rA + rB より大きい → 投影区間が重ならない
 	return (dist <= (rA + rB));
 }
+
+
+CollisionManager::CollisionManager(){
+	// 初期化処理
+	collisionLogs_.clear();
+}

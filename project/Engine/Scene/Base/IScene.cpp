@@ -7,8 +7,6 @@
 
 IScene::IScene(){
 
-	//シーンのオブジェクトの初期化
-	SceneObjectManager::GetInstance()->ClearAllObject();
 
 }
 

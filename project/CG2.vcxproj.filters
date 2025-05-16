@@ -348,7 +348,6 @@
     <ClCompile Include="Engine\Objects\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Objects\Particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\Objects\Particle\Particle.cpp" />
-    <ClCompile Include="Engine\Objects\Particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\BaseGameObject.cpp" />
     <ClCompile Include="Engine\Objects\3D\Geometory\Shape.cpp" />
     <ClCompile Include="Engine\Objects\Collider\Collider.cpp" />
@@ -374,18 +373,15 @@
     <ClCompile Include="Engine\Assets\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\Base\BaseCamera.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\3d\DebugCamera.cpp" />
-    <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\Ease\Ease.cpp" />
     <ClCompile Include="Engine\Foundation\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Foundation\Clock\ClockManager.cpp" />
-    <ClCompile Include="Engine\Lighting\LightManager.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
     <ClCompile Include="Engine\Graphics\Material.cpp" />
     <ClCompile Include="Engine\Objects\Transform\Transform.cpp" />
-    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
@@ -421,6 +417,11 @@
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
+    <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
+    <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\Loader\JsonFileLoader.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\Adapter\JsonFileIO.cpp" />
+    <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileScanner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -612,7 +613,6 @@
     <ClInclude Include="Engine\Objects\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Objects\Particle\DemoParticle.h" />
     <ClInclude Include="Engine\Objects\Particle\Particle.h" />
-    <ClInclude Include="Engine\Objects\Particle\ParticleManager.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\BaseGameObject.h" />
     <ClInclude Include="Engine\Objects\3D\Geometory\Shape.h" />
     <ClInclude Include="Engine\Objects\Collider\Collider.h" />
@@ -640,14 +640,12 @@
     <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\Base\BaseCamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\3d\DebugCamera.h" />
-    <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\Foundation\Utility\Ease\Ease.h" />
     <ClInclude Include="Engine\Foundation\Audio\Audio.h" />
     <ClInclude Include="Engine\Foundation\Clock\ClockManager.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\BlendMode\BlendMode.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineKey.h" />
-    <ClInclude Include="Engine\Lighting\LightManager.h" />
     <ClInclude Include="Engine\Lighting\LightData.h" />
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
@@ -657,7 +655,6 @@
     <ClInclude Include="Engine\Graphics\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxIndexBuffer.h" />
     <ClInclude Include="Engine\Scene\Details\SceneType.h" />
-    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\Renderer\Mesh\IMeshRenderable.h" />
     <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />
@@ -696,6 +693,13 @@
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
     <ClInclude Include="Engine\Application\UI\Panels\Controller\PanelController.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
+    <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
+    <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
+    <ClInclude Include="Engine\Lighting\LightLibrary.h" />
+    <ClInclude Include="Engine\System\Command\Interface\ICommand.h" />
+    <ClInclude Include="Engine\Foundation\Json\Loader\JsonFileLoader.h" />
+    <ClInclude Include="Engine\Foundation\Json\Adapter\JsonFileIO.h" />
+    <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileScanner.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

@@ -1,13 +1,16 @@
 #include "BulletContainer.h"
 
+#include <Engine/Scene/Context/SceneContext.h>
 #include <externals/imgui/imgui.h>
 
-BulletContainer::BulletContainer(const std::string& name,
-								 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB):
-registerCB_(registerCB){
+BulletContainer::BulletContainer(const std::string& name){
 	bullets_.clear();
 	SceneObject::SetName(name, ObjectType::GameObject);
 	SceneObject::EnableGuiList();
+}
+
+void BulletContainer::SetSceneContext(SceneContext* context){
+	sceneContext_ = context;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -30,10 +33,15 @@ void BulletContainer::Update(){
 void BulletContainer::AddBullet(const std::string& modelName,
 								const Vector3& position,
 								const Vector3& velocity){
-	auto bullet = std::make_unique<BaseBullet>(modelName, registerCB_);
-	bullet->Initialize(position,velocity);
+	auto bullet = std::make_unique<BaseBullet>(modelName);
+	bullet->Initialize(position, velocity);
 	bullet->SetMoveSpeed(bulletSpeed_);
 	bullet->SetScale(bulletScale_);
+
+	if (sceneContext_){
+		sceneContext_->GetObjectLibrary()->AddObject(bullet.get());
+	}
+
 	bullets_.push_back(std::move(bullet));
 }
 
@@ -41,11 +49,10 @@ void BulletContainer::AddBullet(const std::string& modelName,
 //		削除
 /////////////////////////////////////////////////////////////////////////////////////////
 void BulletContainer::RemoveBullet(BaseBullet* bullet){
-	// bullets_の中から指定された弾を削除
 	auto it = std::remove_if(bullets_.begin(), bullets_.end(),
 							 [bullet] (const std::unique_ptr<BaseBullet>& b){ return b.get() == bullet; });
+	bullets_.erase(it, bullets_.end());
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		gui

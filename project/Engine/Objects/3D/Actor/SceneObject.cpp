@@ -7,13 +7,11 @@
 #include <externals/imgui/ImGuizmo.h>
 
 SceneObject::~SceneObject(){
-	SceneObjectManager::GetInstance()->RemoveObject(this);
 }
 
 SceneObject::SceneObject(){
 
 	//リストに追加
-	SceneObjectManager::GetInstance()->AddObject(this);
 
 	worldTransform_.Initialize();
 }
@@ -148,6 +146,9 @@ void SceneObject::ShowGui(){
 }
 
 void SceneObject::EnableGuiList() {
-	//リストに追加
-	SceneObjectManager::GetInstance()->AddObject(this);
+}
+
+void SceneObject::SetName(const std::string& name, ObjectType type){
+	name_ = name;
+	objectType_ = type;
 }

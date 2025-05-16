@@ -35,7 +35,7 @@ private:
 	//===================================================================*/
 	//                   private functions
 	//===================================================================*/
-	CollisionManager() = default;
+	CollisionManager();
 	~CollisionManager() = default;
 
 	bool CheckCollisionPair(Collider* colliderA, Collider* colliderB);

@@ -15,18 +15,22 @@
 #include <string>
 #include <array> 
 #include <functional>
+#include <optional>
 
 struct Vector3;
 
 class SkyBox :
-	public IMeshRenderable {
+	public SceneObject, public IMeshRenderable {
 public:
-	SkyBox(std::string fileName, std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+	SkyBox(const std::string& fileName,
+		   std::optional<std::string> objectName);
 	~SkyBox()override = default;
 	void Initialize();
 	void ShowGui();
 	void Update();
 	void Draw(const WorldTransform& transform)override;
+	const WorldTransform& GetWorldTransform()const;
+	void RegisterToRenderer(MeshRenderer* renderer) override;
 
 private:
 	std::array<VertexData, 24> vertices_;

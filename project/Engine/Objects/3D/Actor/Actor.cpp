@@ -1,15 +1,8 @@
 #include "Actor.h"
 
-#include <Engine/Application/System/System.h>
-#include <Engine/Foundation/Utility/Func/MyFunc.h>
-#include <Engine/Foundation/Json/JsonCoordinator.h>
-#include <Engine/Foundation/Clock/ClockManager.h>
-#include <Engine/Renderer/Mesh/IMeshRenderable.h>
-
 Actor::Actor(const std::string& modelName,
-			 std::optional<std::string> objectName,
-			 std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB) :
-	BaseGameObject::BaseGameObject(modelName, objectName, registerCB) {
+			 std::optional<std::string> objectName) :
+	BaseGameObject::BaseGameObject(modelName, objectName) {
 
 }
 

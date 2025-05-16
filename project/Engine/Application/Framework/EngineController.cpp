@@ -27,7 +27,6 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_->SetEngineUICore(engineUICore_.get());
 	system_->InitializeEditor();
 
-
 	// シーンマネージャ初期化
 	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
 	sceneManager_->SetEngineUI(engineUICore_.get());

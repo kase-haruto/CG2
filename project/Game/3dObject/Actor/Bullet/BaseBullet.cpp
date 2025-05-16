@@ -10,9 +10,8 @@
 /* external */
 #include <externals/imgui/imgui.h>
 
-BaseBullet::BaseBullet(const std::string& modelName,
-					   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB)
-	:Actor::Actor(modelName, "bullet", registerCB){
+BaseBullet::BaseBullet(const std::string& modelName)
+	:Actor::Actor(modelName, "bullet"){
 	SphereCollider::name_ = "playerBullet";
 	SphereCollider::Initialize(worldTransform_.scale.x * 2.0f + 0.1f);
 	Collider::targetType_ = ColliderType::Type_PlayerAttack;

@@ -10,14 +10,14 @@
 #endif // _DEBUG
 
 
-PointLight::PointLight(){}
+
+PointLight::PointLight(const std::string& name){
+	SceneObject::SetName(name, ObjectType::Light);
+}
 
 PointLight::~PointLight(){}
 
-void PointLight::Initialize(const DxCore* dxCore){
-	pDxCore_ = dxCore;
-	name_ = "PointLight";
-	objectType_ = ObjectType::Light;
+void PointLight::Initialize(){
 	CreateBuffer();
 	Map();
 }
@@ -27,7 +27,7 @@ void PointLight::Update(){
 }
 
 void PointLight::CreateBuffer(){
-	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
+	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
 	resource_ = CreateBufferResource(device, sizeof(PointLightData));
 }

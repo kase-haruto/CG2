@@ -26,8 +26,7 @@ public:
 	//                   public methods
 	//===================================================================*/
 	Player() = default;
-	Player(const std::string& modelName,
-		   std::function<void(IMeshRenderable*, const WorldTransform*)> registerCB);
+	Player(const std::string& modelName);
 	virtual ~Player() = default;
 
 	void Initialize()override;
