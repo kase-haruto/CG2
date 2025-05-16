@@ -219,8 +219,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Foundation\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\Loader\JsonFileLoader.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\Adapter\JsonFileIO.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\JsonFileIO.cpp" />
+    <ClCompile Include="Engine\Foundation\Json\IJsonSavable.cpp" />
+    <ClCompile Include="IJsonSaveble.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -405,8 +406,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
     <ClInclude Include="Engine\Lighting\LightLibrary.h" />
     <ClInclude Include="Engine\System\Command\Interface\ICommand.h" />
-    <ClInclude Include="Engine\Foundation\Json\Loader\JsonFileLoader.h" />
-    <ClInclude Include="Engine\Foundation\Json\Adapter\JsonFileIO.h" />
+    <ClInclude Include="Engine\Foundation\Json\JsonFileIO.h" />
+    <ClInclude Include="Engine\Foundation\Json\IJsonSavable.h" />
+    <ClInclude Include="IJsonSaveble.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
