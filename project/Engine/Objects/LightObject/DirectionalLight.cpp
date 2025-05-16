@@ -4,6 +4,7 @@
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Foundation/Json/JsonUtils.h>
 
 
 /* externals */
@@ -14,34 +15,24 @@
 
 DirectionalLight::DirectionalLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
+	constantBuffer_.Initialize(device);
+	configPath_ = "Resources/Configs/Engine/Objects/Light/DirectionalLightConfig/DirectionalLightConfig.json";
+	LoadConfig(configPath_);
 }
 
 DirectionalLight::~DirectionalLight(){}
 
-void DirectionalLight::Initialize(){
-	CreateBuffer();
-	Map();
-}
-
+void DirectionalLight::Initialize() {}
 
 void DirectionalLight::Update(){
-	
-}
-
-
-void DirectionalLight::CreateBuffer(){
-	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-
-	resource_ = CreateBufferResource(device, sizeof(DirectionalLightData));
-}
-
-void DirectionalLight::Map(){
-	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
-	data_->color = {1.0f,1.0f,1.0f,1.0f};
-	data_->direction = {0.0f,-1.0f,0.0f};
-	data_->intensity = 0.25f;
-	resource_->Unmap(0, nullptr);
-	
+	// データを更新
+	DirectionalLightData data;
+	data.color = config_.color;
+	data.direction = config_.direction;
+	data.intensity = config_.intensity;
+	// バッファにデータを設定
+	constantBuffer_.TransferData(data);
 }
 
 void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,PipelineType type){
@@ -54,16 +45,34 @@ void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandLi
 
 	// ルートシグネチャをコマンドリストに設定する
 	commandList->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList->SetGraphicsRootConstantBufferView(index, resource_->GetGPUVirtualAddress());
+	constantBuffer_.SetCommand(commandList, index);
 }
 
-
 void DirectionalLight::ShowGui(){
-	SceneObject::ShowGui();
 #ifdef _DEBUG
-	ImGui::SliderFloat3("direction", &data_->direction.x, -1.0f, 1.0f);
-	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+	if (ImGui::Button("SaveConfig")) {
+		SaveConfig(configPath_);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LoadConfig")) {
+		LoadConfig(configPath_);
+	}
+	ImGui::Separator();
+
+	ImGui::SliderFloat3("direction", &config_.direction.x, -1.0f, 1.0f);
+	ImGui::ColorEdit4("color", &config_.color.x);
+	ImGui::SliderFloat("Intensity", &config_.intensity, 0.0f, 1.0f);
 #endif // _DEBUG
 }
 
+ //===================================================================*/
+ //                    config
+ //===================================================================*/
+void DirectionalLight::SaveConfig(const std::string& path) {
+	JsonUtils::Save(path, config_);
+}
+
+void DirectionalLight::LoadConfig(const std::string& path) {
+	JsonUtils::LoadOrCreate(path, config_);
+}

@@ -33,12 +33,28 @@ Vector3 Vector3::Normalize()const{
 	return Vector3(x / length, y / length, z / length);
 }
 
+float Vector3::LengthSquared() const {
+	return x * x + y * y + z * z;
+}
+
+Vector3 Vector3::Forward() {
+	return Vector3(0.0f, 0.0f, 1.0f);
+}
+
+Vector3 Vector3::One() {
+	return Vector3(1.0f, 1.0f, 1.0f);
+}
+
 Vector3 Vector3::Cross(const Vector3& v0, const Vector3& v1){
 	return {
 	  v0.y * v1.z - v0.z * v1.y,
 	  v0.z * v1.x - v0.x * v1.z,
 	  v0.x * v1.y - v0.y * v1.x
 	};
+}
+
+float Vector3::Dot(const Vector3& v1, const Vector3& v2) {
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 const Vector3 Vector3::Zero(0.0f, 0.0f, 0.0f);
@@ -50,6 +66,37 @@ Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t){
 		v1.y + t * (v2.y - v1.y),
 		v1.z + t * (v2.z - v1.z)
 	);
+}
+
+Vector3 Vector3::Transform(const Vector3& vector, const Matrix4x4& matrix) {
+	Vector3 result = { 0, 0, 0 };
+
+	// 同次座標系への変換
+	// 変換行列を適用
+	Vector4 homogeneousCoordinate(
+		vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0],
+		vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1],
+		vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2],
+		vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3]);
+
+	// 同次座標系から3次元座標系に戻す
+	float w = homogeneousCoordinate.w;
+	result.x = homogeneousCoordinate.x / w;
+	result.y = homogeneousCoordinate.y / w;
+	result.z = homogeneousCoordinate.z / w;
+
+	return result;
+}
+
+Vector3 Vector3::Transform(const Vector3& v, const Quaternion& q) {
+	Quaternion normQ = Quaternion::Normalize(q); // 安全
+	Vector3 u(normQ.x, normQ.y, normQ.z);
+	float s = normQ.w;
+
+	return
+		u * (2.0f * Vector3::Dot(u, v)) +
+		v * (s * s - Vector3::Dot(u, u)) +
+		Vector3::Cross(u, v) * (2.0f * s);
 }
 
 //乗算
@@ -183,37 +230,9 @@ Vector3 Vector3::operator-=(const Vector3& other){
 	return Vector3(x, y, z);
 }
 
-Vector3 Vector3::Transform(const Vector3& vector, const Matrix4x4& matrix){
-	Vector3 result = {0, 0, 0};
 
-	// 同次座標系への変換
-	// 変換行列を適用
-	Vector4 homogeneousCoordinate(
-		vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0],
-		vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1],
-		vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2],
-		vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3]);
-
-	// 同次座標系から3次元座標系に戻す
-	float w = homogeneousCoordinate.w;
-	result.x = homogeneousCoordinate.x / w;
-	result.y = homogeneousCoordinate.y / w;
-	result.z = homogeneousCoordinate.z / w;
-
-	return result;
-}
-
-Vector3 Vector3::Transform(const Vector3& v, const Quaternion& q){
-	Quaternion normQ = Quaternion::Normalize(q); // 安全
-	Vector3 u(normQ.x, normQ.y, normQ.z);
-	float s = normQ.w;
-
-	return
-		u * (2.0f * Vector3::Dot(u, v)) +
-		v * (s * s - Vector3::Dot(u, u)) +
-		Vector3::Cross(u, v) * (2.0f * s);
-}
-
-Vector3 operator-(float scalar, const Vector3& vec){
+Vector3 operator-(float scalar, const Vector3& vec) {
 	return Vector3(vec.x - scalar, vec.y - scalar, vec.z - scalar);
 }
+
+

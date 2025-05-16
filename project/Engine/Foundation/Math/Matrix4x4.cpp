@@ -302,3 +302,25 @@ Matrix4x4 Matrix4x4::MakeLookRotationMatrix(const Vector3& forward, const Vector
 
 	return result;
 }
+
+Matrix4x4 Matrix4x4::MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
+
+	Matrix4x4 matrix = {};
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			matrix.m[i][j] = 0.0f;
+		}
+	}
+
+	matrix.m[0][0] = width / 2.0f;
+	matrix.m[1][1] = -height / 2.0f;
+	matrix.m[2][2] = maxDepth - minDepth;
+	matrix.m[3][0] = left + width / 2.0f;
+	matrix.m[3][1] = top + height / 2.0f;
+	matrix.m[3][2] = minDepth;
+	matrix.m[3][3] = 1.0f;
+
+	return matrix;
+}
+

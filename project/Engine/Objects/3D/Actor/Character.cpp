@@ -2,15 +2,12 @@
 
 #include <Engine/Application/System/System.h>
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
-#include <Engine/Foundation/Json/JsonCoordinator.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 
 Character::Character(const std::string& modelName)
 	: BaseGameObject(modelName){}
 
 void Character::Initialize(){
-
-	JsonCoordinator::RegisterItem(name_, "MoveSpeed", moveSpeed_);
 
 }
 
@@ -134,6 +131,5 @@ void Character::KnockBack(const Vector3& direction, float force, float duration)
 
 void Character::ShowGui(){
 
-	JsonCoordinator::RenderGroupUI(name_);
 
 }

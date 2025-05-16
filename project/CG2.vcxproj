@@ -113,7 +113,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
     <ClCompile Include="Engine\Application\Framework\EngineMain.cpp" />
+    <ClCompile Include="Engine\Foundation\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector4.cpp" />
+    <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\BoxDrawer.cpp" />
     <ClCompile Include="Engine\Graphics\Buffer\CameraBuffer.cpp" />
     <ClCompile Include="Engine\PostProcess\CopyImage\CopyImage.cpp" />
@@ -200,7 +202,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\IEngineUI.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\InspectorPanel.cpp" />
@@ -220,8 +221,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
     <ClCompile Include="Engine\Foundation\Json\JsonFileIO.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\IJsonSavable.cpp" />
-    <ClCompile Include="IJsonSaveble.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -251,9 +250,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\LightObjects\DirectionalLightConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\LightObjects\PointLightConfig.h" />
+    <ClInclude Include="Data\Engine\Settings\EnviromentConfig.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
     <ClInclude Include="Engine\API\EngineAPI.h" />
     <ClInclude Include="Engine\Application\Framework\EngineMain.h" />
+    <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.h" />
     <ClInclude Include="Engine\Renderer\Primitive\BoxDrawer.h" />
     <ClInclude Include="Engine\Graphics\Buffer\CameraBuffer.h" />
     <ClInclude Include="Engine\PostProcess\CopyImage\CopyImage.h" />
@@ -358,7 +361,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="Engine\Foundation\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IEngineUI.h" />
     <ClInclude Include="Engine\Application\UI\Panels\HierarchyPanel.h" />
     <ClInclude Include="Engine\Application\UI\Panels\InspectorPanel.h" />
@@ -407,8 +409,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Lighting\LightLibrary.h" />
     <ClInclude Include="Engine\System\Command\Interface\ICommand.h" />
     <ClInclude Include="Engine\Foundation\Json\JsonFileIO.h" />
-    <ClInclude Include="Engine\Foundation\Json\IJsonSavable.h" />
-    <ClInclude Include="IJsonSaveble.h" />
+    <ClInclude Include="Engine\Foundation\Json\JsonUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

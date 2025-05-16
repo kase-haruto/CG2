@@ -9,6 +9,10 @@
 /* engine */
 #include <Engine/Graphics/Pipeline/PipelineType.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
+
+/* config */
+#include <Data/Engine/Configs/Scene/Objects/LightObjects/PointLightConfig.h>
 
 /* lib */
 #include <wrl.h>
@@ -34,21 +38,14 @@ public:
 
 	void Initialize();
 	void Update()override;
-	void CreateBuffer();
-	void Map();
-
 	void ShowGui()override;
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
-
-	void SetPosition(const Vector3& position);
+	void SaveConfig(const std::string& path)override;
+	void LoadConfig(const std::string& path)override;
 
 private:
-	const DxCore* pDxCore_ = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-	PointLightData* data_;
-
-	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+	DxConstantBuffer<PointLightData> constantBuffer_;
+	PointLightConfig config_;
 };
 

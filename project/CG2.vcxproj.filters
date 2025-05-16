@@ -355,7 +355,6 @@
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Objects\Collider\SphereCollider.cpp" />
     <ClCompile Include="Engine\Objects\Particle\ParticleEmitShape.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\JsonCoordinator.cpp" />
     <ClCompile Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Core\EngineUICore.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneManager.cpp" />
@@ -421,8 +420,8 @@
     <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
     <ClCompile Include="Engine\Foundation\Json\JsonFileIO.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileScanner.cpp" />
-    <ClCompile Include="IJsonSaveble.cpp" />
-    <ClCompile Include="Engine\Foundation\Json\IJsonSavable.cpp" />
+    <ClCompile Include="Engine\Foundation\Math\Vector2.cpp" />
+    <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -621,7 +620,6 @@
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\Objects\Collider\SphereCollider.h" />
     <ClInclude Include="Engine\Objects\Particle\ParticleEmitShape.h" />
-    <ClInclude Include="Engine\Foundation\Json\JsonCoordinator.h" />
     <ClInclude Include="Engine\Graphics\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Core\EngineUICore.h" />
     <ClInclude Include="Engine\Scene\System\SceneManager.h" />
@@ -700,8 +698,11 @@
     <ClInclude Include="Engine\System\Command\Interface\ICommand.h" />
     <ClInclude Include="Engine\Foundation\Json\JsonFileIO.h" />
     <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileScanner.h" />
-    <ClInclude Include="IJsonSaveble.h" />
-    <ClInclude Include="Engine\Foundation\Json\IJsonSavable.h" />
+    <ClInclude Include="Engine\Foundation\Json\JsonUtils.h" />
+    <ClInclude Include="Data\Engine\Settings\EnviromentConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\LightObjects\DirectionalLightConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\LightObjects\PointLightConfig.h" />
+    <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

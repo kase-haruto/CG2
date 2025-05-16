@@ -59,6 +59,7 @@ void GameScene::Initialize(){
 
 void GameScene::Update(){
 
+
 	/* カメラ関連更新 ============================*/
 	railCamera_->Update();
 	CameraManager::GetCamera3d()->SetCamera(railCamera_->GetPosition(), railCamera_->GetRotation());
@@ -74,6 +75,7 @@ void GameScene::Update(){
 	enemyCollection_->Update();
 	/* その他 ============================*/
 
+	sceneContext_->Update();
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 }
 

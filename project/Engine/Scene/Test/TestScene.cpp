@@ -65,11 +65,6 @@ void TestScene::Initialize() {
 //	更新処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Update() {
-#ifdef _DEBUG
-
-	Input::ShowImGui();
-
-#endif //  _DEBUG
 
 	CameraManager::Update();
 
@@ -84,6 +79,7 @@ void TestScene::Update() {
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
 	PrimitiveDrawer::GetInstance()->DrawGrid();
+	sceneContext_->Update();
 }
 
 

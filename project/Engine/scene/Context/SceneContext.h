@@ -17,6 +17,8 @@ public:
 	SceneContext();
 	~SceneContext();
 
+	void Update();
+
 	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
 	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
 

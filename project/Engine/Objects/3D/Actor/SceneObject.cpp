@@ -18,9 +18,15 @@ SceneObject::SceneObject(){
 
 void SceneObject::ShowGui(){
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	ImGui::Text("Name : %s", name_.c_str());
-	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	ImGui::Separator();
+
+	if (ImGui::Button("SaveConfig")) {
+		SaveConfig(configPath_);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LoadConfig")) {
+		LoadConfig(configPath_);
+	}
 
 	// ImGui で編集
 
