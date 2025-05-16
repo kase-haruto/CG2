@@ -180,7 +180,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Assets\Model\Model.cpp" />
     <ClCompile Include="Engine\Assets\Model\ModelBuilder.cpp" />
     <ClCompile Include="Engine\Assets\Model\ModelManager.cpp" />
-    <ClCompile Include="Engine\Objects\Particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\Renderer\Sprite\Sprite.cpp" />
     <ClCompile Include="Engine\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Assets\Texture\TextureManager.cpp" />
@@ -231,9 +230,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Objects\3D\Actor\SceneObjectManager.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\SceneSwitcherPanel.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Quaternion.cpp" />
-    <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
-    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\PrimitiveMesh.cpp" />
@@ -334,7 +331,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Assets\Model\ModelBuilder.h" />
     <ClInclude Include="Engine\Assets\Model\ModelData.h" />
     <ClInclude Include="Engine\Assets\Model\ModelManager.h" />
-    <ClInclude Include="Engine\Objects\Particle\ParticleManager.h" />
     <ClInclude Include="Engine\Renderer\Sprite\Sprite.h" />
     <ClInclude Include="Engine\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Assets\Texture\TextureManager.h" />
@@ -387,9 +383,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Objects\3D\Actor\SceneObjectManager.h" />
     <ClInclude Include="Engine\Application\UI\Panels\SceneSwitcherPanel.h" />
     <ClInclude Include="Engine\Foundation\Math\Quaternion.h" />
-    <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
-    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />
     <ClInclude Include="Engine\Scene\Context\SceneContext.h" />
     <ClInclude Include="Engine\Renderer\Primitive\PrimitiveMesh.h" />

@@ -348,7 +348,6 @@
     <ClCompile Include="Engine\Objects\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Objects\Particle\DemoParticle.cpp" />
     <ClCompile Include="Engine\Objects\Particle\Particle.cpp" />
-    <ClCompile Include="Engine\Objects\Particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\BaseGameObject.cpp" />
     <ClCompile Include="Engine\Objects\3D\Geometory\Shape.cpp" />
     <ClCompile Include="Engine\Objects\Collider\Collider.cpp" />
@@ -374,7 +373,6 @@
     <ClCompile Include="Engine\Assets\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\Base\BaseCamera.cpp" />
     <ClCompile Include="Engine\Graphics\Camera\3d\DebugCamera.cpp" />
-    <ClCompile Include="Engine\Application\UI\Panels\ParticleEditPanel.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\Ease\Ease.cpp" />
     <ClCompile Include="Engine\Foundation\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Foundation\Clock\ClockManager.cpp" />
@@ -384,7 +382,6 @@
     <ClCompile Include="Engine\Editor\BaseEditor.cpp" />
     <ClCompile Include="Engine\Graphics\Material.cpp" />
     <ClCompile Include="Engine\Objects\Transform\Transform.cpp" />
-    <ClCompile Include="Engine\Editor\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
@@ -613,7 +610,6 @@
     <ClInclude Include="Engine\Objects\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Objects\Particle\DemoParticle.h" />
     <ClInclude Include="Engine\Objects\Particle\Particle.h" />
-    <ClInclude Include="Engine\Objects\Particle\ParticleManager.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\BaseGameObject.h" />
     <ClInclude Include="Engine\Objects\3D\Geometory\Shape.h" />
     <ClInclude Include="Engine\Objects\Collider\Collider.h" />
@@ -641,7 +637,6 @@
     <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\Base\BaseCamera.h" />
     <ClInclude Include="Engine\Graphics\Camera\3d\DebugCamera.h" />
-    <ClInclude Include="Engine\Application\UI\Panels\ParticleEditPanel.h" />
     <ClInclude Include="Engine\Foundation\Utility\Ease\Ease.h" />
     <ClInclude Include="Engine\Foundation\Audio\Audio.h" />
     <ClInclude Include="Engine\Foundation\Clock\ClockManager.h" />
@@ -657,7 +652,6 @@
     <ClInclude Include="Engine\Graphics\Buffer\DxVertexBuffer.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxIndexBuffer.h" />
     <ClInclude Include="Engine\Scene\Details\SceneType.h" />
-    <ClInclude Include="Engine\Editor\ParticleEditor.h" />
     <ClInclude Include="Engine\Graphics\Buffer\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\Renderer\Mesh\IMeshRenderable.h" />
     <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />

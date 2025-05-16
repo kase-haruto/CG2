@@ -20,7 +20,6 @@
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/objects/particle/ParticleManager.h>
 
 // editor
 #include <Engine/Assets/Model/ModelBuilder.h>
