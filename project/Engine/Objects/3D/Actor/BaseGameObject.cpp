@@ -1,6 +1,5 @@
 #include "BaseGameObject.h"
 
-#include <Engine/Foundation/Json/JsonCoordinator.h>
 #include <Engine/objects/Collider/BoxCollider.h>
 #include <Engine/objects/Collider/SphereCollider.h>
 #include <Engine/Renderer/Mesh/MeshRenderer.h>

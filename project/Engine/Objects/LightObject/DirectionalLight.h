@@ -11,6 +11,10 @@
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Graphics/Pipeline/PipelineType.h>
 #include <Engine/Lighting/LightData.h>
+#include <Engine/Graphics/Buffer/DxConstantBuffer.h>
+
+/* config */
+#include <Data/Engine/Configs/Scene/Objects/LightObjects/DirectionalLightConfig.h>
 
 /* c++ */
 #include<d3d12.h>
@@ -31,33 +35,16 @@ public:
 	DirectionalLight() = default;
 	~DirectionalLight();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="dxCore"></param>
 	void Initialize();
-	/// <summary>
-	/// 更新
-	/// </summary>
 	void Update()override;
-	/// <summary>
-	/// バッファの生成
-	/// </summary>
-	void CreateBuffer();
-	/// <summary>
-	/// マップ
-	/// </summary>
-	void Map();
-
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
-
 	void ShowGui()override;
 
+	void SaveConfig(const std::string& path)override;
+	void LoadConfig(const std::string& path)override;
+
 private:
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource_;
-	DirectionalLightData* data_;
-
-	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+	DxConstantBuffer<DirectionalLightData> constantBuffer_;
+	DirectionalLightConfig config_;
 };
 

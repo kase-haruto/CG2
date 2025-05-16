@@ -16,6 +16,8 @@ public:
 	LightLibrary() = default;
 	~LightLibrary() = default;
 
+	void Update();
+
 	void SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType pipelineType);
 	void SetCommand(ID3D12GraphicsCommandList* cmdList,
 					PipelineType pipelineType,

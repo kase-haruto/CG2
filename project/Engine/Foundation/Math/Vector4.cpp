@@ -9,3 +9,4 @@ Vector4 Vector4::TransformVector(const Matrix4x4& m, const Vector4& v){
 		m.m[0][3] * v.x + m.m[1][3] * v.y + m.m[2][3] * v.z + m.m[3][3] * v.w,
 	};
 }
+

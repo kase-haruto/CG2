@@ -4,6 +4,7 @@
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Foundation/Json/JsonUtils.h>
 
 #ifdef _DEBUG
 #include<externals/imgui/imgui.h>
@@ -18,38 +19,42 @@ PointLight::PointLight(const std::string& name){
 PointLight::~PointLight(){}
 
 void PointLight::Initialize(){
-	CreateBuffer();
-	Map();
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
+	constantBuffer_.Initialize(device);
+
+	configPath_ = "Resources/Configs/Engine/Objects/Light/PointLightConfig/PointLightConfig.json";
+	LoadConfig(configPath_);
 }
 
 void PointLight::Update(){
-
-}
-
-void PointLight::CreateBuffer(){
-	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
-
-	resource_ = CreateBufferResource(device, sizeof(PointLightData));
-}
-
-void PointLight::Map(){
-	resource_->Map(0, nullptr, reinterpret_cast< void** >(&data_));
-	data_->color = {1.0f,1.0f,1.0f,1.0f};
-	data_->position = {0.0f,2.0f,0.0f};
-	data_->intensity = 1.0f;
-	data_->radius = 20.0f;
-	data_->decay = 1.0f;
-	resource_->Unmap(0, nullptr);
+	
+	PointLightData data;
+	data.color = config_.color;
+	data.position = config_.position;
+	data.intensity = config_.intensity;
+	data.radius = config_.radius;
+	data.decay = config_.decay;
+	constantBuffer_.TransferData(data);
 }
 
 void PointLight::ShowGui(){
-	SceneObject::ShowGui();
 #ifdef _DEBUG
-	ImGui::DragFloat3("position", &data_->position.x, 0.01f);
-	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
-	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
-	ImGui::DragFloat("radius", &data_->radius, 0.01f);
-	ImGui::DragFloat("decay", &data_->decay, 0.01f);
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+	if (ImGui::Button("SaveConfig")) {
+		SaveConfig(configPath_);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LoadConfig")) {
+		LoadConfig(configPath_);
+	}
+	ImGui::Separator();
+
+	ImGui::Separator();
+	ImGui::DragFloat3("position", &config_.position.x, 0.01f);
+	ImGui::ColorEdit4("color", &config_.color.x);
+	ImGui::SliderFloat("Intensity", &config_.intensity, 0.0f, 1.0f);
+	ImGui::DragFloat("radius", &config_.radius, 0.01f);
+	ImGui::DragFloat("decay", &config_.decay, 0.01f);
 #endif // _DEBUG
 
 
@@ -63,9 +68,16 @@ void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	}
 	// ルートシグネチャをコマンドリストに設定する
 	commandList->SetGraphicsRootSignature(rootSignature_.Get());
-	commandList->SetGraphicsRootConstantBufferView(index, resource_->GetGPUVirtualAddress());
+	constantBuffer_.SetCommand(commandList, index);
 }
 
-void PointLight::SetPosition(const Vector3& position){
-	data_->position = position;
+ //===================================================================*/
+ //                    config
+ //===================================================================*/
+void PointLight::SaveConfig(const std::string& path) {
+	JsonUtils::Save(path, config_);
+}
+
+void PointLight::LoadConfig(const std::string& path) {
+	JsonUtils::LoadOrCreate(path, config_);
 }

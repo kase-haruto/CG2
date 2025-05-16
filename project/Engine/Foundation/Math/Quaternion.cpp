@@ -174,6 +174,7 @@ Quaternion Quaternion::MakeRotateZ(float radian){
 
 
 
+
 Vector3 Quaternion::ToEuler(const Quaternion& q){
 	Vector3 euler;
 
@@ -283,3 +284,5 @@ Quaternion operator*(float scalar, const Quaternion& q){
 Quaternion Quaternion::operator*(float scalar) const{
 	return {x * scalar, y * scalar, z * scalar, w * scalar};
 }
+
+

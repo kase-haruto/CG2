@@ -1,7 +1,6 @@
 #include "SphereCollider.h"
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
-#include <Engine/Foundation/Json/JsonCoordinator.h>
 #include <externals/imgui/imgui.h>
 
 #include <sstream> 
@@ -14,8 +13,6 @@ void SphereCollider::Initialize(float radius){
 	std::stringstream ss;
 	ss << "sphere" << "_" << this; // 形状とアドレスを組み合わせ
 	name_ = ss.str();
-
-	JsonCoordinator::RegisterItem(name_, "ColliderRadius", shape_.radius);
 
 	collisionShape_ = Sphere {shape_};
 	shape_.radius = radius;
