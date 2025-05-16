@@ -12,14 +12,13 @@
 #endif // _DEBUG
 
 
-DirectionalLight::DirectionalLight(){}
+DirectionalLight::DirectionalLight(const std::string& name){
+	SceneObject::SetName(name, ObjectType::Light);
+}
 
 DirectionalLight::~DirectionalLight(){}
 
-void DirectionalLight::Initialize(const DxCore* dxCore){
-	pDxCore_ = dxCore;
-	name_ = "DirectionalLight";
-	objectType_ = ObjectType::Light;
+void DirectionalLight::Initialize(){
 	CreateBuffer();
 	Map();
 }
@@ -31,7 +30,7 @@ void DirectionalLight::Update(){
 
 
 void DirectionalLight::CreateBuffer(){
-	Microsoft::WRL::ComPtr<ID3D12Device> device = pDxCore_->GetDevice();
+	Microsoft::WRL::ComPtr<ID3D12Device> device = GraphicsGroup::GetInstance()->GetDevice();
 
 	resource_ = CreateBufferResource(device, sizeof(DirectionalLightData));
 }
@@ -66,7 +65,5 @@ void DirectionalLight::ShowGui(){
 	ImGui::ColorEdit4("color", &data_->color.x); // color_ではなく、data_->colorを直接操作
 	ImGui::SliderFloat("Intensity", &data_->intensity, 0.0f, 1.0f);
 #endif // _DEBUG
-
-	
 }
 

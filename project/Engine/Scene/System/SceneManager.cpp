@@ -10,7 +10,6 @@
 #include <Engine/Application/UI/Panels/SceneSwitcherPanel.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
-#include <Engine/Lighting/LightManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
 SceneManager::SceneManager(DxCore* dxCore)

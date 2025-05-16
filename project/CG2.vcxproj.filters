@@ -378,7 +378,6 @@
     <ClCompile Include="Engine\Foundation\Utility\Ease\Ease.cpp" />
     <ClCompile Include="Engine\Foundation\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Foundation\Clock\ClockManager.cpp" />
-    <ClCompile Include="Engine\Lighting\LightManager.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\EditorPanel.cpp" />
@@ -422,6 +421,7 @@
     <ClCompile Include="Engine\Application\UI\Panels\Controller\PanelController.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
     <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
+    <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -648,7 +648,6 @@
     <ClInclude Include="Engine\Graphics\Pipeline\BlendMode\BlendMode.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineKey.h" />
-    <ClInclude Include="Engine\Lighting\LightManager.h" />
     <ClInclude Include="Engine\Lighting\LightData.h" />
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
     <ClInclude Include="Engine\Application\UI\Panels\EditorPanel.h" />
@@ -699,6 +698,7 @@
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
     <ClInclude Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.h" />
     <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
+    <ClInclude Include="Engine\Lighting\LightLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

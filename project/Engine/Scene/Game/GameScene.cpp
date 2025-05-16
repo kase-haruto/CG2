@@ -13,7 +13,6 @@
 #include <Engine/objects/particle/ParticleManager.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Engine/Lighting/LightManager.h>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +59,6 @@ void GameScene::Initialize(){
 }
 
 void GameScene::Update(){
-	LightManager::GetInstance()->ShowImGui();
 
 	/* カメラ関連更新 ============================*/
 	railCamera_->Update();

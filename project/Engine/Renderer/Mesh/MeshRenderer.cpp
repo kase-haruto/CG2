@@ -8,12 +8,15 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Extensions/SkyBox/SkyBox.h>
-#include <Engine/Lighting/LightManager.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/objects/Transform/Transform.h>
+#include <Engine/Lighting/LightLibrary.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
+
+MeshRenderer::MeshRenderer(){
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画登録
@@ -41,7 +44,6 @@ void MeshRenderer::DrawAll() {
 	DrawEntry* skyBox = nullptr;
 
 	ID3D12GraphicsCommandList* commandList = GraphicsGroup::GetInstance()->GetCommandList().Get();
-	LightManager* lightManager = LightManager::GetInstance();
 
 	for (const auto& entry : renderables_){
 		if (dynamic_cast< AnimationModel* >(entry.renderable)){
@@ -64,8 +66,7 @@ void MeshRenderer::DrawAll() {
 	//===================================================================*/
 	//                    静的モデル描画
 	//===================================================================*/
-	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::Object3D);
-	lightManager->SetCommand(commandList, LightType::Point, PipelineType::Object3D);
+	pLightLibrary_->SetCommand(commandList, PipelineType::Object3D);
 	CameraManager::SetCommand(commandList, PipelineType::Object3D);
 	for (const auto& entry : staticModels){
 		entry.renderable->Draw(*entry.transform);
@@ -73,8 +74,7 @@ void MeshRenderer::DrawAll() {
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	lightManager->SetCommand(commandList, LightType::Directional, PipelineType::SkinningObject3D);
-	lightManager->SetCommand(commandList, LightType::Point, PipelineType::SkinningObject3D);
+	pLightLibrary_->SetCommand(commandList, PipelineType::SkinningObject3D);
 	CameraManager::SetCommand(commandList, PipelineType::SkinningObject3D);
 	for (const auto& entry : skinnedModels){
 		entry.renderable->Draw(*entry.transform);

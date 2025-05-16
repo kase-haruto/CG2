@@ -4,6 +4,8 @@
 SceneContext::SceneContext(){
 	renderer_ = std::make_unique<MeshRenderer>();
 	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
+	lightLibrary_ = std::make_unique<LightLibrary>(objectLibrary_.get());
+	renderer_->SetLightLibrary(lightLibrary_.get());
 }
 
 SceneContext::~SceneContext(){

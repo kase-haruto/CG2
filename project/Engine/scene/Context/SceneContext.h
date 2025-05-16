@@ -6,6 +6,7 @@
 // engine
 #include <Engine/Renderer/Mesh/MeshRenderer.h>
 #include <Engine/objects/3D/Actor/Library/SceneObjectLibrary.h>
+#include <Engine/Lighting/LightLibrary.h>
 
 // c++
 #include <memory>
@@ -24,6 +25,7 @@ public:
 private:
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
+	std::unique_ptr<LightLibrary> lightLibrary_;
 };
 
 

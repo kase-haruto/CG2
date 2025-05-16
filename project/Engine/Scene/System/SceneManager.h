@@ -28,10 +28,13 @@ public:
 	// シーン描画
 	void Draw();
 	void DrawForRenderTarget(IRenderTarget* target);
+
 	// UIをセット
 	void SetEngineUI(EngineUICore* ui){ pEngineUI_ = ui; }
+
 	// 切り替えリクエスト用メソッド (UI などから呼び出す)
 	void RequestSceneChange(SceneType nextScene);
+
 	void SetCurrentScene(std::unique_ptr<IScene> newScene);
 
 private:
