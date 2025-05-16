@@ -23,34 +23,42 @@ void HierarchyPanel::Render(){
 
 	const auto& allObjects = pSceneObjectLibrary_->GetAllObjects();
 
-	// カテゴリ分け
-	std::map<std::string, std::vector<SceneObject*>> categorizedObjects = {
+	// 順序保証付きのカテゴリ（表示順: Camera → Light → Game Object）
+	std::vector<std::pair<std::string, std::vector<SceneObject*>>> categorizedObjects = {
 		{ "Cameras", {} },
 		{ "Lights", {} },
 		{ "Game Objects", {} }
 	};
 
+	// 各カテゴリに振り分け
 	for (SceneObject* obj : allObjects){
 		if (!obj) continue;
+
 		switch (obj->GetObjectType()){
-			case ObjectType::Camera: categorizedObjects["Cameras"].push_back(obj); break;
-			case ObjectType::Light: categorizedObjects["Lights"].push_back(obj); break;
-			case ObjectType::GameObject: categorizedObjects["Game Objects"].push_back(obj); break;
-			default: break;
+			case ObjectType::Camera:
+				categorizedObjects[0].second.push_back(obj);
+				break;
+			case ObjectType::Light:
+				categorizedObjects[1].second.push_back(obj);
+				break;
+			case ObjectType::GameObject:
+				categorizedObjects[2].second.push_back(obj);
+				break;
+			default:
+				break;
 		}
 	}
 
-	// 現在の選択
+	// 選択中オブジェクト取得
 	SceneObject* selected = pEditorContext_->GetSelectedObject();
 
-	// カテゴリごとの描画
 	for (const auto& [category, objects] : categorizedObjects){
 		if (ImGui::CollapsingHeader(category.c_str(), ImGuiTreeNodeFlags_DefaultOpen)){
 			for (SceneObject* obj : objects){
 				bool isSelected = (selected == obj);
 				if (ImGui::Selectable(obj->GetName().c_str(), isSelected)){
 					pEditorContext_->SetSelectedObject(obj);
-					pEditorContext_->SetSelectedEditor(nullptr); // Editorの選択解除
+					pEditorContext_->SetSelectedEditor(nullptr);
 				}
 				if (isSelected){
 					ImGui::SetItemDefaultFocus();
@@ -61,6 +69,7 @@ void HierarchyPanel::Render(){
 
 	ImGui::End();
 }
+
 
 const std::string& HierarchyPanel::GetPanelName() const{
 	return panelName_;
