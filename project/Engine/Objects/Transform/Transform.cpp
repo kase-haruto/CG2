@@ -6,9 +6,13 @@
 // engine
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
+//data
+#include <Data/Engine/Macros/Objects/Transform/WorldTransformConfigMacros.h>
+
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <externals/imgui/imgui.h>
+#include <Engine/Foundation/Json/JsonUtils.h>
 
 
 void EulerTransform::ShowImGui(const std::string& label){
@@ -90,6 +94,9 @@ void WorldTransform::Update(const Matrix4x4& viewProMatrix){
 	TransferData(matrix);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//	worldTransformの更新(カメラなし
+/////////////////////////////////////////////////////////////////////////////////////////
 void WorldTransform::Update(){
 	Matrix4x4 scaleMat = MakeScaleMatrix(scale);
 	if (eulerRotation != Vector3 {0.0f, 0.0f, 0.0f}){
@@ -111,6 +118,24 @@ void WorldTransform::Update(){
 	TransferData(matrix);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//	コンフィグ適用
+/////////////////////////////////////////////////////////////////////////////////////////
+void WorldTransform::ApplyConfig() {
+	APPLY_WORLD_TRANSFORM_CONFIG
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	コンフィグから抽出
+/////////////////////////////////////////////////////////////////////////////////////////
+void WorldTransform::ExtractConfig() {
+	EXTRACT_WORLD_TRANSFORM_CONFIG
+}
+
+
+/* ========================================================================
+/* Transform2D class
+/* ===================================================================== */
 void Transform2D::ShowImGui(const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
 		ImGui::DragFloat2("scale", &scale.x, 0.01f);
@@ -118,3 +143,20 @@ void Transform2D::ShowImGui(const std::string& lavel){
 		ImGui::DragFloat2("translate", &translate.x, 0.01f);
 	}
 }
+
+void Transform2D::SaveToJson(const std::string& filePath) {
+	JsonUtils::Save(filePath, config);
+}
+
+void Transform2D::LoadFromJson(const std::string& filePath) {
+	JsonUtils::LoadOrCreate(filePath, config);
+}
+
+void Transform2D::ApplyConfig() {
+	scale = config.scale;
+	rotate = config.rotation;
+	translate = config.translation;
+}
+
+void Transform2D::ExtractConfig() {}
+

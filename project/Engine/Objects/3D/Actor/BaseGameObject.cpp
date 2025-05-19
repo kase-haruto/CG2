@@ -65,6 +65,8 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	//			collider 設定
 	//===================================================================*/
 	SwitchCollider(ColliderKind::Box,true); // 初期化時にBoxをセット
+
+	configPath_ = "Resources/Configs/Engine/Objects/BaseGameObjects/" + objectName.value() + ".json";
 }
 
 BaseGameObject::~BaseGameObject(){}
@@ -175,12 +177,6 @@ const Vector3 BaseGameObject::GetCenterPos()const{
 void BaseGameObject::SetColor(const Vector4& color){
 	if (model_){
 		model_->SetColor(color);
-	}
-}
-
-void BaseGameObject::SetUvScale(const Vector3& uvScale){
-	if (model_){
-		model_->SetUvScale(uvScale);
 	}
 }
 

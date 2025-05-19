@@ -5,6 +5,9 @@
 
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 
+#include <Data/Engine/Configs/Scene/Objects/Transform/UvTransformConfig.h>
+#include <Data/Engine/Configs/Scene/Objects/Transform/WorldTransformConfig.h>
+
 // c++
 #include <string>
 
@@ -28,16 +31,24 @@ struct EulerTransform{
 	void ShowImGui(const std::string& lavel = "Transform");
 };
 
+
 struct Transform2D{
 	Vector2 scale;
 	float rotate;
 	Vector2 translate;
+	Transform2DConfig config;
+	
 	void Initialize(){
 		scale = {1.0f,1.0f};
 		rotate =0.0f;
 		translate = {0.0f,0.0f};
 	}
 	void ShowImGui(const std::string& lavel = "Transform");
+
+	void SaveToJson(const std::string& filePath);
+	void LoadFromJson(const std::string& filePath);
+	void ApplyConfig();
+	void ExtractConfig();
 };
 
 struct QuaternionTransform{
@@ -100,4 +111,12 @@ public:
 
 	virtual void Update(const Matrix4x4& viewProMatrix) override;
 	void Update();
+
+	//--- コンフィグ同期 ---
+	void ApplyConfig();       // config → transformメンバ
+	void ExtractConfig();     // transformメンバ → config
+	WorldTransformConfig GetConfig() const { return config; }
+
+public:
+	WorldTransformConfig config;
 };

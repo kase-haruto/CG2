@@ -25,10 +25,6 @@ public:
 	//============= 
 	// Transform関連
 	//=============
-	void SetUvScale(const Vector3& uvScale) override{ uvTransform.scale = uvScale; }
-	void SetColor(const Vector4& color) override{ RGBa = color; }
-	const Vector4& GetColor() const override{ return RGBa; }
-
 	// アニメーション速度の設定と取得
 	void SetAnimationSpeed(float speed){ animationSpeed_ = speed; }
 	float GetAnimationSpeed() const{ return animationSpeed_; }

@@ -1,7 +1,19 @@
 #include "Material.h"
 
+//data
+#include <Data/Engine/Macros/Objects/Material/MaterialConfigMacros.h>
 
 #include <externals/imgui/imgui.h>
+
+void Material::ApplyConfig() {
+	//========================= config apply =========================
+	APPLY_MATERIAL_CONFIG
+}
+
+void Material::ExtractConfig() {
+	//========================= config extract =========================
+	EXTRACT_MATERIAL_CONFIG
+}
 
 void Material::ShowImGui(){
 
@@ -25,7 +37,7 @@ void Material::ShowImGui(){
 
 	// color
 	ImGui::SeparatorText("Color");
-	ImGui::ColorEdit3("color", &color.x);
+	ImGui::ColorEdit4("color", &color.x);
 
 	ImGui::SeparatorText("EnviromentCoefficient");
 	//環境マップ
