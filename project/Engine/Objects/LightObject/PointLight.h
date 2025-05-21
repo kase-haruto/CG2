@@ -41,8 +41,13 @@ public:
 	void ShowGui()override;
 
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
-	void SaveConfig(const std::string& path)override;
+
+	// config ============================================================
+	void ApplyConfig()override;
+	void SaveConfig(const std::string& path)const override;
 	void LoadConfig(const std::string& path)override;
+
+	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<PointLightData> constantBuffer_;

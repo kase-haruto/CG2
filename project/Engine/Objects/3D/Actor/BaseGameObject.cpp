@@ -149,6 +149,12 @@ void BaseGameObject::DerivativeGui(){
 }
 
 
+void BaseGameObject::ApplyConfig() {}
+
+void BaseGameObject::SaveConfig([[maybe_unused]] const std::string& path) const {}
+
+void BaseGameObject::LoadConfig([[maybe_unused]] const std::string& path) {}
+
 //===================================================================*/
 //                   getter/setter
 //===================================================================*/

@@ -6,7 +6,6 @@
 BulletContainer::BulletContainer(const std::string& name){
 	bullets_.clear();
 	SceneObject::SetName(name, ObjectType::GameObject);
-	SceneObject::EnableGuiList();
 }
 
 void BulletContainer::SetSceneContext(SceneContext* context){

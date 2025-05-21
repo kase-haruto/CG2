@@ -5,7 +5,7 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
-
+#include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
 
 /* externals */
 #ifdef _DEBUG
@@ -15,9 +15,14 @@
 
 DirectionalLight::DirectionalLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
+
+
 	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	constantBuffer_.Initialize(device);
-	configPath_ = "Resources/Configs/Engine/Objects/Light/DirectionalLightConfig/DirectionalLightConfig.json";
+
+	// コンフィグパスの生成 preset名はdefault
+	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	//コンフィグの適用
 	LoadConfig(configPath_);
 }
 
@@ -26,13 +31,7 @@ DirectionalLight::~DirectionalLight(){}
 void DirectionalLight::Initialize() {}
 
 void DirectionalLight::Update(){
-	// データを更新
-	DirectionalLightData data;
-	data.color = config_.color;
-	data.direction = config_.direction;
-	data.intensity = config_.intensity;
-	// バッファにデータを設定
-	constantBuffer_.TransferData(data);
+	ApplyConfig();
 }
 
 void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,PipelineType type){
@@ -51,13 +50,15 @@ void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandLi
 void DirectionalLight::ShowGui(){
 #ifdef _DEBUG
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	if (ImGui::Button("SaveConfig")) {
-		SaveConfig(configPath_);
+
+	if (ImGui::Button("Save Config")) {
+		SaveConfig(GetConfigPath());
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("LoadConfig")) {
-		LoadConfig(configPath_);
+	if (ImGui::Button("Load Config")) {
+		LoadConfig(GetConfigPath());
 	}
+
 	ImGui::Separator();
 
 	ImGui::SliderFloat3("direction", &config_.direction.x, -1.0f, 1.0f);
@@ -66,13 +67,14 @@ void DirectionalLight::ShowGui(){
 #endif // _DEBUG
 }
 
- //===================================================================*/
- //                    config
- //===================================================================*/
-void DirectionalLight::SaveConfig(const std::string& path) {
-	JsonUtils::Save(path, config_);
+void DirectionalLight::ApplyConfig() {
+		// config_ → GPU転送用データに詰め替え
+	DirectionalLightData data;
+	data.color = config_.color;
+	data.direction = config_.direction;
+	data.intensity = config_.intensity;
+
+	// 定数バッファへ
+	constantBuffer_.TransferData(data);
 }
 
-void DirectionalLight::LoadConfig(const std::string& path) {
-	JsonUtils::LoadOrCreate(path, config_);
-}
