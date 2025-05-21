@@ -45,6 +45,8 @@ void TestScene::Initialize() {
 	//=========================
 	// オブジェクト生成
 	//=========================
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
+
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
 	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 
@@ -71,6 +73,7 @@ void TestScene::Update() {
 	skyBox_->Update();
 
 	//test
+	field_->Update();
 	bunny_->Update();
 	teapot_->Update();
 	walkHuman_->Update();

@@ -32,11 +32,6 @@ Model::~Model(){
 }
 
 void Model::Initialize(){
-	// デフォルト値
-	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-
-	materialParameter_.shininess = 20.0f;
-
 	// マテリアル・行列バッファ生成
 	CreateMaterialBuffer();
 	Map();

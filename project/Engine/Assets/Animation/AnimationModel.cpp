@@ -40,11 +40,6 @@ AnimationModel::AnimationModel(const std::string& fileName){
 // 初期化
 //-----------------------------------------------------------------------------
 void AnimationModel::Initialize(){
-	// デフォルト値
-	RGBa = {1.0f, 1.0f, 1.0f, 1.0f};
-	materialParameter_.shininess = 20.0f;
-	materialParameter_.enableLighting = HalfLambert;
-
 	// バッファ生成
 	CreateMaterialBuffer();
 	Map();

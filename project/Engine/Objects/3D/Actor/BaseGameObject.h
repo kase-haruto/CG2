@@ -52,6 +52,8 @@ public:
 	virtual void OnCollisionStay([[maybe_unused]] Collider* other) {};
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other){};
 
+	//--------- config ------------------------------------------------
+
 
 	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);
@@ -59,7 +61,6 @@ public:
 	void SetScale(const Vector3& scale);
 	virtual const Vector3 GetCenterPos()const;
 	void SetColor(const Vector4& color);
-	void SetUvScale(const Vector3& uvScale);
 	Vector3 GetWorldPosition()const{ return worldTransform_.GetWorldPosition(); }
 
 	void SetCollider(std::unique_ptr<Collider> collider);

@@ -7,6 +7,9 @@
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>
 
+// data
+#include <Data/Engine/Configs/Scene/Objects/Material/MaterialConfig.h>
+
 /* c++ */
 #include<stdint.h>
 #include<string>
@@ -20,6 +23,13 @@ struct Material{
 	bool isReflect = false;
 	float enviromentCoefficient = 0.5f;
 	int currentLightingMode_ = 0;
+
+	//config
+	void ApplyConfig();
+	void ExtractConfig();
+	const MaterialConfig& GetConfig() const { return config; }
+
+	MaterialConfig config;
 
 	void ShowImGui();
 };
