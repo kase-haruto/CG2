@@ -69,7 +69,7 @@ void DirectionalLight::ShowGui(){
  //===================================================================*/
  //                    config
  //===================================================================*/
-void DirectionalLight::SaveConfig(const std::string& path) {
+void DirectionalLight::SaveConfig(const std::string& path) const {
 	JsonUtils::Save(path, config_);
 }
 

@@ -71,10 +71,11 @@ void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	constantBuffer_.SetCommand(commandList, index);
 }
 
+
  //===================================================================*/
  //                    config
  //===================================================================*/
-void PointLight::SaveConfig(const std::string& path) {
+void PointLight::SaveConfig(const std::string& path) const {
 	JsonUtils::Save(path, config_);
 }
 

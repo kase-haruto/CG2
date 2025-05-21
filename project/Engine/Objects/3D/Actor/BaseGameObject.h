@@ -65,7 +65,6 @@ public:
 
 	void SetCollider(std::unique_ptr<Collider> collider);
 	Collider* GetCollider();
-
 private:
 	//===================================================================*/
 	//                    private methods

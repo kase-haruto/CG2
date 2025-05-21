@@ -22,7 +22,6 @@
 Player::Player(const std::string& modelName)
 	:Actor::Actor(modelName, "player"){
 	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
-	SceneObject::EnableGuiList();
 	worldTransform_.translation = {0.0f, 0.0f, 25.0f};
 }
 

@@ -6,8 +6,6 @@
 
 EnemyCollection::EnemyCollection(){
 	SetName("EnemyCollection", ObjectType::GameObject);
-	SceneObject::EnableGuiList();
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
