@@ -5,51 +5,53 @@
 
 template<typename TConfig>
 class ConfigurableObject :
-    public SceneObject {
+	public SceneObject{
 protected:
-    void ApplyConfigFromJson(const nlohmann::json& j) override;
 
-    void ExtractConfigToJson(nlohmann::json& j) const override;
+	//* apply/extract ========================================//
+	void ApplyConfigFromJson(const nlohmann::json& j) override;
+	void ExtractConfigToJson(nlohmann::json& j) const override;
 
-    void LoadConfig(const std::string& path) override;
-    void SaveConfig(const std::string& path) const override;
+	//* save/load ============================================//
+	void LoadConfig(const std::string& path) override;
+	void SaveConfig(const std::string& path) const override;
 
 protected:
-    TConfig config_;
+	TConfig config_;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //      jsonからコンフィグを適用
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
-inline void ConfigurableObject<TConfig>::ApplyConfigFromJson(const nlohmann::json& j) {
-    config_ = j.get<TConfig>();
-    ApplyConfig();
+inline void ConfigurableObject<TConfig>::ApplyConfigFromJson(const nlohmann::json& j){
+	config_ = j.get<TConfig>();
+	ApplyConfig();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //      コンフィグをjsonに変換
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
-inline void ConfigurableObject<TConfig>::ExtractConfigToJson(nlohmann::json& j) const {
-    j = config_;
+inline void ConfigurableObject<TConfig>::ExtractConfigToJson(nlohmann::json& j) const{
+	j = config_;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //      コンフィグのロード
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
-inline void ConfigurableObject<TConfig>::LoadConfig(const std::string& path) {
-    nlohmann::json j;
-    if (JsonUtils::Load(path, j)) ApplyConfigFromJson(j);
+inline void ConfigurableObject<TConfig>::LoadConfig(const std::string& path){
+	nlohmann::json j;
+	if (JsonUtils::Load(path, j)) ApplyConfigFromJson(j);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //      コンフィグのセーブ
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
-inline void ConfigurableObject<TConfig>::SaveConfig(const std::string& path) const {
-    nlohmann::json j;
-    ExtractConfigToJson(j);
-    JsonUtils::Save(path, j);
+inline void ConfigurableObject<TConfig>::SaveConfig(const std::string& path) const{
+	nlohmann::json j;
+	ExtractConfigToJson(j);
+	JsonUtils::Save(path, j);
 }

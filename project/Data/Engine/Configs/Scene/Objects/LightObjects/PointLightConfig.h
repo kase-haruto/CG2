@@ -9,7 +9,6 @@
 
 struct PointLightConfig final {
 	//========================= variable =========================
-	std::string sceneName;						//< シーン名
 	Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };	//< 光の色
 	Vector3 position = { 0.0f, 0.0f, 0.0f };	//< 位置
 	float intensity = 0.25f;					//< 光の強度
@@ -18,7 +17,6 @@ struct PointLightConfig final {
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PointLightConfig,
-								   sceneName,
 								   color,
 								   position,
 								   intensity,

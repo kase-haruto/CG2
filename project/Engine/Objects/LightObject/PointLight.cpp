@@ -5,6 +5,7 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
+#include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
 
 #ifdef _DEBUG
 #include<externals/imgui/imgui.h>
@@ -14,27 +15,20 @@
 
 PointLight::PointLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
+
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
+	constantBuffer_.Initialize(device);
+
+	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	LoadConfig(configPath_);
 }
 
 PointLight::~PointLight(){}
 
-void PointLight::Initialize(){
-	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
-	constantBuffer_.Initialize(device);
-
-	configPath_ = "Resources/Configs/Engine/Objects/Light/PointLightConfig/PointLightConfig.json";
-	LoadConfig(configPath_);
-}
+void PointLight::Initialize(){}
 
 void PointLight::Update(){
-	
-	PointLightData data;
-	data.color = config_.color;
-	data.position = config_.position;
-	data.intensity = config_.intensity;
-	data.radius = config_.radius;
-	data.decay = config_.decay;
-	constantBuffer_.TransferData(data);
+	ApplyConfig();
 }
 
 void PointLight::ShowGui(){
@@ -71,18 +65,17 @@ void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> co
 	constantBuffer_.SetCommand(commandList, index);
 }
 
-
-
 //===================================================================*/
  //                    config
  //===================================================================*/
-void PointLight::ApplyConfig() {}
-
-
-void PointLight::SaveConfig(const std::string& path) const {
-	JsonUtils::Save(path, config_);
+void PointLight::ApplyConfig() {
+	PointLightData data;
+	data.color = config_.color;
+	data.position = config_.position;
+	data.intensity = config_.intensity;
+	data.radius = config_.radius;
+	data.decay = config_.decay;
+	constantBuffer_.TransferData(data);
 }
 
-void PointLight::LoadConfig(const std::string& path) {
-	JsonUtils::LoadOrCreate(path, config_);
-}
+

@@ -77,9 +77,6 @@ void BaseModel::UpdateTexture() {
 void BaseModel::ShowImGuiInterface() {
 
 
-	//===========================
-	// 6. 追加の GUI 表示
-	//===========================
 	ImGui::Separator();
 	ImGui::Text("Model: %s", fileName_.c_str());
 
@@ -115,9 +112,6 @@ void BaseModel::ShowImGuiInterface() {
 			blendMode_ = static_cast<BlendMode>(currentBlendMode);
 		}
 	}
-
-
-
 }
 
 void BaseModel::Draw(const WorldTransform& transform) {
@@ -138,15 +132,47 @@ void BaseModel::Draw(const WorldTransform& transform) {
 	cmdList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
 }
 
-void BaseModel::ApplyConfig() {
-	materialData_.ApplyConfig();
-	uvTransform.ApplyConfig();
-	blendMode_ = static_cast<BlendMode>(config_.blendMode);
+void BaseModel::ApplyConfig(const BaseModelConfig& config){
+	materialData_.ApplyConfig(config.materialConfig);
+	uvTransform.ApplyConfig(config.uvTransConfig);
+	blendMode_ = static_cast< BlendMode >(config.blendMode);
 }
 
-void BaseModel::ExtractConfig() {
-	materialData_.ExtractConfig();
-	uvTransform.ExtractConfig();
-	config_.blendMode = static_cast<int>(blendMode_);
+void BaseModel::ShowImGui(BaseModelConfig& config){
+	ImGui::Separator();
+	ImGui::Text("Model: %s", fileName_.c_str());
+
+	uvTransform.ShowImGui(config.uvTransConfig,"uvTransform");
+
+	if (ImGui::CollapsingHeader("Material")){
+		materialData_.ShowImGui(config.materialConfig);
+		static std::string selectedTextureName = modelData_->material.textureFilePath;
+
+		auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
+		if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())){
+			for (const auto& texture : textures){
+				bool is_selected = (selectedTextureName == texture.first);
+				if (ImGui::Selectable(texture.first.c_str(), is_selected)){
+					selectedTextureName = texture.first;
+					handle_ = TextureManager::GetInstance()->LoadTexture(texture.first);
+				}
+				if (is_selected){
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Draw")){
+		static const char* blendModeNames[] = {
+			"NONE", "ALPHA", "ADD", "SUB", "MUL", "NORMAL", "SCREEN"
+		};
+
+		int currentBlendMode = static_cast< int >(blendMode_);
+		if (ImGui::Combo("Blend Mode", &currentBlendMode, blendModeNames, IM_ARRAYSIZE(blendModeNames))){
+			config.blendMode = currentBlendMode;
+		}
+	}
 }
 

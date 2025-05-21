@@ -1,11 +1,9 @@
+#pragma once
 /* ========================================================================
 /*  include space
 /* ===================================================================== */
-#include <Engine/Foundation/Math/Vector3.h>
-#include <Engine/Foundation/Math/Quaternion.h>
 #include <Data/Engine/Configs/Scene/Objects/Transform/UvTransformConfig.h>
-#include <Engine/Graphics/Material.h>
-#include <Engine/Objects/Transform/Transform.h>
+#include <Data/Engine/Configs/Scene/Objects/Material/MaterialConfig.h>
 
 struct BaseModelConfig {
     //========================= variable =========================
@@ -14,6 +12,7 @@ struct BaseModelConfig {
 	int blendMode = 5;						//< ブレンドモード(normal
 
 };
+
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(BaseModelConfig,
 								   materialConfig,
 								   uvTransConfig,

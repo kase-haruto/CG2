@@ -68,7 +68,6 @@ void DirectionalLight::ShowGui(){
 }
 
 void DirectionalLight::ApplyConfig() {
-		// config_ → GPU転送用データに詰め替え
 	DirectionalLightData data;
 	data.color = config_.color;
 	data.direction = config_.direction;

@@ -7,16 +7,16 @@
 #include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
-#include <Engine/Graphics/Pipeline/PipelineType.h>
-#include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Pipeline/PipelineType.h>
+#include <Engine/Objects/ConfigurableObject/ConfigurableObject.h>
 
 /* config */
 #include <Data/Engine/Configs/Scene/Objects/LightObjects/PointLightConfig.h>
 
 /* lib */
-#include <wrl.h>
 #include <d3d12.h>
+#include <wrl.h>
 
 struct PointLightData{
 	Vector4 color;		//ライトの色
@@ -30,7 +30,7 @@ struct PointLightData{
 class DxCore;
 
 class PointLight
-: public SceneObject{
+: public ConfigurableObject<PointLightConfig>{
 public:
 	PointLight(const std::string& name);
 	PointLight() = default;
@@ -44,13 +44,10 @@ public:
 
 	// config ============================================================
 	void ApplyConfig()override;
-	void SaveConfig(const std::string& path)const override;
-	void LoadConfig(const std::string& path)override;
 
 	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<PointLightData> constantBuffer_;
-	PointLightConfig config_;
 };
 

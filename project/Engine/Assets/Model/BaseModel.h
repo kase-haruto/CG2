@@ -43,8 +43,8 @@ public:
 	void Draw(const WorldTransform& transform)override;
 
 	//--------- config -----------------------------------------------------
-	void ApplyConfig();
-	void ExtractConfig();
+	void ApplyConfig(const BaseModelConfig& config);
+	void ShowImGui(BaseModelConfig& config);
 
 	//--------- accessor -----------------------------------------------------
 	const Vector4& GetColor() const { return materialData_.color; }
@@ -66,8 +66,6 @@ public:
 	Transform2D  uvTransform {{1.0f, 1.0f},
 							 0.0f,
 							 {0.0f, 0.0f}};
-
-	BaseModelConfig config_;
 
 
 protected:

@@ -8,7 +8,6 @@
 #include <Engine/Foundation/Math/Vector4.h>
 
 /* engine */
-#include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Objects/ConfigurableObject/ConfigurableObject.h>
 #include <Engine/Graphics/Pipeline/PipelineType.h>
 #include <Engine/Lighting/LightData.h>
