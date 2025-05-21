@@ -9,6 +9,7 @@
 
 /* engine */
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Objects/ConfigurableObject/ConfigurableObject.h>
 #include <Engine/Graphics/Pipeline/PipelineType.h>
 #include <Engine/Lighting/LightData.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
@@ -29,7 +30,7 @@ struct DirectionalLightData{
 class DxCore;
 
 class DirectionalLight
-	:public SceneObject{
+	:public  ConfigurableObject<DirectionalLightConfig>{
 public:
 	DirectionalLight(const std::string& name);
 	DirectionalLight() = default;
@@ -40,14 +41,12 @@ public:
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type);
 	void ShowGui()override;
 
+	// config ============================================================
 	void ApplyConfig()override;
-	void SaveConfig(const std::string& path)const override;
-	void LoadConfig(const std::string& path)override;
 
 	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<DirectionalLightData> constantBuffer_;
-	DirectionalLightConfig config_;
 };
 

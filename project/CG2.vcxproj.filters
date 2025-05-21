@@ -718,6 +718,7 @@
     <ClInclude Include="Data\Engine\Macros\Objects\Model\BaseModelConfigMacro.h" />
     <ClInclude Include="Engine\Editor\SceneObjectEditor.h" />
     <ClInclude Include="Engine\Foundation\Utility\FileSystem\ConfigPathResolver\ConfigPathResolver.h" />
+    <ClInclude Include="Engine\Objects\ConfigurableObject\ConfigurableObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">
