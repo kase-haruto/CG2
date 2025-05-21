@@ -22,16 +22,11 @@ struct Material{
 	float shininess;
 	bool isReflect = false;
 	float enviromentCoefficient = 0.5f;
-	int currentLightingMode_ = 0;
 
 	//config
-	void ApplyConfig();
-	void ExtractConfig();
-	const MaterialConfig& GetConfig() const { return config; }
-
-	MaterialConfig config;
-
+	void ApplyConfig(const MaterialConfig& config);
 	void ShowImGui();
+	void ShowImGui(MaterialConfig& config);
 };
 
 struct Material2D{

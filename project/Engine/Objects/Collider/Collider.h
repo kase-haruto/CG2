@@ -53,10 +53,13 @@ public:
 	virtual void Update(const Vector3& position,const Quaternion& rotate) = 0;
 	virtual void Draw() = 0;
 	virtual void ShowGui();
+	void ShowGui(struct ColliderConfig& config);
 
 	virtual void OnCollisionEnter([[maybe_unused]] Collider* other){};
 	virtual void OnCollisionStay([[maybe_unused]] Collider* other){};
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other){};
+
+	void ApplyConfig(const struct ColliderConfig& config);
 
 protected:
 	//===================================================================*/

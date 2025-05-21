@@ -6,6 +6,8 @@
 #include <Engine/Assets/Model/Model.h>
 #include <Engine/Assets/Animation/AnimationModel.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/objects/ConfigurableObject/ConfigurableObject.h>
+#include <Data/Engine/Configs/Scene/Objects/BaseGameObject/BaseGameObjectConfig.h>
 #include <Engine/objects/Collider/Collider.h>
 
 //* c++ lib *//
@@ -14,7 +16,7 @@
 #include <functional>
 
 class BaseGameObject
-	:public SceneObject {
+	:public ConfigurableObject<BaseGameObjectConfig>{
 
 	enum ObjectModelType {
 		ModelType_Static,		// 静的モデル
@@ -32,9 +34,8 @@ public:
 	//===================================================================*/
 	//                    public methods
 	//===================================================================*/
-	BaseGameObject(const std::string& modelName);
 	BaseGameObject(const std::string& modelName,
-				   std::optional<std::string> objectName);
+				   std::optional<std::string> objectName = std::nullopt);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
@@ -54,8 +55,6 @@ public:
 
 	//--------- config ------------------------------------------------
 	virtual void ApplyConfig()override;
-	virtual void SaveConfig([[maybe_unused]] const std::string& path)const override;
-	virtual void LoadConfig([[maybe_unused]] const std::string& path)override;
 
 	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);

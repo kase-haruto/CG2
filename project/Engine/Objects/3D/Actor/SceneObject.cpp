@@ -24,17 +24,7 @@ SceneObject::SceneObject(){
 }
 
 void SceneObject::ShowGui(){
-	ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	ImGui::Separator();
 
-	if (ImGui::Button("SaveConfig")) {
-		SaveConfig(configPath_);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("LoadConfig")) {
-		LoadConfig(configPath_);
-	}
-	worldTransform_.ShowImGui("world");
 
 }
 
@@ -47,15 +37,3 @@ void SceneObject::SetName(const std::string& name, ObjectType type){
 	objectType_ = type;
 }
 
-void SceneObject::LoadConfig(const std::string& path) {
-	nlohmann::json j;
-	if (JsonUtils::Load(path, j)) {
-		ApplyConfigFromJson(j);
-	}
-}
-
-void SceneObject::SaveConfig(const std::string& path) const {
-	nlohmann::json j;
-	ExtractConfigToJson(j);
-	JsonUtils::Save(path, j);
-}

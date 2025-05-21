@@ -3,33 +3,9 @@
 #include <Engine/objects/Collider/BoxCollider.h>
 #include <Engine/objects/Collider/SphereCollider.h>
 #include <Engine/Renderer/Mesh/MeshRenderer.h>
+#include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
 
 #include "externals/imgui/imgui.h"
-
-BaseGameObject::BaseGameObject(const std::string& modelName){
-
-	auto dotPos = modelName.find_last_of('.');
-	if (dotPos != std::string::npos){
-		std::string extension = modelName.substr(dotPos);
-
-		// obj
-		if (extension == ".obj"){
-			objectModelType_ = ObjectModelType::ModelType_Static;
-			model_ = std::make_unique<Model>(modelName);
-		}
-		// gltf
-		else if (extension == ".gltf"){
-			objectModelType_ = ObjectModelType::ModelType_Animation;
-			model_ = std::make_unique<AnimationModel>(modelName);
-		}
-		// その他の拡張子の場合はここに追加
-		else{
-			// Handle other extensions or set a default type
-			objectModelType_ = ObjectModelType::ModelType_Unknown;
-		}
-
-	}
-}
 
 BaseGameObject::BaseGameObject(const std::string& modelName,
 							   std::optional<std::string> objectName){
@@ -64,9 +40,12 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	//===================================================================*/
 	//			collider 設定
 	//===================================================================*/
-	SwitchCollider(ColliderKind::Box,true); // 初期化時にBoxをセット
+	SwitchCollider(ColliderKind::Box, true); // 初期化時にBoxをセット
 
-	configPath_ = "Resources/Configs/Engine/Objects/BaseGameObjects/" + objectName.value() + ".json";
+	// コンフィグパスの生成 preset名はdefault
+	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	//コンフィグの適用
+	LoadConfig(configPath_);
 }
 
 BaseGameObject::~BaseGameObject(){}
@@ -89,7 +68,7 @@ void BaseGameObject::Update(){
 		collider_->Update(worldPos, worldRot);
 		collider_->Draw();
 	}
-
+	ApplyConfig();
 }
 
 void BaseGameObject::RegisterToRenderer(MeshRenderer* renderer){
@@ -133,13 +112,26 @@ void BaseGameObject::SwitchCollider(ColliderKind kind, bool isCollisionEnubled){
 void BaseGameObject::ShowGui(){
 	ImGui::Spacing();
 
-	SceneObject::ShowGui();
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+	ImGui::Separator();
 
-	model_->ShowImGuiInterface();
+	if (ImGui::Button("SaveConfig")){
+		SaveConfig(configPath_);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LoadConfig")){
+		LoadConfig(configPath_);
+	}
+
+	if (ImGui::CollapsingHeader("Transform")){
+		worldTransform_.ShowImGui("world");
+	}
+
+	model_->ShowImGui(config_.modelConfig);
 
 	ImGui::Spacing();
 
-	collider_->ShowGui();
+	collider_->ShowGui(config_.colliderConfig);
 
 	DerivativeGui();
 }
@@ -149,11 +141,10 @@ void BaseGameObject::DerivativeGui(){
 }
 
 
-void BaseGameObject::ApplyConfig() {}
-
-void BaseGameObject::SaveConfig([[maybe_unused]] const std::string& path) const {}
-
-void BaseGameObject::LoadConfig([[maybe_unused]] const std::string& path) {}
+void BaseGameObject::ApplyConfig(){
+	model_->ApplyConfig(config_.modelConfig);
+	collider_->ApplyConfig(config_.colliderConfig);
+}
 
 //===================================================================*/
 //                   getter/setter

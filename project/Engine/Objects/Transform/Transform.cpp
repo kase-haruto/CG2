@@ -144,19 +144,16 @@ void Transform2D::ShowImGui(const std::string& lavel){
 	}
 }
 
-void Transform2D::SaveToJson(const std::string& filePath) {
-	JsonUtils::Save(filePath, config);
+void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){
+	if (ImGui::CollapsingHeader(lavel.c_str())){
+		ImGui::DragFloat2("scale", &config.scale.x, 0.01f);
+		ImGui::DragFloat("rotation", &config.rotation, 0.01f);
+		ImGui::DragFloat2("translate", &config.translation.x, 0.01f);
+	}
 }
 
-void Transform2D::LoadFromJson(const std::string& filePath) {
-	JsonUtils::LoadOrCreate(filePath, config);
-}
-
-void Transform2D::ApplyConfig() {
+void Transform2D::ApplyConfig(const Transform2DConfig& config){
 	scale = config.scale;
 	rotate = config.rotation;
 	translate = config.translation;
 }
-
-void Transform2D::ExtractConfig() {}
-

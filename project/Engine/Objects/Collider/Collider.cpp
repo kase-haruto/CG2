@@ -1,38 +1,62 @@
 #include "Collider.h"
 
 #include <Engine/Collision/CollisionManager.h>
+#include <Data/Engine/Configs/Scene/Objects/Collider/ColliderConfig.h>
 
 #include <externals/imgui/imgui.h>
 
 
-Collider::Collider(bool isEnuble) {
+Collider::Collider(bool isEnuble){
 	isCollisionEnabled_ = isEnuble;
-	if (isCollisionEnabled_) {
+	if (isCollisionEnabled_){
 		CollisionManager::GetInstance()->Register(this);
 	}
 }
 
-void Collider::ShowGui() {
-    bool enabled = isCollisionEnabled_;
-    if (ImGui::Checkbox("Enable Collision", &enabled)) {
-        SetCollisionEnabled(enabled); // 状態が変わったときだけ反映
-    }
+void Collider::ShowGui(){
+	bool enabled = isCollisionEnabled_;
+	if (ImGui::Checkbox("Enable Collision", &enabled)){
+		SetCollisionEnabled(enabled);
+	}
 
-    if (!isCollisionEnabled_) return;
+	if (!isCollisionEnabled_) return;
 
-    ImGui::Checkbox("Draw Collider", &isDraw_);
-    ImGui::ColorEdit4("Collider Color", &color_.x);
+	ImGui::Checkbox("Draw Collider", &isDraw_);
+	ImGui::ColorEdit4("Collider Color", &color_.x);
+}
+
+void Collider::ShowGui(ColliderConfig& config){
+
+	if (ImGui::CollapsingHeader("Collider")){
+
+		bool enabled = config.isCollisionEnabled;
+		if (ImGui::Checkbox("Enable Collision", &enabled)){
+			config.isCollisionEnabled = enabled;
+		}
+
+		if (!config.isCollisionEnabled) return;
+
+		ImGui::Checkbox("Draw Collider", &config.isDraw);
+		ImGui::ColorEdit4("Collider Color", &color_.x);
+	}
+}
+
+void Collider::ApplyConfig(const ColliderConfig& config){
+	isCollisionEnabled_ = config.isCollisionEnabled;
+	isDraw_ = config.isDraw;
+	type_ = static_cast< ColliderType >(config.colliderType);
+	targetType_ = static_cast< ColliderType >(config.targetType);
 }
 
 
-void Collider::SetCollisionEnabled(bool enable) {
-    if (isCollisionEnabled_ == enable) return; // 状態が変わらないなら何もしない
+void Collider::SetCollisionEnabled(bool enable){
+	if (isCollisionEnabled_ == enable) return; // 状態が変わらないなら何もしない
 
-    isCollisionEnabled_ = enable;
+	isCollisionEnabled_ = enable;
 
-    if (enable) {
-        CollisionManager::GetInstance()->Register(this);
-    } else {
-        CollisionManager::GetInstance()->Unregister(this);
-    }
+	if (enable){
+		CollisionManager::GetInstance()->Register(this);
+	} else{
+		CollisionManager::GetInstance()->Unregister(this);
+	}
 }

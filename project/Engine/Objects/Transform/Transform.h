@@ -36,7 +36,6 @@ struct Transform2D{
 	Vector2 scale;
 	float rotate;
 	Vector2 translate;
-	Transform2DConfig config;
 	
 	void Initialize(){
 		scale = {1.0f,1.0f};
@@ -44,11 +43,8 @@ struct Transform2D{
 		translate = {0.0f,0.0f};
 	}
 	void ShowImGui(const std::string& lavel = "Transform");
-
-	void SaveToJson(const std::string& filePath);
-	void LoadFromJson(const std::string& filePath);
-	void ApplyConfig();
-	void ExtractConfig();
+	void ShowImGui(Transform2DConfig& config, const std::string& lavel = "Transform");
+	void ApplyConfig(const Transform2DConfig& config);
 };
 
 struct QuaternionTransform{

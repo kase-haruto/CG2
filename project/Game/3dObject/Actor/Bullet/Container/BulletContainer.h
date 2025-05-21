@@ -34,9 +34,6 @@ public:
 	virtual void DerivativeGui(){}
 
 	/* config =========================================*/
-	void ApplyConfig() override {};
-	void SaveConfig([[maybe_unused]]const std::string& path) const override {};
-	void LoadConfig([[maybe_unused]] const std::string& path) override {};
 
 	/* accessor =========================================*/
 	const std::list<std::unique_ptr<BaseBullet>>& GetBullets() const{ return bullets_; }

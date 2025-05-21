@@ -24,9 +24,6 @@ private:
 	void Clear();
 
 	// config ============================================================*/
-	void ApplyConfig()override {};
-	void SaveConfig([[maybe_unused]] const std::string& path)const override {};
-	void LoadConfig([[maybe_unused]] const std::string& path)override {};
 
 private:
 	//===================================================================*/

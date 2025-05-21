@@ -1,0 +1,31 @@
+{
+    "colliderConfig": {
+        "colliderType": 0,
+        "isCollisionEnabled": false,
+        "isDraw": true,
+        "targetType": 0
+    },
+    "modelConfig": {
+        "blendMode": 0,
+        "materialConfig": {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "currentLightingMode_": 0,
+            "enableLighting": 0,
+            "enviromentCoefficient": 0.28200000524520874,
+            "isReflect": true,
+            "shininess": 20.0
+        },
+        "uvTransConfig": {
+            "rotation": 0.7599999904632568,
+            "scale": {
+                "x": 20.0,
+                "y": 20.0
+            }
+        }
+    }
+}

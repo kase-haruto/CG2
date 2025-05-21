@@ -26,8 +26,6 @@ public:
 	//==================================================================*//
 	//            Config I/O virtuals
 	//==================================================================*//
-	virtual void ApplyConfigFromJson([[maybe_unused]]const nlohmann::json& j) {};
-	virtual void ExtractConfigToJson([[maybe_unused]] nlohmann::json& j) const {};
 	virtual std::string GetObjectTypeName() const;
 	virtual void SetName(const std::string& name, ObjectType type);
 	void SetConfigPath(const std::string& path) { configPath_ = path; }
@@ -35,9 +33,7 @@ public:
 	//==================================================================*//
 	//            SceneObject I/O helpers
 	//==================================================================*//
-	virtual void ApplyConfig() = 0;
-	virtual void LoadConfig(const std::string& path);
-	virtual void SaveConfig(const std::string& path) const;
+
 
 	//==================================================================*//
 	//            Accessors
