@@ -422,6 +422,7 @@
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileScanner.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.cpp" />
+    <ClCompile Include="Engine\Editor\SceneObjectEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -714,6 +715,7 @@
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Model\BaseModelConfig.h" />
     <ClInclude Include="Data\Engine\Macros\Objects\Transform\Transform2dMacros.h" />
     <ClInclude Include="Data\Engine\Macros\Objects\Model\BaseModelConfigMacro.h" />
+    <ClInclude Include="Engine\Editor\SceneObjectEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

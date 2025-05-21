@@ -11,7 +11,10 @@
 #include <externals/imgui/imgui.h>
 
 InspectorPanel::InspectorPanel()
-	: IEngineUI("Inspector"){}
+	: IEngineUI("Inspector"){
+	pSceneObjectEditor_ = std::make_unique<SceneObjectEditor>();
+	
+}
 
 void InspectorPanel::Render(){
 	ImGui::Begin(panelName_.c_str());
@@ -21,8 +24,8 @@ void InspectorPanel::Render(){
 		ImGui::End();
 		return;
 	}
-
 	SceneObject* selectedObject = pEditorContext_->GetSelectedObject();
+	pSceneObjectEditor_->SetSceneObject(selectedObject);
 	BaseEditor* selectedEditor = pEditorContext_->GetSelectedEditor();
 
 	if (selectedEditor){
@@ -31,7 +34,7 @@ void InspectorPanel::Render(){
 		ImGui::Separator();
 	} else if (selectedObject){
 		ImGui::Text("Selected Object: %s", selectedObject->GetName().c_str());
-		selectedObject->ShowGui();
+		pSceneObjectEditor_->ShowImGuiInterface();
 		ImGui::Separator();
 	} else{
 		ImGui::Text("Nothing is selected.");

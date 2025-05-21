@@ -13,9 +13,9 @@ public:
 	// public functions
 	//===================================================================*/
 	EffectEditor();
-	~EffectEditor() = default;
+	~EffectEditor()override = default;
 
-	void ShowImGuiInterface();
+	void ShowImGuiInterface()override;
 	void SaveToJson(const std::string& filePath);
 	void LoadFromJson(const std::string& filePath);
 	void LoadFromJsonAll(const std::string& directoryPath);

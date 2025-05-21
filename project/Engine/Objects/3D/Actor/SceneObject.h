@@ -29,11 +29,12 @@ public:
 	void EnableGuiList(); //GUIのリストに追加するかどうか
 
 	// accessor =======================================================*//
-	virtual void SetName(const std::string& name, ObjectType type);
-
-	const std::string& GetName()const{ return name_; }
+	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
+	WorldTransform& GetWorldTransform() { return worldTransform_; }
 	ObjectType GetObjectType()const{ return objectType_; }
+	const std::string& GetName()const{ return name_; }
 
+	virtual void SetName(const std::string& name, ObjectType type);
 	void SetConfigPath(const std::string& path) {configPath_ = path;}
 
 protected:

@@ -6,6 +6,7 @@
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Application/UI/EngineUI/Context/EditorContext.h>
+#include <Engine/Editor/SceneObjectEditor.h>
 
 // c++
 #include <string>
@@ -31,6 +32,7 @@ private:
     //===================================================================*/
     //                   private variables
     //===================================================================*/
+	std::unique_ptr<SceneObjectEditor> pSceneObjectEditor_; // シーンオブジェクトエディタ
 	EditorPanel* pEditorPanel_; // エディタパネル
 	EditorContext* pEditorContext_; // context ポインタ
 };
