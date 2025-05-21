@@ -139,9 +139,6 @@ void BaseModel::ApplyConfig(const BaseModelConfig& config){
 }
 
 void BaseModel::ShowImGui(BaseModelConfig& config){
-	ImGui::Separator();
-	ImGui::Text("Model: %s", fileName_.c_str());
-
 	uvTransform.ShowImGui(config.uvTransConfig,"uvTransform");
 
 	if (ImGui::CollapsingHeader("Material")){

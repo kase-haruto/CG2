@@ -6,7 +6,7 @@
         "targetType": 0
     },
     "modelConfig": {
-        "blendMode": 5,
+        "blendMode": 0,
         "materialConfig": {
             "color": {
                 "w": 1.0,
@@ -16,15 +16,15 @@
             },
             "currentLightingMode_": 0,
             "enableLighting": 0,
-            "enviromentCoefficient": 0.5,
-            "isReflect": false,
+            "enviromentCoefficient": 0.28200000524520874,
+            "isReflect": true,
             "shininess": 20.0
         },
         "uvTransConfig": {
-            "rotation": 0.0,
+            "rotation": 0.7599999904632568,
             "scale": {
-                "x": 1.0,
-                "y": 1.0
+                "x": 20.0,
+                "y": 20.0
             }
         }
     }

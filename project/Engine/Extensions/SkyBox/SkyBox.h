@@ -33,9 +33,6 @@ public:
 	void RegisterToRenderer(MeshRenderer* renderer) override;
 
 	//* config ================================================================*/
-	void ApplyConfig()override {};
-	void SaveConfig([[maybe_unused]] const std::string& path)const override {};
-	void LoadConfig([[maybe_unused]] const std::string& path)override {};
 
 private:
 	std::array<VertexData, 24> vertices_;

@@ -34,9 +34,8 @@ public:
 	//===================================================================*/
 	//                    public methods
 	//===================================================================*/
-	BaseGameObject(const std::string& modelName);
 	BaseGameObject(const std::string& modelName,
-				   std::optional<std::string> objectName);
+				   std::optional<std::string> objectName = std::nullopt);
 	BaseGameObject() = default;
 	virtual ~BaseGameObject()override;
 
