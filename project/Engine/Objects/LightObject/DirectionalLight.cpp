@@ -15,6 +15,9 @@
 
 DirectionalLight::DirectionalLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
+
+
+
 	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	constantBuffer_.Initialize(device);
 	configPath_ = "Resources/Configs/Engine/Objects/Light/DirectionalLightConfig/DirectionalLightConfig.json";
@@ -69,10 +72,21 @@ void DirectionalLight::ShowGui(){
  //===================================================================*/
  //                    config
  //===================================================================*/
-void DirectionalLight::SaveConfig(const std::string& path) const {
-	JsonUtils::Save(path, config_);
+
+// ファイル単位のロード/セーブを自己完結
+void DirectionalLight::LoadConfig(const std::string& path) {
+	SceneObject::LoadConfig(path);
+	ApplyConfig();
 }
 
-void DirectionalLight::LoadConfig(const std::string& path) {
-	JsonUtils::LoadOrCreate(path, config_);
+void DirectionalLight::SaveConfig(const std::string& path) const {
+	SceneObject::SaveConfig(path);
+}
+
+void DirectionalLight::ApplyConfig() {
+	DirectionalLightData data;
+	data.color = config_.color;
+	data.direction = config_.direction;
+	data.intensity = config_.intensity;
+	constantBuffer_.TransferData(data);
 }

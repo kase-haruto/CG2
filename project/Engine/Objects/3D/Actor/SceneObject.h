@@ -35,6 +35,7 @@ public:
 	//==================================================================*//
 	//            SceneObject I/O helpers
 	//==================================================================*//
+	virtual void ApplyConfig() = 0;
 	virtual void LoadConfig(const std::string& path);
 	virtual void SaveConfig(const std::string& path) const;
 

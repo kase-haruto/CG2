@@ -53,7 +53,9 @@ public:
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other){};
 
 	//--------- config ------------------------------------------------
-
+	virtual void ApplyConfig()override;
+	virtual void SaveConfig([[maybe_unused]] const std::string& path)const override;
+	virtual void LoadConfig([[maybe_unused]] const std::string& path)override;
 
 	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);

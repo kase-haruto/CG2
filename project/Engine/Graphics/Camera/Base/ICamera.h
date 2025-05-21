@@ -27,5 +27,10 @@ public:
 	virtual void ShowGui()override{}
 	virtual void TransfarToGPU(){}  // GPUへ転送
 	virtual void StartShake([[maybe_unused]] float duration, [[maybe_unused]] float intensity){};
+
+	// config ===========================================================
+	virtual void ApplyConfig()override {};
+	virtual void SaveConfig([[maybe_unused]] const std::string& path)const override {};
+	virtual void LoadConfig([[maybe_unused]] const std::string& path)override {};
 };
 
