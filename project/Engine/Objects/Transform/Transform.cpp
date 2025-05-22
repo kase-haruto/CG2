@@ -8,6 +8,7 @@
 
 //data
 #include <Data/Engine/Macros/Objects/Transform/WorldTransformConfigMacros.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -20,9 +21,9 @@ void EulerTransform::ShowImGui(const std::string& label){
 	std::string scaleLabel = label + "_scale";
 	std::string rotationLabel = label + "_rotation";
 	std::string translationLabel = label + "_translate";
-	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
-	ImGui::DragFloat3(rotationLabel.c_str(), &rotate.x, 0.01f);
-	ImGui::DragFloat3(translationLabel.c_str(), &translate.x, 0.01f);
+	GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
+	GuiCmd::DragFloat3(rotationLabel.c_str(), rotate);
+	GuiCmd::DragFloat3(translationLabel.c_str(), translate);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +47,9 @@ void BaseTransform::ShowImGui(const std::string& label){
 	std::string scaleLabel = label + "_scale";
 	std::string rotationLabel = label + "_rotation";
 	std::string translationLabel = label + "_translate";
-	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
-	ImGui::DragFloat3(rotationLabel.c_str(), &eulerRotation.x, 0.01f);
-	ImGui::DragFloat3(translationLabel.c_str(), &translation.x, 0.01f);
+	GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
+	GuiCmd::DragFloat3(rotationLabel.c_str(), eulerRotation);
+	GuiCmd::DragFloat3(translationLabel.c_str(), translation);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

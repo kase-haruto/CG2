@@ -431,6 +431,8 @@
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -733,6 +735,8 @@
     <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

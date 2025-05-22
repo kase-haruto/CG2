@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.cpp" />
     <ClCompile Include="Engine\System\Command\Manager\CommandManager.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\ConfigPathResolver\ConfigPathResolver.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Context\EditorContext.cpp" />
@@ -257,8 +258,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\RotateCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.h" />
     <ClInclude Include="Engine\System\Command\Manager\CommandManager.h" />
     <ClInclude Include="Engine\Objects\ConfigurableObject\ConfigurableObject.h" />
     <ClInclude Include="Engine\Foundation\Utility\FileSystem\ConfigPathResolver\ConfigPathResolver.h" />
@@ -440,6 +443,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
