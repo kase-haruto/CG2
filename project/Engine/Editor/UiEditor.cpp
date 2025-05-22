@@ -5,6 +5,7 @@
 /* engine */
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Renderer/Sprite/Sprite.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 // external
 #ifdef _DEBUG
@@ -62,8 +63,8 @@ void UIEditor::ShowImGuiInterface(){
 	static Vector2 newPosition = {400.0f, 0.0f}; // デフォルトの位置
 	static Vector2 newSize = {64.0f, 64.0f};     // デフォルトのサイズ
 
-	ImGui::SliderFloat2("Position", &newPosition.x, 0.0f, 1280.0f); // 位置の入力
-	ImGui::SliderFloat2("Size", &newSize.x, 0.0f, 512.0f);          // サイズの入力
+	GuiCmd::SliderFloat2("Position", newPosition, 0.0f, 1280.0f); // 位置の入力
+	GuiCmd::SliderFloat2("Size", newSize, 0.0f, 512.0f);          // サイズの入力
 
 	// スプライトの作成ボタン
 	if (ImGui::Button("Create")){
@@ -90,15 +91,15 @@ void UIEditor::ShowImGuiInterface(){
 				std::string uniqueId = std::to_string(reinterpret_cast< uintptr_t >(sprite.get()));
 
 				// 位置の調整
-				ImGui::SliderFloat2(("Position##" + uniqueId).c_str(), &position.x, 0.0f, 1280.0f);
+				GuiCmd::SliderFloat2(("Position##" + uniqueId).c_str(), position, 0.0f, 1280.0f);
 				sprite->SetPosition(position);
 
 				// 回転の調整
-				ImGui::SliderAngle(("Rotation##" + uniqueId).c_str(), &rotate, -180.0f, 180.0f);
+				GuiCmd::SliderFloat(("Rotation##" + uniqueId).c_str(), rotate, -180.0f, 180.0f);
 				sprite->SetRotation(rotate);
 
 				// サイズの調整
-				ImGui::SliderFloat2(("Size##" + uniqueId).c_str(), &size.x, 1.0f, 512.0f);
+				GuiCmd::SliderFloat2(("Size##" + uniqueId).c_str(), size, 1.0f, 512.0f);
 				sprite->SetSize(size);
 			}
 		}

@@ -6,6 +6,7 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
 #include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 #ifdef _DEBUG
 #include<externals/imgui/imgui.h>
@@ -44,11 +45,11 @@ void PointLight::ShowGui(){
 	ImGui::Separator();
 
 	ImGui::Separator();
-	ImGui::DragFloat3("position", &config_.position.x, 0.01f);
-	ImGui::ColorEdit4("color", &config_.color.x);
+	GuiCmd::DragFloat3("position", config_.position );
+	GuiCmd::ColorEdit4("color",config_.color);
 	ImGui::SliderFloat("Intensity", &config_.intensity, 0.0f, 1.0f);
-	ImGui::DragFloat("radius", &config_.radius, 0.01f);
-	ImGui::DragFloat("decay", &config_.decay, 0.01f);
+	GuiCmd::DragFloat("radius", config_.radius);
+	GuiCmd::DragFloat("decay", config_.decay);
 #endif // _DEBUG
 
 

@@ -139,17 +139,17 @@ void WorldTransform::ExtractConfig() {
 /* ===================================================================== */
 void Transform2D::ShowImGui(const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat2("scale", &scale.x, 0.01f);
-		ImGui::DragFloat("rotation", &rotate, 0.01f);
-		ImGui::DragFloat2("translate", &translate.x, 0.01f);
+		GuiCmd::DragFloat2("scale", scale, 0.01f);
+		GuiCmd::DragFloat("rotation", rotate, 0.01f);
+		GuiCmd::DragFloat2("translate", translate, 0.01f);
 	}
 }
 
 void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat2("scale", &config.scale.x, 0.01f);
-		ImGui::DragFloat("rotation", &config.rotation, 0.01f);
-		ImGui::DragFloat2("translate", &config.translation.x, 0.01f);
+		GuiCmd::DragFloat2("scale", config.scale, 0.01f);
+		GuiCmd::DragFloat("rotation", config.rotation, 0.01f);
+		GuiCmd::DragFloat2("translate", config.translation, 0.01f);
 	}
 }
 

@@ -2,6 +2,7 @@
 
 //data
 #include <Data/Engine/Macros/Objects/Material/MaterialConfigMacros.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 #include <externals/imgui/imgui.h>
 
@@ -17,7 +18,7 @@ void Material::ShowImGui(){
 	static int currentLightingMode_ = 0;
 	// lighting
 	ImGui::SeparatorText("Lighting");
-	ImGui::DragFloat("shininess", &shininess, 0.01f);
+	GuiCmd::DragFloat("shininess", shininess, 0.01f);
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){
 		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
@@ -35,13 +36,13 @@ void Material::ShowImGui(){
 
 	// color
 	ImGui::SeparatorText("Color");
-	ImGui::ColorEdit4("color", &color.x);
+	GuiCmd::ColorEdit4("color", color);
 
 	ImGui::SeparatorText("EnviromentCoefficient");
 	//環境マップ
-	ImGui::Checkbox("isReflect", &isReflect);	
+	GuiCmd::CheckBox("isReflect", isReflect);
 	if (isReflect){
-		ImGui::SliderFloat("enviromentCoefficient", &enviromentCoefficient, 0.0f, 1.0f);
+		GuiCmd::SliderFloat("enviromentCoefficient", enviromentCoefficient, 0.0f, 1.0f);
 	}
 }
 
@@ -49,7 +50,7 @@ void Material::ShowImGui(MaterialConfig& config){
 	static int currentLightingMode_ = 0;
 	// lighting
 	ImGui::SeparatorText("Lighting");
-	ImGui::DragFloat("shininess", &config.shininess, 0.01f);
+	GuiCmd::DragFloat("shininess", config.shininess, 0.01f);
 	const char* lightingModes[] = {"Half-Lambert", "Lambert", "SpecularReflection", "No Lighting"};
 	if (ImGui::BeginCombo("Lighting Mode", lightingModes[currentLightingMode_])){
 		for (int n = 0; n < IM_ARRAYSIZE(lightingModes); n++){
@@ -67,13 +68,13 @@ void Material::ShowImGui(MaterialConfig& config){
 
 	// color
 	ImGui::SeparatorText("Color");
-	ImGui::ColorEdit4("color", &config.color.x);
+	GuiCmd::ColorEdit4("color", config.color);
 
 	ImGui::SeparatorText("EnviromentCoefficient");
 	//環境マップ
-	ImGui::Checkbox("isReflect", &config.isReflect);
+	GuiCmd::CheckBox("isReflect", config.isReflect);
 	if (config.isReflect){
-		ImGui::SliderFloat("enviromentCoefficient", &config.enviromentCoefficient, 0.0f, 1.0f);
+		GuiCmd::SliderFloat("enviromentCoefficient", config.enviromentCoefficient, 0.0f, 1.0f);
 	}
 
 }
