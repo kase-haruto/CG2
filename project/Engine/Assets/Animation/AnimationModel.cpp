@@ -13,6 +13,7 @@
 
 #ifdef _DEBUG
 #include <externals/imgui/imgui.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 #endif
 
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -208,7 +209,7 @@ void AnimationModel::Draw(const WorldTransform& transform){
 void AnimationModel::ShowImGuiInterface(){
 #ifdef _DEBUG
 
-	ImGui::Checkbox("Draw Skeleton", &isDrawSkeleton_);
+	GuiCmd::CheckBox("Draw Skeleton", isDrawSkeleton_);
 	BaseModel::ShowImGuiInterface();
 
 #endif

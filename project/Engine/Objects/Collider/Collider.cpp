@@ -3,8 +3,8 @@
 #include <Engine/Collision/CollisionManager.h>
 #include <Data/Engine/Configs/Scene/Objects/Collider/ColliderConfig.h>
 
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 #include <externals/imgui/imgui.h>
-
 
 Collider::Collider(bool isEnuble){
 	isCollisionEnabled_ = isEnuble;
@@ -15,14 +15,14 @@ Collider::Collider(bool isEnuble){
 
 void Collider::ShowGui(){
 	bool enabled = isCollisionEnabled_;
-	if (ImGui::Checkbox("Enable Collision", &enabled)){
+	if (GuiCmd::CheckBox("Enable Collision", enabled)){
 		SetCollisionEnabled(enabled);
 	}
 
 	if (!isCollisionEnabled_) return;
 
-	ImGui::Checkbox("Draw Collider", &isDraw_);
-	ImGui::ColorEdit4("Collider Color", &color_.x);
+	GuiCmd::CheckBox("Draw Collider", isDraw_);
+	GuiCmd::ColorEdit4("Collider Color", color_);
 }
 
 void Collider::ShowGui(ColliderConfig& config){
@@ -30,14 +30,14 @@ void Collider::ShowGui(ColliderConfig& config){
 	if (ImGui::CollapsingHeader("Collider")){
 
 		bool enabled = config.isCollisionEnabled;
-		if (ImGui::Checkbox("Enable Collision", &enabled)){
+		if (GuiCmd::CheckBox("Enable Collision", enabled)){
 			config.isCollisionEnabled = enabled;
 		}
 
 		if (!config.isCollisionEnabled) return;
 
-		ImGui::Checkbox("Draw Collider", &config.isDraw);
-		ImGui::ColorEdit4("Collider Color", &color_.x);
+		GuiCmd::CheckBox("Draw Collider", config.isDraw);
+		GuiCmd::ColorEdit4("Collider Color", color_);
 	}
 }
 

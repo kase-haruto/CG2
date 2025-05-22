@@ -6,6 +6,7 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
 #include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 /* externals */
 #ifdef _DEBUG
@@ -61,9 +62,9 @@ void DirectionalLight::ShowGui(){
 
 	ImGui::Separator();
 
-	ImGui::SliderFloat3("direction", &config_.direction.x, -1.0f, 1.0f);
-	ImGui::ColorEdit4("color", &config_.color.x);
-	ImGui::SliderFloat("Intensity", &config_.intensity, 0.0f, 1.0f);
+	GuiCmd::SliderFloat3("direction", config_.direction, -1.0f, 1.0f);
+	GuiCmd::ColorEdit4("color", config_.color);
+	GuiCmd::SliderFloat("Intensity", config_.intensity, 0.0f, 1.0f);
 #endif // _DEBUG
 }
 

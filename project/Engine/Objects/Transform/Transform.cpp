@@ -8,6 +8,7 @@
 
 //data
 #include <Data/Engine/Macros/Objects/Transform/WorldTransformConfigMacros.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -20,9 +21,9 @@ void EulerTransform::ShowImGui(const std::string& label){
 	std::string scaleLabel = label + "_scale";
 	std::string rotationLabel = label + "_rotation";
 	std::string translationLabel = label + "_translate";
-	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
-	ImGui::DragFloat3(rotationLabel.c_str(), &rotate.x, 0.01f);
-	ImGui::DragFloat3(translationLabel.c_str(), &translate.x, 0.01f);
+	GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
+	GuiCmd::DragFloat3(rotationLabel.c_str(), rotate);
+	GuiCmd::DragFloat3(translationLabel.c_str(), translate);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +47,9 @@ void BaseTransform::ShowImGui(const std::string& label){
 	std::string scaleLabel = label + "_scale";
 	std::string rotationLabel = label + "_rotation";
 	std::string translationLabel = label + "_translate";
-	ImGui::DragFloat3(scaleLabel.c_str(), &scale.x, 0.01f);
-	ImGui::DragFloat3(rotationLabel.c_str(), &eulerRotation.x, 0.01f);
-	ImGui::DragFloat3(translationLabel.c_str(), &translation.x, 0.01f);
+	GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
+	GuiCmd::DragFloat3(rotationLabel.c_str(), eulerRotation);
+	GuiCmd::DragFloat3(translationLabel.c_str(), translation);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -138,17 +139,17 @@ void WorldTransform::ExtractConfig() {
 /* ===================================================================== */
 void Transform2D::ShowImGui(const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat2("scale", &scale.x, 0.01f);
-		ImGui::DragFloat("rotation", &rotate, 0.01f);
-		ImGui::DragFloat2("translate", &translate.x, 0.01f);
+		GuiCmd::DragFloat2("scale", scale, 0.01f);
+		GuiCmd::DragFloat("rotation", rotate, 0.01f);
+		GuiCmd::DragFloat2("translate", translate, 0.01f);
 	}
 }
 
 void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){
 	if (ImGui::CollapsingHeader(lavel.c_str())){
-		ImGui::DragFloat2("scale", &config.scale.x, 0.01f);
-		ImGui::DragFloat("rotation", &config.rotation, 0.01f);
-		ImGui::DragFloat2("translate", &config.translation.x, 0.01f);
+		GuiCmd::DragFloat2("scale", config.scale, 0.01f);
+		GuiCmd::DragFloat("rotation", config.rotation, 0.01f);
+		GuiCmd::DragFloat2("translate", config.translation, 0.01f);
 	}
 }
 

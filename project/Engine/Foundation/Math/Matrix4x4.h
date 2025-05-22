@@ -18,7 +18,11 @@ struct Matrix4x4 final{
 	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 	static Matrix4x4 MakeLookRotationMatrix(const Vector3& forward, const Vector3& up);
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
-
+	void CopyToArray(float out[16]) const {
+		for (int row = 0; row < 4; ++row)
+			for (int col = 0; col < 4; ++col)
+				out[col * 4 + row] = m[row][col];  // column-major に変換
+	}
 	//--------- operator ---------------------------------------------------
 	//operator関数
 	Matrix4x4 operator*(const Matrix4x4& other) const{

@@ -16,6 +16,8 @@ struct Quaternion{
 	// 単位クォータニオンで初期化する
 	void Initialize();
 
+	bool NotIdentity() const;
+
 	// 2つのクォータニオンのドット積（内積）を求める
 	static float Dot(const Quaternion& q1, const Quaternion& q2);
 
@@ -34,6 +36,7 @@ struct Quaternion{
 
 	Quaternion operator*(float scalar) const;
 	friend Quaternion operator*(float scalar, const Quaternion& q);
+
 
 	// ========================== 静的関数 ==========================
 
@@ -60,6 +63,8 @@ struct Quaternion{
 
 	// クォータニオンから回転行列を生成する
 	static Matrix4x4 ToMatrix(const Quaternion& q);
+
+	static Quaternion FromMatrix(const Matrix4x4& m);
 
 	// クォータニオンでベクトルを回転させる
 	static Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);

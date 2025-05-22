@@ -17,9 +17,6 @@
 
 //external
 #include "externals/imgui/imgui.h"
-#define IMGUIZMO_USE_LH
-#define IMGUIZMO_USE_D3D9_CLIP_SPACE
-#include "externals/imgui/ImGuizmo.h"
 
 const std::string BaseModel::directoryPath_ = "Resource/models";
 

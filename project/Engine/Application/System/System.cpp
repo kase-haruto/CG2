@@ -14,6 +14,7 @@
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/Graphics/RenderTarget/SwapChainRT/SwapChainRenderTarget.h>
 #include <Engine/PostProcess/FullscreenDrawer.h>
+#include <Engine/System/Command/Manager/CommandManager.h>
 
 // manager
 #include <Engine/Assets/Model/ModelManager.h>
@@ -127,7 +128,7 @@ void System::BeginFrame() {
 	dxCore_->PreDrawOffscreen();
 
 	EditorUpdate();
-	
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -176,6 +177,16 @@ void System::EndFrame() {
 //  Editorの更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void System::EditorUpdate() {
+	Input* input = Input::GetInstance();
+	CommandManager* cmdManager = CommandManager::GetInstance();
+	//コマンド
+	if (input->PushKey(DIK_LCONTROL) && input->TriggerKey(DIK_Z)) {
+		if (input->PushKey(DIK_LSHIFT))
+			cmdManager->Redo();
+		else
+			cmdManager->Undo();
+	}
+
 	modelBuilder_->Update();
 	uiEditor_->Update();
 	ParticleEffectCollection::GetInstance()->Update();
