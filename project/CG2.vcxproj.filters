@@ -424,6 +424,13 @@
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileSystemHelper.cpp" />
     <ClCompile Include="Engine\Editor\SceneObjectEditor.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\ConfigPathResolver\ConfigPathResolver.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\TranslateCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\Manager\CommandManager.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\TransformSnapshot.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\RotateCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.cpp" />
+    <ClCompile Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -719,6 +726,13 @@
     <ClInclude Include="Engine\Editor\SceneObjectEditor.h" />
     <ClInclude Include="Engine\Foundation\Utility\FileSystem\ConfigPathResolver\ConfigPathResolver.h" />
     <ClInclude Include="Engine\Objects\ConfigurableObject\ConfigurableObject.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\TranslateCommand.h" />
+    <ClInclude Include="Engine\System\Command\Manager\CommandManager.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\TransformSnapshot.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\RotateCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.h" />
+    <ClInclude Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

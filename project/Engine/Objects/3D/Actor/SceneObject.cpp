@@ -5,7 +5,6 @@
 #include <Engine/Foundation/Json/JsonUtils.h>
 
 #include <externals/imgui/imgui.h>
-#include <externals/imgui/ImGuizmo.h>
 
 static const char* ObjectTypeToString(ObjectType type) {
 	switch (type) {

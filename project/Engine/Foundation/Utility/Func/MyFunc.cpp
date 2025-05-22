@@ -516,6 +516,30 @@ void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate
 	}
 }
 
+void DecomposeMatrixToSRT(const Matrix4x4& m, Vector3& outScale, Matrix4x4& outRot, Vector3& outTrans) {
+	outTrans = Vector3(m.m[3][0], m.m[3][1], m.m[3][2]);
+
+	// スケール抽出（列ベクトルの長さ）
+	Vector3 x = Vector3(m.m[0][0], m.m[0][1], m.m[0][2]);
+	Vector3 y = Vector3(m.m[1][0], m.m[1][1], m.m[1][2]);
+	Vector3 z = Vector3(m.m[2][0], m.m[2][1], m.m[2][2]);
+
+	outScale = Vector3(x.Length(), y.Length(), z.Length());
+
+	// 正規直交化（回転行列）
+	Matrix4x4 rot;
+	for (int i = 0; i < 3; ++i) {
+		rot.m[0][i] = m.m[0][i] / outScale.x;
+		rot.m[1][i] = m.m[1][i] / outScale.y;
+		rot.m[2][i] = m.m[2][i] / outScale.z;
+	}
+	rot.m[3][0] = rot.m[3][1] = rot.m[3][2] = 0.0f;
+	rot.m[0][3] = rot.m[1][3] = rot.m[2][3] = 0.0f;
+	rot.m[3][3] = 1.0f;
+
+	outRot = rot;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 //							Animation
 /////////////////////////////////////////////////////////////////////////////////////////////

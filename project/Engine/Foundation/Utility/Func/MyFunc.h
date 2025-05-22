@@ -76,6 +76,8 @@ bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos);
 // 4x4 行列から Scale, Rotate (Euler角), Translation を抽出する関数
 void DecomposeMatrix(const Matrix4x4& mat, Vector3& outScale, Vector3& outRotate, Vector3& outTrans);
 
+void DecomposeMatrixToSRT(const Matrix4x4& m, Vector3& outScale, Matrix4x4& outRot, Vector3& outTrans);
+
 // skeletonの作成
 Skeleton CreateSkeleton(const Node& rootNode);
 
