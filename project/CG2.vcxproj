@@ -226,6 +226,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Foundation\Json\JsonFileIO.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.cpp" />
+    <ClCompile Include="Engine\graphics\Pipeline\PipelineDesc\GraphicsPipelineDesc.cpp" />
     <ClCompile Include="main.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
@@ -260,6 +261,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.cpp" />
+    <ClCompile Include="Engine\graphics\Pipeline\RootSig\RootSignatureBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.h" />
@@ -446,6 +448,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\RootSig\RootSignatureBuilder.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\PipelineDesc\GraphicsPipelineDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
