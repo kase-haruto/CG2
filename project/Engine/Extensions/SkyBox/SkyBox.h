@@ -31,7 +31,7 @@ public:
 	void Draw(const WorldTransform& transform)override;
 	const WorldTransform& GetWorldTransform()const;
 	void RegisterToRenderer(MeshRenderer* renderer) override;
-
+	BlendMode GetBlendMode() const override { return BlendMode::NONE; }
 	//* config ================================================================*/
 
 private:

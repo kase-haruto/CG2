@@ -1,60 +1,79 @@
 #pragma once
-/* ========================================================================
-/* 	include space
+/* ======================================================================== */
+/* 	include space                                                           */
 /* ===================================================================== */
 
 #include <d3d12.h>
 #include <vector>
 #include <wrl.h>
 
-
-class RootSignatureBuilder{
+/* ======================================================================== */
+/* 	class RootSignatureBuilder                                              */
+/* ===================================================================== */
+class RootSignatureBuilder {
 public:
 	//===================================================================*/
-	//		public functions
+	//		parmSet
 	//===================================================================*/
-	// parmSet ----------------------------------------------------------//
-	RootSignatureBuilder& CBV(D3D12_SHADER_VISIBILITY vis, UINT reg);
-	RootSignatureBuilder& SRV(D3D12_SHADER_VISIBILITY vis, UINT reg);
-	RootSignatureBuilder& UAV(D3D12_SHADER_VISIBILITY vis, UINT reg);
+	RootSignatureBuilder& CBV(UINT reg, D3D12_SHADER_VISIBILITY vis);
+	RootSignatureBuilder& SRV(UINT reg, D3D12_SHADER_VISIBILITY vis);
+	RootSignatureBuilder& UAV(UINT reg, D3D12_SHADER_VISIBILITY vis);
 
-	// samplerSet -------------------------------------------------------//
+	//===================================================================*/
+	//		samplerSet
+	//===================================================================*/
 	RootSignatureBuilder& StaticSampler(const D3D12_STATIC_SAMPLER_DESC& s);
-	RootSignatureBuilder& SamplerWrapLinear(UINT reg,D3D12_SHADER_VISIBILITY vis = D3D12_SHADER_VISIBILITY_PIXEL);
+	RootSignatureBuilder& SampleClampLinear(UINT reg, D3D12_SHADER_VISIBILITY vis = D3D12_SHADER_VISIBILITY_PIXEL);
+	RootSignatureBuilder& SamplerWrapLinear(UINT reg, D3D12_SHADER_VISIBILITY vis = D3D12_SHADER_VISIBILITY_PIXEL);
 	RootSignatureBuilder& SamplerWrapAniso(UINT reg, UINT maxAniso = 16, D3D12_SHADER_VISIBILITY vis = D3D12_SHADER_VISIBILITY_PIXEL);
 
-	// flags -------------------------------------------------------------//
+	//===================================================================*/
+	//		flags
+	//===================================================================*/
 	RootSignatureBuilder& AllowIA();
 	RootSignatureBuilder& DenyVS();
 	RootSignatureBuilder& DenyPS();
 
-	// build -------------------------------------------------------------//
+	//===================================================================*/
+	//		DescriptorTable
+	//===================================================================*/
+	RootSignatureBuilder& SRVTable(UINT shaderRegister, UINT count,
+								   D3D12_DESCRIPTOR_RANGE_TYPE type,
+								   D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL);
+
+	//===================================================================*/
+	//		build
+	//===================================================================*/
 	D3D12_ROOT_SIGNATURE_DESC Desc() const;
 
-	// hash --------------------------------------------------------------//
+	//===================================================================*/
+	//		hash
+	//===================================================================*/
 	size_t Hash() const;
+
 private:
 	//===================================================================*/
-	//		private functions
+	//		inner util
 	//===================================================================*/
 	static D3D12_ROOT_PARAMETER RootParm(D3D12_ROOT_PARAMETER_TYPE type, D3D12_SHADER_VISIBILITY vis, UINT reg);
-	static D3D12_DESCRIPTOR_RANGE RootRange(D3D12_DESCRIPTOR_RANGE_TYPE type, UINT num, UINT baseReg);
-	static D3D12_STATIC_SAMPLER_DESC makeSampler(UINT reg, D3D12_SHADER_VISIBILITY vis,
-												 D3D12_FILTER filter,
-												 D3D12_TEXTURE_ADDRESS_MODE addrMode);
-
+	static D3D12_STATIC_SAMPLER_DESC MakeSampler(UINT reg, D3D12_SHADER_VISIBILITY vis, D3D12_FILTER filter, D3D12_TEXTURE_ADDRESS_MODE addrMode);
 	void AddParm(D3D12_ROOT_PARAMETER param);
-	void AddTable(const D3D12_DESCRIPTOR_RANGE& r, D3D12_SHADER_VISIBILITY vis);
-
-
 
 private:
 	//===================================================================*/
-	//		private variables
+	//		desc table
 	//===================================================================*/
-	std::vector<D3D12_ROOT_PARAMETER> params_;					//< ルートパラメータ
-	std::vector<D3D12_STATIC_SAMPLER_DESC> samplers_;			//< スタティックサンプラ
-	std::vector<D3D12_DESCRIPTOR_RANGE> descriptorRanges_;		//< レンジ
-	D3D12_ROOT_SIGNATURE_FLAGS flags_ {};						//< フラグ
+	struct DescriptorTableEntry {
+		std::vector<D3D12_DESCRIPTOR_RANGE> ranges;
+		D3D12_ROOT_PARAMETER param;
+	};
+	std::vector<DescriptorTableEntry> descriptorTables_; //< 各テーブルの生存管理
+
+	//===================================================================*/
+	//		root signature
+	//===================================================================*/
+	std::vector<D3D12_ROOT_PARAMETER> params_;
+	std::vector<D3D12_STATIC_SAMPLER_DESC> samplers_;
+	D3D12_ROOT_SIGNATURE_FLAGS flags_{};
 };
 

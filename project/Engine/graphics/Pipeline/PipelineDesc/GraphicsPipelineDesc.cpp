@@ -4,6 +4,15 @@
 /* ===================================================================== */
 
 /////////////////////////////////////////////////////////////////////////////////////////
+//		hashの合成
+/////////////////////////////////////////////////////////////////////////////////////////
+namespace {
+	void HashCombine(std::size_t& seed, std::size_t value) noexcept {
+		seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 //		shaderPath
 /////////////////////////////////////////////////////////////////////////////////////////
 GraphicsPipelineDesc& GraphicsPipelineDesc::VS(const std::wstring& path){ vs_ = path; return *this; }
@@ -69,6 +78,7 @@ bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc& o) const noexc
 		root_.Hash() == o.root_.Hash();
 }
 
+
 size_t GraphicsPipelineDesc::Hash() const noexcept{
 	size_t h = 0;
 	HashCombine(h, std::hash<std::wstring>{}(vs_));
@@ -86,12 +96,4 @@ size_t GraphicsPipelineDesc::Hash() const noexcept{
 	return h;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		hashの合成
-/////////////////////////////////////////////////////////////////////////////////////////
-namespace{
-	void HashCombine(std::size_t& seed, std::size_t value) noexcept{
-		seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	}
-}
 

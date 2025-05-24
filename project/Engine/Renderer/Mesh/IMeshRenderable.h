@@ -4,9 +4,11 @@
 /* ===================================================================== */
 #include <Engine/Foundation/Math/Matrix4x4.h>
 #include <Engine/objects/Transform/Transform.h>
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 
 #include <d3d12.h>
 #include <wrl.h>
+
 
 /* ========================================================================
 /* メッシュ描画用インターフェース
@@ -17,7 +19,7 @@ public:
 	//			public methods
 	//===================================================================*/
 	virtual ~IMeshRenderable() = default;
-
+	virtual BlendMode GetBlendMode() const = 0;
 	virtual void Draw(const WorldTransform& transform) = 0;
 };
 

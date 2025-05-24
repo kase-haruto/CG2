@@ -11,11 +11,15 @@
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/objects/Transform/Transform.h>
 #include <Engine/Lighting/LightLibrary.h>
+#include <Engine/Graphics/Pipeline/Presets/PipelinePresets.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
 
 MeshRenderer::MeshRenderer(){
+	pipelineService_ = std::make_unique<PipelineService>();
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -66,19 +70,26 @@ void MeshRenderer::DrawAll() {
 	//===================================================================*/
 	//                    静的モデル描画
 	//===================================================================*/
-	pLightLibrary_->SetCommand(commandList, PipelineType::Object3D);
 	CameraManager::SetCommand(commandList, PipelineType::Object3D);
-	for (const auto& entry : staticModels){
-		entry.renderable->Draw(*entry.transform);
+	pLightLibrary_->SetCommand(commandList, PipelineType::Object3D);
+	// 静的モデルの描画
+	for (auto& staticModel:staticModels) {
+		staticModel.renderable->Draw(*staticModel.transform);
 	}
+
+	//DrawGroup(staticModels, PipelineType::Object3D);
+
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	pLightLibrary_->SetCommand(commandList, PipelineType::SkinningObject3D);
 	CameraManager::SetCommand(commandList, PipelineType::SkinningObject3D);
-	for (const auto& entry : skinnedModels){
-		entry.renderable->Draw(*entry.transform);
+	pLightLibrary_->SetCommand(commandList, PipelineType::SkinningObject3D);
+	// 静的モデルの描画
+	for (auto& animationModel : skinnedModels) {
+		animationModel.renderable->Draw(*animationModel.transform);
 	}
+
+	//DrawGroup(skinnedModels, PipelineType::SkinningObject3D);
 
 	//===================================================================*/
 	//                    プリミティブ描画
@@ -86,6 +97,29 @@ void MeshRenderer::DrawAll() {
 	GraphicsGroup::GetInstance()->SetCommand(commandList, PipelineType::Line, BlendMode::NORMAL);
 	CameraManager::SetCommand(commandList, PipelineType::Line);
 	PrimitiveDrawer::GetInstance()->Render();
+}
+
+void MeshRenderer::DrawGroup(const std::vector<DrawEntry>& entries, PipelineType type) {
+	if (entries.empty()) return;
+
+	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
+
+	for (const auto& entry : entries) {
+		// 各オブジェクトの BlendMode を取得して PSO を構築
+		BlendMode mode = entry.renderable->GetBlendMode();
+		GraphicsPipelineDesc desc = PipelinePresets::MakeObject3D(mode);
+
+		auto* pso = pipelineService_->GetPipelineState(desc);
+		auto* root = pipelineService_->GetRootSig(desc);
+
+		cmdList->SetPipelineState(pso);
+		cmdList->SetGraphicsRootSignature(root);
+
+		CameraManager::SetCommand(cmdList, type);
+		pLightLibrary_->SetCommand(cmdList, type);
+
+		entry.renderable->Draw(*entry.transform);
+	}
 }
 
 void MeshRenderer::Clear() {

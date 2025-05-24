@@ -20,6 +20,10 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_ = std::make_unique<System>();
 	system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
+	// graphicsシステムの初期化
+	graphicsSystem_ = std::make_unique<GraphicsSystem>();
+	graphicsSystem_->Initialize();
+
 	// engineUIの初期化
 	engineUICore_ = std::make_unique<EngineUICore>();
 	engineUICore_->Initialize();
