@@ -6,6 +6,7 @@
 #include <Engine/Renderer/Mesh/IMeshRenderable.h>
 #include <Engine/Lighting/LightLibrary.h>
 #include <Engine/Graphics/Pipeline/Service/PipelineService.h>
+#include <Engine/System/Observer/SceneObject/IRenderableDeathListener.h>
 
 // c++
 #include <vector>
@@ -17,7 +18,8 @@ class LightLibrary;
 /* ========================================================================
 /* mesh renderer
 /* ===================================================================== */
-class MeshRenderer{
+class MeshRenderer
+	: public IRenderableDeathListener {
 private:
 	//===================================================================*/
 	//			struct
@@ -35,6 +37,7 @@ public:
 
 	void Register(IMeshRenderable* renderable, const WorldTransform* transform);
 	void Unregister(IMeshRenderable* renderable);
+	void OnRenderableDestroyed(IMeshRenderable* renderable) override;
 	void DrawAll();
 	void DrawGroup(const std::vector<DrawEntry>& entries, PipelineType type);
 	void Clear();

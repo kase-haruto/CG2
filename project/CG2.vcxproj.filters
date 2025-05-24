@@ -441,6 +441,7 @@
     <ClCompile Include="Engine\Graphics\Pipeline\Service\PipelineService.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.cpp" />
     <ClCompile Include="Engine\Graphics\Core\GraphicsSystem.cpp" />
+    <ClCompile Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -754,6 +755,7 @@
     <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
     <ClInclude Include="Engine\Graphics\Core\GraphicsSystem.h" />
+    <ClInclude Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

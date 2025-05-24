@@ -27,17 +27,24 @@ MeshRenderer::MeshRenderer(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void MeshRenderer::Register(IMeshRenderable* renderable, const WorldTransform* transform){
 	renderables_.emplace_back(DrawEntry {renderable, transform});
+	renderable->AddDeathListener(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		削除
 /////////////////////////////////////////////////////////////////////////////////////////
 void MeshRenderer::Unregister(IMeshRenderable* renderable){
-	renderables_.erase(std::remove_if(renderables_.begin(), renderables_.end(),
-					   [&] (const DrawEntry& entry){
-						   return entry.renderable == renderable;
-					   }), renderables_.end());
+	renderables_.erase(
+		std::remove_if(renderables_.begin(), renderables_.end(),
+					   [&](const DrawEntry& entry) { return entry.renderable == renderable; }),
+		renderables_.end()
+	);
 }
+
+void MeshRenderer::OnRenderableDestroyed(IMeshRenderable* obj) {
+	Unregister(obj);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
