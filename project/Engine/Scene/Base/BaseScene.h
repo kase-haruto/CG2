@@ -24,7 +24,7 @@ public:
 
 	virtual void Initialize()override{}
 	virtual void Update()override{}
-	void Draw()override;
+	void Draw(ID3D12GraphicsCommandList* cmdList)override;
 	void CleanUp()override{};
 public:
 	SceneContext* GetSceneContext() const override { return sceneContext_.get(); }

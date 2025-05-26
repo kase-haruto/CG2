@@ -6,26 +6,26 @@
 /* c++ */
 #include<format>
 
-ShaderManager::~ShaderManager(){
+ShaderManager::~ShaderManager() {
 	dxcUtils.Reset();
 	dxcCompiler.Reset();
 	includeHandler.Reset();
 }
 
-void ShaderManager::InitializeDXC(){
-    // DXC Compilerを初期化
-    HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-    assert(SUCCEEDED(hr));
-    hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-    assert(SUCCEEDED(hr));
+void ShaderManager::InitializeDXC() {
+	// DXC Compilerを初期化
+	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
+	assert(SUCCEEDED(hr));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
+	assert(SUCCEEDED(hr));
 
-    // Include handlerを設定
-    hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
-    assert(SUCCEEDED(hr));
+	// Include handlerを設定
+	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
+	assert(SUCCEEDED(hr));
 }
 
 IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
-	CompileShader(const std::wstring& filePath, const wchar_t* profile){
+CompileShader(const std::wstring& filePath, const wchar_t* profile) {
 
 	HRESULT hr;
 	//==============================
@@ -77,7 +77,7 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	ComPtr<IDxcBlobUtf8> shaderError = nullptr;
 	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
-	if (SUCCEEDED(hr) && shaderError != nullptr && shaderError->GetStringLength() != 0){
+	if (SUCCEEDED(hr) && shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Log(shaderError->GetStringPointer());
 		assert(false); // エラーがあった場合は止める
 	}
@@ -98,7 +98,7 @@ IDxcBlob* ShaderManager:://CompilerするShaderファイルへのパス
 	return shaderBlob.Detach();
 }
 
-bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath){
+bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsPath, const std::wstring& psPath) {
 	//ファイルパスをワイド文字列として結合
 	//ファイルパスをワイド文字列として結合
 	ComPtr<IDxcBlob> vertexShader = CompileShader(L"Resources/shaders/" + vsPath, L"vs_6_0");
@@ -109,9 +109,9 @@ bool ShaderManager::LoadShader(const PipelineType& type, const std::wstring& vsP
 	return true;
 }
 
-const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const PipelineType& type) const{
+const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const PipelineType& type) const {
 	auto it = vertexShaders.find(type);
-	if (it != vertexShaders.end()){
+	if (it != vertexShaders.end()) {
 		return it->second;
 	}
 	assert("Vertex shader not found: ");
@@ -119,9 +119,9 @@ const ComPtr<IDxcBlob>& ShaderManager::GetVertexShader(const PipelineType& type)
 	return nullShader;
 }
 
-const ComPtr<IDxcBlob>& ShaderManager::GetPixelShader(const PipelineType& type) const{
+const ComPtr<IDxcBlob>& ShaderManager::GetPixelShader(const PipelineType& type) const {
 	auto it = pixelShaders.find(type);
-	if (it != pixelShaders.end()){
+	if (it != pixelShaders.end()) {
 		return it->second;
 	}
 	assert("Pixel shader not found: ");

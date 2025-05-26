@@ -1,65 +1,36 @@
 #pragma once
 /* ========================================================================
-/*	include space
+/* include space
 /* ===================================================================== */
-#include <Engine/Graphics/Pipeline/Shader/ShaderCompiler.h>
-
-/* lib */
-#include <d3dcompiler.h>
+// lib
 #include <d3d12.h>
+#include <dxcapi.h>
 #include <wrl.h>
+#include <memory>
 
-using Microsoft::WRL::ComPtr;
+class PipelineStateObject {
+public:
+	PipelineStateObject() = default;
 
-class PipelineStateObject final{
-private://メンバ変数
-	ComPtr<ID3DBlob> signatureBlob = nullptr;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	ComPtr<ID3D12RootSignature> rootSignature = nullptr;
+	void SetRootSignature(ID3D12RootSignature* root);
+	bool Initialize(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);
 
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc {};
-	D3D12_BLEND_DESC blendDesc {};
-	D3D12_RASTERIZER_DESC rasterizerDesc {};
+	// アクセサ
+	const Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetPipelineState()  const { return pipelineState_; }
+	const Microsoft::WRL::ComPtr<ID3D12RootSignature>& GetRootSignature()  const { return rootSignature_; }
 
-	ComPtr<IDxcBlob> vertexShaderBlob;
-	ComPtr<IDxcBlob> pixelShaderBlob;
-	
-public://メンバ関数
+	void SetShaderBlobs(
+		Microsoft::WRL::ComPtr<IDxcBlob> vs,
+		Microsoft::WRL::ComPtr<IDxcBlob> ps) {
+		vsBlob_ = std::move(vs);
+		psBlob_ = std::move(ps);
+	}
+	bool Reload(ID3D12Device* device);   // ここでは実装だけ宣言
 
-	PipelineStateObject() {}
-	~PipelineStateObject() {}
+private:
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
-	/// <summary>
-	/// RootSignatureの生成
-	/// </summary>
-	void CreateRootSignature(ID3D12Device* device);
-	
-	/// <summary>
-	/// InputLayoutの設定を行う
-	/// </summary>
-	void BindInputLayout();
-
-	/// <summary>
-	/// BlendStateの設定を行う
-	/// </summary>
-	void BindBlendState();
-
-	/// <summary>
-	/// RasterizerStateの設定を行う
-	/// </summary>
-	void BintRasterizerState();
-
-	/// <summary>
-	/// shaderをコンパイルする
-	/// </summary>
-	void CompileShader(ShaderCompiler* sc);
-
-	/// <summary>
-	/// csoを生成する
-	/// </summary>
-	void CreatePSO(ID3D12Device* device);
-
-	void Update();
-
+	Microsoft::WRL::ComPtr<IDxcBlob> vsBlob_;
+	Microsoft::WRL::ComPtr<IDxcBlob> psBlob_;
 };
-

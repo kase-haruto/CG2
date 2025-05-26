@@ -4,14 +4,14 @@
 //                      Material
 /////////////////////////////////////////////////////////////////////////
 cbuffer MATERIAL : register(b0) {
-    float4 materialColor; // ƒ}ƒeƒŠƒAƒ‹ƒJƒ‰[
+	float4 materialColor; // ãƒãƒ†ãƒªã‚¢ãƒ«ã‚«ãƒ©ãƒ¼
 }
 
 /////////////////////////////////////////////////////////////////////////
 //                      world/view/projection matrix
 /////////////////////////////////////////////////////////////////////////
 cbuffer VSConstants : register(b1) {
-    TransformationMatrix gTransformationMat; // •ÏŠ·s—ñ
+	TransformationMatrix gTransformationMat; // å¤‰æ›è¡Œåˆ—
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -19,18 +19,17 @@ cbuffer VSConstants : register(b1) {
 /////////////////////////////////////////////////////////////////////////
 VSOutput main(float4 pos : POSITION,
                 float2 texcoord : TEXCOORD,
-                float4 color : COLOR)
-{
-    VSOutput output;
+                float4 color : COLOR) {
+	VSOutput output;
 
-    // ’¸“_ˆÊ’u‚ğ•ÏŠ· (WVP s—ñ‚ğg—p)
-    output.svpos = mul(pos, gTransformationMat.WVP);
+    // é ‚ç‚¹ä½ç½®ã‚’å¤‰æ› (WVP è¡Œåˆ—ã‚’ä½¿ç”¨)
+	output.svpos = mul(pos, gTransformationMat.WVP);
 
-    // ƒeƒNƒXƒ`ƒƒÀ•W‚ğ‚»‚Ì‚Ü‚Ü“n‚·
-    output.texcoord = texcoord;
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’ãã®ã¾ã¾æ¸¡ã™
+	output.texcoord = texcoord;
 
-    // ƒ}ƒeƒŠƒAƒ‹ƒJƒ‰[‚ğæZ‚µ‚ÄF‚ğŒvZ
-    output.color = color * materialColor;
+    // ãƒãƒ†ãƒªã‚¢ãƒ«ã‚«ãƒ©ãƒ¼ã‚’ä¹—ç®—ã—ã¦è‰²ã‚’è¨ˆç®—
+	output.color = color * materialColor;
 
-    return output;
+	return output;
 }

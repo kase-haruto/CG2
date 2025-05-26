@@ -434,6 +434,14 @@
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.cpp" />
+    <ClCompile Include="Engine\graphics\Pipeline\RootSig\RootSignatureBuilder.cpp" />
+    <ClCompile Include="Engine\graphics\Pipeline\PipelineDesc\GraphicsPipelineDesc.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Factory\PsoFactory.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Library\PsoLibrary.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Service\PipelineService.cpp" />
+    <ClCompile Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.cpp" />
+    <ClCompile Include="Engine\Graphics\Core\GraphicsSystem.cpp" />
+    <ClCompile Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -739,6 +747,15 @@
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\RootSig\RootSignatureBuilder.h" />
+    <ClInclude Include="Engine\graphics\Pipeline\PipelineDesc\GraphicsPipelineDesc.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Factory\PsoFactory.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Library\PsoLibrary.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Service\PipelineService.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
+    <ClInclude Include="Engine\Graphics\Core\GraphicsSystem.h" />
+    <ClInclude Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\graphics\shaders\Fragment.hlsli">

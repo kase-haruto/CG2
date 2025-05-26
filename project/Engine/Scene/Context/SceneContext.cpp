@@ -13,6 +13,10 @@ SceneContext::~SceneContext(){
 	renderer_->Clear();
 }
 
+void SceneContext::Initialize() {
+
+}
+
 void SceneContext::Update() {
 	lightLibrary_->Update();
 }

@@ -52,7 +52,6 @@ void Model::Draw(const WorldTransform& transform){
 		return;
 	}
 	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
-	GraphicsGroup::GetInstance()->SetCommand(cmdList, Object3D, blendMode_);
 	// 頂点バッファ/インデックスバッファをセット
 	modelData_->vertexBuffer.SetCommand(cmdList);
 	modelData_->indexBuffer.SetCommand(cmdList);

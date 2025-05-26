@@ -180,7 +180,7 @@ void AnimationModel::OnModelLoaded(){
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void AnimationModel::Draw(const WorldTransform& transform){
+void AnimationModel::Draw([[maybe_unused]]const WorldTransform& transform){
 	// もしモデルデータが読み込まれていない場合は何もしない
 	if (!modelData_){ return; }
 
@@ -189,7 +189,7 @@ void AnimationModel::Draw(const WorldTransform& transform){
 	GraphicsGroup::GetInstance()->SetCommand(cmdList, SkinningObject3D, blendMode_);
 
 
-	cmdList->SetGraphicsRootDescriptorTable(8, skinCluster_.paletteSrvHandle.second);
+	cmdList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 
 	// 頂点バッファ/インデックスバッファをセット
 	vbvs_[0] = modelData_->vertexBuffer.GetVertexBufferView();	//vertexDataのvbv

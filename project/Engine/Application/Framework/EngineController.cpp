@@ -20,6 +20,10 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_ = std::make_unique<System>();
 	system_->Initialize(hInstance, kWindowWidth, kWindowHeight, windowTitle);
 
+	// graphicsシステムの初期化
+	graphicsSystem_ = std::make_unique<GraphicsSystem>();
+	graphicsSystem_->Initialize();
+
 	// engineUIの初期化
 	engineUICore_ = std::make_unique<EngineUICore>();
 	engineUICore_->Initialize();
@@ -28,7 +32,7 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_->InitializeEditor();
 
 	// シーンマネージャ初期化
-	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
+	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore(),graphicsSystem_.get());
 	sceneManager_->SetEngineUI(engineUICore_.get());
 	sceneManager_->Initialize();
 }

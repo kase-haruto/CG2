@@ -12,31 +12,23 @@
 #include <array>
 
 class IRenderTarget;
+class GraphicsSystem;
 
 class SceneManager{
 public:
 	SceneManager() = default;
-	SceneManager(DxCore* dxCore);
+	SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem);
 	~SceneManager();
 
-	// 初期化(シーン生成など)
 	void Initialize();
-
-	// シーン更新
 	void Update();
-
-	// シーン描画
 	void Draw();
 	void DrawForRenderTarget(IRenderTarget* target);
 
-	// UIをセット
 	void SetEngineUI(EngineUICore* ui){ pEngineUI_ = ui; }
-
-	// 切り替えリクエスト用メソッド (UI などから呼び出す)
 	void RequestSceneChange(SceneType nextScene);
-
 	void SetCurrentScene(std::unique_ptr<IScene> newScene);
-
+	void SetGraphicsSystem(GraphicsSystem* graphicsSystem) { pGraphicsSystem_ = graphicsSystem; }
 private:
 	// シーンインスタンスの配列
 	std::array<std::unique_ptr<IScene>, static_cast< int >(SceneType::count)> scenes_;
@@ -48,6 +40,7 @@ private:
 	// UIパネルなど
 	EngineUICore* pEngineUI_ = nullptr;
 	DxCore* pDxCore_ = nullptr;
+	GraphicsSystem* pGraphicsSystem_ = nullptr;
 
 public:
 	bool gameResult_ = false;

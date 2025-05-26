@@ -182,7 +182,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 
 	// 頂点データの読み込み
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-		VertexData vertex;
+		VertexPosUvN vertex;
 
 		// 位置データの取得
 		vertex.position.x = mesh->mVertices[i].x;

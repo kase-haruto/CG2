@@ -5,6 +5,7 @@
 //engine
 #include <Engine/Graphics/Pipeline/Pso/PipelineState.h>
 #include <Engine/Graphics/Pipeline/PipelineKey.h>
+#include <Engine/Graphics/Pipeline/Shader/ShaderManager.h>
 
 /* c++ */
 #include<string>

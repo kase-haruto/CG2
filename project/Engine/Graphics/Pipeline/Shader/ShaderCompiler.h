@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <cassert>
 #include <dxgi1_6.h>
 #include <d3d12.h>
@@ -10,16 +10,8 @@
 using Microsoft::WRL::ComPtr;
 
 class ShaderCompiler{
-private:
-
-public:
-	// ComPtr 型のゲッター
-	ComPtr<IDxcUtils> GetDxcUtils() const{ return dxcUtils; }
-	ComPtr<IDxcCompiler3> GetDxcCompiler() const{ return dxcCompiler; }
-	ComPtr<IDxcIncludeHandler> GetIncludeHandler() const{ return includeHandle; }
-
 public://メンバ関数
-	ShaderCompiler();
+	ShaderCompiler() = default;
 	~ShaderCompiler();
 
 	void InitializeDXC();
@@ -27,21 +19,20 @@ public://メンバ関数
 	void LoadHLSL(const std::wstring& filePath, const wchar_t* profile);
 
 	ComPtr<IDxcBlob> CompileShader(
-		// CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
-		// Compilerに使用するProfile
-		const wchar_t* profile,
-		// 初期化で生成したものを3つ
-		ComPtr<IDxcCompiler3> dxcompiler
-	);
+		const wchar_t* profile);
 	void Compile(const std::wstring& filePath,
-				 const wchar_t* profile,
-				 ComPtr<IDxcCompiler3> dxcompiler,
-				 ComPtr<IDxcIncludeHandler> includeHandler);
+				 const wchar_t* profile);
 	void CheckNoError();
 
 	ComPtr<IDxcBlob> GetCompileResult(const std::wstring& filePath,
 									  const wchar_t* profile);
+
+public:
+// ComPtr 型のゲッター
+	ComPtr<IDxcUtils> GetDxcUtils() const { return dxcUtils; }
+	ComPtr<IDxcCompiler3> GetDxcCompiler() const { return dxcCompiler; }
+	ComPtr<IDxcIncludeHandler> GetIncludeHandler() const { return includeHandle; }
 
 private://メンバ変数
 	ComPtr<IDxcUtils> dxcUtils = nullptr;

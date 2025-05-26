@@ -33,7 +33,7 @@ void BaseModel::Update() {
 		// テクスチャの更新
 		UpdateTexture();
 
-		// UV transform を行列化 (例: スケール→Z回転→平行移動)
+		// UV transform を行列化 
 		Matrix4x4 uvTransformMatrix = MakeScaleMatrix(Vector3(uvTransform.scale.x, uvTransform.scale.y, 1.0f));
 		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate));
 		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(Vector3(uvTransform.translate.x, uvTransform.translate.y, 0.0f)));
@@ -119,11 +119,11 @@ void BaseModel::Draw(const WorldTransform& transform) {
 	materialBuffer_.SetCommand(cmdList, 0);
 	transform.SetCommand(cmdList, 1);
 
-	cmdList->SetGraphicsRootDescriptorTable(3, handle_.value());
+	cmdList->SetGraphicsRootDescriptorTable(2, handle_.value());
 
 	//環境マップ
 	D3D12_GPU_DESCRIPTOR_HANDLE envMapHandle = TextureManager::GetInstance()->GetEnvironmentTextureSrvHandle();
-	cmdList->SetGraphicsRootDescriptorTable(7, envMapHandle);
+	cmdList->SetGraphicsRootDescriptorTable(6, envMapHandle);
 
 	// 描画
 	cmdList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);

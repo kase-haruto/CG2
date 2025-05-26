@@ -2,6 +2,7 @@
 
 #include <Engine/Graphics/Buffer/DxVertexBuffer.h>
 #include <Engine/Graphics/Buffer/DxIndexBuffer.h>
+#include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
 
 // static 変数初期化
 ModelManager* ModelManager::instance_ = nullptr;
@@ -310,7 +311,7 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
 void ModelManager::CreateGpuResources([[maybe_unused]] const std::string& fileName, ModelData model){
 	auto device = GraphicsGroup::GetInstance()->GetDevice();
 
-	DxVertexBuffer<VertexData> new_vertexBuffer;
+	DxVertexBuffer<VertexPosUvN> new_vertexBuffer;
 	new_vertexBuffer.Initialize(device);
 	DxIndexBuffer<uint32_t> new_indexBuffer;
 	new_indexBuffer.Initialize(device);
@@ -328,7 +329,7 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
 
 	// 頂点追加
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i){
-		VertexData vertex {};
+		VertexPosUvN vertex {};
 		vertex.position = {-mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
 		if (mesh->HasNormals()){
 			vertex.normal = {-mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};

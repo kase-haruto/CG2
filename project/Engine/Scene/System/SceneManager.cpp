@@ -11,34 +11,33 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Graphics/Core/GraphicsSystem.h>
 
-SceneManager::SceneManager(DxCore* dxCore)
-	: pDxCore_(dxCore) {
-	// ここでシーンをすべて生成しておく場合
+SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
+	: pDxCore_(dxCore),pGraphicsSystem_(graphicsSystem) {
+	// ここでシーンをすべて生成しておく
 	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
 		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i), pDxCore_);
+		//sceneのレンダラーにパイプラインを登録
+		scenes_[i]->GetSceneContext()->GetMeshRenderer()->SetPipelineService(pGraphicsSystem_->GetPipelineService());
 	}
 
-	// 最初は TITLE シーンにしておく
-	currentSceneNo_ = static_cast<int>(SceneType::TEST);
+	currentSceneNo_ = static_cast<int>(SceneType::PLAY);
 	nextSceneNo_ = currentSceneNo_;
 }
 
 SceneManager::~SceneManager() {}
 
 void SceneManager::Initialize() {
-	// シーン切り替えパネルを作成 (UI がある場合)
 	if (pEngineUI_) {
 		auto sceneSwitchPanel = std::make_unique<SceneSwitcherPanel>(this);
 
-		//パネルにシーンを追加
 		sceneSwitchPanel->AddSceneOption("Game Scene", SceneType::PLAY);
 		sceneSwitchPanel->AddSceneOption("Test Scene", SceneType::TEST);
 
 		pEngineUI_->AddPanel(std::move(sceneSwitchPanel));
 	}
 
-	// まずは最初のシーンを初期化
 	scenes_[currentSceneNo_]->SetSceneManager(this);
 	scenes_[currentSceneNo_]->Initialize();
 	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
@@ -46,7 +45,6 @@ void SceneManager::Initialize() {
 }
 
 void SceneManager::Update() {
-	// シーン切り替えチェック
 	if (currentSceneNo_ != nextSceneNo_) {
 		// いったん現在シーンをクリーンアップ
 		scenes_[currentSceneNo_]->CleanUp();
@@ -54,7 +52,6 @@ void SceneManager::Update() {
 		// シーン番号を更新
 		currentSceneNo_ = nextSceneNo_;
 
-		// 新しいシーンに UI と SceneManager をセットして Initialize
 		scenes_[currentSceneNo_]->SetSceneManager(this);
 		scenes_[currentSceneNo_]->Initialize();
 	}
@@ -86,7 +83,7 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	target->SetRenderTarget(cmd);
 	target->Clear(cmd);
 
-	scenes_[currentSceneNo_]->Draw();
+	scenes_[currentSceneNo_]->Draw(pGraphicsSystem_->GetCommandList());
 }
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {
@@ -95,7 +92,6 @@ void SceneManager::RequestSceneChange(SceneType nextScene) {
 }
 
 void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene) {
-	// いったん現在シーンをクリーンアップ
 	scenes_[currentSceneNo_]->CleanUp();
 
 	// シーン番号を更新

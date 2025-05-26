@@ -47,6 +47,7 @@ public:
 	void ShowImGui(BaseModelConfig& config);
 
 	//--------- accessor -----------------------------------------------------
+	BlendMode GetBlendMode() const override { return blendMode_; }
 	const Vector4& GetColor() const { return materialData_.color; }
 	void SetColor(const Vector4& color) { materialData_.color = color; }
 

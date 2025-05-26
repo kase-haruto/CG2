@@ -5,6 +5,7 @@
 
 // scene
 #include <Engine/Scene/System/SceneManager.h>
+#include <Engine/Scene/Utirity/SceneUtility.h>
 
 // engine
 #include <Engine/Application/Input/Input.h>
@@ -31,29 +32,30 @@ GameScene::GameScene(DxCore* dxCore)
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
+	
+	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
+	skyBox_->Initialize();
+
 	//=========================
 	// グラフィック関連
 	//=========================
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
 	
-	modelField_ = std::make_unique<BaseGameObject>("terrain.obj","field");
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
-	//modelField_->EnableGuiList();
-	//modelField_->SetUvScale({15.0f,15.0f,0.0f});
-
 
 	//player
-	player_ = std::make_unique<Player>("player.obj");
+	CreateAndAddObject<Player>(sceneContext_.get(), player_, "player.obj", "player");
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	enemyCollection_ = std::make_unique<EnemyCollection>();
-
 	
 	//===================================================================*/
 	//                    editor
 	//===================================================================*/
+	sceneContext_->RegisterAllToRenderer();
 }
 
 void GameScene::Update(){
