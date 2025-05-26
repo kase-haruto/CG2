@@ -15,6 +15,7 @@
 #include <Engine/Objects/LightObject/DirectionalLight.h>
 #include <Engine/Objects/LightObject/PointLight.h>
 #include <Game/3d/GameCamera/RailCamera.h>
+#include <Engine/Extensions/SkyBox/SkyBox.h>
 
 /* object */
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
@@ -47,6 +48,7 @@ private:
 	std::unique_ptr<Player> player_ = nullptr;
 	std::unique_ptr<EnemyCollection> enemyCollection_ = nullptr;
 
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 	// カメラ
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 

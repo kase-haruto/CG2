@@ -26,7 +26,8 @@ public:
 	//                   public methods
 	//===================================================================*/
 	Player() = default;
-	Player(const std::string& modelName);
+	Player(const std::string& modelName,
+		   std::optional<std::string> objectName = std::nullopt);
 	virtual ~Player() = default;
 
 	void Initialize()override;

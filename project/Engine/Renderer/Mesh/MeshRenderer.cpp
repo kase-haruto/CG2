@@ -17,6 +17,7 @@
 #include <Engine/Foundation/Math/Matrix4x4.h>
 
 MeshRenderer::MeshRenderer(){
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -105,8 +106,6 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 
 void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {
 	if (entries.empty()) return;
-
-
 
 	for (const auto& entry : entries) {
 		// 各オブジェクトの BlendMode を取得して PSO を構築
