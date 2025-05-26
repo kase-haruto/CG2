@@ -14,7 +14,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{617c498e-efd4-4f5d-b046-31568c2ba625}</ProjectGuid>
-    <RootNamespace>CG2</RootNamespace>
+    <RootNamespace>XalmoEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>MyEngine</ProjectName>
   </PropertyGroup>
