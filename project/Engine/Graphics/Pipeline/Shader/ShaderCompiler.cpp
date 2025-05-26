@@ -7,13 +7,23 @@
 void ShaderCompiler::InitializeDXC() {
 	// DXC Compilerを初期化
 	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		Log("Failed to create DXC Utils");
+		throw std::runtime_error("Failed to create DXC Utils");
+	}
+
 	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		Log("Failed to create DXC Compiler");
+		throw std::runtime_error("Failed to create DXC Compiler");
+	}
 
 	// Include handlerを設定
 	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandle);
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		Log("Failed to create default include handler");
+		throw std::runtime_error("Failed to create default include handler");
+	}
 }
 
 void ShaderCompiler::LoadHLSL(const std::wstring& filePath, const wchar_t* profile) {
@@ -31,8 +41,10 @@ void ShaderCompiler::LoadHLSL(const std::wstring& filePath, const wchar_t* profi
 	//	ファイル読み込み
 	//========================================================================
 	HRESULT hr = dxcUtils->LoadFile(fullPath.c_str(), nullptr, shaderSource.GetAddressOf());
-	assert(SUCCEEDED(hr));
-	(void)hr;
+	if (FAILED(hr)) {
+		Log(ConvertString(std::format(L"Failed to load HLSL file: {}\n", fullPath)));
+		throw std::runtime_error("LoadFile failed");
+	}
 
 	//========================================================================
 	//	読み込んだファイル内容を設定
@@ -68,7 +80,6 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(
 
 void ShaderCompiler::Compile(const std::wstring& filePath,
 							 const wchar_t* profile) {
-	HRESULT hr;
 	//========================================================================
 	//	コンパイルオプションの設定
 	//========================================================================
@@ -79,31 +90,41 @@ void ShaderCompiler::Compile(const std::wstring& filePath,
 		L"-Zi", L"-Qembed_debug", // デバッグ情報
 		L"-Od",                   // 最適化を外す
 		L"-Zpr",                  // 行優先
-		L"-I", L"Resources/shaders/" // ⭐️ 追加！
+		L"-I", L"Resources/shaders/"
 	};
 
 	//========================================================================
 	//	シェーダをコンパイル
 	//========================================================================
-	//実際にshaderをコンパイルする
-	hr = dxcCompiler->Compile(
-		&shaderSourceBuffer,//読み込んだオプション
-		arguments,//コンパイルオプション
-		_countof(arguments),//コンパイルオプションの数
-		includeHandle.Get(),//includeが含まれた諸々
-		IID_PPV_ARGS(&shaderResult)//コンパイル結果
+	HRESULT hr = dxcCompiler->Compile(
+		&shaderSourceBuffer,
+		arguments,
+		_countof(arguments),
+		includeHandle.Get(),
+		IID_PPV_ARGS(&shaderResult)
 	);
-	//コンパイルエラーではなくdxcが起動できないなど致命的な状況
-	assert(SUCCEEDED(hr));
+
+	if (FAILED(hr)) {
+		Log("Failed to compile HLSL shader (DXC invocation failed)");
+		throw std::runtime_error("DXC Compile failed");
+	}
 }
 
 void ShaderCompiler::CheckNoError() {
 	ComPtr<IDxcBlobUtf8> shaderError = nullptr;
-	HRESULT hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(shaderError.GetAddressOf()), nullptr);
+	HRESULT hr = shaderResult->GetOutput(
+		DXC_OUT_ERRORS, IID_PPV_ARGS(shaderError.GetAddressOf()), nullptr);
 
 	if (SUCCEEDED(hr) && shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Log(shaderError->GetStringPointer());
-		assert(false); // エラーはダメ絶対
+		std::string msg = shaderError->GetStringPointer();
+
+		// warning だけならログだけにする
+		if (msg.find("warning") != std::string::npos) {
+			Log(msg.c_str()); // 警告はログに出すだけ
+		} else {
+			Log(msg.c_str()); // エラーはログに出してから例外
+			throw std::runtime_error("Shader compile error");
+		}
 	}
 }
 
@@ -114,7 +135,10 @@ ComPtr<IDxcBlob> ShaderCompiler::GetCompileResult(const std::wstring& filePath,
 	//========================================================================
 	ComPtr<IDxcBlob> shaderBlob = nullptr;
 	HRESULT hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(shaderBlob.GetAddressOf()), nullptr);
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		Log("Failed to get shader bytecode");
+		throw std::runtime_error("Failed to get shader bytecode");
+	}
 
 	//========================================================================
 	//	成功ログ
