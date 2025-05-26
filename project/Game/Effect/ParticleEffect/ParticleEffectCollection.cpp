@@ -45,7 +45,6 @@ void ParticleEffectCollection::Draw() {
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto& effect : effects_) {
-
 		effect->Draw();
 	}
 }

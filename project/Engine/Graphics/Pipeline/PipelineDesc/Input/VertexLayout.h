@@ -8,11 +8,9 @@
 #include <d3dx12.h>
 #include <vector>
 
-// 1️⃣ まずはテンプレート宣言
 template<typename T>
 struct VertexInputLayout;
 
-// 2️⃣ 頂点構造体定義
 struct VertexPosUv {
 	Vector3 pos;
 	Vector2 uv;
@@ -30,9 +28,9 @@ struct VertexPosUvColor {
 };
 
 struct VertexPosUvN {
-	Vector4 position;   // 16 B (レジスタ0)
-	Vector2 texcoord;   //  8 B
-	Vector3 normal;
+	Vector4 position;	// 16 B
+	Vector2 texcoord;	// 24 B
+	Vector3 normal;		// 36 B
 };
 
 struct VertexPosUvNSkinning {
