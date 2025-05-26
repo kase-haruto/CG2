@@ -32,7 +32,7 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	system_->InitializeEditor();
 
 	// シーンマネージャ初期化
-	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore());
+	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore(),graphicsSystem_.get());
 	sceneManager_->SetEngineUI(engineUICore_.get());
 	sceneManager_->Initialize();
 }

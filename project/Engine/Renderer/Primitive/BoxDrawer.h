@@ -4,7 +4,7 @@
 #include <Engine/Graphics/Buffer/DxVertexBuffer.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 #include <Engine/Objects/Transform/Transform.h>
-
+#include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
 struct Vector3;
 struct Vector4;
 struct Matrix4x4;

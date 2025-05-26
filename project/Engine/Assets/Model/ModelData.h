@@ -6,6 +6,7 @@
 #include <Engine/Graphics/Buffer/DxVertexBuffer.h>
 #include <Engine/Graphics/Material.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
+#include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
 
 /* c++ */
 #include <d3d12.h>
@@ -14,7 +15,7 @@
 #include <wrl.h>
 
 struct ModelData{
-	std::vector<VertexData> vertices;
+	std::vector<VertexPosUvN> vertices;
 	std::vector<uint32_t> indices;
 
 	MaterialData material;
@@ -26,6 +27,6 @@ struct ModelData{
 	Animation animation;
 	Skeleton skeleton;
 	// std::vector<Animation> animations;
-	DxVertexBuffer<VertexData> vertexBuffer;
+	DxVertexBuffer<VertexPosUvN> vertexBuffer;
 	DxIndexBuffer<uint32_t> indexBuffer;
 };

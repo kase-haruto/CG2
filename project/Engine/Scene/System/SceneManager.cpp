@@ -11,12 +11,15 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Graphics/Core/GraphicsSystem.h>
 
-SceneManager::SceneManager(DxCore* dxCore)
-	: pDxCore_(dxCore) {
+SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
+	: pDxCore_(dxCore),pGraphicsSystem_(graphicsSystem) {
 	// ここでシーンをすべて生成しておく
 	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
 		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i), pDxCore_);
+		//sceneのレンダラーにパイプラインを登録
+		scenes_[i]->GetSceneContext()->GetMeshRenderer()->SetPipelineService(pGraphicsSystem_->GetPipelineService());
 	}
 
 	currentSceneNo_ = static_cast<int>(SceneType::TEST);
@@ -80,7 +83,7 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	target->SetRenderTarget(cmd);
 	target->Clear(cmd);
 
-	scenes_[currentSceneNo_]->Draw();
+	scenes_[currentSceneNo_]->Draw(pGraphicsSystem_->GetCommandList());
 }
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {

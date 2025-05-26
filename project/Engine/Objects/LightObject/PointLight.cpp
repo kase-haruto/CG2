@@ -56,13 +56,10 @@ void PointLight::ShowGui(){
 }
 
 void PointLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList, PipelineType type){
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(type);
 	uint32_t index = 0;
 	if (type == PipelineType::Object3D || PipelineType::SkinningObject3D){
-		index = 6;
+		index = 5;
 	}
-	// ルートシグネチャをコマンドリストに設定する
-	commandList->SetGraphicsRootSignature(rootSignature_.Get());
 	constantBuffer_.SetCommand(commandList, index);
 }
 

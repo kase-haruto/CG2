@@ -17,9 +17,6 @@
 #include <Engine/Foundation/Math/Matrix4x4.h>
 
 MeshRenderer::MeshRenderer(){
-	pipelineService_ = std::make_unique<PipelineService>();
-
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -49,12 +46,11 @@ void MeshRenderer::OnRenderableDestroyed(IMeshRenderable* obj) {
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 /////////////////////////////////////////////////////////////////////////////////////////
-void MeshRenderer::DrawAll() {
+void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	std::vector<DrawEntry> staticModels;
 	std::vector<DrawEntry> skinnedModels;
 	DrawEntry* skyBox = nullptr;
 
-	ID3D12GraphicsCommandList* commandList = GraphicsGroup::GetInstance()->GetCommandList().Get();
 
 	for (const auto& entry : renderables_){
 		if (dynamic_cast< AnimationModel* >(entry.renderable)){
@@ -69,6 +65,7 @@ void MeshRenderer::DrawAll() {
 	//===================================================================*/
 	//                    背景オブジェクト描画
 	//===================================================================*/
+	cmdList->SetGraphicsRootSignature(GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Skybox).Get());
 	// 背景
 	if (skyBox){
 		skyBox->renderable->Draw(*skyBox->transform);
@@ -77,39 +74,39 @@ void MeshRenderer::DrawAll() {
 	//===================================================================*/
 	//                    静的モデル描画
 	//===================================================================*/
-	CameraManager::SetCommand(commandList, PipelineType::Object3D);
-	pLightLibrary_->SetCommand(commandList, PipelineType::Object3D);
-	// 静的モデルの描画
-	for (auto& staticModel:staticModels) {
-		staticModel.renderable->Draw(*staticModel.transform);
-	}
+	//CameraManager::SetCommand(cmdList, PipelineType::Object3D);
+	//pLightLibrary_->SetCommand(cmdList, PipelineType::Object3D);
+	//// 静的モデルの描画
+	//for (auto& staticModel:staticModels) {
+	//	staticModel.renderable->Draw(*staticModel.transform);
+	//}
 
-	//DrawGroup(staticModels, PipelineType::Object3D);
+	DrawGroup(cmdList,staticModels, PipelineType::Object3D);
 
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	CameraManager::SetCommand(commandList, PipelineType::SkinningObject3D);
-	pLightLibrary_->SetCommand(commandList, PipelineType::SkinningObject3D);
-	// 静的モデルの描画
-	for (auto& animationModel : skinnedModels) {
-		animationModel.renderable->Draw(*animationModel.transform);
-	}
+	//CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
+	//pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
+	//// 静的モデルの描画
+	//for (auto& animationModel : skinnedModels) {
+	//	animationModel.renderable->Draw(*animationModel.transform);
+	//}
 
 	//DrawGroup(skinnedModels, PipelineType::SkinningObject3D);
 
 	//===================================================================*/
 	//                    プリミティブ描画
 	//===================================================================*/
-	GraphicsGroup::GetInstance()->SetCommand(commandList, PipelineType::Line, BlendMode::NORMAL);
-	CameraManager::SetCommand(commandList, PipelineType::Line);
+	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
+	CameraManager::SetCommand(cmdList, PipelineType::Line);
 	PrimitiveDrawer::GetInstance()->Render();
 }
 
-void MeshRenderer::DrawGroup(const std::vector<DrawEntry>& entries, PipelineType type) {
+void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {
 	if (entries.empty()) return;
 
-	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
+
 
 	for (const auto& entry : entries) {
 		// 各オブジェクトの BlendMode を取得して PSO を構築

@@ -5,6 +5,7 @@
 #include <Engine/Foundation/Math/Matrix4x4.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
 
 void LineDrawer::Initialize(){
 	vertexBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice(), kMaxLines * 2);

@@ -269,7 +269,7 @@ int System::ProcessMessage() { return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 void System::CreatePipelines() {
 	shaderManager_->InitializeDXC();
-	Object3DPipelines();
+	//Object3DPipelines();
 	SkinningObject3dPipeline();
 	Object2DPipelines();
 	StructuredObjectPipeline();
@@ -321,7 +321,7 @@ void System::Object3DPipelines() {
 	// ================================
 // RootSignatureの設定
 // ================================
-	D3D12_ROOT_PARAMETER rootParameters[8] = {};
+	D3D12_ROOT_PARAMETER rootParameters[7] = {};
 
 	//-------------------------
 	// 通常テクスチャ用 (t0)
@@ -351,37 +351,32 @@ void System::Object3DPipelines() {
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[1].Descriptor.ShaderRegister = 0;
 
-	// フォグ CBV (b5)
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[2].Descriptor.ShaderRegister = 5;
-
 	// 通常テクスチャ SRV (t0)
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = texRange;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(texRange);
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[2].DescriptorTable.pDescriptorRanges = texRange;
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(texRange);
 
 	// Directional Light CBV (b2)
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[4].Descriptor.ShaderRegister = 2;
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[3].Descriptor.ShaderRegister = 2;
 
 	// カメラ CBV (b1)
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rootParameters[5].Descriptor.ShaderRegister = 1;
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	rootParameters[4].Descriptor.ShaderRegister = 1;
 
 	// Point Light CBV (b4)
-	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[6].Descriptor.ShaderRegister = 4;
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[5].Descriptor.ShaderRegister = 4;
 
 	// 環境マップ SRV (t1)
-	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[7].DescriptorTable.pDescriptorRanges = envMapRange;
-	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[6].DescriptorTable.pDescriptorRanges = envMapRange;
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
 
 	// ================================
 	// Root Signature 全体
@@ -512,9 +507,12 @@ void System::SkinningObject3dPipeline() {
 		// シェーダの読み込みに失敗した場合のエラーハンドリング
 		return;
 	}
-
+	if (!shaderManager_->LoadShader(Object3D, L"Object3d.VS.hlsl", L"Object3d.PS.hlsl")) {
+		// シェーダの読み込みに失敗した場合のエラーハンドリング
+		return;
+	}
 	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[9] = {};
+	D3D12_ROOT_PARAMETER rootParameters[8] = {};
 
 	// テクスチャ用 (t0)
 	D3D12_DESCRIPTOR_RANGE texRange[1] = {};
@@ -547,43 +545,38 @@ void System::SkinningObject3dPipeline() {
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[1].Descriptor.ShaderRegister = 0;
 
-	// フォグ CBV (b5)
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[2].Descriptor.ShaderRegister = 5;
-
 	// テクスチャ SRV (t0)
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = texRange;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = _countof(texRange);
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[2].DescriptorTable.pDescriptorRanges = texRange;
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(texRange);
 
 	// Directional Light CBV (b2)
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[4].Descriptor.ShaderRegister = 2;
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[3].Descriptor.ShaderRegister = 2;
 
 	// カメラ CBV (b1)
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rootParameters[5].Descriptor.ShaderRegister = 1;
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	rootParameters[4].Descriptor.ShaderRegister = 1;
 
 	// Point Light CBV (b4)
-	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[6].Descriptor.ShaderRegister = 4;
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[5].Descriptor.ShaderRegister = 4;
 
 	// 環境マップ SRV (t1)
-	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[7].DescriptorTable.pDescriptorRanges = envMapRange;
-	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[6].DescriptorTable.pDescriptorRanges = envMapRange;
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
 
 	// スキニングパレット SRV (t2)
-	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[8].DescriptorTable.pDescriptorRanges = skinningRange;
-	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(skinningRange);
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[7].DescriptorTable.pDescriptorRanges = skinningRange;
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(skinningRange);
 
 	// RootSignature全体
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};

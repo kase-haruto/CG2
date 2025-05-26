@@ -3,7 +3,7 @@
 // engine
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-
+#include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
 // lib
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>

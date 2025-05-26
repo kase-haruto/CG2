@@ -1,4 +1,5 @@
 #include "GraphicsSystem.h"
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		graphics関連初期化
@@ -9,6 +10,9 @@ void GraphicsSystem::Initialize() {
 	//===================================================================*/
 	pipelineService_ = std::make_unique<PipelineService>();
 	pipelineService_->RegisterAllPipelines();
+
+	//いったんコマンドリストをもらってくる
+	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
 
 }
 

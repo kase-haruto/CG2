@@ -9,7 +9,6 @@ IScene(dxCore){
 	sceneContext_ = std::make_unique<SceneContext>();
 }
 
-void BaseScene::Draw(){
-	auto commandList_ = pDxCore_->GetCommandList();	
-	sceneContext_->GetMeshRenderer()->DrawAll();
+void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList){
+	sceneContext_->GetMeshRenderer()->DrawAll(cmdList);
 }

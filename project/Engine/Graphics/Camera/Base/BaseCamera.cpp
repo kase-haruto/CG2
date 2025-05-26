@@ -127,7 +127,5 @@ const Vector3& BaseCamera::GetTranslate() const{
 
 
 void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
-	ComPtr<ID3D12RootSignature> rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(pipelineType);
-	command->SetGraphicsRootSignature(rootSignature.Get());
 	cameraBuffer_.SetCommand(command.Get(), pipelineType);
 }

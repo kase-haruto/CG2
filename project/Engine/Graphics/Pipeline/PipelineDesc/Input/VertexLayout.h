@@ -8,6 +8,11 @@
 #include <d3dx12.h>
 #include <vector>
 
+// 1️⃣ まずはテンプレート宣言
+template<typename T>
+struct VertexInputLayout;
+
+// 2️⃣ 頂点構造体定義
 struct VertexPosUv {
 	Vector3 pos;
 	Vector2 uv;
@@ -19,14 +24,14 @@ struct VertexPosColor {
 };
 
 struct VertexPosUvColor {
-	Vector3 pos;
+	Vector4 pos;
 	Vector2 uv;
 	Vector4 color;
 };
 
 struct VertexPosUvN {
-	Vector3 pos;
-	Vector2 uv;
+	Vector4 position;   // 16 B (レジスタ0)
+	Vector2 texcoord;   //  8 B
 	Vector3 normal;
 };
 
@@ -38,8 +43,22 @@ struct VertexPosUvNSkinning {
 	int index[4];
 };
 
-template<typename T>
-struct VertexInputLayout;
+template<>
+struct VertexInputLayout<VertexPosUvN> {
+	static std::vector<D3D12_INPUT_ELEMENT_DESC> Get() {
+		return {
+			// Semantic   Idx  Format                          Slot Offset
+			{ "POSITION", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
+			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+
+			{ "TEXCOORD", 0,  DXGI_FORMAT_R32G32_FLOAT,       0,
+			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+
+			{ "NORMAL",   0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,
+			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+	}
+};
 
 template<>
 struct VertexInputLayout<VertexPosUv> {
@@ -48,32 +67,6 @@ struct VertexInputLayout<VertexPosUv> {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
 			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		};
-	}
-};
-
-template<>
-struct VertexInputLayout<VertexPosColor> {
-	static std::vector<D3D12_INPUT_ELEMENT_DESC> Get() {
-		return {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
-			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		};
-	}
-};
-
-template<>
-struct VertexInputLayout<VertexPosUvN> {
-	static std::vector<D3D12_INPUT_ELEMENT_DESC> Get() {
-		return {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "COLOR",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 			  D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
 	}

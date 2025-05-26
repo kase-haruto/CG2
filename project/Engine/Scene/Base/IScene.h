@@ -29,7 +29,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
-	virtual void Draw(){}
+	virtual void Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList){}
 	virtual void CleanUp() = 0;
 
 	//--------- accessor -----------------------------------------------------
