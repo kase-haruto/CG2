@@ -55,7 +55,6 @@ namespace ParticleData{
 	};
 
 	struct ParticleForGPU{
-		Matrix4x4 wvp;
 		Matrix4x4 world;
 		Vector4 color;
 	};

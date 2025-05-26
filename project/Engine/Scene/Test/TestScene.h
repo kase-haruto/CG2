@@ -43,7 +43,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void CleanUp()override;
-
+	void LoadAssets()override;
 private:
 	/* graphics =====================================================*/
 	std::unique_ptr<FogEffect>fog_ = nullptr;

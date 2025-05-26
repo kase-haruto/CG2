@@ -31,7 +31,7 @@ void Camera3DBuffer::SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType
 
 	if (pipelineType == PipelineType::Object3D || pipelineType == PipelineType::SkinningObject3D) {
 		rootParameterIndex = 4;
-	} else if (pipelineType == PipelineType::Line || pipelineType == PipelineType::Skybox) {
+	} else if (pipelineType == PipelineType::Line || pipelineType == PipelineType::Skybox||pipelineType == PipelineType::StructuredObject) {
 		rootParameterIndex = 1;
 	}
 

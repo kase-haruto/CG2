@@ -125,11 +125,8 @@ void BaseParticle::Update(){
 		}
 
 
-		Matrix4x4 wvp = Matrix4x4::Multiply(worldMatrix, CameraManager::GetViewProjectionMatrix());
-
 		// GPU転送用インスタンスデータ作成
 		ParticleData::ParticleForGPU instance;
-		instance.wvp = wvp;
 		instance.world = worldMatrix;
 		instance.color = it->color;
 
@@ -165,6 +162,7 @@ void BaseParticle::Update(){
 
 void BaseParticle::Draw(){
 	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
+	CameraManager::SetCommand(commandList, PipelineType::StructuredObject);
 
 	if (!modelData_) return;
 	if (instanceNum_ == 0) return;
@@ -173,9 +171,9 @@ void BaseParticle::Draw(){
 
 	materialBuffer_.SetCommand(commandList, 0);
 	//t0
-	commandList->SetGraphicsRootDescriptorTable(1, instancingBuffer_.GetGpuHandle());
+	commandList->SetGraphicsRootDescriptorTable(2, instancingBuffer_.GetGpuHandle());
 	//t1
-	commandList->SetGraphicsRootDescriptorTable(2, textureHandle);
+	commandList->SetGraphicsRootDescriptorTable(3, textureHandle);
 
 	// 描画コマンド（インスタンシング）
 	commandList->DrawInstanced(

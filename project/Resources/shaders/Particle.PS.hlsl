@@ -1,34 +1,61 @@
 #include "Particle.hlsli"
 
-Texture2D<float4> gTexture : register(t1);
-SamplerState gSampler : register(s0);
+///////////////////////////////////////////////////////////////////////////////
+//                            structs
+///////////////////////////////////////////////////////////////////////////////
+//マテリアル
+struct Material {
+	float4 color;
+	int enableLighting;
+	float4x4 uvTransform;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//                            出力
+///////////////////////////////////////////////////////////////////////////////
+struct PixelShaderOutput {
+	float4 color : SV_TARGET0;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//                            cbuffers
+///////////////////////////////////////////////////////////////////////////////
 ConstantBuffer<Material> gMaterial : register(b0);
 
-PixelShaderOutput main(VertexShaderOutput input){
-    PixelShaderOutput output;
+///////////////////////////////////////////////////////////////////////////////
+//                            tables
+///////////////////////////////////////////////////////////////////////////////
+Texture2D<float4> gTexture : register(t1);
 
-    // UV座標を変換
-    float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+///////////////////////////////////////////////////////////////////////////////
+//                            samplers
+///////////////////////////////////////////////////////////////////////////////
+SamplerState gSampler : register(s0);
 
-    // テクスチャサンプル
-    float4 texColor = gTexture.Sample(gSampler, transformedUV.xy);
+///////////////////////////////////////////////////////////////////////////////
+//                            main
+///////////////////////////////////////////////////////////////////////////////
+PixelShaderOutput main(VertexShaderOutput input) {
+	PixelShaderOutput output;
 
-    // 合成
-    float4 baseColor = gMaterial.color * texColor * input.color;
+	// UV座標を変換
+	float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+	// テクスチャサンプル
+	float4 texColor = gTexture.Sample(gSampler, transformedUV.xy);
+	// 合成
+	float4 baseColor = gMaterial.color * texColor * input.color;
+	// トーンマッピング
+	float exposure = 1.0f;
+	float3 toneMapped = baseColor.rgb * exposure / (baseColor.rgb * exposure + 1.0f);
+	// ガンマ補正
+	float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
 
-    // トーンマッピング（Exposure付きReinhard）
-    float exposure = 1.0f;
-    float3 toneMapped = baseColor.rgb * exposure / (baseColor.rgb * exposure + 1.0f);
+	output.color = float4(gammaCorrected, baseColor.a);
 
-    // ガンマ補正
-    float3 gammaCorrected = pow(toneMapped, 1.0 / 2.2);
+	// 完全透明なら破棄
+	if(output.color.a <= 0.01f) {
+		discard;
+	}
 
-    output.color = float4(gammaCorrected, baseColor.a);
-
-    // 完全透明なら破棄
-    if (output.color.a <= 0.01f){
-        discard;
-    }
-
-    return output;
+	return output;
 }

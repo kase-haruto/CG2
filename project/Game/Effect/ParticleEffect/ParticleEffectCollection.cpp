@@ -45,7 +45,9 @@ void ParticleEffectCollection::Draw() {
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto& effect : effects_) {
-		effect->Draw();
+		if (effect->IsPlaying()) {  // 再生中のものだけ描画
+			effect->Draw();
+		}
 	}
 }
 
@@ -55,7 +57,7 @@ void ParticleEffectCollection::Draw() {
 void ParticleEffectCollection::PlayByName(const std::string& name, const Vector3& position, EmitType emitType) {
 	for (auto& effect : effects_) {
 		if (effect->GetName() == name) {
-			effect->Play(position, emitType);  // ← ParticleEffect に Play を用意する
+			effect->Play(position, emitType);
 			break;
 		}
 	}
@@ -82,6 +84,18 @@ ParticleEffect* ParticleEffectCollection::GetEffectFromName(const std::string& n
 		}
 	}
 	return nullptr;
+}
+
+void ParticleEffectCollection::LoadByName(const std::string& name) {
+	//すでにある名前のエフェクトなら虫
+	if (GetEffectFromName(name)) {return;}
+
+	const std::string directoryPath = "Resources/Json/Effect/";
+	// 名前からエフェクトをロード
+	auto effect = std::make_unique<ParticleEffect>();
+	effect->Load(directoryPath + name + ".json");
+	effect->Initialize();
+	AddEffect(std::move(effect));
 }
 
 //===================================================================*/

@@ -45,6 +45,8 @@ public:
 			particle->SetEmitPos(position);
 		}
 	}
+	bool IsPendingDelete() const { return pendingDelete_; }
+	bool IsPlaying() const { return isPlaying_; }
 private:
 	//===================================================================*/
 	//		private func
@@ -52,5 +54,6 @@ private:
 	std::string name_ = "UnnamedEffect";
 	std::vector<std::unique_ptr<Particle>> particles_;
 	bool pendingDelete_ = false;
+	bool isPlaying_ = false;
 };
 

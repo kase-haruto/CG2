@@ -26,6 +26,7 @@ public:
 	virtual void Update()override{}
 	void Draw(ID3D12GraphicsCommandList* cmdList)override;
 	void CleanUp()override{};
+	virtual void LoadAssets()override {}
 public:
 	SceneContext* GetSceneContext() const override { return sceneContext_.get(); }
 	void SetSceneName(const std::string& name){ sceneName_ = name; }

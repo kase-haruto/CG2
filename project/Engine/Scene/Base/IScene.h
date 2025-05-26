@@ -31,6 +31,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList){}
 	virtual void CleanUp() = 0;
+	virtual void LoadAssets() = 0;
 
 	//--------- accessor -----------------------------------------------------
 	void SetSceneManager(SceneManager* sceneManager){ pSceneManager_ = sceneManager; }
