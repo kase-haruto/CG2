@@ -29,6 +29,11 @@ void ParticleEffect::Update(){
 	for (auto& ps : particles_){
 		ps->Update();
 	}
+
+	 // 全ての Particle が終了していたら、isPlaying_ を false にする
+	if (IsFinished()) {
+		isPlaying_ = false;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +89,7 @@ void ParticleEffect::Play(const Vector3& pos, EmitType emitType){
 		p->SetEmitPos(pos);
 		p->Play(emitType);
 	}
+	isPlaying_ = true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

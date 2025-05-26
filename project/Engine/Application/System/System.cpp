@@ -90,7 +90,7 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	TextureManager::GetInstance()->StartUpLoad();
 
 	//パーティクルコンテナの初期化
-	ParticleEffectCollection::GetInstance()->StartupLoad();
+	//ParticleEffectCollection::GetInstance()->StartupLoad();
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////

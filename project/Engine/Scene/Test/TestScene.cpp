@@ -15,6 +15,8 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
+#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 
@@ -27,12 +29,27 @@ TestScene::TestScene(DxCore* dxCore)
 	: BaseScene(dxCore) {
 	// シーン名を設定
 	BaseScene::SetSceneName("TestScene");
+
+	ParticleEffectCollection::GetInstance()->Clear();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	アセットのロード
+/////////////////////////////////////////////////////////////////////////////////////////
+void TestScene::LoadAssets() {
+	ParticleEffectCollection::GetInstance()->Clear();
+
+	// パーティクルエフェクトのロード
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize() {
+
+	LoadAssets();
+
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);
 	//=========================
 	// グラフィック関連
@@ -90,4 +107,6 @@ void TestScene::CleanUp() {
 	// 3Dオブジェクトの描画を終了
 	sceneContext_->GetMeshRenderer()->Clear();
 }
+
+
 

@@ -30,6 +30,7 @@ public:
 
 	//--------- Accessor ----------------------------------
 	ParticleEffect* GetEffectFromName(const std::string& name); // 名前からエフェクトを取得
+	void LoadByName(const std::string& name); // 名前からエフェクトをロード
 	const std::vector<std::unique_ptr<ParticleEffect>>& GetEffects() const{ return effects_; }
 
 private:

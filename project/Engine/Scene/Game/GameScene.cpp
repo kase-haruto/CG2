@@ -13,7 +13,7 @@
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
-
+#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ
@@ -25,12 +25,30 @@ GameScene::GameScene(DxCore* dxCore)
 	// シーン名を設定
 	//IScene::SetSceneName("GameScene");
 	SetSceneName("GameScene");
+
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//	アセットのロード
+/////////////////////////////////////////////////////////////////////////////////////////
+void GameScene::LoadAssets() {
+	ParticleEffectCollection* pfxCollection = ParticleEffectCollection::GetInstance();
+	pfxCollection->Clear();
+
+	// パーティクルエフェクトのロード
+	pfxCollection->LoadByName("hitParticle");
+	pfxCollection->LoadByName("reloadParticle");
+	pfxCollection->LoadByName("shootEffect");
+	pfxCollection->LoadByName("smoke");
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
+	LoadAssets();
+
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
 	
 	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");

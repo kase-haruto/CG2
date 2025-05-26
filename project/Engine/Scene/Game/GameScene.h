@@ -41,6 +41,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void CleanUp()override;
+	void LoadAssets()override;
 
 private:
 	/* objects ======================================================*/
