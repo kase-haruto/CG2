@@ -49,7 +49,7 @@ public:
 	//===================================================================*/
 	Collider() = default;
 	Collider(bool isEnuble);
-	virtual ~Collider() = default;
+	virtual ~Collider();
 	virtual void Update(const Vector3& position,const Quaternion& rotate) = 0;
 	virtual void Draw() = 0;
 	virtual void ShowGui();

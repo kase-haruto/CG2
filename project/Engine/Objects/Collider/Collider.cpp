@@ -13,6 +13,12 @@ Collider::Collider(bool isEnuble){
 	}
 }
 
+Collider::~Collider() {
+	if (isCollisionEnabled_) {
+		CollisionManager::GetInstance()->Unregister(this);
+	}
+}
+
 void Collider::ShowGui(){
 	bool enabled = isCollisionEnabled_;
 	if (GuiCmd::CheckBox("Enable Collision", enabled)){

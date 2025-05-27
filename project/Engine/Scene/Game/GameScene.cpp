@@ -102,4 +102,6 @@ void GameScene::Update(){
 void GameScene::CleanUp(){
 	// 3Dオブジェクトの描画を終了
 	sceneContext_->GetMeshRenderer()->Clear();
+	sceneContext_->GetObjectLibrary()->Clear();
+	CollisionManager::GetInstance()->ClearColliders();
 }

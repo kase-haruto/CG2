@@ -125,6 +125,13 @@ void CollisionManager::DebugLog(){
 
 }
 
+void CollisionManager::ClearColliders() {
+	colliders_.clear();
+	collisionLogs_.clear();
+	currentCollisions_.clear();
+	previousCollisions_.clear();
+}
+
 bool CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB){
 
 	auto shapeA = colliderA->GetCollisionShape();

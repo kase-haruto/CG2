@@ -30,6 +30,7 @@ public:
 	void Register(Collider* collider);		// コライダーリストに追加
 	void Unregister(Collider* collider);	// コライダーリストから削除
 	void DebugLog();
+	void ClearColliders();
 
 private:
 	//===================================================================*/
