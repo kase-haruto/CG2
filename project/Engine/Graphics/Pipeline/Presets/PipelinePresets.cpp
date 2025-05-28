@@ -57,7 +57,7 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 		.CBV(1, D3D12_SHADER_VISIBILITY_ALL)     // Camera
 		.CBV(4, D3D12_SHADER_VISIBILITY_PIXEL)   // PointLight
 		.SRVTable(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL) // EnvMap
-		.SRVTable(2, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_VERTEX) // SkinningBuffer
+		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_VERTEX) // SkinningBuffer
 		.SamplerWrapLinear(0);
 
 	return desc;

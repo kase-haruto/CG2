@@ -37,10 +37,6 @@ struct VertexPosUvNSkinning {
 	Vector4 pos;		// 16 B
 	Vector2 uv;			// 24 B
 	Vector3 normal;		// 36 B
-	float pad;			// 40 B
-
-	Vector4 weight;		// 16 B
-	int index[4];		// 32 B
 };
 
 template<>
