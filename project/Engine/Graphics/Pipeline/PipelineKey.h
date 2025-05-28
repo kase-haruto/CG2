@@ -1,5 +1,5 @@
 #pragma once
-#include "../blendMode/BlendMode.h" 
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include "PipelineType.h"
 
 #include <cstdint>

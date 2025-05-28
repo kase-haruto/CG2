@@ -88,14 +88,21 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	//CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
-	//pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
-	//// 静的モデルの描画
-	//for (auto& animationModel : skinnedModels) {
-	//	animationModel.renderable->Draw(*animationModel.transform);
-	//}
+	CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
+	pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
+	// 静的モデルの描画
+	for (auto& animationModel : skinnedModels) {
+		// 各オブジェクトの BlendMode を取得して PSO を構築
+		BlendMode mode = animationModel.renderable->GetBlendMode();
+		GraphicsPipelineDesc desc = PipelinePresets::MakeSkinningObject3D(mode);
 
-	//DrawGroup(skinnedModels, PipelineType::SkinningObject3D);
+		pipelineService_->SetCommand(desc, cmdList);
+		CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
+		pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
+
+		animationModel.renderable->Draw(*animationModel.transform);
+	}
+
 
 	//===================================================================*/
 	//                    プリミティブ描画

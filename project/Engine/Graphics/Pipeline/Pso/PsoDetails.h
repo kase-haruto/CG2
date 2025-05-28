@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3d12.h>
+#include <cstdint>
 
 struct PipelineSet{
 	ID3D12PipelineState* pipelineState;
@@ -11,3 +12,26 @@ struct PipelineSet{
 		cmd->SetGraphicsRootSignature(rootSignature);
 	}
 };
+
+namespace PipelineTag{
+	enum class Object :std::uint16_t{
+		Object3d,
+		SkinningObject3D,
+		Object2d,
+		StructuredObject,
+		Line,
+		Effect,
+		Skybox,
+
+		count
+	};
+
+	enum class PostProcess :std::uint16_t{
+		CopyImage,
+		GrayScale,
+		RadialBlur,
+
+		Count
+	};
+
+} // namespace PipelineTag
