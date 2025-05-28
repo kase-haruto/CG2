@@ -1,10 +1,9 @@
 #include "GrayScale.h"
 #include <Engine/PostProcess/FullscreenDrawer.h>
+#include <Engine/Graphics/Pipeline/Pso/PsoDetails.h>
 
-
-void GrayScaleEffect::Initialize(PipelineStateManager* pipelineMgr){
-	pso_ = pipelineMgr->GetPipelineState(PipelineType::GrayScale, BlendMode::NONE);
-	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::GrayScale, BlendMode::NONE);
+void GrayScaleEffect::Initialize(PipelineSet psoSet){
+	psoSet_ = psoSet;
 }
 
 void GrayScaleEffect::Apply(ID3D12GraphicsCommandList* cmd,
@@ -14,8 +13,7 @@ void GrayScaleEffect::Apply(ID3D12GraphicsCommandList* cmd,
 
 	outputRT->SetRenderTarget(cmd);
 
-	cmd->SetPipelineState(pso_.Get());
-	cmd->SetGraphicsRootSignature(rootSignature_.Get());
+	psoSet_.SetCommand(cmd);
 	cmd->SetGraphicsRootDescriptorTable(0, inputSRV);
 
 	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

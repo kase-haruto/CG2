@@ -1,8 +1,9 @@
 #pragma once
-#include <cstdint>
-#include <functional>
 #include "../blendMode/BlendMode.h" 
 #include "PipelineType.h"
+
+#include <cstdint>
+#include <functional>
 
 struct PipelineKey{
 	PipelineType pipelineType;

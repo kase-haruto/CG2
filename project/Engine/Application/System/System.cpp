@@ -104,9 +104,9 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 
 	postEffectSlots_ = {
-		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
 		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
-		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
+		{ "GrayScale",  true,  postProcessCollection_->GetGrayScale()  },
+		{ "CopyImage",  false,  postProcessCollection_->GetCopyImage()  }
 	};
 
 

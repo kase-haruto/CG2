@@ -1,4 +1,7 @@
 #pragma once
+/* ========================================================================
+/* include space
+/* ===================================================================== */
 #include <Engine/PostProcess/Interface/IPostEffectPass.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 
@@ -7,13 +10,15 @@
 #include <Engine/Foundation/Math/Vector2.h>
 
 class RadialBlurEffect :
-    public IPostEffectPass{
+	public IPostEffectPass{
 private:
 	struct BlurParameter{
 		Vector2 center;
 		float width;
 	};
-
+	//===================================================================*/
+	//		public methods
+	//===================================================================*/
 public:
 	void Initialize(PipelineStateManager* pipelineMgr);
 	void Apply(ID3D12GraphicsCommandList* cmd,
@@ -21,6 +26,9 @@ public:
 			   IRenderTarget* outputRT) override;
 	const std::string GetName() const override{ return "RadialBlur"; }
 
+	//===================================================================*/
+	//		private methods
+	//===================================================================*/
 private:
 	BlurParameter blurParam_;
 	DxConstantBuffer<BlurParameter> blurBuffer_;

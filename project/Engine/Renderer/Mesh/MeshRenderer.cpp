@@ -118,12 +118,7 @@ void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vecto
 		BlendMode mode = entry.renderable->GetBlendMode();
 		GraphicsPipelineDesc desc = PipelinePresets::MakeObject3D(mode);
 
-		auto* pso = pipelineService_->GetPipelineState(desc);
-		auto* root = pipelineService_->GetRootSig(desc);
-
-		cmdList->SetPipelineState(pso);
-		cmdList->SetGraphicsRootSignature(root);
-
+		pipelineService_->SetCommand(desc, cmdList);
 		CameraManager::SetCommand(cmdList, type);
 		pLightLibrary_->SetCommand(cmdList, type);
 

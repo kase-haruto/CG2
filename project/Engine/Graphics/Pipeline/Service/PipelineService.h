@@ -3,6 +3,7 @@
 #include <Engine/Graphics/Pipeline/Shader/ShaderCompiler.h>
 #include <Engine/Graphics/Pipeline/Factory/PsoFactory.h>
 #include <Engine/Graphics/Pipeline/Library/PsoLibrary.h>
+#include <Engine/Graphics/Pipeline/Pso/PsoDetails.h>
 
 class PipelineService {
 public:
@@ -12,7 +13,13 @@ public:
 	void RegisterAllPipelines();
 
 	void Register(const GraphicsPipelineDesc& desc);
+	void SetCommand(const GraphicsPipelineDesc& desc, ID3D12GraphicsCommandList* cmd){
+		GetPipelineSet(desc).SetCommand(cmd);
+	}
 
+	const PipelineSet GetPipelineSet(const GraphicsPipelineDesc& desc)const {
+		return {library_->GetOrCreate(desc),library_->GetRoot(desc)};
+	}
 	ID3D12PipelineState* GetPipelineState(const GraphicsPipelineDesc& desc) { return library_->GetOrCreate(desc); }
 	ID3D12RootSignature* GetRootSig(const GraphicsPipelineDesc& desc) { return library_->GetRoot(desc); }
 

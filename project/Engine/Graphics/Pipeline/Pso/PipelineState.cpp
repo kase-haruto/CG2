@@ -2,6 +2,8 @@
 
 #include <Engine/Foundation/Utility/ConvertString/ConvertString.h>
 
+using Microsoft::WRL::ComPtr;
+
 PipelineState::PipelineState(ComPtr<ID3D12Device>device, std::shared_ptr<ShaderManager> shaderManager)
 	: device_(device), shaderManager_(shaderManager){}
 

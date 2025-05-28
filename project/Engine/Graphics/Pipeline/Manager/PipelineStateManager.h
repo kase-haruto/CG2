@@ -34,6 +34,15 @@ public:
 
 	void Finalize();
 
+	const PipelineSet GetPipelineSet (
+		PipelineType pipelineType,
+		BlendMode blendMode
+	) const{
+		auto it = pipelineStates_.find({pipelineType, blendMode});
+		assert(it != pipelineStates_.end());
+		return it->second->GetPipelineSet();
+	}
+
 	const ComPtr<ID3D12PipelineState>& GetPipelineState(
 		PipelineType pipelineType,
 		BlendMode blendMode
