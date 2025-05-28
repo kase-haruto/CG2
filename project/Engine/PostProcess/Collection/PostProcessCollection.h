@@ -13,7 +13,7 @@ public:
 	PostProcessCollection() = default;
 	~PostProcessCollection() = default;
 
-	void Initialize(PipelineStateManager* pipelineMgr);
+	void Initialize(class PipelineStateManager* pipelineMgr);
 
 	GrayScaleEffect* GetGrayScale();
 	RadialBlurEffect* GetRadialBlur() { return radialBlur_.get(); }

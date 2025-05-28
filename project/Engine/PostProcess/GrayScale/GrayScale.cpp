@@ -1,8 +1,7 @@
 #include "GrayScale.h"
 #include <Engine/PostProcess/FullscreenDrawer.h>
-#include <Engine/Graphics/Pipeline/Pso/PsoDetails.h>
 
-void GrayScaleEffect::Initialize(PipelineSet psoSet){
+void GrayScaleEffect::Initialize(const PipelineSet& psoSet){
 	psoSet_ = psoSet;
 }
 

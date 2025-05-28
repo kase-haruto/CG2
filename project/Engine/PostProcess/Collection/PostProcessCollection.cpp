@@ -1,5 +1,7 @@
 #include "PostProcessCollection.h"
 
+#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
+
 void PostProcessCollection::Initialize(PipelineStateManager* pipelineMgr){
 
 	//===================================================================*/
@@ -12,14 +14,16 @@ void PostProcessCollection::Initialize(PipelineStateManager* pipelineMgr){
 	//===================================================================*/
 	//		RadialBlur
 	//===================================================================*/
+	PipelineSet radialBlurSet = pipelineMgr->GetPipelineSet(PipelineType::RadialBlur, BlendMode::NONE);
 	radialBlur_ = std::make_unique<RadialBlurEffect>();
-	radialBlur_->Initialize(pipelineMgr);
+	radialBlur_->Initialize(radialBlurSet);
 
 	//===================================================================*/
 	//		No Effects
 	//===================================================================*/
+	PipelineSet copyImageSet = pipelineMgr->GetPipelineSet(PipelineType::copyImage, BlendMode::NONE);
 	copyImage_ = std::make_unique<CopyImageEffect>();
-	copyImage_->Initialize(pipelineMgr);
+	copyImage_->Initialize(copyImageSet);
 }
 
 GrayScaleEffect* PostProcessCollection::GetGrayScale(){

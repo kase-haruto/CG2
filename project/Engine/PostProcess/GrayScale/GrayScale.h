@@ -1,14 +1,13 @@
 #pragma once
 
+#include <Engine/Graphics/Pipeline/Pso/PsoDetails.h>
+#include <Engine/PostProcess/FullscreenDrawer.h>
 #include <Engine/PostProcess/Interface/IPostEffectPass.h>
-#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
-
-struct PipelineSet;
 
 class GrayScaleEffect
 	: public IPostEffectPass{
 public:
-	void Initialize(PipelineSet psoSet);
+	void Initialize(const PipelineSet& psoSet);
 	void Apply(ID3D12GraphicsCommandList* cmd,
 			   D3D12_GPU_DESCRIPTOR_HANDLE inputSRV,
 			   IRenderTarget* outputRT) override;

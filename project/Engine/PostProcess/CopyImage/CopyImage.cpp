@@ -2,9 +2,8 @@
 
 #include <Engine/PostProcess/FullscreenDrawer.h>
 
-void CopyImageEffect::Initialize(PipelineStateManager* pipelineMgr) {
-	pso_ = pipelineMgr->GetPipelineState(PipelineType::copyImage, BlendMode::NONE);
-	rootSignature_ = pipelineMgr->GetRootSignature(PipelineType::copyImage, BlendMode::NONE);
+void CopyImageEffect::Initialize(const PipelineSet& psoSet) {
+	psoSet_ = psoSet;
 }
 
 void CopyImageEffect::Apply(ID3D12GraphicsCommandList* cmd,
@@ -14,8 +13,7 @@ void CopyImageEffect::Apply(ID3D12GraphicsCommandList* cmd,
 
 	outputRT->SetRenderTarget(cmd);
 
-	cmd->SetPipelineState(pso_.Get());
-	cmd->SetGraphicsRootSignature(rootSignature_.Get());
+	psoSet_.SetCommand(cmd);
 	cmd->SetGraphicsRootDescriptorTable(0, inputSRV);
 
 	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
