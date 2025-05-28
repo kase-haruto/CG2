@@ -88,16 +88,13 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	// 静的モデルの描画
+	// アニメーションモデルの描画
 	for (auto& animationModel : skinnedModels) {
-		// 各オブジェクトの BlendMode を取得して PSO を構築
 		BlendMode mode = animationModel.renderable->GetBlendMode();
 		GraphicsPipelineDesc desc = PipelinePresets::MakeSkinningObject3D(mode);
-
 		pipelineService_->SetCommand(desc, cmdList);
 		CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
 		pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
-
 		animationModel.renderable->Draw(*animationModel.transform);
 	}
 
@@ -122,7 +119,6 @@ void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vecto
 		// 各オブジェクトの BlendMode を取得して PSO を構築
 		BlendMode mode = entry.renderable->GetBlendMode();
 		GraphicsPipelineDesc desc = PipelinePresets::MakeObject3D(mode);
-
 		pipelineService_->SetCommand(desc, cmdList);
 		CameraManager::SetCommand(cmdList, type);
 		pLightLibrary_->SetCommand(cmdList, type);
