@@ -65,6 +65,7 @@ void EffectEditor::ShowParticleMakingGui() {
 		auto newEffect = std::make_unique<ParticleEffect>();
 		newEffect->AddParticle(std::make_unique<Particle>());
 		newEffect->SetName(effectName);
+		newEffect->Play(Vector3::Zero, EmitType::Both); // 初期位置はゼロ
 		ParticleEffectCollection::GetInstance()->AddEffect(std::move(newEffect));
 		effectName[0] = '\0';
 	}

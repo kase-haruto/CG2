@@ -27,7 +27,11 @@ BaseParticle::BaseParticle(){
 
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
+	emitters_.clear();
 
+	ParticleData::Emitter defaultEmitter;
+	defaultEmitter.Initialize(5);
+	emitters_.emplace_back(defaultEmitter);
 
 	modelName_ = modelName;
 	textureName_ = texturePath;

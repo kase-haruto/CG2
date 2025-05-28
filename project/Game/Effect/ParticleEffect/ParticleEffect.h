@@ -54,6 +54,6 @@ private:
 	std::string name_ = "UnnamedEffect";
 	std::vector<std::unique_ptr<Particle>> particles_;
 	bool pendingDelete_ = false;
-	bool isPlaying_ = false;
+	bool isPlaying_ = true;
 };
 
