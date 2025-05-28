@@ -39,7 +39,7 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 	GraphicsPipelineDesc desc;
 	desc.VS(L"SkinningObject3d.VS.hlsl")
 		.PS(L"Object3d.PS.hlsl")
-		.Input(VertexInputLayout<VertexPosUvN>::Get())
+		.Input(VertexInputLayout<VertexPosUvNSkinning>::Get())
 		.Blend(mode)
 		.CullBack()
 		.DepthEnable(true)

@@ -88,8 +88,6 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
-	pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
 	// 静的モデルの描画
 	for (auto& animationModel : skinnedModels) {
 		// 各オブジェクトの BlendMode を取得して PSO を構築
