@@ -24,7 +24,7 @@ public:
 
 	void Initialize();
 	void Update();
-	void Draw();
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void ImGui();
 	bool IsFinished()const;
 	void Play(const Vector3& pos, EmitType emitType);

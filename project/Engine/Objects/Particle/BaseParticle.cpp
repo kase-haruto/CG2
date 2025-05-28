@@ -164,23 +164,22 @@ void BaseParticle::Update(){
 
 }
 
-void BaseParticle::Draw(){
-	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
-	CameraManager::SetCommand(commandList, PipelineType::StructuredObject);
+void BaseParticle::Draw(ID3D12GraphicsCommandList* cmdList){
+	CameraManager::SetCommand(cmdList, PipelineType::StructuredObject);
 
 	if (!modelData_) return;
 	if (instanceNum_ == 0) return;
 
-	modelData_->vertexBuffer.SetCommand(commandList);
+	modelData_->vertexBuffer.SetCommand(cmdList);
 
-	materialBuffer_.SetCommand(commandList, 0);
+	materialBuffer_.SetCommand(cmdList, 0);
 	//t0
-	commandList->SetGraphicsRootDescriptorTable(2, instancingBuffer_.GetGpuHandle());
+	cmdList->SetGraphicsRootDescriptorTable(2, instancingBuffer_.GetGpuHandle());
 	//t1
-	commandList->SetGraphicsRootDescriptorTable(3, textureHandle);
+	cmdList->SetGraphicsRootDescriptorTable(3, textureHandle);
 
 	// 描画コマンド（インスタンシング）
-	commandList->DrawInstanced(
+	cmdList->DrawInstanced(
 		static_cast< UINT >(modelData_->vertices.size()), // 頂点数
 		instanceNum_,                                   // インスタンス数
 		0, 0
