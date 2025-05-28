@@ -27,11 +27,11 @@ BaseParticle::BaseParticle(){
 
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
-	emitters_.clear();
+	//emitters_.clear();
 
-	ParticleData::Emitter defaultEmitter;
-	defaultEmitter.Initialize(5);
-	emitters_.emplace_back(defaultEmitter);
+	//ParticleData::Emitter defaultEmitter;
+	//defaultEmitter.Initialize(5);
+	//emitters_.emplace_back(defaultEmitter);
 
 	modelName_ = modelName;
 	textureName_ = texturePath;
@@ -164,23 +164,22 @@ void BaseParticle::Update(){
 
 }
 
-void BaseParticle::Draw(){
-	ComPtr<ID3D12GraphicsCommandList> commandList = GraphicsGroup::GetInstance()->GetCommandList();
-	CameraManager::SetCommand(commandList, PipelineType::StructuredObject);
+void BaseParticle::Draw(ID3D12GraphicsCommandList* cmdList){
+	CameraManager::SetCommand(cmdList, PipelineType::StructuredObject);
 
 	if (!modelData_) return;
 	if (instanceNum_ == 0) return;
 
-	modelData_->vertexBuffer.SetCommand(commandList);
+	modelData_->vertexBuffer.SetCommand(cmdList);
 
-	materialBuffer_.SetCommand(commandList, 0);
+	materialBuffer_.SetCommand(cmdList, 0);
 	//t0
-	commandList->SetGraphicsRootDescriptorTable(2, instancingBuffer_.GetGpuHandle());
+	cmdList->SetGraphicsRootDescriptorTable(2, instancingBuffer_.GetGpuHandle());
 	//t1
-	commandList->SetGraphicsRootDescriptorTable(3, textureHandle);
+	cmdList->SetGraphicsRootDescriptorTable(3, textureHandle);
 
 	// 描画コマンド（インスタンシング）
-	commandList->DrawInstanced(
+	cmdList->DrawInstanced(
 		static_cast< UINT >(modelData_->vertices.size()), // 頂点数
 		instanceNum_,                                   // インスタンス数
 		0, 0

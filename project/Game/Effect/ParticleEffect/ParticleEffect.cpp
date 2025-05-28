@@ -39,16 +39,15 @@ void ParticleEffect::Update(){
 ///////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 ///////////////////////////////////////////////////////////////////////////////////////////
-void ParticleEffect::Draw(){
+void ParticleEffect::Draw(ID3D12GraphicsCommandList* cmdList){
 	for (auto& p : particles_){
 		auto blendMode = p->GetBlendMode();
 		auto rs = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::StructuredObject, blendMode);
 		auto ps = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::StructuredObject, blendMode);
-		auto cmdList = GraphicsGroup::GetInstance()->GetCommandList();
 		cmdList->SetGraphicsRootSignature(rs.Get());
 		cmdList->SetPipelineState(ps.Get());
 
-		p->Draw();
+		p->Draw(cmdList);
 	}
 }
 

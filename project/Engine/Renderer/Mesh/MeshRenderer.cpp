@@ -107,9 +107,7 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    パーティクル描画
 	//===================================================================*/
-	ParticleEffectCollection::GetInstance()->Draw();
-
-
+	ParticleEffectCollection::GetInstance()->Draw(cmdList);
 }
 
 void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {

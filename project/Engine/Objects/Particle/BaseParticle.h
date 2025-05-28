@@ -111,7 +111,7 @@ public:
 	virtual void Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count);
 	virtual ~BaseParticle() = default;
 	virtual void Update();
-	virtual void Draw();
+	virtual void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	virtual void ImGui();
 
