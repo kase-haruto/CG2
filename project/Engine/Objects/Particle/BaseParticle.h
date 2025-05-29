@@ -78,6 +78,7 @@ namespace ParticleData{
 		ParticleData::EmittedPtlData parmData;		//発生させるパーティクルのデータ
 		float emissionCounter = 0.0f; // 発生カウンター（頻度管理用）
 		Vector3 prevPosition = {0.0f, 0.0f, 0.0f}; // 追加: 前フレーム位置
+		bool isFirstFrame = true; // 初回フレームかどうか
 
 		void Initialize(uint32_t count);
 		void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);

@@ -99,26 +99,34 @@ void BaseParticle::Update(){
 
 	// EmitType に応じた発生処理（Auto, Both）
 	if (emitType_ == EmitType::Auto || emitType_ == EmitType::Both){
-		for (auto& emitter : emitters_){
-			if (emitter.frequency > 0.0f){
+		for (auto& emitter : emitters_) {
+			// 最初のフレームだけ prevPosition を現在位置に初期化
+			if (emitter.isFirstFrame) {
+				emitter.prevPosition = emitter.transform.translate;
+				emitter.isFirstFrame = false;
+			}
+
+			// EmitTypeに応じた自動発生
+			if (emitter.frequency > 0.0f) {
 				float emissionRate = 1.0f / emitter.frequency;
 				emitter.emissionCounter += deltaTime * emissionRate;
 
-				int emitCount = static_cast< int >(emitter.emissionCounter);
+				int emitCount = static_cast<int>(emitter.emissionCounter);
 				emitter.emissionCounter -= emitCount;
 
-				for (int i = 0; i < emitCount; ++i){
+				for (int i = 0; i < emitCount; ++i) {
 					Emit(emitter);
 				}
 			}
 
+			// 移動補間によるTrail発生
 			Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
 			float distance = moveDelta.Length();
-			if (distance > 0.0f){
+			if (distance > 0.0f) {
 				float spawnInterval = 0.1f;
-				int trailCount = static_cast< int >(distance / spawnInterval);
-				if (trailCount > 0){
-					for (int i = 0; i < trailCount; ++i){
+				int trailCount = static_cast<int>(distance / spawnInterval);
+				if (trailCount > 0) {
+					for (int i = 0; i < trailCount; ++i) {
 						float dist = i * spawnInterval;
 						float t = dist / distance;
 						Vector3 spawnPos = Vector3::Lerp(emitter.prevPosition, emitter.transform.translate, t);
@@ -127,7 +135,7 @@ void BaseParticle::Update(){
 				}
 			}
 
-			// 移動後の位置を更新
+			// 次フレーム用に移動後の位置を更新
 			emitter.prevPosition = emitter.transform.translate;
 		}
 
