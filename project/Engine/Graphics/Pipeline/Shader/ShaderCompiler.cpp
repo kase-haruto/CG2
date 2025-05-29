@@ -9,24 +9,24 @@ void ShaderCompiler::InitializeDXC() {
 	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
 	if (FAILED(hr)) {
 		Log("Failed to create DXC Utils");
-		throw std::runtime_error("Failed to create DXC Utils");
+		assert(false && "Failed to create DXC Utils");
 	}
 
 	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
 	if (FAILED(hr)) {
 		Log("Failed to create DXC Compiler");
-		throw std::runtime_error("Failed to create DXC Compiler");
+		assert(false && "Failed to create DXC Compiler");
 	}
 
 	// Include handlerを設定
 	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandle);
 	if (FAILED(hr)) {
 		Log("Failed to create default include handler");
-		throw std::runtime_error("Failed to create default include handler");
+		assert(false && "Failed to create default include handler");
 	}
 }
 
-void ShaderCompiler::LoadHLSL(const std::wstring& filePath, const wchar_t* profile) {
+void ShaderCompiler::LoadHLSL(const std::wstring& filePath,[[maybe_unused]] const wchar_t* profile) {
 	//========================================================================
 	//	これからシェーダをコンパイルする旨をログに出す
 	//========================================================================
@@ -35,16 +35,16 @@ void ShaderCompiler::LoadHLSL(const std::wstring& filePath, const wchar_t* profi
 	//========================================================================
 	//	シェーダーファイルのフルパスを構築
 	//========================================================================
-	std::wstring fullPath = L"Resources/shaders/" + filePath;
 
 	//========================================================================
 	//	ファイル読み込み
 	//========================================================================
-	HRESULT hr = dxcUtils->LoadFile(fullPath.c_str(), nullptr, shaderSource.GetAddressOf());
+	HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, shaderSource.GetAddressOf());
 	if (FAILED(hr)) {
-		Log(ConvertString(std::format(L"Failed to load HLSL file: {}\n", fullPath)));
-		throw std::runtime_error("LoadFile failed");
+		Log(ConvertString(std::format(L"Failed to load HLSL file: {}\n", filePath)));
+		assert(false && "Failed to load HLSL file");
 	}
+
 
 	//========================================================================
 	//	読み込んだファイル内容を設定
@@ -84,13 +84,12 @@ void ShaderCompiler::Compile(const std::wstring& filePath,
 	//	コンパイルオプションの設定
 	//========================================================================
 	LPCWSTR arguments[] = {
-		filePath.c_str(),         // コンパイル対象
-		L"-E", L"main",           // エントリポイント
-		L"-T", profile,           // プロファイル
-		L"-Zi", L"-Qembed_debug", // デバッグ情報
-		L"-Od",                   // 最適化を外す
-		L"-Zpr",                  // 行優先
-		L"-I", L"Resources/shaders/"
+		filePath.c_str(),			//コンパイル対象のhlslファイル名
+		L"-E",L"main",				//エントリーポイントの指定。基本的にmain以外には市内
+		L"-T",profile,				//ShaderProfileの設定
+		L"-Zi",L"-Qembed_debug",	//デバッグ用の情報を埋め込む
+		L"-Od",						//最適化を外しておく
+		L"-Zpr",					//メモリレイアウトは行優先
 	};
 
 	//========================================================================
@@ -106,7 +105,7 @@ void ShaderCompiler::Compile(const std::wstring& filePath,
 
 	if (FAILED(hr)) {
 		Log("Failed to compile HLSL shader (DXC invocation failed)");
-		throw std::runtime_error("DXC Compile failed");
+		assert(false && "DXC Compile failed");
 	}
 }
 
@@ -120,10 +119,10 @@ void ShaderCompiler::CheckNoError() {
 
 		// warning だけならログだけにする
 		if (msg.find("warning") != std::string::npos) {
-			Log(msg.c_str()); // 警告はログに出すだけ
+			Log(msg.c_str());
 		} else {
-			Log(msg.c_str()); // エラーはログに出してから例外
-			throw std::runtime_error("Shader compile error");
+			Log(msg.c_str());
+			assert(false && "Shader compile error");
 		}
 	}
 }
@@ -137,7 +136,7 @@ ComPtr<IDxcBlob> ShaderCompiler::GetCompileResult(const std::wstring& filePath,
 	HRESULT hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(shaderBlob.GetAddressOf()), nullptr);
 	if (FAILED(hr)) {
 		Log("Failed to get shader bytecode");
-		throw std::runtime_error("Failed to get shader bytecode");
+		assert(false && "Failed to get shader bytecode");
 	}
 
 	//========================================================================
