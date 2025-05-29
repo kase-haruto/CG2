@@ -50,6 +50,7 @@
                 1.0,
                 1.0
             ],
+            "flyToEmitter": false,
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": true,
@@ -59,12 +60,12 @@
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                1.3200000524520874,
-                7.590000152587891,
+                1.059999942779541,
+                5.849999904632568,
                 1.0
             ],
             "randomScaleMin": [
-                0.9800000190734863,
+                0.8199999928474426,
                 3.5,
                 1.0
             ],
