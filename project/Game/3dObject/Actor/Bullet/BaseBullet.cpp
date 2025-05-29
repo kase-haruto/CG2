@@ -1,5 +1,5 @@
 #include "BaseBullet.h"
-
+#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 /* ========================================================================
 /* include space
 /* ===================================================================== */
@@ -37,6 +37,9 @@ void BaseBullet::Update(){
 	worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
 	BaseGameObject::Update();
+
+	Vector3 wPos = worldTransform_.GetWorldPosition();
+	ParticleEffectCollection::GetInstance()->PlayByName("BulletEffect", wPos, EmitType::Both);
 
 	// 時間カウント
 	//currentTime_ += deltaTime;

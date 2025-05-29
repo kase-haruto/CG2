@@ -8,7 +8,7 @@
             "emitType": 1,
             "emitters": [
                 {
-                    "count": 5,
+                    "count": 1,
                     "frequency": 0.05000000074505806,
                     "rotationParm": {
                         "initialRotation": [
@@ -38,8 +38,8 @@
                             1.0
                         ],
                         "translate": [
-                            0.1659107357263565,
-                            10.341838836669922,
+                            0.30883368849754333,
+                            1.8067922592163086,
                             223.0
                         ]
                     }
@@ -54,7 +54,7 @@
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": false,
-            "lifeTime": 0.6019999980926514,
+            "lifeTime": 0.31200000643730164,
             "maxLifeTime": 1.0,
             "minLifeTime": 0.7699999809265137,
             "model": "plane.obj",
@@ -86,7 +86,7 @@
             "emitType": 1,
             "emitters": [
                 {
-                    "count": 4,
+                    "count": 1,
                     "frequency": 0.009999999776482582,
                     "rotationParm": {
                         "initialRotation": [
@@ -116,8 +116,8 @@
                             0.4399999976158142
                         ],
                         "translate": [
-                            0.1659107357263565,
-                            10.341838836669922,
+                            0.30883368849754333,
+                            1.8067922592163086,
                             223.0
                         ]
                     }
@@ -132,18 +132,18 @@
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": true,
-            "lifeTime": 0.13199999928474426,
+            "lifeTime": 0.07999999821186066,
             "maxLifeTime": 3.0,
             "minLifeTime": 1.0,
             "model": "suzanne.obj",
             "name": "",
             "randomScaleMax": [
-                0.7099999785423279,
-                0.5899999737739563,
+                0.6899999976158142,
+                0.30000001192092896,
                 0.7900000214576721
             ],
             "randomScaleMin": [
-                0.33000001311302185,
+                0.30000001192092896,
                 0.25999999046325684,
                 0.36000001430511475
             ],
@@ -164,8 +164,8 @@
             "emitType": 1,
             "emitters": [
                 {
-                    "count": 3,
-                    "frequency": 0.10000000149011612,
+                    "count": 1,
+                    "frequency": 0.3499999940395355,
                     "rotationParm": {
                         "initialRotation": [
                             0.0,
@@ -194,8 +194,8 @@
                             1.0
                         ],
                         "translate": [
-                            0.1659107357263565,
-                            10.341838836669922,
+                            0.30883368849754333,
+                            1.8067922592163086,
                             223.0
                         ]
                     }
@@ -210,19 +210,19 @@
             "isBillboard": true,
             "isRandomLifeTime": false,
             "isStatic": true,
-            "lifeTime": 0.25,
+            "lifeTime": 0.07999999821186066,
             "maxLifeTime": 3.0,
             "minLifeTime": 1.0,
             "model": "suzanne.obj",
             "name": "",
             "randomScaleMax": [
-                0.47999998927116394,
-                0.5699999928474426,
+                0.8700000047683716,
+                0.4099999964237213,
                 0.9100000262260437
             ],
             "randomScaleMin": [
-                0.25999999046325684,
                 0.20000000298023224,
+                0.17000000178813934,
                 0.4099999964237213
             ],
             "selectedColor": [

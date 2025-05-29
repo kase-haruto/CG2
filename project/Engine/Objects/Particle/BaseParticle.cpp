@@ -61,7 +61,6 @@ void BaseParticle::Update(){
 	// EmitType に応じた発生処理（Auto, Both）
 	if (emitType_ == EmitType::Auto || emitType_ == EmitType::Both){
 		for (auto& emitter : emitters_){
-			// ① frequency に従う発生
 			if (emitter.frequency > 0.0f){
 				float emissionRate = 1.0f / emitter.frequency;
 				emitter.emissionCounter += deltaTime * emissionRate;
@@ -74,7 +73,6 @@ void BaseParticle::Update(){
 				}
 			}
 
-			// ② trail 用の移動補完
 			Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
 			float distance = moveDelta.Length();
 			if (distance > 0.0f){

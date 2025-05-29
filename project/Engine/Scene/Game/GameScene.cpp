@@ -40,6 +40,7 @@ void GameScene::LoadAssets() {
 	pfxCollection->LoadByName("reloadParticle");
 	pfxCollection->LoadByName("shootEffect");
 	pfxCollection->LoadByName("smoke");
+	pfxCollection->LoadByName("BulletEffect");
 }
 
 

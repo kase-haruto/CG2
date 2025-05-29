@@ -158,7 +158,7 @@ public:
 	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
-	int32_t kMaxInstanceNum_ = 1024;
+	int32_t kMaxInstanceNum_ = 2048;
 	int32_t instanceNum_ = 0;
 
 	bool useRotation_ = false;
