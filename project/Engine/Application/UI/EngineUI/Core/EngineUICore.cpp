@@ -41,7 +41,8 @@ void EngineUICore::Render() {
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUICore::RenderMainViewport() {
-	ImVec2 viewportSize = ImVec2(kGameViewSize.x, kGameViewSize.y);
+
+	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
 
 	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
 	ImGui::Begin("Game View", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
