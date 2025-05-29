@@ -68,5 +68,6 @@ private:
 
 	ParticleEffect* shootEffect_ = nullptr;
 	ParticleEffect* rollEffect_ = nullptr;
+	ParticleEffect* moveEffect_ = nullptr;
 };
 

@@ -108,9 +108,7 @@ void Player::Move() {
 	if (moveVector.Length() > 0.0f) {
 		moveVector.Normalize();
 	}
-	//effect
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	Vector3 offset = { 0.0f, 0.0f, -2.0f };
+
 
 	//移動速度を掛ける
 	moveVector *= moveSpeed_;
@@ -118,7 +116,13 @@ void Player::Move() {
 	//移動ベクトルを加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
-	//ParticleEffectSystem::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
+	if (moveEffect_) {
+		//effect
+		Vector3 wPos = worldTransform_.GetWorldPosition();
+		Vector3 offset = { 0.0f, 0.0f, -2.0f };
+		moveEffect_->SetPosition(wPos + offset);
+	}
+
 	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
 }
@@ -196,4 +200,5 @@ void Player::InitializeEffect() {
 	Vector3 wPos = worldTransform_.GetWorldPosition();
 	shootEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("shootEffect", wPos, EmitType::Once);
 	rollEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("reloadParticle", wPos, EmitType::Once);
+	moveEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("smoke", wPos, EmitType::Auto);
 }
