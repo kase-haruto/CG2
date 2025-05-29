@@ -60,7 +60,9 @@ BaseParticle::BaseParticle(const BaseParticle& other)
 	isFixationAlpha_(other.isFixationAlpha_),
 	isBillboard_(other.isBillboard_),
 	currentShape_(other.currentShape_),
-	blendMode_(other.blendMode_){}
+	blendMode_(other.blendMode_)
+	{textureHandle.ptr = 0; // 初期化
+}
 
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
@@ -72,6 +74,7 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 
 	modelName_ = modelName;
 	textureName_ = texturePath;
+	textureHandle.ptr = 0; // 初期化
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);

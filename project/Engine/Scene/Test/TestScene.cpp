@@ -15,7 +15,7 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -30,18 +30,18 @@ TestScene::TestScene(DxCore* dxCore)
 	// シーン名を設定
 	BaseScene::SetSceneName("TestScene");
 
-	ParticleEffectCollection::GetInstance()->Clear();
+	ParticleEffectSystem::GetInstance()->GetCollection().Clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::LoadAssets() {
-	ParticleEffectCollection* pfxCollection = ParticleEffectCollection::GetInstance();
-	pfxCollection->Clear();
+	auto& pfxCollection = ParticleEffectSystem::GetInstance()->GetCollection();
+	pfxCollection.Clear();
 
 	// パーティクルエフェクトのロード
-	pfxCollection->LoadByName("BulletEffect");
+	pfxCollection.LoadByName("BulletEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

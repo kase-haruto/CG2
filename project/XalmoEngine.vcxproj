@@ -269,6 +269,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Pipeline\Library\PsoLibrary.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Service\PipelineService.cpp" />
     <ClCompile Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.cpp" />
+    <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChromaticAberration.h" />
@@ -466,6 +467,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\Service\PipelineService.h" />
     <ClInclude Include="Engine\Graphics\Core\GraphicsSystem.h" />
     <ClInclude Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.h" />
+    <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

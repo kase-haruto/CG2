@@ -1,11 +1,11 @@
 #include "BaseBullet.h"
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 /* ========================================================================
 /* include space
 /* ===================================================================== */
 
 /* engine */
 #include <Engine/Foundation/Clock/ClockManager.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 /* external */
 #include <externals/imgui/imgui.h>
@@ -27,25 +27,23 @@ void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
 	moveSpeed_ = 15.0f;
 	life_ = 1;
 	isAlive_ = true;
+
+	OnShot();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseBullet::Update(){
+void BaseBullet::Update() {
 	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 	worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
 	BaseGameObject::Update();
 
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	ParticleEffectCollection::GetInstance()->PlayByName("BulletEffect", wPos, EmitType::Both);
-
-	// 時間カウント
-	//currentTime_ += deltaTime;
-	//if (currentTime_ >= lifeTime_){
-	//	isAlive_ = false;
-	//}
+	if (bulletEffect_) {
+		Vector3 wPos = worldTransform_.GetWorldPosition();
+		bulletEffect_->Play(wPos, EmitType::Auto);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -53,4 +51,9 @@ void BaseBullet::Update(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::DerivativeGui(){
 
+}
+
+void BaseBullet::OnShot() {
+	Vector3 wPos = worldTransform_.GetWorldPosition();
+	bulletEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("BulletEffect", wPos, EmitType::Both);
 }

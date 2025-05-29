@@ -12,7 +12,7 @@
 #include <Engine/objects/Transform/Transform.h>
 #include <Engine/Lighting/LightLibrary.h>
 #include <Engine/Graphics/Pipeline/Presets/PipelinePresets.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
@@ -109,7 +109,8 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    パーティクル描画
 	//===================================================================*/
-	ParticleEffectCollection::GetInstance()->Draw(cmdList);
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	ParticleEffectSystem::GetInstance()->Draw(cmdList);
 }
 
 void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {

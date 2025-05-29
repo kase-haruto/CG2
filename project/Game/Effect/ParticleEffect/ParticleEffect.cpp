@@ -38,6 +38,11 @@ void ParticleEffect::Initialize(){
 //		更新
 ///////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::Update(){
+
+	if (particles_.size()>=kMaxParticleNum_) {
+		return;
+	}
+
 	for (auto& ps : particles_){
 		ps->Update();
 	}
@@ -159,6 +164,11 @@ void ParticleEffect::Load(const std::string& filename){
 	}
 }
 
+void ParticleEffect::SetPosition(const Vector3& position) {
+	for (auto& particle : particles_) {
+		particle->SetEmitPos(position);
+	}
+}
 /////////////////////////////////////////////////////////////////////////////////////////
 //		読み込み
 /////////////////////////////////////////////////////////////////////////////////////////

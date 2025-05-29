@@ -5,6 +5,8 @@
 #include <Engine/Objects/3D/Actor/Actor.h>
 #include <Engine/objects/Collider/SphereCollider.h>
 
+#include <Game/Effect/ParticleEffect/ParticleEffect.h>
+
 /* ========================================================================
 /* bullet 基底クラス
 /* ===================================================================== */
@@ -23,10 +25,11 @@ public:
 	void DerivativeGui()override;
 
 	//--------- accessor ---------------------------------------------------
-
+private:
 	//===================================================================*/
 	//private methods
 	//===================================================================*/
+	void OnShot();
 
 protected:
 	//===================================================================*/
@@ -34,5 +37,7 @@ protected:
 	//===================================================================*/
 	float lifeTime_ = 3.0f;      // 弾の寿命（秒）
 	float currentTime_ = 0.0f;   // 経過時間
+
+	ParticleEffect* bulletEffect_;
 };
 

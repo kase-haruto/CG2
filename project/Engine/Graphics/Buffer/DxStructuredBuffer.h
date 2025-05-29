@@ -50,7 +50,12 @@ void DxStructuredBuffer<T>::SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList
 }
 
 template<typename T>
-void DxStructuredBuffer<T>::CreateSrv(ComPtr<ID3D12Device> device){
+void DxStructuredBuffer<T>::CreateSrv(ComPtr<ID3D12Device> device) {
+	if (cpuHandle_.ptr != 0) {
+		// すでにSRVを作成済みなら再生成しない
+		return;
+	}
+
 	auto [cpu, gpu] = SrvLocator::AllocateSrv();
 	cpuHandle_ = cpu;
 	gpuHandle_ = gpu;

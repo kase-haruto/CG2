@@ -34,7 +34,7 @@ void Enemy::Update(){
 	if (isHit_){
 		Vector3 wPos = worldTransform_.GetWorldPosition();
 		Vector3 offset = {0.0f, 0.0f, -2.0f};
-		ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
+		//ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
 		isHit_ = false;
 	}
 	

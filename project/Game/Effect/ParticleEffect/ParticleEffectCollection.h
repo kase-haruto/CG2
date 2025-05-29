@@ -9,36 +9,24 @@
 class ParticleEffectCollection{
 public:
 	//===================================================================*/
-	//                      Singleton Access
-	//===================================================================*/
-	static ParticleEffectCollection* GetInstance();
-
-	//===================================================================*/
 	//                      Public Methods
 	//===================================================================*/
+	ParticleEffectCollection() = default;
 	~ParticleEffectCollection() = default;
 
 	void StartupLoad();
-	void Update();
-	void Draw(ID3D12GraphicsCommandList* cmdList);
-	void PlayByName(const std::string& name, const Vector3& position, EmitType emitType = EmitType::Once);
-	//--------- Add / Remove -----------------------------
-	void AddEffect(std::unique_ptr<ParticleEffect> effect); // エフェクトを追加（初期化含む）
-	void RemoveEffect(size_t index); // 指定インデックスのエフェクトを削除
-	void Clear(); // 全削除
 
+	//--------- Add / Remove -----------------------------
+	void AddEffect(std::unique_ptr<ParticleEffect> effect);
+	void RemoveEffect(size_t index);
+	void Clear();
 
 	//--------- Accessor ----------------------------------
-	ParticleEffect* GetEffectFromName(const std::string& name); // 名前からエフェクトを取得
-	void LoadByName(const std::string& name); // 名前からエフェクトをロード
-	const std::vector<std::unique_ptr<ParticleEffect>>& GetEffects() const{ return effects_; }
+	ParticleEffect* GetEffectFromName(const std::string& name);
+	void LoadByName(const std::string& name);
+	const std::vector<std::unique_ptr<ParticleEffect>>& GetEffects() const { return effects_; }
 
 private:
-	//===================================================================*/
-	//                      Private Members
-	//===================================================================*/
-	ParticleEffectCollection() = default;
-
-	std::vector<std::unique_ptr<ParticleEffect>> effects_; // 登録された全エフェクト
+	std::vector<std::unique_ptr<ParticleEffect>> effects_;
 };
 
