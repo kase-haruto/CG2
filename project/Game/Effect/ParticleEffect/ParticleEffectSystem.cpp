@@ -46,9 +46,14 @@ ParticleEffect* ParticleEffectSystem::CreateEffectByName(const std::string& name
 		auto newEffect = std::make_unique<ParticleEffect>(*prototype);
 		newEffect->Initialize();
 		newEffect->SetPosition(position);
-		newEffect->Play(position, emitType); // Playをここで呼ぶ！
+		newEffect->Play(position, emitType);
 		activeEffects_.push_back(std::move(newEffect));
 		return activeEffects_.back().get();
 	}
 	return nullptr;
+}
+
+void ParticleEffectSystem::PlayForEditorPreview(std::unique_ptr<ParticleEffect> effect) {
+	effect->Play(Vector3::Zero,EmitType::Both);
+	activeEffects_.push_back(std::move(effect));
 }

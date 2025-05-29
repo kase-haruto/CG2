@@ -69,15 +69,26 @@ void EffectEditor::ShowParticleMakingGui() {
 	static char effectName[128] = "";
 	ImGui::InputText("Effect Name", effectName, sizeof(effectName));
 	if (ImGui::Button("Create Effect")) {
+		// 新規エフェクト作成
 		auto newEffect = std::make_unique<ParticleEffect>();
 		newEffect->AddParticle(std::make_unique<Particle>());
 		newEffect->SetName(effectName);
-		newEffect->Play(Vector3::Zero, EmitType::Both); // 初期位置はゼロ
-		ParticleEffectSystem::GetInstance()->GetCollection().AddEffect(std::move(newEffect));
-		effectName[0] = '\0';
+		newEffect->Initialize();
+		newEffect->Play(Vector3::Zero, EmitType::Both);
+
+		  // ① プロトタイプとして登録
+		ParticleEffectSystem::GetInstance()->GetCollection().AddEffect(std::make_unique<ParticleEffect>(*newEffect));
+		// 追加したエフェクトをプレビュー再生（activeEffects_に追加）
+		ParticleEffectSystem::GetInstance()->PlayForEditorPreview(std::move(newEffect));
+
+		// 追加された最新エフェクトを選択
+		auto& effects = ParticleEffectSystem::GetInstance()->GetCollection().GetEffects();
+		currentEffect_ = effects.back().get();
+		selectedEffectIndex_ = static_cast<int>(effects.size() - 1);
+
+		effectName[0] = '\0';  // 入力欄クリア
 	}
 	ImGui::SameLine();
-	//ロード
 	if (ImGui::Button("Load Effect")) {
 		LoadFromJsonAll(directoryPath_);
 	}
@@ -87,11 +98,9 @@ void EffectEditor::ShowParticleMakingGui() {
 //		effectリスト表示
 /////////////////////////////////////////////////////////////////////////////////////////
 void EffectEditor::ShowEffectListAndProperty() {
-
-	// 全体を水平に分割
 	ImVec2 windowSize = ImGui::GetContentRegionAvail();
 	float leftPaneWidth = windowSize.x * 0.3f;
-	float rightPaneWidth = windowSize.x - leftPaneWidth - 8.0f; // Padding分引く
+	float rightPaneWidth = windowSize.x - leftPaneWidth - 8.0f;
 
 	// 左カラム: エフェクトリスト
 	ImGui::BeginChild("Effect List Pane", ImVec2(leftPaneWidth, 0), true);
@@ -99,11 +108,11 @@ void EffectEditor::ShowEffectListAndProperty() {
 	ImGui::Separator();
 
 	auto& effects = ParticleEffectSystem::GetInstance()->GetCollection().GetEffects();
-	static int renameIndex = -1; // リネーム対象のインデックス
+	static int renameIndex = -1;
 	static char newName[128] = "";
 
 	for (int i = 0; i < effects.size(); ++i) {
-		bool isSelected = (selectedEffectIndex_ == static_cast<int>(i));
+		bool isSelected = (selectedEffectIndex_ == i);
 		ImGui::PushID(i);
 
 		if (renameIndex == i) {
@@ -124,7 +133,6 @@ void EffectEditor::ShowEffectListAndProperty() {
 			}
 		}
 
-		// 右クリックでポップアップメニューを開く
 		if (ImGui::BeginPopupContextItem()) {
 			if (ImGui::MenuItem("Rename")) {
 				renameIndex = i;
@@ -152,7 +160,6 @@ void EffectEditor::ShowEffectListAndProperty() {
 	ImGui::Text("Effect Properties");
 	if (ImGui::Button("saveEffect")) {
 		const std::string filePath = directoryPath_ + "/" + currentEffect_->GetName() + ".json";
-
 		SaveToJson(filePath);
 	}
 	ImGui::Separator();

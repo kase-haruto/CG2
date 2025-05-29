@@ -29,7 +29,6 @@ void ParticleEffectCollection::StartupLoad() {
 //===================================================================*/
 void ParticleEffectCollection::AddEffect(std::unique_ptr<ParticleEffect> effect) {
 	if (effect) {
-		effect->Initialize();
 		effects_.emplace_back(std::move(effect));
 	}
 }

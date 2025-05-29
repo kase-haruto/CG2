@@ -22,7 +22,7 @@ SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
 		scenes_[i]->GetSceneContext()->GetMeshRenderer()->SetPipelineService(pGraphicsSystem_->GetPipelineService());
 	}
 
-	currentSceneNo_ = static_cast<int>(SceneType::PLAY);
+	currentSceneNo_ = static_cast<int>(SceneType::TEST);
 	nextSceneNo_ = currentSceneNo_;
 }
 

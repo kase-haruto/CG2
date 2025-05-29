@@ -30,7 +30,13 @@ ParticleEffect::ParticleEffect(const ParticleEffect& other){
 /////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::Initialize(){
 	for (auto& ps : particles_){
-		ps->Initialize(ps->GetModelName(), ps->GetTextureName(), 1);
+
+		// もしモデル名やテクスチャ名が空なら、デフォルトのものを設定
+		if (ps->GetModelName().empty() || ps->GetTextureName().empty()) {
+			ps->Initialize("plane.obj", "particle.png", 1);
+		} else {
+			ps->Initialize(ps->GetModelName(), ps->GetTextureName(), 1);
+		}
 	}
 }
 
@@ -112,7 +118,6 @@ void ParticleEffect::Play(const Vector3& pos, EmitType emitType){
 //		追加
 /////////////////////////////////////////////////////////////////////////////////////////
 void ParticleEffect::AddParticle(std::unique_ptr<Particle> particle){
-	particle->Initialize("plane.obj", "particle.png", 1);
 	particles_.emplace_back(std::move(particle));
 }
 

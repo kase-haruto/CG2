@@ -22,7 +22,7 @@ public:
 	void Finalize();
 	void PlayByName(const std::string& name, const Vector3& position, EmitType emitType = EmitType::Once);
 	ParticleEffect* CreateEffectByName(const std::string& name, const Vector3& position, EmitType emitType);
-
+	void PlayForEditorPreview(std::unique_ptr<ParticleEffect> effect);
 	//--------- Accessor ----------------------------------
 	ParticleEffectCollection& GetCollection() { return collection_; }
 
