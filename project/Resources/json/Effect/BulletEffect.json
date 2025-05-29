@@ -1,0 +1,83 @@
+{
+    "name": "BulletEffect",
+    "particles": [
+        {
+            "blendMode": 2,
+            "colorMode": 1,
+            "colorVariation": 0.10000000149011612,
+            "emitType": 2,
+            "emitters": [
+                {
+                    "count": 1,
+                    "frequency": 0.019999999552965164,
+                    "rotationParm": {
+                        "initialRotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "randomizeInitialRotation": true,
+                        "rotateContinuously": false,
+                        "rotationSpeed": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "useRotation": true
+                    },
+                    "shape": 1,
+                    "transform": {
+                        "rotate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            2.4800000190734863,
+                            -1.9600000381469727
+                        ],
+                        "translate": [
+                            -13.268906593322754,
+                            14.819528579711914,
+                            531.1181640625
+                        ]
+                    }
+                }
+            ],
+            "fixedMaxScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flyToEmitter": false,
+            "isBillboard": true,
+            "isRandomLifeTime": false,
+            "isStatic": true,
+            "lifeTime": 0.4300000071525574,
+            "maxLifeTime": 0.7900000214576721,
+            "minLifeTime": 0.7799999713897705,
+            "model": "plane.obj",
+            "name": "",
+            "randomScaleMax": [
+                0.5,
+                0.5,
+                6.0
+            ],
+            "randomScaleMin": [
+                0.5,
+                0.47999998927116394,
+                1.0
+            ],
+            "selectedColor": [
+                1.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "texture": "particle.png",
+            "useRandomScale": true,
+            "useRotation": false
+        }
+    ]
+}

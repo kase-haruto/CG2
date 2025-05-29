@@ -1,8 +1,9 @@
 #pragma once
+#include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
+#include "PipelineType.h"
+
 #include <cstdint>
 #include <functional>
-#include "../blendMode/BlendMode.h" 
-#include "PipelineType.h"
 
 struct PipelineKey{
 	PipelineType pipelineType;

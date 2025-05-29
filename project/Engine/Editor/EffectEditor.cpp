@@ -4,7 +4,8 @@
 /*		include space
 /* ===================================================================== */
 // engine
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
+#include <Engine/Graphics/Descriptor/SrvLocator.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -25,6 +26,10 @@ EffectEditor::EffectEditor() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void EffectEditor::ShowImGuiInterface() {
 	ImGui::SeparatorText("New Effect");
+
+	//srvの個数を表示
+	ImGui::Text("srvCount: %d", SrvLocator::GetCurrentOffset());
+
 	ShowParticleMakingGui();
 
 	ShowEffectListAndProperty();
@@ -45,12 +50,14 @@ void EffectEditor::SaveToJson([[maybe_unused]] const std::string& filePath) {
 void EffectEditor::LoadFromJson([[maybe_unused]] const std::string& filePath) {}
 
 void EffectEditor::LoadFromJsonAll(const std::string& directoryPath) {
-	ParticleEffectCollection::GetInstance()->Clear();
+	auto& collection = ParticleEffectSystem::GetInstance()->GetCollection();
+	collection.Clear();
+
 	for (const auto& entry : fs::directory_iterator(directoryPath)) {
 		if (entry.is_regular_file() && entry.path().extension() == ".json") {
 			auto effect = std::make_unique<ParticleEffect>();
 			effect->Load(entry.path().string());
-			ParticleEffectCollection::GetInstance()->AddEffect(std::move(effect));
+			collection.AddEffect(std::move(effect));
 		}
 	}
 }
@@ -66,7 +73,7 @@ void EffectEditor::ShowParticleMakingGui() {
 		newEffect->AddParticle(std::make_unique<Particle>());
 		newEffect->SetName(effectName);
 		newEffect->Play(Vector3::Zero, EmitType::Both); // 初期位置はゼロ
-		ParticleEffectCollection::GetInstance()->AddEffect(std::move(newEffect));
+		ParticleEffectSystem::GetInstance()->GetCollection().AddEffect(std::move(newEffect));
 		effectName[0] = '\0';
 	}
 	ImGui::SameLine();
@@ -75,6 +82,7 @@ void EffectEditor::ShowParticleMakingGui() {
 		LoadFromJsonAll(directoryPath_);
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effectリスト表示
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +97,8 @@ void EffectEditor::ShowEffectListAndProperty() {
 	ImGui::BeginChild("Effect List Pane", ImVec2(leftPaneWidth, 0), true);
 	ImGui::Text("Effect List");
 	ImGui::Separator();
-	auto& effects = ParticleEffectCollection::GetInstance()->GetEffects();
+
+	auto& effects = ParticleEffectSystem::GetInstance()->GetCollection().GetEffects();
 	static int renameIndex = -1; // リネーム対象のインデックス
 	static char newName[128] = "";
 
@@ -151,18 +160,18 @@ void EffectEditor::ShowEffectListAndProperty() {
 		currentEffect_->ImGui();
 	}
 	ImGui::EndChild();
-
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effect追加
 /////////////////////////////////////////////////////////////////////////////////////////
 void EffectEditor::AddEffect(std::unique_ptr<ParticleEffect> effect) {
-	ParticleEffectCollection::GetInstance()->AddEffect(std::move(effect));
+	ParticleEffectSystem::GetInstance()->GetCollection().AddEffect(std::move(effect));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effect削除
 /////////////////////////////////////////////////////////////////////////////////////////
-void EffectEditor::RemoveEffect(int index) { ParticleEffectCollection::GetInstance()->RemoveEffect(index); }
+void EffectEditor::RemoveEffect(int index) {
+	ParticleEffectSystem::GetInstance()->GetCollection().RemoveEffect(index);
+}

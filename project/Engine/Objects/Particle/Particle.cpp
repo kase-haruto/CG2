@@ -18,6 +18,14 @@ Particle::Particle(){}
 
 Particle::~Particle(){}
 
+Particle::Particle(const Particle& other)
+	: BaseParticle(other){ // BaseParticleもコピー！
+	name_ = other.name_;
+	modelName_ = other.modelName_;
+	textureName_ = other.textureName_;
+}
+
+
 void Particle::Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count){
 	//Load(fileDirectoryPath + GetName() + ".json");
 

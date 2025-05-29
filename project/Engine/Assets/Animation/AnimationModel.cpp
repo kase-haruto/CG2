@@ -186,9 +186,6 @@ void AnimationModel::Draw([[maybe_unused]]const WorldTransform& transform){
 
 	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
 
-	GraphicsGroup::GetInstance()->SetCommand(cmdList, SkinningObject3D, blendMode_);
-
-
 	cmdList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 
 	// 頂点バッファ/インデックスバッファをセット

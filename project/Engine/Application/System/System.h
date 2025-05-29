@@ -45,8 +45,6 @@ public:
 
 	//* パイプラインの作成 ==============================*/
 	void CreatePipelines();
-	void Object3DPipelines();
-	void SkinningObject3dPipeline();
 	void Object2DPipelines();
 	void StructuredObjectPipeline();
 	void LinePipeline();

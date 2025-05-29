@@ -5,6 +5,8 @@
 #include <Engine/Objects/3D/Actor/Actor.h>
 #include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
 
+#include <Game/Effect/ParticleEffect/ParticleEffect.h>
+
 /* ========================================================================
 /* Player
 /* ===================================================================== */
@@ -49,6 +51,9 @@ private:
 	void UpdateTilt(const Vector3& moveVector);
 	void BarrelRoll();
 	float EaseForwardThenReturn(float t);
+
+	void InitializeEffect();
+
 private:
 	//===================================================================*/
 	//                   private variables
@@ -59,5 +64,10 @@ private:
 	Vector3 lastMoveVector_;
 	// ローリング関連
 	RollSet rollSet_ = {};
+
+
+	ParticleEffect* shootEffect_ = nullptr;
+	ParticleEffect* rollEffect_ = nullptr;
+	ParticleEffect* moveEffect_ = nullptr;
 };
 

@@ -13,6 +13,7 @@
 #include <Engine/objects/particle/ParticleEmitShape.h>
 #include <Engine/Objects/LightObject/DirectionalLight.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 //* lib
 #include <Engine/Foundation/Utility/Func/MathFunc.h>
@@ -25,6 +26,44 @@ BaseParticle::BaseParticle(){
 	particles_.clear();
 }
 
+BaseParticle::BaseParticle(const BaseParticle& other)
+	: billboardAxis_(other.billboardAxis_),
+	particles_(other.particles_),
+	isStatic_(other.isStatic_),
+	kMaxInstanceNum_(other.kMaxInstanceNum_),
+	instanceNum_(other.instanceNum_),
+	useRotation_(other.useRotation_),
+	useRandomScale_(other.useRandomScale_),
+	fixedMaxScale_(other.fixedMaxScale_),
+	randomScaleMin_(other.randomScaleMin_),
+	randomScaleMax_(other.randomScaleMax_),
+	lifeTime_(other.lifeTime_),
+	isRandomLifeTime_(other.isRandomLifeTime_),
+	maxLifeTime_(other.maxLifeTime_),
+	minLifeTime_(other.minLifeTime_),
+	flyToEmitter_(other.flyToEmitter_),
+	name_(other.name_),
+	useRandomColor_(other.useRandomColor_),
+	selectedColor_(other.selectedColor_),
+	colorMode_(other.colorMode_),
+	colorVariation_(other.colorVariation_),
+	modelName_(other.modelName_),
+	textureName_(other.textureName_),
+	emitters_(other.emitters_),
+	emitType_(other.emitType_),
+	emitPosX_(other.emitPosX_),
+	emitNegX_(other.emitNegX_),
+	emitPosY_(other.emitPosY_),
+	emitNegY_(other.emitNegY_),
+	emitPosZ_(other.emitPosZ_),
+	emitNegZ_(other.emitNegZ_),
+	isFixationAlpha_(other.isFixationAlpha_),
+	isBillboard_(other.isBillboard_),
+	currentShape_(other.currentShape_),
+	blendMode_(other.blendMode_)
+	{textureHandle.ptr = 0; // 初期化
+}
+
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
 	//emitters_.clear();
@@ -35,6 +74,7 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 
 	modelName_ = modelName;
 	textureName_ = texturePath;
+	textureHandle.ptr = 0; // 初期化
 	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -60,12 +100,37 @@ void BaseParticle::Update(){
 	// EmitType に応じた発生処理（Auto, Both）
 	if (emitType_ == EmitType::Auto || emitType_ == EmitType::Both){
 		for (auto& emitter : emitters_){
-			emitter.frequencyTime += deltaTime;
-			if (emitter.frequencyTime >= emitter.frequency){
-				Emit(emitter);
-				emitter.frequencyTime = 0.0f;
+			if (emitter.frequency > 0.0f){
+				float emissionRate = 1.0f / emitter.frequency;
+				emitter.emissionCounter += deltaTime * emissionRate;
+
+				int emitCount = static_cast< int >(emitter.emissionCounter);
+				emitter.emissionCounter -= emitCount;
+
+				for (int i = 0; i < emitCount; ++i){
+					Emit(emitter);
+				}
 			}
+
+			Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
+			float distance = moveDelta.Length();
+			if (distance > 0.0f){
+				float spawnInterval = 0.1f;
+				int trailCount = static_cast< int >(distance / spawnInterval);
+				if (trailCount > 0){
+					for (int i = 0; i < trailCount; ++i){
+						float dist = i * spawnInterval;
+						float t = dist / distance;
+						Vector3 spawnPos = Vector3::Lerp(emitter.prevPosition, emitter.transform.translate, t);
+						Emit(emitter, spawnPos);
+					}
+				}
+			}
+
+			// 移動後の位置を更新
+			emitter.prevPosition = emitter.transform.translate;
 		}
+
 	}
 
 	if (instanceNum_ <= 0) return;// パーティクルがない場合は何もしない
@@ -369,9 +434,14 @@ void BaseParticle::ParameterGui(){
 
 
 void BaseParticle::EmitterGui(){
+
+	ImGui::Text("instanceNum: %d", instanceNum_);
+
 	if (ImGui::CollapsingHeader("Emitters", ImGuiTreeNodeFlags_DefaultOpen)){
 		int emitterIndex = 0;
 		for (auto& emitter : emitters_){
+			GuiCmd::DragFloat3("Emitter Position", emitter.transform.translate);
+
 			ImGui::PushID(emitterIndex);
 			std::string label = "Emitter " + std::to_string(emitterIndex);
 			if (ImGui::TreeNode(label.c_str())){
@@ -426,7 +496,7 @@ void BaseParticle::EmitterGui(){
 }
 
 
-void BaseParticle::Emit(ParticleData::Emitter& emitter){
+void BaseParticle::Emit(ParticleData::Emitter& emitter, std::optional<Vector3> position){
 	for (uint32_t i = 0; i < emitter.count && particles_.size() < static_cast< size_t >(kMaxInstanceNum_); ++i){
 		ParticleData::Parameters particle;
 
@@ -437,34 +507,32 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 			particle.color = GetSelectedColor();
 		}
 
-		// ポジションと速度
-		Vector3 localPoint = emitter.transform.translate;
+		// ここで position がある場合はそれを使う
+		Vector3 emitPos = position.has_value() ? position.value() : emitter.transform.translate;
 
-		//=== ① 発生位置
-		particle.transform.translate = localPoint;
-		//=== ② 速度決定：エミッターに向かう or ランダム
+		// ① 位置
+		particle.transform.translate = emitPos;
+
+		// ② 速度
 		if (flyToEmitter_){
-			// ランダムな周囲の点を生成（球形範囲）
-			Vector3 offset = Random::GenerateVector3(-5.0f, 5.0f); // 立方体範囲でもOK
-			Vector3 spawnPos = emitter.transform.translate + offset;
+			Vector3 offset = Random::GenerateVector3(-5.0f, 5.0f);
+			Vector3 spawnPos = emitPos + offset;
+
 			particle.transform.translate = spawnPos;
 
-			// 速度ベクトル：emitter に向かう方向
 			Vector3 toEmitter = emitter.transform.translate - spawnPos;
 			toEmitter.Normalize();
 			float speed = Random::Generate(0.5f, 2.0f);
 			particle.velocity = toEmitter * speed;
 
-			// 回転：velocity ベクトルの方向を向かせる
+			// 回転
 			Vector3 forward = toEmitter;
-			Vector3 up = Vector3(0.0f,1.0f,0.0f);
+			Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
 			Vector3 right = Vector3::Cross(up, forward);
 			up = Vector3::Cross(forward, right);
-
-			Matrix4x4 rotationMatrix = Matrix4x4::MakeLookRotationMatrix(forward,up);
+			Matrix4x4 rotationMatrix = Matrix4x4::MakeLookRotationMatrix(forward, up);
 			particle.transform.rotate = Matrix4x4::ToEuler(rotationMatrix);
 		} else{
-			particle.transform.translate = emitter.transform.translate;
 			float speed = Random::Generate(0.5f, 2.0f);
 			particle.velocity = GenerateVelocity(speed);
 			if (!isBillboard_){
@@ -473,11 +541,9 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 			}
 		}
 
-		//=== ③ 寿命
+		// 寿命やスケール、回転
 		particle.lifeTime = lifeTime_;
 		particle.currentTime = 0.0f;
-
-		//=== ④ スケール
 		particle.transform.scale = useRandomScale_
 			? Vector3(
 			Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
@@ -486,7 +552,6 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 			: fixedMaxScale_;
 		particle.maxScale = particle.transform.scale;
 
-		//=== ⑤ 回転
 		if (emitter.parmData.useRotation){
 			if (emitter.parmData.randomizeInitialRotation){
 				particle.transform.rotate = {
@@ -508,6 +573,7 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter){
 	}
 	instanceNum_ = static_cast< int32_t >(particles_.size());
 }
+
 
 
 void BaseParticle::EmitAll(){

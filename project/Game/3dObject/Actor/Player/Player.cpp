@@ -7,7 +7,7 @@
 // engine
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
@@ -21,22 +21,24 @@
 
 Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
-	:Actor::Actor(modelName, objectName){
+	:Actor::Actor(modelName, objectName) {
 	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
-	worldTransform_.translation = {0.0f, 0.0f, 25.0f};
+	worldTransform_.translation = { 0.0f, 0.0f, 25.0f };
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
-void Player::Initialize(){
+void Player::Initialize() {
 	moveSpeed_ = 10.0f;
+
+	InitializeEffect();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void Player::Update(){
+void Player::Update() {
 	//移動
 	Move();
 
@@ -62,12 +64,12 @@ void Player::Update(){
 			rollSet_.rollStartPos_ + Vector3(0.0f, 0.0f, zOffset);
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)){
+	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
 		BarrelRoll();
 	}
 
 	shootInterval_ -= ClockManager::GetInstance()->GetDeltaTime();
-	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f){
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f) {
 		Shoot();
 		shootInterval_ = kMaxShootInterval_;
 	}
@@ -80,35 +82,33 @@ void Player::Update(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //		imgui
 /////////////////////////////////////////////////////////////////////////////////////////
-void Player::DerivativeGui(){
+void Player::DerivativeGui() {
 	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.01f, 0.0f, 10.0f);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 //		移動
 ///////////////////////////////////////////////////////////////////////////////////
-void Player::Move(){
-	Vector3 moveVector = {0.0f, 0.0f, 0.0f};;
+void Player::Move() {
+	Vector3 moveVector = { 0.0f, 0.0f, 0.0f };;
 	//キーボード移動
-	if (Input::GetInstance()->PushKey(DIK_A)){
+	if (Input::GetInstance()->PushKey(DIK_A)) {
 		moveVector.x -= 1.0f;
-	} else if (Input::GetInstance()->PushKey(DIK_D)){
+	} else if (Input::GetInstance()->PushKey(DIK_D)) {
 		moveVector.x += 1.0f;
 	}
 
-	if (Input::GetInstance()->PushKey(DIK_W)){
+	if (Input::GetInstance()->PushKey(DIK_W)) {
 		moveVector.y += 1.0f;
-	} else if (Input::GetInstance()->PushKey(DIK_S)){
+	} else if (Input::GetInstance()->PushKey(DIK_S)) {
 		moveVector.y -= 1.0f;
 	}
 
 	//移動ベクトルを正規化
-	if (moveVector.Length() > 0.0f){
+	if (moveVector.Length() > 0.0f) {
 		moveVector.Normalize();
 	}
-	//effect
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	Vector3 offset = {0.0f, 0.0f, -2.0f};
+
 
 	//移動速度を掛ける
 	moveVector *= moveSpeed_;
@@ -116,39 +116,33 @@ void Player::Move(){
 	//移動ベクトルを加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
-	ParticleEffectCollection::GetInstance()->PlayByName("smoke", wPos + offset, EmitType::Auto);
+	if (moveEffect_) {
+		//effect
+		Vector3 wPos = worldTransform_.GetWorldPosition();
+		Vector3 offset = { 0.0f, 0.0f, -2.0f };
+		moveEffect_->SetPosition(wPos + offset);
+	}
+
 	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
 }
 
-void Player::Shoot(){
-	//弾を追加
+void Player::Shoot() {
+	// 弾発射ロジック
 	Vector3 wPos = worldTransform_.GetWorldPosition();
-	Vector3 offset = {0.0f, 0.7f, 2.0f};
-	//発射方向
-
-	//Vector2 mousePos = Input::GetInstance()->GetMousePosition();
-	//Matrix4x4 viewProjMatrix = CameraManager::GetViewProjectionMatrix();
-	//Matrix4x4 matviewPort = Matrix4x4::MakeViewportMatrix(0, 0, 1280,720, 0, 1);
-	//Matrix4x4 matVPV = Matrix4x4::Multiply(viewProjMatrix, matviewPort);
-	//Matrix4x4 matInvVPV = Matrix4x4::Inverse(matVPV);
-
-	//Vector3 posNear = Vector3(mousePos.x, mousePos.y, 0.0f);
-	//Vector3 posFar = Vector3(mousePos.x, mousePos.y, 1.0f);
-
-	//posNear = Matrix4x4::Transform(posNear, matInvVPV);
-	//posFar = Matrix4x4::Transform(posFar, matInvVPV);
-
-	//Vector3 shootDir = (posFar - posNear).Normalize();
-	Vector3 dir = Vector3 {0.0f,0.0f,1.0f};
+	Vector3 dir = Vector3{ 0.0f, 0.0f, 1.0f };
 	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
-	ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
+
+	if (shootEffect_) {
+		Vector3 offset = { 0.0f, 0.7f, 3.0f };
+		shootEffect_->SetPosition(wPos + offset);
+		shootEffect_->Play(wPos + offset, EmitType::Once);
+	}
 }
 
-
-void Player::UpdateTilt(const Vector3& moveVector){
+void Player::UpdateTilt(const Vector3& moveVector) {
 	// 停止時は角度を戻す
-	if (moveVector.Length() <= 0.001f){
+	if (moveVector.Length() <= 0.001f) {
 		worldTransform_.eulerRotation.z *= 0.9f; // 緩やかに戻す
 		return;
 	}
@@ -166,7 +160,7 @@ void Player::UpdateTilt(const Vector3& moveVector){
 ///////////////////////////////////////////////////////////////////////////////////
 //		バレルロール
 ///////////////////////////////////////////////////////////////////////////////////
-void Player::BarrelRoll(){
+void Player::BarrelRoll() {
 	if (rollSet_.isRolling_) return;
 
 	// 現在の移動方向を取得（前回移動量などがあればそこから）
@@ -186,8 +180,10 @@ void Player::BarrelRoll(){
 	rollSet_.rollTimer_ = 0.0f;
 	rollSet_.rollStartAngle_ = worldTransform_.eulerRotation.z;
 
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	ParticleEffectCollection::GetInstance()->PlayByName("reloadParticle", wPos, EmitType::Once);
+	if (rollEffect_) {
+		Vector3 wPos = worldTransform_.GetWorldPosition();
+		rollEffect_->Play(wPos, EmitType::Once);
+	}
 }
 
 float Player::EaseForwardThenReturn(float t) {
@@ -198,4 +194,11 @@ float Player::EaseForwardThenReturn(float t) {
 		float x = (t - 0.5f) / 0.5f;
 		return 1.0f - (x * x); // EaseInQuad (逆補間)
 	}
+}
+
+void Player::InitializeEffect() {
+	Vector3 wPos = worldTransform_.GetWorldPosition();
+	shootEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("shootEffect", wPos, EmitType::Once);
+	rollEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("reloadParticle", wPos, EmitType::Once);
+	moveEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("smoke", wPos, EmitType::Auto);
 }

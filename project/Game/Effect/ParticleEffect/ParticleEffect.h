@@ -22,6 +22,8 @@ public:
 	ParticleEffect() = default;
 	~ParticleEffect() = default;
 
+	ParticleEffect(const ParticleEffect& other);
+
 	void Initialize();
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -40,11 +42,7 @@ public:
 	void SetName(const std::string& name){ name_ = name; }
 	const std::string& GetName()const { return name_; }
 	void SetPendingDelete(bool pendingDelete){ pendingDelete_ = pendingDelete; }
-	void SetPosition(const Vector3& position){
-		for (auto& particle : particles_){
-			particle->SetEmitPos(position);
-		}
-	}
+	void SetPosition(const Vector3& position);
 	bool IsPendingDelete() const { return pendingDelete_; }
 	bool IsPlaying() const { return isPlaying_; }
 private:
@@ -53,6 +51,7 @@ private:
 	//===================================================================*/
 	std::string name_ = "UnnamedEffect";
 	std::vector<std::unique_ptr<Particle>> particles_;
+	const uint32_t kMaxParticleNum_ = 1024; // 最大インスタンス数
 	bool pendingDelete_ = false;
 	bool isPlaying_ = true;
 };

@@ -12,7 +12,7 @@
 #include <Engine/objects/Transform/Transform.h>
 #include <Engine/Lighting/LightLibrary.h>
 #include <Engine/Graphics/Pipeline/Presets/PipelinePresets.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
@@ -88,14 +88,16 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    アニメーションモデル描画
 	//===================================================================*/
-	//CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
-	//pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
-	//// 静的モデルの描画
-	//for (auto& animationModel : skinnedModels) {
-	//	animationModel.renderable->Draw(*animationModel.transform);
-	//}
+	// アニメーションモデルの描画
+	for (auto& animationModel : skinnedModels) {
+		BlendMode mode = animationModel.renderable->GetBlendMode();
+		GraphicsPipelineDesc desc = PipelinePresets::MakeSkinningObject3D(mode);
+		pipelineService_->SetCommand(desc, cmdList);
+		CameraManager::SetCommand(cmdList, PipelineType::SkinningObject3D);
+		pLightLibrary_->SetCommand(cmdList, PipelineType::SkinningObject3D);
+		animationModel.renderable->Draw(*animationModel.transform);
+	}
 
-	//DrawGroup(skinnedModels, PipelineType::SkinningObject3D);
 
 	//===================================================================*/
 	//                    プリミティブ描画
@@ -107,7 +109,8 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	//                    パーティクル描画
 	//===================================================================*/
-	ParticleEffectCollection::GetInstance()->Draw(cmdList);
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	ParticleEffectSystem::GetInstance()->Draw(cmdList);
 }
 
 void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {
@@ -117,13 +120,7 @@ void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vecto
 		// 各オブジェクトの BlendMode を取得して PSO を構築
 		BlendMode mode = entry.renderable->GetBlendMode();
 		GraphicsPipelineDesc desc = PipelinePresets::MakeObject3D(mode);
-
-		auto* pso = pipelineService_->GetPipelineState(desc);
-		auto* root = pipelineService_->GetRootSig(desc);
-
-		cmdList->SetPipelineState(pso);
-		cmdList->SetGraphicsRootSignature(root);
-
+		pipelineService_->SetCommand(desc, cmdList);
 		CameraManager::SetCommand(cmdList, type);
 		pLightLibrary_->SetCommand(cmdList, type);
 

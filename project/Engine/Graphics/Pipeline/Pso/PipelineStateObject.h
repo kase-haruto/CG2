@@ -2,6 +2,8 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
+#include <Engine/Graphics/Pipeline/Pso/PsoDetails.h>
+
 // lib
 #include <d3d12.h>
 #include <dxcapi.h>
@@ -16,6 +18,10 @@ public:
 	bool Initialize(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc);
 
 	// アクセサ
+	const PipelineSet& GetPipelineSet() const{
+		return {pipelineState_.Get(), rootSignature_.Get()};
+	}
+
 	const Microsoft::WRL::ComPtr<ID3D12PipelineState>& GetPipelineState()  const { return pipelineState_; }
 	const Microsoft::WRL::ComPtr<ID3D12RootSignature>& GetRootSignature()  const { return rootSignature_; }
 
@@ -25,6 +31,7 @@ public:
 		vsBlob_ = std::move(vs);
 		psBlob_ = std::move(ps);
 	}
+
 	bool Reload(ID3D12Device* device);   // ここでは実装だけ宣言
 
 private:

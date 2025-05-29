@@ -21,6 +21,7 @@
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // editor
 #include <Engine/Assets/Model/ModelBuilder.h>
@@ -104,8 +105,8 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 
 	postEffectSlots_ = {
-		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
 		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
+		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
 		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
 	};
 
@@ -189,7 +190,7 @@ void System::EditorUpdate() {
 
 	modelBuilder_->Update();
 	uiEditor_->Update();
-	ParticleEffectCollection::GetInstance()->Update();
+	ParticleEffectSystem::GetInstance()->Update();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +225,7 @@ void System::Finalize() {
 	CameraManager::Finalize();
 	//pipelineの終了処理
 	pipelineStateManager_->Finalize();
-	ParticleEffectCollection::GetInstance()->Clear();
+	ParticleEffectSystem::GetInstance()->Finalize();
 	SrvLocator::Finalize();
 	Input::Finalize();
 	Audio::Finalize();
@@ -265,7 +266,6 @@ int System::ProcessMessage() { return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 void System::CreatePipelines() {
 	shaderManager_->InitializeDXC();
-	SkinningObject3dPipeline();
 	Object2DPipelines();
 	StructuredObjectPipeline();
 	LinePipeline();
@@ -274,199 +274,6 @@ void System::CreatePipelines() {
 	RadialBlurPipeline();
 	EffectPipeline();
 	SkyBoxPipeline();
-}
-
-void System::SkinningObject3dPipeline() {
-	// InputLayoutの設定
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[5] = {};
-	inputElementDescs[0].SemanticName = "POSITION";
-	inputElementDescs[0].SemanticIndex = 0;
-	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[1].SemanticName = "TEXCOORD";
-	inputElementDescs[1].SemanticIndex = 0;
-	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[2].SemanticName = "NORMAL";
-	inputElementDescs[2].SemanticIndex = 0;
-	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[3].SemanticName = "WEIGHT";
-	inputElementDescs[3].SemanticIndex = 0;
-	inputElementDescs[3].InputSlot = 1;
-	inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;//float4
-	inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[4].SemanticName = "INDEX";
-	inputElementDescs[4].SemanticIndex = 0;
-	inputElementDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;//uint4
-	inputElementDescs[4].InputSlot = 1;//1番目のslotのvbvと伝える
-	inputElementDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-	// RasterizerStateの設定
-	D3D12_RASTERIZER_DESC rasterizeDesc{};
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_BACK;
-	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
-
-	// DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
-	//shaderPath
-	std::wstring vsPath = L"SkinningObject3d.VS.hlsl";
-	std::wstring psPath = L"Object3d.PS.hlsl";
-
-	// シェーダの読み込み
-	if (!shaderManager_->LoadShader(SkinningObject3D, vsPath, psPath)) {
-		// シェーダの読み込みに失敗した場合のエラーハンドリング
-		return;
-	}
-	if (!shaderManager_->LoadShader(Object3D, L"Object3d.VS.hlsl", L"Object3d.PS.hlsl")) {
-		// シェーダの読み込みに失敗した場合のエラーハンドリング
-		return;
-	}
-	// RootSignatureの設定
-	D3D12_ROOT_PARAMETER rootParameters[8] = {};
-
-	// テクスチャ用 (t0)
-	D3D12_DESCRIPTOR_RANGE texRange[1] = {};
-	texRange[0].BaseShaderRegister = 0; // t0
-	texRange[0].NumDescriptors = 1;
-	texRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	texRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	// 環境マップ用 (t1)
-	D3D12_DESCRIPTOR_RANGE envMapRange[1] = {};
-	envMapRange[0].BaseShaderRegister = 1; // t1
-	envMapRange[0].NumDescriptors = 1;
-	envMapRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	envMapRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	// スキニング用 (t2)
-	D3D12_DESCRIPTOR_RANGE skinningRange[1] = {};
-	skinningRange[0].BaseShaderRegister = 0; // t2
-	skinningRange[0].NumDescriptors = 1;
-	skinningRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	skinningRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	// マテリアル CBV (b0)
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[0].Descriptor.ShaderRegister = 0;
-
-	// WVP / World CBV (b0)
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[1].Descriptor.ShaderRegister = 0;
-
-	// テクスチャ SRV (t0)
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[2].DescriptorTable.pDescriptorRanges = texRange;
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(texRange);
-
-	// Directional Light CBV (b2)
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[3].Descriptor.ShaderRegister = 2;
-
-	// カメラ CBV (b1)
-	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rootParameters[4].Descriptor.ShaderRegister = 1;
-
-	// Point Light CBV (b4)
-	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[5].Descriptor.ShaderRegister = 4;
-
-	// 環境マップ SRV (t1)
-	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[6].DescriptorTable.pDescriptorRanges = envMapRange;
-	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(envMapRange);
-
-	// スキニングパレット SRV (t2)
-	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[7].DescriptorTable.pDescriptorRanges = skinningRange;
-	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(skinningRange);
-
-	// RootSignature全体
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = rootParameters;
-	rootSignatureDesc.NumParameters = _countof(rootParameters);
-
-
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
-	staticSamplers[0].ShaderRegister = 0;
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	rootSignatureDesc.pStaticSamplers = staticSamplers;
-	rootSignatureDesc.NumStaticSamplers = _countof(staticSamplers);
-
-	// RootSignatureの作成
-	ComPtr<ID3DBlob> signatureBlob;
-	ComPtr<ID3DBlob> errorBlob;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)) {
-		// RootSignatureのシリアライズに失敗した場合のエラーハンドリング
-		if (errorBlob) {
-			OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		return;
-	}
-
-	ComPtr<ID3D12RootSignature> rootSignature;
-	ComPtr<ID3D12Device> device = dxCore_->GetDevice();
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr)) {
-		// RootSignatureの作成に失敗した場合のエラーハンドリング
-		return;
-	}
-
-	// PSOの設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.pRootSignature = rootSignature.Get();
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.VS = { shaderManager_->GetVertexShader(SkinningObject3D)->GetBufferPointer(), shaderManager_->GetVertexShader(SkinningObject3D)->GetBufferSize() };
-	psoDesc.PS = { shaderManager_->GetPixelShader(Object3D)->GetBufferPointer(), shaderManager_->GetPixelShader(Object3D)->GetBufferSize() };
-	psoDesc.RasterizerState = rasterizeDesc;
-	psoDesc.DepthStencilState = depthStencilDesc;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.SampleDesc.Count = 1;
-	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-
-
-	for (int i = 0; i < static_cast<int>(BlendMode::kBlendModeCount); i++) {
-		BlendMode mode = static_cast<BlendMode>(i);
-
-		// mode に対応する処理を行う
-		pipelineStateManager_->CreatePipelineState(
-			PipelineType::SkinningObject3D,
-			vsPath,
-			psPath,
-			rootSignatureDesc,
-			psoDesc,
-			mode
-		);
-	}
 }
 
 void System::Object2DPipelines() {

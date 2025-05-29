@@ -76,6 +76,8 @@ namespace ParticleData{
 		float frequencyTime = 0.1f;		//頻度用時刻
 		EmitterShape shape = EmitterShape::Sphere; // エミッタの形状
 		ParticleData::EmittedPtlData parmData;		//発生させるパーティクルのデータ
+		float emissionCounter = 0.0f; // 発生カウンター（頻度管理用）
+		Vector3 prevPosition = {0.0f, 0.0f, 0.0f}; // 追加: 前フレーム位置
 
 		void Initialize(uint32_t count);
 		void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
@@ -108,6 +110,7 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseParticle();
+	BaseParticle(const BaseParticle& other);
 	virtual void Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count);
 	virtual ~BaseParticle() = default;
 	virtual void Update();
@@ -119,7 +122,7 @@ public:
 	void ParameterGui();
 	void EmitterGui();
 
-	virtual void Emit(ParticleData::Emitter& emitter);
+	virtual void Emit(ParticleData::Emitter& emitter,std::optional<Vector3> position = std::nullopt);
 	void EmitAll();
 	void Play(EmitType emitType);
 
@@ -156,7 +159,7 @@ public:
 	BillboardAxis billboardAxis_ = BillboardAxis::AllAxis;
 	std::vector<ParticleData::Parameters> particles_;
 	bool isStatic_ = false;
-	int32_t kMaxInstanceNum_ = 1024;
+	int32_t kMaxInstanceNum_ = 2048;
 	int32_t instanceNum_ = 0;
 
 	bool useRotation_ = false;
