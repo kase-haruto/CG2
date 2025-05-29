@@ -110,6 +110,7 @@ public:
 	//                    public methods
 	//===================================================================*/
 	BaseParticle();
+	BaseParticle(const BaseParticle& other);
 	virtual void Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count);
 	virtual ~BaseParticle() = default;
 	virtual void Update();

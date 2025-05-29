@@ -22,6 +22,8 @@ public:
 	ParticleEffect() = default;
 	~ParticleEffect() = default;
 
+	ParticleEffect(const ParticleEffect& other);
+
 	void Initialize();
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);

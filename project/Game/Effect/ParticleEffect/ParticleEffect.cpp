@@ -13,6 +13,18 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+ParticleEffect::ParticleEffect(const ParticleEffect& other){
+	name_ = other.name_;
+	pendingDelete_ = other.pendingDelete_;
+	isPlaying_ = other.isPlaying_;
+
+	// Particle（Emitterなどを含む）もコピー
+	for (const auto& p : other.particles_){
+		auto cloned = std::make_unique<Particle>(*p);
+		particles_.push_back(std::move(cloned));
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////

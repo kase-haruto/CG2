@@ -26,6 +26,42 @@ BaseParticle::BaseParticle(){
 	particles_.clear();
 }
 
+BaseParticle::BaseParticle(const BaseParticle& other)
+	: billboardAxis_(other.billboardAxis_),
+	particles_(other.particles_),
+	isStatic_(other.isStatic_),
+	kMaxInstanceNum_(other.kMaxInstanceNum_),
+	instanceNum_(other.instanceNum_),
+	useRotation_(other.useRotation_),
+	useRandomScale_(other.useRandomScale_),
+	fixedMaxScale_(other.fixedMaxScale_),
+	randomScaleMin_(other.randomScaleMin_),
+	randomScaleMax_(other.randomScaleMax_),
+	lifeTime_(other.lifeTime_),
+	isRandomLifeTime_(other.isRandomLifeTime_),
+	maxLifeTime_(other.maxLifeTime_),
+	minLifeTime_(other.minLifeTime_),
+	flyToEmitter_(other.flyToEmitter_),
+	name_(other.name_),
+	useRandomColor_(other.useRandomColor_),
+	selectedColor_(other.selectedColor_),
+	colorMode_(other.colorMode_),
+	colorVariation_(other.colorVariation_),
+	modelName_(other.modelName_),
+	textureName_(other.textureName_),
+	emitters_(other.emitters_),
+	emitType_(other.emitType_),
+	emitPosX_(other.emitPosX_),
+	emitNegX_(other.emitNegX_),
+	emitPosY_(other.emitPosY_),
+	emitNegY_(other.emitNegY_),
+	emitPosZ_(other.emitPosZ_),
+	emitNegZ_(other.emitNegZ_),
+	isFixationAlpha_(other.isFixationAlpha_),
+	isBillboard_(other.isBillboard_),
+	currentShape_(other.currentShape_),
+	blendMode_(other.blendMode_){}
+
 void BaseParticle::Initialize(const std::string& modelName, const std::string& texturePath,[[maybe_unused]] const uint32_t count){
 	// 初期エミッターを1つ作って即時Emit（任意）
 	//emitters_.clear();

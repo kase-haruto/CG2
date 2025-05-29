@@ -9,6 +9,8 @@ public:
 	Particle();
 	~Particle() override;
 
+	Particle(const Particle& other);
+
 	void Initialize(const std::string& modelName, const std::string& texturePath, const uint32_t count) override;
 	void LoadInitialize();
 	/* ui ===============================================*/
