@@ -76,6 +76,8 @@ namespace ParticleData{
 		float frequencyTime = 0.1f;		//頻度用時刻
 		EmitterShape shape = EmitterShape::Sphere; // エミッタの形状
 		ParticleData::EmittedPtlData parmData;		//発生させるパーティクルのデータ
+		float emissionCounter = 0.0f; // 発生カウンター（頻度管理用）
+		Vector3 prevPosition = {0.0f, 0.0f, 0.0f}; // 追加: 前フレーム位置
 
 		void Initialize(uint32_t count);
 		void Initialize(const EulerTransform& transform, const float frequency, const float frequencyTime, uint32_t count);
@@ -119,7 +121,7 @@ public:
 	void ParameterGui();
 	void EmitterGui();
 
-	virtual void Emit(ParticleData::Emitter& emitter);
+	virtual void Emit(ParticleData::Emitter& emitter,std::optional<Vector3> position = std::nullopt);
 	void EmitAll();
 	void Play(EmitType emitType);
 

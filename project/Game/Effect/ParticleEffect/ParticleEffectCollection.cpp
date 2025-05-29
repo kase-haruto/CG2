@@ -44,9 +44,9 @@ void ParticleEffectCollection::Draw(ID3D12GraphicsCommandList* cmdList) {
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto& effect : effects_) {
-		if (effect->IsPlaying()) {  // 再生中のものだけ描画
+		//if (effect->IsPlaying()) {  // 再生中のものだけ描画
 			effect->Draw(cmdList);
-		}
+		//}
 	}
 }
 

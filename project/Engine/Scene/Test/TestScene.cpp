@@ -37,10 +37,11 @@ TestScene::TestScene(DxCore* dxCore)
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::LoadAssets() {
-	ParticleEffectCollection::GetInstance()->Clear();
+	ParticleEffectCollection* pfxCollection = ParticleEffectCollection::GetInstance();
+	pfxCollection->Clear();
 
 	// パーティクルエフェクトのロード
-
+	pfxCollection->LoadByName("BulletEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
