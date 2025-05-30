@@ -67,6 +67,8 @@ void GameScene::Initialize(){
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
 
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), teapot_, "debugSphere.obj", "sphere");
+
 	//player
 	CreateAndAddObject<Player>(sceneContext_.get(), player_, "player.obj", "player");
 	player_->Initialize();
@@ -97,7 +99,7 @@ void GameScene::Update(){
 	/* 3dObject ============================*/
 	//地面の更新
 	modelField_->Update();
-	
+	teapot_->Update();
 	//プレイヤーの更新
 	player_->Update();
 

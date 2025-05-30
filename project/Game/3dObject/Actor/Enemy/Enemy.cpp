@@ -25,7 +25,7 @@ Enemy::Enemy(const std::string& modelName, const std::string objName) :
 
 	InitializeEffect();
 
-	life_ = 5;
+	life_ = 3;
 }
 
 void Enemy::InitializeEffect() {

@@ -25,11 +25,15 @@ public:
 			   IRenderTarget* outputRT) override;
 	const std::string GetName() const override{ return "RadialBlur"; }
 
+	void SetWidth(float width) {
+		blurParam_.width = width;
+	}
+
 	//===================================================================*/
 	//		private methods
 	//===================================================================*/
 private:
-	BlurParameter blurParam_;
+	BlurParameter blurParam_{ {0.5f,0.5f}, 0.08f};
 	DxConstantBuffer<BlurParameter> blurBuffer_;
 
 	// pso ================================================================*/

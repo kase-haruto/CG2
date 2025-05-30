@@ -10,6 +10,9 @@
 #include <Engine/Graphics/Core/GraphicsSystem.h>
 #include <Engine/Editor/Collection/EditorCollection.h>
 
+#include <Engine/PostProcess/Collection/PostProcessCollection.h>
+#include <Engine/PostProcess/Graph/PostEffectGraph.h>
+
 // c++
 #include <Windows.h>
 
@@ -21,6 +24,7 @@ public:
 	void Initialize(HINSTANCE hInstance);
 	bool Update();
 	void BeginUpdate();
+	void UpdatePostEffectControl(float deltaTime);
 	void EndUpdate();
 	void Render();
 	void Run();
@@ -36,5 +40,20 @@ private:
 	//scene
 	std::unique_ptr<SceneManager> sceneManager_;
 	std::unique_ptr<EditorCollection> editorCollection_;
+
+
+	std::vector<PostEffectSlot> postEffectSlots_;
+
+	// ポストエフェクトの適用と管理
+	PostEffectGraph* postEffectGraph_;
+	PostProcessCollection* postProcessCollection_;
+
+	// ブラー演出の有効フラグと時間
+	bool isRadialActive_ = false;
+	float radialTimer_ = 0.0f;
+
+	// ブラーの継続時間（秒単位）
+	// 例: 1.0f秒など、お好みで設定
+	const float kRadialDurationSec_ = 1.0f;
 
 };

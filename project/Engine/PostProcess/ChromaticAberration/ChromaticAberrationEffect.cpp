@@ -1,17 +1,17 @@
 #include "ChromaticAberrationEffect.h"
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
-void ChromaticAberrationEffect::Initialize(const PipelineSet& psoSet){
+void ChromaticAberrationEffect::Initialize(const PipelineSet& psoSet) {
 	psoSet_ = psoSet;
 	settingsBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice().Get());
 }
 
 void ChromaticAberrationEffect::Apply(ID3D12GraphicsCommandList* cmd,
-								D3D12_GPU_DESCRIPTOR_HANDLE inputSRV,
-								IRenderTarget* outputRT){
-	
+									  D3D12_GPU_DESCRIPTOR_HANDLE inputSRV,
+									  IRenderTarget* outputRT) {
 
-	settingsBuffer_.TransferData(ChromaticAberrationSettings {0.2f});
+	// 外部から渡された intensity_ を使用
+	settingsBuffer_.TransferData(ChromaticAberrationSettings{ intensity_ });
 
 	outputRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	outputRT->SetRenderTarget(cmd);

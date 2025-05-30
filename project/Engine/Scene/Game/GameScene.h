@@ -47,7 +47,7 @@ public:
 private:
 	/* objects ======================================================*/
 	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
-	
+	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
 	std::unique_ptr<BulletContainer> playerBulletContainer_ = nullptr;
 
@@ -56,6 +56,7 @@ private:
 	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 	// カメラ
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
+
 
 };
 

@@ -177,6 +177,11 @@ public:
 	Vector3 randomScaleMin_ = {1.0f, 1.0f, 1.0f};
 	Vector3 randomScaleMax_ = {6.0f, 6.0f, 6.0f};
 
+	bool useGravity_ = false; // デフォルトは false（オフ）
+	float gravity_ = -9.8f;   // 重力加速度（Y軸下向き）
+	bool usePopVelocity_ = false;   // ポンっと上方向初速を使うか
+	float popVelocityY_ = 3.0f;     // 初速の強さ
+
 	float lifeTime_ = 1.0f; // パーティクルの寿命
 
 	bool isRandomLifeTime_ = true;

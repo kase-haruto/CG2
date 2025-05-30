@@ -19,10 +19,11 @@ public:
 			   IRenderTarget* outputRT) override;
 	const std::string GetName() const override{ return "ChromaticAberration"; }
 
+
+	void SetIntensity(float intensity) { intensity_ = intensity; }
 private:
 	PipelineSet psoSet_;
-
-	//buffer
 	DxConstantBuffer<ChromaticAberrationSettings> settingsBuffer_;
+	float intensity_ = 0.2f; // 初期値
 };
 

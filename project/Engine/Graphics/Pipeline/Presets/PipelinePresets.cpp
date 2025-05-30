@@ -159,6 +159,7 @@ GraphicsPipelineDesc PipelinePresets::MakeRadialBlur(){
 	desc.root_
 		.AllowIA()
 		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL)
+		.CBV(0, D3D12_SHADER_VISIBILITY_PIXEL) // Blur parameters
 		.SampleClampLinear(0);
 	return desc;
 }

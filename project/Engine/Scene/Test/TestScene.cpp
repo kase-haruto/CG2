@@ -60,8 +60,8 @@ void TestScene::Initialize() {
 	//=========================
 	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
-	//CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
-	//skyBox_->Initialize();
+	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
+	skyBox_->Initialize();
 
 	//=========================
 	// オブジェクト生成
