@@ -41,6 +41,8 @@ void GameScene::LoadAssets() {
 	pfxCollection.LoadByName("shootEffect");
 	pfxCollection.LoadByName("smoke");
 	pfxCollection.LoadByName("BulletEffect");
+	pfxCollection.LoadByName("FlyTrailEffect");
+	pfxCollection.LoadByName("JettEffect");
 }
 
 

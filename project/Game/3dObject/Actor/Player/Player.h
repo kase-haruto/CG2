@@ -10,8 +10,8 @@
 /* Player
 /* ===================================================================== */
 class Player :
-	public Actor{
-	struct RollSet{
+	public Actor {
+	struct RollSet {
 		bool isRolling_ = false;
 		float rollTimer_ = 0.0f;
 		float rollDuration_ = 0.5f;
@@ -37,7 +37,7 @@ public:
 	/* ui =========================================*/
 	void DerivativeGui()override;
 
-	void SetParent(const WorldTransform* parent){
+	void SetParent(const WorldTransform* parent) {
 		worldTransform_.parent = parent;
 	}
 
@@ -72,5 +72,5 @@ private:
 	ParticleEffect* shootEffect_ = nullptr;
 	ParticleEffect* rollEffect_ = nullptr;
 	ParticleEffect* moveEffect_ = nullptr;
+	std::array<ParticleEffect*, 2> flyTrailEffect_ = { nullptr, nullptr };
 };
-

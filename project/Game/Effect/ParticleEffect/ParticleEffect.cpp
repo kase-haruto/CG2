@@ -92,6 +92,7 @@ void ParticleEffect::ImGui(){
 	}
 	if (ImGui::Button("Add New System")){
 		auto newSystem = std::make_unique<Particle>();
+		newSystem->Initialize("plane.obj", "particle.png", 1);
 		AddParticle(std::move(newSystem));
 	}
 }

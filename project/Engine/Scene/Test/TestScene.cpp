@@ -42,6 +42,7 @@ void TestScene::LoadAssets() {
 	// パーティクルエフェクトのロード
 	pfxCollection.LoadByName("BulletEffect");
 	pfxCollection.LoadByName("HitEffect");
+	pfxCollection.LoadByName("JettEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
