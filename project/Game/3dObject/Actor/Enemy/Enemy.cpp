@@ -7,8 +7,8 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-Enemy::Enemy(const std::string& modelName) :
-	Actor::Actor(modelName, "enemy"){
+Enemy::Enemy(const std::string& modelName, const std::string objName) :
+	Actor::Actor(modelName, objName){
 
 	worldTransform_.scale = {5.0f, 5.0f, 5.0f};
 	moveSpeed_ = Random::Generate<float>(1.0f, 3.0f);

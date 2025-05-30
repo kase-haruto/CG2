@@ -69,7 +69,11 @@ void GameScene::Initialize(){
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	enemyCollection_ = std::make_unique<EnemyCollection>();
+	playerBulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
+	playerBulletContainer_->SetSceneContext(sceneContext_.get());
+	player_->SetBulletContainer(playerBulletContainer_.get());
+
+	enemyCollection_ = std::make_unique<EnemyCollection>(sceneContext_.get());
 	
 	//===================================================================*/
 	//                    editor

@@ -29,19 +29,19 @@ public:
 
 	/* ui =========================================*/
 	void ShowGui() override;
-	virtual void DerivativeGui(){}
+	virtual void DerivativeGui();
 
 	/* config =========================================*/
 
 	/* accessor =========================================*/
 	const std::list<std::unique_ptr<BaseBullet>>& GetBullets() const{ return bullets_; }
-
+	void SetSceneContext(SceneContext* context) { sceneContext_ = context; }
 private:
 	//===================================================================*/
 	// private variables
 	//===================================================================*/
 	std::list<std::unique_ptr<BaseBullet>> bullets_; // 弾リスト
-	SceneContext* sceneContext_ = nullptr; // 追加：登録用コンテキスト
+	SceneContext* sceneContext_ = nullptr;
 
 	//===================================================================*/
 	// adjustment variables

@@ -3,6 +3,7 @@
 /*	include space
 /* ===================================================================== */
 #include <Game/3dObject/Actor/Enemy/Enemy.h>
+#include <Engine/Scene/Context/SceneContext.h>
 
 class EnemyCollection :
 	SceneObject{
@@ -10,7 +11,7 @@ public:
 	//===================================================================*/
 	//                      Public Methods
 	//===================================================================*/
-	EnemyCollection();
+	EnemyCollection(SceneContext* context);
 	~EnemyCollection() = default;
 	void Update();
 	void ShowGui()override;
@@ -30,6 +31,8 @@ private:
 	//                      Private variables
 	//===================================================================*/
 	std::list<std::unique_ptr<Enemy>> enemies_; // 登録された全エネミー
+
+	SceneContext* sceneContext_ = nullptr; // シーンコンテキスト
 
 	float spawnInterval_ = 2.0f; // スポーン間隔
 	float spawnTimer_ = 0.0f;   // スポーンタイマー

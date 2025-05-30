@@ -15,7 +15,8 @@ public:
 	//					public methods
 	//===================================================================*/
 	Enemy() = default;
-	Enemy(const std::string& modelName);
+	Enemy(const std::string& modelName,const std::string objName);
+
 	virtual ~Enemy() = default;
 
 	void Initialize()override;

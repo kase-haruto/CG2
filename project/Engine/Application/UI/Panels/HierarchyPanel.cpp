@@ -17,7 +17,7 @@ int HierarchyPanel::selectedObjectIndex_ = -1;
 HierarchyPanel::HierarchyPanel()
 	:IEngineUI("Hierarchy"){}
 
-void HierarchyPanel::Render(){
+void HierarchyPanel::Render() {
 	ImGui::Begin(panelName_.c_str(), nullptr, ImGuiWindowFlags_NoDecoration);
 	ImGui::Text("Scene Hierarchy");
 
@@ -31,10 +31,10 @@ void HierarchyPanel::Render(){
 	};
 
 	// 各カテゴリに振り分け
-	for (SceneObject* obj : allObjects){
+	for (SceneObject* obj : allObjects) {
 		if (!obj) continue;
 
-		switch (obj->GetObjectType()){
+		switch (obj->GetObjectType()) {
 			case ObjectType::Camera:
 				categorizedObjects[0].second.push_back(obj);
 				break;
@@ -52,20 +52,56 @@ void HierarchyPanel::Render(){
 	// 選択中オブジェクト取得
 	SceneObject* selected = pEditorContext_->GetSelectedObject();
 
-	for (const auto& [category, objects] : categorizedObjects){
-		if (ImGui::CollapsingHeader(category.c_str(), ImGuiTreeNodeFlags_DefaultOpen)){
-			for (SceneObject* obj : objects){
-				bool isSelected = (selected == obj);
-				if (ImGui::Selectable(obj->GetName().c_str(), isSelected)){
-					pEditorContext_->SetSelectedObject(obj);
-					pEditorContext_->SetSelectedEditor(nullptr);
-				}
-				if (isSelected){
-					ImGui::SetItemDefaultFocus();
+	// ここから追加: 名前の出現回数を管理するマップ
+	std::map<std::string, int> nameCount;
+
+	for (const auto& [category, objects] : categorizedObjects) {
+		if (ImGui::CollapsingHeader(category.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+
+			// 同名オブジェクトをまとめる
+			std::map<std::string, std::vector<SceneObject*>> groupedObjects;
+			for (SceneObject* obj : objects) {
+				groupedObjects[obj->GetName()].push_back(obj);
+			}
+
+			for (const auto& [name, group] : groupedObjects) {
+				// グループに複数ならツリーノード
+				if (group.size() > 1) {
+					if (ImGui::TreeNode(name.c_str())) {
+						for (size_t i = 0; i < group.size(); ++i) {
+							SceneObject* obj = group[i];
+							std::string displayName = name;
+							if (i >= 0) {
+								displayName += " (" + std::to_string(i) + ")";
+							}
+
+							bool isSelected = (selected == obj);
+							if (ImGui::Selectable(displayName.c_str(), isSelected)) {
+								pEditorContext_->SetSelectedObject(obj);
+								pEditorContext_->SetSelectedEditor(nullptr);
+							}
+							if (isSelected) {
+								ImGui::SetItemDefaultFocus();
+							}
+						}
+						ImGui::TreePop();
+					}
+				} else {
+					// 1つだけならそのまま表示
+					SceneObject* obj = group[0];
+					bool isSelected = (selected == obj);
+					if (ImGui::Selectable(name.c_str(), isSelected)) {
+						pEditorContext_->SetSelectedObject(obj);
+						pEditorContext_->SetSelectedEditor(nullptr);
+					}
+					if (isSelected) {
+						ImGui::SetItemDefaultFocus();
+					}
 				}
 			}
 		}
 	}
+
 
 	ImGui::End();
 }

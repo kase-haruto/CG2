@@ -19,6 +19,7 @@
 
 /* object */
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
 
 /* c++ */
 #include <vector>
@@ -46,7 +47,10 @@ public:
 private:
 	/* objects ======================================================*/
 	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
+	
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<BulletContainer> playerBulletContainer_ = nullptr;
+
 	std::unique_ptr<EnemyCollection> enemyCollection_ = nullptr;
 
 	std::unique_ptr<SkyBox> skyBox_ = nullptr;

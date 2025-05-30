@@ -10,8 +10,8 @@
 /* external */
 #include <externals/imgui/imgui.h>
 
-BaseBullet::BaseBullet(const std::string& modelName)
-	:Actor::Actor(modelName, "bullet"){
+BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
+	:Actor::Actor(modelName, name){
 	collider_->SetType(ColliderType::Type_PlayerAttack);
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 }
@@ -19,13 +19,12 @@ BaseBullet::BaseBullet(const std::string& modelName)
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
+void BaseBullet::ShootInitialize(const Vector3 initPos, const Vector3 velocity) {
 	worldTransform_.translation = initPos;
 	velocity_ = velocity;
 	moveSpeed_ = 15.0f;
 	life_ = 1;
 	isAlive_ = true;
-
 	OnShot();
 }
 

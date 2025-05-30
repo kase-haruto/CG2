@@ -1,10 +1,12 @@
 #include "EnemyCollection.h"
 
 #include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Scene/Utirity/SceneUtility.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <externals/imgui/imgui.h>
 
-EnemyCollection::EnemyCollection(){
+EnemyCollection::EnemyCollection(SceneContext* context):
+sceneContext_(context){
 	SetName("EnemyCollection", ObjectType::GameObject);
 }
 
@@ -38,9 +40,17 @@ void EnemyCollection::ShowGui(){
 void EnemyCollection::Spawn(float deltaTime){
 	if (spawnTimer_ > spawnInterval_){
 		spawnTimer_ = 0.0f;
-		auto enemy = new Enemy("debugCube.obj");
+		std::unique_ptr<Enemy> enemy;
+
+		if (sceneContext_) {
+			CreateAndAddObject<Enemy>(sceneContext_, enemy, "debugCube.obj", "enemy");
+			sceneContext_->GetMeshRenderer()->Register(enemy->GetModel(), &enemy->GetWorldTransform());
+		} else {
+			enemy = std::make_unique<Enemy>("debugCube.obj", "enemy");
+		}
+
 		enemy->SetPosition(spawnPos_);
-		AddEnemy(std::move(enemy));
+		enemies_.emplace_back(std::move(enemy));
 	}
 	spawnTimer_ += deltaTime;
 }
