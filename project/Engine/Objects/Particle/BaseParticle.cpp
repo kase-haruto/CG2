@@ -58,8 +58,10 @@ BaseParticle::BaseParticle(const BaseParticle& other)
 	emitPosZ_(other.emitPosZ_),
 	emitNegZ_(other.emitNegZ_),
 	isFixationAlpha_(other.isFixationAlpha_),
+	scaleMode_(ScaleMode::FixedMaxScale), // スケールモードの初期化
 	isBillboard_(other.isBillboard_),
 	currentShape_(other.currentShape_),
+	isComplement_(other.isComplement_),
 	blendMode_(other.blendMode_)
 	{textureHandle.ptr = 0; // 初期化
 }
@@ -120,17 +122,19 @@ void BaseParticle::Update(){
 			}
 
 			// 移動補間によるTrail発生
-			Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
-			float distance = moveDelta.Length();
-			if (distance > 0.0f) {
-				float spawnInterval = 0.02f;
-				int trailCount = static_cast<int>(distance / spawnInterval);
-				if (trailCount > 0) {
-					for (int i = 0; i < trailCount; ++i) {
-						float dist = i * spawnInterval;
-						float t = dist / distance;
-						Vector3 spawnPos = Vector3::Lerp(emitter.prevPosition, emitter.transform.translate, t);
-						Emit(emitter, spawnPos);
+			if (isComplement_) {
+				Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
+				float distance = moveDelta.Length();
+				if (distance > 0.0f) {
+					float spawnInterval = 0.02f;
+					int trailCount = static_cast<int>(distance / spawnInterval);
+					if (trailCount > 0) {
+						for (int i = 0; i < trailCount; ++i) {
+							float dist = i * spawnInterval;
+							float t = dist / distance;
+							Vector3 spawnPos = Vector3::Lerp(emitter.prevPosition, emitter.transform.translate, t);
+							Emit(emitter, spawnPos);
+						}
 					}
 				}
 			}
@@ -213,6 +217,27 @@ void BaseParticle::Update(){
 		} else{
 			float ratio = std::clamp(it->currentTime / it->lifeTime, 0.0f, 1.0f);
 			instance.color.w = 1.0f - ratio;
+		}
+
+		float scaleRito = std::clamp(it->currentTime / it->lifeTime, 0.0f, 1.0f);
+
+		// ScaleModeに応じたスケール更新
+		switch (scaleMode_) {
+			case ScaleMode::FixedMaxScale:
+			case ScaleMode::RandomScale:
+				// 生成時の最大スケールを維持
+				it->transform.scale = it->maxScale;
+				break;
+
+			case ScaleMode::influencedByLifePlus:
+				// 寿命が減るほど小さくなる
+				it->transform.scale = it->maxScale * scaleRito; // 1→0
+				break;
+
+			case ScaleMode::influencedByLifeMinus:
+				// 寿命が減るほど大きくなる
+				it->transform.scale = it->maxScale * (1.0f - scaleRito); // 0→1
+				break;
 		}
 
 		instanceDataList_.push_back(instance);
@@ -381,7 +406,6 @@ void BaseParticle::VisualSettingGui(){
 
 	/* color settings =======================*/
 #pragma region color settings
-	//ImGui::Checkbox("fixationAlpha" ,&isFixationAlpha_);
 	const char* modes[] = {"Random", "Single Color", "Similar Color"};
 	int currentMode = static_cast< int >(colorMode_);
 	if (ImGui::Combo("Color Mode", &currentMode, modes, IM_ARRAYSIZE(modes))){
@@ -417,19 +441,46 @@ void BaseParticle::ParameterGui(){
 	}
 
 	ImGui::SeparatorText("Particle Size");
-	ImGui::Checkbox("Use Random Scale", &useRandomScale_);
-	if (useRandomScale_){
-		ImGui::DragFloat3("Min Scale", &randomScaleMin_.x, 0.01f);
-		ImGui::DragFloat3("Max Scale", &randomScaleMax_.x, 0.01f);
-		if (randomScaleMin_.x > randomScaleMax_.x) std::swap(randomScaleMin_.x, randomScaleMax_.x);
-		if (randomScaleMin_.y > randomScaleMax_.y) std::swap(randomScaleMin_.y, randomScaleMax_.y);
-		if (randomScaleMin_.z > randomScaleMax_.z) std::swap(randomScaleMin_.z, randomScaleMax_.z);
-	} else{
-		ImGui::DragFloat3("scale", &fixedMaxScale_.x, 0.01f, 0.0f, 10.0f);
+	if (scaleMode_ == ScaleMode::FixedMaxScale || scaleMode_ == ScaleMode::RandomScale) {
+		scaleMode_ = useRandomScale_ ? ScaleMode::RandomScale : ScaleMode::FixedMaxScale;
+	}
+
+	// ImGui: Combo で scaleMode_ を選択
+	const char* scaleModes[] = {
+		"Fixed Max Scale",
+		"Random Scale",
+		"Influenced By Life Plus",
+		"Influenced By Life Minus"
+	};
+	int currentMode = static_cast<int>(scaleMode_);
+	if (ImGui::Combo("Scale Mode", &currentMode, scaleModes, IM_ARRAYSIZE(scaleModes))) {
+		scaleMode_ = static_cast<ScaleMode>(currentMode);
+		// もし FixedMaxScale または RandomScale に切り替えた場合は useRandomScale_ も同期する
+		if (scaleMode_ == ScaleMode::FixedMaxScale || scaleMode_ == ScaleMode::RandomScale) {
+			useRandomScale_ = (scaleMode_ == ScaleMode::RandomScale);
+		}
+	}
+
+	// 既存のパラメータUI（FixedMaxScale / RandomScale）
+	if (scaleMode_ == ScaleMode::FixedMaxScale || scaleMode_ == ScaleMode::RandomScale) {
+		ImGui::Checkbox("Use Random Scale", &useRandomScale_);
+		// Checkbox で useRandomScale_ が切り替わった場合は scaleMode_ も同期する
+		scaleMode_ = useRandomScale_ ? ScaleMode::RandomScale : ScaleMode::FixedMaxScale;
+
+		if (useRandomScale_) {
+			ImGui::DragFloat3("Min Scale", &randomScaleMin_.x, 0.01f);
+			ImGui::DragFloat3("Max Scale", &randomScaleMax_.x, 0.01f);
+			if (randomScaleMin_.x > randomScaleMax_.x) std::swap(randomScaleMin_.x, randomScaleMax_.x);
+			if (randomScaleMin_.y > randomScaleMax_.y) std::swap(randomScaleMin_.y, randomScaleMax_.y);
+			if (randomScaleMin_.z > randomScaleMax_.z) std::swap(randomScaleMin_.z, randomScaleMax_.z);
+		} else {
+			ImGui::DragFloat3("Scale", &fixedMaxScale_.x, 0.01f, 0.0f, 10.0f);
+		}
 	}
 
 	ImGui::SeparatorText("lifeTime");
 	ImGui::Checkbox("Random LifeTime", &isRandomLifeTime_);
+
 	if (isRandomLifeTime_){
 		ImGui::DragFloat("Max", &maxLifeTime_, 0.01f, 0.0f, 10.0f);
 		ImGui::DragFloat("Min", &minLifeTime_, 0.01f, 0.0f, 10.0f);
@@ -438,6 +489,9 @@ void BaseParticle::ParameterGui(){
 	} else{
 		ImGui::DragFloat("lifeTime", &lifeTime_, 0.01f, 0.0f, 10.0f);
 	}
+
+	ImGui::Checkbox("fixationAlpha", &isFixationAlpha_);
+
 }
 
 
@@ -481,6 +535,7 @@ void BaseParticle::EmitterGui(){
 				ImGui::Checkbox("Rotate Continuously", &emitter.parmData.rotateContinuously);
 				ImGui::Checkbox("Random Initial Rotation", &emitter.parmData.randomizeInitialRotation);
 				ImGui::Checkbox("flyToEmitter", &flyToEmitter_);
+				ImGui::Checkbox("isComplement_", &isComplement_);
 				if (!emitter.parmData.randomizeInitialRotation){
 					ImGui::DragFloat3("Initial Rotation (Euler)", &emitter.parmData.initialRotation.x, 0.1f);
 				}
@@ -523,7 +578,7 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter, std::optional<Vector3> p
 
 		// ② 速度
 		if (flyToEmitter_){
-			Vector3 offset = Random::GenerateVector3(-5.0f, 5.0f);
+			Vector3 offset = Random::GenerateVector3(-2.0f, 2.0f);
 			Vector3 spawnPos = emitPos + offset;
 
 			particle.transform.translate = spawnPos;
@@ -552,13 +607,19 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter, std::optional<Vector3> p
 		// 寿命やスケール、回転
 		particle.lifeTime = lifeTime_;
 		particle.currentTime = 0.0f;
-		particle.transform.scale = useRandomScale_
-			? Vector3(
-			Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
-			Random::Generate(randomScaleMin_.y, randomScaleMax_.y),
-			Random::Generate(randomScaleMin_.z, randomScaleMax_.z))
-			: fixedMaxScale_;
-		particle.maxScale = particle.transform.scale;
+
+		// 初期スケール決定
+		if (useRandomScale_) {
+			particle.maxScale = Vector3(
+				Random::Generate(randomScaleMin_.x, randomScaleMax_.x),
+				Random::Generate(randomScaleMin_.y, randomScaleMax_.y),
+				Random::Generate(randomScaleMin_.z, randomScaleMax_.z));
+		} else {
+			particle.maxScale = fixedMaxScale_;
+		}
+
+		// 初期 transform.scale に最大スケールをセット
+		particle.transform.scale = particle.maxScale;
 
 		if (emitter.parmData.useRotation){
 			if (emitter.parmData.randomizeInitialRotation){

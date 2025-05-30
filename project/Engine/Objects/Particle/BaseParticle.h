@@ -106,6 +106,13 @@ protected:
 		ZAxis
 	};
 
+	enum class ScaleMode {
+		FixedMaxScale, // 固定最大スケール
+		RandomScale, // ランダムスケール
+		influencedByLifePlus, // 寿命に応じたスケール
+		influencedByLifeMinus // 寿命に応じたスケール（逆）
+	};
+
 public:
 	//===================================================================*/
 	//                    public methods
@@ -173,9 +180,11 @@ public:
 	float lifeTime_ = 1.0f; // パーティクルの寿命
 
 	bool isRandomLifeTime_ = true;
+	bool isComplement_ = true; // パーティクルをストレージに保存するかどうか
 	float maxLifeTime_ = 3.0f;
 	float minLifeTime_ = 1.0f;
 	bool flyToEmitter_ = false; // エミッタに向かうかどうか
+	ScaleMode scaleMode_ = ScaleMode::FixedMaxScale; // スケールの方式
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
 	Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色

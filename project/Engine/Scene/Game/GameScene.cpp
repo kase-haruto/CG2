@@ -43,6 +43,7 @@ void GameScene::LoadAssets() {
 	pfxCollection.LoadByName("BulletEffect");
 	pfxCollection.LoadByName("FlyTrailEffect");
 	pfxCollection.LoadByName("JettEffect");
+	pfxCollection.LoadByName("HitEffect");
 }
 
 
@@ -54,14 +55,14 @@ void GameScene::Initialize(){
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
 	
-	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
-	skyBox_->Initialize();
-
 	//=========================
 	// グラフィック関連
 	//=========================
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
+
+	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
+	skyBox_->Initialize();
 	
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
@@ -90,6 +91,8 @@ void GameScene::Update(){
 	railCamera_->Update();
 	CameraManager::GetCamera3d()->SetCamera(railCamera_->GetPosition(), railCamera_->GetRotation());
 	CameraManager::Update();
+
+	skyBox_->Update();
 	
 	/* 3dObject ============================*/
 	//地面の更新

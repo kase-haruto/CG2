@@ -3,6 +3,7 @@
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Foundation/Utility/Func/MathFunc.h>
+#include <Engine/Application/Input/Input.h>
 
 //c++
 #include <cmath>
@@ -45,6 +46,21 @@ void RailCamera::Initialize(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void RailCamera::Update(){
 
+	Input* input = Input::GetInstance();
+
+	// 目標角度の決定
+	if (input->PushKey(DIK_D)) {
+		targetTilt_ = -tiltAngle_; // 右傾き
+	} else if (input->PushKey(DIK_A)) {
+		targetTilt_ = tiltAngle_;  // 左傾き
+	} else {
+		targetTilt_ = 0.0f;        // 戻す
+	}
+
+	// 滑らかに補間 (Lerp)
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+	zTiltOffset_ = std::lerp(zTiltOffset_, targetTilt_, tiltLerpSpeed_ * deltaTime);
+
 	// 時間経過に応じて t を更新（時間依存）
 	float speed = 0.05f; // 1秒で20%進む
 	t_ += speed * ClockManager::GetInstance()->GetDeltaTime();
@@ -71,7 +87,8 @@ void RailCamera::Update(){
 	float horizontalDistance = sqrtf(normalizedForward.x * normalizedForward.x + normalizedForward.z * normalizedForward.z);
 	transform_.rotate.x = std::atan2(-normalizedForward.y, horizontalDistance);
 	transform_.rotate.y = std::atan2(normalizedForward.x, normalizedForward.z);
-
+	// Z軸の傾きオフセットを適用
+	transform_.rotate.z = zTiltOffset_;
 	// Shake用に originalPosition_ を更新
 	originalPosition_ = transform_.translate;
 

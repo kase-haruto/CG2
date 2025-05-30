@@ -19,6 +19,11 @@ void EnemyCollection::Update(){
 		enemy->Update();
 	}
 
+	// エネミーの削除
+	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
+		return !enemy->GetIsAlive();
+	});
+
 	//　エネミーのスポーン
 	Spawn(ClockManager::GetInstance()->GetDeltaTime());
 }
@@ -37,11 +42,11 @@ void EnemyCollection::ShowGui(){
 ///////////////////////////////////////////////////////////////////////////////////////////
 //		生成
 ///////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::Spawn(float deltaTime){
-	if (spawnTimer_ > spawnInterval_){
+void EnemyCollection::Spawn(float deltaTime) {
+	if (spawnTimer_ > spawnInterval_) {
 		spawnTimer_ = 0.0f;
-		std::unique_ptr<Enemy> enemy;
 
+		std::unique_ptr<Enemy> enemy;
 		if (sceneContext_) {
 			CreateAndAddObject<Enemy>(sceneContext_, enemy, "debugCube.obj", "enemy");
 			sceneContext_->GetMeshRenderer()->Register(enemy->GetModel(), &enemy->GetWorldTransform());
@@ -49,7 +54,21 @@ void EnemyCollection::Spawn(float deltaTime){
 			enemy = std::make_unique<Enemy>("debugCube.obj", "enemy");
 		}
 
-		enemy->SetPosition(spawnPos_);
+		// Y座標は 10±1 でランダム
+		float randomY = 10.0f + Random::Generate(-1.0f, 1.0f);
+		// X座標は -5.0f ～ +5.0f でランダム
+		float randomX = Random::Generate(-5.0f, 5.0f);
+
+		// スポーン位置
+		Vector3 spawnPos(randomX, randomY, currentSpawnZ_);
+		enemy->SetPosition(spawnPos);
+
+		// 次のスポーンZを更新
+		currentSpawnZ_ += spawnZStep_;
+		if (currentSpawnZ_ > spawnZEnd_) {
+			currentSpawnZ_ = spawnZStart_; // ループさせる
+		}
+
 		enemies_.emplace_back(std::move(enemy));
 	}
 	spawnTimer_ += deltaTime;

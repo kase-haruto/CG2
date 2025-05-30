@@ -2,6 +2,7 @@
 
 #include <Engine/Collision/CollisionManager.h>
 #include <Data/Engine/Configs/Scene/Objects/Collider/ColliderConfig.h>
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 #include <externals/imgui/imgui.h>
@@ -44,6 +45,24 @@ void Collider::ShowGui(ColliderConfig& config){
 
 		GuiCmd::CheckBox("Draw Collider", config.isDraw);
 		GuiCmd::ColorEdit4("Collider Color", color_);
+	}
+}
+
+void Collider::NotifyCollisionEnter(Collider* other) {
+	if (owner_) {
+		owner_->OnCollisionEnter(other);
+	}
+}
+
+void Collider::NotifyCollisionStay(Collider* other) {
+	if (owner_) {
+		owner_->OnCollisionStay(other);
+	}
+}
+
+void Collider::NotifyCollisionExit(Collider* other) {
+	if (owner_) {
+		owner_->OnCollisionExit(other);
 	}
 }
 

@@ -11,6 +11,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -23,6 +24,9 @@ Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
 	:Actor::Actor(modelName, objectName) {
 	worldTransform_.translation = { 0.0f, 0.0f, 25.0f };
+
+	collider_->SetTargetType(ColliderType::Type_Enemy);
+	collider_->SetType(ColliderType::Type_Player);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -198,8 +202,8 @@ void Player::BarrelRoll() {
 	rollSet_.rollStartAngle_ = worldTransform_.eulerRotation.z;
 
 	if (rollEffect_) {
-		Vector3 wPos = worldTransform_.GetWorldPosition();
-		rollEffect_->Play(wPos, EmitType::Once);
+		//Vector3 wPos = worldTransform_.GetWorldPosition();
+		//rollEffect_->Play(wPos, EmitType::Once);
 	}
 }
 
