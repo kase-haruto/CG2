@@ -129,9 +129,33 @@ void System::BeginFrame() {
 	dxCore_->PreDrawOffscreen();
 
 	EditorUpdate();
+	/////////////////////////////////////////////////////////////////
+	float dt = ClockManager::GetInstance()->GetDeltaTime();
 
+	// スペースキーでブラー発動
+	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
+		radialTimer_ = 0.0f;
+		isRadialActive_ = true;
+
+		// スロット切り替え
+		for (auto& slot : postEffectSlots_) {
+			slot.enabled = (slot.name == "RadialBlur");
+		}
+	}
+
+	// ブラー中の時間経過
+	if (isRadialActive_) {
+		radialTimer_ += dt;
+		if (radialTimer_ >= kRadialDurationSec_) {
+			isRadialActive_ = false;
+
+			// CopyImage のみ有効に戻す
+			for (auto& slot : postEffectSlots_) {
+				slot.enabled = (slot.name == "CopyImage");
+			}
+		}
+	}
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム終了処理
 /////////////////////////////////////////////////////////////////////////////////////////
