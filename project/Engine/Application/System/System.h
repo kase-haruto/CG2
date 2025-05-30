@@ -43,6 +43,8 @@ public:
 
 	int ProcessMessage();
 
+	void InitializePostProcess(class PipelineService* service);
+
 	//* パイプラインの作成 ==============================*/
 	void CreatePipelines();
 	void Object2DPipelines();

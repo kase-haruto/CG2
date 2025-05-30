@@ -1,27 +1,33 @@
 #include "PostProcessCollection.h"
 
-#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
+#include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 
-void PostProcessCollection::Initialize(PipelineStateManager* pipelineMgr){
-
+void PostProcessCollection::Initialize(PipelineService* service){
 	//===================================================================*/
 	//		grayScale
 	//===================================================================*/
-	PipelineSet grayScaleSet = pipelineMgr->GetPipelineSet(PipelineType::GrayScale, BlendMode::NONE);
+	PipelineSet grayScaleSet = service->GetPipelineSet(PipelineTag::PostProcess::GrayScale);
 	grayScale_ = std::make_unique<GrayScaleEffect>();
 	grayScale_->Initialize(grayScaleSet);
 
 	//===================================================================*/
 	//		RadialBlur
 	//===================================================================*/
-	PipelineSet radialBlurSet = pipelineMgr->GetPipelineSet(PipelineType::RadialBlur, BlendMode::NONE);
+	PipelineSet radialBlurSet = service->GetPipelineSet(PipelineTag::PostProcess::RadialBlur);
 	radialBlur_ = std::make_unique<RadialBlurEffect>();
 	radialBlur_->Initialize(radialBlurSet);
 
 	//===================================================================*/
+	//		ChromaticAberration
+	//===================================================================*/
+	PipelineSet chromaticAberrationSet = service->GetPipelineSet(PipelineTag::PostProcess::ChromaticAberration);
+	chromaticAberration_ = std::make_unique<ChromaticAberrationEffect>();
+	chromaticAberration_->Initialize(chromaticAberrationSet);
+
+	//===================================================================*/
 	//		No Effects
 	//===================================================================*/
-	PipelineSet copyImageSet = pipelineMgr->GetPipelineSet(PipelineType::copyImage, BlendMode::NONE);
+	PipelineSet copyImageSet = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
 	copyImage_ = std::make_unique<CopyImageEffect>();
 	copyImage_->Initialize(copyImageSet);
 }

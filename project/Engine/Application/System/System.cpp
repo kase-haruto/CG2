@@ -15,6 +15,7 @@
 #include <Engine/Graphics/RenderTarget/SwapChainRT/SwapChainRenderTarget.h>
 #include <Engine/PostProcess/FullscreenDrawer.h>
 #include <Engine/System/Command/Manager/CommandManager.h>
+#include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 
 // manager
 #include <Engine/Assets/Model/ModelManager.h>
@@ -94,24 +95,36 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 	//ParticleEffectCollection::GetInstance()->StartupLoad();
 
 
+	}
+
+void System::InitializePostProcess(PipelineService* service){
 	/////////////////////////////////////////////////////////////////////////////////////////
-	/*                     postProcessの描画処理                                             */
+	/*                     postProcessの初期化                                             */
 	/////////////////////////////////////////////////////////////////////////////////////////
+	//=========================================================
+	// PostProcessCollection の初期化
+	//=========================================================
 	postProcessCollection_ = std::make_unique<PostProcessCollection>();
-	postProcessCollection_->Initialize(pipelineStateManager_.get());
+	postProcessCollection_->Initialize(service);
 
-	postEffectGraph_ = std::make_unique<PostEffectGraph>();
-	postEffectGraph_->AddPass(postProcessCollection_->GetCopyImage());
+	//=========================================================
+	// PostEffectGraph の初期化
+	//=========================================================
+	postEffectGraph_ = std::make_unique<PostEffectGraph>(postProcessCollection_.get());
 
-
+	//=========================================================
+	// PostEffectSlot の初期化
+	//    - 「有効化は1つだけ」に合わせて最初は全部falseにするのが安全
+	//=========================================================
 	postEffectSlots_ = {
 		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
-		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
-		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
+		{ "GrayScale",  false, postProcessCollection_->GetGrayScale() },
+		{ "CopyImage",  false, postProcessCollection_->GetCopyImage() },
+		{ "ChromaticAberration", true, postProcessCollection_->GetChromaticAberration() }
 	};
 
-
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム開始処理
@@ -173,9 +186,9 @@ void System::EndFrame() {
 		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
 	}
 
-	// ポストプロセス
+	// ポストエフェクト
 	postEffectGraph_->SetPassesFromList(postEffectSlots_);
-	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
+	postEffectGraph_->Execute(cmd, offscreenRes, postOutput, dxCore_.get());
 
 	//  ImGui 表示登録（Game View）
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -284,6 +297,7 @@ void System::InitializeEditor() {
 //プロセスメッセージ
 /////////////////////////////////////////////////////////////////////////////////////////
 int System::ProcessMessage() { return winApp_->ProcessMessage() ? 1 : 0; }
+
 
 //=============================================================================================================
 //              Pipelineの作成

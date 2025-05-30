@@ -24,6 +24,8 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	graphicsSystem_ = std::make_unique<GraphicsSystem>();
 	graphicsSystem_->Initialize();
 
+	system_->InitializePostProcess(graphicsSystem_->GetPipelineService());
+
 	// engineUIの初期化
 	engineUICore_ = std::make_unique<EngineUICore>();
 	engineUICore_->Initialize();

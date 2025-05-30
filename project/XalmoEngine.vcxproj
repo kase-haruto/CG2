@@ -111,7 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChromaticAberration.cpp" />
+    <ClCompile Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.cpp" />
     <ClCompile Include="Engine\System\Command\Manager\CommandManager.cpp" />
@@ -272,7 +272,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChromaticAberration.h" />
+    <ClInclude Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Pso\PsoDetails.h" />
