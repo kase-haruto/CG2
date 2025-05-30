@@ -59,6 +59,11 @@ void EngineController::BeginUpdate(){
 
 void EngineController::EndUpdate(){
 	editorCollection_->UpdateEditors();
+
+	auto ppEditor = dynamic_cast< PostProcessEditor* >(editorCollection_->GetEditor(EditorCollection::EditorType::PostProcess));
+	if (ppEditor){
+		ppEditor->ApplyToGraph(system_->GetPostEffectGraph());
+	}
 }
 
 void EngineController::Render() {}
@@ -81,7 +86,7 @@ void EngineController::Run(){
 		sceneManager_->Draw();
 
 		// 描画後処理
-		system_->EndFrame(graphicsSystem_->GetPipelineService()->GetPipelineSet(PipelineTag::PostProcess::CopyImage));
+		system_->EndFrame(graphicsSystem_->GetPipelineService());
 
 		if (Input::TriggerKey(DIK_ESCAPE)){
 			break;

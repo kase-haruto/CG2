@@ -33,13 +33,14 @@ public:
 	void Finalize();
 	void InitializeEditor();
 	void BeginFrame();
-	void EndFrame(const PipelineSet& pipelineSet);
+	void EndFrame(const class PipelineService* pipelineSet);
 
 	void EditorUpdate();	//engine内部Editorの更新
 
 	int ProcessMessage();
 
 	void InitializePostProcess(class PipelineService* service);
+
 
 	//* パイプラインの作成 ==============================*/
 	void CreatePipelines();
@@ -57,6 +58,7 @@ public:
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 	void SetEngineUICore(EngineUICore* engineUI) { pEngineUICore_ = engineUI; }
 	PostProcessCollection* GetPostProcessCollection() const{ return postProcessCollection_.get(); }
+	PostEffectGraph* GetPostEffectGraph() const{ return postEffectGraph_.get(); }
 
 private:
 	//===================================================================*/
@@ -85,7 +87,6 @@ private:
 	// postprocess
 	std::unique_ptr<PostProcessCollection> postProcessCollection_;
 	std::unique_ptr<PostEffectGraph> postEffectGraph_;
-	std::vector<PostEffectSlot> postEffectSlots_;
 
 	float radialTimer_ = 0.0f;
 	const float kRadialDurationSec_ = 1.0f;

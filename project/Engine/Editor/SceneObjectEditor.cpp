@@ -18,7 +18,6 @@ void SceneObjectEditor::ShowImGuiInterface(){
 	if (!sceneObject_) return;
 	ShowGuizmo();
 	sceneObject_->ShowGui();
-
 }
 void RowToColumnArray(const Matrix4x4& m, float out[16]){
 	// 回転スケール 3×3 を転置

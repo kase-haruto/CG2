@@ -7,11 +7,9 @@
 #include <externals/imgui/imgui.h>
 
 
-PostProcessEditor::PostProcessEditor(const std::string& name):BaseEditor(name){}
+PostProcessEditor::PostProcessEditor(const std::string& name) :BaseEditor(name){}
 
 void PostProcessEditor::ShowImGuiInterface(){
-	ImGui::Begin("Post Process Editor");
-
 	// スロットの一覧を表示
 	for (int i = 0; i < slots_.size(); ++i){
 		auto& slot = slots_[i];
@@ -55,10 +53,28 @@ void PostProcessEditor::ShowImGuiInterface(){
 		ImGui::PopID();
 	}
 
-	ImGui::End();
 }
 
 void PostProcessEditor::SetPostEffectCollection(PostProcessCollection* postProcessCollection){
 	pCollection_ = postProcessCollection;
+	if (pCollection_){
+		slots_.clear();
+		for (const auto& effectName : pCollection_->GetEffectNames()){
+			slots_.emplace_back(PostEffectSlot {effectName, false, pCollection_->GetEffectByName(effectName)});
+		}
+	}
+}
+
+void PostProcessEditor::ApplyToGraph(PostEffectGraph* graph){
+	if (!graph || !pCollection_) return;
+
+	// slots_ の pass を更新する
+	for (auto& slot : slots_){
+		// スロット名に対応するエフェクトパスを取得
+		slot.pass = pCollection_->GetEffectByName(slot.name);
+	}
+
+	// Graph に反映
+	graph->SetPassesFromList(slots_);
 }
 

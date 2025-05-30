@@ -21,6 +21,8 @@ public:
 	void ShowImGuiInterface() override;
 	void SetPostEffectCollection(PostProcessCollection* postProcessCollection);
 
+	void ApplyToGraph(class PostEffectGraph* graph);
+
 private:
 	//===================================================================*/
 	// private variables

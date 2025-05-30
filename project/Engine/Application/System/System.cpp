@@ -112,13 +112,6 @@ void System::InitializePostProcess(PipelineService* service){
 	// PostEffectSlot の初期化
 	//    - 「有効化は1つだけ」に合わせて最初は全部falseにするのが安全
 	//=========================================================
-	postEffectSlots_ = {
-		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
-		{ "GrayScale",  false, postProcessCollection_->GetGrayScale() },
-		{ "CopyImage",  false, postProcessCollection_->GetCopyImage() },
-		{ "ChromaticAberration", true, postProcessCollection_->GetChromaticAberration() }
-	};
-
 }
 
 
@@ -139,36 +132,36 @@ void System::BeginFrame() {
 
 	EditorUpdate();
 	/////////////////////////////////////////////////////////////////
-	float dt = ClockManager::GetInstance()->GetDeltaTime();
+	//float dt = ClockManager::GetInstance()->GetDeltaTime();
 
-	// スペースキーでブラー発動
-	if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
-		radialTimer_ = 0.0f;
-		isRadialActive_ = true;
+	//// スペースキーでブラー発動
+	//if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
+	//	radialTimer_ = 0.0f;
+	//	isRadialActive_ = true;
 
-		// スロット切り替え
-		for (auto& slot : postEffectSlots_) {
-			slot.enabled = (slot.name == "RadialBlur");
-		}
-	}
+	//	// スロット切り替え
+	//	for (auto& slot : postEffectSlots_) {
+	//		slot.enabled = (slot.name == "RadialBlur");
+	//	}
+	//}
 
-	// ブラー中の時間経過
-	if (isRadialActive_) {
-		radialTimer_ += dt;
-		if (radialTimer_ >= kRadialDurationSec_) {
-			isRadialActive_ = false;
+	//// ブラー中の時間経過
+	//if (isRadialActive_) {
+	//	radialTimer_ += dt;
+	//	if (radialTimer_ >= kRadialDurationSec_) {
+	//		isRadialActive_ = false;
 
-			// CopyImage のみ有効に戻す
-			for (auto& slot : postEffectSlots_) {
-				slot.enabled = (slot.name == "CopyImage");
-			}
-		}
-	}
+	//		// CopyImage のみ有効に戻す
+	//		for (auto& slot : postEffectSlots_) {
+	//			slot.enabled = (slot.name == "CopyImage");
+	//		}
+	//	}
+	//}
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム終了処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void System::EndFrame(const PipelineSet& pipelineSet) {
+void System::EndFrame(const PipelineService* service) {
 	auto* cmd = dxCore_->GetCommandList().Get();
 
 	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
@@ -180,8 +173,6 @@ void System::EndFrame(const PipelineSet& pipelineSet) {
 		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
 	}
 
-	// ポストエフェクト
-	postEffectGraph_->SetPassesFromList(postEffectSlots_);
 	postEffectGraph_->Execute(cmd, offscreenRes, postOutput, dxCore_.get());
 
 	//  ImGui 表示登録（Game View）
@@ -191,6 +182,8 @@ void System::EndFrame(const PipelineSet& pipelineSet) {
 	//  ImGui 表示登録（Debug View）
 	debugRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	pEngineUICore_->SetDebugViewportTexture(debugRT->GetSRV().ptr);
+
+	PipelineSet pipelineSet = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
 
 	DrawTextureToRenderTarget(cmd, postOutput->GetSRV(), backBuffer, pipelineSet.pipelineState, pipelineSet.rootSignature);
 

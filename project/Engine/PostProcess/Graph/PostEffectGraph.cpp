@@ -15,9 +15,9 @@ void PostEffectGraph::SetPassesFromList(const std::vector<PostEffectSlot>& slots
 		}
 	}
 
-	if (enabledCount > 1){
+	/*if (enabledCount > 1){
 		assert(enabledCount <= 2 && "PostEffectGraph currently supports only up to 2 enabled passes for ping-pong rendering.");
-	}
+	}*/
 }
 
 void PostEffectGraph::Execute(ID3D12GraphicsCommandList* cmd,
@@ -48,5 +48,5 @@ void PostEffectGraph::Execute(ID3D12GraphicsCommandList* cmd,
 
 	// 最終出力にPostProcessCollectionのCopyImageを使用してコピー
 	finalTarget->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	postProcessCollection_->GetCopyImage()->Apply(cmd, currentSRV, finalTarget);
+	postProcessCollection_->GetEffectByName("CopyImage")->Apply(cmd, currentSRV, finalTarget);
 }

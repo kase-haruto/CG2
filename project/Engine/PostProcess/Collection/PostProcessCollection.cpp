@@ -3,42 +3,52 @@
 #include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 
 void PostProcessCollection::Initialize(PipelineService* service){
+	effects_.clear();
+	effectNames_.clear();
+
 	//===================================================================*/
 	//		grayScale
 	//===================================================================*/
-	PipelineSet grayScaleSet = service->GetPipelineSet(PipelineTag::PostProcess::GrayScale);
-	grayScale_ = std::make_unique<GrayScaleEffect>();
-	grayScale_->Initialize(grayScaleSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::GrayScale);
+		auto effect = std::make_unique<GrayScaleEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
 	//===================================================================*/
 	//		RadialBlur
 	//===================================================================*/
-	PipelineSet radialBlurSet = service->GetPipelineSet(PipelineTag::PostProcess::RadialBlur);
-	radialBlur_ = std::make_unique<RadialBlurEffect>();
-	radialBlur_->Initialize(radialBlurSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::RadialBlur);
+		auto effect = std::make_unique<RadialBlurEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
 	//===================================================================*/
 	//		ChromaticAberration
 	//===================================================================*/
-	PipelineSet chromaticAberrationSet = service->GetPipelineSet(PipelineTag::PostProcess::ChromaticAberration);
-	chromaticAberration_ = std::make_unique<ChromaticAberrationEffect>();
-	chromaticAberration_->Initialize(chromaticAberrationSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::ChromaticAberration);
+		auto effect = std::make_unique<ChromaticAberrationEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
 	//===================================================================*/
 	//		No Effects
 	//===================================================================*/
-	PipelineSet copyImageSet = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
-	copyImage_ = std::make_unique<CopyImageEffect>();
-	copyImage_->Initialize(copyImageSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
+		auto effect = std::make_unique<CopyImageEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
-	effectNames_ = {
-		grayScale_->GetName(),
-		radialBlur_->GetName(),
-		chromaticAberration_->GetName(),
-		copyImage_->GetName(),
-	};
 }
 
-GrayScaleEffect* PostProcessCollection::GetGrayScale(){
-	return grayScale_.get();
-}
