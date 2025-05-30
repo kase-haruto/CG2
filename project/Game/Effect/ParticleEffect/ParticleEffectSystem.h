@@ -25,7 +25,9 @@ public:
 	void PlayForEditorPreview(std::unique_ptr<ParticleEffect> effect);
 	//--------- Accessor ----------------------------------
 	ParticleEffectCollection& GetCollection() { return collection_; }
-
+	void SetEditorPreviewPointer(ParticleEffect* effect);
+	ParticleEffect* GetEditorPreviewPointer() const { return editorPreviewEffect_; }
+	std::vector<std::unique_ptr<ParticleEffect>>& GetActiveEffects() { return activeEffects_; }
 private:
 	//===================================================================*/
 	//					private functions
@@ -38,4 +40,6 @@ private:
 	//===================================================================*/
 	std::vector<std::unique_ptr<ParticleEffect>> activeEffects_;
 	ParticleEffectCollection collection_;
+
+	ParticleEffect* editorPreviewEffect_ = nullptr;
 };

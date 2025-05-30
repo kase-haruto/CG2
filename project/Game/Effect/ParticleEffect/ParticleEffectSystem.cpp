@@ -10,6 +10,10 @@ void ParticleEffectSystem::Update() {
 		effect->Update();
 	}
 
+	if (editorPreviewEffect_) {
+		editorPreviewEffect_->Update();
+	}
+
 	//activeEffects_.erase(
 	//	std::remove_if(activeEffects_.begin(), activeEffects_.end(),
 	//				   [](const std::unique_ptr<ParticleEffect>& e) {
@@ -21,6 +25,10 @@ void ParticleEffectSystem::Update() {
 void ParticleEffectSystem::Draw(ID3D12GraphicsCommandList* cmdList) {
 	for (auto& effect : activeEffects_) {
 		effect->Draw(cmdList);
+	}
+
+	if (editorPreviewEffect_) {
+		editorPreviewEffect_->Draw(cmdList);
 	}
 }
 
@@ -56,4 +64,9 @@ ParticleEffect* ParticleEffectSystem::CreateEffectByName(const std::string& name
 void ParticleEffectSystem::PlayForEditorPreview(std::unique_ptr<ParticleEffect> effect) {
 	effect->Play(Vector3::Zero,EmitType::Both);
 	activeEffects_.push_back(std::move(effect));
+}
+
+
+void ParticleEffectSystem::SetEditorPreviewPointer(ParticleEffect* effect) {
+	editorPreviewEffect_ = effect;
 }
