@@ -13,11 +13,9 @@ Enemy::Enemy(const std::string& modelName) :
 	worldTransform_.scale = {5.0f, 5.0f, 5.0f};
 	moveSpeed_ = Random::Generate<float>(1.0f, 3.0f);
 	velocity_ = Random::GenerateVector3(-1.0f, 1.0f);
-	SphereCollider::name_ = "enemyCollider";
-	SphereCollider::Initialize(worldTransform_.scale.x*0.5f+0.1f);
 
-	Collider::targetType_ = ColliderType::Type_PlayerAttack;
-	Collider::type_ = ColliderType::Type_Enemy;
+	collider_->SetType(ColliderType::Type_Enemy);
+	collider_->SetTargetType(ColliderType::Type_Player);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -38,14 +36,7 @@ void Enemy::Update(){
 		isHit_ = false;
 	}
 	
-
-	SphereCollider::shape_.center = worldTransform_.translation;
 	BaseGameObject::Update();
-}
-
-void Enemy::Draw(){
-	SphereCollider::Draw();
-	BaseGameObject::Draw();
 }
 
 void Enemy::OnCollisionEnter(Collider* other){

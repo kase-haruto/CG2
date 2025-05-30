@@ -14,7 +14,6 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-
 #include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib

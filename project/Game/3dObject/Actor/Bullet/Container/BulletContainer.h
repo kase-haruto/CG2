@@ -27,8 +27,6 @@ public:
 				   const Vector3& velocity);
 	void RemoveBullet(BaseBullet* bullet);
 
-	void SetSceneContext(SceneContext* context); // 追加
-
 	/* ui =========================================*/
 	void ShowGui() override;
 	virtual void DerivativeGui(){}

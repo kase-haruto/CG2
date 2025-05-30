@@ -16,6 +16,9 @@ void EnemyCollection::Update(){
 	for (auto& enemy : enemies_){
 		enemy->Update();
 	}
+
+	//　エネミーのスポーン
+	Spawn(ClockManager::GetInstance()->GetDeltaTime());
 }
 
 void EnemyCollection::ShowGui(){

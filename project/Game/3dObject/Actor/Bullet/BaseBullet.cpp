@@ -12,10 +12,8 @@
 
 BaseBullet::BaseBullet(const std::string& modelName)
 	:Actor::Actor(modelName, "bullet"){
-	SphereCollider::name_ = "playerBullet";
-	SphereCollider::Initialize(worldTransform_.scale.x * 2.0f + 0.1f);
-	Collider::targetType_ = ColliderType::Type_PlayerAttack;
-	Collider::type_ = ColliderType::Type_PlayerAttack;
+	collider_->SetType(ColliderType::Type_PlayerAttack);
+	collider_->SetTargetType(ColliderType::Type_Enemy);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +38,7 @@ void BaseBullet::Update() {
 
 	BaseGameObject::Update();
 
+	//effect
 	if (bulletEffect_) {
 		Vector3 wPos = worldTransform_.GetWorldPosition();
 		bulletEffect_->Play(wPos, EmitType::Auto);

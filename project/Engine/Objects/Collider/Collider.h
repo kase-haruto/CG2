@@ -87,6 +87,8 @@ public:
 
 	ColliderType GetType() const{ return type_; }
 	ColliderType GetTargetType() const{ return targetType_; }
+	void SetType(ColliderType type) { type_ = type; }
+	void SetTargetType(ColliderType targetType) { targetType_ = targetType; }
 	void SetColor(const Vector4& color){ color_ = color; }
 
 	bool IsCollisionEnubled()const{ return isCollisionEnabled_; }

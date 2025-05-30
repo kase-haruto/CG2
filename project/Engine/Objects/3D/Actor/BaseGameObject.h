@@ -79,7 +79,7 @@ protected:
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
 	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
-private:
+protected:
 	//===================================================================*/
 	//                    private variables
 	//===================================================================*/

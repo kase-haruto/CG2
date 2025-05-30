@@ -11,7 +11,7 @@
 /* bullet 基底クラス
 /* ===================================================================== */
 class BaseBullet :
-	public Actor,SphereCollider{
+	public Actor{
 public:
 	//===================================================================*/
 	//			public function

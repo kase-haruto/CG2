@@ -9,7 +9,7 @@
 /* enemy
 /* ===================================================================== */
 class Enemy :
-    public Actor,SphereCollider{
+    public Actor{
 public:
 	//===================================================================*/
 	//					public methods
@@ -20,7 +20,6 @@ public:
 
 	void Initialize()override;
 	void Update()override;
-	void Draw()override;
 
 	void SetPosition(const Vector3& position){
 		worldTransform_.translation = position;
