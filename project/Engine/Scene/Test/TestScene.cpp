@@ -43,6 +43,7 @@ void TestScene::LoadAssets() {
 	pfxCollection.LoadByName("BulletEffect");
 	pfxCollection.LoadByName("HitEffect");
 	pfxCollection.LoadByName("JettEffect");
+	pfxCollection.LoadByName("FlyTrailEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

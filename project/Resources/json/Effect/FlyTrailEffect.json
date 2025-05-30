@@ -38,9 +38,9 @@
                             1.0
                         ],
                         "translate": [
+                            -3.5,
                             0.0,
-                            0.0,
-                            0.0
+                            -5.980000019073486
                         ]
                     }
                 }
@@ -54,18 +54,18 @@
             "isBillboard": true,
             "isRandomLifeTime": true,
             "isStatic": true,
-            "lifeTime": 0.3199999928474426,
-            "maxLifeTime": 0.3199999928474426,
-            "minLifeTime": 0.3199999928474426,
+            "lifeTime": 0.18302218616008759,
+            "maxLifeTime": 0.1899999976158142,
+            "minLifeTime": 0.18000000715255737,
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                0.1599999964237213,
+                0.6399999856948853,
                 0.1599999964237213,
                 6.0
             ],
             "randomScaleMin": [
-                0.1599999964237213,
+                0.6399999856948853,
                 0.1599999964237213,
                 -2.059999942779541
             ],
@@ -75,7 +75,7 @@
                 1.0,
                 1.0
             ],
-            "texture": "particle.png",
+            "texture": "smoke.png",
             "useRandomScale": true,
             "useRotation": false
         }

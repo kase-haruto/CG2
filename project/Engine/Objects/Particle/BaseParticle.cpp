@@ -123,7 +123,7 @@ void BaseParticle::Update(){
 			Vector3 moveDelta = emitter.transform.translate - emitter.prevPosition;
 			float distance = moveDelta.Length();
 			if (distance > 0.0f) {
-				float spawnInterval = 0.1f;
+				float spawnInterval = 0.02f;
 				int trailCount = static_cast<int>(distance / spawnInterval);
 				if (trailCount > 0) {
 					for (int i = 0; i < trailCount; ++i) {
