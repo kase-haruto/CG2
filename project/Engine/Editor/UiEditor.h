@@ -16,35 +16,35 @@ class Sprite;
 /// <summary>
 /// spriteEditor
 /// </summary>
-class UIEditor final:
-public BaseEditor{
+class UIEditor final :
+	public BaseEditor{
 public:
-    UIEditor();   // コンストラクタ
-    ~UIEditor() = default;  //デストラクタ
+	UIEditor(const std::string& name);   // コンストラクタ
+	~UIEditor() = default;  //デストラクタ
 
-    // UIの描画
-    void ShowImGuiInterface()override;
+	// UIの描画
+	void ShowImGuiInterface()override;
 
 
-    // 更新処理
-    void Update();
+	// 更新処理
+	void Update();
 
-    // スプライトの描画
-    void Draw();
+	// スプライトの描画
+	void Draw();
 
 	void SaveSpriteDataToJson(const std::string& filePath);
-    void LoadSpriteDataFromJson(const std::string& filePath);
+	void LoadSpriteDataFromJson(const std::string& filePath);
 
 private:
-    void AddSprite(const std::string& textureName, const Vector2& position, const Vector2& size);
+	void AddSprite(const std::string& textureName, const Vector2& position, const Vector2& size);
 
 private:
-    // テクスチャマネージャーのインスタンス
-    TextureManager* textureManager_;
+	// テクスチャマネージャーのインスタンス
+	TextureManager* textureManager_;
 
-    // スプライトのリスト
-    std::vector<std::shared_ptr<Sprite>> sprites_;
+	// スプライトのリスト
+	std::vector<std::shared_ptr<Sprite>> sprites_;
 
-    // 現在選択されているスプライトのインデックス
-    int selectedSpriteIndex_ = -1;
+	// 現在選択されているスプライトのインデックス
+	int selectedSpriteIndex_ = -1;
 };

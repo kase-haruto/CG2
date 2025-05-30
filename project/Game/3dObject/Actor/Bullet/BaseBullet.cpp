@@ -6,28 +6,27 @@
 /* engine */
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
+#include <Engine/Objects/Collider/BoxCollider.h>
 
 /* external */
 #include <externals/imgui/imgui.h>
 
-BaseBullet::BaseBullet(const std::string& modelName)
-	:Actor::Actor(modelName, "bullet"){
-	SphereCollider::name_ = "playerBullet";
-	SphereCollider::Initialize(worldTransform_.scale.x * 2.0f + 0.1f);
-	Collider::targetType_ = ColliderType::Type_PlayerAttack;
-	Collider::type_ = ColliderType::Type_PlayerAttack;
+BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
+	:Actor::Actor(modelName, name){
+	collider_->SetType(ColliderType::Type_PlayerAttack);
+	collider_->SetTargetType(ColliderType::Type_Enemy);
+	collider_->SetOwner(this);
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseBullet::Initialize(const Vector3 initPos, const Vector3 velocity){
+void BaseBullet::ShootInitialize(const Vector3 initPos, const Vector3 velocity) {
 	worldTransform_.translation = initPos;
 	velocity_ = velocity;
 	moveSpeed_ = 15.0f;
-	life_ = 1;
 	isAlive_ = true;
-
 	OnShot();
 }
 
@@ -40,10 +39,12 @@ void BaseBullet::Update() {
 
 	BaseGameObject::Update();
 
+	//effect
 	if (bulletEffect_) {
 		Vector3 wPos = worldTransform_.GetWorldPosition();
 		bulletEffect_->Play(wPos, EmitType::Auto);
 	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,9 @@ void BaseBullet::Update() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::DerivativeGui(){
 
+}
+
+void BaseBullet::OnCollisionEnter([[maybe_unused]] Collider* other) {
 }
 
 void BaseBullet::OnShot() {

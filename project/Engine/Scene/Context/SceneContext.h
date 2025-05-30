@@ -22,7 +22,7 @@ public:
 
 	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
 	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
-
+	void RegisterObject(SceneObject* object);
 	void RegisterAllToRenderer();
 
 private:

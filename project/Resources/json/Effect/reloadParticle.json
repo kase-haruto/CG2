@@ -5,7 +5,7 @@
             "blendMode": 2,
             "colorMode": 2,
             "colorVariation": 0.27000001072883606,
-            "emitType": 0,
+            "emitType": 2,
             "emitters": [
                 {
                     "count": 37,
@@ -38,9 +38,9 @@
                             0.2800000011920929
                         ],
                         "translate": [
-                            6.462028980255127,
-                            8.469999313354492,
-                            225.0
+                            0.0,
+                            0.0,
+                            0.0
                         ]
                     }
                 }
@@ -83,7 +83,7 @@
             "blendMode": 2,
             "colorMode": 2,
             "colorVariation": 0.10000000149011612,
-            "emitType": 0,
+            "emitType": 2,
             "emitters": [
                 {
                     "count": 52,
@@ -116,9 +116,9 @@
                             1.0
                         ],
                         "translate": [
-                            6.462028980255127,
-                            8.469999313354492,
-                            225.0
+                            0.0,
+                            0.0,
+                            0.0
                         ]
                     }
                 },
@@ -153,9 +153,9 @@
                             1.0
                         ],
                         "translate": [
-                            6.462028980255127,
-                            8.469999313354492,
-                            225.0
+                            0.0,
+                            0.0,
+                            0.0
                         ]
                     }
                 }
@@ -193,46 +193,6 @@
             "texture": "flower.png",
             "useRandomScale": true,
             "useRotation": true
-        },
-        {
-            "blendMode": 2,
-            "colorMode": 0,
-            "colorVariation": 0.10000000149011612,
-            "emitType": 0,
-            "emitters": [],
-            "fixedMaxScale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "flyToEmitter": false,
-            "isBillboard": true,
-            "isRandomLifeTime": true,
-            "isStatic": false,
-            "lifeTime": 1.0,
-            "maxLifeTime": 3.0,
-            "minLifeTime": 1.0,
-            "model": "plane.obj",
-            "name": "",
-            "randomScaleMax": [
-                6.0,
-                6.0,
-                6.0
-            ],
-            "randomScaleMin": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "selectedColor": [
-                1.0,
-                1.0,
-                1.0,
-                1.0
-            ],
-            "texture": "particle.png",
-            "useRandomScale": false,
-            "useRotation": false
         }
     ]
 }

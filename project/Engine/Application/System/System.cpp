@@ -15,6 +15,7 @@
 #include <Engine/Graphics/RenderTarget/SwapChainRT/SwapChainRenderTarget.h>
 #include <Engine/PostProcess/FullscreenDrawer.h>
 #include <Engine/System/Command/Manager/CommandManager.h>
+#include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 
 // manager
 #include <Engine/Assets/Model/ModelManager.h>
@@ -75,8 +76,6 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	//srvの先頭をimguiが使用するためそのあとに初期化
 	dxCore_->RendererInitialize(clientWidth, clientHeight);
-
-
 	// カメラの生成
 	CameraManager::Initialize();
 	PrimitiveDrawer::GetInstance()->Initialize();
@@ -92,26 +91,29 @@ void System::Initialize(HINSTANCE hInstance, int32_t clientWidth, int32_t client
 
 	//パーティクルコンテナの初期化
 	//ParticleEffectCollection::GetInstance()->StartupLoad();
+	}
 
-
+void System::InitializePostProcess(PipelineService* service){
 	/////////////////////////////////////////////////////////////////////////////////////////
-	/*                     postProcessの描画処理                                             */
+	/*                     postProcessの初期化                                             */
 	/////////////////////////////////////////////////////////////////////////////////////////
+	//=========================================================
+	// PostProcessCollection の初期化
+	//=========================================================
 	postProcessCollection_ = std::make_unique<PostProcessCollection>();
-	postProcessCollection_->Initialize(pipelineStateManager_.get());
+	postProcessCollection_->Initialize(service);
 
-	postEffectGraph_ = std::make_unique<PostEffectGraph>();
-	postEffectGraph_->AddPass(postProcessCollection_->GetCopyImage());
+	//=========================================================
+	// PostEffectGraph の初期化
+	//=========================================================
+	postEffectGraph_ = std::make_unique<PostEffectGraph>(postProcessCollection_.get());
 
-
-	postEffectSlots_ = {
-		{ "RadialBlur", false, postProcessCollection_->GetRadialBlur() },
-		{ "GrayScale",  false,  postProcessCollection_->GetGrayScale()  },
-		{ "CopyImage",  true,  postProcessCollection_->GetCopyImage()  }
-	};
-
-
+	//=========================================================
+	// PostEffectSlot の初期化
+	//    - 「有効化は1つだけ」に合わせて最初は全部falseにするのが安全
+	//=========================================================
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム開始処理
@@ -129,15 +131,37 @@ void System::BeginFrame() {
 	dxCore_->PreDrawOffscreen();
 
 	EditorUpdate();
+	/////////////////////////////////////////////////////////////////
+	//float dt = ClockManager::GetInstance()->GetDeltaTime();
 
+	//// スペースキーでブラー発動
+	//if (Input::GetInstance()->TriggerKey(DIK_LSHIFT)) {
+	//	radialTimer_ = 0.0f;
+	//	isRadialActive_ = true;
+
+	//	// スロット切り替え
+	//	for (auto& slot : postEffectSlots_) {
+	//		slot.enabled = (slot.name == "RadialBlur");
+	//	}
+	//}
+
+	//// ブラー中の時間経過
+	//if (isRadialActive_) {
+	//	radialTimer_ += dt;
+	//	if (radialTimer_ >= kRadialDurationSec_) {
+	//		isRadialActive_ = false;
+
+	//		// CopyImage のみ有効に戻す
+	//		for (auto& slot : postEffectSlots_) {
+	//			slot.enabled = (slot.name == "CopyImage");
+	//		}
+	//	}
+	//}
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////
 //  フレーム終了処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void System::EndFrame() {
-	EditorDraw();
-
+void System::EndFrame(const PipelineService* service) {
 	auto* cmd = dxCore_->GetCommandList().Get();
 
 	auto* backBuffer = dxCore_->GetRenderTargetCollection().Get("BackBuffer");
@@ -149,9 +173,7 @@ void System::EndFrame() {
 		scTarget->SetBufferIndex(dxCore_->GetSwapChain().GetCurrentBackBufferIndex());
 	}
 
-	// ポストプロセス
-	postEffectGraph_->SetPassesFromList(postEffectSlots_);
-	postEffectGraph_->Execute(cmd, offscreenRes, postOutput);
+	postEffectGraph_->Execute(cmd, offscreenRes, postOutput, dxCore_.get());
 
 	//  ImGui 表示登録（Game View）
 	postOutput->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -161,18 +183,15 @@ void System::EndFrame() {
 	debugRT->GetResource()->Transition(cmd, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	pEngineUICore_->SetDebugViewportTexture(debugRT->GetSRV().ptr);
 
-	// BackBuffer へのコピー
-	auto pipelineState = GraphicsGroup::GetInstance()->GetPipelineState(copyImage, BlendMode::NONE);
-	auto rootSignature = GraphicsGroup::GetInstance()->GetRootSignature(copyImage, BlendMode::NONE);
-	DrawTextureToRenderTarget(cmd, postOutput->GetSRV(), backBuffer, pipelineState.Get(), rootSignature.Get());
+	PipelineSet pipelineSet = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
+
+	DrawTextureToRenderTarget(cmd, postOutput->GetSRV(), backBuffer, pipelineSet.pipelineState, pipelineSet.rootSignature);
 
 	imguiManager_->End();
 	imguiManager_->Draw();
 
 	dxCore_->PostDraw();
 }
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  Editorの更新
@@ -188,26 +207,12 @@ void System::EditorUpdate() {
 			cmdManager->Undo();
 	}
 
-	modelBuilder_->Update();
-	uiEditor_->Update();
 	ParticleEffectSystem::GetInstance()->Update();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  Editorの描画
 /////////////////////////////////////////////////////////////////////////////////////////
-void System::EditorDraw() {
-	/*=======================================================================================
-				モデルの描画
-	========================================================================================*/
-	//modelBuilder_->Draw();
-
-	/*=======================================================================================
-				ui描画
-	========================================================================================*/
-	uiEditor_->Draw();
-
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //  終了処理
@@ -239,27 +244,13 @@ void System::InitializeEditor() {
 	/////////////////////////////////////////////////////////////////////////////////////////
 	/*                     editorの初期化と追加                                              */
 	/////////////////////////////////////////////////////////////////////////////////////////
-
-	//モデル
-	modelBuilder_ = std::make_unique<ModelBuilder>();
-	modelBuilder_->Initialize();
-
-	//sprite
-	uiEditor_ = std::make_unique<UIEditor>();
-
-	//パーティクル
-	effectEditor_ = std::make_unique<EffectEditor>();
-
-	EditorPanel* editorPanel = pEngineUICore_->GetPanel<EditorPanel>();
-	editorPanel->AddEditor(modelBuilder_.get());
-	editorPanel->AddEditor(uiEditor_.get());
-	editorPanel->AddEditor(effectEditor_.get());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //プロセスメッセージ
 /////////////////////////////////////////////////////////////////////////////////////////
 int System::ProcessMessage() { return winApp_->ProcessMessage() ? 1 : 0; }
+
 
 //=============================================================================================================
 //              Pipelineの作成
@@ -269,9 +260,6 @@ void System::CreatePipelines() {
 	Object2DPipelines();
 	StructuredObjectPipeline();
 	LinePipeline();
-	CopyImagePipeline();
-	GrayScalePipeline();
-	RadialBlurPipeline();
 	EffectPipeline();
 	SkyBoxPipeline();
 }
@@ -637,284 +625,6 @@ void System::LinePipeline() {
 	}
 }
 
-void System::CopyImagePipeline() {
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.pInputElementDescs = nullptr;
-	inputLayoutDesc.NumElements = 0;
-
-	BlendMode blendMode = BlendMode::NONE;
-
-	D3D12_RASTERIZER_DESC rasterizeDesc = {};
-	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-	rasterizeDesc.FrontCounterClockwise = FALSE;
-	rasterizeDesc.DepthClipEnable = TRUE;
-
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = FALSE;
-	depthStencilDesc.StencilEnable = FALSE;
-
-	if (!shaderManager_->LoadShader(copyImage, L"CopyImage.VS.hlsl", L"CopyImage.PS.hlsl")) {
-		return;
-	}
-
-	D3D12_DESCRIPTOR_RANGE descriptorRanges[1] = {};
-	descriptorRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRanges[0].NumDescriptors = 1;
-	descriptorRanges[0].BaseShaderRegister = 0;
-	descriptorRanges[0].RegisterSpace = 0;
-	descriptorRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRanges);
-	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_STATIC_SAMPLER_DESC staticSampler = {};
-	staticSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	staticSampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.MipLODBias = 0.0f;
-	staticSampler.MaxAnisotropy = 1;
-	staticSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	staticSampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
-	staticSampler.MinLOD = 0.0f;
-	staticSampler.MaxLOD = D3D12_FLOAT32_MAX;
-	staticSampler.ShaderRegister = 0;
-	staticSampler.RegisterSpace = 0;
-	staticSampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = rootParameters;
-	rootSignatureDesc.NumParameters = _countof(rootParameters);
-	rootSignatureDesc.pStaticSamplers = &staticSampler;
-	rootSignatureDesc.NumStaticSamplers = 1;
-
-	ComPtr<ID3DBlob> signatureBlob;
-	ComPtr<ID3DBlob> errorBlob;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)) {
-		if (errorBlob) {
-			OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		return;
-	}
-
-	ComPtr<ID3D12RootSignature> rootSignature;
-	ComPtr<ID3D12Device> device = dxCore_->GetDevice();
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr)) {
-		return;
-	}
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.pRootSignature = rootSignature.Get();
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.VS = { shaderManager_->GetVertexShader(copyImage)->GetBufferPointer(), shaderManager_->GetVertexShader(copyImage)->GetBufferSize() };
-	psoDesc.PS = { shaderManager_->GetPixelShader(copyImage)->GetBufferPointer(), shaderManager_->GetPixelShader(copyImage)->GetBufferSize() };
-	psoDesc.RasterizerState = rasterizeDesc;
-	psoDesc.DepthStencilState = depthStencilDesc;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.SampleDesc.Count = 1;
-	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	if (!pipelineStateManager_->CreatePipelineState(copyImage, L"CopyImage.VS.hlsl", L"CopyImage.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)) {
-		return;
-	}
-}
-
-void System::GrayScalePipeline() {
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.pInputElementDescs = nullptr;
-	inputLayoutDesc.NumElements = 0;
-
-	BlendMode blendMode = BlendMode::NONE;
-
-	D3D12_RASTERIZER_DESC rasterizeDesc = {};
-	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-	rasterizeDesc.FrontCounterClockwise = FALSE;
-	rasterizeDesc.DepthClipEnable = TRUE;
-
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = FALSE;
-	depthStencilDesc.StencilEnable = FALSE;
-
-	if (!shaderManager_->LoadShader(GrayScale, L"CopyImage.VS.hlsl", L"Grayscale.PS.hlsl")) {
-		return;
-	}
-
-	D3D12_DESCRIPTOR_RANGE descriptorRanges[1] = {};
-	descriptorRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRanges[0].NumDescriptors = 1;
-	descriptorRanges[0].BaseShaderRegister = 0;
-	descriptorRanges[0].RegisterSpace = 0;
-	descriptorRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRanges);
-	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_STATIC_SAMPLER_DESC staticSampler = {};
-	staticSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	staticSampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.MipLODBias = 0.0f;
-	staticSampler.MaxAnisotropy = 1;
-	staticSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	staticSampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
-	staticSampler.MinLOD = 0.0f;
-	staticSampler.MaxLOD = D3D12_FLOAT32_MAX;
-	staticSampler.ShaderRegister = 0;
-	staticSampler.RegisterSpace = 0;
-	staticSampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = rootParameters;
-	rootSignatureDesc.NumParameters = _countof(rootParameters);
-	rootSignatureDesc.pStaticSamplers = &staticSampler;
-	rootSignatureDesc.NumStaticSamplers = 1;
-
-	ComPtr<ID3DBlob> signatureBlob;
-	ComPtr<ID3DBlob> errorBlob;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)) {
-		if (errorBlob) {
-			OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		return;
-	}
-
-	ComPtr<ID3D12RootSignature> rootSignature;
-	ComPtr<ID3D12Device> device = dxCore_->GetDevice();
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr)) {
-		return;
-	}
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.pRootSignature = rootSignature.Get();
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.VS = { shaderManager_->GetVertexShader(GrayScale)->GetBufferPointer(), shaderManager_->GetVertexShader(GrayScale)->GetBufferSize() };
-	psoDesc.PS = { shaderManager_->GetPixelShader(GrayScale)->GetBufferPointer(), shaderManager_->GetPixelShader(GrayScale)->GetBufferSize() };
-	psoDesc.RasterizerState = rasterizeDesc;
-	psoDesc.DepthStencilState = depthStencilDesc;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.SampleDesc.Count = 1;
-	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	if (!pipelineStateManager_->CreatePipelineState(GrayScale, L"CopyImage.VS.hlsl", L"Grayscale.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)) {
-		return;
-	}
-}
-
-void System::RadialBlurPipeline() {
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.pInputElementDescs = nullptr;
-	inputLayoutDesc.NumElements = 0;
-
-	BlendMode blendMode = BlendMode::NONE;
-
-	D3D12_RASTERIZER_DESC rasterizeDesc = {};
-	rasterizeDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	rasterizeDesc.CullMode = D3D12_CULL_MODE_NONE;
-	rasterizeDesc.FrontCounterClockwise = FALSE;
-	rasterizeDesc.DepthClipEnable = TRUE;
-
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = FALSE;
-	depthStencilDesc.StencilEnable = FALSE;
-
-	if (!shaderManager_->LoadShader(RadialBlur, L"CopyImage.VS.hlsl", L"RadialBlur.PS.hlsl")) {
-		return;
-	}
-
-	D3D12_DESCRIPTOR_RANGE descriptorRanges[1] = {};
-	descriptorRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRanges[0].NumDescriptors = 1;
-	descriptorRanges[0].BaseShaderRegister = 0; // t0
-	descriptorRanges[0].RegisterSpace = 0;
-	descriptorRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
-
-	// [0] SRV（gTexture用）
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRanges);
-	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRanges;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-
-	D3D12_STATIC_SAMPLER_DESC staticSampler = {};
-	staticSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	staticSampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	staticSampler.MipLODBias = 0.0f;
-	staticSampler.MaxAnisotropy = 1;
-	staticSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	staticSampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
-	staticSampler.MinLOD = 0.0f;
-	staticSampler.MaxLOD = D3D12_FLOAT32_MAX;
-	staticSampler.ShaderRegister = 0;
-	staticSampler.RegisterSpace = 0;
-	staticSampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = rootParameters;
-	rootSignatureDesc.NumParameters = _countof(rootParameters);
-	rootSignatureDesc.pStaticSamplers = &staticSampler;
-	rootSignatureDesc.NumStaticSamplers = 1;
-
-	ComPtr<ID3DBlob> signatureBlob;
-	ComPtr<ID3DBlob> errorBlob;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr)) {
-		if (errorBlob) {
-			OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		return;
-	}
-
-	ComPtr<ID3D12RootSignature> rootSignature;
-	ComPtr<ID3D12Device> device = dxCore_->GetDevice();
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr)) {
-		return;
-	}
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.pRootSignature = rootSignature.Get();
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.VS = { shaderManager_->GetVertexShader(RadialBlur)->GetBufferPointer(), shaderManager_->GetVertexShader(RadialBlur)->GetBufferSize() };
-	psoDesc.PS = { shaderManager_->GetPixelShader(RadialBlur)->GetBufferPointer(), shaderManager_->GetPixelShader(RadialBlur)->GetBufferSize() };
-	psoDesc.RasterizerState = rasterizeDesc;
-	psoDesc.DepthStencilState = depthStencilDesc;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.SampleDesc.Count = 1;
-	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	if (!pipelineStateManager_->CreatePipelineState(RadialBlur, L"CopyImage.VS.hlsl", L"RadialBlur.PS.hlsl", rootSignatureDesc, psoDesc, blendMode)) {
-		return;
-	}
-}
 
 void System::EffectPipeline() {
 	//InputLayoutの設定

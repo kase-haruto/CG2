@@ -8,7 +8,7 @@ public:
 	//			public function
 	//===================================================================*/
 	PlayerBullet() = default;
-	PlayerBullet(const std::string& modelName);
+	PlayerBullet(const std::string& modelName,const std::string& name);
 	~PlayerBullet()override = default;
 
 	void Update() override;

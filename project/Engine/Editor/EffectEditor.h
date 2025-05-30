@@ -12,7 +12,7 @@ public:
 	//===================================================================*/
 	// public functions
 	//===================================================================*/
-	EffectEditor();
+	EffectEditor(const std::string& name);
 	~EffectEditor()override = default;
 
 	void ShowImGuiInterface()override;

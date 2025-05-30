@@ -12,7 +12,7 @@
 
 InspectorPanel::InspectorPanel()
 	: IEngineUI("Inspector"){
-	pSceneObjectEditor_ = std::make_unique<SceneObjectEditor>();
+	pSceneObjectEditor_ = std::make_unique<SceneObjectEditor>("SceneObjectEditor");
 	
 }
 

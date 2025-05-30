@@ -21,6 +21,7 @@ void SceneContext::Update() {
 	lightLibrary_->Update();
 }
 
+
 void SceneContext::RegisterAllToRenderer(){
 	objectLibrary_->RegisterToRenderer(renderer_.get());
 }

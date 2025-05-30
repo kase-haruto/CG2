@@ -106,6 +106,13 @@ protected:
 		ZAxis
 	};
 
+	enum class ScaleMode {
+		FixedMaxScale, // 固定最大スケール
+		RandomScale, // ランダムスケール
+		influencedByLifePlus, // 寿命に応じたスケール
+		influencedByLifeMinus // 寿命に応じたスケール（逆）
+	};
+
 public:
 	//===================================================================*/
 	//                    public methods
@@ -170,12 +177,19 @@ public:
 	Vector3 randomScaleMin_ = {1.0f, 1.0f, 1.0f};
 	Vector3 randomScaleMax_ = {6.0f, 6.0f, 6.0f};
 
+	bool useGravity_ = false; // デフォルトは false（オフ）
+	float gravity_ = -9.8f;   // 重力加速度（Y軸下向き）
+	bool usePopVelocity_ = false;   // ポンっと上方向初速を使うか
+	float popVelocityY_ = 3.0f;     // 初速の強さ
+
 	float lifeTime_ = 1.0f; // パーティクルの寿命
 
 	bool isRandomLifeTime_ = true;
+	bool isComplement_ = true; // パーティクルをストレージに保存するかどうか
 	float maxLifeTime_ = 3.0f;
 	float minLifeTime_ = 1.0f;
 	bool flyToEmitter_ = false; // エミッタに向かうかどうか
+	ScaleMode scaleMode_ = ScaleMode::FixedMaxScale; // スケールの方式
 	std::string name_;                                  // システム名
 	bool useRandomColor_ = true;                        // ランダムカラーを使用するか
 	Vector4 selectedColor_ = {1.0f, 1.0f, 1.0f, 1.0f};  // ランダムでない場合に使う色

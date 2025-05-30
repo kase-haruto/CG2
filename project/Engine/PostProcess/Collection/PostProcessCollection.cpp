@@ -1,31 +1,54 @@
 #include "PostProcessCollection.h"
 
-#include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
+#include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 
-void PostProcessCollection::Initialize(PipelineStateManager* pipelineMgr){
+void PostProcessCollection::Initialize(PipelineService* service){
+	effects_.clear();
+	effectNames_.clear();
 
 	//===================================================================*/
 	//		grayScale
 	//===================================================================*/
-	PipelineSet grayScaleSet = pipelineMgr->GetPipelineSet(PipelineType::GrayScale, BlendMode::NONE);
-	grayScale_ = std::make_unique<GrayScaleEffect>();
-	grayScale_->Initialize(grayScaleSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::GrayScale);
+		auto effect = std::make_unique<GrayScaleEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
 	//===================================================================*/
 	//		RadialBlur
 	//===================================================================*/
-	PipelineSet radialBlurSet = pipelineMgr->GetPipelineSet(PipelineType::RadialBlur, BlendMode::NONE);
-	radialBlur_ = std::make_unique<RadialBlurEffect>();
-	radialBlur_->Initialize(radialBlurSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::RadialBlur);
+		auto effect = std::make_unique<RadialBlurEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
+
+	//===================================================================*/
+	//		ChromaticAberration
+	//===================================================================*/
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::ChromaticAberration);
+		auto effect = std::make_unique<ChromaticAberrationEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
 
 	//===================================================================*/
 	//		No Effects
 	//===================================================================*/
-	PipelineSet copyImageSet = pipelineMgr->GetPipelineSet(PipelineType::copyImage, BlendMode::NONE);
-	copyImage_ = std::make_unique<CopyImageEffect>();
-	copyImage_->Initialize(copyImageSet);
+	{
+		PipelineSet set = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
+		auto effect = std::make_unique<CopyImageEffect>();
+		effect->Initialize(set);
+		effectNames_.push_back(effect->GetName());
+		effects_.push_back(std::move(effect));
+	}
+
 }
 
-GrayScaleEffect* PostProcessCollection::GetGrayScale(){
-	return grayScale_.get();
-}

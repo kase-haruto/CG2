@@ -9,6 +9,7 @@ enum PipelineType{
 	copyImage,
 	GrayScale,
 	RadialBlur,
+	ChromaticAberration,
 	Effect,
 	Skybox,
 };

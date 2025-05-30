@@ -30,6 +30,7 @@ namespace PipelineTag{
 		CopyImage,
 		GrayScale,
 		RadialBlur,
+		ChromaticAberration,
 
 		Count
 	};

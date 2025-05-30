@@ -32,43 +32,38 @@ bool CollisionManager::ShouldLogCollision(const Collider* a, const Collider* b){
 	return aWantsToCollideWithB || bWantsToCollideWithA;
 }
 
-void CollisionManager::UpdateCollisionAllCollider(){
+void CollisionManager::UpdateCollisionAllCollider() {
 	// 前のフレームの衝突を保存してリセット
 	previousCollisions_ = std::move(currentCollisions_);
 	currentCollisions_.clear();
 
-	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA){
-		// コライダーがアクティブでなければスキップ
+	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA) {
 		if (!(*itA)->IsCollisionEnubled()) continue;
 
-		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB){
-			// コライダーがアクティブでなければスキップ
+		for (auto itB = std::next(itA); itB != colliders_.end(); ++itB) {
 			if (!(*itB)->IsCollisionEnubled()) continue;
 
-			if (CheckCollisionPair(*itA, *itB)){
-				// 衝突ペアのキーを生成
+			if (CheckCollisionPair(*itA, *itB)) {
 				std::string key = MakeCollisionKey(*itA, *itB);
 				currentCollisions_.insert(key);
 
-				// 衝突状態をログに記録
-				if (previousCollisions_.find(key) == previousCollisions_.end()){
-					// 新しい衝突 (Enter)
-					(*itA)->OnCollisionEnter(*itB);
-					(*itB)->OnCollisionEnter(*itA);
+				if (previousCollisions_.find(key) == previousCollisions_.end()) {
+					// Enter: 親に通知する
+					(*itA)->NotifyCollisionEnter(*itB);
+					(*itB)->NotifyCollisionEnter(*itA);
 					collisionLogs_.emplace_back("Enter: " + key);
-				} else{
-					// 持続中の衝突 (Stay)
-					(*itA)->OnCollisionStay(*itB);
-					(*itB)->OnCollisionStay(*itA);
+				} else {
+					// Stay: 親に通知する
+					(*itA)->NotifyCollisionStay(*itB);
+					(*itB)->NotifyCollisionStay(*itA);
 				}
 			}
 		}
 	}
 
-	// 前のフレームに存在して現在のフレームに存在しないペアをExitとして記録
-	for (const auto& key : previousCollisions_){
-		if (currentCollisions_.find(key) == currentCollisions_.end()){
-			// ペアを分解して対応するコライダーを取得
+	// Exit検出: これも親に通知する
+	for (const auto& key : previousCollisions_) {
+		if (currentCollisions_.find(key) == currentCollisions_.end()) {
 			auto delimiterPos = key.find('-');
 			std::string colliderAName = key.substr(0, delimiterPos);
 			std::string colliderBName = key.substr(delimiterPos + 1);
@@ -76,16 +71,16 @@ void CollisionManager::UpdateCollisionAllCollider(){
 			Collider* colliderA = FindColliderByName(colliderAName);
 			Collider* colliderB = FindColliderByName(colliderBName);
 
-			if (colliderA && colliderB){
-				colliderA->OnCollisionExit(colliderB);
-				colliderB->OnCollisionExit(colliderA);
+			if (colliderA && colliderB) {
+				colliderA->NotifyCollisionExit(colliderB);
+				colliderB->NotifyCollisionExit(colliderA);
 			}
 
-			// Exitログを記録
 			collisionLogs_.emplace_back("Exit: " + key);
 		}
 	}
 }
+
 
 Collider* CollisionManager::FindColliderByName(const std::string& name){
 	for (auto* collider : colliders_){

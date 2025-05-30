@@ -60,6 +60,9 @@ void PipelineService::RegisterAllPipelines() {
 
 	//=================== PostProcess Pipelines ==========================
 	regPP(PipelineTag::PostProcess::GrayScale, PipelinePresets::MakeGrayScale);
+	regPP(PipelineTag::PostProcess::RadialBlur, PipelinePresets::MakeRadialBlur);
+	regPP(PipelineTag::PostProcess::ChromaticAberration, PipelinePresets::MakeChromaticAberration);
+	regPP(PipelineTag::PostProcess::CopyImage, PipelinePresets::MakeCopyImage);
 
 }
 

@@ -83,6 +83,11 @@ nlohmann::json Particle::SaveToJson() const{
 	json["selectedColor"] = {selectedColor_.x, selectedColor_.y, selectedColor_.z, selectedColor_.w};
 	json["colorVariation"] = colorVariation_;
 	json["lifeTime"] = lifeTime_;
+	json["isComplement"] = isComplement_;
+	json["scaleMode"] = static_cast<int>(scaleMode_);
+	json["useGravity"] = useGravity_;
+	json["usePopVelocity"] = usePopVelocity_;
+	json["popVelocityY"] = popVelocityY_;
 
 	// Emitters
 	nlohmann::json emittersJson = nlohmann::json::array();
@@ -136,6 +141,11 @@ void Particle::LoadFromJson(const nlohmann::json& j){
 	isRandomLifeTime_ = j.value("isRandomLifeTime", false);
 	minLifeTime_ = j.value("minLifeTime", 0.1f);
 	maxLifeTime_ = j.value("maxLifeTime", 3.0f);
+	isComplement_ = j.value("isComplement", true);
+	scaleMode_ = j.value("scaleMode", ScaleMode::FixedMaxScale);
+	useGravity_ = j.value("useGravity", false);
+	popVelocityY_ = j.value("popVelocityY", 3.0f);
+	usePopVelocity_ = j.value("usePopVelocity", false);
 
 	emitters_.clear();
 	for (const auto& ej : j["emitters"]){

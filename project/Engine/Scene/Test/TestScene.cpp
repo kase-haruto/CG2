@@ -14,7 +14,6 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-
 #include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib
@@ -43,6 +42,9 @@ void TestScene::LoadAssets() {
 	// パーティクルエフェクトのロード
 	pfxCollection.LoadByName("BulletEffect");
 	pfxCollection.LoadByName("HitEffect");
+	pfxCollection.LoadByName("JettEffect");
+	pfxCollection.LoadByName("FlyTrailEffect");
+	pfxCollection.LoadByName("ChageEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -5,9 +5,6 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/ImGuiManager.h>
-#include <Engine/Assets/Model/ModelBuilder.h>
-#include <Engine/Editor/EffectEditor.h>
-#include <Engine/Editor/UiEditor.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
@@ -36,12 +33,14 @@ public:
 	void Finalize();
 	void InitializeEditor();
 	void BeginFrame();
-	void EndFrame();
+	void EndFrame(const class PipelineService* pipelineSet);
 
 	void EditorUpdate();	//engine内部Editorの更新
-	void EditorDraw();		//engine内部editorの描画
 
 	int ProcessMessage();
+
+	void InitializePostProcess(class PipelineService* service);
+
 
 	//* パイプラインの作成 ==============================*/
 	void CreatePipelines();
@@ -51,9 +50,6 @@ public:
 	void EffectPipeline();
 	void SkyBoxPipeline();
 
-	void CopyImagePipeline();
-	void GrayScalePipeline();
-	void RadialBlurPipeline();
 	//===================================================================*/
 	//                    getter / setter
 	//===================================================================*/
@@ -61,6 +57,8 @@ public:
 	static HWND GetHWND(){ return hwnd_; }
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 	void SetEngineUICore(EngineUICore* engineUI) { pEngineUICore_ = engineUI; }
+	PostProcessCollection* GetPostProcessCollection() const{ return postProcessCollection_.get(); }
+	PostEffectGraph* GetPostEffectGraph() const{ return postEffectGraph_.get(); }
 
 private:
 	//===================================================================*/
@@ -85,14 +83,10 @@ private:
 private:
 	// engineEditors
 	EngineUICore* pEngineUICore_;			//engineUIの描画
-	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
-	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
-	std::unique_ptr<EffectEditor> effectEditor_;	//パーティクルエディタ
 	
 	// postprocess
 	std::unique_ptr<PostProcessCollection> postProcessCollection_;
 	std::unique_ptr<PostEffectGraph> postEffectGraph_;
-	std::vector<PostEffectSlot> postEffectSlots_;
 
 	float radialTimer_ = 0.0f;
 	const float kRadialDurationSec_ = 1.0f;
