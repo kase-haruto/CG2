@@ -1,0 +1,83 @@
+{
+    "name": "HitEffect",
+    "particles": [
+        {
+            "blendMode": 2,
+            "colorMode": 1,
+            "colorVariation": 0.7599999904632568,
+            "emitType": 2,
+            "emitters": [
+                {
+                    "count": 15,
+                    "frequency": 0.8600000143051147,
+                    "rotationParm": {
+                        "initialRotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "randomizeInitialRotation": true,
+                        "rotateContinuously": false,
+                        "rotationSpeed": [
+                            1.600000023841858,
+                            0.0,
+                            -2.5999999046325684
+                        ],
+                        "useRotation": true
+                    },
+                    "shape": 1,
+                    "transform": {
+                        "rotate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "translate": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                }
+            ],
+            "fixedMaxScale": [
+                0.9200000166893005,
+                1.0,
+                1.0
+            ],
+            "flyToEmitter": false,
+            "isBillboard": true,
+            "isRandomLifeTime": false,
+            "isStatic": true,
+            "lifeTime": 0.872493326663971,
+            "maxLifeTime": 3.0,
+            "minLifeTime": 0.8199999928474426,
+            "model": "plane.obj",
+            "name": "",
+            "randomScaleMax": [
+                0.2199999988079071,
+                1.8799999952316284,
+                6.0
+            ],
+            "randomScaleMin": [
+                0.03999999910593033,
+                0.6399999856948853,
+                1.0
+            ],
+            "selectedColor": [
+                0.8494208455085754,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "texture": "particle.png",
+            "useRandomScale": true,
+            "useRotation": true
+        }
+    ]
+}

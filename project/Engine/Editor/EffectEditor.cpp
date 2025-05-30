@@ -68,30 +68,41 @@ void EffectEditor::LoadFromJsonAll(const std::string& directoryPath) {
 void EffectEditor::ShowParticleMakingGui() {
 	static char effectName[128] = "";
 	ImGui::InputText("Effect Name", effectName, sizeof(effectName));
+
 	if (ImGui::Button("Create Effect")) {
+		// 1. 新規エフェクト作成
 		auto newEffect = std::make_unique<ParticleEffect>();
 		newEffect->AddParticle(std::make_unique<Particle>());
 		newEffect->SetName(effectName);
-		newEffect->Play(Vector3::Zero, EmitType::Both); // 初期位置はゼロ
+
+		// 2. プロトタイプとして登録
+		auto rawPtr = newEffect.get();
 		ParticleEffectSystem::GetInstance()->GetCollection().AddEffect(std::move(newEffect));
-		effectName[0] = '\0';
+
+		// 3. そのまま currentEffect_ にも登録（コピーせず編集対象）
+		currentEffect_ = rawPtr;
+		selectedEffectIndex_ = static_cast<int>(ParticleEffectSystem::GetInstance()->GetCollection().GetEffects().size() - 1);
+
+		// 4. プレビュー用に再生
+		currentEffect_->Initialize();
+		currentEffect_->Play(Vector3::Zero, EmitType::Both);
+
+		effectName[0] = '\0';  // 入力欄クリア
 	}
+
 	ImGui::SameLine();
-	//ロード
+
 	if (ImGui::Button("Load Effect")) {
 		LoadFromJsonAll(directoryPath_);
 	}
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effectリスト表示
 /////////////////////////////////////////////////////////////////////////////////////////
 void EffectEditor::ShowEffectListAndProperty() {
-
-	// 全体を水平に分割
 	ImVec2 windowSize = ImGui::GetContentRegionAvail();
 	float leftPaneWidth = windowSize.x * 0.3f;
-	float rightPaneWidth = windowSize.x - leftPaneWidth - 8.0f; // Padding分引く
+	float rightPaneWidth = windowSize.x - leftPaneWidth - 8.0f;
 
 	// 左カラム: エフェクトリスト
 	ImGui::BeginChild("Effect List Pane", ImVec2(leftPaneWidth, 0), true);
@@ -99,11 +110,11 @@ void EffectEditor::ShowEffectListAndProperty() {
 	ImGui::Separator();
 
 	auto& effects = ParticleEffectSystem::GetInstance()->GetCollection().GetEffects();
-	static int renameIndex = -1; // リネーム対象のインデックス
+	static int renameIndex = -1;
 	static char newName[128] = "";
 
 	for (int i = 0; i < effects.size(); ++i) {
-		bool isSelected = (selectedEffectIndex_ == static_cast<int>(i));
+		bool isSelected = (selectedEffectIndex_ == i);
 		ImGui::PushID(i);
 
 		if (renameIndex == i) {
@@ -119,12 +130,37 @@ void EffectEditor::ShowEffectListAndProperty() {
 			ImGui::PopStyleVar();
 		} else {
 			if (ImGui::Selectable((effects[i]->GetName() + std::to_string(i)).c_str(), isSelected)) {
-				currentEffect_ = effects[i].get();
 				selectedEffectIndex_ = i;
+
+				// 1️⃣ 既存のプレビューインスタンス（editorPreviewEffect_）を削除
+				auto& effectSystem = *ParticleEffectSystem::GetInstance();
+
+				// editorPreviewEffect_ は activeEffects_ に含まれているので、先に削除
+				if (effectSystem.GetEditorPreviewPointer()) {
+					auto& activeEffects = effectSystem.GetActiveEffects();
+					activeEffects.erase(
+						std::remove_if(activeEffects.begin(), activeEffects.end(),
+									   [&](const std::unique_ptr<ParticleEffect>& e) {
+						return e.get() == effectSystem.GetEditorPreviewPointer();
+					}),
+						activeEffects.end()
+					);
+				}
+
+				// 2️⃣ 新しいプレビュー用インスタンスを作成
+				auto previewEffect = std::make_unique<ParticleEffect>(*effects[i]);
+				previewEffect->Initialize();
+				previewEffect->Play(Vector3::Zero, EmitType::Both);
+
+				// 3️⃣ プレビュー用として登録
+				effectSystem.SetEditorPreviewPointer(previewEffect.get());
+				currentEffect_ = previewEffect.get();
+
+				// 4️⃣ activeEffects_ に追加（実体として保持するため）
+				effectSystem.PlayForEditorPreview(std::move(previewEffect));
 			}
 		}
 
-		// 右クリックでポップアップメニューを開く
 		if (ImGui::BeginPopupContextItem()) {
 			if (ImGui::MenuItem("Rename")) {
 				renameIndex = i;
@@ -142,25 +178,28 @@ void EffectEditor::ShowEffectListAndProperty() {
 
 		ImGui::PopID();
 	}
-
 	ImGui::EndChild();
 
 	ImGui::SameLine();
 
-	// 右カラム: 選択中のエフェクトのプロパティ
+	// 右カラム: 直接編集
 	ImGui::BeginChild("Effect Property Pane", ImVec2(rightPaneWidth, 0), true);
 	ImGui::Text("Effect Properties");
-	if (ImGui::Button("saveEffect")) {
-		const std::string filePath = directoryPath_ + "/" + currentEffect_->GetName() + ".json";
 
-		SaveToJson(filePath);
+	if (ImGui::Button("Save Effect") && currentEffect_) {
+		const std::string filePath = directoryPath_ + "/" + currentEffect_->GetName() + ".json";
+		currentEffect_->Save(filePath);
 	}
+
 	ImGui::Separator();
+
 	if (currentEffect_) {
 		currentEffect_->ImGui();
 	}
+
 	ImGui::EndChild();
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		effect追加

@@ -585,6 +585,12 @@ void BaseParticle::Emit(ParticleData::Emitter& emitter, std::optional<Vector3> p
 
 
 void BaseParticle::EmitAll(){
+	if (emitters_.empty()) {
+		ParticleData::Emitter defaultEmitter;
+		defaultEmitter.Initialize(10);
+		emitters_.push_back(defaultEmitter);
+	}
+
 	for (auto& emitter:emitters_){
 		Emit(emitter);
 	}

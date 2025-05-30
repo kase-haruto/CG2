@@ -22,10 +22,12 @@ public:
 	void Finalize();
 	void PlayByName(const std::string& name, const Vector3& position, EmitType emitType = EmitType::Once);
 	ParticleEffect* CreateEffectByName(const std::string& name, const Vector3& position, EmitType emitType);
-
+	void PlayForEditorPreview(std::unique_ptr<ParticleEffect> effect);
 	//--------- Accessor ----------------------------------
 	ParticleEffectCollection& GetCollection() { return collection_; }
-
+	void SetEditorPreviewPointer(ParticleEffect* effect);
+	ParticleEffect* GetEditorPreviewPointer() const { return editorPreviewEffect_; }
+	std::vector<std::unique_ptr<ParticleEffect>>& GetActiveEffects() { return activeEffects_; }
 private:
 	//===================================================================*/
 	//					private functions
@@ -38,4 +40,6 @@ private:
 	//===================================================================*/
 	std::vector<std::unique_ptr<ParticleEffect>> activeEffects_;
 	ParticleEffectCollection collection_;
+
+	ParticleEffect* editorPreviewEffect_ = nullptr;
 };

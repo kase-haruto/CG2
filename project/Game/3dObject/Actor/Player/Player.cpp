@@ -120,7 +120,7 @@ void Player::Move() {
 		//effect
 		Vector3 wPos = worldTransform_.GetWorldPosition();
 		Vector3 offset = { 0.0f, 0.0f, -2.0f };
-		moveEffect_->SetPosition(wPos + offset);
+		moveEffect_->Play(wPos + offset, EmitType::Auto);
 	}
 
 	if (rollSet_.isRolling_) return;
