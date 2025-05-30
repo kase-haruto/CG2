@@ -8,6 +8,7 @@
 #include <Engine/Scene/System/SceneManager.h>
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
+#include <Engine/Editor/Collection/EditorCollection.h>
 
 // c++
 #include <Windows.h>
@@ -19,6 +20,8 @@ public:
 
 	void Initialize(HINSTANCE hInstance);
 	bool Update();
+	void BeginUpdate();
+	void EndUpdate();
 	void Render();
 	void Run();
 	void Finalize();
@@ -32,5 +35,6 @@ private:
 
 	//scene
 	std::unique_ptr<SceneManager> sceneManager_;
+	std::unique_ptr<EditorCollection> editorCollection_;
 
 };

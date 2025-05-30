@@ -17,7 +17,7 @@
 class ModelBuilder :
 	public BaseEditor{
 public:
-	ModelBuilder();
+	ModelBuilder(const std::string& name);
 	~ModelBuilder()override = default;
 
 	/// <summary>

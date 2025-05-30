@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\Collection\EditorCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.cpp" />
@@ -270,8 +271,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Pipeline\Service\PipelineService.cpp" />
     <ClCompile Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.cpp" />
     <ClCompile Include="Game\Effect\ParticleEffect\ParticleEffectSystem.cpp" />
+    <ClCompile Include="Engine\Editor\PostProcessEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\Collection\EditorCollection.h" />
     <ClInclude Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
@@ -468,6 +471,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Core\GraphicsSystem.h" />
     <ClInclude Include="Engine\System\Observer\SceneObject\IRenderableDeathListener.h" />
     <ClInclude Include="Game\Effect\ParticleEffect\ParticleEffectSystem.h" />
+    <ClInclude Include="Engine\Editor\PostProcessEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

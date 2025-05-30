@@ -1,30 +1,34 @@
 #pragma once
 /* ========================================================================
-/*  include space
+/* include space
 /* ===================================================================== */
 #include <Engine/Editor/BaseEditor.h>
 
-class SceneObject;
+#include <vector>
 
-//　sceneオブジェクト編集
-class SceneObjectEditor :
-    public BaseEditor {
+struct PostEffectSlot;
+class PostProcessCollection;
+
+class PostProcessEditor : public
+	BaseEditor{
 public:
 	//===================================================================*/
-	//                   public functions
+	// public functions
 	//===================================================================*/
-	SceneObjectEditor(const std::string& name);
-	~SceneObjectEditor() override = default;
+	PostProcessEditor(const std::string& name);
+	~PostProcessEditor() = default;
 
 	void ShowImGuiInterface() override;
-	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
+	void SetPostEffectCollection(PostProcessCollection* postProcessCollection);
 
 private:
-	void ShowGuizmo();
+	//===================================================================*/
+	// private variables
+	//===================================================================*/
+	std::vector<PostEffectSlot> slots_;
+	PostProcessCollection* pCollection_ = nullptr;
 
-	//===================================================================*/
-	//                   public functions
-	//===================================================================*/
-	SceneObject* sceneObject_ = nullptr;	// 編集対象のSceneObject
+private:
+	const std::string directoryPath_ = "Resources/Json/PostEffect/";
 };
 

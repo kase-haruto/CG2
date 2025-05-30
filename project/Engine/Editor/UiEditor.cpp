@@ -17,10 +17,9 @@
 #include <externals/nlohmann/json.hpp>
 #include <fstream>
 
-UIEditor::UIEditor(){
+UIEditor::UIEditor(const std::string& name):BaseEditor(name){
 	// テクスチャマネージャーのインスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
-	editorName_ = "UIEditor";
 	LoadSpriteDataFromJson("Resources/json/sprite/spriteData.json");
 }
 

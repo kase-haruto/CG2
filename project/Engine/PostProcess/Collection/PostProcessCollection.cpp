@@ -30,6 +30,13 @@ void PostProcessCollection::Initialize(PipelineService* service){
 	PipelineSet copyImageSet = service->GetPipelineSet(PipelineTag::PostProcess::CopyImage);
 	copyImage_ = std::make_unique<CopyImageEffect>();
 	copyImage_->Initialize(copyImageSet);
+
+	effectNames_ = {
+		grayScale_->GetName(),
+		radialBlur_->GetName(),
+		chromaticAberration_->GetName(),
+		copyImage_->GetName(),
+	};
 }
 
 GrayScaleEffect* PostProcessCollection::GetGrayScale(){

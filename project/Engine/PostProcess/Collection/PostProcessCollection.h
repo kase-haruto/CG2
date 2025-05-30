@@ -21,9 +21,15 @@ public:
 	CopyImageEffect* GetCopyImage() { return copyImage_.get(); }
 	ChromaticAberrationEffect* GetChromaticAberration(){ return chromaticAberration_.get(); }
 
+	const std::vector<std::string>& GetEffectNames() const{ return effectNames_; }
+
 private:
 	std::unique_ptr<GrayScaleEffect> grayScale_;
 	std::unique_ptr<RadialBlurEffect> radialBlur_;
 	std::unique_ptr<CopyImageEffect> copyImage_;
 	std::unique_ptr<ChromaticAberrationEffect> chromaticAberration_;
+
+	std::vector<std::unique_ptr<IPostEffectPass>> effects_;
+
+	std::vector<std::string> effectNames_;
 };

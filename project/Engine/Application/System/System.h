@@ -5,9 +5,6 @@
 /* ===================================================================== */
 // engine
 #include <Engine/Application/UI/ImGuiManager.h>
-#include <Engine/Assets/Model/ModelBuilder.h>
-#include <Engine/Editor/EffectEditor.h>
-#include <Engine/Editor/UiEditor.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
@@ -36,10 +33,9 @@ public:
 	void Finalize();
 	void InitializeEditor();
 	void BeginFrame();
-	void EndFrame();
+	void EndFrame(const PipelineSet& pipelineSet);
 
 	void EditorUpdate();	//engine内部Editorの更新
-	void EditorDraw();		//engine内部editorの描画
 
 	int ProcessMessage();
 
@@ -53,9 +49,6 @@ public:
 	void EffectPipeline();
 	void SkyBoxPipeline();
 
-	void CopyImagePipeline();
-	void GrayScalePipeline();
-	void RadialBlurPipeline();
 	//===================================================================*/
 	//                    getter / setter
 	//===================================================================*/
@@ -63,6 +56,7 @@ public:
 	static HWND GetHWND(){ return hwnd_; }
 	DxCore* GetDxCore()const{ return dxCore_.get(); }
 	void SetEngineUICore(EngineUICore* engineUI) { pEngineUICore_ = engineUI; }
+	PostProcessCollection* GetPostProcessCollection() const{ return postProcessCollection_.get(); }
 
 private:
 	//===================================================================*/
@@ -87,9 +81,6 @@ private:
 private:
 	// engineEditors
 	EngineUICore* pEngineUICore_;			//engineUIの描画
-	std::unique_ptr<UIEditor> uiEditor_;			//ui編集
-	std::unique_ptr<ModelBuilder> modelBuilder_;	//モデル配置
-	std::unique_ptr<EffectEditor> effectEditor_;	//パーティクルエディタ
 	
 	// postprocess
 	std::unique_ptr<PostProcessCollection> postProcessCollection_;

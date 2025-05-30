@@ -11,8 +11,7 @@
 #include <externals/imgui/imgui.h>
 #include "externals/imgui/ImGuizmo.h"
 
-SceneObjectEditor::SceneObjectEditor(){
-	editorName_ = "SceneObjectEditor";
+SceneObjectEditor::SceneObjectEditor(const std::string& name):BaseEditor(name){
 }
 
 void SceneObjectEditor::ShowImGuiInterface(){
