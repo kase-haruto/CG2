@@ -21,6 +21,7 @@ DebugCamera::DebugCamera()
 	lastMousePosMove_ {0.0f, 0.0f},
 	isDraggingMove_ {false}{
 	BaseCamera::SetName("DebugCamera");
+	fovAngleY_ = static_cast< float >(std::numbers::pi) * 0.25f; // 45度
 
 	transform_.translate = {0.0f, 2.0f, -10.0f};
 }

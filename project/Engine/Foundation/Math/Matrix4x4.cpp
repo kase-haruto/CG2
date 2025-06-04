@@ -324,3 +324,19 @@ Matrix4x4 Matrix4x4::MakeViewportMatrix(float left, float top, float width, floa
 	return matrix;
 }
 
+Matrix4x4 Matrix4x4::PerspectiveFovRH(float fovY, float aspect, float nearZ, float farZ){
+	float yScale = 1.0f / std::tan(fovY * 0.5f);
+	float xScale = yScale / aspect;
+	float zRange = farZ - nearZ;
+
+	Matrix4x4 mat = {};
+
+	mat.m[0][0] = xScale;
+	mat.m[1][1] = yScale;
+	mat.m[2][2] = farZ / zRange;
+	mat.m[2][3] = 1.0f;
+	mat.m[3][2] = -nearZ * farZ / zRange;
+	mat.m[3][3] = 0.0f;
+
+	return mat;
+}

@@ -23,7 +23,12 @@ SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
 		scenes_[i]->GetSceneContext()->GetMeshRenderer()->SetPipelineService(pGraphicsSystem_->GetPipelineService());
 	}
 
-	currentSceneNo_ = static_cast<int>(SceneType::TEST);
+
+	currentSceneNo_ = static_cast< int >(SceneType::PLAY);
+#ifdef _DEBUG
+	currentSceneNo_ = static_cast< int >(SceneType::TEST);
+#endif // 
+
 	nextSceneNo_ = currentSceneNo_;
 }
 
@@ -46,13 +51,6 @@ void SceneManager::Initialize() {
 }
 
 void SceneManager::Update() {
-	//キー入力で切り替え
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		RequestSceneChange(SceneType::PLAY);
-	} else if (Input::GetInstance()->TriggerKey(DIK_2)) {
-		RequestSceneChange(SceneType::TEST);
-	}
-
 	if (currentSceneNo_ != nextSceneNo_) {
 		// いったん現在シーンをクリーンアップ
 		scenes_[currentSceneNo_]->CleanUp();

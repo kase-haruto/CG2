@@ -27,6 +27,7 @@ public:
 	virtual void ShowGui()override{}
 	virtual void TransfarToGPU(){}  // GPUへ転送
 	virtual void StartShake([[maybe_unused]] float duration, [[maybe_unused]] float intensity){};
+	virtual void SetAspectRatio(float aspect) = 0;
 
 	// config ===========================================================
 };

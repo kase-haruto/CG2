@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 #include <Engine/Application/System/Enviroment.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 // uiPanel
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>
@@ -40,18 +41,21 @@ void EngineUICore::Render() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   メインビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUICore::RenderMainViewport() {
+void EngineUICore::RenderMainViewport(){
+	ImGui::Begin("Game View", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	ImVec2 viewportSize = ImVec2(kExecuteWindowSize.x, kExecuteWindowSize.y);
+	ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 
-	ImGui::SetNextWindowSize(ImVec2(viewportSize.x, viewportSize.y));
-	ImGui::Begin("Game View", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+	// カメラのアスペクト比を更新
+	if (viewportSize.x > 0 && viewportSize.y > 0){
+		CameraManager::GetInstance()->SetAspectRatio(viewportSize.x, viewportSize.y);
+	}
 
-	if (mainViewportTextureID_) {
+	if (mainViewportTextureID_){
 		ImVec2 imagePos = ImGui::GetCursorScreenPos();
 		ImGui::SetCursorScreenPos(imagePos);
-		ImGui::Image(reinterpret_cast<ImTextureID>(mainViewportTextureID_), viewportSize);
-	} else {
+		ImGui::Image(reinterpret_cast< ImTextureID >(mainViewportTextureID_), viewportSize);
+	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
 
@@ -61,37 +65,29 @@ void EngineUICore::RenderMainViewport() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //                   デバッグビューポートの描画
 ////////////////////////////////////////////////////////////////////////////////////////////
-void EngineUICore::RenderDebugViewPort() {
-	ImVec2 imgSize{ kExecuteWindowSize.x, kExecuteWindowSize.y };
+void EngineUICore::RenderDebugViewPort(){
+	ImGui::Begin("Debug Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	ImGui::SetNextWindowSize(imgSize);
-	ImGui::Begin("Debug Viewport",
-				 nullptr,
-				 ImGuiWindowFlags_NoResize |
-				 ImGuiWindowFlags_NoScrollbar);
+	ImVec2 imgSize = ImGui::GetContentRegionAvail();
 
-	//--------------------------------------------
-	// ① ここで BeginFrame ― ウィンドウが決まった直後
-	//--------------------------------------------
+	// カメラのアスペクト比を更新（ここではDebugCameraを使う想定）
+	if (imgSize.x > 0 && imgSize.y > 0){
+		CameraManager::GetDebugCamera()->SetAspectRatio(imgSize.x / imgSize.y);
+	}
+
 	ImGuizmo::BeginFrame();
 
-	if (debugViewportTextureID_) {
-		//--------------------------------------------
-		// ② 画像を “アイテム無し” で描画
-		//--------------------------------------------
+	if (debugViewportTextureID_){
 		ImVec2 pos = ImGui::GetCursorScreenPos();
 		ImDrawList* dl = ImGui::GetWindowDrawList();
-		dl->AddImage((ImTextureID)debugViewportTextureID_,
+		dl->AddImage(( ImTextureID ) debugViewportTextureID_,
 					 pos,
 					 ImVec2(pos.x + imgSize.x,
-							pos.y + imgSize.y));
+					 pos.y + imgSize.y));
 
-		//--------------------------------------------
-		// ③ ヒット矩形 & DrawList を登録
-		//--------------------------------------------
 		ImGuizmo::SetRect(pos.x, pos.y, imgSize.x, imgSize.y);
-		ImGuizmo::SetDrawlist();            // ← BeginFrame 後なので有効
-	} else {
+		ImGuizmo::SetDrawlist();
+	} else{
 		ImGui::Text("Viewport texture not set.");
 	}
 

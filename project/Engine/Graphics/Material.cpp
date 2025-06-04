@@ -43,6 +43,7 @@ void Material::ShowImGui(){
 	GuiCmd::CheckBox("isReflect", isReflect);
 	if (isReflect){
 		GuiCmd::SliderFloat("enviromentCoefficient", enviromentCoefficient, 0.0f, 1.0f);
+		GuiCmd::SliderFloat("roughness", roughness, 0.0f, 1.0f);
 	}
 }
 
@@ -75,6 +76,7 @@ void Material::ShowImGui(MaterialConfig& config){
 	GuiCmd::CheckBox("isReflect", config.isReflect);
 	if (config.isReflect){
 		GuiCmd::SliderFloat("enviromentCoefficient", config.enviromentCoefficient, 0.0f, 1.0f);
+		GuiCmd::SliderFloat("roughness", roughness, 0.0f, 1.0f);
 	}
 
 }

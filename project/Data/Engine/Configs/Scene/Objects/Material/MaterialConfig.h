@@ -13,6 +13,7 @@ struct MaterialConfig final{
 	float enviromentCoefficient = 0.5f;			//< 環境光の強さ
 	bool isReflect = false;						//< 反射
 	int currentLightingMode_ = 0;				//< ライティングモード
+
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MaterialConfig,

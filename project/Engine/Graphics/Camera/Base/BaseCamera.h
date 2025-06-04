@@ -58,6 +58,8 @@ public:
 	const Vector3& GetTranslate() const;
 	bool IsActive()const{ return isActive_; }
 	void SetActive(bool isActive){ isActive_ = isActive; }
+	void SetAspectRatio(float aspect)override;
+
 
 	Matrix4x4 GetViewProjection()const{ return viewProjectionMatrix_; }
 
@@ -72,7 +74,7 @@ protected:
 	float aspectRatio_ = 16.0f / 9.0f;                           // アスペクト比
 	float nearZ_ = 0.1f;                                         // 近クリップ面
 	float farZ_ = 1000.0f;                                       // 遠クリップ面
-	float fovAngleY_ = 45.0f * static_cast< float >(std::numbers::pi) / 180.0f;  // 垂直視野角
+	float fovAngleY_ = 90.0f * static_cast< float >(std::numbers::pi) / 180.0f;  // 垂直視野角
 
 protected:
 	// カメラシェイク関連

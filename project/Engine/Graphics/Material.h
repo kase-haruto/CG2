@@ -22,6 +22,7 @@ struct Material{
 	float shininess;
 	bool isReflect = false;
 	float enviromentCoefficient = 0.5f;
+	float roughness = 0.5f; // 反射率
 
 	//config
 	void ApplyConfig(const MaterialConfig& config);

@@ -40,6 +40,8 @@ public:
 
 	static void TransfarToGPU();   // GPUへの転送
 
+	void SetAspectRatio(float width, float height);
+
 	static void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
 		instance_->cameras_[instance_->type_]->SetCommand(command, pipelineType);
 	}

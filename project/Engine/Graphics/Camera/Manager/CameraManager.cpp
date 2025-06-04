@@ -47,3 +47,13 @@ void CameraManager::TransfarToGPU(){
 		camera.second->TransfarToGPU();
 	}
 }
+
+void CameraManager::SetAspectRatio(float width, float height){
+	if (height <= 0) return;
+	float aspect = width / height;
+
+	for (auto& camera : cameras_){
+		camera.second->SetAspectRatio(aspect);
+	}
+}
+

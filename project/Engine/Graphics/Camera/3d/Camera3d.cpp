@@ -28,3 +28,4 @@ void Camera3d::ShowGui(){
 	// アクティブかどうか
 	BaseCamera::ShowGui();
 }
+

@@ -123,9 +123,27 @@ const Vector3& BaseCamera::GetRotate() const{
 const Vector3& BaseCamera::GetTranslate() const{
 	return transform_.translate;
 }
-#pragma endregion
 
+#pragma endregion
 
 void BaseCamera::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command, PipelineType pipelineType){
 	cameraBuffer_.SetCommand(command.Get(), pipelineType);
+}
+
+void BaseCamera::SetAspectRatio(float aspect){
+	aspectRatio_ = aspect;
+
+	float adjustedFov = fovAngleY_;
+
+	// 画面が極端に狭い・広い場合はFOVを補正する
+	const float lowAspectThreshold = 0.6f;
+	const float highAspectThreshold = 2.0f;
+
+	if (aspect < lowAspectThreshold){
+		adjustedFov *= 1.0f + (lowAspectThreshold - aspect); // 縦長 → 視野を広げる
+	} else if (aspect > highAspectThreshold){
+		adjustedFov *= 1.0f + (aspect - highAspectThreshold) * 0.5f; // 横長 → 少し広げる
+	}
+
+	projectionMatrix_ = Matrix4x4::PerspectiveFovRH(adjustedFov, aspect, nearZ_, farZ_);
 }

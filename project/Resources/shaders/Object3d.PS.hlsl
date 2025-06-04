@@ -5,12 +5,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 // マテリアル
 struct Material {
-	float4 color;
-	int enableLighting;
-	float4x4 uvTransform;
-	float shiniess;
-	bool isReflect;
-	float enviromentCoefficient;
+    float4 color;
+    int enableLighting;
+    float4x4 uvTransform;
+    float shiniess;
+
+	// enviromentMap
+    bool isReflect;
+    float enviromentCoefficient;
+    float roughness; // 0.0（鏡のような反射）～ 1.0（完全にぼけた反射）
 };
 
 // ディレクショナルライト
@@ -149,12 +152,17 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	float3 finalColor = ApplyToneMappingAndGamma(litColor, 1.0f);
 
     //================= 環境マップ =================
-	if(gMaterial.isReflect) {
-		float3 cameraToPosition = normalize(input.worldPosition - cameraPosition);
-		float3 reflectedVector = reflect(cameraToPosition, normal);
-		float4 environmentColor = gEnvironmentMap.Sample(gSampler, reflectedVector);
-		finalColor += environmentColor.rgb * gMaterial.enviromentCoefficient;
-	}
+    if (gMaterial.isReflect) {
+        float3 viewDir = normalize(input.worldPosition - cameraPosition);
+        float3 reflectDir = reflect(viewDir, normal);
+
+		// mipLevel を roughness に応じて指定
+        const float maxMipLevel = 7.0f; // ← キューブマップに応じて調整（最大mip数）
+        float mipLevel = saturate(gMaterial.roughness) * maxMipLevel;
+
+        float3 envColor = gEnvironmentMap.SampleLevel(gSampler, reflectDir, mipLevel).rgb;
+        finalColor += envColor * gMaterial.enviromentCoefficient;
+    }
 
     //================= アルファ計算 =================
 	float alpha = gMaterial.color.a * textureColor.a;

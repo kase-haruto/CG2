@@ -18,6 +18,7 @@ struct Matrix4x4 final{
 	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 	static Matrix4x4 MakeLookRotationMatrix(const Vector3& forward, const Vector3& up);
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+	static Matrix4x4 PerspectiveFovRH(float fovY, float aspect, float nearZ, float farZ);
 	void CopyToArray(float out[16]) const {
 		for (int row = 0; row < 4; ++row)
 			for (int col = 0; col < 4; ++col)
