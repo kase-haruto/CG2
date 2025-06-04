@@ -18,7 +18,6 @@ ParticleEffect::ParticleEffect(const ParticleEffect& other){
 	pendingDelete_ = other.pendingDelete_;
 	isPlaying_ = other.isPlaying_;
 
-	// Particle（Emitterなどを含む）もコピー
 	for (const auto& p : other.particles_){
 		auto cloned = std::make_unique<Particle>(*p);
 		particles_.push_back(std::move(cloned));
@@ -93,6 +92,7 @@ void ParticleEffect::ImGui(){
 	}
 	if (ImGui::Button("Add New System")){
 		auto newSystem = std::make_unique<Particle>();
+		newSystem->Initialize("plane.obj", "particle.png", 1);
 		AddParticle(std::move(newSystem));
 	}
 }

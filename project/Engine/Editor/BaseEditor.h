@@ -4,12 +4,12 @@
 
 class BaseEditor{
 public:
-    virtual void ShowImGuiInterface() = 0; // 純粋仮想関数
-    virtual ~BaseEditor() = default;
+	BaseEditor(const std::string& name) : editorName_(name){}
+	virtual ~BaseEditor() = default;
+	virtual void ShowImGuiInterface() = 0; // 純粋仮想関数
 
-    // エディタ名を取得する仮想関数
-    const std::string& GetEditorName() const;
+	const std::string& GetEditorName() const{return editorName_; }
 
 protected:
-	std::string editorName_; // エディタ名
+	std::string editorName_ = "Editor"; // エディタ名
 };

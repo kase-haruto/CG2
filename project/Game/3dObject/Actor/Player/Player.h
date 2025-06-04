@@ -3,16 +3,15 @@
 /*	include space
 /* ===================================================================== */
 #include <Engine/Objects/3D/Actor/Actor.h>
-#include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
-
 #include <Game/Effect/ParticleEffect/ParticleEffect.h>
+#include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
 
 /* ========================================================================
 /* Player
 /* ===================================================================== */
 class Player :
-	public Actor{
-	struct RollSet{
+	public Actor {
+	struct RollSet {
 		bool isRolling_ = false;
 		float rollTimer_ = 0.0f;
 		float rollDuration_ = 0.5f;
@@ -38,8 +37,12 @@ public:
 	/* ui =========================================*/
 	void DerivativeGui()override;
 
-	void SetParent(const WorldTransform* parent){
+	void SetParent(const WorldTransform* parent) {
 		worldTransform_.parent = parent;
+	}
+
+	void SetBulletContainer(BulletContainer* bulletContainer) {
+		bulletContainer_ = bulletContainer;
 	}
 
 private:
@@ -58,7 +61,7 @@ private:
 	//===================================================================*/
 	//                   private variables
 	//===================================================================*/
-	std::unique_ptr<BulletContainer> bulletContainer_ = nullptr;	// 弾コンテナ
+	BulletContainer* bulletContainer_ = nullptr;	// 弾コンテナ
 	float shootInterval_ = 0.3f;	// 発射間隔
 	const float kMaxShootInterval_ = 0.3f;	// 最大発射間隔
 	Vector3 lastMoveVector_;
@@ -69,5 +72,5 @@ private:
 	ParticleEffect* shootEffect_ = nullptr;
 	ParticleEffect* rollEffect_ = nullptr;
 	ParticleEffect* moveEffect_ = nullptr;
+	std::array<ParticleEffect*, 2> flyTrailEffect_ = { nullptr, nullptr };
 };
-

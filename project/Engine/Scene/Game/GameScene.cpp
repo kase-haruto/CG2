@@ -41,6 +41,9 @@ void GameScene::LoadAssets() {
 	pfxCollection.LoadByName("shootEffect");
 	pfxCollection.LoadByName("smoke");
 	pfxCollection.LoadByName("BulletEffect");
+	pfxCollection.LoadByName("FlyTrailEffect");
+	pfxCollection.LoadByName("JettEffect");
+	pfxCollection.LoadByName("HitEffect");
 }
 
 
@@ -52,24 +55,30 @@ void GameScene::Initialize(){
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
 	
-	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
-	skyBox_->Initialize();
-
 	//=========================
 	// グラフィック関連
 	//=========================
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
+
+	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
+	skyBox_->Initialize();
 	
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
+
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), teapot_, "debugSphere.obj", "sphere");
 
 	//player
 	CreateAndAddObject<Player>(sceneContext_.get(), player_, "player.obj", "player");
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	enemyCollection_ = std::make_unique<EnemyCollection>();
+	playerBulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
+	playerBulletContainer_->SetSceneContext(sceneContext_.get());
+	player_->SetBulletContainer(playerBulletContainer_.get());
+
+	enemyCollection_ = std::make_unique<EnemyCollection>(sceneContext_.get());
 	
 	//===================================================================*/
 	//                    editor
@@ -84,11 +93,13 @@ void GameScene::Update(){
 	railCamera_->Update();
 	CameraManager::GetCamera3d()->SetCamera(railCamera_->GetPosition(), railCamera_->GetRotation());
 	CameraManager::Update();
+
+	skyBox_->Update();
 	
 	/* 3dObject ============================*/
 	//地面の更新
 	modelField_->Update();
-	
+	teapot_->Update();
 	//プレイヤーの更新
 	player_->Update();
 

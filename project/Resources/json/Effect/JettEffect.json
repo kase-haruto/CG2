@@ -1,5 +1,5 @@
 {
-    "name": "BulletEffect",
+    "name": "JettEffect",
     "particles": [
         {
             "blendMode": 2,
@@ -8,8 +8,8 @@
             "emitType": 2,
             "emitters": [
                 {
-                    "count": 1,
-                    "frequency": 0.019999999552965164,
+                    "count": 2,
+                    "frequency": 0.5,
                     "rotationParm": {
                         "initialRotation": [
                             0.0,
@@ -17,9 +17,9 @@
                             0.0
                         ],
                         "randomizeInitialRotation": true,
-                        "rotateContinuously": false,
+                        "rotateContinuously": true,
                         "rotationSpeed": [
-                            0.0,
+                            1.0,
                             0.0,
                             0.0
                         ],
@@ -34,13 +34,13 @@
                         ],
                         "scale": [
                             1.0,
-                            2.4800000190734863,
-                            -1.9600000381469727
+                            1.0,
+                            -2.799999952316284
                         ],
                         "translate": [
-                            -2.0,
+                            -2.819999933242798,
                             0.0,
-                            0.5199999809265137
+                            1.0
                         ]
                     }
                 }
@@ -52,32 +52,32 @@
             ],
             "flyToEmitter": false,
             "isBillboard": true,
-            "isRandomLifeTime": false,
+            "isRandomLifeTime": true,
             "isStatic": true,
-            "lifeTime": 0.20999999344348907,
-            "maxLifeTime": 0.7900000214576721,
-            "minLifeTime": 0.7799999713897705,
+            "lifeTime": 0.10000000149011612,
+            "maxLifeTime": 0.10000000149011612,
+            "minLifeTime": 0.10000000149011612,
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                0.23999999463558197,
-                0.30000001192092896,
+                0.8399999737739563,
+                1.2999999523162842,
                 6.0
             ],
             "randomScaleMin": [
-                0.2199999988079071,
-                0.2800000011920929,
+                0.6399999856948853,
+                0.6800000071525574,
                 1.0
             ],
             "selectedColor": [
-                0.5445107817649841,
-                0.15503644943237305,
-                0.6177606582641602,
+                0.13532894849777222,
+                0.6680798530578613,
+                0.6872587203979492,
                 1.0
             ],
             "texture": "particle.png",
             "useRandomScale": true,
-            "useRotation": false
+            "useRotation": true
         }
     ]
 }

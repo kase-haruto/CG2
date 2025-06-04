@@ -50,10 +50,10 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	renderTargetCollection_ = std::make_unique<RenderTargetCollection>();
 	auto device = dxDevice_->GetDevice();
 
-	// RTV heap（SwapChain用に2つ、Offscreen用に1つ = 合計3つ）
+	// RTV heap（SwapChain用に2つ、Offscreen用に1つ、PostEffect用に1つ、Debug用に1つ、Ping-Pong用に2つ = 合計7つ）
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDesc = {};
 	rtvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDesc.NumDescriptors = 5;
+	rtvDesc.NumDescriptors = 7;
 	rtvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	device->CreateDescriptorHeap(&rtvDesc, IID_PPV_ARGS(&rtvHeap_));
 	rtvDescriptorSize_ = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -106,6 +106,23 @@ void DxCore::RendererInitialize(uint32_t width, uint32_t height){
 	debugRT->Initialize(device.Get(), width, height, format_, debugRTVHandle, dsvHandle);
 
 	renderTargetCollection_->Add("DebugView", std::move(debugRT));
+
+	// postEffect切り替え用
+	// PostEffectBuffer1（スロット5として）
+	D3D12_CPU_DESCRIPTOR_HANDLE postEffectBuffer1Handle = baseRTVHandle;
+	postEffectBuffer1Handle.ptr += rtvDescriptorSize_ * 5;
+
+	auto postEffectBuffer1 = std::make_unique<OffscreenRenderTarget>();
+	postEffectBuffer1->Initialize(device.Get(), width, height, format_, postEffectBuffer1Handle, dsvHandle);
+	renderTargetCollection_->Add("PostEffectBuffer1", std::move(postEffectBuffer1));
+
+	// PostEffectBuffer2（スロット6として）
+	D3D12_CPU_DESCRIPTOR_HANDLE postEffectBuffer2Handle = baseRTVHandle;
+	postEffectBuffer2Handle.ptr += rtvDescriptorSize_ * 6;
+
+	auto postEffectBuffer2 = std::make_unique<OffscreenRenderTarget>();
+	postEffectBuffer2->Initialize(device.Get(), width, height, format_, postEffectBuffer2Handle, dsvHandle);
+	renderTargetCollection_->Add("PostEffectBuffer2", std::move(postEffectBuffer2));
 }
 
 

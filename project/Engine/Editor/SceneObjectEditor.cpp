@@ -11,15 +11,13 @@
 #include <externals/imgui/imgui.h>
 #include "externals/imgui/ImGuizmo.h"
 
-SceneObjectEditor::SceneObjectEditor(){
-	editorName_ = "SceneObjectEditor";
+SceneObjectEditor::SceneObjectEditor(const std::string& name):BaseEditor(name){
 }
 
 void SceneObjectEditor::ShowImGuiInterface(){
 	if (!sceneObject_) return;
 	ShowGuizmo();
 	sceneObject_->ShowGui();
-
 }
 void RowToColumnArray(const Matrix4x4& m, float out[16]){
 	// 回転スケール 3×3 を転置

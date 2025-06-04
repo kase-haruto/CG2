@@ -11,6 +11,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
+#include <Engine/Foundation/Utility/Random/Random.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -22,15 +23,17 @@
 Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
 	:Actor::Actor(modelName, objectName) {
-	bulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
 	worldTransform_.translation = { 0.0f, 0.0f, 25.0f };
+
+	collider_->SetTargetType(ColliderType::Type_Enemy);
+	collider_->SetType(ColliderType::Type_Player);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::Initialize() {
-	moveSpeed_ = 10.0f;
+	moveSpeed_ = 15.0f;
 
 	InitializeEffect();
 }
@@ -41,6 +44,7 @@ void Player::Initialize() {
 void Player::Update() {
 	//移動
 	Move();
+
 
 
 	if (rollSet_.isRolling_) {
@@ -72,6 +76,23 @@ void Player::Update() {
 	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f) {
 		Shoot();
 		shootInterval_ = kMaxShootInterval_;
+	}
+
+	if (moveEffect_) {
+		// 親のワールド行列
+		const Matrix4x4& playerWorldMat = worldTransform_.matrix.world;
+
+		// trailEffect のローカルオフセット
+		Vector3 offsetLeft = { -2.2f, 0.0f, 0.0f };
+		Vector3 offsetRight = { 2.2f, 0.0f, 0.0f };
+
+		// 親の行列でローカルオフセットをワールドに変換
+		Vector3 leftWorldPos = Vector3::Transform(offsetLeft, playerWorldMat);
+		Vector3 rightWorldPos = Vector3::Transform(offsetRight, playerWorldMat);
+
+		// trailEffect のワールド座標で再生
+		flyTrailEffect_[0]->Play(leftWorldPos, EmitType::Auto);
+		flyTrailEffect_[1]->Play(rightWorldPos, EmitType::Auto);
 	}
 
 	bulletContainer_->Update();
@@ -181,8 +202,8 @@ void Player::BarrelRoll() {
 	rollSet_.rollStartAngle_ = worldTransform_.eulerRotation.z;
 
 	if (rollEffect_) {
-		Vector3 wPos = worldTransform_.GetWorldPosition();
-		rollEffect_->Play(wPos, EmitType::Once);
+		//Vector3 wPos = worldTransform_.GetWorldPosition();
+		//rollEffect_->Play(wPos, EmitType::Once);
 	}
 }
 
@@ -200,5 +221,9 @@ void Player::InitializeEffect() {
 	Vector3 wPos = worldTransform_.GetWorldPosition();
 	shootEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("shootEffect", wPos, EmitType::Once);
 	rollEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("reloadParticle", wPos, EmitType::Once);
-	moveEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("smoke", wPos, EmitType::Auto);
+	moveEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("JettEffect", wPos, EmitType::Auto);
+	flyTrailEffect_ = {
+		ParticleEffectSystem::GetInstance()->CreateEffectByName("FlyTrailEffect", wPos, EmitType::Auto),
+		ParticleEffectSystem::GetInstance()->CreateEffectByName("FlyTrailEffect", wPos, EmitType::Auto)
+	};
 }

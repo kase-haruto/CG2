@@ -63,7 +63,7 @@ public:
 	virtual const Vector3 GetCenterPos()const;
 	void SetColor(const Vector4& color);
 	Vector3 GetWorldPosition()const{ return worldTransform_.GetWorldPosition(); }
-
+	BaseModel* GetModel() const { return model_.get(); }
 	void SetCollider(std::unique_ptr<Collider> collider);
 	Collider* GetCollider();
 private:
@@ -79,7 +79,7 @@ protected:
 	std::unique_ptr<BaseModel> model_ = nullptr;					// 描画用モデル
 	std::unique_ptr<AnimationModel> animationModel_ = nullptr;		// アニメーションモデル
 
-private:
+protected:
 	//===================================================================*/
 	//                    private variables
 	//===================================================================*/

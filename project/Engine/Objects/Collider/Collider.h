@@ -41,6 +41,7 @@ inline ColliderType& operator&=(ColliderType& lhs, ColliderType rhs){
 	return lhs;
 }
 
+class BaseGameObject; // 前方宣言
 
 class Collider{
 public:
@@ -55,10 +56,14 @@ public:
 	virtual void ShowGui();
 	void ShowGui(struct ColliderConfig& config);
 
+
 	virtual void OnCollisionEnter([[maybe_unused]] Collider* other){};
 	virtual void OnCollisionStay([[maybe_unused]] Collider* other){};
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other){};
 
+	void NotifyCollisionEnter(Collider* other);
+	void NotifyCollisionStay(Collider* other);
+	void NotifyCollisionExit(Collider* other);
 	void ApplyConfig(const struct ColliderConfig& config);
 
 protected:
@@ -79,6 +84,10 @@ public:
 	//===================================================================*/
 	//                   getter/setter
 	//===================================================================*/
+
+	void SetOwner(BaseGameObject* owner) { owner_ = owner; }
+	BaseGameObject* GetOwner() const { return owner_; }
+
 	virtual const Vector3& GetCenter()const = 0;
 	virtual const std::variant<Sphere, OBB>& GetCollisionShape() = 0;
 
@@ -87,12 +96,17 @@ public:
 
 	ColliderType GetType() const{ return type_; }
 	ColliderType GetTargetType() const{ return targetType_; }
+	void SetType(ColliderType type) { type_ = type; }
+	void SetTargetType(ColliderType targetType) { targetType_ = targetType; }
 	void SetColor(const Vector4& color){ color_ = color; }
 
 	bool IsCollisionEnubled()const{ return isCollisionEnabled_; }
 	void SetCollisionEnabled(bool isCollisionEnuble);
 
 	void SetIsDrawCollider(bool isDraw) { isDraw_ = isDraw; }
+
+private:
+	BaseGameObject* owner_ = nullptr;
 };
 
 

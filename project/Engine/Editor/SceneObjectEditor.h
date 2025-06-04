@@ -13,7 +13,7 @@ public:
 	//===================================================================*/
 	//                   public functions
 	//===================================================================*/
-	SceneObjectEditor();
+	SceneObjectEditor(const std::string& name);
 	~SceneObjectEditor() override = default;
 
 	void ShowImGuiInterface() override;

@@ -1,5 +1,5 @@
 {
-    "name": "BulletEffect",
+    "name": "FlyTrailEffect",
     "particles": [
         {
             "blendMode": 2,
@@ -9,7 +9,7 @@
             "emitters": [
                 {
                     "count": 1,
-                    "frequency": 0.019999999552965164,
+                    "frequency": 0.5,
                     "rotationParm": {
                         "initialRotation": [
                             0.0,
@@ -34,13 +34,13 @@
                         ],
                         "scale": [
                             1.0,
-                            2.4800000190734863,
-                            -1.9600000381469727
+                            1.0,
+                            1.0
                         ],
                         "translate": [
-                            -2.0,
+                            -3.5,
                             0.0,
-                            0.5199999809265137
+                            -5.980000019073486
                         ]
                     }
                 }
@@ -52,30 +52,30 @@
             ],
             "flyToEmitter": false,
             "isBillboard": true,
-            "isRandomLifeTime": false,
+            "isRandomLifeTime": true,
             "isStatic": true,
-            "lifeTime": 0.20999999344348907,
-            "maxLifeTime": 0.7900000214576721,
-            "minLifeTime": 0.7799999713897705,
+            "lifeTime": 0.18302218616008759,
+            "maxLifeTime": 0.1899999976158142,
+            "minLifeTime": 0.18000000715255737,
             "model": "plane.obj",
             "name": "",
             "randomScaleMax": [
-                0.23999999463558197,
-                0.30000001192092896,
+                0.6399999856948853,
+                0.1599999964237213,
                 6.0
             ],
             "randomScaleMin": [
-                0.2199999988079071,
-                0.2800000011920929,
-                1.0
+                0.6399999856948853,
+                0.1599999964237213,
+                -2.059999942779541
             ],
             "selectedColor": [
-                0.5445107817649841,
-                0.15503644943237305,
-                0.6177606582641602,
+                1.0,
+                1.0,
+                1.0,
                 1.0
             ],
-            "texture": "particle.png",
+            "texture": "smoke.png",
             "useRandomScale": true,
             "useRotation": false
         }

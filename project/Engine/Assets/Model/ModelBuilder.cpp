@@ -9,9 +9,8 @@
 #include <Externals/imgui/imgui.h>
 
 using json = nlohmann::json;
-ModelBuilder::ModelBuilder(){}
+ModelBuilder::ModelBuilder(const std::string& name):BaseEditor(name){}
 void ModelBuilder::Initialize(){
-	editorName_ = "ModelBuilder";
 	LoadModels("Resources/json/models.json");
 }
 

@@ -11,6 +11,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/RenderTarget/Interface/IRenderTarget.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
+#include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
 
 SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
@@ -45,6 +46,13 @@ void SceneManager::Initialize() {
 }
 
 void SceneManager::Update() {
+	//キー入力で切り替え
+	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+		RequestSceneChange(SceneType::PLAY);
+	} else if (Input::GetInstance()->TriggerKey(DIK_2)) {
+		RequestSceneChange(SceneType::TEST);
+	}
+
 	if (currentSceneNo_ != nextSceneNo_) {
 		// いったん現在シーンをクリーンアップ
 		scenes_[currentSceneNo_]->CleanUp();

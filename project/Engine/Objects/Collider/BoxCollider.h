@@ -42,6 +42,7 @@ public:
 	//                   getter/setter
 	//===================================================================*/
 	const Vector3& GetCenter()const override;
+	void SetSize(const Vector3& size) { shape_.size = size; }
 
 	const std::variant<Sphere, OBB>& GetCollisionShape() override;
 };

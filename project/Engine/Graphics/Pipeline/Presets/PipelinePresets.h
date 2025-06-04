@@ -14,4 +14,5 @@ namespace PipelinePresets {
 	GraphicsPipelineDesc MakeGrayScale();
 	GraphicsPipelineDesc MakeRadialBlur();
 	GraphicsPipelineDesc MakeGrayScale();
+	GraphicsPipelineDesc MakeChromaticAberration();
 }

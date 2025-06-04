@@ -34,6 +34,10 @@ private:
 	Vector3 scrollVal_;
 	std::vector<Vector3> railPoints_;
 	WorldTransform worldTransform_;
+	float zTiltOffset_ = 0.0f;    // 現在の傾き
+	float targetTilt_ = 0.0f;     // 目標の傾き
+	float tiltAngle_ = 0.05f;     // 最大角度（ラジアン）
+	float tiltLerpSpeed_ = 10.0f; // 補間の速さ（大きいほど速く追従）
 
 };
 

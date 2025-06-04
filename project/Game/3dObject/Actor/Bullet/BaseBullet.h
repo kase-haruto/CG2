@@ -11,18 +11,23 @@
 /* bullet 基底クラス
 /* ===================================================================== */
 class BaseBullet :
-	public Actor,SphereCollider{
+	public Actor{
 public:
 	//===================================================================*/
 	//			public function
 	//===================================================================*/
 	BaseBullet() = default;
-	BaseBullet(const std::string& modelName);
+	BaseBullet(const std::string& modelName,const std::string& name);
 	virtual ~BaseBullet() = default;
 
-	virtual void Initialize(const Vector3 initPos,const Vector3 velocity);
+	virtual void ShootInitialize(const Vector3 initPos, const Vector3 velocity);
+	void Initialize() override {};
 	void Update()override;
 	void DerivativeGui()override;
+
+	void OnCollisionEnter(Collider* other)override;
+	void OnCollisionStay([[maybe_unused]] Collider* other)override {};
+	void OnCollisionExit([[maybe_unused]] Collider* other)override {};
 
 	//--------- accessor ---------------------------------------------------
 private:
