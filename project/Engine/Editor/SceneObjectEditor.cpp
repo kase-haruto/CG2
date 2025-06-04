@@ -51,15 +51,9 @@ Matrix4x4 ColumnArrayToRow(const float in_[16]){
 //  SceneObjectEditor::ShowGuizmo
 //====================================================================//
 void SceneObjectEditor::ShowGuizmo(){
-	// -----------------------------------------------------------------
-	// 0. ガード
-	// -----------------------------------------------------------------
 	if (!sceneObject_ || sceneObject_->GetObjectType() != ObjectType::GameObject) return;
 	WorldTransform& wt = sceneObject_->GetWorldTransform();
 
-	// -----------------------------------------------------------------
-	// 1. カメラ行列（column-major）
-	// -----------------------------------------------------------------
 	auto* camMgr = CameraManager::GetInstance();
 	if (!camMgr){ ImGui::Text("CameraManager not found!"); return; }
 	auto* cam = camMgr->GetActiveCamera();
@@ -68,23 +62,14 @@ void SceneObjectEditor::ShowGuizmo(){
 	float viewCM[16]; Matrix4x4::Transpose(cam->GetViewMatrix()).CopyToArray(viewCM);
 	float projCM[16]; Matrix4x4::Transpose(cam->GetProjectionMatrix()).CopyToArray(projCM);
 
-	// -----------------------------------------------------------------
-	// 2. 編集対象のワールド行列（column-major）
-	// -----------------------------------------------------------------
 	float worldCM[16];
 	Matrix4x4::Transpose(wt.matrix.world).CopyToArray(worldCM);
 
-	// -----------------------------------------------------------------
-	// 3. ImGuizmo 操作
-	// -----------------------------------------------------------------
 	static ImGuizmo::OPERATION op = ImGuizmo::TRANSLATE;
 	static ImGuizmo::MODE      mode = ImGuizmo::WORLD;
 
 	ImGuizmo::Manipulate(viewCM, projCM, op, mode, worldCM);
 
-	// ------------------------------------------------------------
-	// 4. 変更を S / R / T へ反映
-	// ------------------------------------------------------------
 	if (ImGuizmo::IsUsing()){
 		// column → row 行列
 		Matrix4x4 worldEditedRow = ColumnArrayToRow(worldCM);
@@ -111,12 +96,15 @@ void SceneObjectEditor::ShowGuizmo(){
 
 	}
 
-	// -----------------------------------------------------------------
-	// 5. UI：モード切替
-	// -----------------------------------------------------------------
+	// 画面上の操作モード切替ボタン
 	if (ImGui::RadioButton("Translate", op == ImGuizmo::TRANSLATE)) op = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Rotate", op == ImGuizmo::ROTATE)) op = ImGuizmo::ROTATE;
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Scale", op == ImGuizmo::SCALE)) op = ImGuizmo::SCALE;
+
+	// world/local モード切替
+	if (ImGui::RadioButton("World", mode == ImGuizmo::WORLD)) mode = ImGuizmo::WORLD;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Local", mode == ImGuizmo::LOCAL)) mode = ImGuizmo::LOCAL;
 }
