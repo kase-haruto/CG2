@@ -16,15 +16,15 @@
             },
             "currentLightingMode_": 0,
             "enableLighting": 0,
-            "enviromentCoefficient": 0.28200000524520874,
+            "enviromentCoefficient": 0.15399999916553497,
             "isReflect": false,
             "shininess": 20.0
         },
         "uvTransConfig": {
-            "rotation": 0.7599999904632568,
+            "rotation": 0.0,
             "scale": {
-                "x": 20.0,
-                "y": 20.0
+                "x": 50.0,
+                "y": 50.0
             }
         }
     }

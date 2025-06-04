@@ -22,6 +22,7 @@ void TextureManager::StartUpLoad(){
 	LoadTexture("flower.png");
 	LoadTexture("smoke.png");
 	LoadTexture("redCircle.png");
+	LoadTexture("fieldTile.png");
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandle(const std::string& textureName) const{

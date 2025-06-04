@@ -102,7 +102,6 @@ void TestScene::Update() {
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
-	PrimitiveDrawer::GetInstance()->DrawGrid();
 	sceneContext_->Update();
 }
 
