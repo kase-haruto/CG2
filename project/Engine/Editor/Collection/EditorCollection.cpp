@@ -7,7 +7,7 @@
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 
 void EditorCollection::InitializeEditors(){
-	EditorPanel* editorPanel = pEngineUICore_->GetPanel<EditorPanel>();
+	EditorPanel* editorPanel = pEngineUICore_->GetEditorPanel();
 
 	//===================================================================*/
 	//			postprocess

@@ -14,6 +14,9 @@
 SceneObjectEditor::SceneObjectEditor(const std::string& name):BaseEditor(name){
 }
 
+SceneObjectEditor::SceneObjectEditor():BaseEditor("sceneObjectEditor"){}
+
+
 void SceneObjectEditor::ShowImGuiInterface(){
 	if (!sceneObject_) return;
 	ShowGuizmo();

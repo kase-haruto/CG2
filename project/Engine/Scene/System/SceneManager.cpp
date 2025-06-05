@@ -47,7 +47,7 @@ void SceneManager::Initialize() {
 	scenes_[currentSceneNo_]->SetSceneManager(this);
 	scenes_[currentSceneNo_]->Initialize();
 	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
-	pEngineUI_->GetPanel<HierarchyPanel>()->SetSceneObjectLibrary(SceneObjectLibrary);
+	pEngineUI_->GetHierarchyPanel()->SetSceneObjectLibrary(SceneObjectLibrary);
 }
 
 void SceneManager::Update() {

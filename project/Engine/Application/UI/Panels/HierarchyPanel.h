@@ -5,30 +5,29 @@
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
 
-class EditorContext;
+class SceneObject;
 class SceneObjectLibrary;
 
 // c++
 #include <vector>
 #include <string>
+#include <functional>
 
-class HierarchyPanel
-	: public IEngineUI{
+class HierarchyPanel : public IEngineUI{
+	using OnObjectSelectedCallback = std::function<void(SceneObject*)>;
 public:
-	//===================================================================*/
-	//                   public functions
-	//===================================================================*/
 	HierarchyPanel();
 	~HierarchyPanel() override = default;
 
-	void Render() override; // 描画処理
-	const std::string& GetPanelName() const override; // パネル名の取得
+	void Render() override;
+	const std::string& GetPanelName() const override;
 
-	void SetEditorContext(EditorContext* context);
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
+	void SetOnObjectSelected(OnObjectSelectedCallback cb){ onObjectSelected_ = std::move(cb); }
+	void SetSelectedObject(SceneObject* obj){ selected_ = obj; }
 
-public:
-	static int selectedObjectIndex_;							// 選択中のオブジェクトのインデックス
-	EditorContext* pEditorContext_ = nullptr;				// context ポインタ
-	const SceneObjectLibrary* pSceneObjectLibrary_ = nullptr;	// シーンオブジェクトライブラリポインタ
+private:
+	const SceneObjectLibrary* pSceneObjectLibrary_ = nullptr;
+	OnObjectSelectedCallback onObjectSelected_;
+	SceneObject* selected_ = nullptr;
 };

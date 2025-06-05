@@ -7,6 +7,7 @@
 // engine
 #include <Engine/Application/UI/EngineUI/IEngineUI.h>
 #include <Engine/Application/UI/Panels/Controller/PanelController.h>
+#include <Engine/Editor/LevelEditor.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 
 // c++
@@ -34,6 +35,9 @@ public:
 	//パネルの取得
 	template<class Panel>
 	Panel* GetPanel();
+
+	HierarchyPanel* GetHierarchyPanel() const;
+	EditorPanel* GetEditorPanel() const;
 private:
 	//===================================================================*/
 	//					private function
@@ -47,6 +51,7 @@ private:
 	//					private variable
 	//===================================================================*/
 	std::unique_ptr<PanelController> panelController_ = nullptr;
+	std::unique_ptr<LevelEditor> levelEditor_ = nullptr; // レベルエディタ
 	UINT64 mainViewportTextureID_ = 0;
 	UINT64 debugViewportTextureID_ = 0;
 };

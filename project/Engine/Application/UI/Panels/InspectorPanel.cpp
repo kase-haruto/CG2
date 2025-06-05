@@ -3,6 +3,7 @@
 /* ===================================================================== */
 
 // engine
+#include <Engine/Editor/SceneObjectEditor.h>
 #include <Engine/Application/UI/Panels/InspectorPanel.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Editor/BaseEditor.h>
@@ -11,31 +12,19 @@
 #include <externals/imgui/imgui.h>
 
 InspectorPanel::InspectorPanel()
-	: IEngineUI("Inspector"){
-	pSceneObjectEditor_ = std::make_unique<SceneObjectEditor>("SceneObjectEditor");
-	
-}
+	: IEngineUI("Inspector"){}
 
 void InspectorPanel::Render(){
 	ImGui::Begin(panelName_.c_str());
 
-	if (!pEditorContext_){
-		ImGui::Text("Editor context not set.");
-		ImGui::End();
-		return;
-	}
-	SceneObject* selectedObject = pEditorContext_->GetSelectedObject();
-	pSceneObjectEditor_->SetSceneObject(selectedObject);
-	BaseEditor* selectedEditor = pEditorContext_->GetSelectedEditor();
-
-	if (selectedEditor){
-		ImGui::Text("Selected Editor: %s", selectedEditor->GetEditorName().c_str());
-		selectedEditor->ShowImGuiInterface();
-		ImGui::Separator();
-	} else if (selectedObject){
-		ImGui::Text("Selected Object: %s", selectedObject->GetName().c_str());
-		pSceneObjectEditor_->ShowImGuiInterface();
-		ImGui::Separator();
+	if (selectedEditor_){
+		ImGui::Text("Editor: %s", selectedEditor_->GetEditorName().c_str());
+		selectedEditor_->ShowImGuiInterface();
+	} else if (selectedObject_){
+		if (sceneObjectEditor_){
+			sceneObjectEditor_->SetSceneObject(selectedObject_);
+			sceneObjectEditor_->ShowImGuiInterface();
+		}
 	} else{
 		ImGui::Text("Nothing is selected.");
 	}
@@ -43,6 +32,3 @@ void InspectorPanel::Render(){
 	ImGui::End();
 }
 
-const std::string& InspectorPanel::GetPanelName() const{
-	return panelName_;
-}

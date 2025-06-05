@@ -3,9 +3,7 @@
 /* include space
 /* ===================================================================== */
 // uiPanel
-#include <Engine/Application/UI/Panels/HierarchyPanel.h>
 #include <Engine/Application/UI/Panels/EditorPanel.h>
-#include <Engine/Application/UI/Panels/InspectorPanel.h>
 #include <Engine/Application/UI/Panels/ConsolePanel.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -30,20 +28,9 @@ void PanelController::Initialize() {
 	editorContext_ = std::make_unique<EditorContext>();
 
 	// パネルを生成
-	auto hierarchyPanel = std::make_unique<HierarchyPanel>();
-	auto editorPanel = std::make_unique<EditorPanel>();
-	auto inspectorPanel = std::make_unique<InspectorPanel>();
 	auto consolePanel = std::make_unique<ConsolePanel>();
 
-	// EditorContext をパネルに注入
-	hierarchyPanel->SetEditorContext(editorContext_.get());
-	editorPanel->SetEditorContext(editorContext_.get());
-	inspectorPanel->SetEditorContext(editorContext_.get());
-
 	// パネルを登録
-	panels_.emplace("Hierarchy", std::move(hierarchyPanel));
-	panels_.emplace("Editor", std::move(editorPanel));
-	panels_.emplace("Inspector", std::move(inspectorPanel));
 	panels_.emplace("Console", std::move(consolePanel));
 }
 

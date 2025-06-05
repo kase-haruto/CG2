@@ -19,6 +19,7 @@ public:
 	void SaveToJson(const std::string& filePath);
 	void LoadFromJson(const std::string& filePath);
 	void LoadFromJsonAll(const std::string& directoryPath);
+
 private:
 	//===================================================================*/
 	// private functions

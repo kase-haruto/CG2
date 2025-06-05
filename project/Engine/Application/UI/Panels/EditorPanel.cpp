@@ -22,27 +22,26 @@ EditorPanel::EditorPanel()
 ///////////////////////////////////////////////////////////////////////////
 // 描画関数
 ///////////////////////////////////////////////////////////////////////////
-void EditorPanel::Render() {
+void EditorPanel::Render(){
+
 	ImGui::Begin(panelName_.c_str());
 
 	ImGui::Text("Editor List");
 	ImGui::Separator();
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-	if (!pEditorContext_) {
-		ImGui::Text("EditorContext not set.");
-		ImGui::End();
-		return;
-	}
+	for (size_t i = 0; i < editors_.size(); i++){
+		bool isSelected = (selectedEditorIndex == static_cast< int >(i));
+		if (ImGui::Selectable(editors_[i]->GetEditorName().c_str(), isSelected)){
+			selectedEditorIndex = static_cast< int >(i);
 
-	for (size_t i = 0; i < editors_.size(); i++) {
-		bool isSelected = (selectedEditorIndex == static_cast<int>(i));
-		if (ImGui::Selectable(editors_[i]->GetEditorName().c_str(), isSelected)) {
-			selectedEditorIndex = static_cast<int>(i);
-			pEditorContext_->SetSelectedEditor(editors_[i]);
-			pEditorContext_->SetSelectedObject(nullptr); // オブジェクト選択解除
+			// この中でのみ呼び出す
+			if (onEditorSelected_){
+				onEditorSelected_(editors_[i]);
+			}
 		}
-		if (isSelected) {
+
+		if (isSelected){
 			ImGui::SetItemDefaultFocus();
 		}
 	}
@@ -71,6 +70,3 @@ void EditorPanel::RemoveEditor(const BaseEditor* editor){
 	editors_.erase(std::remove(editors_.begin(), editors_.end(), editor), editors_.end());
 }
 
-void EditorPanel::SetEditorContext(EditorContext* context) {
-	pEditorContext_ = context;
-}

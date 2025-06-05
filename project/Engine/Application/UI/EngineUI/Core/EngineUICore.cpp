@@ -21,6 +21,9 @@
 void EngineUICore::Initialize() {
 	panelController_ = std::make_unique<PanelController>();
 	panelController_->Initialize();
+
+	levelEditor_ = std::make_unique<LevelEditor>();
+	levelEditor_->Initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,9 +36,24 @@ void EngineUICore::Render() {
 	RenderMainViewport();
 	RenderDebugViewPort();
 
+
+	if (levelEditor_){
+		levelEditor_->Render();
+	}
+
 	// すべてのパネルをレンダリング
 	panelController_->RenderPanels();
+
+
 #endif // _DEBUG
+}
+
+HierarchyPanel* EngineUICore::GetHierarchyPanel() const{
+	return levelEditor_->GetHierarchyPanel();
+}
+
+EditorPanel* EngineUICore::GetEditorPanel() const{
+	return levelEditor_->GetEditorPanel();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
