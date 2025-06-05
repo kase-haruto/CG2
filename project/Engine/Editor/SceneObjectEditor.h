@@ -14,13 +14,14 @@ public:
 	//                   public functions
 	//===================================================================*/
 	SceneObjectEditor(const std::string& name);
+	SceneObjectEditor();
 	~SceneObjectEditor() override = default;
 
 	void ShowImGuiInterface() override;
 	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
+	void ShowGuizmo();
 
 private:
-	void ShowGuizmo();
 
 	//===================================================================*/
 	//                   public functions

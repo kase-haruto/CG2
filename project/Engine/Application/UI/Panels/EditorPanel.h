@@ -9,12 +9,12 @@
 // c++
 #include <vector>
 #include <string>
-
-// Forward
-class EditorContext;
+#include <functional>
 
 class EditorPanel
 	:public IEngineUI{
+	using OnEditorSelectedCallback = std::function<void(BaseEditor*)>;
+
 public:
 	//===================================================================*/
 	//                   public functions
@@ -28,15 +28,17 @@ public:
 	void AddEditor(const BaseEditor* editor);
 	void RemoveEditor(const BaseEditor* editor);
 
-	void SetEditorContext(EditorContext* context);
+	void SetOnEditorSelected(OnEditorSelectedCallback cb){ onEditorSelected_ = std::move(cb); }
 
 private:
 	//===================================================================*/
 	//                   private variables
 	//===================================================================*/
 	std::vector<BaseEditor*> editors_;	//< エディタのリスト
-	EditorContext* pEditorContext_ = nullptr;
 public:
 	static int selectedEditorIndex;							//< 選択されたエディタ
+
+private:
+	OnEditorSelectedCallback onEditorSelected_;
 };
 
