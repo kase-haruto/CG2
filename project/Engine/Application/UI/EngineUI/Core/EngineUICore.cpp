@@ -24,11 +24,6 @@ void EngineUICore::Initialize() {
 
 	levelEditor_ = std::make_unique<LevelEditor>();
 	levelEditor_->Initialize();
-
-	mainViewport_ = std::make_unique<Viewport>(ViewportType::VIEWPORT_MAIN, "Game Viewport");
-	mainViewport_->SetCamera(CameraManager::GetInstance()->GetCamera3d());
-	debugViewport_ = std::make_unique<Viewport>(ViewportType::VIEWPORT_DEBUG, "Debug Viewport");
-	debugViewport_->SetCamera(CameraManager::GetDebugCamera());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +34,8 @@ void EngineUICore::Render() {
 	RenderMenue();
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-	mainViewport_->Render(reinterpret_cast< ImTextureID >(mainViewportTextureID_));
-	debugViewport_->Render(reinterpret_cast< ImTextureID >(debugViewportTextureID_));
+	levelEditor_->RenderViewport(ViewportType::VIEWPORT_MAIN,reinterpret_cast< ImTextureID >(mainViewportTextureID_));
+	levelEditor_->RenderViewport(ViewportType::VIEWPORT_DEBUG, reinterpret_cast< ImTextureID >(debugViewportTextureID_));
 
 	if (levelEditor_){
 		levelEditor_->Render();

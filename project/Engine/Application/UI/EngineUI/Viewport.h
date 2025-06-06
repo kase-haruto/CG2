@@ -6,6 +6,9 @@
 #include <Engine/Graphics/Camera/Viewport/ViewportDetail.h>
 #include <Engine/Foundation/Math/Vector2.h>
 
+// engine
+#include <Engine/Application/UI/EngineUI/IOnViewportTool.h>
+
 // c++
 #include <string>
 
@@ -23,7 +26,9 @@ public:
 	//===================================================================*/
 	Viewport(ViewportType type, const std::string& windowName);
 
+	void Update();								//< ビューポートの更新処理
 	void Render(const ImTextureID& tex);		//< ImGui上への描画処理
+	void AddTool(IOnViewportTool* tool);		//< ビューポートツールの追加
 
 	//--------- accessor -----------------------------------------------------
 	bool IsHovered() const;
@@ -32,6 +37,7 @@ public:
 	ViewportType GetType() const;
 	void SetCamera(BaseCamera* camera);
 private:
+	std::vector<IOnViewportTool*> tools_;
 	ViewportType type_ = ViewportType::VIEWPORT_NONE;	//< ビューポートの種類
 	std::string windowName_;							//< ビューポートのウィンドウ名
 

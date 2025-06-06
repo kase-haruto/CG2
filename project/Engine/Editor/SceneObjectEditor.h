@@ -3,6 +3,9 @@
 /*  include space
 /* ===================================================================== */
 #include <Engine/Editor/BaseEditor.h>
+#include <Engine/Application/UI/EngineUI/Manipulator.h>
+
+#include <memory>
 
 class SceneObject;
 
@@ -17,15 +20,17 @@ public:
 	SceneObjectEditor();
 	~SceneObjectEditor() override = default;
 
+	void Update();
 	void ShowImGuiInterface() override;
 	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
-	void ShowGuizmo();
 
+	void SetTarget(SceneObject* object);
+	Manipulator* GetManipulator() const{ return manipulator_.get(); }
 private:
-
 	//===================================================================*/
-	//                   public functions
+	//                   private variables
 	//===================================================================*/
+	std::unique_ptr<Manipulator> manipulator_ = nullptr;	// マニピュレーター
 	SceneObject* sceneObject_ = nullptr;	// 編集対象のSceneObject
 };
 
