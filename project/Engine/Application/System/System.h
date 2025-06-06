@@ -4,7 +4,7 @@
 /*	include space
 /* ===================================================================== */
 // engine
-#include <Engine/Application/UI/ImGuiManager.h>
+#include <Engine/Application/UI/GUI/ImGuiManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
