@@ -9,6 +9,7 @@
 #include <Engine/Application/UI/Panels/Controller/PanelController.h>
 #include <Engine/Editor/LevelEditor.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Graphics/Camera/Viewport/Viewport.h>
 
 // c++
 #include <vector>
@@ -21,11 +22,11 @@ public:
 	//===================================================================*/
 	//					public function
 	//===================================================================*/
-	EngineUICore() = default;       // コンストラクタ
-	~EngineUICore() = default;      // デストラクタ
+	EngineUICore() = default;			//< コンストラクタ
+	~EngineUICore() = default;			//< デストラクタ
 
-	void Initialize();					 // 初期化
-	void Render();						 // レンダリング
+	void Initialize();					//< 初期化
+	void Render();						//< レンダリング
 
 	void AddPanel(std::unique_ptr<IEngineUI> panel); // パネル追加
 
@@ -42,8 +43,6 @@ private:
 	//===================================================================*/
 	//					private function
 	//===================================================================*/
-	void RenderMainViewport();  // メインビューポートの描画
-	void RenderDebugViewPort(); // デフォルトビューポートの描画
 	void RenderMenue();         // メニューの描画
 
 private:
@@ -51,7 +50,10 @@ private:
 	//					private variable
 	//===================================================================*/
 	std::unique_ptr<PanelController> panelController_ = nullptr;
-	std::unique_ptr<LevelEditor> levelEditor_ = nullptr; // レベルエディタ
+	std::unique_ptr<LevelEditor> levelEditor_ = nullptr;	//< レベルエディタ
+	std::unique_ptr<Viewport> mainViewport_;				//< メインビューポート
+	std::unique_ptr<Viewport> debugViewport_;				//< デバッグビューポート
+
 	UINT64 mainViewportTextureID_ = 0;
 	UINT64 debugViewportTextureID_ = 0;
 };
