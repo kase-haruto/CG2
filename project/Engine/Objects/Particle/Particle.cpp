@@ -34,7 +34,7 @@ void Particle::Initialize(const std::string& modelName, const std::string& textu
 }
 
 void Particle::LoadInitialize(){
-	textureHandle = TextureManager::GetInstance()->LoadTexture(textureName_);
+	textureHandle = TextureManager::GetInstance()->LoadTexture("Textures/" + textureName_);
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 	instanceDataList_.reserve(kMaxInstanceNum_);
 	BaseParticle::CreateBuffer();

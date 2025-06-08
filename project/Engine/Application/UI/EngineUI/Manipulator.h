@@ -15,6 +15,7 @@ struct Matrix4x4;
 class Manipulator 
 	: public IOnViewportTool{
 public:
+	Manipulator();
 	void Update() override;
 	void RenderOverlay() override;
 	void RenderToolbar() override;
@@ -36,4 +37,18 @@ private:
 
 	ImVec2 viewOrigin_ = {0, 0};
 	ImVec2 viewSize_ = {0, 0};
+
+private:
+	// アイコン
+	struct Icon {
+		ImTextureID texture = nullptr;
+		ImVec2 size{32.0f,32.0f};
+	};
+
+public:
+	Icon iconTranslate_;
+	Icon iconRotate_;
+	Icon iconScale_;
+	Icon iconUniversal_;
+	Icon iconWorld_;
 };

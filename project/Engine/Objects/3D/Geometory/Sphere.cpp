@@ -24,7 +24,7 @@
 //	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(Object3D);
 //	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(Object3D);
 //
-//	handle = TextureManager::GetInstance()->LoadTexture("MonsterBall.png");
+//	handle = TextureManager::GetInstance()->LoadTexture("Textures/MonsterBall.png");
 //
 //	RGBa = {1.0f,1.0f,1.0f,1.0f};
 //	transform = {{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}};

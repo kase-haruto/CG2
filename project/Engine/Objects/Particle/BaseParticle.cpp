@@ -80,7 +80,7 @@ void BaseParticle::Initialize(const std::string& modelName, const std::string& t
 	modelName_ = modelName;
 	textureName_ = texturePath;
 	textureHandle.ptr = 0; // 初期化
-	textureHandle = TextureManager::GetInstance()->LoadTexture(texturePath);
+	textureHandle = TextureManager::GetInstance()->LoadTexture("Textures/"+texturePath);
 
 	backToFrontMatrix_ = MakeRotateYMatrix(std::numbers::pi_v<float>);
 	instanceDataList_.reserve(kMaxInstanceNum_);

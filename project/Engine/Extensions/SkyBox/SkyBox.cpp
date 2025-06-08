@@ -12,7 +12,7 @@ SkyBox::SkyBox(const std::string& fileName,
 			   std::optional<std::string> objectName){
 	textureName_ = fileName;
 	SceneObject::SetName(objectName.value(),ObjectType::GameObject);
-	TextureManager::GetInstance()->SetEnvironmentTexture(fileName);
+	TextureManager::GetInstance()->SetEnvironmentTexture("Textures/"+fileName);
 }
 
 void SkyBox::Initialize(){

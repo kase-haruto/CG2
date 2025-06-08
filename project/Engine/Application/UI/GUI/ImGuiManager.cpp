@@ -34,7 +34,6 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	// Dockingのみ有効、Viewportsは無効
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; ← この行は削除またはコメントアウト
 
 	ImGui_ImplWin32_Init(winApp->GetHWND());
 	ImGui_ImplDX12_Init(pDxCore_->GetDevice().Get(),
@@ -47,7 +46,7 @@ void ImGuiManager::Initialize(WinApp* winApp, const DxCore* dxCore){
 	ImGui::StyleColorsDark(); // ダークテーマを適用
 
 	// fontの設定
-	ImFont* font = io.Fonts->AddFontFromFileTTF("Resources/asetts/fonts/FiraMono.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	ImFont* font = io.Fonts->AddFontFromFileTTF("Resources/Assets/fonts/FiraMono.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 	io.FontDefault = font;
 	CustomizeImGuiStyle();
 

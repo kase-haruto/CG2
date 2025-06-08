@@ -56,7 +56,7 @@ void BaseModel::OnModelLoaded() {
 
 	// テクスチャ設定
 	if (!handle_) {
-		handle_ = TextureManager::GetInstance()->LoadTexture(modelData_->material.textureFilePath);
+		handle_ = TextureManager::GetInstance()->LoadTexture("Textures/" + modelData_->material.textureFilePath);
 	}
 
 }

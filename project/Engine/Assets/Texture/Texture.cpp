@@ -48,7 +48,7 @@ Texture& Texture::operator=(Texture&& other) noexcept {
 }
 
 void Texture::Load([[maybe_unused]] ID3D12Device* device) {
-	std::string fullPath = "Resources/textures/" + filePath_;
+	std::string fullPath = "Resources/Assets/" + filePath_;
 	image_ = LoadTextureImage(fullPath);
 	metadata_ = image_.GetMetadata();
 }
@@ -65,7 +65,6 @@ void Texture::Upload(ID3D12Device* device) {
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
-	// ✅ Dimensionの修正（CubeMapでも2Dとして扱う）
 	switch (metadata_.dimension) {
 		case DirectX::TEX_DIMENSION_TEXTURE1D:
 			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE1D;

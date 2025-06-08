@@ -38,7 +38,7 @@ void Viewport::Render(const ImTextureID& tex){
 		ImGuizmo::SetDrawlist();
 
 		// オーバーレイツールバーの描画位置を設定（画像の左上にする場合）
-		ImGui::SetCursorScreenPos(ImVec2(imagePos.x + 10, imagePos.y + 10));
+		ImGui::SetCursorScreenPos(ImVec2(imagePos.x + 10, imagePos.y + 20));
 		ImGui::BeginGroup(); // 複数のRadioButtonを1グループに
 		for (auto* tool : tools_){
 			tool->RenderToolbar(); // Manipulator のツールバー表示

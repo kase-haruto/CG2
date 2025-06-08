@@ -6,6 +6,7 @@
 #include <Engine/Foundation/Math/Matrix4x4.h>
 #include <Engine/Objects/Transform/Transform.h>
 #include <Engine/Editor/SceneObjectEditor.h>
+#include <Engine/Assets/Texture/TextureManager.h>
 
 void Manipulator::SetTarget(WorldTransform* target){
 	target_ = target;
@@ -18,6 +19,15 @@ void Manipulator::SetCamera(BaseCamera* camera){
 void Manipulator::SetViewRect(const ImVec2& origin, const ImVec2& size){
 	viewOrigin_ = origin;
 	viewSize_ = size;
+}
+
+Manipulator::Manipulator() {
+	//iconの初期化
+	iconTranslate_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/translate.png").ptr);
+	iconRotate_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/rotate.png").ptr);
+	iconScale_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/scale.png").ptr);
+	iconUniversal_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/universal.png").ptr);
+	iconWorld_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/world.png").ptr);
 }
 
 void Manipulator::Update(){
@@ -54,16 +64,62 @@ void Manipulator::Update(){
 
 void Manipulator::RenderOverlay(){}
 
-void Manipulator::RenderToolbar(){
-	if (ImGui::RadioButton("Translate", operation_ == ImGuizmo::TRANSLATE)) operation_ = ImGuizmo::TRANSLATE;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Rotate", operation_ == ImGuizmo::ROTATE)) operation_ = ImGuizmo::ROTATE;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Scale", operation_ == ImGuizmo::SCALE)) operation_ = ImGuizmo::SCALE;
+void Manipulator::RenderToolbar() {
 
-	if (ImGui::RadioButton("World", mode_ == ImGuizmo::WORLD)) mode_ = ImGuizmo::WORLD;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Local", mode_ == ImGuizmo::LOCAL)) mode_ = ImGuizmo::LOCAL;
+	ImVec2 iconSize = iconTranslate_.size;
+
+	struct ButtonInfo {
+		ImGuizmo::OPERATION op;
+		const char* tooltip;
+		const Icon& icon;
+	};
+
+	ButtonInfo buttons[] = {
+		{ ImGuizmo::TRANSLATE, "Translate", iconTranslate_ },
+		{ ImGuizmo::ROTATE,    "Rotate",    iconRotate_    },
+		{ ImGuizmo::SCALE,     "Scale",     iconScale_     },
+		{ ImGuizmo::UNIVERSAL, "Universal", iconUniversal_ }
+	};
+
+	for (const auto& btn : buttons) {
+		bool isSelected = (operation_ == btn.op);
+		if (isSelected) {
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
+		}
+
+		if (ImGui::ImageButton(btn.icon.texture, iconSize)) {
+			operation_ = btn.op;
+		}
+		if (isSelected) {
+			ImGui::PopStyleColor();
+		}
+
+		if (ImGui::IsItemHovered()) {
+			ImGui::SetTooltip("%s", btn.tooltip);
+		}
+	}
+
+	{
+		bool isWorld = (mode_ == ImGuizmo::WORLD);
+
+		if (isWorld) {
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
+		}
+
+		if (ImGui::ImageButton(iconWorld_.texture, iconWorld_.size)) {
+			// トグル切り替え
+			mode_ = isWorld ? ImGuizmo::LOCAL : ImGuizmo::WORLD;
+		}
+
+		if (isWorld) {
+			ImGui::PopStyleColor();
+		}
+
+		if (ImGui::IsItemHovered()) {
+			ImGui::SetTooltip("%s Mode", isWorld ? "World" : "Local");
+		}
+	}
+
 }
 
 void Manipulator::RowToColumnArray(const Matrix4x4& m, float out[16]){
