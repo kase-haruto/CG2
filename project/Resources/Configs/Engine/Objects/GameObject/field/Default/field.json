@@ -16,8 +16,8 @@
             },
             "currentLightingMode_": 0,
             "enableLighting": 0,
-            "enviromentCoefficient": 0.15399999916553497,
-            "isReflect": false,
+            "enviromentCoefficient": 0.5,
+            "isReflect": true,
             "shininess": 20.0
         },
         "uvTransConfig": {

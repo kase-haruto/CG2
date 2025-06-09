@@ -1,5 +1,9 @@
 #include "Vector4.h"
 #include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Foundation/Math/Vector3.h>
+
+Vector4::Vector4(const Vector3& v, float w)
+	: x(v.x), y(v.y), z(v.z), w(w) {}
 
 Vector4 Vector4::TransformVector(const Matrix4x4& m, const Vector4& v){
 	return Vector4 {
@@ -10,3 +14,41 @@ Vector4 Vector4::TransformVector(const Matrix4x4& m, const Vector4& v){
 	};
 }
 
+bool Vector4::operator==(const Vector4& other) const {
+	return x == other.x && y == other.y && z == other.z && w == other.w;
+}
+
+bool Vector4::operator!=(const Vector4& other) const {
+	return !(*this == other);
+}
+
+Vector4 Vector4::operator*(const float& scalar) const {
+	return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
+}
+
+Vector4 Vector4::operator*=(const float& scalar) {
+	x *= scalar; y *= scalar; z *= scalar; w *= scalar;
+	return *this;
+}
+
+Vector4 Vector4::operator*(const Vector4& other) const {
+	return Vector4(x * other.x, y * other.y, z * other.z, w * other.w);
+}
+
+Vector4 Vector4::operator*=(const Vector4& other) {
+	x *= other.x; y *= other.y; z *= other.z; w *= other.w;
+	return *this;
+}
+
+Vector4 Vector4::operator/(const float& scalar) const {
+	return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
+}
+
+Vector4 Vector4::operator/=(const float& scalar) {
+	x /= scalar; y /= scalar; z /= scalar; w /= scalar;
+	return *this;
+}
+
+Vector3 Vector4::xyz() const {
+	return Vector3{ x, y, z };
+}

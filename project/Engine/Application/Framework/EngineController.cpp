@@ -62,8 +62,9 @@ void EngineController::BeginUpdate(){
 	// 描画前処理
 	system_->BeginFrame();
 
-	// UI描画
-	engineUICore_->Render();
+	engineUICore_->Update();
+
+	
 }
 void EngineController::UpdatePostEffectControl(float dt) {
 	postEffectGraph_ = system_->GetPostEffectGraph();
@@ -124,6 +125,9 @@ void EngineController::EndUpdate(){
 	//if (ppEditor){
 	//	ppEditor->ApplyToGraph(system_->GetPostEffectGraph());
 	//}
+
+	// UI描画
+	engineUICore_->Render();
 
 	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }

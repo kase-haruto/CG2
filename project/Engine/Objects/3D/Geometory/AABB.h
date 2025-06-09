@@ -9,27 +9,16 @@
 
 struct Vector3;
 
-class AABB{
+class AABB {
 
 public:
+	AABB(const Vector3& min, const Vector3& max, uint32_t color = 0xFFFFFFFF)
+		: min_(min), max_(max), color(color) {}
 	AABB() = default;
 	~AABB() = default;
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="min"></param>
-	/// <param name="max"></param>
 	void Initialize(const Vector3& min, const Vector3& max);
-
-	/// <summary>
-	/// 更新
-	/// </summary>
 	void Update();
-
-	/// <summary>
-	/// uiの更新
-	/// </summary>
 	void UpdateUI(std::string lavel);
 
 	Vector3 GetMin()const;
@@ -42,8 +31,8 @@ public:
 	void SetColor(const uint32_t color);
 
 public:
-	Vector3 min;
-	Vector3 max;
+	Vector3 min_;
+	Vector3 max_;
 	uint32_t color;
 
 };

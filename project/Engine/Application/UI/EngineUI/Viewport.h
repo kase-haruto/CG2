@@ -34,6 +34,7 @@ public:
 	bool IsHovered() const;
 	bool IsClicked() const;
 	Vector2 GetSize() const;
+	Vector2 GetPosition() const;				//< ビューポートの位置
 	ViewportType GetType() const;
 	void SetCamera(BaseCamera* camera);
 private:
@@ -45,6 +46,7 @@ private:
 
 	BaseCamera* camera_ = nullptr;						//< ビューポートに関連付けられたカメラ
 	Vector2 size_ {};
+	Vector2 viewOrigin_;								//< ImGui上での描画開始位置
 	bool isHovered_ = false;
 	bool isClicked_ = false;
 };

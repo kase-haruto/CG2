@@ -15,6 +15,7 @@ class SceneObject;
 class LevelEditor{
 public:
 	void Initialize();
+	void Update();
 	void Render();
 
 	// 編集対象
@@ -22,8 +23,15 @@ public:
 	void SetSelectedObject(SceneObject* object);
 	void RenderViewport(ViewportType type, const ImTextureID& tex);
 
+
 	HierarchyPanel* GetHierarchyPanel() const{ return hierarchy_.get(); }
 	EditorPanel* GetEditorPanel() const{ return editor_.get(); }
+
+private:
+	void TryPickUnderCursor();
+	void TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj);
+	SceneObject* PickSceneObjectByRay(const struct Ray& ray);
+
 
 private:
 	// 管理UI

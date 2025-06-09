@@ -25,6 +25,7 @@ public:
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
 	void SetOnObjectSelected(OnObjectSelectedCallback cb){ onObjectSelected_ = std::move(cb); }
 	void SetSelectedObject(SceneObject* obj){ selected_ = obj; }
+	const SceneObjectLibrary* GetSceneObjectLibrary() const { return pSceneObjectLibrary_; }
 
 private:
 	const SceneObjectLibrary* pSceneObjectLibrary_ = nullptr;

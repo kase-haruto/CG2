@@ -25,6 +25,7 @@ public:
 	~EngineUICore() = default;			//< デストラクタ
 
 	void Initialize();					//< 初期化
+	void Update();						//< 更新処理
 	void Render();						//< レンダリング
 
 	void AddPanel(std::unique_ptr<IEngineUI> panel); // パネル追加

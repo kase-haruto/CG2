@@ -25,6 +25,8 @@ DirectionalLight::DirectionalLight(const std::string& name){
 	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
 	//コンフィグの適用
 	LoadConfig(configPath_);
+
+	isEnableRaycast_ = false;
 }
 
 DirectionalLight::~DirectionalLight(){}

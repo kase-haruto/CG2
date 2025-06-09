@@ -13,6 +13,7 @@ SkyBox::SkyBox(const std::string& fileName,
 	textureName_ = fileName;
 	SceneObject::SetName(objectName.value(),ObjectType::GameObject);
 	TextureManager::GetInstance()->SetEnvironmentTexture("Textures/"+fileName);
+	isEnableRaycast_ = false;
 }
 
 void SkyBox::Initialize(){

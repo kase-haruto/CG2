@@ -22,6 +22,8 @@ PointLight::PointLight(const std::string& name){
 
 	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
 	LoadConfig(configPath_);
+
+	isEnableRaycast_ = false;
 }
 
 PointLight::~PointLight(){}

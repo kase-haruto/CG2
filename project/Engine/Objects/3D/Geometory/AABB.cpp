@@ -7,32 +7,32 @@
 #include <cmath>
 
 
-void AABB::Initialize(const Vector3& Min, const Vector3& Max){
-    min = Min;
-    max = Max;
+void AABB::Initialize(const Vector3& Min, const Vector3& Max) {
+	min_ = Min;
+	max_ = Max;
 }
 
-void AABB::Update(){
-    //minとmaxが入れ替わらないようにする
-    min.x = ( std::min ) (min.x, max.x);
-    max.x = ( std::max ) (min.x, max.x);
+void AABB::Update() {
+	//minとmaxが入れ替わらないようにする
+	min_.x = (std::min)(min_.x, max_.x);
+	max_.x = (std::max)(min_.x, max_.x);
 
-    min.y = ( std::min ) (min.y, max.y);
-    max.y = ( std::max ) (min.y, max.y);
+	min_.y = (std::min)(min_.y, max_.y);
+	max_.y = (std::max)(min_.y, max_.y);
 
-    min.z = ( std::min ) (min.z, max.z);
-    max.z = ( std::max ) (min.z, max.z);
+	min_.z = (std::min)(min_.z, max_.z);
+	max_.z = (std::max)(min_.z, max_.z);
 }
 
 
 
-void AABB::UpdateUI(std::string lavel){
-    ImGui::Begin(lavel.c_str());
-    ImGui::DragFloat3("min", &min.x, 0.01f);
-    ImGui::DragFloat3("max", &max.x, 0.01f);
-    ImGui::End();
+void AABB::UpdateUI(std::string lavel) {
+	ImGui::Begin(lavel.c_str());
+	ImGui::DragFloat3("min", &min_.x, 0.01f);
+	ImGui::DragFloat3("max", &max_.x, 0.01f);
+	ImGui::End();
 }
 
-Vector3 AABB::GetMin()const{ return min; }
-Vector3 AABB::GetMax()const{ return max; }
+Vector3 AABB::GetMin()const { return min_; }
+Vector3 AABB::GetMax()const { return max_; }
 

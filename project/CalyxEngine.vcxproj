@@ -275,12 +275,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Editor\PostProcessEditor.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Viewport.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Manipulator.cpp" />
+    <ClCompile Include="Engine\Physics\Ray\Raycastor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />
     <ClInclude Include="Engine\Application\UI\Panels\IInspectable.h" />
     <ClInclude Include="Engine\Editor\Collection\EditorCollection.h" />
     <ClInclude Include="Engine\Graphics\Camera\Viewport\ViewportDetail.h" />
+    <ClInclude Include="Engine\Physics\Ray\RayDetail.h" />
     <ClInclude Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
@@ -481,6 +483,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Editor\LevelEditor.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Viewport.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Manipulator.h" />
+    <ClInclude Include="Engine\Physics\Ray\Raycastor.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

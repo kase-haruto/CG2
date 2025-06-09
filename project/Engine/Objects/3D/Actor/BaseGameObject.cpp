@@ -4,6 +4,7 @@
 #include <Engine/objects/Collider/SphereCollider.h>
 #include <Engine/Renderer/Mesh/MeshRenderer.h>
 #include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 #include "externals/imgui/imgui.h"
 
@@ -69,6 +70,7 @@ void BaseGameObject::Update(){
 		collider_->Draw();
 	}
 	ApplyConfig();
+
 }
 
 void BaseGameObject::RegisterToRenderer(MeshRenderer* renderer){
@@ -145,9 +147,12 @@ void BaseGameObject::ApplyConfig(){
 	collider_->ApplyConfig(config_.colliderConfig);
 }
 
+
+
 //===================================================================*/
 //                   getter/setter
 //===================================================================*/
+
 void BaseGameObject::SetName(const std::string& name){
 	SceneObject::SetName(name, ObjectType::GameObject);
 }

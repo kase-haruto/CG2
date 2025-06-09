@@ -68,6 +68,7 @@ void TestScene::Initialize() {
 	//=========================
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
 	field_->SetScale({ 100.0f, 1.0f, 100.0f });
+	field_->SetEnableRaycast(false);
 
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
 	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
