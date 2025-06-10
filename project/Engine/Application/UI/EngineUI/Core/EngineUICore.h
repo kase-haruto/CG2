@@ -28,22 +28,24 @@ public:
 	void Update();						//< 更新処理
 	void Render();						//< レンダリング
 
-	void AddPanel(std::unique_ptr<IEngineUI> panel); // パネル追加
+	void AddPanel(std::unique_ptr<IEngineUI> panel);	//< パネル追加
 
-	void SetMainViewportTexture(UINT64 textureID);  // メインビューポート用のテクスチャを設定
-	void SetDebugViewportTexture(UINT64 textureID); // デバッグビューポート用のテクスチャを設定
+	void NotifySceneContextChanged(class SceneContext* newContext);
 
-	//パネルの取得
+	//--------- accessor -----------------------------------------------------
+	void SetMainViewportTexture(UINT64 textureID);		//< メインビューポート用のテクスチャを設定
+	void SetDebugViewportTexture(UINT64 textureID);		//< デバッグビューポート用のテクスチャを設定
 	template<class Panel>
 	Panel* GetPanel();
-
 	HierarchyPanel* GetHierarchyPanel() const;
 	EditorPanel* GetEditorPanel() const;
+	PlaceToolPanel* GetPlaceToolPanel() const;
+
 private:
 	//===================================================================*/
 	//					private function
 	//===================================================================*/
-	void RenderMenue();         // メニューの描画
+	void RenderMenue();				//< メニューの描画
 
 private:
 	//===================================================================*/

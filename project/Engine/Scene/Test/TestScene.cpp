@@ -58,7 +58,6 @@ void TestScene::Initialize() {
 	//=========================
 	// グラフィック関連
 	//=========================
-	fog_ = std::make_unique<FogEffect>(pDxCore_);
 
 	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
 	skyBox_->Initialize();
@@ -66,18 +65,19 @@ void TestScene::Initialize() {
 	//=========================
 	// オブジェクト生成
 	//=========================
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
+	field_ = std::make_unique<BaseGameObject>("ground.obj", "field");
 	field_->SetScale({ 100.0f, 1.0f, 100.0f });
 	field_->SetEnableRaycast(false);
+	sceneContext_->GetMeshRenderer()->Register(field_->GetModel(), &field_->GetWorldTransform());
 
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
-	bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
+	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
+	//bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),teapot_,"debugSphere.obj", "sphere");
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),teapot_,"debugSphere.obj", "enviromentSphere");
 	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
-	walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
+	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
+	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 
 	//=========================
 	// 描画登録
@@ -97,9 +97,9 @@ void TestScene::Update() {
 
 	//test
 	field_->Update();
-	bunny_->Update();
+	//bunny_->Update();
 	teapot_->Update();
-	walkHuman_->Update();
+	//walkHuman_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();

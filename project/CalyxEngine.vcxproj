@@ -276,6 +276,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\EngineUI\Viewport.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\Manipulator.cpp" />
     <ClCompile Include="Engine\Physics\Ray\Raycastor.cpp" />
+    <ClCompile Include="Engine\Application\UI\Panels\PlaceToolPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />
@@ -287,6 +288,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineDesc\Input\VertexLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\Pso\PsoDetails.h" />
+    <ClInclude Include="Engine\Scene\Context\ISceneContextListener.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmd.h" />
     <ClInclude Include="Engine\System\Command\Manager\CommandManager.h" />
     <ClInclude Include="Engine\Objects\ConfigurableObject\ConfigurableObject.h" />
@@ -484,6 +486,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\EngineUI\Viewport.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Manipulator.h" />
     <ClInclude Include="Engine\Physics\Ray\Raycastor.h" />
+    <ClInclude Include="Engine\Application\UI\Panels\PlaceToolPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

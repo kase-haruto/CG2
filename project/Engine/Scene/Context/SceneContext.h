@@ -25,10 +25,14 @@ public:
 	void RegisterObject(SceneObject* object);
 	void RegisterAllToRenderer();
 
+	void AddEditorObject(std::unique_ptr<SceneObject> obj);
+
 private:
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
 	std::unique_ptr<LightLibrary> lightLibrary_;
+
+	std::vector<std::unique_ptr<SceneObject>> editorObjects_;
 };
 
 

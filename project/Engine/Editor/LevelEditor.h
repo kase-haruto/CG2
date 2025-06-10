@@ -3,6 +3,7 @@
 #include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/Application/UI/Panels/HierarchyPanel.h>
 #include <Engine/Application/UI/Panels/InspectorPanel.h>
+#include <Engine/Application/UI/Panels/PlaceToolPanel.h>
 #include <Engine/Application/UI/EngineUI/Manipulator.h>
 #include <Engine/Application/UI/EngineUI/Viewport.h>
 
@@ -26,6 +27,7 @@ public:
 
 	HierarchyPanel* GetHierarchyPanel() const{ return hierarchy_.get(); }
 	EditorPanel* GetEditorPanel() const{ return editor_.get(); }
+	PlaceToolPanel* GetPlaceToolPanel() const { return placeToolPanel_.get(); }
 
 private:
 	void TryPickUnderCursor();
@@ -39,6 +41,7 @@ private:
 	std::unique_ptr<EditorPanel> editor_;
 	std::unique_ptr<InspectorPanel> inspector_;
 	std::unique_ptr<SceneObjectEditor> sceneEditor_;
+	std::unique_ptr<PlaceToolPanel> placeToolPanel_;
 
 	// ビューポート
 	std::unique_ptr<Viewport> mainViewport_;				//< メインビューポート

@@ -14,6 +14,7 @@ void LevelEditor::Initialize() {
 	editor_ = std::make_unique<EditorPanel>();
 	inspector_ = std::make_unique<InspectorPanel>();
 	sceneEditor_ = std::make_unique<SceneObjectEditor>();
+	placeToolPanel_ = std::make_unique<PlaceToolPanel>();
 
 	// Panel に LevelEditor 自体を渡す（コールバック通知や setter）
 	editor_->SetOnEditorSelected([this](BaseEditor* editor) {
@@ -38,16 +39,18 @@ void LevelEditor::Initialize() {
 }
 
 void LevelEditor::Update() {
-	//// 入力チェックはここで行う
+#ifdef _DEBUG
+		//// 入力チェックはここで行う
 	//if (Input::GetInstance()->TriggerMouseButton(0)) {
 	//	TryPickUnderCursor(); // レイキャストして選択処理へ
-	//}
-
+	//}9
+#endif // _DEBUG
 }
 
 void LevelEditor::Render() {
 	hierarchy_->Render();
 	editor_->Render();
+	placeToolPanel_->Render();
 
 	inspector_->SetSelectedEditor(selectedEditor_);
 	inspector_->SetSelectedObject(selectedObject_);

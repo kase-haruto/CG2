@@ -31,6 +31,6 @@ private:
 	//                   private variables
 	//===================================================================*/
 	std::unique_ptr<Manipulator> manipulator_ = nullptr;	// マニピュレーター
-	SceneObject* sceneObject_ = nullptr;	// 編集対象のSceneObject
+	SceneObject* sceneObject_ = nullptr;					// 編集対象のSceneObject
 };
 

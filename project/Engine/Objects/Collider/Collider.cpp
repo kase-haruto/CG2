@@ -38,7 +38,7 @@ void Collider::ShowGui(ColliderConfig& config){
 
 		bool enabled = config.isCollisionEnabled;
 		if (GuiCmd::CheckBox("Enable Collision", enabled)){
-			config.isCollisionEnabled = enabled;
+			SetCollisionEnabled(enabled);
 		}
 
 		if (!config.isCollisionEnabled) return;

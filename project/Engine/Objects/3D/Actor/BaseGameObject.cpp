@@ -69,7 +69,7 @@ void BaseGameObject::Update(){
 		collider_->Update(worldPos, worldRot);
 		collider_->Draw();
 	}
-	ApplyConfig();
+	//ApplyConfig();
 
 }
 

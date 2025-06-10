@@ -172,6 +172,9 @@ void ModelManager::StartUpLoad(){
 	LoadModel("player.obj");
 	LoadModel("debugSphere.obj");
 	LoadModel("debugCube.obj");
+	LoadModel("cylinder.obj");
+	LoadModel("cone.obj");
+	LoadModel("torus.obj");
 	LoadModel("fence.obj");
 	LoadModel("ground.obj");
 	LoadModel("multiMaterial.obj");

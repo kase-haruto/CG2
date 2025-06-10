@@ -15,12 +15,10 @@ public:
 	IEngineUI();
 	virtual ~IEngineUI() = default;
 
-	// パネルの描画
 	virtual void Render() = 0;
 
-	// パネル名を取得
+	//--------- accessor -----------------------------------------------------//
 	virtual const std::string& GetPanelName() const = 0;
-
 	void SetShow(bool isShow){ isShow_ = isShow; }
 	bool IsShow() const{ return isShow_; }
 
