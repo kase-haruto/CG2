@@ -59,16 +59,16 @@ void TestScene::Initialize() {
 	// グラフィック関連
 	//=========================
 
-	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
+	skyBox_ = std::make_unique<SkyBox>("sky.dds", "skyBox");
+	sceneContext_->GetMeshRenderer()->Register(skyBox_.get(), &skyBox_->GetWorldTransform());
 	skyBox_->Initialize();
 
 	//=========================
 	// オブジェクト生成
 	//=========================
-	field_ = std::make_unique<BaseGameObject>("ground.obj", "field");
+	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
 	field_->SetScale({ 100.0f, 1.0f, 100.0f });
 	field_->SetEnableRaycast(false);
-	sceneContext_->GetMeshRenderer()->Register(field_->GetModel(), &field_->GetWorldTransform());
 
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
 	//bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});

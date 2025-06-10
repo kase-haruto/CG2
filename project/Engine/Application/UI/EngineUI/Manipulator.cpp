@@ -67,9 +67,6 @@ void Manipulator::RenderOverlay(){}
 
 void Manipulator::RenderToolbar() {
 
-	Vector2 mousePos = Input::GetInstance()->GetMousePosInDebugWindow();
-	ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
-
 	ImVec2 iconSize = iconTranslate_.size;
 
 	struct ButtonInfo {

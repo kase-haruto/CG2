@@ -113,7 +113,7 @@ void EngineUICore::AddPanel(std::unique_ptr<IEngineUI> panel) {
 //						sceneの更新を通知
 ////////////////////////////////////////////////////////////////////////////////////////////
 void EngineUICore::NotifySceneContextChanged(SceneContext* newContext) {
-	levelEditor_->GetPlaceToolPanel()->OnSceneContextChanged(newContext);
+	levelEditor_->NotifySceneContextChanged(newContext);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

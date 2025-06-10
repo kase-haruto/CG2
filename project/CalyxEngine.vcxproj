@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.cpp" />
     <ClCompile Include="Engine\Editor\Collection\EditorCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\Presets\PipelinePresets.cpp" />
@@ -279,6 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\PlaceToolPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />
     <ClInclude Include="Engine\Application\UI\Panels\IInspectable.h" />
     <ClInclude Include="Engine\Editor\Collection\EditorCollection.h" />

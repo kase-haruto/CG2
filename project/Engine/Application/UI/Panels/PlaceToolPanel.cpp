@@ -10,6 +10,8 @@
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Scene/Context/SceneContext.h>
 #include <Engine/Scene/Utirity/SceneUtility.h>
+#include <Engine/System/Command/EditorCommand/LevelEditorCommand/CreateObjectCommand/CreateShapeObjectCommand.h>
+#include <Engine/System/Command/Manager/CommandManager.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -70,49 +72,28 @@ void PlaceToolPanel::OnSceneContextChanged(SceneContext* newContext) { pSceneCon
 /////////////////////////////////////////////////////////////////////////////////////////
 //		図形モデルを追加
 /////////////////////////////////////////////////////////////////////////////////////////
-void PlaceToolPanel::CreateShapeObject(ShapeObjType shapeType) {
-	//タイプに応じたオブジェクトを生成
-	std::unique_ptr<BaseGameObject> object;
-	std::string objectName;
-	std::string modelName;
+void PlaceToolPanel::CreateShapeObject(ShapeObjType shapeType){
+	std::string objectName, modelName;
 
-	switch (shapeType) {
-		case PlaceToolPanel::ShapeObjType::Plane:
-			objectName = "Plane";
-			modelName = "plane.obj";
-			break;
-		case PlaceToolPanel::ShapeObjType::Cube:
-			objectName = "Cube";
-			modelName = "debugCube.obj";
-			break;
-		case PlaceToolPanel::ShapeObjType::Sphere:
-			objectName = "Sphere";
-			modelName = "debugSphere.obj";
-			break;
-		case PlaceToolPanel::ShapeObjType::Cylinder:
-			objectName = "Cylinder";
-			modelName = "cylinder.obj";
-			break;
-		case PlaceToolPanel::ShapeObjType::Cone:
-			objectName = "Cone";
-			modelName = "cone.obj";
-			break;
-		case PlaceToolPanel::ShapeObjType::Torus:
-			objectName = "Torus";
-			modelName = "torus.obj";
-			break;
-
-		case PlaceToolPanel::ShapeObjType::Count:
-			break;
-		default:
-			break;
+	switch (shapeType){
+		case ShapeObjType::Plane:		objectName = "Plane";	 modelName = "plane.obj";		 break;
+		case ShapeObjType::Cube:		objectName = "Cube";	 modelName = "debugCube.obj";	 break;
+		case ShapeObjType::Sphere:		objectName = "Sphere";	 modelName = "debugSphere.obj";	 break;
+		case ShapeObjType::Cylinder:	objectName = "Cylinder"; modelName = "cylinder.obj";	 break;
+		case ShapeObjType::Cone:		objectName = "Cone";	 modelName = "cone.obj";		 break;
+		case ShapeObjType::Torus:		objectName = "Torus";	 modelName = "torus.obj";		 break;
+		default: return;
 	}
 
-	object = std::make_unique<BaseGameObject>(modelName, objectName);
-	object->Initialize();
-	pSceneContext_->GetMeshRenderer()->Register(object->GetModel(), &object->GetWorldTransform());
-	pSceneContext_->AddEditorObject(std::move(object));
+	auto factory = [=] (){
+		auto obj = std::make_unique<BaseGameObject>(modelName, objectName);
+		obj->Initialize();
+		pSceneContext_->GetMeshRenderer()->Register(obj->GetModel(), &obj->GetWorldTransform());
+		return obj;
+		};
 
+	auto cmd = std::make_unique<CreateShapeObjectCommand>(pSceneContext_, factory);
+	CommandManager::GetInstance()->Execute(std::move(cmd));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
