@@ -25,9 +25,8 @@ public:
 	void Draw();
 	void DrawForRenderTarget(IRenderTarget* target);
 
-	void SetEngineUI(EngineUICore* ui){ pEngineUI_ = ui; }
+	void SetEngineUI(EngineUICore* ui);
 	void RequestSceneChange(SceneType nextScene);
-	void SetCurrentScene(std::unique_ptr<IScene> newScene);
 	void SetGraphicsSystem(GraphicsSystem* graphicsSystem) { pGraphicsSystem_ = graphicsSystem; }
 private:
 	// シーンインスタンスの配列

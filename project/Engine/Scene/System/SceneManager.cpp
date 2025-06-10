@@ -14,8 +14,8 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
 
-SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
-	: pDxCore_(dxCore),pGraphicsSystem_(graphicsSystem) {
+SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
+	: pDxCore_(dxCore), pGraphicsSystem_(graphicsSystem) {
 	// ここでシーンをすべて生成しておく
 	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
 		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i), pDxCore_);
@@ -24,9 +24,9 @@ SceneManager::SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem)
 	}
 
 
-	currentSceneNo_ = static_cast< int >(SceneType::PLAY);
+	currentSceneNo_ = static_cast<int>(SceneType::PLAY);
 #ifdef _DEBUG
-	currentSceneNo_ = static_cast< int >(SceneType::TEST);
+	currentSceneNo_ = static_cast<int>(SceneType::TEST);
 #endif // 
 
 	nextSceneNo_ = currentSceneNo_;
@@ -44,7 +44,6 @@ void SceneManager::Initialize() {
 		pEngineUI_->AddPanel(std::move(sceneSwitchPanel));
 	}
 
-	scenes_[currentSceneNo_]->SetSceneManager(this);
 	scenes_[currentSceneNo_]->Initialize();
 	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
 	pEngineUI_->GetHierarchyPanel()->SetSceneObjectLibrary(SceneObjectLibrary);
@@ -58,8 +57,12 @@ void SceneManager::Update() {
 		// シーン番号を更新
 		currentSceneNo_ = nextSceneNo_;
 
-		scenes_[currentSceneNo_]->SetSceneManager(this);
 		scenes_[currentSceneNo_]->Initialize();
+
+		if (pEngineUI_) {
+			auto* context = scenes_[currentSceneNo_]->GetSceneContext();
+			pEngineUI_->NotifySceneContextChanged(context);
+		}
 	}
 
 	// 現在のシーンを更新
@@ -83,13 +86,19 @@ void SceneManager::Draw() {
 }
 
 void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
-	auto* cmd = pDxCore_->GetCommandList().Get();
+	auto* cmd = pGraphicsSystem_->GetCommandList();
 
 	// 出力先RT設定
 	target->SetRenderTarget(cmd);
 	target->Clear(cmd);
 
-	scenes_[currentSceneNo_]->Draw(pGraphicsSystem_->GetCommandList());
+	scenes_[currentSceneNo_]->Draw(cmd);
+}
+
+void SceneManager::SetEngineUI(EngineUICore* ui) {
+	pEngineUI_ = ui;
+	auto* context = scenes_[currentSceneNo_]->GetSceneContext();
+	pEngineUI_->NotifySceneContextChanged(context);
 }
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {
@@ -97,15 +106,3 @@ void SceneManager::RequestSceneChange(SceneType nextScene) {
 
 }
 
-void SceneManager::SetCurrentScene(std::unique_ptr<IScene> newScene) {
-	scenes_[currentSceneNo_]->CleanUp();
-
-	// シーン番号を更新
-	currentSceneNo_ = nextSceneNo_;
-
-	// 新しいシーンに UI と SceneManager をセットして Initialize
-	scenes_[currentSceneNo_]->SetSceneManager(this);
-	scenes_[currentSceneNo_]->Initialize();
-	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
-	pEngineUI_->GetPanel<HierarchyPanel>()->SetSceneObjectLibrary(SceneObjectLibrary);
-}

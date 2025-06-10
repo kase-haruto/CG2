@@ -5,6 +5,7 @@
 #include <Engine/Graphics/Camera/Base/BaseCamera.h>
 #include <Engine/Foundation/Math/Matrix4x4.h>
 #include <Engine/Objects/Transform/Transform.h>
+#include <Engine/Application/Input/Input.h>
 #include <Engine/Editor/SceneObjectEditor.h>
 #include <Engine/Assets/Texture/TextureManager.h>
 
@@ -65,6 +66,9 @@ void Manipulator::Update(){
 void Manipulator::RenderOverlay(){}
 
 void Manipulator::RenderToolbar() {
+
+	Vector2 mousePos = Input::GetInstance()->GetMousePosInDebugWindow();
+	ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
 
 	ImVec2 iconSize = iconTranslate_.size;
 
@@ -128,17 +132,14 @@ void Manipulator::RowToColumnArray(const Matrix4x4& m, float out[16]){
 	out[4] = m.m[0][1]; out[5] = m.m[1][1]; out[6] = m.m[2][1]; out[7] = 0.0f;
 	out[8] = m.m[0][2]; out[9] = m.m[1][2]; out[10] = m.m[2][2]; out[11] = 0.0f;
 
-	// 平行移動はそのまま 12–14
 	out[12] = m.m[3][0];
 	out[13] = m.m[3][1];
 	out[14] = m.m[3][2];
 	out[15] = 1.0f;
 }
 
-// column-major[16] → DirectX(row-major)
 Matrix4x4 Manipulator::ColumnArrayToRow(const float in_[16]){
 	Matrix4x4 m;
-	// 3×3 転置（＝再転置で元に戻る）
 	m.m[0][0] = in_[0];  m.m[0][1] = in_[4];  m.m[0][2] = in_[8];  m.m[0][3] = 0.0f;
 	m.m[1][0] = in_[1];  m.m[1][1] = in_[5];  m.m[1][2] = in_[9];  m.m[1][3] = 0.0f;
 	m.m[2][0] = in_[2];  m.m[2][1] = in_[6];  m.m[2][2] = in_[10]; m.m[2][3] = 0.0f;

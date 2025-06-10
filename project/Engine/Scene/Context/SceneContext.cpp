@@ -18,10 +18,22 @@ void SceneContext::Initialize() {
 }
 
 void SceneContext::Update() {
+
+	for (auto& obj:editorObjects_) {
+		obj->Update();
+	}
+
 	lightLibrary_->Update();
 }
 
 
 void SceneContext::RegisterAllToRenderer(){
 	objectLibrary_->RegisterToRenderer(renderer_.get());
+}
+
+void SceneContext::AddEditorObject(std::unique_ptr<SceneObject> obj) {
+	if (obj) {
+		GetObjectLibrary()->AddObject(obj.get());
+		editorObjects_.push_back(std::move(obj)); // 所有する！
+	}
 }

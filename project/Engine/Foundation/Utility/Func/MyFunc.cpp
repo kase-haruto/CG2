@@ -358,9 +358,9 @@ DirectX::ScratchImage LoadTextureImage(const std::string& filePath) {
 
 bool IsCollision(const AABB& aabb, const Vector3& point) {
 	// pointがaabbのminとmaxの範囲内にあるかチェック
-	return (point.x >= aabb.min.x && point.x <= aabb.max.x) &&
-		(point.y >= aabb.min.y && point.y <= aabb.max.y) &&
-		(point.z >= aabb.min.z && point.z <= aabb.max.z);
+	return (point.x >= aabb.min_.x && point.x <= aabb.max_.x) &&
+		(point.y >= aabb.min_.y && point.y <= aabb.max_.y) &&
+		(point.z >= aabb.min_.z && point.z <= aabb.max_.z);
 }
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {

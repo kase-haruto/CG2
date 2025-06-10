@@ -10,13 +10,12 @@
 #include <Engine/Editor/PostProcessEditor.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 
-//===================================================================*/
-// Engine全体の初期化処理
-//===================================================================*/
+/////////////////////////////////////////////////////////////////////////////////////////
+//		engine 初期化
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::Initialize(HINSTANCE hInstance){
 	// comの初期化
 	CoInitializeEx(0, COINIT_MULTITHREADED);
-
 
 	// engineの初期化
 	system_ = std::make_unique<System>();
@@ -54,17 +53,27 @@ void EngineController::Initialize(HINSTANCE hInstance){
 	};
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//		更新
+/////////////////////////////////////////////////////////////////////////////////////////
 bool EngineController::Update() {
 	return false;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//		更新前処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::BeginUpdate(){
 	// 描画前処理
 	system_->BeginFrame();
 
-	// UI描画
-	engineUICore_->Render();
+	engineUICore_->Update();
+
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//		ポストエフェクト処理（疑似
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::UpdatePostEffectControl(float dt) {
 	postEffectGraph_ = system_->GetPostEffectGraph();
 
@@ -115,24 +124,21 @@ void EngineController::UpdatePostEffectControl(float dt) {
 	}
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////
+//		更新後処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::EndUpdate(){
-	//editorCollection_->UpdateEditors();
+	// UI描画
+	engineUICore_->Render();
 
-	//auto ppEditor = dynamic_cast< PostProcessEditor* >(editorCollection_->GetEditor(EditorCollection::EditorType::PostProcess));
-	//if (ppEditor){
-	//	ppEditor->ApplyToGraph(system_->GetPostEffectGraph());
-	//}
-
-	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
+	//UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }
 
 void EngineController::Render() {}
 
-//===================================================================*/
-// メインループ処理
-//===================================================================*/
+/////////////////////////////////////////////////////////////////////////////////////////
+//		メインループ
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::Run(){
 	// メインループ
 	while (!system_->ProcessMessage()){
@@ -156,9 +162,9 @@ void EngineController::Run(){
 	}
 }
 
-//===================================================================*/
-// 終了処理
-//===================================================================*/
+/////////////////////////////////////////////////////////////////////////////////////////
+//		終了処理
+/////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::Finalize(){
 	//終了処理
 	system_->Finalize();

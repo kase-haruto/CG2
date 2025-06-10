@@ -23,13 +23,13 @@ void Viewport::Render(const ImTextureID& tex){
 
 	ImVec2 contentSize = ImGui::GetContentRegionAvail();
 	size_ = Vector2(contentSize.x, contentSize.y);
-
+	// 画像描画
+	ImVec2 imagePos = ImGui::GetCursorScreenPos();
+	viewOrigin_ = Vector2(imagePos.x, imagePos.y);
 	if (size_.y > 0.0f){
 		camera_->SetAspectRatio(size_.x / size_.y);
 	}
 
-	// 画像描画
-	ImVec2 imagePos = ImGui::GetCursorScreenPos();
 	ImGui::SetCursorScreenPos(imagePos);
 	ImGui::Image(textureID_, contentSize);
 
@@ -39,9 +39,9 @@ void Viewport::Render(const ImTextureID& tex){
 
 		// オーバーレイツールバーの描画位置を設定（画像の左上にする場合）
 		ImGui::SetCursorScreenPos(ImVec2(imagePos.x + 10, imagePos.y + 20));
-		ImGui::BeginGroup(); // 複数のRadioButtonを1グループに
+		ImGui::BeginGroup();
 		for (auto* tool : tools_){
-			tool->RenderToolbar(); // Manipulator のツールバー表示
+			tool->RenderToolbar();	
 		}
 		ImGui::EndGroup();
 	}
@@ -57,6 +57,10 @@ void Viewport::AddTool(IOnViewportTool* tool){ tools_.push_back(tool); }
 bool Viewport::IsHovered() const{ return isHovered_; }
 bool Viewport::IsClicked() const{ return isClicked_; }
 Vector2 Viewport::GetSize() const{ return size_; }
+Vector2 Viewport::GetPosition() const {
+	// ビューポートの位置を取得
+	return viewOrigin_;
+}
 ViewportType Viewport::GetType() const{ return type_; }
 void Viewport::SetCamera(BaseCamera* camera){ camera_ = camera; }
 

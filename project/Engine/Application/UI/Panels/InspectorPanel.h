@@ -22,7 +22,6 @@ public:
 	void Render() override;
 	const std::string& GetPanelName() const override{ return panelName_; }
 
-	// 外部から選択を注入
 	void SetSelectedEditor(BaseEditor* editor){ selectedEditor_ = editor; }
 	void SetSelectedObject(SceneObject* obj){ selectedObject_ = obj; }
 	void SetSceneObjectEditor(SceneObjectEditor* editor){ sceneObjectEditor_ = editor; }

@@ -230,6 +230,16 @@ Vector3 Vector3::operator-=(const Vector3& other){
 	return Vector3(x, y, z);
 }
 
+float& Vector3::operator[](int index) {
+	assert(index >= 0 && index < 3);
+	return *(&x + index);
+}
+
+const float& Vector3::operator[](int index) const {
+	assert(index >= 0 && index < 3);
+	return *(&x + index);
+}
+
 
 Vector3 operator-(float scalar, const Vector3& vec) {
 	return Vector3(vec.x - scalar, vec.y - scalar, vec.z - scalar);

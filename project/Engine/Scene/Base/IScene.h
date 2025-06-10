@@ -11,7 +11,6 @@
 
 // forward declaration
 class DxCore;
-class SceneManager;
 class BaseCamera;
 class SceneContext;
 
@@ -34,7 +33,6 @@ public:
 	virtual void LoadAssets() = 0;
 
 	//--------- accessor -----------------------------------------------------
-	void SetSceneManager(SceneManager* sceneManager){ pSceneManager_ = sceneManager; }
 	virtual SceneContext* GetSceneContext() const = 0;
 
 protected:
@@ -42,5 +40,4 @@ protected:
 	//			protected methods
 	//===================================================================*/
 	DxCore* pDxCore_ = nullptr;
-	SceneManager* pSceneManager_ = nullptr;
 };
