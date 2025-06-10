@@ -13,7 +13,7 @@
 //forward declaration
 class SceneObjectEditor;
 
-class InspectorPanel 
+class InspectorPanel
 	: public IEngineUI{
 public:
 	InspectorPanel();
@@ -23,11 +23,11 @@ public:
 	const std::string& GetPanelName() const override{ return panelName_; }
 
 	void SetSelectedEditor(BaseEditor* editor){ selectedEditor_ = editor; }
-	void SetSelectedObject(SceneObject* obj){ selectedObject_ = obj; }
+	void SetSelectedObject(const std::shared_ptr<SceneObject>& obj){ selectedObject_ = obj; }
 	void SetSceneObjectEditor(SceneObjectEditor* editor){ sceneObjectEditor_ = editor; }
 
 private:
 	BaseEditor* selectedEditor_ = nullptr;
-	SceneObject* selectedObject_ = nullptr;
+	std::shared_ptr<SceneObject> selectedObject_;
 	SceneObjectEditor* sceneObjectEditor_ = nullptr;
 };

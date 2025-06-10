@@ -26,15 +26,15 @@ void HierarchyPanel::Render(){
 		return;
 	}
 
-	const auto& allObjects = pSceneObjectLibrary_->GetAllObjects();
+	const auto& allObjects = pSceneObjectLibrary_->GetAllObjects(); // shared_ptr<SceneObject> のリスト
 
-	std::vector<std::pair<std::string, std::vector<SceneObject*>>> categorizedObjects = {
+	std::vector<std::pair<std::string, std::vector<std::shared_ptr<SceneObject>>>> categorizedObjects = {
 		{ "Cameras", {} },
 		{ "Lights", {} },
 		{ "Game Objects", {} }
 	};
 
-	for (SceneObject* obj : allObjects){
+	for (const auto& obj : allObjects){
 		if (!obj) continue;
 
 		switch (obj->GetObjectType()){
@@ -48,8 +48,8 @@ void HierarchyPanel::Render(){
 	for (const auto& [category, objects] : categorizedObjects){
 		if (ImGui::CollapsingHeader(category.c_str(), ImGuiTreeNodeFlags_DefaultOpen)){
 
-			std::map<std::string, std::vector<SceneObject*>> groupedObjects;
-			for (SceneObject* obj : objects){
+			std::map<std::string, std::vector<std::shared_ptr<SceneObject>>> groupedObjects;
+			for (const auto& obj : objects){
 				groupedObjects[obj->GetName()].push_back(obj);
 			}
 
@@ -57,7 +57,7 @@ void HierarchyPanel::Render(){
 				if (group.size() > 1){
 					if (ImGui::TreeNode(name.c_str())){
 						for (size_t i = 0; i < group.size(); ++i){
-							SceneObject* obj = group[i];
+							auto obj = group[i];
 							std::string displayName = name + " (" + std::to_string(i) + ")";
 							bool isSelected = (selected_ == obj);
 							if (ImGui::Selectable(displayName.c_str(), isSelected)){
@@ -69,7 +69,7 @@ void HierarchyPanel::Render(){
 						ImGui::TreePop();
 					}
 				} else{
-					SceneObject* obj = group[0];
+					auto obj = group[0];
 					bool isSelected = (selected_ == obj);
 					if (ImGui::Selectable(name.c_str(), isSelected)){
 						selected_ = obj;
@@ -83,6 +83,7 @@ void HierarchyPanel::Render(){
 
 	ImGui::End();
 }
+
 
 const std::string& HierarchyPanel::GetPanelName() const{
 	return panelName_;

@@ -10,8 +10,7 @@
 class Raycastor {
 public:
 	static std::optional<RaycastHit> Raycast(
-		const Ray& ray,
-		const std::vector<SceneObject*>& objects,
+		const Ray& ray, const std::vector<std::shared_ptr<SceneObject>>& objects,
 		float maxDistance = 1000.0f);
 
 	static Ray ConvertMouseToRay(

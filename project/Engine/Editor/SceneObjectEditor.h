@@ -22,15 +22,14 @@ public:
 
 	void Update();
 	void ShowImGuiInterface() override;
-	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
 
-	void SetTarget(SceneObject* object);
+	void SetTarget(const std::shared_ptr<SceneObject>& object);
 	Manipulator* GetManipulator() const{ return manipulator_.get(); }
 private:
 	//===================================================================*/
 	//                   private variables
 	//===================================================================*/
 	std::unique_ptr<Manipulator> manipulator_ = nullptr;	// マニピュレーター
-	SceneObject* sceneObject_ = nullptr;					// 編集対象のSceneObject
+	std::weak_ptr<SceneObject> sceneObject_;					// 編集対象のSceneObject
 };
 

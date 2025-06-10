@@ -18,6 +18,6 @@ void CreateAndAddObject(SceneObjectLibrary* library, std::unique_ptr<T>& target,
 	target = std::make_unique<T>(std::forward<Args>(args)...);
 	target->Initialize();
 	if (library){
-		library->AddObject(target.get());
+		library->AddObject(target);
 	}
 }

@@ -21,21 +21,22 @@ bool IntersectRayAABB(const Ray& ray, const AABB& aabb, float& tOut) {
 	return true;
 }
 
-std::optional<RaycastHit> Raycastor::Raycast(const Ray& ray, const std::vector<SceneObject*>& objects, float maxDistance) {
+std::optional<RaycastHit> Raycastor::Raycast(const Ray& ray, const std::vector<std::shared_ptr<SceneObject>>& objects, float maxDistance) {
 	std::optional<RaycastHit> closestHit;
 
-	for (auto* obj : objects) {
+	for (const auto& obj : objects){
 		if (!obj) continue;
 		if (!obj->IsEnableRaycast()) continue;
-		AABB box = obj->GetWorldAABB();
 
+		AABB box = obj->GetWorldAABB();
 		float t = maxDistance;
-		if (IntersectRayAABB(ray, box, t) && t < maxDistance) {
-			closestHit = RaycastHit{
+
+		if (IntersectRayAABB(ray, box, t) && t < maxDistance){
+			closestHit = RaycastHit {
 				.distance = t,
 				.point = ray.origin + ray.direction * t,
 				.normal = Vector3(),
-				.hitObject = obj
+				.hitObject = obj  //<-- shared_ptr のまま渡す
 			};
 			maxDistance = t;
 		}

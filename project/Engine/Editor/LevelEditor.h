@@ -21,19 +21,18 @@ public:
 
 	// 編集対象
 	void SetSelectedEditor(BaseEditor* editor);
-	void SetSelectedObject(SceneObject* object);
+	void SetSelectedObject(const std::shared_ptr<SceneObject>& object);
 	void RenderViewport(ViewportType type, const ImTextureID& tex);
-
 
 	HierarchyPanel* GetHierarchyPanel() const{ return hierarchy_.get(); }
 	EditorPanel* GetEditorPanel() const{ return editor_.get(); }
-	PlaceToolPanel* GetPlaceToolPanel() const { return placeToolPanel_.get(); }
+	PlaceToolPanel* GetPlaceToolPanel() const{ return placeToolPanel_.get(); }
+	void NotifySceneContextChanged(class SceneContext* newContext);
 
 private:
 	void TryPickUnderCursor();
 	void TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj);
-	SceneObject* PickSceneObjectByRay(const struct Ray& ray);
-
+	std::shared_ptr<SceneObject> PickSceneObjectByRay(const struct Ray& ray);
 
 private:
 	// 管理UI
@@ -44,10 +43,10 @@ private:
 	std::unique_ptr<PlaceToolPanel> placeToolPanel_;
 
 	// ビューポート
-	std::unique_ptr<Viewport> mainViewport_;				//< メインビューポート
-	std::unique_ptr<Viewport> debugViewport_;				//< デバッグビューポート
+	std::unique_ptr<Viewport> mainViewport_;
+	std::unique_ptr<Viewport> debugViewport_;
 
 	// 状態
 	BaseEditor* selectedEditor_ = nullptr;
-	SceneObject* selectedObject_ = nullptr;
+	std::shared_ptr<SceneObject> selectedObject_ = nullptr;
 };

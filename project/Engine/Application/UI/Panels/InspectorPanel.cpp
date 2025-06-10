@@ -12,23 +12,22 @@
 #include <externals/imgui/imgui.h>
 
 InspectorPanel::InspectorPanel()
-	: IEngineUI("Inspector") {}
+	: IEngineUI("Inspector"){}
 
-void InspectorPanel::Render() {
+void InspectorPanel::Render(){
 	ImGui::Begin(panelName_.c_str());
 
-	if (selectedEditor_) {
+	if (selectedEditor_){
 		ImGui::Text("Editor: %s", selectedEditor_->GetEditorName().c_str());
 		selectedEditor_->ShowImGuiInterface();
-	} else if (selectedObject_) {
-		if (sceneObjectEditor_) {
-			sceneObjectEditor_->SetSceneObject(selectedObject_);
+	} else if (selectedObject_){
+		if (sceneObjectEditor_){
+			sceneObjectEditor_->SetTarget(selectedObject_);
 			sceneObjectEditor_->ShowImGuiInterface();
 		}
-	} else {
+	} else{
 		ImGui::Text("Nothing is selected.");
 	}
 
 	ImGui::End();
 }
-

@@ -5,6 +5,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Physics/Ray/Raycastor.h>
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
+#include <Engine/Scene/Context/SceneContext.h>
 
 
 void LevelEditor::Initialize() {
@@ -20,9 +21,9 @@ void LevelEditor::Initialize() {
 	editor_->SetOnEditorSelected([this](BaseEditor* editor) {
 		SetSelectedEditor(editor);
 	});
-	hierarchy_->SetOnObjectSelected([this](SceneObject* obj) {
+	hierarchy_->SetOnObjectSelected([this] (const std::shared_ptr<SceneObject>& obj){
 		SetSelectedObject(obj);
-	});
+									});
 	inspector_->SetSceneObjectEditor(sceneEditor_.get());
 
 	// ビューポートの初期化
@@ -65,10 +66,9 @@ void LevelEditor::SetSelectedEditor(BaseEditor* editor) {
 	inspector_->SetSelectedEditor(editor);
 }
 
-void LevelEditor::SetSelectedObject(SceneObject* object) {
+void LevelEditor::SetSelectedObject(const std::shared_ptr<SceneObject>& object) {
 	selectedObject_ = object;
 	selectedEditor_ = nullptr;
-	hierarchy_->SetSelectedObject(object);
 	inspector_->SetSelectedObject(object);
 }
 
@@ -85,48 +85,54 @@ void LevelEditor::RenderViewport(ViewportType type, const ImTextureID& tex) {
 	}
 }
 
-void LevelEditor::TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj) {
+void LevelEditor::TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj){
 	Ray ray = Raycastor::ConvertMouseToRay(mouse, view, proj, viewportSize);
-	if (SceneObject* obj = PickSceneObjectByRay(ray)) {
-		SetSelectedObject(obj);
+	auto picked = PickSceneObjectByRay(ray);
+	if (picked){
+		SetSelectedObject(picked);
 	}
 }
 
-SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
+std::shared_ptr<SceneObject> LevelEditor::PickSceneObjectByRay(const Ray& ray){
 	const auto* lib = hierarchy_->GetSceneObjectLibrary();
 	if (!lib) return nullptr;
 
-	const auto& allObjects = lib->GetAllObjects();
+	const auto& allObjects = lib->GetAllObjects(); // std::vector<std::shared_ptr<SceneObject>>
 	auto hit = Raycastor::Raycast(ray, allObjects);
-	if (hit) {
-		return static_cast<SceneObject*>(hit->hitObject);
+	if (hit){
+		// RaycastHit 内の hitObject は shared_ptr と一致していないため、明示的に探す必要あり
+		for (const auto& obj : allObjects){
+			if (obj == hit->hitObject){
+				return obj;
+			}
+		}
 	}
 	return nullptr;
 }
 
-void LevelEditor::TryPickUnderCursor() {
+void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
+	placeToolPanel_->OnSceneContextChanged(newContext);
+}
+
+void LevelEditor::TryPickUnderCursor(){
 	Vector2 origin = debugViewport_->GetPosition();	// ビューポート描画位置（スクリーン座標）
 	Vector2 size = debugViewport_->GetSize();		// ビューポートの実際のサイズ（ピクセル）
 
-	// ImGui上のマウス位置
 	ImVec2 mouse = ImGui::GetMousePos();
 
-	// ビューポート内のローカルマウス座標
 	float relativeX = mouse.x - origin.x;
 	float relativeY = mouse.y - origin.y;
 
-	// 範囲外なら無視
 	if (relativeX < 0 || relativeY < 0 || relativeX > size.x || relativeY > size.y) return;
 
-	// スクリーン→ビューポート空間（ピクセル）
 	Vector2 mousePos = Vector2(relativeX, relativeY);
 
-	// Ray生成
 	Matrix4x4 view = CameraManager::GetDebugCamera()->GetViewMatrix();
 	Matrix4x4 proj = CameraManager::GetDebugCamera()->GetProjectionMatrix();
 
 	Ray ray = Raycastor::ConvertMouseToRay(mousePos, view, proj, size);
-	if (SceneObject* picked = PickSceneObjectByRay(ray)) {
+	auto picked = PickSceneObjectByRay(ray);
+	if (picked){
 		SetSelectedObject(picked);
 	}
 }

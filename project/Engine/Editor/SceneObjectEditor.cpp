@@ -22,10 +22,11 @@ SceneObjectEditor::SceneObjectEditor():BaseEditor("sceneObjectEditor"){
 }
 
 
-void SceneObjectEditor::SetTarget(SceneObject* object){
+void SceneObjectEditor::SetTarget(const std::shared_ptr<SceneObject>& object){
 	sceneObject_ = object;
+
 	if (object){
-		manipulator_->SetTarget(&sceneObject_->GetWorldTransform());
+		manipulator_->SetTarget(&object->GetWorldTransform());
 	} else{
 		manipulator_->SetTarget(nullptr);
 	}
@@ -36,10 +37,10 @@ void SceneObjectEditor::Update(){
 }
 
 void SceneObjectEditor::ShowImGuiInterface(){
-	if (!sceneObject_) return;
-	sceneObject_->ShowGui();
-	// マニピュレーターの更新
-	manipulator_->SetTarget(&sceneObject_->GetWorldTransform());
+	if (auto obj = sceneObject_.lock()){
+		obj->ShowGui();
+		manipulator_->SetTarget(&obj->GetWorldTransform());
+	}
 }
 
 
