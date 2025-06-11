@@ -44,4 +44,13 @@ public:
 		// 正規化して単位ベクトルを返す
 		return v.Normalize();
 	}
+
+
 };
+template<>
+inline uint8_t Random::Generate<uint8_t>(uint8_t min, uint8_t max){
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(min, max); // int で代用
+	return static_cast< uint8_t >(dist(gen));
+}

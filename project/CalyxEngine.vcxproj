@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Foundation\Utility\Guid\Guid.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.cpp" />
     <ClCompile Include="Engine\Editor\Collection\EditorCollection.cpp" />
     <ClCompile Include="Engine\PostProcess\ChromaticAberration\ChromaticAberrationEffect.cpp" />
@@ -274,8 +275,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\EngineUI\Manipulator.cpp" />
     <ClCompile Include="Engine\Physics\Ray\Raycastor.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\PlaceToolPanel.cpp" />
+    <ClCompile Include="SceneSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
+    <ClInclude Include="Engine\Foundation\Utility\Guid\Guid.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />
     <ClInclude Include="Engine\Application\UI\Panels\IInspectable.h" />
@@ -300,10 +304,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Transform\WorldTransformConfig.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Transform\UvTransformConfig.h" />
     <ClInclude Include="Data\Engine\Macros\ConfigMacros\ConfigMacros.h" />
-    <ClInclude Include="Data\Engine\Macros\Objects\Material\MaterialConfigMacros.h" />
-    <ClInclude Include="Data\Engine\Macros\Objects\Model\BaseModelConfigMacro.h" />
     <ClInclude Include="Data\Engine\Macros\Objects\Transform\Transform2dMacros.h" />
-    <ClInclude Include="Data\Engine\Macros\Objects\Transform\WorldTransformConfigMacros.h" />
     <ClInclude Include="Data\Engine\Settings\EnviromentConfig.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\Context\EditorContext.h" />
     <ClInclude Include="Engine\API\EngineAPI.h" />
@@ -481,6 +482,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\EngineUI\Manipulator.h" />
     <ClInclude Include="Engine\Physics\Ray\Raycastor.h" />
     <ClInclude Include="Engine\Application\UI\Panels\PlaceToolPanel.h" />
+    <ClInclude Include="SceneSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

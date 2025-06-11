@@ -1,7 +1,6 @@
 #include "Material.h"
 
 //data
-#include <Data/Engine/Macros/Objects/Material/MaterialConfigMacros.h>
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 #include <externals/imgui/imgui.h>

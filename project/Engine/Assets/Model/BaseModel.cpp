@@ -12,7 +12,6 @@
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 
-#include <Data/Engine/Macros/Objects/Model/BaseModelConfigMacro.h>
 #include <Data/Engine/Macros/ConfigMacros/ConfigMacros.h>
 
 //external

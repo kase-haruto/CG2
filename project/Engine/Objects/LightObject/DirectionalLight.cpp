@@ -72,6 +72,7 @@ void DirectionalLight::ApplyConfig() {
 	data.color = config_.color;
 	data.direction = config_.direction;
 	data.intensity = config_.intensity;
+	objectType_ = ObjectType::Light;
 
 	// 定数バッファへ
 	constantBuffer_.TransferData(data);

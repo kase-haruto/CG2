@@ -109,12 +109,11 @@ public:
 	void Update();
 
 	//--- コンフィグ同期 ---
-	void ApplyConfig();       // config → transformメンバ
+	void ApplyConfig(const WorldTransformConfig& config);       // config → transformメンバ
 	void ExtractConfig();     // transformメンバ → config
-	WorldTransformConfig GetConfig() const { return config; }
 
 public:
-	WorldTransformConfig config;
+	
 };
 
 //============================================================================*/

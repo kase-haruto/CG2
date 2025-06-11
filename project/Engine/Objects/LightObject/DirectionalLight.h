@@ -29,7 +29,8 @@ struct DirectionalLightData{
 class DxCore;
 
 class DirectionalLight
-	:public  ConfigurableObject<DirectionalLightConfig>{
+	: public SceneObject
+	, public ConfigurableObject<DirectionalLightConfig>{
 public:
 	DirectionalLight(const std::string& name);
 	DirectionalLight() = default;

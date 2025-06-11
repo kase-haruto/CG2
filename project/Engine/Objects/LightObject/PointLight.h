@@ -30,7 +30,8 @@ struct PointLightData{
 class DxCore;
 
 class PointLight
-: public ConfigurableObject<PointLightConfig>{
+	: public SceneObject
+	, public ConfigurableObject<PointLightConfig>{
 public:
 	PointLight(const std::string& name);
 	PointLight() = default;

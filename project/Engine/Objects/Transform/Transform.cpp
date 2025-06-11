@@ -7,7 +7,6 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
 //data
-#include <Data/Engine/Macros/Objects/Transform/WorldTransformConfigMacros.h>
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 // lib
@@ -122,15 +121,16 @@ void WorldTransform::Update(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグ適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ApplyConfig() {
-	APPLY_WORLD_TRANSFORM_CONFIG
+void WorldTransform::ApplyConfig(const WorldTransformConfig& config) {
+	translation = config.translation;
+	rotation = config.rotation;
+	scale = config.scale;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグから抽出
 /////////////////////////////////////////////////////////////////////////////////////////
 void WorldTransform::ExtractConfig() {
-	EXTRACT_WORLD_TRANSFORM_CONFIG
 }
 
 

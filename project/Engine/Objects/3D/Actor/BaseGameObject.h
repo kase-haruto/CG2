@@ -16,7 +16,8 @@
 #include <functional>
 
 class BaseGameObject
-	:public ConfigurableObject<BaseGameObjectConfig>{
+	: public SceneObject
+	, public ConfigurableObject<BaseGameObjectConfig>{
 
 	enum ObjectModelType {
 		ModelType_Static,		// 静的モデル
