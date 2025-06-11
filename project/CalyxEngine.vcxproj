@@ -228,7 +228,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Renderer\Primitive\LineDrawer.cpp" />
     <ClCompile Include="Engine\Lighting\LightLibrary.cpp" />
     <ClCompile Include="Engine\Foundation\Json\JsonFileIO.cpp" />
-    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.cpp" />
     <ClCompile Include="Engine\graphics\Pipeline\PipelineDesc\GraphicsPipelineDesc.cpp" />
     <ClCompile Include="Engine\Graphics\Core\GraphicsSystem.cpp" />
@@ -262,9 +261,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\objects\3D\Actor\Library\SceneObjectLibrary.cpp" />
     <ClCompile Include="Engine\Editor\SceneObjectEditor.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\TransformSnapshot.cpp" />
-    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\TranslateCommand.cpp" />
-    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\RotateCommand.cpp" />
-    <ClCompile Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.cpp" />
     <ClCompile Include="Engine\graphics\Pipeline\RootSig\RootSignatureBuilder.cpp" />
@@ -468,10 +464,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Foundation\Json\JsonUtils.h" />
     <ClInclude Include="Engine\Editor\SceneObjectEditor.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\TransformSnapshot.h" />
-    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\TranslateCommand.h" />
-    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\RotateCommand.h" />
-    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\ScaleCommand.h" />
-    <ClInclude Include="Engine\System\Command\EditorCommand\TransformCommand\GenericTransformCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuizmoCommand\ScopedGizmoCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\SetValueCommand\SetValueCommand.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\GuiCommand\ImGuiHelper\GuiCmdInternal.h" />

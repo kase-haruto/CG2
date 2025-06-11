@@ -1,25 +1,25 @@
 #pragma once
 
+#include <Engine/System/Command/EditorCommand/TransformCommand/TransformSnapshot.h>
 #include <Engine/System/Command/Interface/ICommand.h>
-#include <Engine/System/Command/Manager/CommandManager.h>
-#include <Engine/System/Command/EditorCommand/TransformCommand/GenericTransformCommand.h>
 
 #include <externals/imgui/imgui.h>
 #include <externals/imgui/ImGuizmo.h>
 
-
-class ScopedGizmoCommand {
+class ScopedGizmoCommand : public ICommand {
 public:
-	ScopedGizmoCommand(SceneObject* obj, ImGuizmo::OPERATION op);
+	ScopedGizmoCommand(WorldTransform* transform, ImGuizmo::OPERATION op);
 
-	~ScopedGizmoCommand();
+	void CaptureAfter();
+	bool IsTrivial(float epsilon = 1e-5f) const;
 
-	// コピー防止
-	ScopedGizmoCommand(const ScopedGizmoCommand&) = delete;
-	ScopedGizmoCommand& operator=(const ScopedGizmoCommand&) = delete;
+	void Execute() override;
+	void Undo() override;
 
 private:
-	SceneObject* obj_;
+	WorldTransform* transform_;
 	ImGuizmo::OPERATION op_;
-	TransformSnapshot   before_;
+	TransformSnapshot before_;
+	TransformSnapshot after_;
+	bool captured_ = false;
 };

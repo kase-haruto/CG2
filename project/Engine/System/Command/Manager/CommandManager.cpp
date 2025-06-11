@@ -21,6 +21,6 @@ void CommandManager::Undo() {
 void CommandManager::Redo() {
 	if (redoStack_.empty()) return;
 	auto cmd = std::move(redoStack_.top()); redoStack_.pop();
-	cmd->Redo();                               // Execute ではなく Redo を明示
+	cmd->Redo();
 	undoStack_.push(std::move(cmd));
 }

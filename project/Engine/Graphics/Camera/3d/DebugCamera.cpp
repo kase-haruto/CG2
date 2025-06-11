@@ -78,7 +78,7 @@ void DebugCamera::ShowGui(){
 // 回転処理 (MMBドラッグ): ターゲット中心にカメラを回転させる
 //-----------------------------------------------------------------------
 void DebugCamera::Rotate(){
-	bool mmbPressed = Input::PushMouseButton(2); // 中央ボタンは通常ボタンインデックス2
+	bool mmbPressed = Input::PushMouseButton(MouseButton::Middle);
 	bool shiftHeld = Input::PushKey(DIK_LSHIFT) || Input::PushKey(DIK_RSHIFT);
 	bool ctrlHeld = Input::PushKey(DIK_LCONTROL) || Input::PushKey(DIK_RCONTROL);
 
@@ -115,7 +115,7 @@ void DebugCamera::Rotate(){
 // パン処理 (Shift + MMBドラッグ): カメラのターゲットを移動させる
 //-----------------------------------------------------------------------
 void DebugCamera::Move(){
-	bool mmbPressed = Input::PushMouseButton(2); // 中央ボタンは通常ボタンインデックス2
+	bool mmbPressed = Input::PushMouseButton(MouseButton::Middle); // 中央ボタンは通常ボタンインデックス2
 	bool shiftHeld = Input::PushKey(DIK_LSHIFT) || Input::PushKey(DIK_RSHIFT);
 	bool ctrlHeld = Input::PushKey(DIK_LCONTROL) || Input::PushKey(DIK_RCONTROL);
 
@@ -164,7 +164,7 @@ void DebugCamera::Move(){
 void DebugCamera::Zoom(){
 
 	// ホイールクリックが押されている場合はズームを無視
-	if (Input::PushMouseButton(2)){
+	if (Input::PushMouseButton(MouseButton::Middle)){
 		return;
 	}
 
