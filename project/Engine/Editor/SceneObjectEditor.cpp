@@ -11,31 +11,31 @@
 #include <externals/imgui/imgui.h>
 #include "externals/imgui/ImGuizmo.h"
 
-SceneObjectEditor::SceneObjectEditor(const std::string& name):BaseEditor(name){
+SceneObjectEditor::SceneObjectEditor(const std::string& name) :BaseEditor(name) {
 	manipulator_ = std::make_unique<Manipulator>();
 	manipulator_->SetCamera(CameraManager::GetInstance()->GetDebugCamera());
 }
 
-SceneObjectEditor::SceneObjectEditor():BaseEditor("sceneObjectEditor"){
+SceneObjectEditor::SceneObjectEditor() :BaseEditor("sceneObjectEditor") {
 	manipulator_ = std::make_unique<Manipulator>();
 	manipulator_->SetCamera(CameraManager::GetInstance()->GetDebugCamera());
 }
 
 
-void SceneObjectEditor::SetTarget(SceneObject* object){
+void SceneObjectEditor::SetTarget(SceneObject* object) {
 	sceneObject_ = object;
-	if (object){
+	if (object) {
 		manipulator_->SetTarget(&sceneObject_->GetWorldTransform());
-	} else{
+	} else {
 		manipulator_->SetTarget(nullptr);
 	}
 }
 
-void SceneObjectEditor::Update(){
+void SceneObjectEditor::Update() {
 	manipulator_->Update();
 }
 
-void SceneObjectEditor::ShowImGuiInterface(){
+void SceneObjectEditor::ShowImGuiInterface() {
 	if (!sceneObject_) return;
 	sceneObject_->ShowGui();
 	// マニピュレーターの更新

@@ -59,7 +59,7 @@ Ray Raycastor::ConvertMouseToRay(const Vector2& mousePos, const Matrix4x4& viewM
 	Vector3 rayDirWorld = (invView * rayView).xyz();
 	rayDirWorld = rayDirWorld.Normalize();
 
-	Vector3 rayOrigin =  invView.GetTranslationMatrix();
+	Vector3 rayOrigin = invView.GetTranslationMatrix();
 
 	return Ray{ rayOrigin, rayDirWorld };
 }

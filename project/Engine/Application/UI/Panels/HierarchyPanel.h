@@ -12,8 +12,10 @@ class SceneObjectLibrary;
 #include <vector>
 #include <string>
 #include <functional>
+#include <memory>
 
-class HierarchyPanel : public IEngineUI{
+class HierarchyPanel 
+	: public IEngineUI {
 	using OnObjectSelectedCallback = std::function<void(SceneObject*)>;
 public:
 	HierarchyPanel();
@@ -23,8 +25,8 @@ public:
 	const std::string& GetPanelName() const override;
 
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
-	void SetOnObjectSelected(OnObjectSelectedCallback cb){ onObjectSelected_ = std::move(cb); }
-	void SetSelectedObject(SceneObject* obj){ selected_ = obj; }
+	void SetOnObjectSelected(OnObjectSelectedCallback cb) { onObjectSelected_ = std::move(cb); }
+	void SetSelectedObject(SceneObject* obj) { selected_ = obj; }
 	const SceneObjectLibrary* GetSceneObjectLibrary() const { return pSceneObjectLibrary_; }
 	SceneObject* GetSelectedObject() const { return selected_; }
 

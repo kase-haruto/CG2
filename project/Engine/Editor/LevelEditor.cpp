@@ -106,7 +106,6 @@ SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
 }
 
 void LevelEditor::NotifySceneContextChanged(SceneContext* newContext) {
-	// ① パネル／ライブラリの差し替え
 	hierarchy_->SetSceneObjectLibrary(
 		newContext ? newContext->GetObjectLibrary() : nullptr);
 
