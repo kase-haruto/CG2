@@ -52,6 +52,8 @@ void TestScene::LoadAssets() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize() {
 
+	sceneContext_->SetSceneName("TestScene");
+
 	LoadAssets();
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Debug);

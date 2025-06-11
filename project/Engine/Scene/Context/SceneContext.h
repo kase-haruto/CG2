@@ -33,6 +33,8 @@ public:
 		objectRemovedCallbacks_.push_back(std::move(cb));
 	}
 
+	std::string GetSceneName() const { return sceneName_; }
+	void SetSceneName(const std::string& name) {sceneName_ = name;}
 private:
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
@@ -40,6 +42,8 @@ private:
 
 	std::vector<std::unique_ptr<SceneObject>> editorObjects_;
 	std::vector<std::function<void(SceneObject*)>> objectRemovedCallbacks_;
+
+	std::string sceneName_ = "scene"; // シーン名
 };
 
 template<typename TObject>

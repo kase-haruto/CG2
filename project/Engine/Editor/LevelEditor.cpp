@@ -6,7 +6,7 @@
 #include <Engine/Physics/Ray/Raycastor.h>
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
 #include <Engine/Scene/Context/SceneContext.h>
-
+#include <Engine/Scene/Serializer/SceneSerializer.h>
 
 void LevelEditor::Initialize() {
 
@@ -37,6 +37,12 @@ void LevelEditor::Initialize() {
 		debugViewport_->AddTool(manipulator);
 	}
 
+	// エディターメニューの初期化
+	menu_ = std::make_unique<EditorMenu>();
+	menu_->Add(MenuCategory::File, {
+	  "保存", "Ctrl+S", [this]() { SaveScene(); }, true
+			  });
+
 }
 
 void LevelEditor::Update() {
@@ -52,6 +58,7 @@ void LevelEditor::Render() {
 	hierarchy_->Render();
 	editor_->Render();
 	placeToolPanel_->Render();
+	menu_->Render();
 
 	inspector_->SetSelectedEditor(selectedEditor_);
 	inspector_->SetSelectedObject(selectedObject_);
@@ -103,6 +110,11 @@ SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
 		return static_cast<SceneObject*>(hit->hitObject);
 	}
 	return nullptr;
+}
+
+void LevelEditor::SaveScene() {
+	std::string scenePath = "Resources/Assets/Scenes/" + pSceneContext_->GetSceneName() + ".json";
+	SceneSerializer::Save(*pSceneContext_, scenePath);
 }
 
 void LevelEditor::NotifySceneContextChanged(SceneContext* newContext) {

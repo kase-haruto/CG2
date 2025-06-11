@@ -41,8 +41,7 @@ public:
 	//==================================================================*//
 	//				SceneObject I/O helpers
 	//==================================================================*//
-	virtual bool IsSerializable() const { return false; }
-	// コンフィグベースのシリアライズが可能なオブジェクトか確認する
+	virtual bool IsSerializable() const { return true; }
 	virtual bool HasConfigInterface() const;
 
 	//==================================================================*//
