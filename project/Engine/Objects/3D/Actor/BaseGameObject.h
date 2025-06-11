@@ -56,6 +56,7 @@ public:
 
 	//--------- config ------------------------------------------------
 	virtual void ApplyConfig()override;
+	virtual void ExtractConfig()override;
 
 	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);

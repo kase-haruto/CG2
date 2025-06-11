@@ -130,7 +130,12 @@ void WorldTransform::ApplyConfig(const WorldTransformConfig& config) {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグから抽出
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ExtractConfig() {
+WorldTransformConfig WorldTransform::ExtractConfig(){
+	WorldTransformConfig config;
+	config.translation = translation;
+	config.rotation = rotation;
+	config.scale = scale;
+	return config;
 }
 
 
@@ -143,6 +148,14 @@ void Transform2D::ShowImGui(const std::string& lavel){
 		GuiCmd::DragFloat("rotation", rotate, 0.01f);
 		GuiCmd::DragFloat2("translate", translate, 0.01f);
 	}
+}
+
+Transform2DConfig Transform2D::ExtractConfig() const{
+	Transform2DConfig config;
+	config.scale = scale;
+	config.rotation = rotate;
+	config.translation = translate;
+	return config;
 }
 
 void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){

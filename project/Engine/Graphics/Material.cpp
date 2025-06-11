@@ -13,6 +13,16 @@ void Material::ApplyConfig(const MaterialConfig& config){
 	isReflect = config.isReflect;
 }
 
+MaterialConfig Material::ExtractConfig() const{
+	MaterialConfig config;
+	config.color = color;
+	config.enableLighting = enableLighting;
+	config.shininess = shininess;
+	config.enviromentCoefficient = enviromentCoefficient;
+	config.isReflect = isReflect;
+	return config;
+}
+
 void Material::ShowImGui(){
 	static int currentLightingMode_ = 0;
 	// lighting

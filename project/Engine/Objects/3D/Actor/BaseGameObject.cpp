@@ -128,11 +128,11 @@ void BaseGameObject::ShowGui(){
 		worldTransform_.ShowImGui("world");
 	}
 
-	model_->ShowImGui(config_.modelConfig);
+	model_->ShowImGuiInterface();
 
 	ImGui::Spacing();
 
-	collider_->ShowGui(config_.colliderConfig);
+	collider_->ShowGui();
 
 	DerivativeGui();
 }
@@ -145,6 +145,15 @@ void BaseGameObject::DerivativeGui(){
 void BaseGameObject::ApplyConfig(){
 	model_->ApplyConfig(config_.modelConfig);
 	collider_->ApplyConfig(config_.colliderConfig);
+	worldTransform_.ApplyConfig(config_.transform);
+}
+
+void BaseGameObject::ExtractConfig(){
+	config_.modelConfig = model_->ExtractConfig();
+	config_.colliderConfig = collider_->ExtractConfig();
+	config_.transform = worldTransform_.ExtractConfig();
+	config_.objectType = static_cast< int >(objectType_);
+	config_.name = name_;
 }
 
 

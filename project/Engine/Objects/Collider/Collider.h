@@ -65,6 +65,7 @@ public:
 	void NotifyCollisionStay(Collider* other);
 	void NotifyCollisionExit(Collider* other);
 	void ApplyConfig(const struct ColliderConfig& config);
+	ColliderConfig ExtractConfig() const;
 
 protected:
 	//===================================================================*/

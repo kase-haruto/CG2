@@ -43,10 +43,12 @@ public:
 
 	// config ============================================================
 	void ApplyConfig()override;
+	void ExtractConfig()override;
 
 	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<DirectionalLightData> constantBuffer_;
+	DirectionalLightData lightData_ = {};	// ライトデータ
 };
 

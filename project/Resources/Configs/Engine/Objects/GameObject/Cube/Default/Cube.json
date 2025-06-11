@@ -1,7 +1,7 @@
 {
     "colliderConfig": {
         "colliderType": 0,
-        "isCollisionEnabled": false,
+        "isCollisionEnabled": true,
         "isDraw": true,
         "targetType": 0
     },
@@ -24,12 +24,12 @@
         "uvTransConfig": {
             "rotation": 0.0,
             "scale": {
-                "x": 20.0,
-                "y": 20.0
+                "x": 1.0,
+                "y": 1.0
             }
         }
     },
-    "name": "field",
+    "name": "Cube",
     "objectType": 2,
     "parentGuid": "00000000-0000-0000-0000-000000000000",
     "transform": {
@@ -40,13 +40,13 @@
             "z": 0.0
         },
         "scale": {
-            "x": 100.0,
+            "x": 1.0,
             "y": 1.0,
-            "z": 100.0
+            "z": 1.0
         },
         "translation": {
-            "x": 0.0,
-            "y": 0.0,
+            "x": -6.43983268737793,
+            "y": 3.998122215270996,
             "z": 0.0
         }
     }

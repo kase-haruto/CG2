@@ -134,6 +134,14 @@ void BaseModel::ApplyConfig(const BaseModelConfig& config){
 	blendMode_ = static_cast< BlendMode >(config.blendMode);
 }
 
+BaseModelConfig BaseModel::ExtractConfig() const{
+	BaseModelConfig config;
+	config.materialConfig = materialData_.ExtractConfig();
+	config.uvTransConfig = uvTransform.ExtractConfig();
+	config.blendMode = static_cast< int >(blendMode_);
+	return config;
+}
+
 void BaseModel::ShowImGui(BaseModelConfig& config){
 	uvTransform.ShowImGui(config.uvTransConfig,"uvTransform");
 
