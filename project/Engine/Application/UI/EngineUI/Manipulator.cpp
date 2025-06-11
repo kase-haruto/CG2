@@ -2,12 +2,14 @@
 /* ========================================================================
 /* include space
 /* ===================================================================== */
-#include <Engine/Graphics/Camera/Base/BaseCamera.h>
-#include <Engine/Foundation/Math/Matrix4x4.h>
-#include <Engine/Objects/Transform/Transform.h>
 #include <Engine/Application/Input/Input.h>
-#include <Engine/Editor/SceneObjectEditor.h>
 #include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Editor/SceneObjectEditor.h>
+#include <Engine/Foundation/Math/Matrix4x4.h>
+#include <Engine/Graphics/Camera/Base/BaseCamera.h>
+#include <Engine/Objects/Transform/Transform.h>
+#include <Engine/System/Command/EditorCommand/GuizmoCommand/ScopedGizmoCommand.h>
+#include <Engine/System/Command/Manager/CommandManager.h>
 
 void Manipulator::SetTarget(WorldTransform* target){
 	target_ = target;
@@ -30,19 +32,25 @@ Manipulator::Manipulator() {
 	iconUniversal_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/universal.png").ptr);
 	iconWorld_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/world.png").ptr);
 }
-
-void Manipulator::Update(){
+void Manipulator::Update() {
 	if (!target_ || !camera_) return;
 
-	// View/Projection行列を準備
 	float view[16], proj[16], world[16];
 	Matrix4x4::Transpose(camera_->GetViewMatrix()).CopyToArray(view);
 	Matrix4x4::Transpose(camera_->GetProjectionMatrix()).CopyToArray(proj);
 	Matrix4x4::Transpose(target_->matrix.world).CopyToArray(world);
 
+	/* ─────────────── state ─────────────── */
+	static bool wasUsing = false;
+	static std::unique_ptr<ScopedGizmoCommand> scopedCmd;
+
+	/* ────────── Gizmo 描画 / 操作 ───────── */
 	ImGuizmo::Manipulate(view, proj, operation_, mode_, world);
 
-	if (ImGuizmo::IsUsing()){
+	bool usingNow = ImGuizmo::IsUsing();
+
+	/* ──────── 変換結果を書き戻し ──────── */
+	if (usingNow) {
 		Matrix4x4 worldEdited = ColumnArrayToRow(world);
 		Matrix4x4 localEdited = target_->parent
 			? Matrix4x4::Inverse(target_->parent->matrix.world) * worldEdited
@@ -51,17 +59,30 @@ void Manipulator::Update(){
 		float decomposed[16];
 		RowToColumnArray(localEdited, decomposed);
 
-		float pos[3], rot[3], scale[3];
-		ImGuizmo::DecomposeMatrixToComponents(decomposed, pos, rot, scale);
+		float pos[3], rot[3], scl[3];
+		ImGuizmo::DecomposeMatrixToComponents(decomposed, pos, rot, scl);
 
-		target_->translation = {pos[0], pos[1], pos[2]};
-		target_->scale = {scale[0], scale[1], scale[2]};
+		target_->translation = { pos[0], pos[1], pos[2] };
+		target_->scale = { scl[0], scl[1], scl[2] };
 
-		constexpr float degToRad = 3.14159265f / 180.0f;
-		Vector3 euler = {rot[0] * degToRad, rot[1] * degToRad, rot[2] * degToRad};
+		constexpr float DegToRad = 3.14159265f / 180.0f;
+		Vector3 euler = { rot[0] * DegToRad, rot[1] * DegToRad, rot[2] * DegToRad };
 		target_->rotation = Quaternion::EulerToQuaternion(euler);
 	}
+
+	/* ──────── 編集開始 / 終了検出 ──────── */
+	if (usingNow && !wasUsing) {   // 編集 “開始”
+		scopedCmd = std::make_unique<ScopedGizmoCommand>(target_, operation_);
+	} else if (!usingNow && wasUsing && scopedCmd) {   // 編集 “終了”
+		scopedCmd->CaptureAfter();
+		if (!scopedCmd->IsTrivial())
+			CommandManager::GetInstance()->Execute(std::move(scopedCmd));
+		else
+			scopedCmd.reset();
+	}
+	wasUsing = usingNow;
 }
+
 
 void Manipulator::RenderOverlay(){}
 

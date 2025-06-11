@@ -2,16 +2,17 @@
 
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Quaternion.h>
-#include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Objects/Transform/Transform.h>
 
 
 struct TransformSnapshot {
 public:
-    static TransformSnapshot Capture(const SceneObject* obj);
-    void Apply(SceneObject* obj) const;
+	static TransformSnapshot FromTransform(const WorldTransform* tf);
+	void ApplyToTransform(WorldTransform* tf) const;
 
-public:
-    Vector3    scale;
-    Quaternion rotate;
-    Vector3    translate;
+	bool Equals(const TransformSnapshot& other, float epsilon = 1e-5f) const;
+
+	Vector3 scale;
+	Quaternion rotate;
+	Vector3 translate;
 };

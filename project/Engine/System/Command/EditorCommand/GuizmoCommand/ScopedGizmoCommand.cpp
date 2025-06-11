@@ -1,33 +1,28 @@
 #include "ScopedGizmoCommand.h"
-#include <Engine/System/Command/EditorCommand/TransformCommand/TranslateCommand.h>
-#include <Engine/System/Command/EditorCommand/TransformCommand/RotateCommand.h>
-#include <Engine/System/Command/EditorCommand/TransformCommand/ScaleCommand.h>
+#include <Engine/Objects/Transform/Transform.h>
 
 
-ScopedGizmoCommand::ScopedGizmoCommand(SceneObject* obj, ImGuizmo::OPERATION op)
-	: obj_(obj), before_(TransformSnapshot::Capture(obj)),op_(op) {}
 
-ScopedGizmoCommand::~ScopedGizmoCommand() {
-    TransformSnapshot after = TransformSnapshot::Capture(obj_);
-    if (memcmp(&before_, &after, sizeof(before_)) == 0) return;   // 変化なし
+ScopedGizmoCommand::ScopedGizmoCommand(WorldTransform* transform, ImGuizmo::OPERATION op)
+	: transform_(transform), op_(op) {
+	before_ = TransformSnapshot::FromTransform(transform_);
+}
 
-    Vector3   dT = after.translate - before_.translate;
-    Vector3   dS = after.scale / before_.scale;
-    Quaternion dQ = after.rotate * Quaternion::Inverse(before_.rotate);
+void ScopedGizmoCommand::CaptureAfter() {
+	after_ = TransformSnapshot::FromTransform(transform_);
+	captured_ = true;
+}
 
-    auto& mgr = *CommandManager::GetInstance();
-    switch (op_) {
-        case ImGuizmo::TRANSLATE:
-            if (dT.LengthSquared() > 1e-6f)
-                mgr.Execute(std::make_unique<TranslateCommand>(obj_, dT));
-            break;
-        case ImGuizmo::ROTATE:
-            if (dQ.NotIdentity())
-                mgr.Execute(std::make_unique<RotateCommand>(obj_, dQ));
-            break;
-        case ImGuizmo::SCALE:
-            if (dS != Vector3{ 1,1,1 })
-                mgr.Execute(std::make_unique<ScaleCommand>(obj_, dS));
-            break;
-    }
+bool ScopedGizmoCommand::IsTrivial(float epsilon) const {
+	return !captured_ || before_.Equals(after_, epsilon);
+}
+
+void ScopedGizmoCommand::Execute() {
+	if (captured_)
+		after_.ApplyToTransform(transform_);
+}
+
+void ScopedGizmoCommand::Undo() {
+	if (captured_)
+		before_.ApplyToTransform(transform_);
 }

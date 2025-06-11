@@ -254,15 +254,21 @@ void Input::MouseUpdate(){
 
 //-----------------------------------------------------------------------------
 /* マウスボタンが押されているかの判定 */
-bool Input::PushMouseButton(int button){
-	return (instance_->mouseState_.rgbButtons[button] & 0x80) != 0;
+bool Input::PushMouseButton(MouseButton button){
+	return (instance_->mouseState_.rgbButtons[static_cast<int>(button)] & 0x80) != 0;
 }
 
 //-----------------------------------------------------------------------------
 /* マウスボタンがトリガーされた瞬間の判定 */
-bool Input::TriggerMouseButton(int button){
-	return ((instance_->mouseState_.rgbButtons[button] & 0x80) != 0) &&
-		((instance_->mouseStatePre_.rgbButtons[button] & 0x80) == 0);
+bool Input::TriggerMouseButton(MouseButton button){
+	return ((instance_->mouseState_.rgbButtons[static_cast<int>(button)] & 0x80) != 0) &&
+		((instance_->mouseStatePre_.rgbButtons[static_cast<int>(button)] & 0x80) == 0);
+}
+
+bool Input::ReleaseMouseButton(MouseButton button) {
+	//話したとき
+	return ((instance_->mouseState_.rgbButtons[static_cast<int>(button)] & 0x80) == 0) &&
+		((instance_->mouseStatePre_.rgbButtons[static_cast<int>(button)] & 0x80) != 0);
 }
 
 //-----------------------------------------------------------------------------
