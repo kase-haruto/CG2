@@ -12,7 +12,6 @@
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 
-#include <Data/Engine/Macros/Objects/Model/BaseModelConfigMacro.h>
 #include <Data/Engine/Macros/ConfigMacros/ConfigMacros.h>
 
 //external
@@ -133,6 +132,14 @@ void BaseModel::ApplyConfig(const BaseModelConfig& config){
 	materialData_.ApplyConfig(config.materialConfig);
 	uvTransform.ApplyConfig(config.uvTransConfig);
 	blendMode_ = static_cast< BlendMode >(config.blendMode);
+}
+
+BaseModelConfig BaseModel::ExtractConfig() const{
+	BaseModelConfig config;
+	config.materialConfig = materialData_.ExtractConfig();
+	config.uvTransConfig = uvTransform.ExtractConfig();
+	config.blendMode = static_cast< int >(blendMode_);
+	return config;
 }
 
 void BaseModel::ShowImGui(BaseModelConfig& config){

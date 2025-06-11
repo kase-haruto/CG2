@@ -43,6 +43,7 @@ struct Transform2D{
 		translate = {0.0f,0.0f};
 	}
 	void ShowImGui(const std::string& lavel = "Transform");
+	Transform2DConfig ExtractConfig()const;
 	void ShowImGui(Transform2DConfig& config, const std::string& lavel = "Transform");
 	void ApplyConfig(const Transform2DConfig& config);
 };
@@ -109,12 +110,11 @@ public:
 	void Update();
 
 	//--- コンフィグ同期 ---
-	void ApplyConfig();       // config → transformメンバ
-	void ExtractConfig();     // transformメンバ → config
-	WorldTransformConfig GetConfig() const { return config; }
+	void ApplyConfig(const WorldTransformConfig& config);       // config → transformメンバ
+	WorldTransformConfig ExtractConfig();     // transformメンバ → config
 
 public:
-	WorldTransformConfig config;
+	
 };
 
 //============================================================================*/

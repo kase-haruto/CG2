@@ -17,9 +17,13 @@
 DirectionalLight::DirectionalLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
 
-
 	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	constantBuffer_.Initialize(device);
+
+	//初期化
+	lightData_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);	// ライトの色
+	lightData_.direction = Vector3(0.0f, -1.0f, 0.0f);	// ライトの向き
+	lightData_.intensity = 0.25f;						// 輝度
 
 	// コンフィグパスの生成 preset名はdefault
 	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
@@ -34,7 +38,7 @@ DirectionalLight::~DirectionalLight(){}
 void DirectionalLight::Initialize() {}
 
 void DirectionalLight::Update(){
-	ApplyConfig();
+	constantBuffer_.TransferData(lightData_);
 }
 
 void DirectionalLight::SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,PipelineType type){
@@ -61,19 +65,21 @@ void DirectionalLight::ShowGui(){
 
 	ImGui::Separator();
 
-	GuiCmd::SliderFloat3("direction", config_.direction, -1.0f, 1.0f);
-	GuiCmd::ColorEdit4("color", config_.color);
-	GuiCmd::SliderFloat("Intensity", config_.intensity, 0.0f, 1.0f);
+	GuiCmd::SliderFloat3("direction", lightData_.direction, -1.0f, 1.0f);
+	GuiCmd::ColorEdit4("color", lightData_.color);
+	GuiCmd::SliderFloat("Intensity", lightData_.intensity, 0.0f, 1.0f);
 #endif // _DEBUG
 }
 
 void DirectionalLight::ApplyConfig() {
-	DirectionalLightData data;
-	data.color = config_.color;
-	data.direction = config_.direction;
-	data.intensity = config_.intensity;
+	lightData_.color = config_.color;
+	lightData_.direction = config_.direction;
+	lightData_.intensity = config_.intensity;
+}
 
-	// 定数バッファへ
-	constantBuffer_.TransferData(data);
+void DirectionalLight::ExtractConfig(){
+	config_.color = lightData_.color;
+	config_.direction = lightData_.direction;
+	config_.intensity = lightData_.intensity;
 }
 

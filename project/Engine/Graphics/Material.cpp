@@ -1,7 +1,6 @@
 #include "Material.h"
 
 //data
-#include <Data/Engine/Macros/Objects/Material/MaterialConfigMacros.h>
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 #include <externals/imgui/imgui.h>
@@ -12,6 +11,16 @@ void Material::ApplyConfig(const MaterialConfig& config){
 	shininess = config.shininess;
 	enviromentCoefficient = config.enviromentCoefficient;
 	isReflect = config.isReflect;
+}
+
+MaterialConfig Material::ExtractConfig() const{
+	MaterialConfig config;
+	config.color = color;
+	config.enableLighting = enableLighting;
+	config.shininess = shininess;
+	config.enviromentCoefficient = enviromentCoefficient;
+	config.isReflect = isReflect;
+	return config;
 }
 
 void Material::ShowImGui(){

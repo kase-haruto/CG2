@@ -16,7 +16,8 @@
 #include <functional>
 
 class BaseGameObject
-	:public ConfigurableObject<BaseGameObjectConfig>{
+	: public SceneObject
+	, public ConfigurableObject<BaseGameObjectConfig>{
 
 	enum ObjectModelType {
 		ModelType_Static,		// 静的モデル
@@ -55,6 +56,7 @@ public:
 
 	//--------- config ------------------------------------------------
 	virtual void ApplyConfig()override;
+	virtual void ExtractConfig()override;
 
 	//--------- accessor ------------------------------------------------
 	void SetName(const std::string& name);

@@ -7,7 +7,6 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 
 //data
-#include <Data/Engine/Macros/Objects/Transform/WorldTransformConfigMacros.h>
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 // lib
@@ -122,15 +121,21 @@ void WorldTransform::Update(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグ適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ApplyConfig() {
-	APPLY_WORLD_TRANSFORM_CONFIG
+void WorldTransform::ApplyConfig(const WorldTransformConfig& config) {
+	translation = config.translation;
+	rotation = config.rotation;
+	scale = config.scale;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグから抽出
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ExtractConfig() {
-	EXTRACT_WORLD_TRANSFORM_CONFIG
+WorldTransformConfig WorldTransform::ExtractConfig(){
+	WorldTransformConfig config;
+	config.translation = translation;
+	config.rotation = rotation;
+	config.scale = scale;
+	return config;
 }
 
 
@@ -143,6 +148,14 @@ void Transform2D::ShowImGui(const std::string& lavel){
 		GuiCmd::DragFloat("rotation", rotate, 0.01f);
 		GuiCmd::DragFloat2("translate", translate, 0.01f);
 	}
+}
+
+Transform2DConfig Transform2D::ExtractConfig() const{
+	Transform2DConfig config;
+	config.scale = scale;
+	config.rotation = rotate;
+	config.translation = translate;
+	return config;
 }
 
 void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){

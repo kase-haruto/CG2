@@ -26,6 +26,7 @@ struct Material{
 
 	//config
 	void ApplyConfig(const MaterialConfig& config);
+	MaterialConfig ExtractConfig() const;
 	void ShowImGui();
 	void ShowImGui(MaterialConfig& config);
 };

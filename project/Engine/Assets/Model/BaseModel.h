@@ -44,6 +44,7 @@ public:
 
 	//--------- config -----------------------------------------------------
 	void ApplyConfig(const BaseModelConfig& config);
+	BaseModelConfig ExtractConfig() const;
 	void ShowImGui(BaseModelConfig& config);
 
 	//--------- accessor -----------------------------------------------------

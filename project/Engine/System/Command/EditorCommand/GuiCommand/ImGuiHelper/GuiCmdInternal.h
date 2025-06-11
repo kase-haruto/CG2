@@ -18,7 +18,9 @@ namespace GuiCmdInternal{
 	class GuiCmdSetValueComputer{
 	public:
 		void Begin(const T& initial);
-		std::unique_ptr<ICommand> End(const T& current, std::function<void(const T&)> setter);
+		std::unique_ptr<ICommand> End(const T& current,
+									  std::function<void(const T&)> setter,
+									  const std::string& label);
 
 	private:
 		bool IsNotEqual(const Vector2& a, const Vector2& b) const;
@@ -48,14 +50,15 @@ namespace GuiCmdInternal{
 	//		コマンド発行
 	/////////////////////////////////////////////////////////////////////////////////////////
 	template<typename T>
-	inline std::unique_ptr<ICommand> GuiCmdSetValueComputer<T>::End(const T& current, 
-																	std::function<void(const T&)> setter){
+	std::unique_ptr<ICommand> GuiCmdSetValueComputer<T>::End(const T& current,
+															 std::function<void(const T&)> setter,
+															 const std::string& label){
 		dragging_ = false;
 
 		if (!IsNotEqual(before_, current))
 			return nullptr;
 
-		return std::make_unique<SetValueCommand<T>>(before_, current, setter);
+		return std::make_unique<SetValueCommand<T>>(label, before_, current, setter);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////

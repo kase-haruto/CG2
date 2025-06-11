@@ -73,6 +73,15 @@ void Collider::ApplyConfig(const ColliderConfig& config){
 	targetType_ = static_cast< ColliderType >(config.targetType);
 }
 
+ColliderConfig Collider::ExtractConfig() const{
+	ColliderConfig config;
+	config.isCollisionEnabled = isCollisionEnabled_;
+	config.isDraw = isDraw_;
+	config.colliderType = static_cast< int >(type_);
+	config.targetType = static_cast< int >(targetType_);
+	return config;
+}
+
 
 void Collider::SetCollisionEnabled(bool enable){
 	if (isCollisionEnabled_ == enable) return; // 状態が変わらないなら何もしない

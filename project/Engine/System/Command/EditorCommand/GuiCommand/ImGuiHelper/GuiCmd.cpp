@@ -25,9 +25,12 @@ bool GuiCmd::DragFloat(const char* label, float& value, float speed, float min, 
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const float& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const float& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
-		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
+		if (cmd){
+			CommandManager::GetInstance()->Execute(std::move(cmd));		
+		}
 	}
 	return changed;
 }
@@ -41,7 +44,8 @@ bool GuiCmd::DragFloat2(const char* label, Vector2& value, float speed, float mi
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector2& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector2& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -59,7 +63,8 @@ bool GuiCmd::DragFloat3(const char* label, Vector3& value, float speed, float mi
 
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector3& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector3& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -75,7 +80,8 @@ bool GuiCmd::DragFloat4(const char* label, Vector4& value, float speed, float mi
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -96,7 +102,8 @@ bool GuiCmd::SliderFloat(const char* label, float& value, float min, float max){
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const float& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const float& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -112,7 +119,8 @@ bool GuiCmd::SliderFloat2(const char* label, Vector2& value, float min, float ma
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector2& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector2& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -128,7 +136,8 @@ bool GuiCmd::SliderFloat3(const char* label, Vector3& value, float min, float ma
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector3& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector3& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -144,7 +153,8 @@ bool GuiCmd::SliderFloat4(const char* label, Vector4& value, float min, float ma
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -170,7 +180,8 @@ bool GuiCmd::ColorEdit4(const char* label, Vector4& value, ImGuiColorEditFlags f
 	value = temp;
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const Vector4& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}
@@ -193,7 +204,8 @@ bool GuiCmd::CheckBox(const char* label, bool& value){
 	if (ImGui::IsItemActivated()) computer.Begin(value);
 	// マウスが離れた
 	if (ImGui::IsItemDeactivatedAfterEdit()){
-		auto cmd = computer.End(value, [&value] (const bool& v){ value = v; });
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const bool& v){ value = v; }, labelStr);
 		//マウスが押された位置から動いていたらコマンドを発行する
 		if (cmd) CommandManager::GetInstance()->Execute(std::move(cmd));
 	}

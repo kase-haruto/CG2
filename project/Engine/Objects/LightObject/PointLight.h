@@ -30,7 +30,8 @@ struct PointLightData{
 class DxCore;
 
 class PointLight
-: public ConfigurableObject<PointLightConfig>{
+	: public SceneObject
+	, public ConfigurableObject<PointLightConfig>{
 public:
 	PointLight(const std::string& name);
 	PointLight() = default;
@@ -44,10 +45,12 @@ public:
 
 	// config ============================================================
 	void ApplyConfig()override;
+	void ExtractConfig()override;
 
 	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<PointLightData> constantBuffer_;
+	PointLightData lightData_ = {}; // ライトデータ
 };
 

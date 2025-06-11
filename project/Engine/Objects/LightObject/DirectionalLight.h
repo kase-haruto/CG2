@@ -29,7 +29,8 @@ struct DirectionalLightData{
 class DxCore;
 
 class DirectionalLight
-	:public  ConfigurableObject<DirectionalLightConfig>{
+	: public SceneObject
+	, public ConfigurableObject<DirectionalLightConfig>{
 public:
 	DirectionalLight(const std::string& name);
 	DirectionalLight() = default;
@@ -42,10 +43,12 @@ public:
 
 	// config ============================================================
 	void ApplyConfig()override;
+	void ExtractConfig()override;
 
 	std::string GetObjectTypeName()const override { return "Light"; }
 
 private:
 	DxConstantBuffer<DirectionalLightData> constantBuffer_;
+	DirectionalLightData lightData_ = {};	// ライトデータ
 };
 

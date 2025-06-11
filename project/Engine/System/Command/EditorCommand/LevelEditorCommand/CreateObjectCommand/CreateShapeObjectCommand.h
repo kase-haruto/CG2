@@ -18,9 +18,11 @@ public:
 
 	void Execute() override;
 	void Undo() override;
+	const char* GetName() const override;
 
 private:
 	SceneContext* context_ = nullptr;
 	ObjectFactory factory_;
-	BaseGameObject* object_ = nullptr; 
+	BaseGameObject* object_ = nullptr;
+	std::string name_; // ログ用の名前
 };
