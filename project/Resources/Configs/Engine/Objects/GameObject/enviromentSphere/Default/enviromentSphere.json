@@ -17,7 +17,7 @@
             },
             "currentLightingMode_": 0,
             "enableLighting": 0,
-            "enviromentCoefficient": 1.0,
+            "enviromentCoefficient": 0.5,
             "isReflect": true,
             "shininess": 20.0
         },

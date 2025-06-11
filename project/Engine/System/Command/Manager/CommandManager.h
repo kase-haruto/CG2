@@ -4,7 +4,8 @@
 
 #include <stack>
 #include <memory>
-
+#include <vector>
+#include <string>
 
 class CommandManager {
 public:
@@ -17,6 +18,10 @@ public:
 	bool CanUndo() const { return !undoStack_.empty(); }
 	bool CanRedo() const { return !redoStack_.empty(); }
 
+	const std::vector<std::string>& GetLogs() const{
+		return commandLogs_;
+	}
+
 private:
 	CommandManager() = default;
 	~CommandManager() = default;
@@ -28,5 +33,8 @@ private:
 private:
 	std::stack<std::unique_ptr<ICommand>> undoStack_;
 	std::stack<std::unique_ptr<ICommand>> redoStack_;
+
+private:
+	std::vector<std::string> commandLogs_;
 };
 

@@ -8,5 +8,6 @@ public:
 	virtual void Execute() = 0;
 	virtual void Undo() = 0;
 	virtual void Redo() { Execute(); }
+	virtual const char* GetName() const = 0;
 };
 

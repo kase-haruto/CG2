@@ -6,12 +6,17 @@
 CreateShapeObjectCommand::CreateShapeObjectCommand(SceneContext* context, ObjectFactory factory)
 	: context_(context), factory_(std::move(factory)){}
 
-void CreateShapeObjectCommand::Execute() {
-	std::unique_ptr<BaseGameObject> tmp = factory_();
-	object_ = context_->AddEditorObject(std::move(tmp));
+void CreateShapeObjectCommand::Execute(){
+	auto obj = factory_();
+	object_ = obj.get();
+	context_->AddEditorObject(std::move(obj));
 }
 
 void CreateShapeObjectCommand::Undo() {
 	context_->RemoveEditorObject(object_);
 	object_ = nullptr;
+}
+
+const char* CreateShapeObjectCommand::GetName() const{
+	return name_.c_str();
 }
