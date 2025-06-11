@@ -275,11 +275,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\EngineUI\Manipulator.cpp" />
     <ClCompile Include="Engine\Physics\Ray\Raycastor.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\PlaceToolPanel.cpp" />
-    <ClCompile Include="SceneSerializer.cpp" />
+    <ClCompile Include="Engine\Scene\Serializer\SceneSerializer.cpp" />
+    <ClCompile Include="Engine\Objects\3D\Actor\Factory\SceneObjectFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
     <ClInclude Include="Engine\Foundation\Utility\Guid\Guid.h" />
+    <ClInclude Include="Engine\Objects\ConfigurableObject\IConfigurable.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />
     <ClInclude Include="Engine\Application\UI\Panels\IInspectable.h" />
@@ -482,7 +484,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\EngineUI\Manipulator.h" />
     <ClInclude Include="Engine\Physics\Ray\Raycastor.h" />
     <ClInclude Include="Engine\Application\UI\Panels\PlaceToolPanel.h" />
-    <ClInclude Include="SceneSerializer.h" />
+    <ClInclude Include="Engine\Scene\Serializer\SceneSerializer.h" />
+    <ClInclude Include="Engine\Objects\3D\Actor\Factory\SceneObjectFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

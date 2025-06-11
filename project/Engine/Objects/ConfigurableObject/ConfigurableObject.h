@@ -1,14 +1,16 @@
 #pragma once
 #include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Engine/Objects/ConfigurableObject/IConfigurable.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
 
 
 template<typename TConfig>
-class ConfigurableObject{
-protected:
+class ConfigurableObject
+	: public IConfigurable {
+public:
 	//* apply/extract ========================================//
-	void ApplyConfigFromJson(const nlohmann::json& j);
-	void ExtractConfigToJson(nlohmann::json& j) const;
+	void ApplyConfigFromJson(const nlohmann::json& j) override;
+	void ExtractConfigToJson(nlohmann::json& j) const override;
 
 	//* save/load ============================================//
 	void LoadConfig(const std::string& path);
@@ -35,6 +37,7 @@ inline void ConfigurableObject<TConfig>::ApplyConfigFromJson(const nlohmann::jso
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
 inline void ConfigurableObject<TConfig>::ExtractConfigToJson(nlohmann::json& j) const{
+	const_cast<ConfigurableObject*>(this)->ExtractConfig();  // 状態を config_ に反映
 	j = config_;
 }
 

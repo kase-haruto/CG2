@@ -6,6 +6,7 @@
 #include <Engine/Objects/3D/Geometory/AABB.h>
 
 #include <string>
+#include <nlohmann/json.hpp>
 
 enum class ObjectType {
 	Camera,			//カメラ
@@ -13,6 +14,8 @@ enum class ObjectType {
 	GameObject,		//ゲームオブジェクト
 	None,			//なし
 };
+
+class IConfigurable; // 前方宣言
 
 class SceneObject {
 public:
@@ -38,7 +41,9 @@ public:
 	//==================================================================*//
 	//				SceneObject I/O helpers
 	//==================================================================*//
-
+	virtual bool IsSerializable() const { return false; }
+	// コンフィグベースのシリアライズが可能なオブジェクトか確認する
+	virtual bool HasConfigInterface() const;
 
 	//==================================================================*//
 	//				Accessors
