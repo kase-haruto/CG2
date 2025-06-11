@@ -11,7 +11,7 @@ class SceneObject;
 
 //　sceneオブジェクト編集
 class SceneObjectEditor :
-    public BaseEditor {
+	public BaseEditor {
 public:
 	//===================================================================*/
 	//                   public functions
@@ -25,7 +25,7 @@ public:
 	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
 
 	void SetTarget(SceneObject* object);
-	Manipulator* GetManipulator() const{ return manipulator_.get(); }
+	Manipulator* GetManipulator() const { return manipulator_.get(); }
 private:
 	//===================================================================*/
 	//                   private variables
@@ -33,4 +33,3 @@ private:
 	std::unique_ptr<Manipulator> manipulator_ = nullptr;	// マニピュレーター
 	SceneObject* sceneObject_ = nullptr;					// 編集対象のSceneObject
 };
-

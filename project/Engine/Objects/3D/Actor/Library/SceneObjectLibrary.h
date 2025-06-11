@@ -6,7 +6,7 @@
 
 class MeshRenderer;
 
-class SceneObjectLibrary{
+class SceneObjectLibrary {
 public:
 	SceneObjectLibrary();
 	void AddObject(SceneObject* object);

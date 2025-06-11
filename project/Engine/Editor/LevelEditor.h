@@ -11,6 +11,7 @@
 #include <memory>
 
 class BaseEditor;
+class SceneContext;
 class SceneObject;
 
 class LevelEditor{
@@ -24,16 +25,15 @@ public:
 	void SetSelectedObject(SceneObject* object);
 	void RenderViewport(ViewportType type, const ImTextureID& tex);
 
-
 	HierarchyPanel* GetHierarchyPanel() const{ return hierarchy_.get(); }
 	EditorPanel* GetEditorPanel() const{ return editor_.get(); }
-	PlaceToolPanel* GetPlaceToolPanel() const { return placeToolPanel_.get(); }
+	PlaceToolPanel* GetPlaceToolPanel() const{ return placeToolPanel_.get(); }
+	void NotifySceneContextChanged(SceneContext* newContext);
 
 private:
 	void TryPickUnderCursor();
 	void TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj);
 	SceneObject* PickSceneObjectByRay(const struct Ray& ray);
-
 
 private:
 	// 管理UI
@@ -50,4 +50,5 @@ private:
 	// 状態
 	BaseEditor* selectedEditor_ = nullptr;
 	SceneObject* selectedObject_ = nullptr;
+	SceneContext* pSceneContext_ = nullptr;	//< 現在のシーンコンテキスト
 };

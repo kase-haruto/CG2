@@ -5,6 +5,7 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Physics/Ray/Raycastor.h>
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
+#include <Engine/Scene/Context/SceneContext.h>
 
 
 void LevelEditor::Initialize() {
@@ -102,6 +103,24 @@ SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
 		return static_cast<SceneObject*>(hit->hitObject);
 	}
 	return nullptr;
+}
+
+void LevelEditor::NotifySceneContextChanged(SceneContext* newContext) {
+	hierarchy_->SetSceneObjectLibrary(
+		newContext ? newContext->GetObjectLibrary() : nullptr);
+
+	placeToolPanel_->OnSceneContextChanged(newContext);
+	pSceneContext_ = newContext;
+
+	// ② 選択ポインタの無効化
+	if (newContext) {
+		newContext->AddOnObjectRemovedListener(
+			[editor = this](SceneObject* removed) {
+			if (editor->GetHierarchyPanel()->GetSelectedObject() == removed) {
+				editor->SetSelectedObject(nullptr);
+			}
+		});
+	}
 }
 
 void LevelEditor::TryPickUnderCursor() {

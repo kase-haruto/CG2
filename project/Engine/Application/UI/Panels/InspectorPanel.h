@@ -13,18 +13,18 @@
 //forward declaration
 class SceneObjectEditor;
 
-class InspectorPanel 
-	: public IEngineUI{
+class InspectorPanel
+	: public IEngineUI {
 public:
 	InspectorPanel();
 	~InspectorPanel() override = default;
 
 	void Render() override;
-	const std::string& GetPanelName() const override{ return panelName_; }
+	const std::string& GetPanelName() const override { return panelName_; }
 
-	void SetSelectedEditor(BaseEditor* editor){ selectedEditor_ = editor; }
-	void SetSelectedObject(SceneObject* obj){ selectedObject_ = obj; }
-	void SetSceneObjectEditor(SceneObjectEditor* editor){ sceneObjectEditor_ = editor; }
+	void SetSelectedEditor(BaseEditor* editor) { selectedEditor_ = editor; }
+	void SetSelectedObject(SceneObject* obj) { selectedObject_ = obj; }
+	void SetSceneObjectEditor(SceneObjectEditor* editor) { sceneObjectEditor_ = editor; }
 
 private:
 	BaseEditor* selectedEditor_ = nullptr;
