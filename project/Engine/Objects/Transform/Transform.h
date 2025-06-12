@@ -98,7 +98,7 @@ public:
 	TransformationMatrix matrix;
 	const BaseTransform* parent = nullptr;
 
-	RotationSource rotationSource = RotationSource::Euler;
+	RotationSource rotationSource = RotationSource::Quaternion;
 
 };
 

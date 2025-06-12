@@ -164,24 +164,30 @@ void LevelEditor::SaveScene() {
 	SceneSerializer::Save(*pSceneContext_, scenePath);
 }
 
-void LevelEditor::NotifySceneContextChanged(SceneContext* newContext) {
-	hierarchy_->SetSceneObjectLibrary(
-		newContext ? newContext->GetObjectLibrary() : nullptr);
-
+void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
+	// 新しい ObjectLibrary を各パネルに通知
+	hierarchy_->SetSceneObjectLibrary(newContext ? newContext->GetObjectLibrary() : nullptr);
 	placeToolPanel_->OnSceneContextChanged(newContext);
 	pSceneContext_ = newContext;
 
-	// ② 選択ポインタの無効化
-	if (newContext) {
+	// 現在の選択オブジェクトをリセット（古いシーンに属している可能性あり）
+	SetSelectedObject(nullptr);
+	sceneEditor_->ClearSelection(); // ⬅️ 明示的に無効化（ダングリング防止）
+
+	if (newContext){
+		// HierarchyPanel: 削除されたら選択解除
 		newContext->AddOnObjectRemovedListener(
-			[editor = this](SceneObject* removed) {
-			if (editor->GetHierarchyPanel()->GetSelectedObject() == removed) {
-				editor->SetSelectedObject(nullptr);
+			[editor = this] (SceneObject* removed){
+				if (editor->GetHierarchyPanel()->GetSelectedObject() == removed){
+					editor->SetSelectedObject(nullptr);
+				}
 			}
-		});
+		);
+
+		// SceneObjectEditor: 削除されたら無効化
+		sceneEditor_->BindRemovalCallback(newContext);
 	}
 }
-
 void LevelEditor::TryPickUnderCursor() {
 	Vector2 origin = debugViewport_->GetPosition();	// ビューポート描画位置（スクリーン座標）
 	Vector2 size = debugViewport_->GetSize();		// ビューポートの実際のサイズ（ピクセル）

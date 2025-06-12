@@ -16,6 +16,7 @@ BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
 	collider_->SetType(ColliderType::Type_PlayerAttack);
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetOwner(this);
+	collider_->SetIsDrawCollider(false);
 }
 
 
@@ -42,7 +43,7 @@ void BaseBullet::Update() {
 	//effect
 	if (bulletEffect_) {
 		Vector3 wPos = worldTransform_.GetWorldPosition();
-		bulletEffect_->Play(wPos, EmitType::Auto);
+		//bulletEffect_->Play(wPos, EmitType::Both);
 	}
 
 }

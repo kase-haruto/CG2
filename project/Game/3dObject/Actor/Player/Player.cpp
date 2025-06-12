@@ -23,7 +23,7 @@
 Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
 	:Actor::Actor(modelName, objectName) {
-	worldTransform_.translation = { 0.0f, 0.0f, 10.0f };
+	worldTransform_.translation = { 0.0f, 0.0f, 20.0f };
 
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetType(ColliderType::Type_Player);

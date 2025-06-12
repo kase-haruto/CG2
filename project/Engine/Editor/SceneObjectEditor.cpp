@@ -6,7 +6,7 @@
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
-
+#include <Engine/Scene/Context/SceneContext.h>
 // externals
 #include <externals/imgui/imgui.h>
 #include "externals/imgui/ImGuizmo.h"
@@ -46,3 +46,15 @@ void SceneObjectEditor::ShowImGuiInterface() {
 //====================================================================//
 //  SceneObjectEditor::ShowGuizmo
 //====================================================================//
+void SceneObjectEditor::BindRemovalCallback(SceneContext* ctx){
+	ctx->SetOnEditorObjectRemoved([this] (SceneObject* removed){
+		if (sceneObject_ == removed){
+			ClearSelection(); // 明示的に無効化
+		}
+								  });
+}
+
+void SceneObjectEditor::ClearSelection(){
+	sceneObject_ = nullptr;
+	manipulator_->SetTarget(nullptr);
+}

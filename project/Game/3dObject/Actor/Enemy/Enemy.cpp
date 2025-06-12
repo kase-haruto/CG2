@@ -21,7 +21,7 @@ Enemy::Enemy(const std::string& modelName, const std::string objName) :
 
 	auto collider = dynamic_cast<BoxCollider*>(collider_.get());
 	collider->SetSize(worldTransform_.scale+1);
-
+	collider_->SetIsDrawCollider(false);
 
 	InitializeEffect();
 

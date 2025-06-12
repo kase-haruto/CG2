@@ -50,7 +50,7 @@
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "position": {
             "x": 0.0,
-            "y": 4.440000057220459,
+            "y": 6.840000152587891,
             "z": 0.0
         },
         "radius": 20.0,
@@ -92,11 +92,12 @@
                 },
                 "currentLightingMode_": 0,
                 "enableLighting": 0,
-                "enviromentCoefficient": 0.5,
-                "isReflect": false,
+                "enviromentCoefficient": 0.671999990940094,
+                "isReflect": true,
                 "shininess": 20.0
             },
-            "modelName": "ground.obj",
+            "modelName": "plane.obj",
+            "textureName": "Textures/fieldTile.png",
             "uvTransConfig": {
                 "rotation": 0.0,
                 "scale": {
@@ -105,7 +106,7 @@
                 }
             }
         },
-        "name": "field",
+        "name": "Plane",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
@@ -151,6 +152,7 @@
                 "shininess": 20.0
             },
             "modelName": "debugSphere.obj",
+            "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
                 "scale": {
@@ -159,7 +161,7 @@
                 }
             }
         },
-        "name": "enviromentSphere",
+        "name": "Sphere",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
@@ -175,9 +177,64 @@
                 "z": 1.0
             },
             "translation": {
-                "x": 5.0,
-                "y": 4.1149187088012695,
-                "z": -6.001645088195801
+                "x": 5.421098232269287,
+                "y": 2.0408413410186768,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "debugSphere.obj",
+            "textureName": "Textures/MonsterBall.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Sphere",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 0.8374422788619995,
+                "x": 5.687713837687625e-07,
+                "y": 0.5465257167816162,
+                "z": 6.280708930717083e-07
+            },
+            "scale": {
+                "x": 0.9999982118606567,
+                "y": 0.999999463558197,
+                "z": 0.9999982118606567
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 5.060273170471191,
+                "z": 0.0
             }
         }
     },
@@ -205,6 +262,7 @@
                 "shininess": 20.0
             },
             "modelName": "torus.obj",
+            "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
                 "scale": {
@@ -214,114 +272,6 @@
             }
         },
         "name": "Torus",
-        "objectType": 2,
-        "parentGuid": "00000000-0000-0000-0000-000000000000",
-        "transform": {
-            "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "translation": {
-                "x": -9.40180492401123,
-                "y": 0.0,
-                "z": 0.0
-            }
-        }
-    },
-    {
-        "colliderConfig": {
-            "colliderType": 0,
-            "isCollisionEnabled": false,
-            "isDraw": true,
-            "targetType": 0
-        },
-        "guid": "00000000-0000-0000-0000-000000000000",
-        "modelConfig": {
-            "blendMode": 5,
-            "materialConfig": {
-                "color": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "currentLightingMode_": 0,
-                "enableLighting": 0,
-                "enviromentCoefficient": 0.5,
-                "isReflect": false,
-                "shininess": 20.0
-            },
-            "modelName": "cylinder.obj",
-            "uvTransConfig": {
-                "rotation": 0.0,
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0
-                }
-            }
-        },
-        "name": "Cylinder",
-        "objectType": 2,
-        "parentGuid": "00000000-0000-0000-0000-000000000000",
-        "transform": {
-            "rotation": {
-                "w": 0.9621932506561279,
-                "x": 0.2723676264286041,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 1.0000003576278687,
-                "y": 3.767489194869995,
-                "z": 1.0000007152557373
-            },
-            "translation": {
-                "x": -1.9328442811965942,
-                "y": 1.6041202545166016,
-                "z": 3.4802660942077637
-            }
-        }
-    },
-    {
-        "colliderConfig": {
-            "colliderType": 0,
-            "isCollisionEnabled": false,
-            "isDraw": true,
-            "targetType": 0
-        },
-        "guid": "00000000-0000-0000-0000-000000000000",
-        "modelConfig": {
-            "blendMode": 5,
-            "materialConfig": {
-                "color": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "currentLightingMode_": 0,
-                "enableLighting": 0,
-                "enviromentCoefficient": 0.5,
-                "isReflect": false,
-                "shininess": 20.0
-            },
-            "modelName": "debugCube.obj",
-            "uvTransConfig": {
-                "rotation": 0.0,
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0
-                }
-            }
-        },
-        "name": "Cube",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {

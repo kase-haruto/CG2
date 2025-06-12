@@ -25,13 +25,26 @@ void SceneContext::Update() {
 }
 
 void SceneContext::Clear() {
-	renderer_->Clear();
-	objectLibrary_->Clear();
+	// まず ObjectLibrary のすべてのオブジェクトに削除通知を出す
+	if (objectLibrary_) {
+		const auto& objects = objectLibrary_->GetAllObjects();
+		for (const auto& obj : objects) {
+			if (onEditorObjectRemoved_) {
+				onEditorObjectRemoved_(obj); // ← 通知
+			}
+		}
+		objectLibrary_->Clear(); // ← 通知後にクリア
+	}
+
+	// エディタオブジェクトも破棄（必要なら通知追加可能）
 	editorObjects_.clear();
 
-	CollisionManager::GetInstance()->ClearColliders(); // コリジョンマネージャーのクリア
-	PrimitiveDrawer::GetInstance()->ClearMesh(); // プリミティブドロワーのメッシュクリア
+	// その他のシステムのクリア
+	renderer_->Clear();
+	CollisionManager::GetInstance()->ClearColliders();
+	PrimitiveDrawer::GetInstance()->ClearMesh();
 }
+
 
 void SceneContext::RegisterAllToRenderer() {
 	objectLibrary_->RegisterToRenderer(renderer_.get());

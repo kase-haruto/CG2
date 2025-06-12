@@ -23,6 +23,8 @@ public:
 	void Update();
 	void ShowImGuiInterface() override;
 	void SetSceneObject(SceneObject* sceneObject) { sceneObject_ = sceneObject; }
+	void BindRemovalCallback(class SceneContext* ctx);
+	void ClearSelection(); // ← 明示クリアも使える
 
 	void SetTarget(SceneObject* object);
 	Manipulator* GetManipulator() const { return manipulator_.get(); }
