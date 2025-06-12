@@ -131,7 +131,7 @@ void EngineController::EndUpdate(){
 	// UI描画
 	engineUICore_->Render();
 
-	//UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
+	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }
 
 void EngineController::Render() {}

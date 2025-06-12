@@ -80,14 +80,13 @@ void BaseModel::ShowImGuiInterface() {
 
 	if (ImGui::CollapsingHeader("Material")) {
 		materialData_.ShowImGui();
-		static std::string selectedTextureName = modelData_->material.textureFilePath;
 
 		auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
-		if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())) {
+		if (ImGui::BeginCombo("Texture", textureName_.c_str())) {
 			for (const auto& texture : textures) {
-				bool is_selected = (selectedTextureName == texture.first);
+				bool is_selected = (textureName_ == texture.first);
 				if (ImGui::Selectable(texture.first.c_str(), is_selected)) {
-					selectedTextureName = texture.first;
+					textureName_ = texture.first;
 					handle_ = TextureManager::GetInstance()->LoadTexture(texture.first);
 				}
 				if (is_selected) {
@@ -133,7 +132,14 @@ void BaseModel::ApplyConfig(const BaseModelConfig& config){
 	uvTransform.ApplyConfig(config.uvTransConfig);
 	blendMode_ = static_cast< BlendMode >(config.blendMode);
 	fileName_ = config.modelName;
-	
+
+	if (config.textureName.empty()){
+		textureName_ = "textures/white1x1.png";
+		handle_ = TextureManager::GetInstance()->LoadTexture(textureName_);
+	} else{
+		textureName_ = config.textureName;
+		handle_ = TextureManager::GetInstance()->LoadTexture(textureName_);
+	}
 }
 
 BaseModelConfig BaseModel::ExtractConfig() const{
@@ -142,6 +148,7 @@ BaseModelConfig BaseModel::ExtractConfig() const{
 	config.uvTransConfig = uvTransform.ExtractConfig();
 	config.blendMode = static_cast< int >(blendMode_);
 	config.modelName = fileName_;
+	config.textureName = textureName_;
 	return config;
 }
 
@@ -150,14 +157,13 @@ void BaseModel::ShowImGui(BaseModelConfig& config){
 
 	if (ImGui::CollapsingHeader("Material")){
 		materialData_.ShowImGui(config.materialConfig);
-		static std::string selectedTextureName = modelData_->material.textureFilePath;
 
 		auto& textures = TextureManager::GetInstance()->GetLoadedTextures();
-		if (ImGui::BeginCombo("Texture", selectedTextureName.c_str())){
+		if (ImGui::BeginCombo("Texture", textureName_.c_str())){
 			for (const auto& texture : textures){
-				bool is_selected = (selectedTextureName == texture.first);
+				bool is_selected = (textureName_ == texture.first);
 				if (ImGui::Selectable(texture.first.c_str(), is_selected)){
-					selectedTextureName = texture.first;
+					textureName_ = texture.first;
 					handle_ = TextureManager::GetInstance()->LoadTexture(texture.first);
 				}
 				if (is_selected){

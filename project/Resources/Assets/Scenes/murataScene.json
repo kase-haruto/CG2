@@ -50,7 +50,7 @@
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "position": {
             "x": 0.0,
-            "y": 4.769999980926514,
+            "y": 6.840000152587891,
             "z": 0.0
         },
         "radius": 20.0,
@@ -147,21 +147,21 @@
                 },
                 "currentLightingMode_": 0,
                 "enableLighting": 0,
-                "enviromentCoefficient": 0.07000000029802322,
-                "isReflect": false,
+                "enviromentCoefficient": 1.0,
+                "isReflect": true,
                 "shininess": 20.0
             },
-            "modelName": "debugCube.obj",
-            "textureName": "Textures/uvChecker.png",
+            "modelName": "debugSphere.obj",
+            "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
                 "scale": {
-                    "x": 5.460000038146973,
+                    "x": 1.0,
                     "y": 1.0
                 }
             }
         },
-        "name": "Cube",
+        "name": "Sphere",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
@@ -172,14 +172,14 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.9999948143959045,
-                "y": 13.504932403564453,
-                "z": 0.9999942779541016
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "translation": {
-                "x": -4.435372829437256,
-                "y": 2.2953970432281494,
-                "z": 1.0491682291030884
+                "x": 5.421098232269287,
+                "y": 2.0408413410186768,
+                "z": 0.0
             }
         }
     }

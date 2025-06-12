@@ -135,10 +135,13 @@ void WorldTransform::Update() {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグ適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ApplyConfig(const WorldTransformConfig& config) {
+void WorldTransform::ApplyConfig(const WorldTransformConfig& config){
+	scale = config.scale;
 	translation = config.translation;
 	rotation = config.rotation;
-	scale = config.scale;
+
+	eulerRotation = Quaternion::ToEuler(rotation);
+	rotationSource = RotationSource::Quaternion;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

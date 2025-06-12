@@ -63,6 +63,7 @@ void GameScene::Initialize(){
 
 	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
 	skyBox_->Initialize();
+	sceneContext_->GetMeshRenderer()->SetSkyBox(skyBox_.get());
 	
 	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});

@@ -11,6 +11,7 @@ void Material::ApplyConfig(const MaterialConfig& config){
 	shininess = config.shininess;
 	enviromentCoefficient = config.enviromentCoefficient;
 	isReflect = config.isReflect;
+	
 }
 
 MaterialConfig Material::ExtractConfig() const{

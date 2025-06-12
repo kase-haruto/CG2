@@ -10,7 +10,7 @@
 
 // c++
 #include <memory>
-
+using ObjectRemovedCallback = std::function<void(SceneObject*)>;
 class SceneContext{
 public:
 	SceneContext();
@@ -37,7 +37,12 @@ public:
 	std::string GetSceneName() const { return sceneName_; }
 	LightLibrary* GetLightLibrary() const { return lightLibrary_.get(); }
 	void SetSceneName(const std::string& name) {sceneName_ = name;}
+	void SetOnEditorObjectRemoved(const ObjectRemovedCallback& callback){
+		onEditorObjectRemoved_ = callback;
+	}
+
 private:
+	ObjectRemovedCallback onEditorObjectRemoved_;
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
 	std::unique_ptr<LightLibrary> lightLibrary_;

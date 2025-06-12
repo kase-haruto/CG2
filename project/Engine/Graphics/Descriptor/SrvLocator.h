@@ -32,5 +32,5 @@ private:
 	static std::mutex mutex_; // スレッドセーフのためのミューテックス
 
 private:
-	static const uint32_t kMaxSrvNum = 2048; // SRVヒープの最大スロット数
+	static const uint32_t kMaxSrvNum = 60000; // SRVヒープの最大スロット数
 };
