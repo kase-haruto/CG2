@@ -14,6 +14,7 @@
 
 class WorldTransform;
 class LightLibrary;
+class SkyBox;
 
 /* ========================================================================
 /* mesh renderer
@@ -39,6 +40,7 @@ public:
 	void Unregister(IMeshRenderable* renderable);
 	void OnRenderableDestroyed(IMeshRenderable* renderable) override;
 	void DrawAll(ID3D12GraphicsCommandList* cmdList);
+	void SetSkyBox(SkyBox* skyBox) { skyBox_ = skyBox; }
 	void Clear();
 
 	void SetLightLibrary(LightLibrary* light){ pLightLibrary_ = light; }
@@ -56,4 +58,5 @@ private:
 	std::vector<DrawEntry> renderables_;
 	PipelineService* pipelineService_;
 	LightLibrary* pLightLibrary_;
+	SkyBox* skyBox_ = nullptr; ///< SkyBoxの参照。nullptrなら描画しない
 };

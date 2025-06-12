@@ -11,6 +11,11 @@
 // c++
 #include <string>
 
+enum class RotationSource {
+	Euler,
+	Quaternion
+};
+
 struct TransformationMatrix{
 	Matrix4x4 world;
 	Matrix4x4 WorldInverseTranspose;
@@ -92,6 +97,9 @@ public:
 
 	TransformationMatrix matrix;
 	const BaseTransform* parent = nullptr;
+
+	RotationSource rotationSource = RotationSource::Euler;
+
 };
 
 //============================================================================*/
@@ -110,9 +118,8 @@ public:
 	void Update();
 
 	//--- コンフィグ同期 ---
-	void ApplyConfig(const WorldTransformConfig& config);       // config → transformメンバ
-	WorldTransformConfig ExtractConfig();     // transformメンバ → config
-
+	void ApplyConfig(const WorldTransformConfig& config);
+	WorldTransformConfig ExtractConfig();
 public:
 	
 };

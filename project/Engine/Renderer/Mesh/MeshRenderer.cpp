@@ -51,7 +51,6 @@ void MeshRenderer::OnRenderableDestroyed(IMeshRenderable* obj) {
 void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	std::vector<DrawEntry> staticModels;
 	std::vector<DrawEntry> skinnedModels;
-	DrawEntry* skyBox = nullptr;
 
 
 	for (const auto& entry : renderables_){
@@ -59,8 +58,6 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 			skinnedModels.push_back(entry);
 		} else if (dynamic_cast< Model* >(entry.renderable)){
 			staticModels.push_back(entry);
-		} else if (dynamic_cast< SkyBox* >(entry.renderable)){
-			skyBox = const_cast< DrawEntry* >(&entry);
 		}
 	}
 
@@ -69,8 +66,8 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	//===================================================================*/
 	cmdList->SetGraphicsRootSignature(GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Skybox).Get());
 	// 背景
-	if (skyBox){
-		skyBox->renderable->Draw(*skyBox->transform);
+	if (skyBox_){
+		skyBox_->Draw(skyBox_->GetWorldTransform());
 	}
 
 	//===================================================================*/

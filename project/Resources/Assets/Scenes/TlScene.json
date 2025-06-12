@@ -1,0 +1,346 @@
+[
+    {
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "direction": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "intensity": 0.25,
+        "name": "DirectionalLight",
+        "objectType": 1,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "decay": 1.0,
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "intensity": 0.25,
+        "name": "PointLight",
+        "objectType": 1,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "position": {
+            "x": 0.0,
+            "y": 4.440000057220459,
+            "z": 0.0
+        },
+        "radius": 20.0,
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "ground.obj",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 20.0,
+                    "y": 20.0
+                }
+            }
+        },
+        "name": "field",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 100.0,
+                "y": 1.0,
+                "z": 100.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 1.0,
+                "isReflect": true,
+                "shininess": 20.0
+            },
+            "modelName": "debugSphere.obj",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "enviromentSphere",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 5.0,
+                "y": 4.1149187088012695,
+                "z": -6.001645088195801
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "torus.obj",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Torus",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": -9.40180492401123,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "cylinder.obj",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Cylinder",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 0.9621932506561279,
+                "x": 0.2723676264286041,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0000003576278687,
+                "y": 3.767489194869995,
+                "z": 1.0000007152557373
+            },
+            "translation": {
+                "x": -1.9328442811965942,
+                "y": 1.6041202545166016,
+                "z": 3.4802660942077637
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "debugCube.obj",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Cube",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    }
+]

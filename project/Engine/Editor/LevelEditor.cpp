@@ -6,7 +6,9 @@
 #include <Engine/Physics/Ray/Raycastor.h>
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
 #include <Engine/Scene/Context/SceneContext.h>
+#include <Engine/Scene/Serializer/SceneSerializer.h>
 
+#include <externals/imgui/ImGuiFileDialog.h>
 
 void LevelEditor::Initialize() {
 
@@ -37,6 +39,34 @@ void LevelEditor::Initialize() {
 		debugViewport_->AddTool(manipulator);
 	}
 
+	// エディターメニューの初期化
+	menu_ = std::make_unique<EditorMenu>();
+	menu_->Add(MenuCategory::File, {
+		"Save Scene", "Ctrl+S", [this]() {
+			IGFD::FileDialogConfig config;
+			config.path = "Resources/Assets/Scenes/";
+			ImGuiFileDialog::Instance()->OpenDialog(
+				"SceneSaveDialog",
+				"load scene file",
+				".json",
+				config
+			);
+		}, true
+			   });
+
+	menu_->Add(MenuCategory::File, {
+	"Open Scene", "Ctrl+O", [] {
+		IGFD::FileDialogConfig config;
+		config.path = "Resources/Assets/Scenes/";
+		ImGuiFileDialog::Instance()->OpenDialog(
+			"SceneOpenDialog",
+			"open scene",
+			".json",
+			config
+		);
+	}, true
+			  });
+
 }
 
 void LevelEditor::Update() {
@@ -52,6 +82,30 @@ void LevelEditor::Render() {
 	hierarchy_->Render();
 	editor_->Render();
 	placeToolPanel_->Render();
+	menu_->Render();
+
+	// ----------------------------
+	// Open Scene ダイアログ処理
+	// ----------------------------
+	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			SceneSerializer::Load(*pSceneContext_, filePath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+
+	// ----------------------------
+	// Save Scene ダイアログ処理 ←★これを追加！
+	// ----------------------------
+	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			SceneSerializer::Save(*pSceneContext_, filePath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+
 
 	inspector_->SetSelectedEditor(selectedEditor_);
 	inspector_->SetSelectedObject(selectedObject_);
@@ -103,6 +157,11 @@ SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
 		return static_cast<SceneObject*>(hit->hitObject);
 	}
 	return nullptr;
+}
+
+void LevelEditor::SaveScene() {
+	std::string scenePath = "Resources/Assets/Scenes/" + pSceneContext_->GetSceneName() + ".json";
+	SceneSerializer::Save(*pSceneContext_, scenePath);
 }
 
 void LevelEditor::NotifySceneContextChanged(SceneContext* newContext) {

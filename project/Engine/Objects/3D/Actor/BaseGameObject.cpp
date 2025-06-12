@@ -43,10 +43,10 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	//===================================================================*/
 	SwitchCollider(ColliderKind::Box, true); // 初期化時にBoxをセット
 
-	// コンフィグパスの生成 preset名はdefault
-	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
-	//コンフィグの適用
-	LoadConfig(configPath_);
+	//// コンフィグパスの生成 preset名はdefault
+	//SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	////コンフィグの適用
+	//LoadConfig(configPath_);
 }
 
 BaseGameObject::~BaseGameObject(){}

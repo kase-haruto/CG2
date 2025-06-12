@@ -47,7 +47,7 @@ public:
 	void ApplyConfig()override;
 	void ExtractConfig()override;
 
-	std::string GetObjectTypeName()const override { return "Light"; }
+	std::string GetObjectTypeName()const override { return name_; }
 
 private:
 	DxConstantBuffer<PointLightData> constantBuffer_;

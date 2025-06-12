@@ -18,6 +18,7 @@ public:
 
 	void Initialize();
 	void Update();
+	void Clear();
 
 	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
 	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
@@ -33,6 +34,9 @@ public:
 		objectRemovedCallbacks_.push_back(std::move(cb));
 	}
 
+	std::string GetSceneName() const { return sceneName_; }
+	LightLibrary* GetLightLibrary() const { return lightLibrary_.get(); }
+	void SetSceneName(const std::string& name) {sceneName_ = name;}
 private:
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
@@ -40,6 +44,8 @@ private:
 
 	std::vector<std::unique_ptr<SceneObject>> editorObjects_;
 	std::vector<std::function<void(SceneObject*)>> objectRemovedCallbacks_;
+
+	std::string sceneName_ = "scene"; // シーン名
 };
 
 template<typename TObject>

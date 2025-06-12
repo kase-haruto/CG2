@@ -6,6 +6,7 @@
 #include <Engine/Application/UI/Panels/PlaceToolPanel.h>
 #include <Engine/Application/UI/EngineUI/Manipulator.h>
 #include <Engine/Application/UI/EngineUI/Viewport.h>
+#include <Engine/Application/UI/EngineUI/EditorMenu.h>
 
 //c++
 #include <memory>
@@ -36,12 +37,17 @@ private:
 	SceneObject* PickSceneObjectByRay(const struct Ray& ray);
 
 private:
+	void SaveScene();
+
+private:
 	// 管理UI
 	std::unique_ptr<HierarchyPanel> hierarchy_;
 	std::unique_ptr<EditorPanel> editor_;
 	std::unique_ptr<InspectorPanel> inspector_;
 	std::unique_ptr<SceneObjectEditor> sceneEditor_;
 	std::unique_ptr<PlaceToolPanel> placeToolPanel_;
+	// メニュー
+	std::unique_ptr<EditorMenu> menu_;				//< エディターメニュー
 
 	// ビューポート
 	std::unique_ptr<Viewport> mainViewport_;				//< メインビューポート
