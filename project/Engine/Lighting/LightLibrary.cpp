@@ -16,6 +16,27 @@ void LightLibrary::Update() {
 	pointLight_->Update();
 }
 
+void LightLibrary::Clear() {
+	/*directionalLight_.reset();
+	pointLight_.reset();*/
+}
+
+void LightLibrary::SetDirectionalLight(std::unique_ptr<DirectionalLight> light) {
+	if (light) {
+		directionalLight_ = std::move(light);
+	} else {
+		directionalLight_ = std::make_unique<DirectionalLight>("DefaultDirectionalLight");
+	}
+}
+
+void LightLibrary::SetPointLight(std::unique_ptr<PointLight> light) {
+	if (light) {
+		pointLight_ = std::move(light);
+	} else {
+		pointLight_ = std::make_unique<PointLight>("DefaultPointLight");
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		コマンドを積む(すべてのライト
 /////////////////////////////////////////////////////////////////////////////////////////

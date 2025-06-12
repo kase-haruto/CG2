@@ -16,7 +16,6 @@
 
 PointLight::PointLight(const std::string& name){
 	SceneObject::SetName(name, ObjectType::Light);
-
 	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	constantBuffer_.Initialize(device);
 
@@ -27,8 +26,8 @@ PointLight::PointLight(const std::string& name){
 	lightData_.radius = 20.0f;							// 最大距離
 	lightData_.decay = 1.0f;							// 減衰率
 
-	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
-	LoadConfig(configPath_);
+	//SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	//LoadConfig(configPath_);
 
 	isEnableRaycast_ = false;
 }
@@ -80,6 +79,7 @@ void PointLight::ApplyConfig() {
 	lightData_.intensity = config_.intensity;
 	lightData_.radius = config_.radius;
 	lightData_.decay = config_.decay;
+	name_ = config_.name;
 	constantBuffer_.TransferData(lightData_);
 }
 
@@ -89,6 +89,7 @@ void PointLight::ExtractConfig(){
 	config_.intensity = lightData_.intensity;
 	config_.radius = lightData_.radius;
 	config_.decay = lightData_.decay;
+	config_.name = name_;
 }
 
 

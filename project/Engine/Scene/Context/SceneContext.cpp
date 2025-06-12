@@ -1,6 +1,8 @@
 #include "SceneContext.h"
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/Objects/3D/Actor/BaseGameObject.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Collision/CollisionManager.h>
 
 SceneContext::SceneContext() {
 	renderer_ = std::make_unique<MeshRenderer>();
@@ -20,6 +22,15 @@ void SceneContext::Update() {
 		obj->Update();
 	}
 	lightLibrary_->Update();
+}
+
+void SceneContext::Clear() {
+	renderer_->Clear();
+	objectLibrary_->Clear();
+	editorObjects_.clear();
+
+	CollisionManager::GetInstance()->ClearColliders(); // コリジョンマネージャーのクリア
+	PrimitiveDrawer::GetInstance()->ClearMesh(); // プリミティブドロワーのメッシュクリア
 }
 
 void SceneContext::RegisterAllToRenderer() {

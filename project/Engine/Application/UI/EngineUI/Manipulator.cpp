@@ -68,6 +68,8 @@ void Manipulator::Update() {
 		constexpr float DegToRad = 3.14159265f / 180.0f;
 		Vector3 euler = { rot[0] * DegToRad, rot[1] * DegToRad, rot[2] * DegToRad };
 		target_->rotation = Quaternion::EulerToQuaternion(euler);
+
+		target_->rotationSource = RotationSource::Quaternion;
 	}
 
 	/* ──────── 編集開始 / 終了検出 ──────── */

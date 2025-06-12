@@ -18,6 +18,7 @@ public:
 
 	void Initialize();
 	void Update();
+	void Clear();
 
 	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
 	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
@@ -34,6 +35,7 @@ public:
 	}
 
 	std::string GetSceneName() const { return sceneName_; }
+	LightLibrary* GetLightLibrary() const { return lightLibrary_.get(); }
 	void SetSceneName(const std::string& name) {sceneName_ = name;}
 private:
 	std::unique_ptr<MeshRenderer> renderer_;

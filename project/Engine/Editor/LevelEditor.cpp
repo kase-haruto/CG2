@@ -8,6 +8,8 @@
 #include <Engine/Scene/Context/SceneContext.h>
 #include <Engine/Scene/Serializer/SceneSerializer.h>
 
+#include <externals/imgui/ImGuiFileDialog.h>
+
 void LevelEditor::Initialize() {
 
 	// 各パネルの初期化
@@ -40,7 +42,29 @@ void LevelEditor::Initialize() {
 	// エディターメニューの初期化
 	menu_ = std::make_unique<EditorMenu>();
 	menu_->Add(MenuCategory::File, {
-	  "保存", "Ctrl+S", [this]() { SaveScene(); }, true
+		"Save Scene", "Ctrl+S", [this]() {
+			IGFD::FileDialogConfig config;
+			config.path = "Resources/Assets/Scenes/";
+			ImGuiFileDialog::Instance()->OpenDialog(
+				"SceneSaveDialog",
+				"load scene file",
+				".json",
+				config
+			);
+		}, true
+			   });
+
+	menu_->Add(MenuCategory::File, {
+	"Open Scene", "Ctrl+O", [] {
+		IGFD::FileDialogConfig config;
+		config.path = "Resources/Assets/Scenes/";
+		ImGuiFileDialog::Instance()->OpenDialog(
+			"SceneOpenDialog",
+			"open scene",
+			".json",
+			config
+		);
+	}, true
 			  });
 
 }
@@ -59,6 +83,29 @@ void LevelEditor::Render() {
 	editor_->Render();
 	placeToolPanel_->Render();
 	menu_->Render();
+
+	// ----------------------------
+	// Open Scene ダイアログ処理
+	// ----------------------------
+	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			SceneSerializer::Load(*pSceneContext_, filePath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+
+	// ----------------------------
+	// Save Scene ダイアログ処理 ←★これを追加！
+	// ----------------------------
+	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			SceneSerializer::Save(*pSceneContext_, filePath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+
 
 	inspector_->SetSelectedEditor(selectedEditor_);
 	inspector_->SetSelectedObject(selectedObject_);

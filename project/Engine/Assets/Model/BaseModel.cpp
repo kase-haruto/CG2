@@ -132,6 +132,8 @@ void BaseModel::ApplyConfig(const BaseModelConfig& config){
 	materialData_.ApplyConfig(config.materialConfig);
 	uvTransform.ApplyConfig(config.uvTransConfig);
 	blendMode_ = static_cast< BlendMode >(config.blendMode);
+	fileName_ = config.modelName;
+	
 }
 
 BaseModelConfig BaseModel::ExtractConfig() const{
@@ -139,6 +141,7 @@ BaseModelConfig BaseModel::ExtractConfig() const{
 	config.materialConfig = materialData_.ExtractConfig();
 	config.uvTransConfig = uvTransform.ExtractConfig();
 	config.blendMode = static_cast< int >(blendMode_);
+	config.modelName = fileName_;
 	return config;
 }
 

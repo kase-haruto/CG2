@@ -142,6 +142,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Assets\Model\BaseModel.cpp" />
     <ClCompile Include="Engine\Assets\Animation\AnimationModel.cpp" />
     <ClCompile Include="Engine\Objects\Transform\Transform.cpp" />
+    <ClCompile Include="externals\imgui\ImGuiFileDialog.cpp" />
     <ClCompile Include="externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\PostProcess\FullscreenDrawer.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\FileSystem\FileScanner.cpp" />
@@ -341,6 +342,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Assets\Animation\AnimationStruct.h" />
     <ClInclude Include="Engine\Scene\Details\SceneType.h" />
     <ClInclude Include="Engine\Scene\Utirity\SceneUtility.h" />
+    <ClInclude Include="externals\imgui\ImGuiFileDialog.h" />
+    <ClInclude Include="externals\imgui\ImGuiFileDialogConfig.h" />
     <ClInclude Include="externals\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\PostProcess\FullscreenDrawer.h" />
     <ClInclude Include="Engine\Foundation\Utility\FileSystem\FileScanner.h" />

@@ -62,21 +62,21 @@ void TestScene::Initialize() {
 	//=========================
 
 	skyBox_ = std::make_unique<SkyBox>("sky.dds", "skyBox");
-	sceneContext_->GetMeshRenderer()->Register(skyBox_.get(), &skyBox_->GetWorldTransform());
 	skyBox_->Initialize();
+	sceneContext_->GetMeshRenderer()->SetSkyBox(skyBox_.get());
 
 	//=========================
 	// オブジェクト生成
 	//=========================
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
-	field_->SetScale({ 100.0f, 1.0f, 100.0f });
-	field_->SetEnableRaycast(false);
+	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(), field_, "ground.obj", "field");
+	//field_->SetScale({ 100.0f, 1.0f, 100.0f });
+	//field_->SetEnableRaycast(false);
 
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(), bunny_, "bunny.obj", "bunny");
 	//bunny_->SetTranslate({-10.0f, 0.0f, 0.0f});
 
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(),teapot_,"debugSphere.obj", "enviromentSphere");
-	teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
+	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),teapot_,"debugSphere.obj", "enviromentSphere");
+	//teapot_->SetTranslate({5.0f, 0.0f, 0.0f});
 
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
 	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
@@ -98,9 +98,9 @@ void TestScene::Update() {
 	skyBox_->Update();
 
 	//test
-	field_->Update();
+	//field_->Update();
 	//bunny_->Update();
-	teapot_->Update();
+	//teapot_->Update();
 	//walkHuman_->Update();
 
 	//衝突判定

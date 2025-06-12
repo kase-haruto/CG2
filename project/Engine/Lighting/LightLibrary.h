@@ -17,6 +17,12 @@ public:
 	~LightLibrary() = default;
 
 	void Update();
+	void Clear();
+	void SetDirectionalLight(std::unique_ptr<DirectionalLight> light);
+	void SetPointLight(std::unique_ptr<PointLight> light);
+
+	DirectionalLight* GetDirectionalLight() const { return directionalLight_.get(); }
+	PointLight* GetPointLight() const { return pointLight_.get(); }
 
 	void SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType pipelineType);
 	void SetCommand(ID3D12GraphicsCommandList* cmdList,

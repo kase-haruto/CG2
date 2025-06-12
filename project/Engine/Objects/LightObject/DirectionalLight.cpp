@@ -25,10 +25,10 @@ DirectionalLight::DirectionalLight(const std::string& name){
 	lightData_.direction = Vector3(0.0f, -1.0f, 0.0f);	// ライトの向き
 	lightData_.intensity = 0.25f;						// 輝度
 
-	// コンフィグパスの生成 preset名はdefault
-	SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
-	//コンフィグの適用
-	LoadConfig(configPath_);
+	//// コンフィグパスの生成 preset名はdefault
+	//SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
+	////コンフィグの適用
+	//LoadConfig(configPath_);
 
 	isEnableRaycast_ = false;
 }
@@ -75,11 +75,14 @@ void DirectionalLight::ApplyConfig() {
 	lightData_.color = config_.color;
 	lightData_.direction = config_.direction;
 	lightData_.intensity = config_.intensity;
+	name_ = config_.name;
 }
 
 void DirectionalLight::ExtractConfig(){
 	config_.color = lightData_.color;
 	config_.direction = lightData_.direction;
 	config_.intensity = lightData_.intensity;
+	config_.objectType = static_cast<int>(objectType_);
+	config_.name = name_;
 }
 

@@ -33,39 +33,41 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path) {
 	if (!JsonUtils::Load(path, jArray)) return false;
 
 	auto* lib = context.GetObjectLibrary();
-	lib->Clear();
+	context.Clear();
+	lib->Clear();                           // 全オブジェクトクリア（エディタ外含む）
 
 	for (const auto& j : jArray) {
 		int type = j.value("objectType", -1);
-		std::unique_ptr<SceneObject> obj;
+		std::string name = j.value("name", "UnnamedObject");
 
 		switch (static_cast<ObjectType>(type)) {
 			case ObjectType::GameObject:
 				{
-					auto ptr = std::make_unique<BaseGameObject>();
+					std::string modelName = j.value("modelName", "debugCube.obj");
+					auto ptr = std::make_unique<BaseGameObject>(modelName, name);
 					ptr->ConfigurableObject<BaseGameObjectConfig>::ApplyConfigFromJson(j);
-					obj = std::move(ptr);
+					context.GetMeshRenderer()->Register(ptr->GetModel(), &ptr->GetWorldTransform());
+					context.AddEditorObject(std::move(ptr)); // 所有権はここに移動
 					break;
 				}
 			case ObjectType::Light:
 				{
 					if (j.contains("direction")) {
-						auto ptr = std::make_unique<DirectionalLight>();
+						auto ptr = std::make_unique<DirectionalLight>(name);
 						ptr->ConfigurableObject<DirectionalLightConfig>::ApplyConfigFromJson(j);
-						obj = std::move(ptr);
+						context.GetObjectLibrary()->AddObject(ptr.get());
+						context.GetLightLibrary()->SetDirectionalLight(std::move(ptr));
 					} else {
-						auto ptr = std::make_unique<PointLight>();
+						auto ptr = std::make_unique<PointLight>(name);
 						ptr->ConfigurableObject<PointLightConfig>::ApplyConfigFromJson(j);
-						obj = std::move(ptr);
+						context.GetObjectLibrary()->AddObject(ptr.get());
+						context.GetLightLibrary()->SetPointLight(std::move(ptr));
 					}
 					break;
 				}
 			default:
 				continue;
 		}
-
-		lib->AddObject(obj.get());
-		context.GetEditorObjects().emplace_back(std::move(obj));
 	}
 
 	return true;

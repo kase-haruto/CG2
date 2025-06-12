@@ -32,10 +32,10 @@ void EditorMenu::Render() {
 	//ProcessShortcuts(ImGui::GetIO());
 
 	if (ImGui::BeginMainMenuBar()) {
-		RenderCategory("File(F)", MenuCategory::File);
-		RenderCategory("Edit(E)", MenuCategory::Edit);
+		RenderCategory("File", MenuCategory::File);
+	/*	RenderCategory("Edit(E)", MenuCategory::Edit);
 		RenderCategory("View(V)", MenuCategory::View);
-		RenderCategory("Tools(T)", MenuCategory::Tools);
+		RenderCategory("Tools(T)", MenuCategory::Tools);*/
 		ImGui::EndMainMenuBar();
 	}
 }
