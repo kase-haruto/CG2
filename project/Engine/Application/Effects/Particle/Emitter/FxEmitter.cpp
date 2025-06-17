@@ -17,7 +17,7 @@ void FxEmitter::Update(float deltaTime){
 		Emit();
 	}
 
-	// Update all units
+
 	for (auto& fx : units_){
 		if (!fx.alive) continue;
 

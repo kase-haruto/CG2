@@ -288,6 +288,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\Effects\Particle\Parm\FxParm.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\EditorMenu.h" />
     <ClInclude Include="Engine\Foundation\Utility\Guid\Guid.h" />
+    <ClInclude Include="Engine\Objects\3D\Mesh\MeshData.h" />
     <ClInclude Include="Engine\Objects\ConfigurableObject\IConfigurable.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateShapeObjectCommand.h" />
     <ClInclude Include="Engine\Application\UI\EngineUI\IOnViewportTool.h" />

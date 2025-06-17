@@ -96,7 +96,7 @@ void LevelEditor::Render() {
 	}
 
 	// ----------------------------
-	// Save Scene ダイアログ処理 ←★これを追加！
+	// Save Scene ダイアログ処理
 	// ----------------------------
 	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
 		if (ImGuiFileDialog::Instance()->IsOk()) {
