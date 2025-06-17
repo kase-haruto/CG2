@@ -45,6 +45,13 @@ public:
 		return v.Normalize();
 	}
 
+	static Vector3 GenerateVector3(const Vector3& min, const Vector3& max){
+		return Vector3(
+			Generate<float>(min.x, max.x),
+			Generate<float>(min.y, max.y),
+			Generate<float>(min.z, max.z)
+		);
+	}
 
 };
 template<>

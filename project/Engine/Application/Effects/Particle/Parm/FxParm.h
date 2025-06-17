@@ -54,13 +54,25 @@ inline void FxParam<T>::SetRandom(const T& min, const T& max){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//		値の取得
+//		値の取得（スカラー型用）
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 inline T FxParam<T>::Get() const{
 	if (mode_ == FxValueMode::Constant){
 		return constant_;
 	} else{
-		return Random::Generate(min_, max_);
+		return Random::Generate<T>(min_, max_);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//		値の取得（Vector3 専用特殊化）
+/////////////////////////////////////////////////////////////////////////////////////////
+template<>
+inline Vector3 FxParam<Vector3>::Get() const{
+	if (mode_ == FxValueMode::Constant){
+		return constant_;
+	} else{
+		return Random::GenerateVector3(min_, max_);
 	}
 }

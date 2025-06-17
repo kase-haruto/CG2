@@ -221,20 +221,20 @@
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
             "rotation": {
-                "w": 0.8374422788619995,
-                "x": 5.687713837687625e-07,
-                "y": 0.5465257167816162,
-                "z": 6.280708930717083e-07
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
-                "x": 0.9999982118606567,
-                "y": 0.999999463558197,
-                "z": 0.9999982118606567
+                "x": 0.9999975562095642,
+                "y": 0.9999992251396179,
+                "z": 0.9999975562095642
             },
             "translation": {
-                "x": 0.0,
+                "x": 0.5635251998901367,
                 "y": 5.060273170471191,
-                "z": 0.0
+                "z": -4.928318977355957
             }
         }
     },
@@ -289,6 +289,116 @@
             "translation": {
                 "x": 0.0,
                 "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": false,
+            "isDraw": false,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 1,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": true,
+                "shininess": 20.0
+            },
+            "modelName": "debugCube.obj",
+            "textureName": "textures/white1x1.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Cube",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 5.15861177444458,
+                "z": 1.0283360481262207
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": true,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "00000000-0000-0000-0000-000000000000",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "cylinder.obj",
+            "textureName": "Textures/uvChecker.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "Cylinder",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 0.6467548608779907,
+                "x": 0.5672479271888733,
+                "y": 0.38330143690109253,
+                "z": -0.3361814022064209
+            },
+            "scale": {
+                "x": 0.9999992251396179,
+                "y": 6.4137282371521,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 3.514871597290039,
                 "z": 0.0
             }
         }
