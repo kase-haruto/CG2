@@ -9,11 +9,10 @@ struct VertexShaderInput {
 	float3 normal : NORMAL0;
 };
 
-struct ParticleConstants {
+struct ParticleData {
 	float3 position;
 	float size;
 	float4 color;
-	int meshID;
 };
 
 struct Camera {
@@ -34,28 +33,29 @@ ConstantBuffer<Camera> gCamera : register(b0);
 ///////////////////////////////////////////////////////////////////////////////
 //                            tables
 ///////////////////////////////////////////////////////////////////////////////
-StructuredBuffer<ParticleConstants> gParticle : register(t0);
+StructuredBuffer<ParticleData> gParticle : register(t0);
 
 
-float2 quad[4] = {
-	float2(-0.5f, 0.5f),
-	float2(0.5f, 0.5f),
-	float2(-0.5f, -0.5f),
-	float2(0.5f, -0.5f)
-};
 
 ///////////////////////////////////////////////////////////////////////////////
-//                              main
+//                            main
 ///////////////////////////////////////////////////////////////////////////////
-VertexShaderOutput main(uint vertexID : SV_VertexID, uint instanceID : SV_InstanceID) {
-	ParticleConstants p = gParticle[instanceID];
+VertexShaderOutput main(uint vertexID : SV_VertexID,
+                        uint instanceID : SV_InstanceID)
+{
+    ParticleData p = gParticle[instanceID];
 
-	float2 offset = quad[vertexID] * p.size;
-	float3 worldPos = p.position + gCamera.camRight * offset.x + gCamera.camUp * offset.y;
+    // 0,1,2,3 → (-0.5,0.5),(0.5,0.5),(-0.5,-0.5),(0.5,-0.5)
+    float2 corner = float2((vertexID & 1) ? 0.5f : -0.5f,
+                            (vertexID & 2) ? -0.5f : 0.5f);
+    float2 offset = corner * p.size;
+    float3 worldPos = p.position
+                    + gCamera.camRight * offset.x
+                    + gCamera.camUp * offset.y;
 
-	VertexShaderOutput output;
-	output.position = mul(float4(worldPos, 1.0f), gCamera.viewProjection);
-	output.texcoord = float2((vertexID % 2), (vertexID / 2));
-	output.color = p.color;
-	return output;
+    VertexShaderOutput o;
+    o.position = mul(float4(worldPos, 1), gCamera.viewProjection);
+    o.texcoord = float2(vertexID & 1, vertexID >> 1);
+    o.color = p.color;
+    return o;
 }

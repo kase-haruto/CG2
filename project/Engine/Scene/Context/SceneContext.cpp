@@ -1,14 +1,17 @@
 #include "SceneContext.h"
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/Objects/3D/Actor/BaseGameObject.h>
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
+#include <Engine/Application/Effects/FxSystem.h>
 #include <Engine/Collision/CollisionManager.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 
 SceneContext::SceneContext() {
 	renderer_ = std::make_unique<MeshRenderer>();
 	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
 	lightLibrary_ = std::make_unique<LightLibrary>(objectLibrary_.get());
 	renderer_->SetLightLibrary(lightLibrary_.get());
+
+	fxSystem_ = std::make_unique<FxSystem>();
 }
 
 SceneContext::~SceneContext() {
@@ -18,10 +21,14 @@ SceneContext::~SceneContext() {
 void SceneContext::Initialize() {}
 
 void SceneContext::Update() {
+	float dt = ClockManager::GetInstance()->GetDeltaTime();
+
 	for (auto& obj : editorObjects_) {
 		obj->Update();
 	}
 	lightLibrary_->Update();
+
+	fxSystem_->Update(dt);
 }
 
 void SceneContext::Clear() {

@@ -9,6 +9,7 @@
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 #include <Engine/Editor/PostProcessEditor.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Application/Effects/FxSystem.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		engine 初期化
@@ -51,13 +52,52 @@ void EngineController::Initialize(HINSTANCE hInstance){
 		{ "CopyImage",  true,  postProcessCollection_->GetEffectByName("CopyImage")},
 		{ "ChromaticAberration", false, postProcessCollection_->GetEffectByName("ChromaticAberration")},
 	};
+
+	// particleRendererの初期化
+	particleRenderer_ = std::make_unique<ParticleRenderer>();
+	particleRenderer_->Initialize(system_->GetDxCore()->GetDevice().Get());
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//		メインループ
+/////////////////////////////////////////////////////////////////////////////////////////
+void EngineController::Run(){
+	// メインループ
+	while (!system_->ProcessMessage()){
+
+		//更新処理
+		Update();
+
+		//描画処理
+		Render();
+
+		if (Input::TriggerKey(DIK_ESCAPE)){
+			break;
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//		終了処理
+/////////////////////////////////////////////////////////////////////////////////////////
+void EngineController::Finalize(){
+	//終了処理
+	system_->Finalize();
+	CoUninitialize();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
 bool EngineController::Update() {
-	return false;
+	BeginUpdate();
+
+	// シーンの更新
+	sceneManager_->Update();
+
+	EndUpdate();
+
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +108,6 @@ void EngineController::BeginUpdate(){
 	system_->BeginFrame();
 
 	engineUICore_->Update();
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -134,39 +173,21 @@ void EngineController::EndUpdate(){
 	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }
 
-void EngineController::Render() {}
-
 /////////////////////////////////////////////////////////////////////////////////////////
-//		メインループ
+//		描画
 /////////////////////////////////////////////////////////////////////////////////////////
-void EngineController::Run(){
-	// メインループ
-	while (!system_->ProcessMessage()){
-		
-		BeginUpdate();
+void EngineController::Render() {
+	auto* context = sceneManager_->GetCurrentSceneContext();
+	// シーンの描画
+	sceneManager_->Draw();
 
-		// シーンの更新
-		sceneManager_->Update();
-
-		EndUpdate();
-
-		// シーンの描画
-		sceneManager_->Draw();
-
-		// 描画後処理
-		system_->EndFrame(graphicsSystem_->GetPipelineService());
-
-		if (Input::TriggerKey(DIK_ESCAPE)){
-			break;
-		}
+	// パーティクル描画
+	if (particleRenderer_ && context){
+		const auto& emitters = context->GetFxSystem()->GetEmitters();
+		particleRenderer_->Render(emitters, graphicsSystem_->GetPipelineService(), graphicsSystem_->GetCommandList());
 	}
+
+	// 描画後処理
+	system_->EndFrame(graphicsSystem_->GetPipelineService());
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		終了処理
-/////////////////////////////////////////////////////////////////////////////////////////
-void EngineController::Finalize(){
-	//終了処理
-	system_->Finalize();
-	CoUninitialize();
-}

@@ -139,7 +139,7 @@ void ModelManager::ProcessLoadingTasks(){
 //----------------------------------------------------------------------------
 // ロード済みモデルを取得（まだロード中なら nullptr）
 //----------------------------------------------------------------------------
-ModelData ModelManager::GetModelData(const std::string& fileName){
+ModelData& ModelManager::GetModelData(const std::string& fileName){
 	std::lock_guard<std::mutex> lock(modelDataMutex_);
 	auto it = modelDatas_.find(fileName);
 	if (it != modelDatas_.end()){

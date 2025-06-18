@@ -32,6 +32,10 @@ public:
 	virtual void TransferData(const T* data, UINT count);
 	void TransferVectorData(const std::vector<T>& data);
 
+	bool IsInitialized() const{
+		return resource_ != nullptr && mappedPtr_ != nullptr;
+	}
+
 	// リソースの取得 ===================================================================*/
 	ComPtr<ID3D12Resource> GetResource() const{ return resource_; }
 	UINT GetRootParameterIndex() const{ return rootParameterIndex_; }

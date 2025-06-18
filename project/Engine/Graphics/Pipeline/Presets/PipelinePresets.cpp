@@ -69,7 +69,7 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 ////////////////////////////////////////////////////////////////////////////////////////
 //		partcicle
 /////////////////////////////////////////////////////////////////////////////////////////
-GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode) {
+GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode){
 	GraphicsPipelineDesc desc;
 	desc.VS(L"Particle.VS.hlsl")
 		.PS(L"Particle.PS.hlsl")
@@ -82,11 +82,11 @@ GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode) {
 
 	desc.root_
 		.AllowIA()
-		.CBV(0, D3D12_SHADER_VISIBILITY_PIXEL)   // Material
-		.CBV(0, D3D12_SHADER_VISIBILITY_VERTEX)  // Camera
-		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_VERTEX)//ちょうてんshader
-		.SRVTable(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL) // Tex
-		.SamplerWrapLinear(0);
+		.CBV(0, D3D12_SHADER_VISIBILITY_VERTEX)  // gCamera (b0)
+		.CBV(1, D3D12_SHADER_VISIBILITY_PIXEL)   // gMaterial (b1)
+		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_VERTEX) // gParticle (t0)
+		.SRVTable(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL)  // gTexture  (t1)
+		.SamplerWrapLinear(0); // gSampler (s0)
 
 	return desc;
 }

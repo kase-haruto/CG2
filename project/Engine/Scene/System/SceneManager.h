@@ -28,6 +28,7 @@ public:
 	void SetEngineUI(EngineUICore* ui);
 	void RequestSceneChange(SceneType nextScene);
 	void SetGraphicsSystem(GraphicsSystem* graphicsSystem) { pGraphicsSystem_ = graphicsSystem; }
+	SceneContext* GetCurrentSceneContext() const;
 private:
 	// シーンインスタンスの配列
 	std::array<std::unique_ptr<IScene>, static_cast< int >(SceneType::count)> scenes_;

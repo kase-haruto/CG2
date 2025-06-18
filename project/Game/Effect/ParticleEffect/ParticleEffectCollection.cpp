@@ -45,14 +45,14 @@ ParticleEffect* ParticleEffectCollection::GetEffectFromName(const std::string& n
 	return nullptr;
 }
 
-void ParticleEffectCollection::LoadByName(const std::string& name) {
-	if (GetEffectFromName(name)) return;
+void ParticleEffectCollection::LoadByName([[maybe_unused]]const std::string& name) {
+	/*if (GetEffectFromName(name)) return;
 
 	const std::string directoryPath = "Resources/Json/Effect/";
 	auto effect = std::make_unique<ParticleEffect>();
 	effect->Load(directoryPath + name + ".json");
 	effect->Initialize();
-	AddEffect(std::move(effect));
+	AddEffect(std::move(effect));*/
 }
 
 //===================================================================*/

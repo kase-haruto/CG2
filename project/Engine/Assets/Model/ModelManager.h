@@ -49,7 +49,7 @@ public:
 	/// <summary>
 	/// ロード済みのモデルを取得(非同期ロード中の場合は nullptr の可能性もある)
 	/// </summary>
-	ModelData GetModelData(const std::string& fileName);
+	ModelData& GetModelData(const std::string& fileName);
 
 	//ロード済みのモデルをを判定
 	bool IsModelLoaded(const std::string& fileName) const;

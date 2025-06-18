@@ -9,5 +9,4 @@ struct ParticleConstantData {
 	Vector3 position;
 	float size;
 	Vector4 color;
-	uint32_t meshID;
 };

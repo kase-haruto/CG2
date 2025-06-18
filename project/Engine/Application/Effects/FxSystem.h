@@ -16,13 +16,12 @@ public:
 	//===================================================================*/
 	//					public func
 	//===================================================================*/
-	void AddEmitter(std::shared_ptr<FxEmitter> emitter);
+	void AddEmitter(FxEmitter* emitter);
 	void Update(float dt);
-	std::vector<FxUnit> CollectAliveUnits() const;
-
+	const std::vector<FxEmitter*>& GetEmitters() const{ return emitters_; }
 private:
 	//===================================================================*/
 	//					private variable
 	//===================================================================*/
-	std::vector<std::shared_ptr<FxEmitter>> emitters_;
+	std::vector<FxEmitter*> emitters_;
 };

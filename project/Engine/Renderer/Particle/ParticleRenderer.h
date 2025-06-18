@@ -14,13 +14,22 @@ public:
 	//					public functions
 	//===================================================================*/
 	void Initialize(ID3D12Device* device);
-	void RegisterModelByPath(const std::string& modelPath);
-	void Render(ID3D12GraphicsCommandList* cmdList, const std::vector<FxUnit>& units,class PipelineService* pipelineService);
+	void Render(const std::vector<class FxEmitter*>& emitters,
+				class PipelineService* pipelineService,
+				ID3D12GraphicsCommandList* cmdList);
+
+private:
+	//===================================================================*/
+	//					private functions
+	//===================================================================*/
+	void RenderUnits(const std::string& modelPath,
+				const std::vector<ParticleConstantData>& gpuUnits,
+				class PipelineService* pipelineService,
+				ID3D12GraphicsCommandList* cmdList);
 
 private:
 	//===================================================================*/
 	//					private variables
 	//===================================================================*/
 	DxStructuredBuffer<ParticleConstantData> instanceBuffer_;
-	std::unordered_map<std::string, std::shared_ptr<ModelData>> modelMap_;
 };
