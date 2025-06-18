@@ -4,24 +4,24 @@
 //                            structs
 ///////////////////////////////////////////////////////////////////////////////
 struct VertexShaderInput {
-	float4 position : POSITION0;
-	float2 texcoord : TEXCOORD0;
-	float3 normal : NORMAL0;
+    float4 position : POSITION0;
+    float2 texcoord : TEXCOORD0;
+    float3 normal : NORMAL0;
 };
 
 struct ParticleData {
-	float3 position;
-	float size;
-	float4 color;
+    float3 position;
+    float size;
+    float4 color;
 };
 
 struct Camera {
-	float4x4 view;
-	float4x4 projection;
-	float4x4 viewProjection;
-	float3 cameraPosition;
-	float3 camRight; // ViewMatrixのX列
-	float3 camUp; // ViewMatrixのY列
+    float4x4 view;
+    float4x4 projection;
+    float4x4 viewProjection;
+    float3 cameraPosition;
+    float3 camRight; // ViewMatrixのX列
+    float3 camUp; // ViewMatrixのY列
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,8 +41,7 @@ StructuredBuffer<ParticleData> gParticle : register(t0);
 //                            main
 ///////////////////////////////////////////////////////////////////////////////
 VertexShaderOutput main(uint vertexID : SV_VertexID,
-                        uint instanceID : SV_InstanceID)
-{
+                        uint instanceID : SV_InstanceID){
     ParticleData p = gParticle[instanceID];
 
     // 0,1,2,3 → (-0.5,0.5),(0.5,0.5),(-0.5,-0.5),(0.5,-0.5)

@@ -14,19 +14,22 @@ public:
 	//					public functions
 	//===================================================================*/
 	void Initialize(ID3D12Device* device);
+
 	void Render(const std::vector<class FxEmitter*>& emitters,
 				class PipelineService* pipelineService,
 				ID3D12GraphicsCommandList* cmdList);
+
 
 private:
 	//===================================================================*/
 	//					private functions
 	//===================================================================*/
-	void RenderUnits(const std::string& modelPath,
-				const std::vector<ParticleConstantData>& gpuUnits,
-				class PipelineService* pipelineService,
-				ID3D12GraphicsCommandList* cmdList);
-
+	void RenderGrouped(const std::string& modelPath,
+					   const std::string& texturePath,
+					   const ParticleMaterial& material,
+					   const std::vector<ParticleConstantData>& gpuUnits,
+					   class PipelineService* pipelineService,
+					   ID3D12GraphicsCommandList* cmdList);
 private:
 	//===================================================================*/
 	//					private variables

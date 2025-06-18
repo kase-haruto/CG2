@@ -8,9 +8,9 @@
 struct FxUnit{
 	Vector3 position;		//< 座標
 	Vector3 velocity;		//< 速度
-	float lifetime;			//< 寿命
+	float lifetime = 1.0f;	//< 寿命
 	float age;				//< 経過時間
 	Vector4 color;			//< 色
 	float size;				//< サイズ
-	bool alive;				//< 生存フラグ
+	bool alive = true;		//< 生存フラグ
 };

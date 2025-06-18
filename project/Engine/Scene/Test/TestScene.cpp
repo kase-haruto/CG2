@@ -15,6 +15,7 @@
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
+#include <Engine/Application/Effects/FxSystem.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -80,6 +81,10 @@ void TestScene::Initialize() {
 
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
 	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
+
+	emitter_ = std::make_unique<FxEmitter>();
+
+	sceneContext_->GetFxSystem()->AddEmitter(emitter_.get());
 
 	//=========================
 	// 描画登録
