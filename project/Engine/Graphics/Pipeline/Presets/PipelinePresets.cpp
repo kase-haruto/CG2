@@ -35,6 +35,9 @@ GraphicsPipelineDesc PipelinePresets::MakeObject3D(BlendMode mode){
 	return desc;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//		skinModel
+/////////////////////////////////////////////////////////////////////////////////////////
 GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 	GraphicsPipelineDesc desc;
 	desc.VS(L"SkinningObject3d.VS.hlsl")
@@ -63,10 +66,30 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 	return desc;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+//		partcicle
 /////////////////////////////////////////////////////////////////////////////////////////
-//		SkinObject3D
-/////////////////////////////////////////////////////////////////////////////////////////
+GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode) {
+	GraphicsPipelineDesc desc;
+	desc.VS(L"Particle.VS.hlsl")
+		.PS(L"Particle.PS.hlsl")
+		.Input(VertexInputLayout<VertexPosUvN>::Get())
+		.Blend(mode)
+		.CullBack()
+		.DepthEnable(true)
+		.RTV(DXGI_FORMAT_R8G8B8A8_UNORM)
+		.Samples(1);
 
+	desc.root_
+		.AllowIA()
+		.CBV(0, D3D12_SHADER_VISIBILITY_PIXEL)   // Material
+		.CBV(0, D3D12_SHADER_VISIBILITY_VERTEX)  // Camera
+		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_VERTEX)//ちょうてんshader
+		.SRVTable(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL) // Tex
+		.SamplerWrapLinear(0);
+
+	return desc;
+}
 
 /* ================================================================================================
 /*							postProcess

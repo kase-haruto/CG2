@@ -42,20 +42,24 @@ void PipelineService::RegisterAllPipelines() {
 
 	//=================== Object Pipelines ================================
 
-	//===================================================================*/
-	//						Object3D Pipelines
-	//===================================================================*/
-	for (int i = 0; i < static_cast< int >(BlendMode::kBlendModeCount); ++i){
-		BlendMode mode = static_cast< BlendMode >(i);
-		regObj(PipelineTag::Object::Object3d, mode, PipelinePresets::MakeObject3D);
-	}
 
-	//===================================================================*/
-	//						SkinObject3D Pipelines
-	//===================================================================*/
 	for (int i = 0; i < static_cast< int >(BlendMode::kBlendModeCount); ++i){
 		BlendMode mode = static_cast< BlendMode >(i);
+		
+		//===================================================================*/
+		//						Object3D Pipelines
+		//===================================================================*/
+		regObj(PipelineTag::Object::Object3d, mode, PipelinePresets::MakeObject3D);
+		
+		//===================================================================*/
+		//						SkinObject3D Pipelines
+		//===================================================================*/
 		regObj(PipelineTag::Object::SkinningObject3D, mode, PipelinePresets::MakeSkinningObject3D);
+
+		//===================================================================*/
+		//						Particle Pipelines
+		//===================================================================*/
+		regObj(PipelineTag::Object::Particle, mode, PipelinePresets::MakeParticle);
 	}
 
 	//=================== PostProcess Pipelines ==========================

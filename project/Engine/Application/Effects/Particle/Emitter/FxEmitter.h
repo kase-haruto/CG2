@@ -27,6 +27,9 @@ public:
 	void Update(float deltaTime);
 	void ResetFxUnit(FxUnit& fxUnit);
 
+	//--------- accessor -------------------------------------------------//
+	const std::vector<FxUnit>& GetUnits()const { return units_; }
+
 private:
 	//===================================================================*/
 	//					private func

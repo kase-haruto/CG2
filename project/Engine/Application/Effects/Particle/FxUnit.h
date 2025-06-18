@@ -11,4 +11,5 @@ struct FxUnit{
 	Vector4 color;		//< 色
 	float size;			//< サイズ
 	bool alive;			//< 生存フラグ
+	uint32_t meshID;	//< メッシュID
 };

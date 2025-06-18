@@ -8,6 +8,7 @@ namespace PipelinePresets {
 	// 3dObjects
 	GraphicsPipelineDesc MakeObject3D(BlendMode mode);
 	GraphicsPipelineDesc MakeSkinningObject3D(BlendMode mode);
+	GraphicsPipelineDesc MakeParticle(BlendMode mode);
 
 	// postprocess
 	GraphicsPipelineDesc MakeCopyImage();

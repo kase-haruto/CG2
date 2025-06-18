@@ -1,7 +1,7 @@
 #pragma once
 #include <random>
 #include <type_traits>
-#include <Engine/Foundation/Math/Vector3.h> // Vector3 クラスが定義されている前提
+#include <Engine/Foundation/Math/Vector3.h>
 
 class Random{
 public:

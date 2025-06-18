@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Application\Effects\FxSystem.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Emitter\FxEmitter.cpp" />
     <ClCompile Include="Engine\Application\UI\EngineUI\EditorMenu.cpp" />
     <ClCompile Include="Engine\Foundation\Utility\Guid\Guid.cpp" />
@@ -280,9 +281,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\PlaceToolPanel.cpp" />
     <ClCompile Include="Engine\Scene\Serializer\SceneSerializer.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\Factory\SceneObjectFactory.cpp" />
+    <ClCompile Include="Engine\Renderer\Particle\ParticleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
+    <ClInclude Include="Engine\Application\Effects\FxSystem.h" />
+    <ClInclude Include="Engine\Application\Effects\Particle\Detail\ParticleDetail.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Emitter\FxEmitter.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\FxUnit.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Parm\FxParm.h" />
@@ -496,6 +500,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\PlaceToolPanel.h" />
     <ClInclude Include="Engine\Scene\Serializer\SceneSerializer.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\Factory\SceneObjectFactory.h" />
+    <ClInclude Include="Engine\Renderer\Particle\ParticleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

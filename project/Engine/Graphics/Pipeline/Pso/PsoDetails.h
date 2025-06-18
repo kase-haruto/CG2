@@ -18,7 +18,7 @@ namespace PipelineTag{
 		Object3d,
 		SkinningObject3D,
 		Object2d,
-		StructuredObject,
+		Particle,
 		Line,
 		Effect,
 		Skybox,
