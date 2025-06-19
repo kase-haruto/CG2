@@ -96,8 +96,8 @@ void BaseParticle::Update() {
 		if (ModelManager::GetInstance()->IsModelLoaded(modelName_)) {
 			modelData_ = ModelManager::GetInstance()->GetModelData(modelName_);
 			auto device = GraphicsGroup::GetInstance()->GetDevice();
-			modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
-			modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
+			modelData_->vertexBuffer.Initialize(device, UINT(modelData_->meshData.vertices.size()));
+			modelData_->vertexBuffer.TransferVectorData(modelData_->meshData.vertices);
 		}
 		return;
 	}
@@ -261,7 +261,7 @@ void BaseParticle::Update() {
 	if (instanceNum_ > 0) {
 		instancingBuffer_.TransferVectorData(instanceDataList_);
 	}
-	modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
+	modelData_->vertexBuffer.TransferVectorData(modelData_->meshData.vertices);
 	materialBuffer_.TransferData(materialData_);
 
 
@@ -283,7 +283,7 @@ void BaseParticle::Draw(ID3D12GraphicsCommandList* cmdList) {
 
 	// 描画コマンド（インスタンシング）
 	cmdList->DrawInstanced(
-		static_cast<UINT>(modelData_->vertices.size()), // 頂点数
+		static_cast<UINT>(modelData_->meshData.vertices.size()), // 頂点数
 		instanceNum_,                                   // インスタンス数
 		0, 0
 	);
@@ -380,8 +380,8 @@ void BaseParticle::VisualSettingGui() {
 				if (modelData_.has_value()) {
 					// モデルデータがある場合、テクスチャを更新
 					const auto& device = GraphicsGroup::GetInstance()->GetDevice();
-					modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
-					modelData_->indexBuffer.Initialize(device, UINT(modelData_->indices.size()));
+					modelData_->vertexBuffer.Initialize(device, UINT(modelData_->meshData.vertices.size()));
+					modelData_->indexBuffer.Initialize(device, UINT(modelData_->meshData.indices.size()));
 				}
 			}
 			if (is_selected) {

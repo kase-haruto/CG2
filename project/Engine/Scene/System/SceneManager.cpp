@@ -106,3 +106,10 @@ void SceneManager::RequestSceneChange(SceneType nextScene) {
 
 }
 
+SceneContext* SceneManager::GetCurrentSceneContext() const{
+	if (currentSceneNo_ >= 0 && currentSceneNo_ < static_cast< int >(scenes_.size())){
+		return scenes_[currentSceneNo_]->GetSceneContext();
+	}
+	return nullptr;
+}
+

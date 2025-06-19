@@ -10,7 +10,12 @@
 
 // c++
 #include <memory>
+
 using ObjectRemovedCallback = std::function<void(SceneObject*)>;
+
+// forward declaration
+class FxSystem;
+
 class SceneContext{
 public:
 	SceneContext();
@@ -41,11 +46,14 @@ public:
 		onEditorObjectRemoved_ = callback;
 	}
 
+	FxSystem* GetFxSystem() const{ return fxSystem_.get(); }
+
 private:
 	ObjectRemovedCallback onEditorObjectRemoved_;
 	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
 	std::unique_ptr<LightLibrary> lightLibrary_;
+	std::unique_ptr<FxSystem> fxSystem_;
 
 	std::vector<std::unique_ptr<SceneObject>> editorObjects_;
 	std::vector<std::function<void(SceneObject*)>> objectRemovedCallbacks_;

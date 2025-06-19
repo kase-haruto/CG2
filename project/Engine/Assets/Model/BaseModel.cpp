@@ -40,8 +40,8 @@ void BaseModel::Update() {
 		materialData_.uvTransform = uvTransformMatrix;
 		materialBuffer_.TransferData(materialData_);
 		// カメラ行列との掛け合わせ
-		modelData_->vertexBuffer.TransferVectorData(modelData_->vertices);
-		modelData_->indexBuffer.TransferVectorData(modelData_->indices);
+		modelData_->vertexBuffer.TransferVectorData(modelData_->meshData.vertices);
+		modelData_->indexBuffer.TransferVectorData(modelData_->meshData.indices);
 		Map();
 	}
 
@@ -49,13 +49,13 @@ void BaseModel::Update() {
 
 void BaseModel::OnModelLoaded() {
 	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
-	modelData_->vertexBuffer.Initialize(device, UINT(modelData_->vertices.size()));
-	modelData_->indexBuffer.Initialize(device, UINT(modelData_->indices.size()));
+	modelData_->vertexBuffer.Initialize(device, UINT(modelData_->meshData.vertices.size()));
+	modelData_->indexBuffer.Initialize(device, UINT(modelData_->meshData.indices.size()));
 
 
 	// テクスチャ設定
 	if (!handle_) {
-		handle_ = TextureManager::GetInstance()->LoadTexture("Textures/" + modelData_->material.textureFilePath);
+		handle_ = TextureManager::GetInstance()->LoadTexture("Textures/" + modelData_->meshData.material.textureFilePath);
 	}
 
 }
@@ -124,7 +124,7 @@ void BaseModel::Draw(const WorldTransform& transform) {
 	cmdList->SetGraphicsRootDescriptorTable(6, envMapHandle);
 
 	// 描画
-	cmdList->DrawIndexedInstanced(UINT(modelData_->indices.size()), 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced(UINT(modelData_->meshData.indices.size()), 1, 0, 0, 0);
 }
 
 void BaseModel::ApplyConfig(const BaseModelConfig& config){

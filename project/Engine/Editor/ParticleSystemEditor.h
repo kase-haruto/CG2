@@ -3,36 +3,31 @@
 /* include space
 /* ===================================================================== */
 #include <Engine/Editor/BaseEditor.h>
-#include <unordered_map>
-#include <memory>
+#include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
-class EditorCollection{
-public:
-	enum class EditorType{
-		PostProcess,
-		Effect,
-		Ui,
-	};
+/* ========================================================================
+/* particle system editor
+/* ===================================================================== */
+class ParticleSystemEditor :
+	public BaseEditor{
 public:
 	//===================================================================*/
-	//		public functions
+	// public functions
 	//===================================================================*/
-	EditorCollection() = default;
-	~EditorCollection() = default;
+	void ShowImGuiInterface()override;
+	void UpdatePreviewParticles();
+	void SaveToFile(const std::string& path);
+	void LoadFromFile(const std::string& path);
+	FxEmitter* GetPreviewEmitter();
 
-	void InitializeEditors();
-	void UpdateEditors();
-	// accessor =========================================================//
-	BaseEditor* GetEditor(EditorType editorType);
 private:
 	//===================================================================*/
-	//		private functions
+	// private functions
 	//===================================================================*/
 
 private:
 	//===================================================================*/
-	//		private variables
+	// private variables
 	//===================================================================*/
-	std::unordered_map<EditorType, std::unique_ptr<BaseEditor>> editors_;
+	std::unique_ptr<FxEmitter> previewEmitter_;
 };
-

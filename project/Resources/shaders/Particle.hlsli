@@ -6,17 +6,4 @@ struct VertexShaderOutput{
 	float2 texcoord:TEXCOORD0;
 	float4 color:COLOR0;
 };
-struct Camera {
-	float4x4 view;
-	float4x4 projection;
-	float4x4 viewProjection;
-	float3 cameraPosition;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//                            cbuffers
-///////////////////////////////////////////////////////////////////////////////
-cbuffer CameraConstants : register(b1) {
-	Camera gCamera;
-};
 

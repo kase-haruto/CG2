@@ -205,7 +205,7 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 			vertex.texcoord = { 0.0f, 0.0f };
 		}
 
-		modelData.vertices.push_back(vertex);
+		modelData.meshData.vertices.push_back(vertex);
 	}
 
 	// インデックスデータの読み込み
@@ -213,9 +213,9 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 		const aiFace& face = mesh->mFaces[i];
 		assert(face.mNumIndices == 3); // 三角形のみを想定
 
-		modelData.indices.push_back(face.mIndices[0]);
-		modelData.indices.push_back(face.mIndices[1]);
-		modelData.indices.push_back(face.mIndices[2]);
+		modelData.meshData.indices.push_back(face.mIndices[0]);
+		modelData.meshData.indices.push_back(face.mIndices[1]);
+		modelData.meshData.indices.push_back(face.mIndices[2]);
 	}
 
 	// skinCluster構築用のデータ取得
@@ -250,9 +250,9 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 		const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		aiString texturePath;
 		if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
-			modelData.material.textureFilePath = texturePath.C_Str();
+			modelData.meshData.material.textureFilePath = texturePath.C_Str();
 		} else {
-			modelData.material.textureFilePath = "white1x1.png";
+			modelData.meshData.material.textureFilePath = "white1x1.png";
 		}
 	}
 
@@ -694,17 +694,17 @@ SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device
 	//===================================================================*/
 	//	influence用のresourceを確保。頂点ごとにinfluence情報を追加できるようにする
 	//===================================================================*/
-	skinCluster.influenceResource = CreateBufferResource(device, sizeof(VertexInfluence) * modelData.vertices.size());
+	skinCluster.influenceResource = CreateBufferResource(device, sizeof(VertexInfluence) * modelData.meshData.vertices.size());
 	VertexInfluence* mappedInfluence = nullptr;
 	skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
-	std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());//weightを0にしておく
-	skinCluster.mappedInfluence = { mappedInfluence, modelData.vertices.size() }; // spanでアクセス
+	std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.meshData.vertices.size());//weightを0にしておく
+	skinCluster.mappedInfluence = { mappedInfluence, modelData.meshData.vertices.size() }; // spanでアクセス
 
 	//===================================================================*/
 	//	incluence用のvbvの作成
 	//===================================================================*/
 	skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
-	skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
+	skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.meshData.vertices.size());
 	skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
 
 	//===================================================================*/

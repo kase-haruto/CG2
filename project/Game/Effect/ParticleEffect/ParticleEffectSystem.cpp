@@ -6,30 +6,30 @@ ParticleEffectSystem* ParticleEffectSystem::GetInstance() {
 }
 
 void ParticleEffectSystem::Update() {
-	for (auto& effect : activeEffects_) {
-		effect->Update();
-	}
+	//for (auto& effect : activeEffects_) {
+	//	effect->Update();
+	//}
 
-	if (editorPreviewEffect_) {
-		editorPreviewEffect_->Update();
-	}
+	//if (editorPreviewEffect_) {
+	//	editorPreviewEffect_->Update();
+	//}
 
-	//activeEffects_.erase(
-	//	std::remove_if(activeEffects_.begin(), activeEffects_.end(),
-	//				   [](const std::unique_ptr<ParticleEffect>& e) {
-	//	return e->IsFinished();
-	//}),
-	//	activeEffects_.end());
+	////activeEffects_.erase(
+	////	std::remove_if(activeEffects_.begin(), activeEffects_.end(),
+	////				   [](const std::unique_ptr<ParticleEffect>& e) {
+	////	return e->IsFinished();
+	////}),
+	////	activeEffects_.end());
 }
 
-void ParticleEffectSystem::Draw(ID3D12GraphicsCommandList* cmdList) {
-	for (auto& effect : activeEffects_) {
-		effect->Draw(cmdList);
-	}
+void ParticleEffectSystem::Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList) {
+	//for (auto& effect : activeEffects_) {
+	//	effect->Draw(cmdList);
+	//}
 
-	if (editorPreviewEffect_) {
-		editorPreviewEffect_->Draw(cmdList);
-	}
+	//if (editorPreviewEffect_) {
+	//	editorPreviewEffect_->Draw(cmdList);
+	//}
 }
 
 void ParticleEffectSystem::Finalize() { 

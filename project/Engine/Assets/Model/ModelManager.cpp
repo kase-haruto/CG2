@@ -139,7 +139,7 @@ void ModelManager::ProcessLoadingTasks(){
 //----------------------------------------------------------------------------
 // ロード済みモデルを取得（まだロード中なら nullptr）
 //----------------------------------------------------------------------------
-ModelData ModelManager::GetModelData(const std::string& fileName){
+ModelData& ModelManager::GetModelData(const std::string& fileName){
 	std::lock_guard<std::mutex> lock(modelDataMutex_);
 	auto it = modelDatas_.find(fileName);
 	if (it != modelDatas_.end()){
@@ -328,7 +328,7 @@ void ModelManager::CreateGpuResources([[maybe_unused]] const std::string& fileNa
 //----------------------------------------------------------------------------
 void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
 	// 今の時点での頂点数を取得しておく
-	uint32_t baseVertex = static_cast< uint32_t >(modelData.vertices.size());
+	uint32_t baseVertex = static_cast< uint32_t >(modelData.meshData.vertices.size());
 
 	// 頂点追加
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i){
@@ -341,15 +341,15 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
 			vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
 			vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
 		}
-		modelData.vertices.push_back(vertex);
+		modelData.meshData.vertices.push_back(vertex);
 	}
 
 	// インデックス追加（baseVertexオフセットを加算）
 	for (unsigned int i = 0; i < mesh->mNumFaces; ++i){
 		const aiFace& face = mesh->mFaces[i];
-		modelData.indices.push_back(baseVertex + face.mIndices[0]);
-		modelData.indices.push_back(baseVertex + face.mIndices[2]);
-		modelData.indices.push_back(baseVertex + face.mIndices[1]);
+		modelData.meshData.indices.push_back(baseVertex + face.mIndices[0]);
+		modelData.meshData.indices.push_back(baseVertex + face.mIndices[2]);
+		modelData.meshData.indices.push_back(baseVertex + face.mIndices[1]);
 	}
 }
 
@@ -359,23 +359,23 @@ void ModelManager::LoadMesh(const aiMesh* mesh, ModelData& modelData){
 //----------------------------------------------------------------------------
 void ModelManager::LoadMaterial(const aiScene* scene, const aiMesh* mesh, ModelData& modelData){
 	if (!scene->HasMaterials()){
-		modelData.material.textureFilePath = "white1x1.png";
+		modelData.meshData.material.textureFilePath = "white1x1.png";
 		return;
 	}
 	const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 	if (!material){
-		modelData.material.textureFilePath = "white1x1.png";
+		modelData.meshData.material.textureFilePath = "white1x1.png";
 		return;
 	}
 
 	aiString texPath;
 	if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS){
-		modelData.material.textureFilePath = texPath.C_Str();
+		modelData.meshData.material.textureFilePath = texPath.C_Str();
 	} else{
-		modelData.material.textureFilePath = "white1x1.png";
+		modelData.meshData.material.textureFilePath = "white1x1.png";
 	}
 
-	LoadUVTransform(material, modelData.material);
+	LoadUVTransform(material, modelData.meshData.material);
 }
 
 //----------------------------------------------------------------------------

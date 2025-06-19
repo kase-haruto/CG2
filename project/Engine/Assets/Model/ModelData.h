@@ -7,6 +7,7 @@
 #include <Engine/Graphics/Material.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
 #include <Engine/Graphics/Pipeline/PipelineDesc/Input/VertexLayout.h>
+#include <Engine/Objects/3D/Mesh/MeshData.h>
 
 /* c++ */
 #include <d3d12.h>
@@ -15,10 +16,7 @@
 #include <wrl.h>
 
 struct ModelData{
-	std::vector<VertexPosUvN> vertices;
-	std::vector<uint32_t> indices;
-
-	MaterialData material;
+	MeshData meshData; // メッシュデータ
 
 	//-----------------------------------------------------------
 	// アニメーション情報

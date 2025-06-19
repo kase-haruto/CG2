@@ -16,6 +16,7 @@
 /* object */
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <Engine/Foundation/Math/Quaternion.h>
+#include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
 /* c++ */
 #include <vector>
@@ -54,6 +55,8 @@ private:
 	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
 	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
 	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
+
+	std::unique_ptr<FxEmitter> emitter_ = nullptr;
 
 	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 
