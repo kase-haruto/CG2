@@ -41,6 +41,16 @@ private:
 	//===================================================================*/
 	void Emit();
 
+public:
+	//===================================================================*/
+	//					public variable
+	//===================================================================*/
+	Vector3 position_;					//< emitterの位置
+	float emitRate_ = 0.1f;				//< パーティクル生成レート
+	FxParam<Vector3> velocity_;			//< パーティクルの速度（定数またはランダム）
+	FxParam<float> lifetime_;			//< パーティクルの寿命（定数またはランダム）
+	float defaultSize_ = 1.0f;			//< パーティクルのデフォルトサイズ
+
 private:
 	//===================================================================*/
 	//					private variable
@@ -54,12 +64,6 @@ private:
 	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
 	int unitCount_ = 0;						//< 現在のパーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
-	Vector3 position_;						//< エミッターの位置
 
-	float emitRate_ = 0.1f;					//< パーティクル生成レート
 	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
-
-	FxParam<Vector3> velocity_;
-	FxParam<float> lifetime_;
-
 };

@@ -19,11 +19,6 @@ void EditorCollection::InitializeEditors(){
 	auto effectEditor = std::make_unique<EffectEditor>("EffectEditor");
 	editors_.insert({EditorType::Effect, std::move(effectEditor)});
 
-	//===================================================================*/
-	//			UiEditor
-	//===================================================================*/
-	auto uiEditor = std::make_unique<UIEditor>("UiEditor");
-	editors_.insert({EditorType::Ui, std::move(uiEditor)});
 }
 
 void EditorCollection::UpdateEditors(){
