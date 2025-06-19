@@ -21,7 +21,7 @@ FxEmitter::FxEmitter(){
 void FxEmitter::Update(float deltaTime){
 	emitTimer_ += deltaTime;
 	const float interval =  emitRate_;
-	while (emitTimer_ >= interval && unitCount_ < kMaxUnits_){
+	if (emitTimer_ >= interval && unitCount_ < kMaxUnits_){
 		emitTimer_ -= interval;
 		Emit();
 	}

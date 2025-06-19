@@ -35,10 +35,13 @@ void EngineController::Initialize(HINSTANCE hInstance){
 
 	// engineEditorの初期化
 	editorCollection_ = std::make_unique<EditorCollection>();
-	editorCollection_->SetEngineUICore(engineUICore_.get());
 	editorCollection_->InitializeEditors();
 	auto ppCollection = dynamic_cast< PostProcessEditor* >(editorCollection_->GetEditor(EditorCollection::EditorType::PostProcess));
 	ppCollection->SetPostEffectCollection(system_->GetPostProcessCollection());
+
+	// エディターパネルにエディターを追加
+	engineUICore_->GetEditorPanel()->AddEditor(editorCollection_->GetEditor(EditorCollection::EditorType::PostProcess));
+	engineUICore_->GetEditorPanel()->AddEditor(editorCollection_->GetEditor(EditorCollection::EditorType::Effect));
 
 	// シーンマネージャ初期化
 	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore(),graphicsSystem_.get());
