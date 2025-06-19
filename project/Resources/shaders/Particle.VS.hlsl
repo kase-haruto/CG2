@@ -20,8 +20,8 @@ struct Camera {
     float4x4 projection;
     float4x4 viewProjection;
     float3 cameraPosition;
-    float3 camRight; // ViewMatrixのX列
-    float3 camUp; // ViewMatrixのY列
+    float3 camRight;    // ViewMatrixのX列
+    float3 camUp;       // ViewMatrixのY列
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,32 +29,48 @@ struct Camera {
 ///////////////////////////////////////////////////////////////////////////////
 ConstantBuffer<Camera> gCamera : register(b0);
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //                            tables
 ///////////////////////////////////////////////////////////////////////////////
 StructuredBuffer<ParticleData> gParticle : register(t0);
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
-//                            main
+//                            main (shader内でビルボード処理
 ///////////////////////////////////////////////////////////////////////////////
 VertexShaderOutput main(uint vertexID : SV_VertexID,
-                        uint instanceID : SV_InstanceID){
-    ParticleData p = gParticle[instanceID];
+                        uint instanceID : SV_InstanceID) {
+	ParticleData p = gParticle[instanceID];
 
-    // 0,1,2,3 → (-0.5,0.5),(0.5,0.5),(-0.5,-0.5),(0.5,-0.5)
-    float2 corner = float2((vertexID & 1) ? 0.5f : -0.5f,
-                            (vertexID & 2) ? -0.5f : 0.5f);
-    float2 offset = corner * p.size;
-    float3 worldPos = p.position
+    // 頂点の位置（TRIANGLESTRIP順: 左下, 左上, 右下, 右上）
+	float2 corner;
+	float2 texcoord;
+	switch(vertexID) {
+		case 0:
+			corner = float2(-0.5f, -0.5f);
+			texcoord = float2(0.0f, 1.0f);
+			break;
+		case 1:
+			corner = float2(-0.5f, 0.5f);
+			texcoord = float2(0.0f, 0.0f);
+			break;
+		case 2:
+			corner = float2(0.5f, -0.5f);
+			texcoord = float2(1.0f, 1.0f);
+			break;
+		case 3:
+			corner = float2(0.5f, 0.5f);
+			texcoord = float2(1.0f, 0.0f);
+			break;
+	}
+
+	float2 offset = corner * p.size;
+	float3 worldPos = p.position
                     + gCamera.camRight * offset.x
                     + gCamera.camUp * offset.y;
 
-    VertexShaderOutput o;
-    o.position = mul(float4(worldPos, 1), gCamera.viewProjection);
-    o.texcoord = float2(vertexID & 1, vertexID >> 1);
-    o.color = p.color;
-    return o;
+	VertexShaderOutput o;
+	o.position = mul(float4(worldPos, 1.0f), gCamera.viewProjection);
+	o.texcoord = texcoord;
+	o.color = p.color;
+	return o;
 }

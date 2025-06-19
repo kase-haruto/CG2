@@ -75,8 +75,8 @@ GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode){
 		.PS(L"Particle.PS.hlsl")
 		.Input(VertexInputLayout<VertexPosUvN>::Get())
 		.Blend(mode)
-		.CullBack()
-		.DepthEnable(true)
+		.CullNone()
+		.DepthEnable(false)
 		.RTV(DXGI_FORMAT_R8G8B8A8_UNORM)
 		.Samples(1);
 

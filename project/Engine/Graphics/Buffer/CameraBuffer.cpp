@@ -19,6 +19,11 @@ void Camera3DBuffer::Update(const Matrix4x4& view, const Matrix4x4& proj, const 
 	data_.projection = proj;
 	data_.viewProjection = Matrix4x4::Multiply(view, proj);
 	data_.worldPosition = worldPos;
+
+	  // ビルボード用のカメラの右・上ベクトル（View行列のX列とY列）
+	data_.camRight = Vector3(view.m[0][0], view.m[1][0], view.m[2][0]);
+	data_.camUp = Vector3(view.m[0][1], view.m[1][1], view.m[2][1]);
+
 	// バッファにデータを転送
 	buffer_.TransferData(data_);
 }
@@ -31,7 +36,7 @@ void Camera3DBuffer::SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType
 
 	if (pipelineType == PipelineType::Object3D || pipelineType == PipelineType::SkinningObject3D) {
 		rootParameterIndex = 4;
-	} else if (pipelineType == PipelineType::Line || pipelineType == PipelineType::Skybox||pipelineType == PipelineType::StructuredObject) {
+	} else if (pipelineType == PipelineType::Line || pipelineType == PipelineType::Skybox) {
 		rootParameterIndex = 1;
 	}
 

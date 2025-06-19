@@ -34,7 +34,7 @@ public:
 	const std::string& GetModelPath() const{ return modelPath; }
 	const std::string& GetTexturePath() const{ return texturePath; }
 	const ParticleMaterial& GetMaterial() const{ return material_; }
-
+	const DxConstantBuffer<ParticleMaterial>& GetMaterialBuffer() const { return materialBuffer_; }
 private:
 	//===================================================================*/
 	//					private func

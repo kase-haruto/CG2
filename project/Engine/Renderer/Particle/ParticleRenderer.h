@@ -25,10 +25,7 @@ private:
 	//					private functions
 	//===================================================================*/
 	void RenderGrouped(const std::string& modelPath,
-					   const std::string& texturePath,
-					   const ParticleMaterial& material,
 					   const std::vector<ParticleConstantData>& gpuUnits,
-					   class PipelineService* pipelineService,
 					   ID3D12GraphicsCommandList* cmdList);
 private:
 	//===================================================================*/
