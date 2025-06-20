@@ -95,71 +95,65 @@ void ImGuiManager::Draw(){
 
 void ImGuiManager::CustomizeImGuiStyle(){
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowPadding = ImVec2(0, 0); // ウィンドウのパディング
+	style.WindowPadding = ImVec2(8, 8);
 	ImVec4* colors = style.Colors;
 
-	// 全体の背景色とウィンドウ背景
-	colors[ImGuiCol_WindowBg] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f); // 非常に暗い背景
-	colors[ImGuiCol_ChildBg] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f); // 子ウィンドウ背景
-	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f); // ポップアップ背景
-
-	// フレーム系
-	colors[ImGuiCol_FrameBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // フレーム背景
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // フレームホバー時
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // フレームアクティブ時
-
-	// ボタン
-	colors[ImGuiCol_Button] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // 通常ボタン
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // ホバー時
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // クリック時
-
-	// タブ
-	colors[ImGuiCol_Tab] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // 通常タブ
-	colors[ImGuiCol_TabHovered] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // ホバー時
-	colors[ImGuiCol_TabActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // アクティブなタブ
-	colors[ImGuiCol_TabUnfocused] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f); // 非フォーカスタブ
-	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // 非フォーカス時のアクティブタブ
+	// 全体背景
+	colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.13f, 0.14f, 1.0f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.10f, 0.11f, 0.12f, 1.0f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.14f, 0.14f, 0.15f, 1.0f);
 
 	// テキスト
-	colors[ImGuiCol_Text] = ImVec4(0.9f, 0.9f, 0.9f, 1.0f);  // 明るい白グレー
-	colors[ImGuiCol_TextDisabled] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);  // 無効化テキスト
+	colors[ImGuiCol_Text] = ImVec4(0.90f, 0.92f, 0.95f, 1.0f);
+	colors[ImGuiCol_TextDisabled] = ImVec4(0.55f, 0.55f, 0.58f, 1.0f);
 
-	// ボーダーとセパレーター
-	colors[ImGuiCol_Border] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // 境界線
-	colors[ImGuiCol_Separator] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // セパレーター
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);  // ホバー時
-	colors[ImGuiCol_SeparatorActive] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);  // アクティブ時
+	// フレーム
+	colors[ImGuiCol_FrameBg] = ImVec4(0.18f, 0.20f, 0.22f, 1.0f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.25f, 0.27f, 0.30f, 1.0f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.30f, 0.33f, 0.36f, 1.0f);
+
+	// ボタン
+	colors[ImGuiCol_Button] = ImVec4(0.20f, 0.22f, 0.25f, 1.0f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.28f, 0.30f, 0.33f, 1.0f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.32f, 0.35f, 0.38f, 1.0f);
+
+	// タブ
+	colors[ImGuiCol_Tab] = ImVec4(0.16f, 0.18f, 0.20f, 1.0f);
+	colors[ImGuiCol_TabHovered] = ImVec4(0.25f, 0.27f, 0.30f, 1.0f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.30f, 0.33f, 1.0f);
+	colors[ImGuiCol_TabUnfocused] = ImVec4(0.12f, 0.12f, 0.13f, 1.0f);
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.18f, 0.20f, 0.22f, 1.0f);
+
+	// ヘッダー（例: 選択リストやツリー）
+	colors[ImGuiCol_Header] = ImVec4(0.20f, 0.22f, 0.25f, 1.0f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.27f, 0.30f, 1.0f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.30f, 0.33f, 0.36f, 1.0f);
+
+	// タイトルバー
+	colors[ImGuiCol_TitleBg] = ImVec4(0.12f, 0.13f, 0.14f, 1.0f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.18f, 0.20f, 0.22f, 1.0f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.10f, 0.10f, 0.11f, 1.0f);
 
 	// スクロールバー
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f); // 背景
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);    // 通常時
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f); // ホバー時
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f); // アクティブ時
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.10f, 0.11f, 1.0f);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.28f, 0.28f, 0.30f, 1.0f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.35f, 0.35f, 0.37f, 1.0f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.40f, 0.40f, 0.42f, 1.0f);
 
-	// プログレスバー
-	colors[ImGuiCol_PlotLines] = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);  // ライン
-	colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.9f, 0.9f, 0.9f, 1.0f);  // ホバー時
-	colors[ImGuiCol_PlotHistogram] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);  // ヒストグラム
-	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.8f, 0.8f, 0.8f, 1.0f); // ホバー時
+	// ボーダー・セパレーター
+	colors[ImGuiCol_Border] = ImVec4(0.24f, 0.24f, 0.26f, 1.0f);
+	colors[ImGuiCol_Separator] = ImVec4(0.28f, 0.28f, 0.30f, 1.0f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.34f, 0.34f, 0.36f, 1.0f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(0.40f, 0.40f, 0.42f, 1.0f);
 
-	// 選択されていないときの色 (水色を黒系に変更)
-	colors[ImGuiCol_Header] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // 通常ヘッダー
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // ホバー時
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // アクティブ
+	// プロット（折れ線/棒）
+	colors[ImGuiCol_PlotLines] = ImVec4(0.70f, 0.75f, 0.85f, 1.0f);
+	colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.90f, 0.90f, 0.95f, 1.0f);
+	colors[ImGuiCol_PlotHistogram] = ImVec4(0.60f, 0.65f, 0.70f, 1.0f);
+	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.75f, 0.78f, 0.80f, 1.0f);
 
-	// タイトルバーの色 (アクティブ / 非アクティブ)
-	colors[ImGuiCol_TitleBg] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f); // 非アクティブ時の背景
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);    // アクティブ時の背景
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.02f, 0.02f, 0.02f, 1.0f); // 折りたたみ時の背景
-
-	// ヘッダー (選択された要素やタブの色)
-	colors[ImGuiCol_Header] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);  // 通常ヘッダー
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);  // ホバー時
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);  // アクティブ状態
-
-
-	// 丸みを少なくしてフラットな印象に
-	style.WindowRounding = 2.0f;  // ウィンドウ角丸
-	style.FrameRounding = 2.0f;   // フレーム角丸
-	style.GrabRounding = 2.0f;    // スクロールグラブ角丸
+	// 丸みなどのスタイル
+	style.WindowRounding = 4.0f;
+	style.FrameRounding = 4.0f;
+	style.GrabRounding = 4.0f;
 }

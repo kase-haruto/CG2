@@ -22,6 +22,7 @@ public:
 	~HierarchyPanel() override = default;
 
 	void Render() override;
+	void ShowObjectRecursive(SceneObject* obj);
 	const std::string& GetPanelName() const override;
 
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
