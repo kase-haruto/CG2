@@ -15,6 +15,7 @@ struct Matrix4x4 final{
 	static Matrix4x4 MakeIdentity();
 	static Matrix4x4 Inverse(const Matrix4x4& m);
 	static Vector3 ToEuler(const Matrix4x4& matrix);
+	static Vector3 Translation(const Matrix4x4& matrix);
 	static Matrix4x4 Transpose(const Matrix4x4& mat);
 	static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 	static Matrix4x4 MakeLookRotationMatrix(const Vector3& forward, const Vector3& up);

@@ -171,7 +171,7 @@ void EngineController::UpdatePostEffectControl(float dt) {
 /////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::EndUpdate(){
 	// UI描画
-	engineUICore_->Render();
+	engineUICore_->Render();	
 
 	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }

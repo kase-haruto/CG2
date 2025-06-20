@@ -32,7 +32,8 @@ Manipulator::Manipulator() {
 	iconUniversal_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/universal.png").ptr);
 	iconWorld_.texture = reinterpret_cast<ImTextureID>(TextureManager::GetInstance()->LoadTexture("UI/Tool/world.png").ptr);
 }
-void Manipulator::Update() {
+
+void Manipulator::Update(){
 	if (!target_ || !camera_) return;
 
 	float view[16], proj[16], world[16];
@@ -40,21 +41,25 @@ void Manipulator::Update() {
 	Matrix4x4::Transpose(camera_->GetProjectionMatrix()).CopyToArray(proj);
 	Matrix4x4::Transpose(target_->matrix.world).CopyToArray(world);
 
-	/* ─────────────── state ─────────────── */
 	static bool wasUsing = false;
 	static std::unique_ptr<ScopedGizmoCommand> scopedCmd;
 
-	/* ────────── Gizmo 描画 / 操作 ───────── */
 	ImGuizmo::Manipulate(view, proj, operation_, mode_, world);
 
 	bool usingNow = ImGuizmo::IsUsing();
 
-	/* ──────── 変換結果を書き戻し ──────── */
-	if (usingNow) {
+	if (usingNow){
 		Matrix4x4 worldEdited = ColumnArrayToRow(world);
-		Matrix4x4 localEdited = target_->parent
-			? Matrix4x4::Inverse(target_->parent->matrix.world) * worldEdited
-			: worldEdited;
+
+		Matrix4x4 localEdited;
+
+		if (target_->parent){
+			// 親の worldMatrix の逆行列を使ってローカル変換を求める
+			localEdited = Matrix4x4::Inverse(target_->parent->matrix.world) * worldEdited;
+		} else{
+			// 親がいなければローカル＝ワールド
+			localEdited = worldEdited;
+		}
 
 		float decomposed[16];
 		RowToColumnArray(localEdited, decomposed);
@@ -62,20 +67,19 @@ void Manipulator::Update() {
 		float pos[3], rot[3], scl[3];
 		ImGuizmo::DecomposeMatrixToComponents(decomposed, pos, rot, scl);
 
-		target_->translation = { pos[0], pos[1], pos[2] };
-		target_->scale = { scl[0], scl[1], scl[2] };
+		target_->translation = {pos[0], pos[1], pos[2]};
+		target_->scale = {scl[0], scl[1], scl[2]};
 
 		constexpr float DegToRad = 3.14159265f / 180.0f;
-		Vector3 euler = { rot[0] * DegToRad, rot[1] * DegToRad, rot[2] * DegToRad };
+		Vector3 euler = {rot[0] * DegToRad, rot[1] * DegToRad, rot[2] * DegToRad};
 		target_->rotation = Quaternion::EulerToQuaternion(euler);
 
 		target_->rotationSource = RotationSource::Quaternion;
 	}
 
-	/* ──────── 編集開始 / 終了検出 ──────── */
-	if (usingNow && !wasUsing) {   // 編集 “開始”
+	if (usingNow && !wasUsing){   // 編集 “開始”
 		scopedCmd = std::make_unique<ScopedGizmoCommand>(target_, operation_);
-	} else if (!usingNow && wasUsing && scopedCmd) {   // 編集 “終了”
+	} else if (!usingNow && wasUsing && scopedCmd){   // 編集 “終了”
 		scopedCmd->CaptureAfter();
 		if (!scopedCmd->IsTrivial())
 			CommandManager::GetInstance()->Execute(std::move(scopedCmd));
@@ -84,7 +88,6 @@ void Manipulator::Update() {
 	}
 	wasUsing = usingNow;
 }
-
 
 void Manipulator::RenderOverlay(){}
 

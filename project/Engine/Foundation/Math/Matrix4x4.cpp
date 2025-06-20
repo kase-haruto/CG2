@@ -251,6 +251,14 @@ Vector3 Matrix4x4::ToEuler(const Matrix4x4& matrix){
 	return euler;
 }
 
+Vector3 Matrix4x4::Translation(const Matrix4x4& matrix){
+	return Vector3 {
+		matrix.m[0][3],
+		matrix.m[1][3],
+		matrix.m[2][3]
+	};
+}
+
 Matrix4x4 Matrix4x4::Transpose(const Matrix4x4& mat){
 	Matrix4x4 result;
 	for (int r = 0; r < 4; ++r){

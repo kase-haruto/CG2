@@ -74,6 +74,7 @@ public:
 	//--------- main -----------------------------------------------------
 	virtual void Initialize();
 	virtual void Update([[maybe_unused]]const Matrix4x4& viewProMatrix){}
+	virtual void Update(){}
 	virtual void SetCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList,
 							UINT rootParameterIndex)const{
 		DxBuffer::SetCommand(commandList, rootParameterIndex);
@@ -115,7 +116,7 @@ public:
 	~WorldTransform()override = default;
 
 	virtual void Update(const Matrix4x4& viewProMatrix) override;
-	void Update();
+	void Update()override;
 
 	//--- コンフィグ同期 ---
 	void ApplyConfig(const WorldTransformConfig& config);

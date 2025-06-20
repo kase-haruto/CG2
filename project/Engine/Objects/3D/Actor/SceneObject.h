@@ -55,10 +55,21 @@ public:
 
 	bool IsEnableRaycast() const { return isEnableRaycast_; }
 	void SetEnableRaycast(bool enable) { isEnableRaycast_ = enable; }
+
+	// 親子関係
+	SceneObject* GetParent() const{ return parent_; }
+	const std::vector<SceneObject*>& GetChildren() const{ return children_; }
+	void SetParent(SceneObject* newParent);
+
+	void UpdateWorldTransformRecursive();
+
 protected:
 	std::string name_ = "";          // オブジェクト名
 	ObjectType  objectType_ = ObjectType::None;
 	WorldTransform worldTransform_;             // ワールドトランスフォーム
+	// 親子構造
+	SceneObject* parent_ = nullptr;
+	std::vector<SceneObject*> children_;
 
 	// 設定ファイル保存先パス
 	std::string configPath_ = "";
