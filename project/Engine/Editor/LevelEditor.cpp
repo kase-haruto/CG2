@@ -174,7 +174,7 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 
 	// 現在の選択オブジェクトをリセット（古いシーンに属している可能性あり）
 	SetSelectedObject(nullptr);
-	ClearSelection(); // ⬅️ 明示的に無効化（ダングリング防止）
+	ClearSelection();
 
 	if (newContext){
 		// HierarchyPanel: 削除されたら選択解除
@@ -190,6 +190,7 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 		sceneEditor_->BindRemovalCallback(newContext);
 	}
 }
+
 void LevelEditor::TryPickUnderCursor() {
 	Vector2 origin = debugViewport_->GetPosition();	// ビューポート描画位置（スクリーン座標）
 	Vector2 size = debugViewport_->GetSize();		// ビューポートの実際のサイズ（ピクセル）

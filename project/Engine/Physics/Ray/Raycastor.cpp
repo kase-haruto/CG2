@@ -44,25 +44,27 @@ std::optional<RaycastHit> Raycastor::Raycast(const Ray& ray, const std::vector<S
 }
 
 Ray Raycastor::ConvertMouseToRay(const Vector2& mousePos, const Matrix4x4& view, const Matrix4x4& proj, const Vector2& viewportSize){
-	// 1. スクリーン空間 → 正規化デバイス座標（NDC）
+	// 1. NDC座標に変換
 	float ndcX = (2.0f * mousePos.x) / viewportSize.x - 1.0f;
-	float ndcY = 1.0f - (2.0f * mousePos.y) / viewportSize.y; // Y軸反転
-	float ndcZ = 1.0f; // DirectXは Z=1 が far plane
+	float ndcY = 1.0f - (2.0f * mousePos.y) / viewportSize.y; // Y反転（DirectX準拠）
 
-	Vector3 ndcRay = Vector3(ndcX, ndcY, ndcZ);
+	// 2. 近接点 (z=0) と遠方点 (z=1) をクリップ空間で作成
+	Vector4 nearPoint = Vector4(ndcX, ndcY, 0.0f, 1.0f); // near plane
+	Vector4 farPoint = Vector4(ndcX, ndcY, 1.0f, 1.0f); // far plane
 
-	// 2. NDC → View space（視錐台座標系）
+	// 3. 逆射影行列でview空間に戻す
 	Matrix4x4 invProj = Matrix4x4::Inverse(proj);
-	Vector4 rayView = invProj * Vector4(ndcRay, 1.0f);
-	rayView.z = 1.0f; // ディレクションベクトルにするため
-	rayView.w = 0.0f;
+	Vector4 nearView = invProj * nearPoint;
+	Vector4 farView = invProj * farPoint;
 
-	// 3. View space → World space
+	// 4. 視点空間からワールド空間へ変換
 	Matrix4x4 invView = Matrix4x4::Inverse(view);
-	Vector4 rayWorld = invView * rayView;
+	Vector4 nearWorld = invView * (nearView / nearView.w);
+	Vector4 farWorld = invView * (farView / farView.w);
 
-	Vector3 rayDir = rayWorld.xyz().Normalize();
-	Vector3 rayOrigin = Matrix4x4::Translation(invView); // カメラ位置
+	// 5. レイ作成
+	Vector3 origin = nearWorld.xyz();
+	Vector3 direction = (farWorld.xyz() - origin).Normalize();
 
-	return Ray {rayOrigin, rayDir};
+	return Ray {origin, direction};
 }
