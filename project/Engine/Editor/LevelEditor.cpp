@@ -71,10 +71,10 @@ void LevelEditor::Initialize() {
 
 void LevelEditor::Update() {
 #ifdef _DEBUG
-		//// 入力チェックはここで行う
-	//if (Input::GetInstance()->TriggerMouseButton(0)) {
-	//	TryPickUnderCursor(); // レイキャストして選択処理へ
-	//}9
+		// 入力チェックはここで行う
+	if (Input::GetInstance()->TriggerMouseButton(MouseButton::Left)) {
+		TryPickUnderCursor(); // レイキャストして選択処理へ
+	}
 #endif // _DEBUG
 }
 
@@ -84,12 +84,16 @@ void LevelEditor::Render() {
 	placeToolPanel_->Render();
 	menu_->Render();
 
+	inspector_->SetSelectedEditor(selectedEditor_);
+	inspector_->SetSelectedObject(selectedObject_);
+
 	// ----------------------------
 	// Open Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")) {
-		if (ImGuiFileDialog::Instance()->IsOk()) {
+	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			ClearSelection(); // 既存の選択をクリア
 			SceneSerializer::Load(*pSceneContext_, filePath);
 		}
 		ImGuiFileDialog::Instance()->Close();
@@ -98,17 +102,14 @@ void LevelEditor::Render() {
 	// ----------------------------
 	// Save Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
-		if (ImGuiFileDialog::Instance()->IsOk()) {
+	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			SceneSerializer::Save(*pSceneContext_, filePath);
 		}
 		ImGuiFileDialog::Instance()->Close();
 	}
 
-
-	inspector_->SetSelectedEditor(selectedEditor_);
-	inspector_->SetSelectedObject(selectedObject_);
 	inspector_->Render();
 
 	sceneEditor_->Update();
@@ -141,7 +142,8 @@ void LevelEditor::RenderViewport(ViewportType type, const ImTextureID& tex) {
 }
 
 void LevelEditor::TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj) {
-	Ray ray = Raycastor::ConvertMouseToRay(mouse, view, proj, viewportSize);
+	Vector2 mouseLocal = mouse - debugViewport_->GetPosition();
+	Ray ray = Raycastor::ConvertMouseToRay(mouseLocal, view, proj, viewportSize);
 	if (SceneObject* obj = PickSceneObjectByRay(ray)) {
 		SetSelectedObject(obj);
 	}
@@ -172,7 +174,7 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 
 	// 現在の選択オブジェクトをリセット（古いシーンに属している可能性あり）
 	SetSelectedObject(nullptr);
-	sceneEditor_->ClearSelection(); // ⬅️ 明示的に無効化（ダングリング防止）
+	ClearSelection();
 
 	if (newContext){
 		// HierarchyPanel: 削除されたら選択解除
@@ -188,6 +190,7 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 		sceneEditor_->BindRemovalCallback(newContext);
 	}
 }
+
 void LevelEditor::TryPickUnderCursor() {
 	Vector2 origin = debugViewport_->GetPosition();	// ビューポート描画位置（スクリーン座標）
 	Vector2 size = debugViewport_->GetSize();		// ビューポートの実際のサイズ（ピクセル）
