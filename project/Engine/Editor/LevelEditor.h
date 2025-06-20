@@ -38,6 +38,13 @@ private:
 
 private:
 	void SaveScene();
+	void ClearSelection(){
+		selectedEditor_ = nullptr;
+		selectedObject_ = nullptr;
+		hierarchy_->SetSelectedObject(nullptr);
+		inspector_->SetSelectedObject(nullptr);
+		sceneEditor_->ClearSelection();
+	}
 
 private:
 	// 管理UI
