@@ -11,7 +11,8 @@
 
 
 class ParticleSystemObject
-	:public SceneObject {
+	:public SceneObject ,
+	 public FxEmitter {
 public:
 	//===================================================================*/
 	//					public func
@@ -24,12 +25,9 @@ public:
 	void Update() override;
 	void ShowGui()override;
 
-	FxEmitter* GetParticleEmitter() const{ return particleEmitter_.get(); }
-
 private:
 	//===================================================================*/
 	//					private func
 	//===================================================================*/
-	std::unique_ptr<FxEmitter> particleEmitter_;
 };
 

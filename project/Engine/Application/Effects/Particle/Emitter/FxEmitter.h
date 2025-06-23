@@ -26,7 +26,7 @@ public:
 	FxEmitter();
 	~FxEmitter() = default;
 
-	void Update(float deltaTime);
+	virtual void Update();
 	void ResetFxUnit(FxUnit& fxUnit);
 
 	//--------- accessor -------------------------------------------------//

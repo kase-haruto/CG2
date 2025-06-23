@@ -83,7 +83,7 @@ void TestScene::Initialize() {
 	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 
 	CreateAndAddObject<ParticleSystemObject>(sceneContext_.get(), particleSystem_, "particleSystem");
-	sceneContext_->GetFxSystem()->AddEmitter(particleSystem_->GetParticleEmitter());
+	sceneContext_->GetFxSystem()->AddEmitter(particleSystem_.get());
 
 	//=========================
 	// 描画登録

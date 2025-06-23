@@ -6,6 +6,7 @@
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Application/Effects/Particle/FxUnit.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
+#include <Engine/Foundation/Clock/ClockManager.h>
 
 
 FxEmitter::FxEmitter(){
@@ -18,7 +19,9 @@ FxEmitter::FxEmitter(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //			更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::Update(float deltaTime){
+void FxEmitter::Update(){
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+
 	emitTimer_ += deltaTime;
 	const float interval =  emitRate_;
 	if (emitTimer_ >= interval && unitCount_ < kMaxUnits_){

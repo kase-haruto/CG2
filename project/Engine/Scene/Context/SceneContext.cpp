@@ -21,14 +21,13 @@ SceneContext::~SceneContext() {
 void SceneContext::Initialize() {}
 
 void SceneContext::Update() {
-	float dt = ClockManager::GetInstance()->GetDeltaTime();
 
 	for (auto& obj : editorObjects_) {
 		obj->Update();
 	}
 	lightLibrary_->Update();
 
-	fxSystem_->Update(dt);
+	fxSystem_->Update();
 }
 
 void SceneContext::Clear() {

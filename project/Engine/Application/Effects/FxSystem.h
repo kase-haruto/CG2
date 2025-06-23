@@ -2,8 +2,10 @@
 /* ========================================================================
 /*	include space
 /* ===================================================================== */
+// engine
 #include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
+// c++ 
 #include <memory>
 
 /* ========================================================================
@@ -15,7 +17,7 @@ public:
 	//					public func
 	//===================================================================*/
 	void AddEmitter(FxEmitter* emitter);
-	void Update(float dt);
+	void Update();
 	const std::vector<FxEmitter*>& GetEmitters() const{ return emitters_; }
 private:
 	//===================================================================*/
