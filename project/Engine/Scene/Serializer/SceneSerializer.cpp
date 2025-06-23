@@ -65,6 +65,11 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path) {
 					}
 					break;
 				}
+			case ObjectType::ParticleSystem:
+				{
+					break;
+				}
+
 			default:
 				continue;
 		}

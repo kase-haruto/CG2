@@ -4,6 +4,7 @@
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 ParticleSystemObject::ParticleSystemObject(const std::string& name){
 	SceneObject::SetName(name, ObjectType::ParticleSystem);
+	particleEmitter_ = std::make_unique<FxEmitter>();
 }
 
 void ParticleSystemObject::Update(){

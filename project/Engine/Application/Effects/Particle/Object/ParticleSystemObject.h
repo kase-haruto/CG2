@@ -20,6 +20,7 @@ public:
 	ParticleSystemObject() = default;
 	~ParticleSystemObject() = default;
 
+	void Initialize() {}
 	void Update() override;
 	void ShowGui()override;
 

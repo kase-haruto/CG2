@@ -82,9 +82,8 @@ void TestScene::Initialize() {
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
 	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 
-	emitter_ = std::make_unique<FxEmitter>();
-
-	sceneContext_->GetFxSystem()->AddEmitter(emitter_.get());
+	CreateAndAddObject<ParticleSystemObject>(sceneContext_.get(), particleSystem_, "particleSystem");
+	sceneContext_->GetFxSystem()->AddEmitter(particleSystem_->GetParticleEmitter());
 
 	//=========================
 	// 描画登録

@@ -210,9 +210,9 @@ protected:
 	DxStructuredBuffer<ParticleData::ParticleForGPU> instancingBuffer_;
 
 	/* data =======================*/
-	std::string modelName_;                           // ▼ロードするファイル名を保持
-	std::string textureName_ = "particle.png";        // ▼テクスチャのパスを保持
-	std::optional<ModelData> modelData_;              // ▼取得後に代入
+	std::string modelName_;                           // ロードするファイル名を保持
+	std::string textureName_ = "particle.png";        // テクスチャのパスを保持
+	std::optional<ModelData> modelData_;              // 取得後に代入
 	Material materialData_;
 	std::vector<ParticleData::ParticleForGPU> instanceDataList_;
 
