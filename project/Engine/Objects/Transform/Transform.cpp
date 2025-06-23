@@ -15,7 +15,7 @@
 #include <Engine/Foundation/Json/JsonUtils.h>
 
 
-void EulerTransform::ShowImGui(const std::string& label){
+void EulerTransform::ShowImGui(const std::string& label) {
 	ImGui::SeparatorText(label.c_str());
 	std::string scaleLabel = label + "_scale";
 	std::string rotationLabel = label + "_rotation";
@@ -28,9 +28,9 @@ void EulerTransform::ShowImGui(const std::string& label){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseTransform::Initialize(){
+void BaseTransform::Initialize() {
 	// デフォルト値
-	scale.Initialize({1.0f, 1.0f, 1.0f});
+	scale.Initialize({ 1.0f, 1.0f, 1.0f });
 	rotation.Initialize();
 	translation.Initialize();
 
@@ -42,23 +42,24 @@ void BaseTransform::Initialize(){
 //	imgui
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseTransform::ShowImGui(const std::string& label) {
-	ImGui::SeparatorText(label.c_str());
-	std::string scaleLabel = label + "_scale";
-	std::string rotationLabel = label + "_rotation";
-	std::string translationLabel = label + "_translate";
+	if (ImGui::CollapsingHeader(label.c_str())) {
+		std::string scaleLabel = "scale";
+		std::string rotationLabel = "rotation";
+		std::string translationLabel = "translate";
 
-	GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
-	if (GuiCmd::DragFloat3(rotationLabel.c_str(), eulerRotation)) {
-		rotationSource = RotationSource::Euler; // ⬅️ 回転が変更されたら Euler モードに
+		GuiCmd::DragFloat3(scaleLabel.c_str(), scale);
+		if (GuiCmd::DragFloat3(rotationLabel.c_str(), eulerRotation)) {
+			rotationSource = RotationSource::Euler; 
+		}
+		GuiCmd::DragFloat3(translationLabel.c_str(), translation);
 	}
-	GuiCmd::DragFloat3(translationLabel.c_str(), translation);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	ワールド座標空間での位置を取得
 /////////////////////////////////////////////////////////////////////////////////////////
-Vector3 BaseTransform::GetWorldPosition() const{
-	Vector3 worldPos {};
+Vector3 BaseTransform::GetWorldPosition() const {
+	Vector3 worldPos{};
 	worldPos.x = matrix.world.m[3][0];
 	worldPos.y = matrix.world.m[3][1];
 	worldPos.z = matrix.world.m[3][2];
@@ -135,7 +136,7 @@ void WorldTransform::Update() {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグ適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void WorldTransform::ApplyConfig(const WorldTransformConfig& config){
+void WorldTransform::ApplyConfig(const WorldTransformConfig& config) {
 	scale = config.scale;
 	translation = config.translation;
 	rotation = config.rotation;
@@ -147,7 +148,7 @@ void WorldTransform::ApplyConfig(const WorldTransformConfig& config){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンフィグから抽出
 /////////////////////////////////////////////////////////////////////////////////////////
-WorldTransformConfig WorldTransform::ExtractConfig(){
+WorldTransformConfig WorldTransform::ExtractConfig() {
 	WorldTransformConfig config;
 	config.translation = translation;
 	config.rotation = rotation;
@@ -159,15 +160,15 @@ WorldTransformConfig WorldTransform::ExtractConfig(){
 /* ========================================================================
 /* Transform2D class
 /* ===================================================================== */
-void Transform2D::ShowImGui(const std::string& lavel){
-	if (ImGui::CollapsingHeader(lavel.c_str())){
+void Transform2D::ShowImGui(const std::string& lavel) {
+	if (ImGui::CollapsingHeader(lavel.c_str())) {
 		GuiCmd::DragFloat2("scale", scale, 0.01f);
 		GuiCmd::DragFloat("rotation", rotate, 0.01f);
 		GuiCmd::DragFloat2("translate", translate, 0.01f);
 	}
 }
 
-Transform2DConfig Transform2D::ExtractConfig() const{
+Transform2DConfig Transform2D::ExtractConfig() const {
 	Transform2DConfig config;
 	config.scale = scale;
 	config.rotation = rotate;
@@ -175,15 +176,15 @@ Transform2DConfig Transform2D::ExtractConfig() const{
 	return config;
 }
 
-void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel){
-	if (ImGui::CollapsingHeader(lavel.c_str())){
+void Transform2D::ShowImGui(Transform2DConfig& config, const std::string& lavel) {
+	if (ImGui::CollapsingHeader(lavel.c_str())) {
 		GuiCmd::DragFloat2("scale", config.scale, 0.01f);
 		GuiCmd::DragFloat("rotation", config.rotation, 0.01f);
 		GuiCmd::DragFloat2("translate", config.translation, 0.01f);
 	}
 }
 
-void Transform2D::ApplyConfig(const Transform2DConfig& config){
+void Transform2D::ApplyConfig(const Transform2DConfig& config) {
 	scale = config.scale;
 	rotate = config.rotation;
 	translate = config.translation;

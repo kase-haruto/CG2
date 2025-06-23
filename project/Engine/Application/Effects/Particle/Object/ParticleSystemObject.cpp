@@ -10,7 +10,6 @@ ParticleSystemObject::ParticleSystemObject(const std::string& name){
 
 void ParticleSystemObject::Update(){
 
-
 	position_ = worldTransform_.GetWorldPosition();
 
 	worldTransform_.Update();
@@ -19,6 +18,10 @@ void ParticleSystemObject::Update(){
 }
 
 void ParticleSystemObject::ShowGui(){
-	/*GuiCmd::DragFloat3("Position", particleEmitter_->position_, 0.1f, -100.0f, 100.0f);
-	GuiCmd::DragFloat("Emit Rate", particleEmitter_->emitRate_, 0.01f, 0.0f, 10.0f);*/
+	//particle 名
+	ImGui::Text("Particle System: %s", name_.c_str());
+	worldTransform_.ShowImGui("transform 3d");
+	ImGui::Separator();
+
+	FxEmitter::ShowGui();
 }

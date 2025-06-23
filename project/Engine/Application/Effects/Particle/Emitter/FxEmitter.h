@@ -28,6 +28,7 @@ public:
 
 	virtual void Update();
 	void ResetFxUnit(FxUnit& fxUnit);
+	void ShowGui();
 
 	//--------- accessor -------------------------------------------------//
 	const std::vector<FxUnit>& GetUnits()const { return units_; }
@@ -40,12 +41,14 @@ private:
 	//					private func
 	//===================================================================*/
 	void Emit();
+	void Emit(const Vector3& pos);
 
 public:
 	//===================================================================*/
 	//					public variable
 	//===================================================================*/
 	Vector3 position_;					//< emitterの位置
+	Vector3 prevPostion_;				//< 前回の座標
 	float emitRate_ = 0.1f;				//< パーティクル生成レート
 	FxParam<Vector3> velocity_;			//< パーティクルの速度（定数またはランダム）
 	FxParam<float> lifetime_;			//< パーティクルの寿命（定数またはランダム）
@@ -62,8 +65,10 @@ private:
 	DxConstantBuffer<ParticleMaterial> materialBuffer_; // パーティクルマテリアルの定数バッファ
 
 	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
-	int unitCount_ = 0;						//< 現在のパーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
 
 	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
+
+	bool isComplement_ = true;	//< 補完を行うかどうか
+	bool isStatic_ = false;		//< エミッタが静的かどうか（trueならパーティクルは動かない）
 };
