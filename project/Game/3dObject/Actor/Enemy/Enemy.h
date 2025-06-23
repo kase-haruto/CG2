@@ -4,7 +4,6 @@
 /* include space
 /* ===================================================================== */
 #include <Engine/objects/Collider/SphereCollider.h>
-#include <Game/Effect/ParticleEffect/ParticleEffect.h>
 /* ========================================================================
 /* enemy
 /* ===================================================================== */
@@ -44,7 +43,6 @@ private:
 	//					private variables
 	//===================================================================*/
 	bool isHit_ = false;		// 衝突フラグ
-	ParticleEffect* hitEffect_ = nullptr;
 
 };
 

@@ -7,7 +7,6 @@
 #include <Engine/Application/UI/GUI/ImGuiManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Graphics/Pipeline/Manager/PipelineStateManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectCollection.h>
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 
 // postprocess

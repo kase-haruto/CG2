@@ -2,7 +2,6 @@
 
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 #include <Engine/Objects/Collider/BoxCollider.h>
 
 /* ========================================================================
@@ -23,15 +22,9 @@ Enemy::Enemy(const std::string& modelName, const std::string objName) :
 	collider->SetSize(worldTransform_.scale+1);
 	collider_->SetIsDrawCollider(false);
 
-	InitializeEffect();
-
 	life_ = 3;
 }
 
-void Enemy::InitializeEffect() {
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	hitEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("HitEffect", wPos, EmitType::Once);
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
@@ -58,13 +51,7 @@ void Enemy::Update() {
 }
 
 void Enemy::OnCollisionEnter([[maybe_unused]]Collider* other) {
-	if (hitEffect_) {
-		Vector3 offset = { 0.0f, 0.0f, -2.0f };
-		Vector3 hitPos = worldTransform_.GetWorldPosition()+ offset;
-		hitEffect_->Play(hitPos,EmitType::Once);
-
-		life_--;
-	}
+	life_--;
 }
 
 const Vector3 Enemy::GetCenterPos() const {

@@ -22,7 +22,6 @@
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // editor
 #include <Engine/Assets/Model/ModelBuilder.h>
@@ -207,7 +206,6 @@ void System::EditorUpdate() {
 			cmdManager->Undo();
 	}
 
-	ParticleEffectSystem::GetInstance()->Update();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +228,6 @@ void System::Finalize() {
 	CameraManager::Finalize();
 	//pipelineの終了処理
 	pipelineStateManager_->Finalize();
-	ParticleEffectSystem::GetInstance()->Finalize();
 	SrvLocator::Finalize();
 	Input::Finalize();
 	Audio::Finalize();

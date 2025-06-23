@@ -3,7 +3,6 @@
 /*	include space
 /* ===================================================================== */
 #include <Engine/Objects/3D/Actor/Actor.h>
-#include <Game/Effect/ParticleEffect/ParticleEffect.h>
 #include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
 
 /* ========================================================================
@@ -67,10 +66,4 @@ private:
 	Vector3 lastMoveVector_;
 	// ローリング関連
 	RollSet rollSet_ = {};
-
-
-	ParticleEffect* shootEffect_ = nullptr;
-	ParticleEffect* rollEffect_ = nullptr;
-	ParticleEffect* moveEffect_ = nullptr;
-	std::array<ParticleEffect*, 2> flyTrailEffect_ = { nullptr, nullptr };
 };

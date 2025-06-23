@@ -5,7 +5,6 @@
 
 /* engine */
 #include <Engine/Foundation/Clock/ClockManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 #include <Engine/Objects/Collider/BoxCollider.h>
 
 /* external */
@@ -40,11 +39,6 @@ void BaseBullet::Update() {
 
 	BaseGameObject::Update();
 
-	//effect
-	if (bulletEffect_) {
-		Vector3 wPos = worldTransform_.GetWorldPosition();
-		//bulletEffect_->Play(wPos, EmitType::Both);
-	}
 
 }
 
@@ -59,6 +53,4 @@ void BaseBullet::OnCollisionEnter([[maybe_unused]] Collider* other) {
 }
 
 void BaseBullet::OnShot() {
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	bulletEffect_ = ParticleEffectSystem::GetInstance()->CreateEffectByName("BulletEffect", wPos, EmitType::Both);
 }
