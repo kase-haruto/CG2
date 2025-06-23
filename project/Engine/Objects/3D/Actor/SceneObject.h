@@ -12,6 +12,7 @@ enum class ObjectType {
 	Camera,			//カメラ
 	Light,			//ライト
 	GameObject,		//ゲームオブジェクト
+	ParticleSystem, //パーティクルシステム
 	None,			//なし
 };
 
