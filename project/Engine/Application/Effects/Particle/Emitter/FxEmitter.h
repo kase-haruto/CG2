@@ -36,6 +36,8 @@ public:
 	const std::string& GetTexturePath() const{ return texturePath; }
 	const ParticleMaterial& GetMaterial() const{ return material_; }
 	const DxConstantBuffer<ParticleMaterial>& GetMaterialBuffer() const { return materialBuffer_; }
+	bool IsDrawEnable(){ return isDrawEnable_; }
+	void SetDrawEnable(bool isEnable){ isDrawEnable_ = isEnable; }
 private:
 	//===================================================================*/
 	//					private func
@@ -70,5 +72,6 @@ private:
 	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
 
 	bool isComplement_ = true;	//< 補完を行うかどうか
-	bool isStatic_ = false;		//< エミッタが静的かどうか（trueならパーティクルは動かない）
+	bool isStatic_ = false;		//< エミッタが静的かどうか（trueならパーティクルは動かない
+	bool isDrawEnable_ = true;	//< particleを描画するか
 };

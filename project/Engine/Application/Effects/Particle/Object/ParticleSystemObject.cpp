@@ -25,3 +25,8 @@ void ParticleSystemObject::ShowGui(){
 
 	FxEmitter::ShowGui();
 }
+
+void ParticleSystemObject::SetDrawEnable(bool isDrawEnable){
+	SceneObject::SetDrawEnable(isDrawEnable);
+	FxEmitter::SetDrawEnable(isDrawEnable);
+}

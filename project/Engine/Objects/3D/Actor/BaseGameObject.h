@@ -62,6 +62,7 @@ public:
 	void SetName(const std::string& name);
 	void SetTranslate(const Vector3& pos);
 	void SetScale(const Vector3& scale);
+	void SetDrawEnable(bool isDrawEnable)override;
 	virtual const Vector3 GetCenterPos()const;
 	void SetColor(const Vector4& color);
 	Vector3 GetWorldPosition()const{ return worldTransform_.GetWorldPosition(); }

@@ -25,6 +25,8 @@ public:
 	void Update() override;
 	void ShowGui()override;
 
+	void SetDrawEnable(bool isDrawEnable)override;
+
 private:
 	//===================================================================*/
 	//					private func

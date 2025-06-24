@@ -174,6 +174,11 @@ void BaseGameObject::SetScale(const Vector3& scale) {
 	}
 }
 
+void BaseGameObject::SetDrawEnable(bool isDrawEnable){
+	SceneObject::SetDrawEnable(isDrawEnable);
+	model_->SetIsDrawEnable(isDrawEnable);
+}
+
 const Vector3 BaseGameObject::GetCenterPos()const {
 	const Vector3 offset = { 0.0f, 0.5f, 0.0f };
 	Vector3 worldPos = Vector3::Transform(offset, worldTransform_.matrix.world);

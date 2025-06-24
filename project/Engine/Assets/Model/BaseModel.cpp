@@ -110,6 +110,8 @@ void BaseModel::ShowImGuiInterface() {
 }
 
 void BaseModel::Draw(const WorldTransform& transform) {
+	if (!isDrawEnable_)return;
+
 	ID3D12GraphicsCommandList* cmdList = GraphicsGroup::GetInstance()->GetCommandList().Get();
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

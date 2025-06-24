@@ -19,8 +19,8 @@ void ParticleRenderer::Render(const std::vector<FxEmitter*>& emitters,
 
 	CameraManager::GetInstance()->SetCommand(cmdList, PipelineType::StructuredObject);
 
-	for (const auto* emitter : emitters) {
-		if (!emitter || emitter->GetUnits().empty()) continue;
+	for (auto* emitter : emitters) {
+		if (!emitter || !emitter->IsDrawEnable() || emitter->GetUnits().empty()) continue;
 
 		emitter->GetMaterialBuffer().SetCommand(cmdList,1);
 
