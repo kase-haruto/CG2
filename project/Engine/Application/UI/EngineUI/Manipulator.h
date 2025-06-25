@@ -4,6 +4,7 @@
 /* ===================================================================== */
 
 #include <Engine/Application/UI/EngineUI/IOnViewportTool.h>
+#include <Engine/System/Command/EditorCommand/GuizmoCommand/ScopedGizmoCommand.h>
 
 #include <externals/imgui/imgui.h>
 #include <externals/imgui/ImGuizmo.h>
@@ -31,6 +32,9 @@ private:
 private:
 	ImGuizmo::OPERATION operation_ = ImGuizmo::TRANSLATE;
 	ImGuizmo::MODE mode_ = ImGuizmo::WORLD;
+
+	bool wasUsing = false;
+	std::unique_ptr<ScopedGizmoCommand> scopedCmd;
 
 	WorldTransform* target_ = nullptr;
 	BaseCamera* camera_ = nullptr;
