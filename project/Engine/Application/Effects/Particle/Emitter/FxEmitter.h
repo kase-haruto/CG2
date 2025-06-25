@@ -5,6 +5,7 @@
 
 // engine
 #include <Engine/Application/Effects/Particle/Parm/FxParm.h>
+#include <Engine/Application/Effects/Particle/Module/Container/FxModuleContainer.h>
 #include <Engine/Application/Effects/Particle/FxUnit.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 #include <Engine/Graphics/Material.h>
@@ -68,6 +69,8 @@ private:
 
 	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
+
+	std::unique_ptr<FxModuleContainer> moduleContainer_; // モジュールコンテナ
 
 	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
 
