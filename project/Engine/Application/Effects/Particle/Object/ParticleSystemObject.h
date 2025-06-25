@@ -1,27 +1,35 @@
 #pragma once
 /* ========================================================================
-/*	include space
+/* include space
 /* ===================================================================== */
+
 // engine
+#include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
-// c++ 
-#include <memory>
+// c++
 
-/* ========================================================================
-/*	effect system
-/* ===================================================================== */
-class FxSystem {
+
+class ParticleSystemObject
+	:public SceneObject ,
+	 public FxEmitter {
 public:
 	//===================================================================*/
 	//					public func
 	//===================================================================*/
-	void AddEmitter(FxEmitter* emitter);
-	void Update();
-	const std::vector<FxEmitter*>& GetEmitters() const{ return emitters_; }
+	ParticleSystemObject(const std::string& name);
+	ParticleSystemObject() = default;
+	~ParticleSystemObject() = default;
+
+	void Initialize() {}
+	void Update() override;
+	void ShowGui()override;
+
+	void SetDrawEnable(bool isDrawEnable)override;
+
 private:
 	//===================================================================*/
-	//					private variable
+	//					private func
 	//===================================================================*/
-	std::vector<FxEmitter*> emitters_;
 };
+

@@ -263,7 +263,7 @@ Matrix4x4 Matrix4x4::Transpose(const Matrix4x4& mat){
 	Matrix4x4 result;
 	for (int r = 0; r < 4; ++r){
 		for (int c = 0; c < 4; ++c){
-			result.m[r][c] = mat.m[c][r];
+			result.m[r][c] = mat.m[c][r]; // 行と列を入れ替え
 		}
 	}
 	return result;
@@ -311,12 +311,12 @@ Matrix4x4 Matrix4x4::MakeLookRotationMatrix(const Vector3& forward, const Vector
 	return result;
 }
 
-Matrix4x4 Matrix4x4::MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
+Matrix4x4 Matrix4x4::MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth){
 
 	Matrix4x4 matrix = {};
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
 			matrix.m[i][j] = 0.0f;
 		}
 	}
@@ -349,22 +349,25 @@ Matrix4x4 Matrix4x4::PerspectiveFovRH(float fovY, float aspect, float nearZ, flo
 	return mat;
 }
 
-void Matrix4x4::CopyToArray(float out[16]) const {
-	for (int row = 0; row < 4; ++row)
-		for (int col = 0; col < 4; ++col)
-			out[col * 4 + row] = m[row][col];  // column-major に変換
+void Matrix4x4::CopyToArray(float out[16]) const{
+	// m[row][col] → out[col*4 + row]
+	for (int row = 0; row < 4; ++row){
+		for (int col = 0; col < 4; ++col){
+			out[col * 4 + row] = m[row][col];
+		}
+	}
 }
 
-Vector3 Matrix4x4::GetTranslationMatrix()const {
-	return Vector3{
+Vector3 Matrix4x4::GetTranslationMatrix()const{
+	return Vector3 {
 		m[0][3],
 		m[1][3],
 		m[2][3]
 	};
 }
 
-Vector4 Matrix4x4::operator*(const Vector4& v) const {
-	return Vector4{
+Vector4 Matrix4x4::operator*(const Vector4& v) const{
+	return Vector4 {
 		m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0] * v.w,
 		m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1] * v.w,
 		m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2] * v.w,

@@ -12,6 +12,7 @@ static const char* ObjectTypeToString(ObjectType type){
 		case ObjectType::Camera:     return "Camera";
 		case ObjectType::Light:      return "Light";
 		case ObjectType::GameObject: return "GameObject";
+		case ObjectType::ParticleSystem: return "ParticleSystem";
 		default:                     return "None";
 	}
 }

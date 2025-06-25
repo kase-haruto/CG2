@@ -13,7 +13,6 @@
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Device/DxCore.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ
@@ -32,18 +31,6 @@ GameScene::GameScene(DxCore* dxCore)
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::LoadAssets() {
-	ParticleEffectCollection& pfxCollection = ParticleEffectSystem::GetInstance()->GetCollection();
-	pfxCollection.Clear();
-
-	// パーティクルエフェクトのロード
-	pfxCollection.LoadByName("hitParticle");
-	pfxCollection.LoadByName("reloadParticle");
-	pfxCollection.LoadByName("shootEffect");
-	pfxCollection.LoadByName("smoke");
-	pfxCollection.LoadByName("BulletEffect");
-	pfxCollection.LoadByName("FlyTrailEffect");
-	pfxCollection.LoadByName("JettEffect");
-	pfxCollection.LoadByName("HitEffect");
 }
 
 

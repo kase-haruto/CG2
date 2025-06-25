@@ -12,6 +12,7 @@ enum class ObjectType {
 	Camera,			//カメラ
 	Light,			//ライト
 	GameObject,		//ゲームオブジェクト
+	ParticleSystem, //パーティクルシステム
 	None,			//なし
 };
 
@@ -55,7 +56,8 @@ public:
 
 	bool IsEnableRaycast() const { return isEnableRaycast_; }
 	void SetEnableRaycast(bool enable) { isEnableRaycast_ = enable; }
-
+	bool IsDrawEnable() const{ return isDrawEnable_; }
+	virtual void SetDrawEnable(bool enable){ isDrawEnable_ = enable; }
 	// 親子関係
 	SceneObject* GetParent() const{ return parent_; }
 	const std::vector<SceneObject*>& GetChildren() const{ return children_; }
@@ -75,5 +77,6 @@ protected:
 	std::string configPath_ = "";
 
 protected:
-	bool isEnableRaycast_ = true; // レイキャストを有効にするかどうか
+	bool isEnableRaycast_ = true;	// レイキャストを有効にするかどうか
+	bool isDrawEnable_ = true;		// 描画を有効にするかどうか
 };

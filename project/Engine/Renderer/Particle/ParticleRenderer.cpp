@@ -19,17 +19,14 @@ void ParticleRenderer::Render(const std::vector<FxEmitter*>& emitters,
 
 	CameraManager::GetInstance()->SetCommand(cmdList, PipelineType::StructuredObject);
 
-	for (const auto* emitter : emitters) {
-		if (!emitter || emitter->GetUnits().empty()) continue;
+	for (auto* emitter : emitters) {
+		if (!emitter || !emitter->IsDrawEnable() || emitter->GetUnits().empty()) continue;
 
-		// CBV: マテリアルのGPUアドレスを設定（b1）
 		emitter->GetMaterialBuffer().SetCommand(cmdList,1);
 
-		// SRV: テクスチャのハンドルを設定（t1）
 		auto textureHandle = TextureManager::GetInstance()->LoadTexture("Textures/" + emitter->GetTexturePath());
 		cmdList->SetGraphicsRootDescriptorTable(3, textureHandle);
 
-		// インスタンス用のGPUデータ生成
 		std::vector<ParticleConstantData> gpuUnits;
 		for (const auto& fx : emitter->GetUnits()) {
 			if (fx.alive) {

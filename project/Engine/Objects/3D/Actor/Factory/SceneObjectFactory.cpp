@@ -3,6 +3,7 @@
 #include <Engine/Objects/3D/Actor/BaseGameObject.h>
 #include <Engine/Objects/LightObject/PointLight.h>
 #include <Engine/Objects/LightObject/DirectionalLight.h>
+#include <Engine/Application/Effects/Particle/Object/ParticleSystemObject.h>
 
 std::unordered_map<ObjectType, ObjectFactory::CreatorFunc> ObjectFactory::registry_ = {
 	{ ObjectType::GameObject, [](const nlohmann::json& j) {
@@ -20,7 +21,11 @@ std::unordered_map<ObjectType, ObjectFactory::CreatorFunc> ObjectFactory::regist
 		obj->ApplyConfigFromJson(j);
 		return obj;
 	}
-	}}
+	}},
+	{ ObjectType::ParticleSystem, [] ([[maybe_unused]]const nlohmann::json& j){
+		auto obj = std::make_unique<ParticleSystemObject>();
+		return obj;
+	}},
 };
 
 std::unique_ptr<SceneObject> ObjectFactory::Create(ObjectType type, const nlohmann::json& j) {

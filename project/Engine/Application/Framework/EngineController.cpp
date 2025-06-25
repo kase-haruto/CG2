@@ -41,7 +41,6 @@ void EngineController::Initialize(HINSTANCE hInstance){
 
 	// エディターパネルにエディターを追加
 	engineUICore_->GetEditorPanel()->AddEditor(editorCollection_->GetEditor(EditorCollection::EditorType::PostProcess));
-	engineUICore_->GetEditorPanel()->AddEditor(editorCollection_->GetEditor(EditorCollection::EditorType::Effect));
 
 	// シーンマネージャ初期化
 	sceneManager_ = std::make_unique<SceneManager>(system_->GetDxCore(),graphicsSystem_.get());

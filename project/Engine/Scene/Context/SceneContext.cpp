@@ -1,9 +1,9 @@
 #include "SceneContext.h"
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
-#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 #include <Engine/Application/Effects/FxSystem.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 SceneContext::SceneContext() {
 	renderer_ = std::make_unique<MeshRenderer>();
@@ -21,14 +21,13 @@ SceneContext::~SceneContext() {
 void SceneContext::Initialize() {}
 
 void SceneContext::Update() {
-	float dt = ClockManager::GetInstance()->GetDeltaTime();
 
 	for (auto& obj : editorObjects_) {
 		obj->Update();
 	}
 	lightLibrary_->Update();
 
-	fxSystem_->Update(dt);
+	fxSystem_->Update();
 }
 
 void SceneContext::Clear() {
@@ -37,13 +36,13 @@ void SceneContext::Clear() {
 		const auto& objects = objectLibrary_->GetAllObjects();
 		for (const auto& obj : objects) {
 			if (onEditorObjectRemoved_) {
-				onEditorObjectRemoved_(obj); // ← 通知
+				onEditorObjectRemoved_(obj);
 			}
 		}
-		objectLibrary_->Clear(); // ← 通知後にクリア
+		objectLibrary_->Clear();
 	}
 
-	// エディタオブジェクトも破棄（必要なら通知追加可能）
+	// エディタオブジェクトも破棄
 	editorObjects_.clear();
 
 	// その他のシステムのクリア
@@ -51,7 +50,6 @@ void SceneContext::Clear() {
 	CollisionManager::GetInstance()->ClearColliders();
 	PrimitiveDrawer::GetInstance()->ClearMesh();
 }
-
 
 void SceneContext::RegisterAllToRenderer() {
 	objectLibrary_->RegisterToRenderer(renderer_.get());

@@ -14,7 +14,6 @@
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 #include <Engine/Application/Effects/FxSystem.h>
 
 // lib
@@ -30,22 +29,12 @@ TestScene::TestScene(DxCore* dxCore)
 	// シーン名を設定
 	BaseScene::SetSceneName("TestScene");
 
-	ParticleEffectSystem::GetInstance()->GetCollection().Clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::LoadAssets() {
-	auto& pfxCollection = ParticleEffectSystem::GetInstance()->GetCollection();
-	pfxCollection.Clear();
-
-	// パーティクルエフェクトのロード
-	pfxCollection.LoadByName("BulletEffect");
-	pfxCollection.LoadByName("HitEffect");
-	pfxCollection.LoadByName("JettEffect");
-	pfxCollection.LoadByName("FlyTrailEffect");
-	pfxCollection.LoadByName("ChageEffect");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -82,9 +71,8 @@ void TestScene::Initialize() {
 	//CreateAndAddObject<BaseGameObject>(sceneContext_.get(),walkHuman_,"sneakWalk.gltf", "human");
 	//walkHuman_->SetColor({1.0f, 1.0f, 1.0f, 0.5f});
 
-	emitter_ = std::make_unique<FxEmitter>();
-
-	sceneContext_->GetFxSystem()->AddEmitter(emitter_.get());
+	CreateAndAddObject<ParticleSystemObject>(sceneContext_.get(), particleSystem_, "particleSystem");
+	sceneContext_->GetFxSystem()->AddEmitter(particleSystem_.get());
 
 	//=========================
 	// 描画登録

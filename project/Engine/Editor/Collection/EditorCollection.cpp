@@ -1,7 +1,6 @@
 #include "EditorCollection.h"
 
 #include <Engine/Application/UI/Panels/EditorPanel.h>
-#include <Engine/Editor/EffectEditor.h>
 #include <Engine/Editor/PostProcessEditor.h>
 #include <Engine/Editor/UiEditor.h>
 
@@ -12,12 +11,6 @@ void EditorCollection::InitializeEditors(){
 	//===================================================================*/
 	auto postProcessEditor = std::make_unique<PostProcessEditor>("PostProcessEditor");
 	editors_.insert({EditorType::PostProcess, std::move(postProcessEditor)});
-
-	//===================================================================*/
-	//			EffectEditor
-	//===================================================================*/
-	auto effectEditor = std::make_unique<EffectEditor>("EffectEditor");
-	editors_.insert({EditorType::Effect, std::move(effectEditor)});
 
 }
 

@@ -10,7 +10,6 @@ class EditorCollection{
 public:
 	enum class EditorType{
 		PostProcess,
-		Effect,
 		Ui,
 	};
 public:

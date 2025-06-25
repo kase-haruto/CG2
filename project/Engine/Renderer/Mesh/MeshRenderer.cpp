@@ -12,7 +12,6 @@
 #include <Engine/objects/Transform/Transform.h>
 #include <Engine/Lighting/LightLibrary.h>
 #include <Engine/Graphics/Pipeline/Presets/PipelinePresets.h>
-#include <Game/Effect/ParticleEffect/ParticleEffectSystem.h>
 
 // lib
 #include <Engine/Foundation/Math/Matrix4x4.h>
@@ -102,12 +101,6 @@ void MeshRenderer::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
 	CameraManager::SetCommand(cmdList, PipelineType::Line);
 	PrimitiveDrawer::GetInstance()->Render();
-
-	//===================================================================*/
-	//                    パーティクル描画
-	//===================================================================*/
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	ParticleEffectSystem::GetInstance()->Draw(cmdList);
 }
 
 void MeshRenderer::DrawGroup(ID3D12GraphicsCommandList* cmdList,const std::vector<DrawEntry>& entries, PipelineType type) {

@@ -51,6 +51,7 @@ public:
 	BlendMode GetBlendMode() const override { return blendMode_; }
 	const Vector4& GetColor() const { return materialData_.color; }
 	void SetColor(const Vector4& color) { materialData_.color = color; }
+	void SetIsDrawEnable(bool drawEnable){ isDrawEnable_ = drawEnable; }
 
 protected:
 	//===================================================================*/
@@ -79,6 +80,7 @@ protected:
 
 protected:
 	static const std::string directoryPath_;
+	bool isDrawEnable_ = true;
 
 	virtual void CreateMaterialBuffer() = 0;
 	virtual void MaterialBufferMap() = 0;
