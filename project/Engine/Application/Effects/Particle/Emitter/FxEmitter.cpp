@@ -17,6 +17,9 @@ FxEmitter::FxEmitter(){
 	material_.color = Vector4(1, 1, 1, 1);
 	materialBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice());
 	materialBuffer_.TransferData(material_);
+
+	//モジュールの初期化
+	moduleContainer_ = std::make_unique<FxModuleContainer>();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +63,12 @@ void FxEmitter::Update(){
 
 	for (auto& fx : units_){
 		if (!fx.alive) continue;
+
+		for (auto& m : moduleContainer_->GetModules()){
+			if (m->IsEnabled()){
+				m->OnUpdate(fx, deltaTime);
+			}
+		}
 
 		// 位置の更新
 		if (!isStatic_){
@@ -113,9 +122,33 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 //			gui表示
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ShowGui(){
-	ImGui::Begin("particle system");
 	ImGui::Text("emitCount: %d", units_.size());
 	GuiCmd::CheckBox("isComplement", isComplement_);
 	GuiCmd::CheckBox("isStatic", isStatic_);
-	ImGui::End();
+
+	ImGui::Spacing();
+
+	ImGui::SeparatorText("Modules:");
+
+	for (auto& m : moduleContainer_->GetModules()){
+		ImGui::PushID(m.get());
+
+		bool enabled = m->IsEnabled();
+		ImGui::Checkbox("##enable", &enabled);
+		m->SetEnabled(enabled);
+		ImGui::SameLine();
+
+		// 折りたたみ（CollapsingHeader）管理
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
+		bool open = ImGui::CollapsingHeader(m->GetName().c_str(), flags);
+
+		// 表示（ONのときのみ中身）
+		if (open && enabled){
+			ImGui::Indent();
+			m->ShowGuiContent(); // パラメータだけ分離
+			ImGui::Unindent();
+		}
+
+		ImGui::PopID();
+	}
 }
