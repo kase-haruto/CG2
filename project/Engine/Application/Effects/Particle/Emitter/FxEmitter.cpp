@@ -13,10 +13,14 @@
 
 
 FxEmitter::FxEmitter(){
+	ID3D12Device* device = GraphicsGroup::GetInstance()->GetDevice().Get();
 	// マテリアルの初期化
 	material_.color = Vector4(1, 1, 1, 1);
 	materialBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice());
 	materialBuffer_.TransferData(material_);
+
+	instanceBuffer_.Initialize(device, kMaxUnits_);
+	instanceBuffer_.CreateSrv(device);
 
 	//モジュールの初期化
 	moduleContainer_ = std::make_unique<FxModuleContainer>();
@@ -27,11 +31,9 @@ FxEmitter::FxEmitter(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::Update(){
 	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
-	static bool isFirstFrame = true;
-
-	if (isFirstFrame){
+	if (isFirstFrame_){
 		prevPostion_ = position_;
-		isFirstFrame = false;
+		isFirstFrame_ = false;
 
 	}
 
@@ -151,4 +153,15 @@ void FxEmitter::ShowGui(){
 
 		ImGui::PopID();
 	}
+}
+
+void FxEmitter::TransferParticleDataToGPU(){
+	std::vector<ParticleConstantData> gpuUnits;
+	gpuUnits.clear();
+	for (const auto& fx : units_){
+		if (fx.alive){
+			gpuUnits.push_back({fx.position, fx.size, fx.color});
+		}
+	}
+	instanceBuffer_.TransferVectorData(gpuUnits);
 }

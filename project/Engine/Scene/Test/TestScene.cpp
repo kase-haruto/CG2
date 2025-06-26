@@ -74,6 +74,9 @@ void TestScene::Initialize() {
 	CreateAndAddObject<ParticleSystemObject>(sceneContext_.get(), particleSystem_, "particleSystem");
 	sceneContext_->GetFxSystem()->AddEmitter(particleSystem_.get());
 
+	CreateAndAddObject<ParticleSystemObject>(sceneContext_.get(), particleSystem2_, "particleSystem");
+	sceneContext_->GetFxSystem()->AddEmitter(particleSystem2_.get());
+
 	//=========================
 	// 描画登録
 	//=========================

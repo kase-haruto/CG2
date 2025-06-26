@@ -7,26 +7,28 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-
 class ParticleRenderer {
 public:
 	//===================================================================*/
 	//					public functions
 	//===================================================================*/
-	void Initialize(ID3D12Device* device);
 
 	void Render(const std::vector<class FxEmitter*>& emitters,
 				class PipelineService* pipelineService,
 				ID3D12GraphicsCommandList* cmdList);
 
-
+	void RenderGrouped(const std::string& modelPath,
+					   const std::vector<ParticleConstantData>& gpuUnits,
+					   ID3D12GraphicsCommandList* cmdList);
 private:
 	//===================================================================*/
 	//					private functions
 	//===================================================================*/
-	void RenderGrouped(const std::string& modelPath,
-					   const std::vector<ParticleConstantData>& gpuUnits,
-					   ID3D12GraphicsCommandList* cmdList);
+	void EnsureModelIsReady(struct ModelData& model, ID3D12Device* device);
+	void DrawModelInstanced(struct ModelData& model,
+							ID3D12GraphicsCommandList* cmdList,
+							UINT instanceCount,
+							D3D12_GPU_DESCRIPTOR_HANDLE handle);
 private:
 	//===================================================================*/
 	//					private variables
