@@ -15,6 +15,7 @@ public:
 
 	const std::vector<SceneObject*>& GetAllObjects() const;
 
+
 	void RegisterToRenderer(MeshRenderer* renderer);
 
 private:

@@ -38,7 +38,6 @@ public:
 	//			public methods
 	//===================================================================*/
 	TestScene();
-	TestScene(DxCore* dxCore);
 	~TestScene() override = default;
 
 	void Initialize()override;
@@ -58,8 +57,6 @@ private:
 
 	std::unique_ptr<ParticleSystemObject> particleSystem_ = nullptr;
 	std::unique_ptr<ParticleSystemObject> particleSystem2_ = nullptr;
-
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 
 	//テスト用
 	std::vector<std::unique_ptr<BaseGameObject>> humans_;

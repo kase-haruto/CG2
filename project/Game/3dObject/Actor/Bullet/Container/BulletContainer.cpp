@@ -32,7 +32,6 @@ void BulletContainer::AddBullet(const std::string& modelName,
 
 	if (sceneContext_) {
 		CreateAndAddObject<BaseBullet>(sceneContext_, bullet, modelName, "bullet");
-		sceneContext_->GetMeshRenderer()->Register(bullet->GetModel(),&bullet->GetWorldTransform());
 	} else {
 		bullet = std::make_unique<BaseBullet>(modelName,"bullet");
 	}

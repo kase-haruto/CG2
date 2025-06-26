@@ -5,6 +5,7 @@
 // engine
 #include <Engine/Scene/Base/IScene.h>
 #include <Engine/Scene/Context/SceneContext.h>
+#include <Engine/Extensions/SkyBox/SkyBox.h>
 
 // c++
 #include <string>
@@ -18,13 +19,12 @@ public:
 	//===================================================================*/
 	//			public methods
 	//===================================================================*/
-	BaseScene() = default;
-	BaseScene(DxCore* dxCore);
+	BaseScene();
 	~BaseScene() override = default;
 
 	virtual void Initialize()override{}
 	virtual void Update()override{}
-	void Draw(ID3D12GraphicsCommandList* cmdList)override;
+	void Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList, class PipelineService* psoService)override;
 	void CleanUp()override{};
 	virtual void LoadAssets()override {}
 public:
@@ -35,7 +35,7 @@ protected:
 	//			protected methods
 	//===================================================================*/
 	std::unique_ptr<SceneContext> sceneContext_ = nullptr;
-
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 	std::string sceneName_ = "Scene";
 };
 

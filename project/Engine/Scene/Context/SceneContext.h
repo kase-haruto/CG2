@@ -4,7 +4,6 @@
 /* ===================================================================== */
 
 // engine
-#include <Engine/Renderer/Mesh/MeshRenderer.h>
 #include <Engine/objects/3D/Actor/Library/SceneObjectLibrary.h>
 #include <Engine/Lighting/LightLibrary.h>
 
@@ -25,9 +24,7 @@ public:
 	void Update();
 	void Clear();
 
-	MeshRenderer* GetMeshRenderer() const{ return renderer_.get(); }
 	SceneObjectLibrary* GetObjectLibrary() const{ return objectLibrary_.get(); }
-	void RegisterAllToRenderer();
 
 	template<typename TObject>
 	TObject* AddEditorObject(std::unique_ptr<TObject> object);
@@ -50,7 +47,6 @@ public:
 
 private:
 	ObjectRemovedCallback onEditorObjectRemoved_;
-	std::unique_ptr<MeshRenderer> renderer_;
 	std::unique_ptr<SceneObjectLibrary> objectLibrary_;
 	std::unique_ptr<LightLibrary> lightLibrary_;
 	std::unique_ptr<FxSystem> fxSystem_;

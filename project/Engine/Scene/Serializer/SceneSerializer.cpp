@@ -46,7 +46,6 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path) {
 					std::string modelName = j.value("modelName", "debugCube.obj");
 					auto ptr = std::make_unique<BaseGameObject>(modelName, name);
 					ptr->ConfigurableObject<BaseGameObjectConfig>::ApplyConfigFromJson(j);
-					context.GetMeshRenderer()->Register(ptr->GetModel(), &ptr->GetWorldTransform());
 					context.AddEditorObject(std::move(ptr)); // 所有権はここに移動
 					break;
 				}

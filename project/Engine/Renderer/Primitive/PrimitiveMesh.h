@@ -3,7 +3,6 @@
 /* include space
 /* ===================================================================== */
 /* engine */
-#include <Engine/Renderer/Mesh/IMeshRenderable.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 
 #include <Engine/Foundation/Math/Vector4.h>
@@ -11,8 +10,7 @@
 /* ========================================================================
 /* primitiveObject
 /* ===================================================================== */
-class IPrimitiveMesh :
-	public IMeshRenderable{
+class IPrimitiveMesh{
 public:
 	//===================================================================*/
 	//			public methods

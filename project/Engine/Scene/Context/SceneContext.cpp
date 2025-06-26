@@ -6,16 +6,13 @@
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 SceneContext::SceneContext() {
-	renderer_ = std::make_unique<MeshRenderer>();
 	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
 	lightLibrary_ = std::make_unique<LightLibrary>(objectLibrary_.get());
-	renderer_->SetLightLibrary(lightLibrary_.get());
 
 	fxSystem_ = std::make_unique<FxSystem>();
 }
 
 SceneContext::~SceneContext() {
-	renderer_->Clear();
 }
 
 void SceneContext::Initialize() {}
@@ -46,13 +43,8 @@ void SceneContext::Clear() {
 	editorObjects_.clear();
 
 	// その他のシステムのクリア
-	renderer_->Clear();
 	CollisionManager::GetInstance()->ClearColliders();
 	PrimitiveDrawer::GetInstance()->ClearMesh();
-}
-
-void SceneContext::RegisterAllToRenderer() {
-	objectLibrary_->RegisterToRenderer(renderer_.get());
 }
 
 void SceneContext::RemoveEditorObject(SceneObject* obj) {

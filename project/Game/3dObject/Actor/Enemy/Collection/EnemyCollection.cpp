@@ -49,7 +49,6 @@ void EnemyCollection::Spawn(float deltaTime) {
 		std::unique_ptr<Enemy> enemy;
 		if (sceneContext_) {
 			CreateAndAddObject<Enemy>(sceneContext_, enemy, "debugCube.obj", "enemy");
-			sceneContext_->GetMeshRenderer()->Register(enemy->GetModel(), &enemy->GetWorldTransform());
 		} else {
 			enemy = std::make_unique<Enemy>("debugCube.obj", "enemy");
 		}

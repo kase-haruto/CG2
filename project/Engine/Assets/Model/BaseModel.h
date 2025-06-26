@@ -9,7 +9,6 @@
 #include <engine/graphics/Material.h>
 #include <Engine/Graphics/Pipeline/BlendMode/BlendMode.h>
 #include <Engine/Objects/Transform/Transform.h>
-#include <Engine/Renderer/Mesh/IMeshRenderable.h>
 
 /*data*/
 #include <Data/Engine/Configs/Scene/Objects/Model/BaseModelConfig.h>
@@ -26,8 +25,7 @@
 /* ========================================================================
 /*		model
 /* ===================================================================== */
-class BaseModel
-	:public IMeshRenderable{
+class BaseModel{
 public:
 	//===================================================================*/
 	//			public methods
@@ -40,7 +38,7 @@ public:
 	void UpdateTexture();
 	virtual void Map() = 0;
 	virtual void ShowImGuiInterface();
-	void Draw(const WorldTransform& transform)override;
+	virtual void Draw(const WorldTransform& transform);
 
 	//--------- config -----------------------------------------------------
 	void ApplyConfig(const BaseModelConfig& config);
@@ -48,7 +46,7 @@ public:
 	void ShowImGui(BaseModelConfig& config);
 
 	//--------- accessor -----------------------------------------------------
-	BlendMode GetBlendMode() const override { return blendMode_; }
+	BlendMode GetBlendMode() const  { return blendMode_; }
 	const Vector4& GetColor() const { return materialData_.color; }
 	void SetColor(const Vector4& color) { materialData_.color = color; }
 	void SetIsDrawEnable(bool drawEnable){ isDrawEnable_ = drawEnable; }

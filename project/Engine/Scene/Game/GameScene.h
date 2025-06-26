@@ -35,7 +35,6 @@ class GameScene final :
 	public BaseScene{
 public:
 	GameScene();
-	GameScene(DxCore* dxCore);
 	~GameScene() override = default;
 
 	void Initialize()override;
@@ -52,7 +51,6 @@ private:
 
 	std::unique_ptr<EnemyCollection> enemyCollection_ = nullptr;
 
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 	// カメラ
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 

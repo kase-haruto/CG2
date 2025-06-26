@@ -1,6 +1,5 @@
 #include "SceneObjectLibrary.h"
 
-#include <Engine/Renderer/Mesh/MeshRenderer.h>
 #include <algorithm>
 
 SceneObjectLibrary::SceneObjectLibrary() {
