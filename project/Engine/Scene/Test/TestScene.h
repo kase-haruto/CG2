@@ -57,6 +57,7 @@ private:
 	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
 
 	std::unique_ptr<ParticleSystemObject> particleSystem_ = nullptr;
+	std::unique_ptr<ParticleSystemObject> particleSystem2_ = nullptr;
 
 	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 

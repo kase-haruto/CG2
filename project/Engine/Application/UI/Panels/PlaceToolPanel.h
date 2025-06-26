@@ -12,17 +12,16 @@
 #include <d3d12.h>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <functional>
 
 class SceneContext;
 class SceneObject;
 
 class PlaceToolPanel
-	:public IEngineUI, public ISceneContextListener {
+	: public IEngineUI, public ISceneContextListener{
 public:
-	//===================================================================*/
-	//						enums
-	//===================================================================*/
-	enum class ShapeObjType {
+	enum class ShapeObjType{
 		Plane,
 		Cube,
 		Sphere,
@@ -32,41 +31,36 @@ public:
 		Count
 	};
 
+	enum class PlaceItemCategory{
+		Shape,
+		Light,
+		Particle,
+		Count
+	};
+
 private:
-	//===================================================================*/
-	//						structs
-	//===================================================================*/
-	struct Icon {
+	struct PlaceItem{
+		PlaceItemCategory category;
+		std::string name;
 		D3D12_GPU_DESCRIPTOR_HANDLE texture;
-		Vector2 size{ 64.0f, 64.0f };
+		Vector2 iconSize {64.0f, 64.0f};
+		std::function<void()> createFunc; //< 直接作成コマンドを呼ぶ方式に変更
 	};
 
 public:
-	//===================================================================*/
-	//						public functions
-	//===================================================================*/
 	PlaceToolPanel();
 	~PlaceToolPanel() override = default;
 
 	void Render() override;
 	void OnSceneContextChanged(SceneContext* newContext) override;
 
-	//--------- accessor ------------------------------------------------//
-	const std::string& GetPanelName() const override { return panelName_; }
+	const std::string& GetPanelName() const override{ return panelName_; }
 
 private:
-	//===================================================================*/
-	//						private functions
-	//===================================================================*/
-	void CreateShapeObject(ShapeObjType shapeType);
+	void RegisterPlaceItems();
+	void RenderCategoryItems();
 
-	void RenderShapeObjectButtons();
-
-private:
-	//===================================================================*/
-	//						private variables
-	//===================================================================*/
-	SceneContext* pSceneContext_ = nullptr;			//< context
-	std::unordered_map<ShapeObjType, Icon> icons_;	//< アイコンのマップ
+	SceneContext* pSceneContext_ = nullptr;
+	std::unordered_map<PlaceItemCategory, std::vector<PlaceItem>> categoryItems_;
+	std::string panelName_ = "PlaceToolPanel";
 };
-

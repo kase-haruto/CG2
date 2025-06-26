@@ -17,6 +17,7 @@ public:
 	//					public func
 	//===================================================================*/
 	void AddEmitter(FxEmitter* emitter);
+	void RemoveEmitter(FxEmitter* emitter);
 	void Update();
 	const std::vector<FxEmitter*>& GetEmitters() const{ return emitters_; }
 private:

@@ -57,7 +57,6 @@ void EngineController::Initialize(HINSTANCE hInstance){
 
 	// particleRendererの初期化
 	particleRenderer_ = std::make_unique<ParticleRenderer>();
-	particleRenderer_->Initialize(system_->GetDxCore()->GetDevice().Get());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

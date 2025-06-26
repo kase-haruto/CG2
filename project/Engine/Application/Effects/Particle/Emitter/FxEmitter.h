@@ -4,10 +4,12 @@
 /* ===================================================================== */
 
 // engine
-#include <Engine/Application/Effects/Particle/Parm/FxParm.h>
-#include <Engine/Application/Effects/Particle/Module/Container/FxModuleContainer.h>
+#include <Engine/Application/Effects/Particle/Detail/ParticleDetail.h>
 #include <Engine/Application/Effects/Particle/FxUnit.h>
+#include <Engine/Application/Effects/Particle/Module/Container/FxModuleContainer.h>
+#include <Engine/Application/Effects/Particle/Parm/FxParm.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
+#include <Engine/Graphics/Buffer/DxStructuredBuffer.h>
 #include <Engine/Graphics/Material.h>
 
 // c++
@@ -30,13 +32,14 @@ public:
 	virtual void Update();
 	void ResetFxUnit(FxUnit& fxUnit);
 	void ShowGui();
-
+	void TransferParticleDataToGPU();
 	//--------- accessor -------------------------------------------------//
-	const std::vector<FxUnit>& GetUnits()const { return units_; }
+	const std::vector<FxUnit>& GetUnits()const{ return units_; }
 	const std::string& GetModelPath() const{ return modelPath; }
 	const std::string& GetTexturePath() const{ return texturePath; }
 	const ParticleMaterial& GetMaterial() const{ return material_; }
-	const DxConstantBuffer<ParticleMaterial>& GetMaterialBuffer() const { return materialBuffer_; }
+	const DxConstantBuffer<ParticleMaterial>& GetMaterialBuffer() const{ return materialBuffer_; }
+	const DxStructuredBuffer<ParticleConstantData>& GetInstanceBuffer() const{ return instanceBuffer_; }
 	bool IsDrawEnable(){ return isDrawEnable_; }
 	void SetDrawEnable(bool isEnable){ isDrawEnable_ = isEnable; }
 private:
@@ -64,8 +67,6 @@ private:
 	std::string modelPath = "plane.obj";		//< モデルパス（デフォルトは平面
 	std::string texturePath = "particle.png";	//< テクスチャパス（デフォルトはparticle.png
 
-	ParticleMaterial material_;							//< パーティクルのマテリアル
-	DxConstantBuffer<ParticleMaterial> materialBuffer_; // パーティクルマテリアルの定数バッファ
 
 	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
@@ -74,7 +75,13 @@ private:
 
 	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
 
+	bool isFirstFrame_ = true;	//< 最初のフレームかどうか
 	bool isComplement_ = true;	//< 補完を行うかどうか
 	bool isStatic_ = false;		//< エミッタが静的かどうか（trueならパーティクルは動かない
 	bool isDrawEnable_ = true;	//< particleを描画するか
+
+	//resources
+	ParticleMaterial material_;							//< パーティクルのマテリアル
+	DxStructuredBuffer<ParticleConstantData> instanceBuffer_;
+	DxConstantBuffer<ParticleMaterial> materialBuffer_; // パーティクルマテリアルの定数バッファ
 };
