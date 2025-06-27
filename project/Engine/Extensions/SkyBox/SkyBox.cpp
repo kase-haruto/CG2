@@ -5,7 +5,6 @@
 #include <Engine/Graphics/Camera/Base/BaseCamera.h>
 #include <Engine/Assets/Texture/TextureManager.h>
 #include <Engine/Foundation/Math/Matrix4x4.h>
-#include <Engine/Renderer/Mesh/MeshRenderer.h>
 
 
 SkyBox::SkyBox(const std::string& fileName,
@@ -91,9 +90,7 @@ void SkyBox::Update(){
 	worldTransform_.Update();
 }
 
-
-void SkyBox::Draw(const WorldTransform& transform){
-	ID3D12GraphicsCommandList* cmd = GraphicsGroup::GetInstance()->GetCommandList().Get();
+void SkyBox::Draw(ID3D12GraphicsCommandList* cmd){
 	CameraManager::SetCommand(cmd, PipelineType::Skybox);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE handle = TextureManager::GetInstance()->GetEnvironmentTextureSrvHandle();
@@ -103,7 +100,7 @@ void SkyBox::Draw(const WorldTransform& transform){
 
 	vertexBuffer_.SetCommand(cmd);
 	indexBuffer_.SetCommand(cmd);
-	transform.SetCommand(cmd, 0);
+	worldTransform_.SetCommand(cmd, 0);
 	cmd->SetGraphicsRootDescriptorTable(2, handle);
 
 	cmd->DrawIndexedInstanced(
@@ -117,8 +114,4 @@ void SkyBox::Draw(const WorldTransform& transform){
 
 const WorldTransform& SkyBox::GetWorldTransform() const{
 	return worldTransform_;
-}
-
-void SkyBox::RegisterToRenderer(MeshRenderer* renderer){
-	renderer->Register(this, &worldTransform_);
 }

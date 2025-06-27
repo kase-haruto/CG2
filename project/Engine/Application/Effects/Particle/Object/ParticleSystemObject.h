@@ -1,35 +1,29 @@
 #pragma once
-/* ========================================================================
-/* include space
-/* ===================================================================== */
 
-// engine
-#include <Engine/Objects/3D/Actor/SceneObject.h>
+// Engine
 #include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
+#include <Engine/Objects/3D/Actor/SceneObject.h>
+#include <Data/Engine/Configs/Scene/Objects/Particle/ParticleSystemObjectConfig.h>
 
-// c++
-
+// C++
+#include <string>
 
 class ParticleSystemObject
-	:public SceneObject ,
-	 public FxEmitter {
+	: public SceneObject
+	, public FxEmitter{
 public:
-	//===================================================================*/
-	//					public func
-	//===================================================================*/
-	ParticleSystemObject(const std::string& name);
+	// コンストラクタ
 	ParticleSystemObject() = default;
-	~ParticleSystemObject() = default;
+	explicit ParticleSystemObject(const std::string& name);
+	~ParticleSystemObject() override = default;
 
-	void Initialize() {}
+	// 更新
+	void Initialize(){}
 	void Update() override;
-	void ShowGui()override;
+	void ShowGui() override;
+	void SetDrawEnable(bool isDrawEnable) override;
 
-	void SetDrawEnable(bool isDrawEnable)override;
-
-private:
-	//===================================================================*/
-	//					private func
-	//===================================================================*/
+	// コンフィグ適用・抽出
+	void ApplyConfig()override;
+	void ExtractConfig()override;
 };
-

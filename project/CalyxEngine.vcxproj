@@ -218,7 +218,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\HierarchyPanel.cpp" />
     <ClCompile Include="Engine\Application\UI\Panels\InspectorPanel.cpp" />
     <ClCompile Include="Engine\Objects\3D\Actor\SceneObject.cpp" />
-    <ClCompile Include="Engine\Renderer\Mesh\IMeshRenderable.cpp" />
     <ClCompile Include="Engine\PostProcess\Interface\IPostEffectPass.cpp" />
     <ClCompile Include="Engine\PostProcess\GrayScale\GrayScale.cpp" />
     <ClCompile Include="Game\3d\GameCamera\RailCamera.cpp" />
@@ -250,7 +249,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\Panels\SceneSwitcherPanel.cpp" />
     <ClCompile Include="Engine\Foundation\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Scene\System\SceneFactory.cpp" />
-    <ClCompile Include="Engine\Renderer\Mesh\MeshRenderer.cpp" />
     <ClCompile Include="Engine\Scene\Context\SceneContext.cpp" />
     <ClCompile Include="Engine\Renderer\Primitive\PrimitiveMesh.cpp" />
     <ClCompile Include="Engine\Graphics\RenderTarget\SwapChainRT\SwapChainRenderTarget.cpp" />
@@ -282,6 +280,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\EmitterConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\FxParmConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\ParticleSystemObjectConfig.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateParticleSystemCommand.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
     <ClInclude Include="Engine\Application\Effects\FxSystem.h" />
@@ -434,7 +435,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\InspectorPanel.h" />
     <ClInclude Include="Engine\Objects\3D\Actor\SceneObject.h" />
     <ClInclude Include="Engine\Graphics\Camera\Base\ICamera.h" />
-    <ClInclude Include="Engine\Renderer\Mesh\IMeshRenderable.h" />
     <ClInclude Include="Engine\Graphics\RenderTarget\Interface\IRenderTarget.h" />
     <ClInclude Include="Engine\PostProcess\Interface\IPostEffectPass.h" />
     <ClInclude Include="Engine\PostProcess\GrayScale\GrayScale.h" />
@@ -458,7 +458,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\Panels\SceneSwitcherPanel.h" />
     <ClInclude Include="Engine\Foundation\Math\Quaternion.h" />
     <ClInclude Include="Engine\Scene\System\SceneFactory.h" />
-    <ClInclude Include="Engine\Renderer\Mesh\MeshRenderer.h" />
     <ClInclude Include="Engine\Scene\Context\SceneContext.h" />
     <ClInclude Include="Engine\Renderer\Primitive\PrimitiveMesh.h" />
     <ClInclude Include="Engine\Renderer\Primitive\LineDrawer.h" />

@@ -11,6 +11,8 @@
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
 #include <Engine/Graphics/Buffer/DxStructuredBuffer.h>
 #include <Engine/Graphics/Material.h>
+#include <Engine/Objects/ConfigurableObject/ConfigurableObject.h>
+#include <Data/Engine/Configs/Scene/Objects/Particle/EmitterConfig.h>
 
 // c++
 #include <vector>
@@ -21,7 +23,8 @@ struct Vector3;
 /* ========================================================================
 /*	particle emitter
 /* ===================================================================== */
-class FxEmitter{
+class FxEmitter:
+public ConfigurableObject<EmitterConfig>{
 public:
 	//===================================================================*/
 	//					public func
@@ -33,6 +36,11 @@ public:
 	void ResetFxUnit(FxUnit& fxUnit);
 	void ShowGui();
 	void TransferParticleDataToGPU();
+
+	//--------- config -------------------------------------------------//
+	void ApplyConfig()override;
+	void ExtractConfig()override;
+
 	//--------- accessor -------------------------------------------------//
 	const std::vector<FxUnit>& GetUnits()const{ return units_; }
 	const std::string& GetModelPath() const{ return modelPath; }

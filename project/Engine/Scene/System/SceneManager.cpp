@@ -18,9 +18,7 @@ SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
 	: pDxCore_(dxCore), pGraphicsSystem_(graphicsSystem) {
 	// ここでシーンをすべて生成しておく
 	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
-		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i), pDxCore_);
-		//sceneのレンダラーにパイプラインを登録
-		scenes_[i]->GetSceneContext()->GetMeshRenderer()->SetPipelineService(pGraphicsSystem_->GetPipelineService());
+		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i));
 	}
 
 
@@ -92,7 +90,7 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	target->SetRenderTarget(cmd);
 	target->Clear(cmd);
 
-	scenes_[currentSceneNo_]->Draw(cmd);
+	scenes_[currentSceneNo_]->Draw(cmd, pGraphicsSystem_->GetPipelineService());
 }
 
 void SceneManager::SetEngineUI(EngineUICore* ui) {

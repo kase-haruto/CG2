@@ -19,12 +19,6 @@ class BaseGameObject
 	: public SceneObject
 	, public ConfigurableObject<BaseGameObjectConfig>{
 
-	enum ObjectModelType {
-		ModelType_Static,		// 静的モデル
-		ModelType_Animation,	// アニメーションモデル
-		ModelType_Unknown,		// 不明
-	};
-
 	enum class ColliderKind{
 		None,
 		Box,
@@ -43,7 +37,6 @@ public:
 	virtual void Initialize() {};
 	virtual void Update()override;
 	virtual void Draw() {};
-	virtual void RegisterToRenderer(MeshRenderer* renderer)override;
 
 	//--------- ui/gui --------------------------------------------------
 	void ShowGui()override;
@@ -69,6 +62,17 @@ public:
 	BaseModel* GetModel() const { return model_.get(); }
 	void SetCollider(std::unique_ptr<Collider> collider);
 	Collider* GetCollider();
+
+	ObjectModelType GetModelType() const{ return objectModelType_; }
+
+	Model* GetStaticModel(){
+		return (objectModelType_ == ObjectModelType::ModelType_Static)
+			? static_cast< Model* >(model_.get()) : nullptr;
+	}
+	AnimationModel* GetAnimationModel(){
+		return (objectModelType_ == ObjectModelType::ModelType_Animation)
+			? static_cast< AnimationModel* >(model_.get()) : nullptr;
+	}
 private:
 	//===================================================================*/
 	//                    private methods

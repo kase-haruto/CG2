@@ -8,19 +8,16 @@
 #include <Engine/Scene/Utirity/SceneUtility.h>
 
 // engine
+#include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Collision/CollisionManager.h>
-#include <Engine/Graphics/Device/DxCore.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ
 /////////////////////////////////////////////////////////////////////////////////////////
-GameScene::GameScene(){}
-
-GameScene::GameScene(DxCore* dxCore) 
-	: BaseScene(dxCore){
+GameScene::GameScene() {
 	// シーン名を設定
 	//IScene::SetSceneName("GameScene");
 	SetSceneName("GameScene");
@@ -48,35 +45,24 @@ void GameScene::Initialize(){
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize();
 
-	CreateAndAddObject<SkyBox>(sceneContext_.get(), skyBox_, "sky.dds", "skyBox");
-	skyBox_->Initialize();
-	sceneContext_->GetMeshRenderer()->SetSkyBox(skyBox_.get());
-	
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), modelField_, "terrain.obj", "field");
+	modelField_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
 
-	CreateAndAddObject<BaseGameObject>(sceneContext_.get(), teapot_, "debugSphere.obj", "sphere");
-
 	//player
-	CreateAndAddObject<Player>(sceneContext_.get(), player_, "player.obj", "player");
+	player_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<Player>("player.obj", "player");
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	playerBulletContainer_ = std::make_unique<BulletContainer>("playerBulletContainer");
+	playerBulletContainer_ = sceneContext_->AddEditorObject(std::make_unique<BulletContainer>("playerBulletContainer"));
 	playerBulletContainer_->SetSceneContext(sceneContext_.get());
-	player_->SetBulletContainer(playerBulletContainer_.get());
+	player_->SetBulletContainer(playerBulletContainer_);
 
-	enemyCollection_ = std::make_unique<EnemyCollection>(sceneContext_.get());
-	
 	//===================================================================*/
 	//                    editor
 	//===================================================================*/
-	sceneContext_->RegisterAllToRenderer();
 }
 
 void GameScene::Update(){
-
-
 	/* カメラ関連更新 ============================*/
 	railCamera_->Update();
 	CameraManager::GetCamera3d()->SetCamera(railCamera_->GetPosition(), railCamera_->GetRotation());
@@ -87,11 +73,9 @@ void GameScene::Update(){
 	/* 3dObject ============================*/
 	//地面の更新
 	modelField_->Update();
-	teapot_->Update();
 	//プレイヤーの更新
 	player_->Update();
 
-	enemyCollection_->Update();
 	/* その他 ============================*/
 
 	sceneContext_->Update();
@@ -101,7 +85,7 @@ void GameScene::Update(){
 
 void GameScene::CleanUp(){
 	// 3Dオブジェクトの描画を終了
-	sceneContext_->GetMeshRenderer()->Clear();
 	sceneContext_->GetObjectLibrary()->Clear();
 	CollisionManager::GetInstance()->ClearColliders();
 }
+

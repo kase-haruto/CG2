@@ -3,6 +3,10 @@
 #include <Engine/Application/Effects/Particle/FxUnit.h>
 
 
+FxSystem::~FxSystem(){
+	emitters_.clear();
+}
+
 void FxSystem::AddEmitter(FxEmitter* emitter) {
 	emitters_.push_back(emitter);
 }
@@ -16,5 +20,9 @@ void FxSystem::RemoveEmitter(FxEmitter* emitter){
 
 void FxSystem::Update() {
 	for (auto& e : emitters_) e->Update();
+}
+
+void FxSystem::Clear(){
+	emitters_.clear();
 }
 

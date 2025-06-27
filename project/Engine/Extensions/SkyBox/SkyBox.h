@@ -9,7 +9,6 @@
 #include <Engine/Graphics/Buffer/DxIndexBuffer.h>
 #include <Engine/Graphics/Buffer/DxVertexBuffer.h>
 #include <Engine/Graphics/Buffer/DxConstantBuffer.h>
-#include <Engine/Renderer/Mesh/IMeshRenderable.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 
 #include <string>
@@ -20,7 +19,7 @@
 struct Vector3;
 
 class SkyBox :
-	public SceneObject, public IMeshRenderable {
+	public SceneObject{
 public:
 	SkyBox(const std::string& fileName,
 		   std::optional<std::string> objectName);
@@ -28,10 +27,9 @@ public:
 	void Initialize();
 	void ShowGui();
 	void Update();
-	void Draw(const WorldTransform& transform)override;
+	void Draw(ID3D12GraphicsCommandList* cmd);
 	const WorldTransform& GetWorldTransform()const;
-	void RegisterToRenderer(MeshRenderer* renderer) override;
-	BlendMode GetBlendMode() const override { return BlendMode::NONE; }
+
 	//* config ================================================================*/
 
 private:

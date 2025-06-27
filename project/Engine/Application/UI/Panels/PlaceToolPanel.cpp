@@ -27,7 +27,7 @@ void PlaceToolPanel::RegisterPlaceItems(){
 		{ShapeObjType::Cone, "cone"},
 		{ShapeObjType::Torus, "torus"}
 	};
-	for (auto [type, name] : shapes){
+	for (auto& [type, name] : shapes){
 		std::string objName = name;
 		std::string modelName = (name == "cube" ? "debugCube.obj" :
 								 name == "sphere" ? "debugSphere.obj" :
@@ -63,7 +63,7 @@ void PlaceToolPanel::RegisterPlaceItems(){
 				return obj;
 			};
 			CommandManager::GetInstance()->Execute(
-				std::make_unique<CreateParticleSystemObjectCommand>(pSceneContext_, factory));
+				std::make_unique<CreateParticleSystemObjectCommand>(pSceneContext_, factory, name));
 		}
 							});
 }

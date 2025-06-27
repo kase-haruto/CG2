@@ -28,7 +28,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
-	virtual void Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList){}
+	virtual void Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList,class PipelineService*){}
 	virtual void CleanUp() = 0;
 	virtual void LoadAssets() = 0;
 

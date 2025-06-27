@@ -28,7 +28,6 @@ public:
 
 	virtual void Update() = 0;
 	virtual void ShowGui();
-	virtual void RegisterToRenderer(class MeshRenderer*) {}
 	virtual AABB GetWorldAABB() const { return FallbackAABBFromTransform(); }
 
 	AABB FallbackAABBFromTransform()const;

@@ -28,3 +28,9 @@ struct ModelData{
 	DxVertexBuffer<VertexPosUvN> vertexBuffer;
 	DxIndexBuffer<uint32_t> indexBuffer;
 };
+
+enum ObjectModelType{
+	ModelType_Static,		// 静的モデル
+	ModelType_Animation,	// アニメーションモデル
+	ModelType_Unknown,		// 不明
+};

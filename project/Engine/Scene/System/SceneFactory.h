@@ -1,7 +1,6 @@
 #pragma once
 
 // engine
-#include <Engine/Graphics/Device/DxCore.h>
 #include <Engine/Scene/Base/IScene.h>
 
 // lib
@@ -9,5 +8,5 @@
 
 class SceneFactory{
 public:
-	static std::unique_ptr<IScene> CreateScene(SceneType sceneType, DxCore* dxCore);
+	static std::unique_ptr<IScene> CreateScene(SceneType sceneType);
 };

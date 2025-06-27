@@ -2,7 +2,6 @@
 
 #include <Engine/objects/Collider/BoxCollider.h>
 #include <Engine/objects/Collider/SphereCollider.h>
-#include <Engine/Renderer/Mesh/MeshRenderer.h>
 #include <Engine/foundation/Utility/FileSystem/ConfigPathResolver/ConfigPathResolver.h>
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
@@ -71,12 +70,6 @@ void BaseGameObject::Update() {
 	}
 	//ApplyConfig();
 
-}
-
-void BaseGameObject::RegisterToRenderer(MeshRenderer* renderer) {
-	if (model_) {
-		renderer->Register(model_.get(), &worldTransform_);
-	}
 }
 
 //===================================================================*/
