@@ -50,7 +50,7 @@
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "position": {
             "x": 0.0,
-            "y": 4.769999980926514,
+            "y": 0.0,
             "z": 0.0
         },
         "radius": 20.0,
@@ -76,7 +76,7 @@
     {
         "colliderConfig": {
             "colliderType": 0,
-            "isCollisionEnabled": false,
+            "isCollisionEnabled": true,
             "isDraw": true,
             "targetType": 0
         },
@@ -96,90 +96,35 @@
                 "isReflect": false,
                 "shininess": 20.0
             },
-            "modelName": "plane.obj",
-            "textureName": "Textures/fieldTile.png",
-            "uvTransConfig": {
-                "rotation": 0.0,
-                "scale": {
-                    "x": 20.0,
-                    "y": 20.0
-                }
-            }
-        },
-        "name": "Plane",
-        "objectType": 2,
-        "parentGuid": "00000000-0000-0000-0000-000000000000",
-        "transform": {
-            "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 100.0,
-                "y": 1.0,
-                "z": 100.0
-            },
-            "translation": {
-                "x": 0.0,
-                "y": -6.660989284515381,
-                "z": 0.0
-            }
-        }
-    },
-    {
-        "colliderConfig": {
-            "colliderType": 0,
-            "isCollisionEnabled": false,
-            "isDraw": true,
-            "targetType": 0
-        },
-        "guid": "00000000-0000-0000-0000-000000000000",
-        "modelConfig": {
-            "blendMode": 5,
-            "materialConfig": {
-                "color": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "currentLightingMode_": 0,
-                "enableLighting": 0,
-                "enviromentCoefficient": 0.07000000029802322,
-                "isReflect": false,
-                "shininess": 20.0
-            },
             "modelName": "debugCube.obj",
-            "textureName": "Textures/uvChecker.png",
+            "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
                 "scale": {
-                    "x": 5.460000038146973,
+                    "x": 1.0,
                     "y": 1.0
                 }
             }
         },
-        "name": "Cube",
+        "name": "cube",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
             "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "w": -0.6310790181159973,
+                "x": -9.447269349038834e-07,
+                "y": 0.7757185697555542,
+                "z": -9.447269349038834e-07
             },
             "scale": {
-                "x": 0.9999948143959045,
-                "y": 13.504932403564453,
-                "z": 0.9999942779541016
+                "x": 6.119999885559082,
+                "y": 1.0,
+                "z": 5.119999885559082
             },
             "translation": {
-                "x": -4.435372829437256,
-                "y": 2.2953970432281494,
-                "z": 1.0491682291030884
+                "x": -0.6502193808555603,
+                "y": 1.1519999504089355,
+                "z": 0.0
             }
         }
     },
@@ -189,17 +134,17 @@
         "isDrawEnable": true,
         "isStatic": false,
         "lifetime": {
-            "constant": 0.0,
+            "constant": 2.0,
             "max": 3.0,
             "min": 1.0,
-            "mode": 1
+            "mode": 0
         },
         "modelPath": "plane.obj",
         "objectType": 3,
         "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
+            "x": 0.6596956849098206,
+            "y": 0.5833604335784912,
+            "z": 3.6348962783813477
         },
         "texturePath": "particle.png",
         "velocity": {
@@ -218,7 +163,83 @@
                 "y": 0.0,
                 "z": -1.0
             },
-            "mode": 1
+            "mode": 0
+        }
+    },
+    {
+        "emitRate": 0.10000000149011612,
+        "isComplement": true,
+        "isDrawEnable": true,
+        "isStatic": false,
+        "lifetime": {
+            "constant": 2.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 0
+        },
+        "modelPath": "plane.obj",
+        "objectType": 3,
+        "position": {
+            "x": 2.0266599655151367,
+            "y": 0.6004446744918823,
+            "z": -2.554144859313965
+        },
+        "texturePath": "particle.png",
+        "velocity": {
+            "constant": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "max": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "min": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": -1.0
+            },
+            "mode": 0
+        }
+    },
+    {
+        "emitRate": 0.10000000149011612,
+        "isComplement": true,
+        "isDrawEnable": true,
+        "isStatic": false,
+        "lifetime": {
+            "constant": 2.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 0
+        },
+        "modelPath": "plane.obj",
+        "objectType": 3,
+        "position": {
+            "x": -3.037353754043579,
+            "y": 0.6603327989578247,
+            "z": -0.4961096942424774
+        },
+        "texturePath": "particle.png",
+        "velocity": {
+            "constant": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "max": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "min": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": -1.0
+            },
+            "mode": 0
         }
     }
 ]

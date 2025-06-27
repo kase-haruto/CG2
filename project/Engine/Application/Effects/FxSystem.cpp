@@ -3,6 +3,10 @@
 #include <Engine/Application/Effects/Particle/FxUnit.h>
 
 
+FxSystem::FxSystem(){
+	particleRenderer_ = std::make_unique<ParticleRenderer>();
+}
+
 FxSystem::~FxSystem(){
 	emitters_.clear();
 }
@@ -20,6 +24,10 @@ void FxSystem::RemoveEmitter(FxEmitter* emitter){
 
 void FxSystem::Update() {
 	for (auto& e : emitters_) e->Update();
+}
+
+void FxSystem::Render(PipelineService* pso, ID3D12GraphicsCommandList* cmd){
+	particleRenderer_->Render(emitters_, pso,cmd);
 }
 
 void FxSystem::Clear(){

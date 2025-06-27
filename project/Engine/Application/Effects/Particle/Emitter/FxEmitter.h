@@ -78,7 +78,7 @@ private:
 	std::string texturePath = "particle.png";	//< テクスチャパス（デフォルトはparticle.png
 
 
-	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
+	const int kMaxUnits_ = 2048;			//< 最大パーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
 
 	std::unique_ptr<FxModuleContainer> moduleContainer_; // モジュールコンテナ
