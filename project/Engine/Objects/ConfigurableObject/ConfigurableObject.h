@@ -16,8 +16,8 @@ public:
 	void LoadConfig(const std::string& path);
 	void SaveConfig(const std::string& path) const;
 
-	virtual void ApplyConfig() = 0;   ///< config_ → 実行状態へ反映
-	virtual void ExtractConfig() = 0; ///< 実行状態 → config_ へ反映
+	virtual void ApplyConfig() = 0;   //< config_ → 実行状態へ反映
+	virtual void ExtractConfig() = 0; //< 実行状態 → config_ へ反映
 
 protected:
 	TConfig config_;

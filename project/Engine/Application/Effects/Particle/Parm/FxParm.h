@@ -5,11 +5,7 @@
 
 // engine
 #include <Engine/Foundation/Utility/Random/Random.h>
-
-enum class FxValueMode{
-	Constant,
-	Random
-};
+#include <Data/Engine/Configs/Scene/Objects/Particle/FxParmConfig.h>
 
 template<typename T>
 class FxParam{
@@ -27,6 +23,9 @@ public:
 	const T& GetMax() const{ return max_; }
 	const T& GetConstant() const{ return constant_; }
 
+	//config
+	void FromConfig(const FxParamConfig<T>& cfg);
+	FxParamConfig<T> ToConfig() const;
 private:
 	FxValueMode mode_ = FxValueMode::Constant;
 	T constant_ {};	//< 定数値
@@ -75,4 +74,23 @@ inline Vector3 FxParam<Vector3>::Get() const{
 	} else{
 		return Random::GenerateVector3(min_, max_);
 	}
+}
+
+//===================================================================*/
+//		Config からの設定
+//===================================================================*/
+template<typename T>
+inline void FxParam<T>::FromConfig(const FxParamConfig<T>& cfg){
+	mode_ = cfg.mode;
+	constant_ = cfg.constant;
+	min_ = cfg.min;
+	max_ = cfg.max;
+}
+
+//===================================================================*/
+//		Config への変換
+//===================================================================*/
+template<typename T>
+inline FxParamConfig<T> FxParam<T>::ToConfig() const{
+	return FxParamConfig<T>{ mode_, constant_, min_, max_ };
 }

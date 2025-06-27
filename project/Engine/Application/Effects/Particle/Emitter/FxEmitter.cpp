@@ -165,3 +165,30 @@ void FxEmitter::TransferParticleDataToGPU(){
 	}
 	instanceBuffer_.TransferVectorData(gpuUnits);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//			コンフィグの適用
+/////////////////////////////////////////////////////////////////////////////////////////
+void FxEmitter::ApplyConfig(){
+	position_ = config_.position;
+	velocity_.FromConfig(config_.velocity);
+	lifetime_.FromConfig(config_.lifetime);
+	emitRate_ = config_.emitRate;
+	modelPath = config_.modelPath;
+	texturePath = config_.texturePath;
+	isDrawEnable_ = config_.isDrawEnable;
+	isComplement_ = config_.isComplement;
+	isStatic_ = config_.isStatic;
+}
+
+void FxEmitter::ExtractConfig(){
+	config_.position = position_;
+	config_.velocity = FxVector3ParamConfig {velocity_.ToConfig()};
+	config_.lifetime = FxFloatParamConfig {lifetime_.ToConfig()};
+	config_.emitRate = emitRate_;
+	config_.modelPath = modelPath;
+	config_.texturePath = texturePath;
+	config_.isDrawEnable = isDrawEnable_;
+	config_.isComplement = isComplement_;
+	config_.isStatic = isStatic_;
+}

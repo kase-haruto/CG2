@@ -44,12 +44,9 @@ public:
 
 private:
 	/* objects ======================================================*/
-	std::unique_ptr<BaseGameObject> modelField_ = nullptr;
-	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
-	std::unique_ptr<Player> player_ = nullptr;
-	std::unique_ptr<BulletContainer> playerBulletContainer_ = nullptr;
-
-	std::unique_ptr<EnemyCollection> enemyCollection_ = nullptr;
+	BaseGameObject* modelField_ = nullptr;
+	Player* player_ = nullptr;
+	BulletContainer* playerBulletContainer_ = nullptr;
 
 	// カメラ
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;

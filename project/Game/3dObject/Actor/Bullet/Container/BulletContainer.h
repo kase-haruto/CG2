@@ -34,13 +34,13 @@ public:
 	/* config =========================================*/
 
 	/* accessor =========================================*/
-	const std::list<std::unique_ptr<BaseBullet>>& GetBullets() const{ return bullets_; }
-	void SetSceneContext(SceneContext* context) { sceneContext_ = context; }
+	const std::list<BaseBullet*>& GetBullets() const{ return bullets_; }
+	void SetSceneContext(SceneContext* context){ sceneContext_ = context; }
 private:
 	//===================================================================*/
 	// private variables
 	//===================================================================*/
-	std::list<std::unique_ptr<BaseBullet>> bullets_; // 弾リスト
+	std::list<BaseBullet*> bullets_; // 生ポインタのみ保持（所有権はSceneObjectLibrary）
 	SceneContext* sceneContext_ = nullptr;
 
 	//===================================================================*/

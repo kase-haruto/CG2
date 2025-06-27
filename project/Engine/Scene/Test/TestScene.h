@@ -49,14 +49,6 @@ private:
 	std::unique_ptr<FogEffect>fog_ = nullptr;
 
 	/* objects ====================================================*/
-	std::unique_ptr<Model> modelField_ = nullptr;
-	std::unique_ptr<BaseGameObject> field_ = nullptr;
-	std::unique_ptr<BaseGameObject> bunny_ = nullptr;
-	std::unique_ptr<BaseGameObject> teapot_ = nullptr;
-	std::unique_ptr<BaseGameObject> walkHuman_ = nullptr;
-
-	std::unique_ptr<ParticleSystemObject> particleSystem_ = nullptr;
-	std::unique_ptr<ParticleSystemObject> particleSystem2_ = nullptr;
 
 	//テスト用
 	std::vector<std::unique_ptr<BaseGameObject>> humans_;

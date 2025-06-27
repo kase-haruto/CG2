@@ -7,34 +7,28 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 LightLibrary::LightLibrary(SceneObjectLibrary* library){
-	CreateAndAddObject(library, directionalLight_, "DirectionalLight");
-	CreateAndAddObject(library, pointLight_, "PointLight");
+	// ライトを生成してSceneObjectLibraryに追加し、生ポインタだけ保持
+	directionalLight_ = CreateAndAddObject<DirectionalLight>(library, "DirectionalLight");
+	pointLight_ = CreateAndAddObject<PointLight>(library, "PointLight");
 }
 
-void LightLibrary::Update() {
-	directionalLight_->Update();
-	pointLight_->Update();
+void LightLibrary::Update(){
+	if (directionalLight_) directionalLight_->Update();
+	if (pointLight_) pointLight_->Update();
 }
 
-void LightLibrary::Clear() {
-	/*directionalLight_.reset();
-	pointLight_.reset();*/
+void LightLibrary::Clear(){
+	// SceneObjectLibrary側でクリアするときにライトも消えるので
+	directionalLight_ = nullptr;
+	pointLight_ = nullptr;
 }
 
-void LightLibrary::SetDirectionalLight(std::unique_ptr<DirectionalLight> light) {
-	if (light) {
-		directionalLight_ = std::move(light);
-	} else {
-		directionalLight_ = std::make_unique<DirectionalLight>("DefaultDirectionalLight");
-	}
+void LightLibrary::SetDirectionalLight(DirectionalLight* light){
+	directionalLight_ = light;
 }
 
-void LightLibrary::SetPointLight(std::unique_ptr<PointLight> light) {
-	if (light) {
-		pointLight_ = std::move(light);
-	} else {
-		pointLight_ = std::make_unique<PointLight>("DefaultPointLight");
-	}
+void LightLibrary::SetPointLight(PointLight* light){
+	pointLight_ = light;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

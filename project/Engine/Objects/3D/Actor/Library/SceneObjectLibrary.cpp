@@ -1,32 +1,30 @@
 #include "SceneObjectLibrary.h"
 
-#include <algorithm>
-
-SceneObjectLibrary::SceneObjectLibrary() {
+SceneObjectLibrary::SceneObjectLibrary(){
 	allSceneObjects_.clear();
 }
 
-void SceneObjectLibrary::AddObject(SceneObject* object) {
-	if (std::find(allSceneObjects_.begin(), allSceneObjects_.end(), object) == allSceneObjects_.end()) {
-		allSceneObjects_.push_back(object);
-	}
+void SceneObjectLibrary::AddObject(std::unique_ptr<SceneObject> object){
+	allSceneObjects_.push_back(std::move(object));
 }
 
-void SceneObjectLibrary::RemoveObject(SceneObject* object) {
-	auto it = std::remove(allSceneObjects_.begin(), allSceneObjects_.end(), object);
+void SceneObjectLibrary::RemoveObject(SceneObject* object){
+	auto it = std::remove_if(allSceneObjects_.begin(), allSceneObjects_.end(),
+							 [object] (const std::unique_ptr<SceneObject>& obj){
+								 return obj.get() == object;
+							 });
 	allSceneObjects_.erase(it, allSceneObjects_.end());
 }
 
-void SceneObjectLibrary::Clear() {
+void SceneObjectLibrary::Clear(){
 	allSceneObjects_.clear();
 }
 
-const std::vector<SceneObject*>& SceneObjectLibrary::GetAllObjects() const {
-	return allSceneObjects_;
-}
-
-void SceneObjectLibrary::RegisterToRenderer(MeshRenderer* renderer) {
-	for (auto* obj : allSceneObjects_) {
-		obj->RegisterToRenderer(renderer);
+std::vector<SceneObject*> SceneObjectLibrary::GetAllObjects() const{
+	std::vector<SceneObject*> result;
+	result.reserve(allSceneObjects_.size());
+	for (const auto& obj : allSceneObjects_){
+		result.push_back(obj.get());
 	}
+	return result;
 }

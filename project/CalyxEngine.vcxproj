@@ -280,6 +280,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\EmitterConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\FxParmConfig.h" />
+    <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\ParticleSystemObjectConfig.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateParticleSystemCommand.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
     <ClInclude Include="Engine\Application\Effects\FxSystem.h" />

@@ -18,11 +18,11 @@ public:
 
 	void Update();
 	void Clear();
-	void SetDirectionalLight(std::unique_ptr<DirectionalLight> light);
-	void SetPointLight(std::unique_ptr<PointLight> light);
+	void SetDirectionalLight(DirectionalLight* light);
+	void SetPointLight(PointLight* light);
 
-	DirectionalLight* GetDirectionalLight() const { return directionalLight_.get(); }
-	PointLight* GetPointLight() const { return pointLight_.get(); }
+	DirectionalLight* GetDirectionalLight() const{ return directionalLight_; }
+	PointLight* GetPointLight() const{ return pointLight_; }
 
 	void SetCommand(ID3D12GraphicsCommandList* cmdList, PipelineType pipelineType);
 	void SetCommand(ID3D12GraphicsCommandList* cmdList,
@@ -32,8 +32,8 @@ private:
 	//===================================================================*/
 	//			private methods
 	//===================================================================*/
-	std::unique_ptr<DirectionalLight> directionalLight_;
-	std::unique_ptr<PointLight> pointLight_;
+	DirectionalLight* directionalLight_ = nullptr;  // 所有しない生ポインタ
+	PointLight* pointLight_ = nullptr;              // 所有しない生ポインタ
 
 };
 
