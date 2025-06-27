@@ -8,12 +8,8 @@
 
 // engine
 #include <Engine/Application/Input/Input.h>
-#include <Engine/Application/UI/Panels/EditorPanel.h>
 #include <Engine/Collision/CollisionManager.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
-#include <Engine/Graphics/Context/GraphicsGroup.h>
-#include <Engine/Objects/3D/Actor/SceneObjectManager.h>
-#include <Engine/Application/Effects/FxSystem.h>
 
 // lib
 #include <Engine/Foundation/Utility/Func/MyFunc.h>
@@ -64,12 +60,6 @@ void TestScene::Update() {
 	CameraManager::Update();
 
 	skyBox_->Update();
-
-	//test
-	//field_->Update();
-	//bunny_->Update();
-	//teapot_->Update();
-	//walkHuman_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();

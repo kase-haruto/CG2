@@ -3,24 +3,12 @@
 /* include space
 /* ===================================================================== */
 /* engine */
-#include <Engine/scene/Base/BaseScene.h>
-#include <Engine/Renderer/Sprite/Sprite.h>
-#include <Engine/Objects/3D/Actor/BaseGameObject.h>
-#include <Engine/Extensions/SkyBox/SkyBox.h>
 #include <Engine/Extensions/Fog/FogEffect.h>
-
-/* graphics */
-#include <Engine/Objects/LightObject/DirectionalLight.h>
-#include <Engine/Objects/LightObject/PointLight.h>
-
-/* object */
-#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
-#include <Engine/Foundation/Math/Quaternion.h>
-#include <Engine/Application/Effects/Particle/Object/ParticleSystemObject.h>
+#include <Engine/scene/Base/BaseScene.h>
 
 /* c++ */
-#include <vector>
 #include <memory>
+#include <vector>
 
 ///デバッグ関連///
 #ifdef _DEBUG
@@ -50,8 +38,6 @@ private:
 
 	/* objects ====================================================*/
 
-	//テスト用
-	std::vector<std::unique_ptr<BaseGameObject>> humans_;
 
 };
 
