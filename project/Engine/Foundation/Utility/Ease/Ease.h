@@ -2,7 +2,7 @@
 #include <cmath>
 #include <numbers>
 
-class EvoEase{
+class CalyxEase{
 public:
 	// Linear
 	static float Linear(float t);

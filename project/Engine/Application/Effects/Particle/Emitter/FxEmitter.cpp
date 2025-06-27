@@ -22,6 +22,14 @@ FxEmitter::FxEmitter(){
 	instanceBuffer_.Initialize(device, kMaxUnits_);
 	instanceBuffer_.CreateSrv(device);
 
+	velocity_ = FxParam<Vector3>::MakeRandom(
+		Vector3(-1.0f, 0.0f, -1.0f),
+		Vector3(1.0f, 0.0f, 1.0f)
+	);
+
+	lifetime_ = FxParam<float>::MakeRandom(1.0f, 3.0f);
+	scale_ = FxParam<Vector3>::MakeConstant();
+
 	//モジュールの初期化
 	moduleContainer_ = std::make_unique<FxModuleContainer>();
 }
@@ -110,12 +118,12 @@ void FxEmitter::Emit(const Vector3& pos){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ResetFxUnit(FxUnit& fx){
 	fx.position = position_;
-	velocity_.SetRandom(Vector3(-1.0f, 0.0f, -1.0f), Vector3(1.0f, 0.0f, 1.0f));
-	lifetime_.SetRandom(1.0f, 3.0f);
+
 	fx.velocity = velocity_.Get();
 	fx.lifetime = lifetime_.Get();
 	fx.age = 0.0f;
-	fx.size = 1.0f;
+	fx.scale = scale_.Get();
+	fx.initialScale = fx.scale; // 初期スケールを設定
 	fx.color = Vector4(1, 1, 1, 1);
 	fx.alive = true;
 }
@@ -125,8 +133,15 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ShowGui(){
 	ImGui::Text("emitCount: %d", units_.size());
+	GuiCmd::DragFloat3("position", position_);
+	GuiCmd::DragFloat("emitRate", emitRate_, 0.01f, 0.0f, 10.0f);
+
 	GuiCmd::CheckBox("isComplement", isComplement_);
 	GuiCmd::CheckBox("isStatic", isStatic_);
+
+	ImGuiHelpers::DrawFxParamGui("Scale", scale_);
+	ImGuiHelpers::DrawFxParamGui("Velocity", velocity_);
+	ImGuiHelpers::DrawFxParamGui("Lifetime", lifetime_);
 
 	ImGui::Spacing();
 
@@ -141,8 +156,7 @@ void FxEmitter::ShowGui(){
 		ImGui::SameLine();
 
 		// 折りたたみ（CollapsingHeader）管理
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
-		bool open = ImGui::CollapsingHeader(m->GetName().c_str(), flags);
+		bool open = ImGui::CollapsingHeader(m->GetName().c_str());
 
 		// 表示（ONのときのみ中身）
 		if (open && enabled){
@@ -160,7 +174,7 @@ void FxEmitter::TransferParticleDataToGPU(){
 	gpuUnits.clear();
 	for (const auto& fx : units_){
 		if (fx.alive){
-			gpuUnits.push_back({fx.position, fx.size, fx.color});
+			gpuUnits.push_back({fx.position, fx.scale, fx.color});
 		}
 	}
 	instanceBuffer_.TransferVectorData(gpuUnits);

@@ -11,7 +11,7 @@ struct VertexShaderInput {
 
 struct ParticleData {
     float3 position;
-    float size;
+    float3 scale;
     float4 color;
 };
 
@@ -63,10 +63,11 @@ VertexShaderOutput main(uint vertexID : SV_VertexID,
 			break;
 	}
 
-	float2 offset = corner * p.size;
-	float3 worldPos = p.position
-                    + gCamera.camRight * offset.x
-                    + gCamera.camUp * offset.y;
+    float2 offset = float2(corner.x * p.scale.x, corner.y * p.scale.y);
+
+    float3 worldPos = p.position
+                + gCamera.camRight * offset.x
+                + gCamera.camUp * offset.y;
 
 	VertexShaderOutput o;
 	o.position = mul(float4(worldPos, 1.0f), gCamera.viewProjection);

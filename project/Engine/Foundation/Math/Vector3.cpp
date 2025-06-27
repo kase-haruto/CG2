@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <cmath>
 
+Vector3::Vector3(float scaler)
+	: x(scaler), y(scaler), z(scaler){}
+
 void Vector3::Initialize(const Vector3& value){
 	//値で初期化
 	x = value.x;

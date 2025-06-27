@@ -278,11 +278,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Objects\3D\Actor\Factory\SceneObjectFactory.cpp" />
     <ClCompile Include="Engine\Renderer\Particle\ParticleRenderer.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.cpp" />
+    <ClCompile Include="Engine\Application\Effects\Particle\Module\Size\SizeOverLiftimeModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\EmitterConfig.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\FxParmConfig.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\ParticleSystemObjectConfig.h" />
+    <ClInclude Include="Engine\Foundation\Utility\Ease\EaseTypes.h" />
     <ClInclude Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateParticleSystemCommand.h" />
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\SceneObject\SceneObjectConfig.h" />
     <ClInclude Include="Engine\Application\Effects\FxSystem.h" />
@@ -497,6 +499,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Renderer\Particle\ParticleRenderer.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Module\Velocity\GravityModule.h" />
+    <ClInclude Include="Engine\Application\Effects\Particle\Module\Size\SizeOverLiftimeModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

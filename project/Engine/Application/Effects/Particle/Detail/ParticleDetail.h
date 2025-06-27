@@ -8,6 +8,6 @@
 
 struct ParticleConstantData {
 	Vector3 position;
-	float size;
+	Vector3 scale;
 	Vector4 color;
 };

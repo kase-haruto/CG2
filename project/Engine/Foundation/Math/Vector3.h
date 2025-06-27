@@ -11,6 +11,9 @@ struct Vector3 final {
 	float x;
 	float y;
 	float z;
+	Vector3(float scaler);
+	Vector3(float x, float y, float z) : x(x), y(y), z(z){}
+	Vector3() : x(0.0f), y(0.0f), z(0.0f){}
 
 	//--------- function ---------------------------------------------------
 #pragma region function
