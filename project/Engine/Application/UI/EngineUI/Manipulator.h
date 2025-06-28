@@ -14,17 +14,19 @@ class BaseCamera;
 struct Matrix4x4;
 
 class Manipulator 
-	: public IOnViewportTool{
+	: public BaseOnViewportTool{
 public:
+	//===================================================================*/
+	//					methods
+	//===================================================================*/
 	Manipulator();
-	void Update() override;
-	void RenderOverlay() override;
+	void Update();
+	void RenderOverlay(const ImVec2& basePos) override;
 	void RenderToolbar() override;
 
 	void SetTarget(WorldTransform* target);
 	void SetCamera(BaseCamera* camera);
 	void SetViewRect(const ImVec2& origin, const ImVec2& size);
-
 private:
 	void RowToColumnArray(const Matrix4x4& m, float out[16]);
 	Matrix4x4 ColumnArrayToRow(const float in_[16]);

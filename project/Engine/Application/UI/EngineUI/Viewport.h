@@ -28,6 +28,7 @@ public:
 
 	void Update();								//< ビューポートの更新処理
 	void Render(const ImTextureID& tex);		//< ImGui上への描画処理
+
 	void AddTool(IOnViewportTool* tool);		//< ビューポートツールの追加
 
 	//--------- accessor -----------------------------------------------------
@@ -37,6 +38,11 @@ public:
 	Vector2 GetPosition() const;				//< ビューポートの位置
 	ViewportType GetType() const;
 	void SetCamera(BaseCamera* camera);
+
+private:
+	ImVec2 CalcToolPosition(IOnViewportTool* tool,
+							const ImVec2& viewportPos,
+							const ImVec2& viewportSize);
 private:
 	std::vector<IOnViewportTool*> tools_;
 	ViewportType type_ = ViewportType::VIEWPORT_NONE;	//< ビューポートの種類

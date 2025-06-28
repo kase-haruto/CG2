@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Application\UI\EngineUI\IOnViewportTool.cpp" />
     <ClCompile Include="Engine\System\Command\EditorCommand\LevelEditorCommand\CreateObjectCommand\CreateParticleSystemCommand.cpp" />
     <ClCompile Include="Engine\Application\Effects\FxSystem.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Emitter\FxEmitter.cpp" />
@@ -279,6 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Renderer\Particle\ParticleRenderer.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Module\Size\SizeOverLiftimeModule.cpp" />
+    <ClCompile Include="Engine\Application\UI\EngineUI\PerformanceOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\EmitterConfig.h" />
@@ -500,6 +502,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\Effects\Particle\Object\ParticleSystemObject.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Module\Velocity\GravityModule.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Module\Size\SizeOverLiftimeModule.h" />
+    <ClInclude Include="Engine\Application\UI\EngineUI\PerformanceOverlay.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
