@@ -2,7 +2,7 @@
 
 PerformanceOverlay::PerformanceOverlay(){
 	align_ = OverlayAlign::TopRight;
-	overlayOffset_ = ImVec2(200.0f, 10.0f);
+	overlayOffset_ = ImVec2(-200.0f, 10.0f);
 }
 
 void PerformanceOverlay::RenderOverlay(const ImVec2& basePos){
