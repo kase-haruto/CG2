@@ -55,8 +55,6 @@ void EngineController::Initialize(HINSTANCE hInstance){
 		{ "ChromaticAberration", false, postProcessCollection_->GetEffectByName("ChromaticAberration")},
 	};
 
-	// particleRendererの初期化
-	particleRenderer_ = std::make_unique<ParticleRenderer>();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -174,19 +172,13 @@ void EngineController::EndUpdate(){
 	UpdatePostEffectControl(ClockManager::GetInstance()->GetDeltaTime());
 }
 
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		描画
 /////////////////////////////////////////////////////////////////////////////////////////
 void EngineController::Render() {
-	auto* context = sceneManager_->GetCurrentSceneContext();
 	// シーンの描画
 	sceneManager_->Draw();
-
-	// パーティクル描画
-	if (particleRenderer_ && context){
-		const auto& emitters = context->GetFxSystem()->GetEmitters();
-		particleRenderer_->Render(emitters, graphicsSystem_->GetPipelineService(), graphicsSystem_->GetCommandList());
-	}
 
 	// 描画後処理
 	system_->EndFrame(graphicsSystem_->GetPipelineService());

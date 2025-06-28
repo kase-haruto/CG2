@@ -8,9 +8,10 @@
 struct FxUnit{
 	Vector3 position;		//< 座標
 	Vector3 velocity;		//< 速度
+	Vector3 initialScale = {1.0f, 1.0f, 1.0f}; // 初期スケール
+	Vector3 scale;			//< スケール
 	float lifetime = 1.0f;	//< 寿命
 	float age;				//< 経過時間
 	Vector4 color;			//< 色
-	float size;				//< サイズ
 	bool alive = true;		//< 生存フラグ
 };

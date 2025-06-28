@@ -9,7 +9,6 @@
 #include <Engine/Application/UI/EngineUI/Core/EngineUICore.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
 #include <Engine/Editor/Collection/EditorCollection.h>
-#include <Engine/Renderer/Particle/ParticleRenderer.h>
 
 #include <Engine/PostProcess/Collection/PostProcessCollection.h>
 #include <Engine/PostProcess/Graph/PostEffectGraph.h>
@@ -48,9 +47,6 @@ private:
 	// ポストエフェクトの適用と管理
 	PostEffectGraph* postEffectGraph_;
 	PostProcessCollection* postProcessCollection_;
-
-	// renderer
-	std::unique_ptr<ParticleRenderer> particleRenderer_;
 
 	// ブラー演出の有効フラグと時間
 	bool isRadialActive_ = false;

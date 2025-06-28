@@ -34,9 +34,12 @@ void LevelEditor::Initialize() {
 	debugViewport_ = std::make_unique<Viewport>(ViewportType::VIEWPORT_DEBUG, "Debug Viewport");
 	debugViewport_->SetCamera(CameraManager::GetDebugCamera());
 
+	performanceOverlay_ = std::make_unique<PerformanceOverlay>();
+
 	// Manipulator をツールとして登録
 	if (auto* manipulator = sceneEditor_->GetManipulator()) {
 		debugViewport_->AddTool(manipulator);
+		debugViewport_->AddTool(performanceOverlay_.get());
 	}
 
 	// エディターメニューの初期化

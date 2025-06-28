@@ -10,6 +10,7 @@
 #include <Engine/Graphics/Pipeline/Presets/PipelinePresets.h>
 #include <Engine/Graphics/Pipeline/Service/PipelineService.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
+#include <Engine/Application/Effects/FxSystem.h>
 
 BaseScene::BaseScene(){
 	sceneContext_ = std::make_unique<SceneContext>();
@@ -86,4 +87,9 @@ void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoSer
 	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
 	CameraManager::SetCommand(cmdList, PipelineType::Line);
 	PrimitiveDrawer::GetInstance()->Render();
+
+	//===================================================================*/
+	//                    particle描画
+	//===================================================================*/
+	sceneContext_->GetFxSystem()->Render(psoService, cmdList);
 }

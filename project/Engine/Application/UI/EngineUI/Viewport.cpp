@@ -10,11 +10,7 @@
 
 Viewport::Viewport(ViewportType type, const std::string& windowName) :type_(type), windowName_(windowName){}
 
-void Viewport::Update(){
-	for (auto& tool:tools_){
-		tool->Update();
-	}
-}
+void Viewport::Update(){}
 
 void Viewport::Render(const ImTextureID& tex){
 	textureID_ = tex;
@@ -37,12 +33,20 @@ void Viewport::Render(const ImTextureID& tex){
 		ImGuizmo::SetRect(imagePos.x, imagePos.y, size_.x, size_.y);
 		ImGuizmo::SetDrawlist();
 
-		// オーバーレイツールバーの描画位置を設定（画像の左上にする場合）
-		ImGui::SetCursorScreenPos(ImVec2(imagePos.x + 10, imagePos.y + 20));
+		ImVec2 viewportPos = imagePos;
+		ImVec2 viewportSize = ImVec2(size_.x, size_.y);
+
 		ImGui::BeginGroup();
 		for (auto* tool : tools_){
-			tool->RenderToolbar();	
+			auto* base = dynamic_cast< BaseOnViewportTool* >(tool);
+			if (!base) continue;
+
+			ImVec2 viewSize = ImVec2(size_.x, size_.y);
+
+			ImVec2 pos = base->CalcScreenPosition(imagePos, viewSize);
+			tool->RenderOverlay(pos); // ← 基準位置を引数で渡す
 		}
+
 		ImGui::EndGroup();
 	}
 
@@ -52,12 +56,43 @@ void Viewport::Render(const ImTextureID& tex){
 	ImGui::End();
 }
 
+ImVec2 Viewport::CalcToolPosition(IOnViewportTool* tool, const ImVec2& viewportPos, const ImVec2& viewportSize){
+	ImVec2 basePos;
+
+	OverlayAlign align = OverlayAlign::TopLeft;
+	if (auto* base = dynamic_cast< BaseOnViewportTool* >(tool)){
+		align = base->GetOverlayAlign();
+	}
+
+	switch (align){
+		case OverlayAlign::TopLeft:
+			basePos = viewportPos;
+			break;
+		case OverlayAlign::TopRight:
+			basePos = ImVec2(viewportPos.x + viewportSize.x, viewportPos.y);
+			break;
+		case OverlayAlign::BottomLeft:
+			basePos = ImVec2(viewportPos.x, viewportPos.y + viewportSize.y);
+			break;
+		case OverlayAlign::BottomRight:
+			basePos = ImVec2(viewportPos.x + viewportSize.x, viewportPos.y + viewportSize.y);
+			break;
+		case OverlayAlign::CenterTop:
+			basePos = ImVec2(viewportPos.x + viewportSize.x * 0.5f, viewportPos.y);
+			break;
+	}
+
+	// オフセット加算
+	return ImVec2(basePos.x + tool->GetOverlayOffset().x,
+				  basePos.y + tool->GetOverlayOffset().y);
+}
+
 void Viewport::AddTool(IOnViewportTool* tool){ tools_.push_back(tool); }
 
 bool Viewport::IsHovered() const{ return isHovered_; }
 bool Viewport::IsClicked() const{ return isClicked_; }
 Vector2 Viewport::GetSize() const{ return size_; }
-Vector2 Viewport::GetPosition() const {
+Vector2 Viewport::GetPosition() const{
 	// ビューポートの位置を取得
 	return viewOrigin_;
 }

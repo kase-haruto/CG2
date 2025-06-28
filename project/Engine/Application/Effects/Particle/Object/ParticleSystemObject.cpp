@@ -10,7 +10,7 @@ ParticleSystemObject::ParticleSystemObject(const std::string& name){
 
 void ParticleSystemObject::Update(){
 	worldTransform_.Update();
-	position_ = worldTransform_.translation;
+	position_ = worldTransform_.GetWorldPosition();
 	FxEmitter::Update();
 }
 

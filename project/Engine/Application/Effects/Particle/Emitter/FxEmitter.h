@@ -64,9 +64,11 @@ public:
 	Vector3 position_;					//< emitterの位置
 	Vector3 prevPostion_;				//< 前回の座標
 	float emitRate_ = 0.1f;				//< パーティクル生成レート
+	float defaultSize_ = 1.0f;			//< パーティクルのデフォルトサイズ
+
+	FxParam<Vector3> scale_;			//< パーティクルのスケール（定数またはランダム）
 	FxParam<Vector3> velocity_;			//< パーティクルの速度（定数またはランダム）
 	FxParam<float> lifetime_;			//< パーティクルの寿命（定数またはランダム）
-	float defaultSize_ = 1.0f;			//< パーティクルのデフォルトサイズ
 
 private:
 	//===================================================================*/
@@ -76,7 +78,7 @@ private:
 	std::string texturePath = "particle.png";	//< テクスチャパス（デフォルトはparticle.png
 
 
-	const int kMaxUnits_ = 1024;			//< 最大パーティクル数
+	const int kMaxUnits_ = 2048;			//< 最大パーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
 
 	std::unique_ptr<FxModuleContainer> moduleContainer_; // モジュールコンテナ

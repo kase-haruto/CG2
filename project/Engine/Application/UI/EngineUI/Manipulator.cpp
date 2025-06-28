@@ -10,8 +10,7 @@
 #include <Engine/Objects/Transform/Transform.h>
 #include <Engine/System/Command/Manager/CommandManager.h>
 
-#include <cmath> // for std::numbers or M_PI
-// #include <numbers> // (C++20以降が使用できる場合はこちら)
+#include <cmath>
 
 Manipulator::Manipulator(){
 	iconTranslate_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/translate.png").ptr);
@@ -19,6 +18,8 @@ Manipulator::Manipulator(){
 	iconScale_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/scale.png").ptr);
 	iconUniversal_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/universal.png").ptr);
 	iconWorld_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/world.png").ptr);
+	SetOverlayAlign(OverlayAlign::TopLeft);
+	SetOverlayOffset(overlayOffset_); // Viewport右上から左下に少しずらす
 }
 
 void Manipulator::SetTarget(WorldTransform* target){
@@ -106,12 +107,9 @@ void Manipulator::Update(){
 	wasUsing = usingNow;
 }
 
-void Manipulator::RenderOverlay(){
-	// 将来的に補助線やハンドルUIを追加したい場合に使用
-}
-
-void Manipulator::RenderToolbar(){
+void Manipulator::RenderOverlay(const ImVec2& basePos){
 	ImVec2 iconSize = iconTranslate_.size;
+	float spacing = 4.0f;
 
 	struct ButtonInfo{
 		ImGuizmo::OPERATION op;
@@ -126,42 +124,47 @@ void Manipulator::RenderToolbar(){
 		{ ImGuizmo::UNIVERSAL, "Universal", iconUniversal_ }
 	};
 
-	for (const auto& btn : buttons){
-		bool isSelected = (operation_ == btn.op);
-		if (isSelected){
+	for (int i = 0; i < IM_ARRAYSIZE(buttons); ++i){
+		ImVec2 btnPos = ImVec2(basePos.x, basePos.y + i * (iconSize.y + spacing));
+		ImGui::SetCursorScreenPos(btnPos);
+
+		bool isSelected = (operation_ == buttons[i].op);
+		if (isSelected)
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
-		}
 
-		if (ImGui::ImageButton(btn.icon.texture, iconSize)){
-			operation_ = btn.op;
-		}
-		if (isSelected){
+		if (ImGui::ImageButton(buttons[i].icon.texture, iconSize))
+			operation_ = buttons[i].op;
+
+		if (isSelected)
 			ImGui::PopStyleColor();
-		}
 
-		if (ImGui::IsItemHovered()){
-			ImGui::SetTooltip("%s", btn.tooltip);
-		}
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("%s", buttons[i].tooltip);
 	}
 
+	// ワールド/ローカル切り替えボタン
 	{
+		int i = IM_ARRAYSIZE(buttons);
+		ImVec2 btnPos = ImVec2(basePos.x, basePos.y + i * (iconSize.y + spacing));
+		ImGui::SetCursorScreenPos(btnPos);
+
 		bool isWorld = (mode_ == ImGuizmo::WORLD);
-		if (isWorld){
+		if (isWorld)
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
-		}
 
-		if (ImGui::ImageButton(iconWorld_.texture, iconWorld_.size)){
+		if (ImGui::ImageButton(iconWorld_.texture, iconSize))
 			mode_ = isWorld ? ImGuizmo::LOCAL : ImGuizmo::WORLD;
-		}
 
-		if (isWorld){
+		if (isWorld)
 			ImGui::PopStyleColor();
-		}
 
-		if (ImGui::IsItemHovered()){
+		if (ImGui::IsItemHovered())
 			ImGui::SetTooltip("%s Mode", isWorld ? "World" : "Local");
-		}
 	}
+}
+
+void Manipulator::RenderToolbar(){
+
 }
 
 void Manipulator::RowToColumnArray(const Matrix4x4& m, float out[16]){

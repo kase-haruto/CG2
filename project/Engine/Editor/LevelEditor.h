@@ -7,6 +7,7 @@
 #include <Engine/Application/UI/EngineUI/Manipulator.h>
 #include <Engine/Application/UI/EngineUI/Viewport.h>
 #include <Engine/Application/UI/EngineUI/EditorMenu.h>
+#include <Engine/Application/UI/EngineUI/PerformanceOverlay.h>
 
 //c++
 #include <memory>
@@ -59,6 +60,7 @@ private:
 	// ビューポート
 	std::unique_ptr<Viewport> mainViewport_;				//< メインビューポート
 	std::unique_ptr<Viewport> debugViewport_;				//< デバッグビューポート
+	std::unique_ptr<PerformanceOverlay> performanceOverlay_;	//< パフォーマンスオーバーレイ
 
 	// 状態
 	BaseEditor* selectedEditor_ = nullptr;
