@@ -4,6 +4,7 @@
 /* ===================================================================== */
 #include <Engine/Objects/3D/Actor/Actor.h>
 #include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
+#include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
 /* ========================================================================
 /* Player
@@ -66,4 +67,6 @@ private:
 	Vector3 lastMoveVector_;
 	// ローリング関連
 	RollSet rollSet_ = {};
+
+	std::unique_ptr<FxEmitter> trailFx_;	// トレイルエフェクト
 };

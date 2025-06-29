@@ -13,7 +13,7 @@
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
-
+#include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
 SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
 	: pDxCore_(dxCore), pGraphicsSystem_(graphicsSystem) {
 	// ここでシーンをすべて生成しておく
@@ -52,8 +52,12 @@ void SceneManager::Update() {
 		// いったん現在シーンをクリーンアップ
 		scenes_[currentSceneNo_]->CleanUp();
 
+
 		// シーン番号を更新
 		currentSceneNo_ = nextSceneNo_;
+
+		//新しいsceneContextを設定
+		FxIntermediary::GetInstance()->SetSceneContext(scenes_[currentSceneNo_]->GetSceneContext());
 
 		scenes_[currentSceneNo_]->Initialize();
 
@@ -61,7 +65,7 @@ void SceneManager::Update() {
 			auto* context = scenes_[currentSceneNo_]->GetSceneContext();
 			pEngineUI_->NotifySceneContextChanged(context);
 		}
-	}
+			}
 
 	// 現在のシーンを更新
 	scenes_[currentSceneNo_]->Update();

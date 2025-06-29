@@ -18,6 +18,12 @@ public:
 	void OnUpdate(struct FxUnit& unit, float dt) override;
 	void ShowGuiContent() override;
 
+	void SetIsGrowing(bool frag) { isGrowing_ = frag; }
+	void SetEaseType(EaseType type) { easeType_ =type; }
+
+	bool GetIsGrowing() const { return isGrowing_; }
+	EaseType GetEaseType() const { return easeType_; }
+
 private:
 	//===================================================================*/
 	//					private methods

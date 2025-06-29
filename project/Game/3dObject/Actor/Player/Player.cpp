@@ -11,6 +11,7 @@
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
+#include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -33,7 +34,7 @@ Player::Player(const std::string& modelName,
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::Initialize() {
 	moveSpeed_ = 15.0f;
-
+	InitializeEffect();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,9 @@ void Player::Update() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::DerivativeGui() {
 	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.01f, 0.0f, 10.0f);
+
+
+	trailFx_->ShowGui();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +118,9 @@ void Player::Move() {
 
 	//移動速度を掛ける
 	moveVector *= moveSpeed_;
+
+	//エフェクトの座標更新
+	trailFx_->position_ = GetWorldPosition();
 
 	//移動ベクトルを加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
@@ -180,5 +187,12 @@ float Player::EaseForwardThenReturn(float t) {
 		float x = (t - 0.5f) / 0.5f;
 		return 1.0f - (x * x); // EaseInQuad (逆補間)
 	}
+}
+
+void Player::InitializeEffect() {
+	const std::string path = "Resoureces/Assets/Configs/Effect/";
+	trailFx_ = std::make_unique<FxEmitter>();
+	trailFx_->LoadConfig(path+"PlayerTrail.json");
+	FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 

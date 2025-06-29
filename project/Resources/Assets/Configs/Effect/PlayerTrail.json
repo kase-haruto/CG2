@@ -1,0 +1,45 @@
+{
+    "emitRate": 0.10000000149011612,
+    "isComplement": true,
+    "isDrawEnable": true,
+    "isStatic": false,
+    "lifetime": {
+        "constant": 0.0,
+        "max": 1.0,
+        "min": 0.5,
+        "mode": 1
+    },
+    "modelPath": "plane.obj",
+    "modules": [
+        {
+            "easeType": 11,
+            "enabled": true,
+            "isGrowing": false,
+            "name": "SizeOverLifetimeModule"
+        }
+    ],
+    "position": {
+        "x": 6.2671074867248535,
+        "y": -0.6745359897613525,
+        "z": 0.0
+    },
+    "texturePath": "particle.png",
+    "velocity": {
+        "constant": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "max": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "min": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": -1.0
+        },
+        "mode": 1
+    }
+}

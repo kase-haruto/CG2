@@ -30,7 +30,7 @@ public:
 	//					public func
 	//===================================================================*/
 	FxEmitter();
-	~FxEmitter() = default;
+	~FxEmitter();
 
 	virtual void Update();
 	void ResetFxUnit(FxUnit& fxUnit);
@@ -57,6 +57,12 @@ private:
 	void Emit();
 	void Emit(const Vector3& pos);
 
+	// モジュール追加・削除・有効切替用API
+	void AddModule(const std::string& moduleName);
+	void RemoveModule(const std::string& moduleName);
+	void SetModuleEnabled(const std::string& moduleName, bool enabled);
+
+	void UpdateConfigModulesFromContainer();
 public:
 	//===================================================================*/
 	//					public variable
@@ -78,8 +84,8 @@ private:
 	std::string texturePath = "particle.png";	//< テクスチャパス（デフォルトはparticle.png
 
 
-	const int kMaxUnits_ = 2048;			//< 最大パーティクル数
-	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
+	const int kMaxUnits_ = 2048;				//< 最大パーティクル数
+	std::vector<FxUnit> units_;					//< パーティクルユニットの配列
 
 	std::unique_ptr<FxModuleContainer> moduleContainer_; // モジュールコンテナ
 

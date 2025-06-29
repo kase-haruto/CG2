@@ -7,7 +7,11 @@
 #include <Engine/Application/Effects/Particle/FxUnit.h>
 #include <Engine/Graphics/Context/GraphicsGroup.h>
 #include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
+#include <Data/Engine/Configs/Scene/Objects/Particle/Module/ModuleConfigFactory.h>
+#include <Engine/Application/Effects/Particle/Module/Factory/ModuleFactory.h>
+
 // externals
 #include <externals/imgui/imgui.h>
 
@@ -32,6 +36,10 @@ FxEmitter::FxEmitter(){
 
 	//モジュールの初期化
 	moduleContainer_ = std::make_unique<FxModuleContainer>();
+}
+
+FxEmitter::~FxEmitter() {
+	//FxIntermediary::GetInstance()->Detach(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +139,9 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 /////////////////////////////////////////////////////////////////////////////////////////
 //			gui表示
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::ShowGui(){
+void FxEmitter::ShowGui() {
+	ConfigurableObject::ShowGUi();
+
 	ImGui::Text("emitCount: %d", units_.size());
 	GuiCmd::DragFloat3("position", position_);
 	GuiCmd::DragFloat("emitRate", emitRate_, 0.01f, 0.0f, 10.0f);
@@ -144,30 +154,58 @@ void FxEmitter::ShowGui(){
 	ImGuiHelpers::DrawFxParamGui("Lifetime", lifetime_);
 
 	ImGui::Spacing();
+	ImGui::SeparatorText("Modules");
 
-	ImGui::SeparatorText("Modules:");
-
-	for (auto& m : moduleContainer_->GetModules()){
+	//=============================
+	// 追加済みモジュールの編集GUI
+	//=============================
+	for (auto& m : moduleContainer_->GetModules()) {
 		ImGui::PushID(m.get());
 
 		bool enabled = m->IsEnabled();
-		ImGui::Checkbox("##enable", &enabled);
-		m->SetEnabled(enabled);
+		if (ImGui::Checkbox("##enabled", &enabled)) {
+			m->SetEnabled(enabled);
+			UpdateConfigModulesFromContainer();
+		}
 		ImGui::SameLine();
 
-		// 折りたたみ（CollapsingHeader）管理
 		bool open = ImGui::CollapsingHeader(m->GetName().c_str());
-
-		// 表示（ONのときのみ中身）
-		if (open && enabled){
+		if (open && enabled) {
 			ImGui::Indent();
-			m->ShowGuiContent(); // パラメータだけ分離
+			m->ShowGuiContent();
 			ImGui::Unindent();
 		}
 
+		ImGui::SameLine();
+		if (ImGui::Button("Remove")) {
+			RemoveModule(m->GetName());
+			ImGui::PopID();
+			break; // remove後なので break
+		}
 		ImGui::PopID();
 	}
+
+	//=============================
+	// 追加されていないモジュールの表示
+	//=============================
+	ImGui::Spacing();
+	ImGui::SeparatorText("Add Modules");
+
+	static const std::vector<std::string> availableModules = {
+		"GravityModule",
+		"SizeOverLifetimeModule",
+	};
+
+	for (const auto& modName : availableModules) {
+		if (!moduleContainer_->HasModule(modName)) {
+			if (ImGui::Button(modName.c_str())) {
+				AddModule(modName);
+			}
+		}
+	}
+	ImGui::NewLine();
 }
+
 
 void FxEmitter::TransferParticleDataToGPU(){
 	std::vector<ParticleConstantData> gpuUnits;
@@ -183,7 +221,7 @@ void FxEmitter::TransferParticleDataToGPU(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //			コンフィグの適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::ApplyConfig(){
+void FxEmitter::ApplyConfig() {
 	position_ = config_.position;
 	velocity_.FromConfig(config_.velocity);
 	lifetime_.FromConfig(config_.lifetime);
@@ -193,16 +231,63 @@ void FxEmitter::ApplyConfig(){
 	isDrawEnable_ = config_.isDrawEnable;
 	isComplement_ = config_.isComplement;
 	isStatic_ = config_.isStatic;
+
+	moduleContainer_ = std::make_unique<FxModuleContainer>(config_.modules);
 }
 
-void FxEmitter::ExtractConfig(){
+void FxEmitter::ExtractConfig() {
 	config_.position = position_;
-	config_.velocity = FxVector3ParamConfig {velocity_.ToConfig()};
-	config_.lifetime = FxFloatParamConfig {lifetime_.ToConfig()};
+	config_.velocity = FxVector3ParamConfig{ velocity_.ToConfig() };
+	config_.lifetime = FxFloatParamConfig{ lifetime_.ToConfig() };
 	config_.emitRate = emitRate_;
 	config_.modelPath = modelPath;
 	config_.texturePath = texturePath;
 	config_.isDrawEnable = isDrawEnable_;
 	config_.isComplement = isComplement_;
 	config_.isStatic = isStatic_;
+
+	config_.modules.clear();
+	if (!moduleContainer_) return;
+
+	for (const auto& mod : moduleContainer_->GetModules()) {
+		auto cfgPtr = FxModuleFactory::CreateConfigFromModule(*mod);
+		if (cfgPtr) {
+			config_.modules.push_back(std::move(cfgPtr));
+		}
+	}
+}
+
+void FxEmitter::UpdateConfigModulesFromContainer() {
+	config_.modules.clear();
+	if (!moduleContainer_) return;
+
+	for (const auto& m : moduleContainer_->GetModules()) {
+		auto cfg = std::make_unique<SimpleModuleConfig>(m->GetName(), m->IsEnabled());
+		config_.modules.push_back(std::move(cfg));
+	}
+}
+
+void FxEmitter::AddModule(const std::string& moduleName) {
+	if (!moduleContainer_) moduleContainer_ = std::make_unique<FxModuleContainer>();
+	if (!moduleContainer_->HasModule(moduleName)) {
+		moduleContainer_->AddModuleByName(moduleName);
+		UpdateConfigModulesFromContainer();
+	}
+}
+
+void FxEmitter::RemoveModule(const std::string& moduleName) {
+	if (!moduleContainer_) return;
+	moduleContainer_->RemoveModuleByName(moduleName);
+	UpdateConfigModulesFromContainer();
+}
+
+void FxEmitter::SetModuleEnabled(const std::string& moduleName, bool enabled) {
+	if (!moduleContainer_) return;
+	for (auto& m : moduleContainer_->GetModules()) {
+		if (m->GetName() == moduleName) {
+			m->SetEnabled(enabled);
+			break;
+		}
+	}
+	UpdateConfigModulesFromContainer();
 }
