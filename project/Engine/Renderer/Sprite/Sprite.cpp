@@ -16,12 +16,7 @@
 #include "externals/imgui/imgui.h"
 
 Sprite::Sprite(const std::string& filePath) {
-	commandList_ = GraphicsGroup::GetInstance()->GetCommandList();
-	device_ = GraphicsGroup::GetInstance()->GetDevice();
 
-	// パイプラインとルートシグネチャの設定
-	rootSignature_ = GraphicsGroup::GetInstance()->GetRootSignature(PipelineType::Object2D, BlendMode::ALPHA);
-	pipelineState_ = GraphicsGroup::GetInstance()->GetPipelineState(PipelineType::Object2D, BlendMode::ALPHA);
 
 	handle = TextureManager::GetInstance()->LoadTexture(filePath);
 
@@ -106,41 +101,34 @@ void Sprite::UpdateTransform() {
 	materialData_->uvTransform = uvTransformMatrix;
 }
 
-void Sprite::Draw() {
-	if (!pipelineState_ || !rootSignature_) {
-		OutputDebugStringA("パイプラインステートまたはルートシグネチャが設定されていません");
-		return;
-	}
+void Sprite::Draw(ID3D12GraphicsCommandList* cmdList) {
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdList->SetGraphicsRootDescriptorTable(2, handle);
+	cmdList->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
+	cmdList->IASetIndexBuffer(&indexBufferView);
+	cmdList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
 
-	commandList_->SetPipelineState(pipelineState_.Get());
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList_->SetGraphicsRootDescriptorTable(2, handle);
-	commandList_->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);
-	commandList_->IASetIndexBuffer(&indexBufferView);
-	commandList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootConstantBufferView(1, transformResource_->GetGPUVirtualAddress());
-
-	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
-
 void Sprite::CreateBuffer() {
+	ID3D12Device* deivce = GraphicsGroup::GetInstance()->GetDevice().Get();
+
 	// 頂点用リソース
-	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * 4);
+	vertexResource_ = CreateBufferResource(deivce, sizeof(VertexData) * 4);
 
 	vertexBufferViewSprite.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	vertexBufferViewSprite.SizeInBytes = sizeof(VertexData) * 4;
 	vertexBufferViewSprite.StrideInBytes = sizeof(VertexData);
 
 	// トランスフォーム用リソース
-	transformResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
+	transformResource_ = CreateBufferResource(deivce, sizeof(TransformationMatrix));
 
 	// マテリアル用リソース
-	materialResource_ = CreateBufferResource(device_, sizeof(Material2D));
+	materialResource_ = CreateBufferResource(deivce, sizeof(Material2D));
 
 	// インデックス用リソース
-	indexResource_ = CreateBufferResource(device_, sizeof(uint32_t) * 6);
+	indexResource_ = CreateBufferResource(deivce, sizeof(uint32_t) * 6);
 	indexBufferView.BufferLocation = indexResource_->GetGPUVirtualAddress();
 	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
 	indexBufferView.Format = DXGI_FORMAT_R32_UINT;

@@ -33,6 +33,7 @@ public:
 
 	void Initialize()override;
 	void Update()override;
+	void Draw(ID3D12GraphicsCommandList* cmdList)override;
 
 	/* ui =========================================*/
 	void DerivativeGui()override;

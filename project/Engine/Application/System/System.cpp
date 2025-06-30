@@ -254,7 +254,7 @@ int System::ProcessMessage() { return winApp_->ProcessMessage() ? 1 : 0; }
 //=============================================================================================================
 void System::CreatePipelines() {
 	shaderManager_->InitializeDXC();
-	Object2DPipelines();
+	//Object2DPipelines();
 	LinePipeline();
 	EffectPipeline();
 	SkyBoxPipeline();

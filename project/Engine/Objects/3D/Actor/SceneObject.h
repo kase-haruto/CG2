@@ -27,6 +27,7 @@ public:
 	SceneObject();
 
 	virtual void Update() = 0;
+	virtual void Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList) {};
 	virtual void ShowGui();
 	virtual AABB GetWorldAABB() const { return FallbackAABBFromTransform(); }
 

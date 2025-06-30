@@ -49,7 +49,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// 定数バッファの作成
@@ -155,11 +155,6 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite {};
 
 	//directX関連
-	ComPtr<ID3D12Device> device_;
-	ComPtr<ID3D12GraphicsCommandList>commandList_;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature_;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState_;
-
 	
 	Matrix4x4* transformData = nullptr;
 

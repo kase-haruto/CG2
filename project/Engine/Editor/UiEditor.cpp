@@ -129,9 +129,9 @@ void UIEditor::Update(){
 }
 
 void UIEditor::Draw(){
-	for (const auto& sprite : sprites_){
-		sprite->Draw();
-	}
+	//for (const auto& sprite : sprites_){
+	//	sprite->Draw();
+	//}
 }
 
 void UIEditor::SaveSpriteDataToJson(const std::string& filePath){

@@ -84,6 +84,10 @@ void Player::Update() {
 	BaseGameObject::Update();
 }
 
+void Player::Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList) {
+	return;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		imgui
