@@ -21,7 +21,6 @@ FxEmitter::FxEmitter(){
 	// マテリアルの初期化
 	material_.color = Vector4(1, 1, 1, 1);
 	materialBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice());
-	materialBuffer_.TransferData(material_);
 
 	instanceBuffer_.Initialize(device, kMaxUnits_);
 	instanceBuffer_.CreateSrv(device);
@@ -39,7 +38,7 @@ FxEmitter::FxEmitter(){
 }
 
 FxEmitter::~FxEmitter() {
-	//FxIntermediary::GetInstance()->Detach(this);
+	instanceBuffer_.ReleaseSrv();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -99,6 +98,8 @@ void FxEmitter::Update(){
 			fx.alive = false;
 	}
 
+	materialBuffer_.TransferData(material_);
+
 	// 死亡ユニットを削除
 	std::erase_if(units_, [] (const FxUnit& fx){
 		return !fx.alive;
@@ -140,6 +141,7 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 //			gui表示
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ShowGui() {
+	ImGui::PushID(this);
 	ConfigurableObject::ShowGUi();
 
 	ImGui::Text("emitCount: %d", units_.size());
@@ -204,6 +206,8 @@ void FxEmitter::ShowGui() {
 		}
 	}
 	ImGui::NewLine();
+
+	ImGui::PopID();
 }
 
 
@@ -223,6 +227,7 @@ void FxEmitter::TransferParticleDataToGPU(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ApplyConfig() {
 	position_ = config_.position;
+	material_.color = config_.color;
 	velocity_.FromConfig(config_.velocity);
 	lifetime_.FromConfig(config_.lifetime);
 	emitRate_ = config_.emitRate;
@@ -237,6 +242,7 @@ void FxEmitter::ApplyConfig() {
 
 void FxEmitter::ExtractConfig() {
 	config_.position = position_;
+	config_.color = material_.color;
 	config_.velocity = FxVector3ParamConfig{ velocity_.ToConfig() };
 	config_.lifetime = FxFloatParamConfig{ lifetime_.ToConfig() };
 	config_.emitRate = emitRate_;

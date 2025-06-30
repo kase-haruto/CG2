@@ -14,6 +14,8 @@ public:
 	void SetCommand(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT slot = 0);
 	void CreateSrv(ComPtr<ID3D12Device> device);
 
+	void ReleaseSrv();
+
 	//--------- accessor -----------------------------------------------------
 	// SRVハンドル取得
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const{ return gpuHandle_; }
@@ -70,4 +72,13 @@ void DxStructuredBuffer<T>::CreateSrv(ComPtr<ID3D12Device> device) {
 	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 	device->CreateShaderResourceView(this->resource_.Get(), &srvDesc, cpuHandle_);
+}
+
+template<typename T>
+void DxStructuredBuffer<T>::ReleaseSrv() {
+	if (cpuHandle_.ptr != 0) {
+		SrvLocator::FreeSrv(cpuHandle_);
+		cpuHandle_ = {};
+		gpuHandle_ = {};
+	}
 }

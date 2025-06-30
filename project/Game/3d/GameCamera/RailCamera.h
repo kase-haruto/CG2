@@ -17,6 +17,7 @@ public:
 
 	void Initialize();
 	void Update() override;
+	Vector3 CatmullRomPosition(const std::vector<Vector3>& points, float t);
 	void DrawRail();
 
 	Vector3 GetPosition() ;

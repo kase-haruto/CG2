@@ -25,8 +25,11 @@ void FxIntermediary::Attach(FxEmitter* fxEmitter) {
 //		リストから削除
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxIntermediary::Detach(FxEmitter* emitter) {
-	if (pSceneContext_) {
-		pSceneContext_->GetFxSystem()->RemoveEmitter(emitter);
+	if (!emitter || !pSceneContext_) return;
+
+	auto fxSystem = pSceneContext_->GetFxSystem();
+	if (fxSystem) {
+		fxSystem->RemoveEmitter(emitter);
 	}
 }
 

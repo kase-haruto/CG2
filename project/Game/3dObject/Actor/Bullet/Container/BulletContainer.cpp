@@ -6,17 +6,26 @@
 BulletContainer::BulletContainer(const std::string& name){
 	bullets_.clear();
 	SceneObject::SetName(name, ObjectType::GameObject);
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void BulletContainer::Update(){
-	for (auto it = bullets_.begin(); it != bullets_.end(); ){
-		(*it)->Update();
-		if (!(*it)->GetIsAlive()){
+void BulletContainer::Update() {
+	auto* sceneLibrary = sceneContext_->GetObjectLibrary(); // シーン参照がある前提
+
+	for (auto it = bullets_.begin(); it != bullets_.end(); ) {
+		auto& bullet = *it;
+		bullet->Update();
+
+		if (!bullet->GetIsAlive()) {
+			// Scene 側からも削除
+			sceneLibrary->RemoveObject(bullet);
+
+			// ローカルのコンテナからも削除
 			it = bullets_.erase(it);
-		} else{
+		} else {
 			++it;
 		}
 	}

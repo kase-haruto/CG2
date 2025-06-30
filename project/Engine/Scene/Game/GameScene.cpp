@@ -48,6 +48,10 @@ void GameScene::Initialize(){
 	modelField_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
 
+	modelFieldBack_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field_back");
+	modelFieldBack_->SetScale({ 300.0f, 300.0f, 300.0f });
+	modelFieldBack_->SetTranslate({ 0.0f, 0.0f, 600.0f });
+
 	//player
 	player_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<Player>("player.obj", "player");
 	player_->Initialize();

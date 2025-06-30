@@ -24,10 +24,11 @@ SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
 
 	currentSceneNo_ = static_cast<int>(SceneType::PLAY);
 #ifdef _DEBUG
-	currentSceneNo_ = static_cast<int>(SceneType::TEST);
+	currentSceneNo_ = static_cast<int>(SceneType::PLAY);
 #endif // 
 
 	nextSceneNo_ = currentSceneNo_;
+
 }
 
 SceneManager::~SceneManager() {}
@@ -42,7 +43,9 @@ void SceneManager::Initialize() {
 		pEngineUI_->AddPanel(std::move(sceneSwitchPanel));
 	}
 
+	FxIntermediary::GetInstance()->SetSceneContext(scenes_[currentSceneNo_]->GetSceneContext());
 	scenes_[currentSceneNo_]->Initialize();
+
 	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
 	pEngineUI_->GetHierarchyPanel()->SetSceneObjectLibrary(SceneObjectLibrary);
 }

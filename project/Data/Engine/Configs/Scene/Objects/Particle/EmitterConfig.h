@@ -4,6 +4,7 @@
 #include <Data/Engine/Configs/Scene/Objects/Particle/Module/ModuleConfig.h>
 #include <Data/Engine/Configs/Scene/Objects/Particle/Module/ModuleConfigFactory.h>
 #include <Engine/Foundation/Math/Vector3.h>
+#include <Engine/Foundation/Math/Vector4.h>
 
 #include <nlohmann/json.hpp>
 #include <string>
@@ -11,6 +12,7 @@
 
 struct EmitterConfig {
 	Vector3 position{};
+	Vector4 color;
 	FxVector3ParamConfig velocity;
 	FxFloatParamConfig lifetime;
 
@@ -32,21 +34,24 @@ struct EmitterConfig {
 };
 
 inline void EmitterConfig::FromJson(const nlohmann::json& j) {
-	position = j.at("position").get<Vector3>();
-	velocity = j.at("velocity").get<FxVector3ParamConfig>();
-	lifetime = j.at("lifetime").get<FxFloatParamConfig>();
-	emitRate = j.at("emitRate").get<float>();
-	modelPath = j.at("modelPath").get<std::string>();
-	texturePath = j.at("texturePath").get<std::string>();
-	isDrawEnable = j.at("isDrawEnable").get<bool>();
-	isComplement = j.at("isComplement").get<bool>();
-	isStatic = j.at("isStatic").get<bool>();
+	position = j.value("position", Vector3{ 0, 0, 0 });
+	color = j.value("color", Vector4{ 1, 1, 1, 1 });
+	velocity = j.value("velocity", FxVector3ParamConfig{});
+	lifetime = j.value("lifetime", FxFloatParamConfig{});
+	emitRate = j.value("emitRate", 1.0f);
+	modelPath = j.value("modelPath", "plane.obj");
+	texturePath = j.value("texturePath", "particle.png");
+	isDrawEnable = j.value("isDrawEnable", true);
+	isComplement = j.value("isComplement", true);
+	isStatic = j.value("isStatic", false);
 
 	modules.clear();
-	for (const auto& moduleJson : j.at("modules")) {
-		auto modConfig = ModuleConfigFactory::FromJson(moduleJson);
-		if (modConfig) {
-			modules.push_back(std::move(modConfig));
+	if (j.contains("modules") && j["modules"].is_array()) {
+		for (const auto& moduleJson : j["modules"]) {
+			auto modConfig = ModuleConfigFactory::FromJson(moduleJson);
+			if (modConfig) {
+				modules.push_back(std::move(modConfig));
+			}
 		}
 	}
 }
@@ -54,6 +59,7 @@ inline void EmitterConfig::FromJson(const nlohmann::json& j) {
 inline nlohmann::json EmitterConfig::ToJson() const {
 	nlohmann::json j;
 	j["position"] = position;
+	j["color"] = color;
 	j["velocity"] = velocity;
 	j["lifetime"] = lifetime;
 	j["emitRate"] = emitRate;

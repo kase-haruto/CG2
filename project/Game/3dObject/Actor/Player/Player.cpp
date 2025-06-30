@@ -23,10 +23,11 @@
 Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
 	:Actor::Actor(modelName, objectName) {
-	worldTransform_.translation = { 0.0f, 0.0f, 20.0f };
+	worldTransform_.translation = { 0.0f, 0.0f, 15.0f };
 
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetType(ColliderType::Type_Player);
+	model_->SetIsDrawEnable(false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +44,6 @@ void Player::Initialize() {
 void Player::Update() {
 	//移動
 	Move();
-
-
 
 	if (rollSet_.isRolling_) {
 		rollSet_.rollTimer_ += ClockManager::GetInstance()->GetDeltaTime();
@@ -88,9 +87,19 @@ void Player::Update() {
 void Player::DerivativeGui() {
 	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.01f, 0.0f, 10.0f);
 
+	if (ImGui::BeginTabBar("FxEmittersTabBar")) {
 
-	trailFx_->ShowGui();
+		if (trailFx_ && ImGui::BeginTabItem("Trail")) {
+			ImGui::PushID(trailFx_.get());
+			trailFx_->ShowGui();
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //		移動
@@ -190,7 +199,7 @@ float Player::EaseForwardThenReturn(float t) {
 }
 
 void Player::InitializeEffect() {
-	const std::string path = "Resoureces/Assets/Configs/Effect/";
+	const std::string path = "Resources/Assets/Configs/Effect/";
 	trailFx_ = std::make_unique<FxEmitter>();
 	trailFx_->LoadConfig(path+"PlayerTrail.json");
 	FxIntermediary::GetInstance()->Attach(trailFx_.get());

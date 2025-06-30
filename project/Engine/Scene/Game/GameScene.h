@@ -45,6 +45,7 @@ public:
 private:
 	/* objects ======================================================*/
 	BaseGameObject* modelField_ = nullptr;
+	BaseGameObject* modelFieldBack_ = nullptr;
 	Player* player_ = nullptr;
 	BulletContainer* playerBulletContainer_ = nullptr;
 

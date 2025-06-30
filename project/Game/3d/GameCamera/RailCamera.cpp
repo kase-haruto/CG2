@@ -5,23 +5,17 @@
 #include <Engine/Foundation/Utility/Func/MathFunc.h>
 #include <Engine/Application/Input/Input.h>
 
-//c++
+// C++
 #include <cmath>
 #include <algorithm>
 
-RailCamera::RailCamera(){
+RailCamera::RailCamera() {}
 
-}
+void RailCamera::Initialize() {
+	transform_.translate = { 0.0f, 10.0f, 0.0f };
+	transform_.scale = { 1.0f, 1.0f, 1.0f };
+	transform_.rotate = { 0.5f, 0.0f, 0.0f };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		初期化
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::Initialize(){
-	transform_.translate = {0.0f, 10.0f, 0.0f};
-	transform_.scale = {1.0f, 1.0f, 1.0f};
-	transform_.rotate = {0.5f, 0.0f, 0.0f};
-
-	//ワールドトランスフォームに設定
 	worldTransform_.Initialize();
 	worldTransform_.scale = transform_.scale;
 	worldTransform_.eulerRotation = transform_.rotate;
@@ -29,6 +23,7 @@ void RailCamera::Initialize(){
 
 	BaseCamera::SetName("RailCamera");
 
+	// 初期レール
 	railPoints_ = {
 		{0,10,-100},
 		{0,10,-50},
@@ -41,78 +36,84 @@ void RailCamera::Initialize(){
 	};
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		更新
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::Update(){
-
+void RailCamera::Update() {
 	Input* input = Input::GetInstance();
 
-	// 目標角度の決定
+	// カメラ傾き入力処理
 	if (input->PushKey(DIK_D)) {
-		targetTilt_ = -tiltAngle_; // 右傾き
+		targetTilt_ = -tiltAngle_;
 	} else if (input->PushKey(DIK_A)) {
-		targetTilt_ = tiltAngle_;  // 左傾き
+		targetTilt_ = tiltAngle_;
 	} else {
-		targetTilt_ = 0.0f;        // 戻す
+		targetTilt_ = 0.0f;
 	}
 
-	// 滑らかに補間 (Lerp)
 	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 	zTiltOffset_ = std::lerp(zTiltOffset_, targetTilt_, tiltLerpSpeed_ * deltaTime);
 
-	// 時間経過に応じて t を更新（時間依存）
-	float speed = 0.05f; // 1秒で20%進む
-	t_ += speed * ClockManager::GetInstance()->GetDeltaTime();
-	t_ = std::clamp(t_, 0.0f, 1.0f);
+	// t を無限に進める（ループしない）
+	float speed = 1.0f; // セグメント1つを1秒で進む
+	t_ += speed * deltaTime;
 
-	// スプライン上の現在のカメラ位置を計算
+	// 必要に応じてレールを延長
+	int requiredPoints = static_cast<int>(t_) + 4;
+	while ((int)railPoints_.size() < requiredPoints) {
+		Vector3 last = railPoints_.back();
+		railPoints_.push_back(last + Vector3(0, 0, 50)); // Z方向に直進
+	}
+
+	// 現在位置と注視点
 	Vector3 eye = CatmullRomPosition(railPoints_, t_);
+	Vector3 target = CatmullRomPosition(railPoints_, t_ + 0.01f);
 
-	// 注視点計算用の t を少し先に設定（終端で forward = 0 にならないよう）
-	float t_2 = std::min(t_ + 0.001f, 0.999f);
-	Vector3 target = CatmullRomPosition(railPoints_, t_2);
-
-	// forward ベクトルの計算と正規化
+	// forward ベクトルと回転
 	Vector3 forward = target - eye;
-	if (forward.LengthSquared() < 1e-6f){
-		forward = {0.0f, 0.0f, 1.0f}; // デフォルト方向
+	if (forward.LengthSquared() < 1e-6f) {
+		forward = { 0.0f, 0.0f, 1.0f };
 	}
 	Vector3 normalizedForward = forward.Normalize();
 
-	// トランスフォームの更新
+	// トランスフォーム更新
 	transform_.translate = eye;
 
-	// 回転を算出
 	float horizontalDistance = sqrtf(normalizedForward.x * normalizedForward.x + normalizedForward.z * normalizedForward.z);
 	transform_.rotate.x = std::atan2(-normalizedForward.y, horizontalDistance);
 	transform_.rotate.y = std::atan2(normalizedForward.x, normalizedForward.z);
-	// Z軸の傾きオフセットを適用
 	transform_.rotate.z = zTiltOffset_;
-	// Shake用に originalPosition_ を更新
+
 	originalPosition_ = transform_.translate;
 
 	worldTransform_.scale = transform_.scale;
 	worldTransform_.eulerRotation = transform_.rotate;
 	worldTransform_.translation = transform_.translate;
-	// 共通カメラ処理呼び出し（Shakeや行列更新）
+
 	BaseCamera::Update();
 	worldTransform_.Update(viewProjectionMatrix_);
 }
 
+Vector3 RailCamera::CatmullRomPosition(const std::vector<Vector3>& points, float t) {
+	int i = static_cast<int>(t);
+	float localT = t - static_cast<float>(i);
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		レールの描画
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::DrawRail(){
+	int maxIndex = static_cast<int>(points.size()) - 4;
+	i = std::clamp(i, 0, maxIndex);
 
+	const Vector3& p0 = points[i];
+	const Vector3& p1 = points[i + 1];
+	const Vector3& p2 = points[i + 2];
+	const Vector3& p3 = points[i + 3];
+
+	return CatmullRomInterpolation(p0, p1, p2, p3, localT);
+}
+
+void RailCamera::DrawRail() {
+	// レール描画をしたい場合に使用（未実装）
 }
 
 Vector3 RailCamera::GetPosition() {
-	Vector3 worldPos {};
+	Vector3 worldPos{};
 	worldPos.x = worldMatrix_.m[3][0];
 	worldPos.y = worldMatrix_.m[3][1];
 	worldPos.z = worldMatrix_.m[3][2];
-
 	return worldPos;
 }

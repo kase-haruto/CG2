@@ -1,47 +1,55 @@
 {
-    "emitRate": 0.10000000149011612,
-    "isComplement": true,
-    "isDrawEnable": true,
-    "isStatic": false,
-    "lifetime": {
-        "constant": 0.0,
-        "max": 3.0,
-        "min": 1.0,
-        "mode": 1
+    "colliderConfig": {
+        "colliderType": 0,
+        "isCollisionEnabled": true,
+        "isDraw": true,
+        "targetType": 0
     },
-    "modelPath": "plane.obj",
-    "modules": [
-        {
-            "enabled": true,
-            "name": "SizeOverLifetimeModule"
+    "guid": "00000000-0000-0000-0000-000000000000",
+    "modelConfig": {
+        "blendMode": 5,
+        "materialConfig": {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "currentLightingMode_": 0,
+            "enableLighting": 0,
+            "enviromentCoefficient": 0.5,
+            "isReflect": false,
+            "shininess": 20.0
         },
-        {
-            "enabled": true,
-            "name": "GravityModule"
+        "modelName": "terrain.obj",
+        "textureName": "textures/white1x1.png",
+        "uvTransConfig": {
+            "rotation": 0.0,
+            "scale": {
+                "x": 1.0,
+                "y": 1.0
+            }
         }
-    ],
-    "position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
     },
-    "texturePath": "particle.png",
-    "velocity": {
-        "constant": {
+    "name": "field",
+    "objectType": 2,
+    "parentGuid": "00000000-0000-0000-0000-000000000000",
+    "transform": {
+        "rotation": {
+            "w": 1.0,
             "x": 0.0,
             "y": 0.0,
             "z": 0.0
         },
-        "max": {
-            "x": 1.0,
-            "y": 0.0,
-            "z": 1.0
+        "scale": {
+            "x": 300.0,
+            "y": 300.0,
+            "z": 300.0
         },
-        "min": {
-            "x": -1.0,
+        "translation": {
+            "x": 0.0,
             "y": 0.0,
-            "z": -1.0
-        },
-        "mode": 1
+            "z": 0.0
+        }
     }
 }

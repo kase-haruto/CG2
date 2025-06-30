@@ -6,7 +6,7 @@
 /* engine */
 #include <Engine/Foundation/Clock/ClockManager.h>
 #include <Engine/Objects/Collider/BoxCollider.h>
-
+#include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
 /* external */
 #include <externals/imgui/imgui.h>
 
@@ -16,8 +16,16 @@ BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetOwner(this);
 	collider_->SetIsDrawCollider(false);
+
+	const std::string path = "Resources/Assets/Configs/Effect/";
+	trailFx_ = std::make_unique<FxEmitter>();
+	trailFx_->LoadConfig(path + "BulletTrail.json");
+	FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 
+BaseBullet::~BaseBullet() {
+	
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		初期化
@@ -39,7 +47,23 @@ void BaseBullet::Update() {
 
 	BaseGameObject::Update();
 
+	// エフェクトの座標更新
+	if (trailFx_) {
+		trailFx_->position_ = GetWorldPosition();
+	}
 
+	// 寿命減少
+	lifeTime_ -= deltaTime;
+
+	if (lifeTime_ <= 0.0f) {
+		isAlive_ = false;
+
+		// FxEmitter を安全にデタッチして破棄
+		if (trailFx_) {
+			FxIntermediary::GetInstance()->Detach(trailFx_.get());
+			trailFx_.reset();
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
