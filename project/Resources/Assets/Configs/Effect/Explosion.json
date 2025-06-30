@@ -1,33 +1,38 @@
 {
+    "autoDestroy": false,
     "color": {
         "w": 1.0,
-        "x": 1.0,
+        "x": 0.0,
         "y": 1.0,
-        "z": 1.0
+        "z": 0.0
     },
+    "emitCount": 800,
+    "emitDelay": 0.0,
+    "emitDuration": -1.0,
     "emitRate": 0.10000000149011612,
     "isComplement": true,
     "isDrawEnable": true,
+    "isOneShot": true,
     "isStatic": false,
     "lifetime": {
-        "constant": 0.10000000298023224,
-        "max": 0.5000000238418579,
-        "min": 0.0,
+        "constant": 2.140000104904175,
+        "max": 2.759999990463257,
+        "min": 0.5,
         "mode": 1
     },
     "modelPath": "plane.obj",
     "modules": [
         {
-            "easeType": 11,
+            "easeType": 9,
             "enabled": true,
             "isGrowing": false,
             "name": "SizeOverLifetimeModule"
         }
     ],
     "position": {
-        "x": 0.770659863948822,
-        "y": 1.600134253501892,
-        "z": 18.27802085876465
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
     },
     "texturePath": "particle.png",
     "velocity": {
@@ -37,22 +42,23 @@
             "z": 0.0
         },
         "max": {
-            "x": 15.079999923706055,
-            "y": 24.100000381469727,
-            "z": 1.0
+            "x": 15.0,
+            "y": 15.0600004196167,
+            "z": 15.699999809265137
         },
         "min": {
-            "x": -15.1899995803833,
-            "y": -24.0,
-            "z": -1.0
+            "x": -15.5,
+            "y": -15.3100004196167,
+            "z": -14.819999694824219
         },
-        "mode": 1
-     },
-    "scale": {
+        "mode": 2
+    },
+
+      "scale": {
         "constant": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
+            "x": 2.0,
+            "y": 2.0,
+            "z": 2.0
         },
         "max": {
             "x": 1.0,

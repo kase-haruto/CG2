@@ -44,67 +44,91 @@ FxEmitter::~FxEmitter() {
 /////////////////////////////////////////////////////////////////////////////////////////
 //			更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::Update(){
-	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
-	if (isFirstFrame_){
-		prevPostion_ = position_;
-		isFirstFrame_ = false;
+void FxEmitter::Update() {
+	if (!isPlaying_) return;
 
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+	elapsedTime_ += deltaTime;
+
+	// 遅延前は何もしない
+	if (elapsedTime_ < emitDelay_) return;
+
+	// duration制限ありで、超えていたら停止
+	if (emitDuration_ >= 0.0f && elapsedTime_ > emitDelay_ + emitDuration_) {
+		Stop();
 	}
 
-	Vector3 moveDelta = position_ - prevPostion_;
-	float distance = moveDelta.Length();
-	if (distance > 0.0f&& isComplement_){
-		float spawnInterval = 0.02f;
-		int trailCount = static_cast< int >(distance / spawnInterval);
-		if (trailCount > 0){
-			for (int i = 0; i < trailCount; ++i){
+	// OneShotモードの発生処理（emitDuration == 0 or isOneShot_）
+	if (isOneShot_) {
+		if (!hasEmitted_) {
+			for (int i = 0; i < emitCount_ && units_.size() < kMaxUnits_; ++i) {
+				Emit();
+			}
+			hasEmitted_ = true;
+		}
+		// Emitは1回だけ。発生処理はスキップしても更新は続けるため return しない
+	} else {
+		// 通常の連続発生ロジック
+		if (isFirstFrame_) {
+			prevPostion_ = position_;
+			isFirstFrame_ = false;
+		}
+
+		Vector3 moveDelta = position_ - prevPostion_;
+		float distance = moveDelta.Length();
+
+		if (distance > 0.0f && isComplement_) {
+			float spawnInterval = 0.02f;
+			int trailCount = static_cast<int>(distance / spawnInterval);
+			for (int i = 0; i < trailCount; ++i) {
 				float dist = i * spawnInterval;
 				float t = dist / distance;
 				Vector3 spawnPos = Vector3::Lerp(prevPostion_, position_, t);
 				Emit(spawnPos);
 			}
-		}
-	} else{
-		emitTimer_ += deltaTime;
-		const float interval = emitRate_;
-		if (emitTimer_ >= interval && units_.size() < kMaxUnits_){
-			emitTimer_ -= interval;
-			Emit();
-		}
-
-	}
-
-	// 前回の位置を更新
-	prevPostion_ = position_;
-
-	for (auto& fx : units_){
-		if (!fx.alive) continue;
-
-		for (auto& m : moduleContainer_->GetModules()){
-			if (m->IsEnabled()){
-				m->OnUpdate(fx, deltaTime);
+		} else {
+			emitTimer_ += deltaTime;
+			const float interval = emitRate_;
+			if (emitTimer_ >= interval && units_.size() < kMaxUnits_) {
+				emitTimer_ -= interval;
+				Emit();
 			}
 		}
+		prevPostion_ = position_;
+	}
 
-		// 位置の更新
-		if (!isStatic_){
-			fx.position += fx.velocity * deltaTime;
+	// パーティクルの更新処理
+	for (auto& fx : units_) {
+		if (!fx.alive) continue;
+
+		for (auto& m : moduleContainer_->GetModules()) {
+			if (m->IsEnabled()) m->OnUpdate(fx, deltaTime);
 		}
-		// 寿命の更新
-		fx.age += deltaTime;
 
-		if (fx.age >= fx.lifetime)
-			fx.alive = false;
+		if (!isStatic_) fx.position += fx.velocity * deltaTime;
+
+		fx.age += deltaTime;
+		if (fx.age >= fx.lifetime) fx.alive = false;
 	}
 
 	materialBuffer_.TransferData(material_);
+	std::erase_if(units_, [](const FxUnit& fx) { return !fx.alive; });
 
-	// 死亡ユニットを削除
-	std::erase_if(units_, [] (const FxUnit& fx){
-		return !fx.alive;
-				  });
+	// エフェクト終了検出 & コールバック呼び出し（1回だけ）
+	bool shouldNotify =
+		(isOneShot_ && hasEmitted_ && units_.empty()) ||
+		(emitDuration_ >= 0.0f && elapsedTime_ > emitDelay_ + emitDuration_ && units_.empty());
+
+	if (shouldNotify && !isFinishedNotified_) {
+		isFinishedNotified_ = true;
+		Stop();  // 明示的に止めておく
+		if (onFinished_) {
+			onFinished_(); // 外部通知
+		}
+	}
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //			発生
@@ -127,11 +151,10 @@ void FxEmitter::Emit(const Vector3& pos){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ResetFxUnit(FxUnit& fx){
 	fx.position = position_;
-
+	fx.scale = scale_.Get();
 	fx.velocity = velocity_.Get();
 	fx.lifetime = lifetime_.Get();
 	fx.age = 0.0f;
-	fx.scale = scale_.Get();
 	fx.initialScale = fx.scale; // 初期スケールを設定
 	fx.color = Vector4(1, 1, 1, 1);
 	fx.alive = true;
@@ -144,6 +167,7 @@ void FxEmitter::ShowGui() {
 	ImGui::PushID(this);
 	ConfigurableObject::ShowGUi();
 
+	// 状態表示
 	ImGui::Text("emitCount: %d", units_.size());
 	GuiCmd::DragFloat3("position", position_);
 	GuiCmd::DragFloat("emitRate", emitRate_, 0.01f, 0.0f, 10.0f);
@@ -155,8 +179,26 @@ void FxEmitter::ShowGui() {
 	ImGuiHelpers::DrawFxParamGui("Velocity", velocity_);
 	ImGuiHelpers::DrawFxParamGui("Lifetime", lifetime_);
 
+	// 再生制御 GUI
 	ImGui::Spacing();
-	ImGui::SeparatorText("Modules");
+	ImGui::SeparatorText("Emitter Controls");
+	if (ImGui::Button("Play")) { Play(); }
+	ImGui::SameLine();
+	if (ImGui::Button("Stop")) { Stop(); }
+	ImGui::SameLine();
+	if (ImGui::Button("Reset")) { Reset(); }
+
+	// OneShot 関連 GUI
+	ImGui::Spacing();
+	ImGui::SeparatorText("OneShot Settings");
+	GuiCmd::CheckBox("OneShot", isOneShot_);
+	if (isOneShot_) {
+		ImGui::DragInt("Emit Count", &emitCount_, 1, 1, kMaxUnits_);
+		GuiCmd::CheckBox("Auto Destroy", autoDestroy_);
+		GuiCmd::DragFloat("Emit Delay", emitDelay_, 0.01f, 0.0f, 10.0f);
+	} else {
+		GuiCmd::DragFloat("Emit Duration", emitDuration_, 0.01f, -1.0f, 60.0f);
+	}
 
 	//=============================
 	// 追加済みモジュールの編集GUI
@@ -230,6 +272,7 @@ void FxEmitter::ApplyConfig() {
 	material_.color = config_.color;
 	velocity_.FromConfig(config_.velocity);
 	lifetime_.FromConfig(config_.lifetime);
+	scale_.FromConfig(config_.scale);
 	emitRate_ = config_.emitRate;
 	modelPath = config_.modelPath;
 	texturePath = config_.texturePath;
@@ -238,6 +281,18 @@ void FxEmitter::ApplyConfig() {
 	isStatic_ = config_.isStatic;
 
 	moduleContainer_ = std::make_unique<FxModuleContainer>(config_.modules);
+
+	isOneShot_ = config_.isOneShot;
+	autoDestroy_ = config_.autoDestroy;
+	emitCount_ = config_.emitCount;
+	emitDelay_ = config_.emitDelay;
+	emitDuration_ = config_.emitDuration;
+
+	// 再生状態を初期化
+	isFirstFrame_ = true;
+	hasEmitted_ = false;
+	elapsedTime_ = 0.0f;
+	isPlaying_ = true;
 }
 
 void FxEmitter::ExtractConfig() {
@@ -245,6 +300,7 @@ void FxEmitter::ExtractConfig() {
 	config_.color = material_.color;
 	config_.velocity = FxVector3ParamConfig{ velocity_.ToConfig() };
 	config_.lifetime = FxFloatParamConfig{ lifetime_.ToConfig() };
+	config_.scale = FxVector3ParamConfig{ scale_.ToConfig() };
 	config_.emitRate = emitRate_;
 	config_.modelPath = modelPath;
 	config_.texturePath = texturePath;
@@ -261,6 +317,12 @@ void FxEmitter::ExtractConfig() {
 			config_.modules.push_back(std::move(cfgPtr));
 		}
 	}
+
+	config_.isOneShot = isOneShot_;
+	config_.autoDestroy = autoDestroy_;
+	config_.emitCount = emitCount_;
+	config_.emitDelay = emitDelay_;
+	config_.emitDuration = emitDuration_;
 }
 
 void FxEmitter::UpdateConfigModulesFromContainer() {
@@ -296,4 +358,22 @@ void FxEmitter::SetModuleEnabled(const std::string& moduleName, bool enabled) {
 		}
 	}
 	UpdateConfigModulesFromContainer();
+}
+
+
+void FxEmitter::Play() {
+	isPlaying_ = true;
+	isFirstFrame_ = true;
+}
+
+void FxEmitter::Stop() {
+	isPlaying_ = false;
+}
+
+void FxEmitter::Reset() {
+	units_.clear();
+	emitTimer_ = 0.0f;
+	elapsedTime_ = 0.0f;
+	isFirstFrame_ = true;
+	hasEmitted_ = false;
 }

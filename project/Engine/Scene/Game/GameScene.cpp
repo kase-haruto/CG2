@@ -35,6 +35,7 @@ void GameScene::LoadAssets() {
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
+	sceneContext_->Initialize();
 	LoadAssets();
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);

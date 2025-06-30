@@ -115,11 +115,22 @@ inline T FxParam<T>::Get() const{
 //		値の取得（Vector3 専用特殊化）
 /////////////////////////////////////////////////////////////////////////////////////////
 template<>
-inline Vector3 FxParam<Vector3>::Get() const{
-	if (mode_ == FxValueMode::Constant){
-		return constant_;
-	} else{
-		return Random::GenerateVector3(min_, max_);
+inline Vector3 FxParam<Vector3>::Get() const {
+	switch (mode_) {
+		case FxValueMode::Constant:
+			return constant_;
+		case FxValueMode::Random: // 立方体ランダム
+			return Random::GenerateVector3(min_, max_);
+		case FxValueMode::RandomSphere:
+			{ // 球状ランダム
+				Vector3 center = (min_ + max_) * 0.5f;
+				float radius = ((max_ - min_).Length()) * 0.5f;
+				Vector3 dir = Random::GenerateUnitVector3();
+				float dist = Random::Generate<float>(0.0f, radius);
+				return center + dir * dist;
+			}
+		default:
+			return constant_;
 	}
 }
 

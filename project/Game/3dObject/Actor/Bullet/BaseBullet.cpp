@@ -42,28 +42,56 @@ void BaseBullet::ShootInitialize(const Vector3 initPos, const Vector3 velocity) 
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::Update() {
-	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
-	worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
+    float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
-	BaseGameObject::Update();
+    if (!isExploding_) {
+        // 通常移動とtrailFx_更新
+        worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
-	// エフェクトの座標更新
-	if (trailFx_) {
-		trailFx_->position_ = GetWorldPosition();
-	}
+        BaseGameObject::Update();
 
-	// 寿命減少
-	lifeTime_ -= deltaTime;
+        if (trailFx_) {
+            trailFx_->position_ = GetWorldPosition();
+            trailFx_->Update();  // 明示的にUpdate呼ぶ（Attachだけで自動呼びでなければ）
+        }
 
-	if (lifeTime_ <= 0.0f) {
-		isAlive_ = false;
+        // 寿命減少
+        lifeTime_ -= deltaTime;
 
-		// FxEmitter を安全にデタッチして破棄
-		if (trailFx_) {
-			FxIntermediary::GetInstance()->Detach(trailFx_.get());
-			trailFx_.reset();
-		}
-	}
+        if (lifeTime_ <= 0.0f) {
+            // 寿命切れ → 爆発開始
+            isExploding_ = true;
+
+            // trailFx_停止＆破棄
+            if (trailFx_) {
+                FxIntermediary::GetInstance()->Detach(trailFx_.get());
+                trailFx_.reset();
+            }
+
+            // 爆発エフェクト初期化・再生
+            if (!explosionFx_) {
+                explosionFx_ = std::make_unique<FxEmitter>();
+                explosionFx_->LoadConfig("Resources/Assets/Configs/Effect/Explosion.json");
+                FxIntermediary::GetInstance()->Attach(explosionFx_.get());
+            }
+            explosionFx_->position_ = GetWorldPosition();
+            explosionFx_->Play();
+        }
+    } else {
+        // 爆発中は爆発エフェクトの更新のみ
+        if (explosionFx_) {
+            explosionFx_->position_ = GetWorldPosition();
+            explosionFx_->Update();
+
+            // エフェクトが終了していたら弾も消す
+            if (!explosionFx_->isPlayng() && explosionFx_->GetUnits().empty()) {
+                isAlive_ = false;
+
+                FxIntermediary::GetInstance()->Detach(explosionFx_.get());
+                explosionFx_.reset();
+            }
+        }
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

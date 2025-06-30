@@ -8,7 +8,8 @@
 // -------------------------
 enum class FxValueMode{
 	Constant,
-	Random
+	Random,
+	RandomSphere
 };
 
 // JSON enum対応
