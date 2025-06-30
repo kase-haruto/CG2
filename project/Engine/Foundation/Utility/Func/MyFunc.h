@@ -69,6 +69,8 @@ Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix);
 
 Vector2 WorldToScreen(const Vector3& worldPos);
 
+Vector3 ScreenToWorld(const Vector2& screenPos, float depthZ);
+
 Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec);
 
 bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos);

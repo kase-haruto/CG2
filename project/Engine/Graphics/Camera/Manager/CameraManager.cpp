@@ -26,6 +26,30 @@ void CameraManager::SetType(const CameraType type){
 	}
 }
 
+void CameraManager::SetViewportSize(ViewportType type, const Vector2& size) {
+	switch (type) {
+		case ViewportType::VIEWPORT_MAIN:
+			mainViewportSize_ = size;
+			break;
+		case ViewportType::VIEWPORT_DEBUG:
+			debugViewportSize_ = size;
+			break;
+		default:
+			break;
+	}
+}
+
+Vector2 CameraManager::GetViewportSize(ViewportType type) const {
+	switch (type) {
+		case ViewportType::VIEWPORT_MAIN:
+			return mainViewportSize_;
+		case ViewportType::VIEWPORT_DEBUG:
+			return debugViewportSize_;
+		default:
+			return Vector2{ 0, 0 };
+	}
+}
+
 void CameraManager::Initialize(){
 	GetInstance();//インスタンスがない場合作成
 }

@@ -7,6 +7,7 @@
 #include <Engine/graphics/camera/3d/FollowCamera.h>
 #include <Engine/graphics/camera/3d/DebugCamera.h>
 #include <Engine/graphics/camera/Base/BaseCamera.h>
+#include <Engine/Graphics/Camera/Viewport/ViewportDetail.h>
 
 //* c++ *//
 #include <memory>
@@ -57,6 +58,9 @@ private:
 	static CameraManager* instance_;                 // クラスのインスタンス
 	CameraType type_ = Type_Default;
 
+	Vector2 mainViewportSize_{ 1920.0f, 1080.0f };
+	Vector2 debugViewportSize_{ 800.0f, 600.0f };
+
 	/* 管理しているカメラ =======================*/
 	std::unique_ptr<Camera3d> camera3d_ = nullptr;   // 3dオブジェクトのデフォルトカメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
@@ -96,4 +100,7 @@ public:
 	void SetShake(float duration, float intensity){
 		instance_->cameras_[instance_->type_]->StartShake(duration, intensity);
 	}
+
+	void SetViewportSize(ViewportType type, const Vector2& size);
+	Vector2 GetViewportSize(ViewportType type) const;
 };

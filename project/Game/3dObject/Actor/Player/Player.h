@@ -51,6 +51,7 @@ private:
 	//===================================================================*/
 	void Move();
 	void Shoot();
+	void UpdateReticlePosition();
 	void UpdateTilt(const Vector3& moveVector);
 	void BarrelRoll();
 	float EaseForwardThenReturn(float t);
@@ -66,6 +67,8 @@ private:
 	Vector3 lastMoveVector_;
 	// ローリング関連
 	RollSet rollSet_ = {};
+	Vector3 reticleLocalOffset_ = Vector3(0.0f, 0.0f, 5.0f); // Playerからの相対位置（例：前方5m）
+	WorldTransform reticleTransform_;
 
 	std::unique_ptr<FxEmitter> trailFx_;	// トレイルエフェクト
 };

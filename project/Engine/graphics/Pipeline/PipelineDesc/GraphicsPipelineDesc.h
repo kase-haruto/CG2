@@ -25,6 +25,7 @@ public:
 	GraphicsPipelineDesc& Input(const std::vector<D3D12_INPUT_ELEMENT_DESC>& e);
 	GraphicsPipelineDesc& RTV(DXGI_FORMAT format);
 	GraphicsPipelineDesc& Samples(UINT count);
+	GraphicsPipelineDesc& StaticSamplerWrapLinear(UINT shaderRegister);
 
 	// rasterizer -------------------------------------------------------//
 	GraphicsPipelineDesc& Rasterizer(const D3D12_RASTERIZER_DESC& r);

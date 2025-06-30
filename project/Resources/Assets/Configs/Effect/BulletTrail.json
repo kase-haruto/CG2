@@ -4,7 +4,7 @@
     "isDrawEnable": true,
     "isStatic": false,
     "lifetime": {
-        "constant": 1.0,
+        "constant": 0.6,
         "max": 3.0,
         "min": 1.0,
         "mode": 0

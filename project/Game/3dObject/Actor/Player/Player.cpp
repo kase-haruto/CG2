@@ -12,8 +12,6 @@
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
-#include <Engine/Physics/Ray/Raycastor.h>
-#include <Engine/Physics/Ray/RayDetail.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -38,6 +36,9 @@ Player::Player(const std::string& modelName,
 void Player::Initialize() {
 	moveSpeed_ = 15.0f;
 	InitializeEffect();
+	reticleTransform_.Initialize();
+	reticleTransform_.parent = &worldTransform_;
+	reticleTransform_.translation = Vector3(0.0f, 0.0f, 10.0f);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,7 @@ void Player::Initialize() {
 void Player::Update() {
 	//移動
 	Move();
-
+	UpdateReticlePosition();
 	if (rollSet_.isRolling_) {
 		rollSet_.rollTimer_ += ClockManager::GetInstance()->GetDeltaTime();
 		float t = rollSet_.rollTimer_ / rollSet_.rollDuration_;
@@ -78,6 +79,7 @@ void Player::Update() {
 		shootInterval_ = kMaxShootInterval_;
 	}
 
+	reticleTransform_.Update();
 	bulletContainer_->Update();
 	BaseGameObject::Update();
 }
@@ -107,8 +109,9 @@ void Player::DerivativeGui() {
 //		移動
 ///////////////////////////////////////////////////////////////////////////////////
 void Player::Move() {
-	Vector3 moveVector = { 0.0f, 0.0f, 0.0f };;
-	//キーボード移動
+	Vector3 moveVector = { 0.0f, 0.0f, 0.0f };
+
+	// キーボード移動
 	if (Input::GetInstance()->PushKey(DIK_A)) {
 		moveVector.x -= 1.0f;
 	} else if (Input::GetInstance()->PushKey(DIK_D)) {
@@ -121,50 +124,70 @@ void Player::Move() {
 		moveVector.y -= 1.0f;
 	}
 
-	//移動ベクトルを正規化
+	// ゲームパッド左スティック入力
+	Vector2 leftStick = Input::GetInstance()->GetLeftStick();
+	moveVector.x += leftStick.x;
+	moveVector.y += leftStick.y;
+
 	if (moveVector.Length() > 0.0f) {
 		moveVector.Normalize();
 	}
 
-
-	//移動速度を掛ける
 	moveVector *= moveSpeed_;
 
-	//エフェクトの座標更新
+	// エフェクト座標更新
 	trailFx_->position_ = GetWorldPosition();
 
-	//移動ベクトルを加算
+	// 移動加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
 	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
 }
 
+
 void Player::Shoot() {
-	// マウス座標をInputから取得（Inputにマウス位置取得関数がある前提）
-	Vector2 mousePos = Input::GetInstance()->GetMousePosition();
+	Vector3 playerPos = worldTransform_.GetWorldPosition();
+	Vector3 reticlePos = reticleTransform_.GetWorldPosition();
 
-	// カメラのViewとProjectionを取得（CameraManagerが単一のMainCameraを持つ前提）
-	auto mainCam = CameraManager::GetInstance()->GetCamera3d();
-	Matrix4x4 view = mainCam->GetViewMatrix();
-	Matrix4x4 proj = mainCam->GetProjectionMatrix();
+	Vector3 dir = reticlePos - playerPos;
+	if (dir.Length() > 0.001f) {
+		dir = dir.Normalize();
+	} else {
+		dir = Vector3(0.0f, 0.0f, 1.0f); // フォールバック方向
+	}
 
-	// ウィンドウやビューポートサイズ取得（例としてWindowクラスを使用）
-	Vector2 viewportSize = Vector2{ 1920,1080 };
-
-	// マウス座標からレイを作成
-	Ray ray = Raycastor::ConvertMouseToRay(mousePos, view, proj, viewportSize);
-
-	// プレイヤーの位置を発射点に
-	Vector3 wPos = GetWorldPosition();
-
-	// レイの方向を発射方向に
-	Vector3 dir = ray.direction;
-
-	// 弾を生成（モデル名・発射位置・発射方向）
-	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
+	bulletContainer_->AddBullet("debugCube.obj", playerPos, dir);
 }
 
+void Player::UpdateReticlePosition() {
+	constexpr float moveSpeed = 7.0f;
+	float dt = ClockManager::GetInstance()->GetDeltaTime();
+
+	Vector3 offset = Vector3::Zero;
+
+	// キーボード入力
+	if (Input::GetInstance()->PushKey(DIK_UP))    offset.y += 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_DOWN))  offset.y -= 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_LEFT))  offset.x -= 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) offset.x += 1.0f;
+
+	// ゲームパッドの右スティック入力を加算
+	Vector2 rightStick = Input::GetInstance()->GetRightStick();
+	offset.x += rightStick.x;  // 右スティック横方向
+	offset.y += rightStick.y;  // 右スティック縦方向
+
+	if (offset.Length() > 0.0f) {
+		offset.Normalize();
+		offset *= moveSpeed * dt;
+		reticleTransform_.translation += offset;
+
+		// 制限
+		reticleTransform_.translation.x = std::clamp(reticleTransform_.translation.x, -4.0f, 4.0f);
+		reticleTransform_.translation.y = std::clamp(reticleTransform_.translation.y, -2.0f, 2.0f);
+		reticleTransform_.translation.z = std::clamp(reticleTransform_.translation.z, 1.0f, 20.0f);
+	}
+}
 
 void Player::UpdateTilt(const Vector3& moveVector) {
 	// 停止時は角度を戻す
