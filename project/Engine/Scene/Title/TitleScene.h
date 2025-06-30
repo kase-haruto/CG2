@@ -41,9 +41,11 @@ public:
 	void Update()override;
 	void CleanUp()override;
 	void LoadAssets()override;
-
+	void Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList, class PipelineService* psoService)override;
 private:
 	/* objects ======================================================*/
 	BaseGameObject* modelField_ = nullptr;
+
+	std::unique_ptr<Sprite> title_;
 };
 

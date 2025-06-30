@@ -82,14 +82,14 @@ void EnemyCollection::CreateSpawners() {
 	auto* leftSpawner = sceneContext_->AddEditorObject(std::make_unique<EnemySpawner>("leftSpawner"));
 	leftSpawner->SetRotationSpeed(0.4f); // 左回り（正回転）
 	leftSpawner->SetRotationDir({ 0, 1, 0 }); // Y軸回転
-	leftSpawner->SetSpawnArea({ -10, 0, -30 }, { 10, 5, -30 });
+	leftSpawner->SetSpawnArea({ -10, 0, -15 }, { 10, 5, -20 });
 	AddSpawner(leftSpawner);
 
 	// 右回りスポナー
 	auto* rightSpawner = sceneContext_->AddEditorObject(std::make_unique<EnemySpawner>("rightSpawner"));
 	rightSpawner->SetRotationSpeed(-0.6f); // 右回り（負回転）
 	rightSpawner->SetRotationDir({ 0, 1, 0 }); // Y軸回転
-	rightSpawner->SetSpawnArea({ -15, 0, -40 }, { 15, 5, -40 });
+	rightSpawner->SetSpawnArea({ -15, 0, -30 }, { 15, 7, -20 });
 	AddSpawner(rightSpawner);
 }
 

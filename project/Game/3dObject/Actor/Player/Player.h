@@ -5,6 +5,7 @@
 #include <Engine/Objects/3D/Actor/Actor.h>
 #include <Game/3dObject/Actor/Bullet/Container/BulletContainer.h>
 #include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
+#include <Engine/Renderer/Sprite/Sprite.h>
 
 /* ========================================================================
 /* Player
@@ -70,6 +71,8 @@ private:
 	RollSet rollSet_ = {};
 	Vector3 reticleLocalOffset_ = Vector3(0.0f, 0.0f, 5.0f); // Playerからの相対位置（例：前方5m）
 	WorldTransform reticleTransform_;
+	std::vector < std::unique_ptr<Sprite>> lifeSprite_;
+	std::unique_ptr<Sprite> attackSprite_;
 
 	std::unique_ptr<FxEmitter> trailFx_;	// トレイルエフェクト
 };

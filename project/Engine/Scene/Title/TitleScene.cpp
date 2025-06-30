@@ -13,6 +13,8 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Objects/3D/Actor/SceneObjectManager.h>
 #include <Engine/Collision/CollisionManager.h>
+#include <Engine/Assets/Texture/TextureManager.h>
+#include <Engine/Application/System/Enviroment.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	コンストラクタ/デストラクタ
@@ -27,7 +29,10 @@ TitleScene::TitleScene() {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
-void TitleScene::LoadAssets() {}
+void TitleScene::LoadAssets() {
+}
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +50,11 @@ void TitleScene::Initialize() {
 	modelField_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field");
 	modelField_->SetScale({ 300.0f,300.0f,300.0f });
 
+	title_ = std::make_unique<Sprite>("Textures/title.png");
+	Vector2 pos = {1280.0f,720.0f};
+	Vector2 size = Vector2(540.0f*0.8f, 320.0f * 0.8f);
+	title_->Initialize(Vector2(pos.x * 0.5f, pos.y * 0.5f), size);
+
 }
 
 void TitleScene::Update() {
@@ -56,12 +66,13 @@ void TitleScene::Update() {
 	/* 3dObject ============================*/
 	//地面の更新
 	modelField_->Update();
-
+	title_->Update();
 	/* その他 ============================*/
 	sceneContext_->Update();
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
-	if (Input::GetInstance()->TriggerKey(DIK_2)) {
+	if (Input::GetInstance()->TriggerKey(DIK_2)||
+		Input::GetInstance()->TriggerGamepadButton(PAD_BUTTON::A)) {
 		if (transitionRequestor_) {
 			transitionRequestor_->RequestSceneChange(SceneType::PLAY);
 		}
@@ -75,3 +86,8 @@ void TitleScene::CleanUp() {
 	CollisionManager::GetInstance()->ClearColliders();
 }
 
+void TitleScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoService) {
+	BaseScene::Draw(cmdList, psoService);
+
+	title_->Draw(cmdList);
+}

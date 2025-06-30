@@ -70,13 +70,19 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 //		partcicle
 /////////////////////////////////////////////////////////////////////////////////////////
 GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode){
+	D3D12_DEPTH_STENCIL_DESC depthDesc = {};
+	depthDesc.DepthEnable = TRUE;
+	depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO; // 書き込みを無効にする
+	depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	depthDesc.StencilEnable = FALSE;
+
 	GraphicsPipelineDesc desc;
 	desc.VS(L"Particle.VS.hlsl")
 		.PS(L"Particle.PS.hlsl")
 		.Input(VertexInputLayout<VertexPosUvN>::Get())
 		.Blend(mode)
 		.CullNone()
-		.DepthEnable(false)
+		.DepthState(depthDesc)
 		.RTV(DXGI_FORMAT_R8G8B8A8_UNORM)
 		.Samples(1);
 

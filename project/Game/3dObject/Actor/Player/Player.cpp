@@ -12,6 +12,7 @@
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
+#include <Engine/Application/System/Enviroment.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -39,6 +40,20 @@ void Player::Initialize() {
 	reticleTransform_.Initialize();
 	reticleTransform_.parent = &worldTransform_;
 	reticleTransform_.translation = Vector3(0.0f, 0.0f, 10.0f);
+
+	life_ = 10;
+
+	lifeSprite_.resize(life_);
+	for (size_t i = 0; i < life_; i++) {
+		lifeSprite_[i] = std::make_unique<Sprite>("Textures/life.png");
+		Vector2 pos = { 100.0f * i + 30.0f,50.0f };
+		lifeSprite_[i]->Initialize(pos, {64.0f,64.0f});
+	}
+
+	attackSprite_ = std::make_unique<Sprite>("Textures/attackUI.png");
+	Vector2 attackUiPos = Vector2(1280.0f - 200.0f, 720.0f - 200.0f);
+	Vector2 attackUiSize = Vector2(128.0f,64.0f);
+	attackSprite_->Initialize(attackUiPos, attackUiSize);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -80,13 +95,21 @@ void Player::Update() {
 		shootInterval_ = kMaxShootInterval_;
 	}
 
+	for (auto& sprite : lifeSprite_) {
+		sprite->Update();
+	}
+	attackSprite_->Update();
+
 	reticleTransform_.Update();
 	bulletContainer_->Update();
 	BaseGameObject::Update();
 }
 
 void Player::Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList) {
-	return;
+	for (auto& sprite : lifeSprite_) {
+		sprite->Draw(cmdList);
+	}
+	attackSprite_->Draw(cmdList);
 }
 
 
@@ -189,7 +212,7 @@ void Player::UpdateReticlePosition() {
 
 		// 制限
 		reticleTransform_.translation.x = std::clamp(reticleTransform_.translation.x, -6.0f, 6.0f);
-		reticleTransform_.translation.y = std::clamp(reticleTransform_.translation.y, -2.0f, 2.0f);
+		reticleTransform_.translation.y = std::clamp(reticleTransform_.translation.y, -3.0f, 4.0f);
 		reticleTransform_.translation.z = std::clamp(reticleTransform_.translation.z, 1.0f, 20.0f);
 	}
 }
