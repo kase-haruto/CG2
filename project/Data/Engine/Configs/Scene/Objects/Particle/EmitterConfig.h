@@ -6,7 +6,7 @@
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>
 
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 #include <string>
 #include <vector>
 struct EmitterConfig {

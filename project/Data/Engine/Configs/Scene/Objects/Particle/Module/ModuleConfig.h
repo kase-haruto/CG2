@@ -3,7 +3,7 @@
 #include <string>
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Utility/Ease/EaseTypes.h>
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 
 struct BaseModuleConfig {
 	std::string name;

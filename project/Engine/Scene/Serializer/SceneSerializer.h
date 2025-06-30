@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 
 class SceneContext;
 class SceneObject;

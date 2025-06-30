@@ -3,8 +3,10 @@
 #include <Engine/Objects/ConfigurableObject/IConfigurable.h>
 #include <Engine/Foundation/Json/JsonUtils.h>
 
+#ifdef _DEBUG
 #include <externals/imgui/imgui.h>
 #include <externals/imgui/ImGuiFileDialog.h>
+#endif // _DEBUG
 
 template<typename TConfig>
 class ConfigurableObject
@@ -70,6 +72,7 @@ inline void ConfigurableObject<TConfig>::SaveConfig(const std::string& path) con
 /////////////////////////////////////////////////////////////////////////////////////////
 template<typename TConfig>
 inline void ConfigurableObject<TConfig>::ShowGUi() {
+#ifdef _DEBUG
 	if (ImGui::Button("Load Config")) {
 		IGFD::FileDialogConfig config;
 		config.path = "Resources/Assets/Configs/";
@@ -109,4 +112,7 @@ inline void ConfigurableObject<TConfig>::ShowGUi() {
 		}
 		ImGuiFileDialog::Instance()->Close();
 	}
+#endif // _DEBUG
+
+
 }

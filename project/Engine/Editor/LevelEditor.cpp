@@ -7,12 +7,15 @@
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
 #include <Engine/Scene/Context/SceneContext.h>
 #include <Engine/Scene/Serializer/SceneSerializer.h>
-
+#ifdef _DEBUG
 #include <externals/imgui/ImGuiFileDialog.h>
 
-void LevelEditor::Initialize() {
+#endif // _DEBUG
 
-	// 各パネルの初期化
+
+void LevelEditor::Initialize() {
+#ifdef _DEBUG
+		// 各パネルの初期化
 	hierarchy_ = std::make_unique<HierarchyPanel>();
 	editor_ = std::make_unique<EditorPanel>();
 	inspector_ = std::make_unique<InspectorPanel>();
@@ -68,8 +71,9 @@ void LevelEditor::Initialize() {
 			config
 		);
 	}, true
-			  });
+			   });
 
+#endif // _DEBUG
 }
 
 void LevelEditor::Update() {
@@ -82,6 +86,7 @@ void LevelEditor::Update() {
 }
 
 void LevelEditor::Render() {
+#ifdef _DEBUG
 	hierarchy_->Render();
 	editor_->Render();
 	placeToolPanel_->Render();
@@ -93,8 +98,8 @@ void LevelEditor::Render() {
 	// ----------------------------
 	// Open Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")){
-		if (ImGuiFileDialog::Instance()->IsOk()){
+	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			ClearSelection(); // 既存の選択をクリア
 			SceneSerializer::Load(*pSceneContext_, filePath);
@@ -105,8 +110,8 @@ void LevelEditor::Render() {
 	// ----------------------------
 	// Save Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")){
-		if (ImGuiFileDialog::Instance()->IsOk()){
+	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			SceneSerializer::Save(*pSceneContext_, filePath);
 		}
@@ -116,6 +121,10 @@ void LevelEditor::Render() {
 	inspector_->Render();
 
 	sceneEditor_->Update();
+#endif // _DEBUG
+
+
+
 }
 
 void LevelEditor::SetSelectedEditor(BaseEditor* editor) {

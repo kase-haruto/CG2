@@ -54,7 +54,6 @@ private:
 	void UpdateTilt(const Vector3& moveVector);
 	void BarrelRoll();
 	float EaseForwardThenReturn(float t);
-
 	void InitializeEffect();
 
 private:

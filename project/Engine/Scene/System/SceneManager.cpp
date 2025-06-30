@@ -34,6 +34,8 @@ SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
 SceneManager::~SceneManager() {}
 
 void SceneManager::Initialize() {
+#ifdef _DEBUG
+
 	if (pEngineUI_) {
 		auto sceneSwitchPanel = std::make_unique<SceneSwitcherPanel>(this);
 
@@ -42,12 +44,15 @@ void SceneManager::Initialize() {
 
 		pEngineUI_->AddPanel(std::move(sceneSwitchPanel));
 	}
+#endif // _DEBUG
 
 	FxIntermediary::GetInstance()->SetSceneContext(scenes_[currentSceneNo_]->GetSceneContext());
 	scenes_[currentSceneNo_]->Initialize();
 
+#ifdef _DEBUG
 	auto* SceneObjectLibrary = scenes_[currentSceneNo_]->GetSceneContext()->GetObjectLibrary();
 	pEngineUI_->GetHierarchyPanel()->SetSceneObjectLibrary(SceneObjectLibrary);
+#endif // _DEBUG
 }
 
 void SceneManager::Update() {
@@ -63,11 +68,12 @@ void SceneManager::Update() {
 		FxIntermediary::GetInstance()->SetSceneContext(scenes_[currentSceneNo_]->GetSceneContext());
 
 		scenes_[currentSceneNo_]->Initialize();
-
+#ifdef _DEBUG
 		if (pEngineUI_) {
 			auto* context = scenes_[currentSceneNo_]->GetSceneContext();
 			pEngineUI_->NotifySceneContextChanged(context);
 		}
+#endif // _DEBUG
 			}
 
 	// 現在のシーンを更新
@@ -100,10 +106,12 @@ void SceneManager::DrawForRenderTarget(IRenderTarget* target) {
 	scenes_[currentSceneNo_]->Draw(cmd, pGraphicsSystem_->GetPipelineService());
 }
 
-void SceneManager::SetEngineUI(EngineUICore* ui) {
+void SceneManager::SetEngineUI([[maybe_unused]]EngineUICore* ui) {
+#ifdef _DEBUG
 	pEngineUI_ = ui;
 	auto* context = scenes_[currentSceneNo_]->GetSceneContext();
 	pEngineUI_->NotifySceneContextChanged(context);
+#endif // _DEBUG
 }
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {

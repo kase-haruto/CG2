@@ -12,6 +12,8 @@
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
+#include <Engine/Physics/Ray/Raycastor.h>
+#include <Engine/Physics/Ray/RayDetail.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -139,12 +141,30 @@ void Player::Move() {
 }
 
 void Player::Shoot() {
-	// 弾発射ロジック
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	Vector3 dir = Vector3{ 0.0f, 0.0f, 1.0f };
-	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
+	// マウス座標をInputから取得（Inputにマウス位置取得関数がある前提）
+	Vector2 mousePos = Input::GetInstance()->GetMousePosition();
 
+	// カメラのViewとProjectionを取得（CameraManagerが単一のMainCameraを持つ前提）
+	auto mainCam = CameraManager::GetInstance()->GetCamera3d();
+	Matrix4x4 view = mainCam->GetViewMatrix();
+	Matrix4x4 proj = mainCam->GetProjectionMatrix();
+
+	// ウィンドウやビューポートサイズ取得（例としてWindowクラスを使用）
+	Vector2 viewportSize = Vector2{ 1920,1080 };
+
+	// マウス座標からレイを作成
+	Ray ray = Raycastor::ConvertMouseToRay(mousePos, view, proj, viewportSize);
+
+	// プレイヤーの位置を発射点に
+	Vector3 wPos = GetWorldPosition();
+
+	// レイの方向を発射方向に
+	Vector3 dir = ray.direction;
+
+	// 弾を生成（モデル名・発射位置・発射方向）
+	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
 }
+
 
 void Player::UpdateTilt(const Vector3& moveVector) {
 	// 停止時は角度を戻す

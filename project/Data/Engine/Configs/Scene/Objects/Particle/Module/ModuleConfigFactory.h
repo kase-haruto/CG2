@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 #include "ModuleConfig.h"
 
 namespace ModuleConfigFactory {
