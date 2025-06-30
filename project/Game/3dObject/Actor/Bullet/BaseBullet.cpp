@@ -11,7 +11,7 @@
 #include <externals/imgui/imgui.h>
 
 BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
-	:Actor::Actor(modelName, name){
+	:Actor::Actor(modelName, name) {
 	collider_->SetType(ColliderType::Type_PlayerAttack);
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetOwner(this);
@@ -24,7 +24,7 @@ BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
 }
 
 BaseBullet::~BaseBullet() {
-	
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -42,67 +42,65 @@ void BaseBullet::ShootInitialize(const Vector3 initPos, const Vector3 velocity) 
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
 void BaseBullet::Update() {
-    float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
 
-    if (!isExploding_) {
-        // 通常移動とtrailFx_更新
-        worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
+	if (!isExploding_) {
+		// 通常移動とtrailFx_更新
+		worldTransform_.translation += velocity_ * moveSpeed_ * deltaTime;
 
-        BaseGameObject::Update();
+		BaseGameObject::Update();
 
-        if (trailFx_) {
-            trailFx_->position_ = GetWorldPosition();
-            trailFx_->Update();  // 明示的にUpdate呼ぶ（Attachだけで自動呼びでなければ）
-        }
+		if (trailFx_) {
+			trailFx_->position_ = GetWorldPosition();
+			trailFx_->Update();  // 明示的にUpdate呼ぶ（Attachだけで自動呼びでなければ）
+		}
 
-        // 寿命減少
-        lifeTime_ -= deltaTime;
+		// 寿命減少
+		lifeTime_ -= deltaTime;
 
-        if (lifeTime_ <= 0.0f) {
-            // 寿命切れ → 爆発開始
-            isExploding_ = true;
+		if (lifeTime_ <= 0.0f) {
+			// 寿命切れ → 爆発開始
+			isExploding_ = true;
 
-            // trailFx_停止＆破棄
-            if (trailFx_) {
-                FxIntermediary::GetInstance()->Detach(trailFx_.get());
-                trailFx_.reset();
-            }
+			// trailFx_停止＆破棄
+			if (trailFx_) {
+				FxIntermediary::GetInstance()->Detach(trailFx_.get());
+				trailFx_.reset();
+			}
 
-            // 爆発エフェクト初期化・再生
-            if (!explosionFx_) {
-                explosionFx_ = std::make_unique<FxEmitter>();
-                explosionFx_->LoadConfig("Resources/Assets/Configs/Effect/Explosion.json");
-                FxIntermediary::GetInstance()->Attach(explosionFx_.get());
-            }
-            explosionFx_->position_ = GetWorldPosition();
-            explosionFx_->Play();
-        }
-    } else {
-        // 爆発中は爆発エフェクトの更新のみ
-        if (explosionFx_) {
-            explosionFx_->position_ = GetWorldPosition();
-            explosionFx_->Update();
+			// 爆発エフェクト初期化・再生
+			if (!explosionFx_) {
+				explosionFx_ = std::make_unique<FxEmitter>();
+				explosionFx_->LoadConfig("Resources/Assets/Configs/Effect/Explosion.json");
+				FxIntermediary::GetInstance()->Attach(explosionFx_.get());
+			}
+			explosionFx_->position_ = GetWorldPosition();
+			explosionFx_->Play();
+		}
+	} else {
+		// 爆発中は爆発エフェクトの更新のみ
+		if (explosionFx_) {
+			explosionFx_->position_ = GetWorldPosition();
+			explosionFx_->Update();
 
-            // エフェクトが終了していたら弾も消す
-            if (!explosionFx_->isPlayng() && explosionFx_->GetUnits().empty()) {
-                isAlive_ = false;
+			// エフェクトが終了していたら弾も消す
+			if (!explosionFx_->isPlayng() && explosionFx_->GetUnits().empty()) {
+				isAlive_ = false;
 
-                FxIntermediary::GetInstance()->Detach(explosionFx_.get());
-                explosionFx_.reset();
-            }
-        }
-    }
+				FxIntermediary::GetInstance()->Detach(explosionFx_.get());
+				explosionFx_.reset();
+			}
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		imgui
 /////////////////////////////////////////////////////////////////////////////////////////
-void BaseBullet::DerivativeGui(){
+void BaseBullet::DerivativeGui() {
 
 }
 
-void BaseBullet::OnCollisionEnter([[maybe_unused]] Collider* other) {
-}
+void BaseBullet::OnCollisionEnter([[maybe_unused]] Collider* other) {}
 
-void BaseBullet::OnShot() {
-}
+void BaseBullet::OnShot() {}

@@ -31,7 +31,7 @@ public:
 	virtual void Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList,class PipelineService*){}
 	virtual void CleanUp() = 0;
 	virtual void LoadAssets() = 0;
-
+	virtual void SetTransitionRequestor(class SceneTransitionRequestor* requestor) = 0;
 	//--------- accessor -----------------------------------------------------
 	virtual SceneContext* GetSceneContext() const = 0;
 

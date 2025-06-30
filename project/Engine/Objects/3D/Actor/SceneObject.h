@@ -61,7 +61,7 @@ public:
 	// 親子関係
 	SceneObject* GetParent() const{ return parent_; }
 	const std::vector<SceneObject*>& GetChildren() const{ return children_; }
-	void SetParent(SceneObject* newParent);
+	virtual void SetParent(SceneObject* newParent);
 
 	void UpdateWorldTransformRecursive();
 

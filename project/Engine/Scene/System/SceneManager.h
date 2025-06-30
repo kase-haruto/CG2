@@ -14,7 +14,8 @@
 class IRenderTarget;
 class GraphicsSystem;
 
-class SceneManager{
+class SceneManager
+	: public SceneTransitionRequestor{
 public:
 	SceneManager() = default;
 	SceneManager(DxCore* dxCore,GraphicsSystem* graphicsSystem);
@@ -26,9 +27,11 @@ public:
 	void DrawForRenderTarget(IRenderTarget* target);
 
 	void SetEngineUI(EngineUICore* ui);
-	void RequestSceneChange(SceneType nextScene);
+	void RequestSceneChange(SceneType nextScene)override;
 	void SetGraphicsSystem(GraphicsSystem* graphicsSystem) { pGraphicsSystem_ = graphicsSystem; }
 	SceneContext* GetCurrentSceneContext() const;
+
+
 private:
 	// シーンインスタンスの配列
 	std::array<std::unique_ptr<IScene>, static_cast< int >(SceneType::count)> scenes_;

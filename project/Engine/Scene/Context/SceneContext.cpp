@@ -6,16 +6,16 @@
 #include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 
 SceneContext::SceneContext(){
-	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
-	lightLibrary_ = std::make_unique<LightLibrary>(objectLibrary_.get());
-	fxSystem_ = std::make_unique<FxSystem>();
+
 }
 
 SceneContext::~SceneContext() = default;
 
 void SceneContext::Initialize(){
 	editorObjects_.clear();
-
+	objectLibrary_ = std::make_unique<SceneObjectLibrary>();
+	lightLibrary_ = std::make_unique<LightLibrary>(objectLibrary_.get());
+	fxSystem_ = std::make_unique<FxSystem>();
 }
 
 void SceneContext::Update(){

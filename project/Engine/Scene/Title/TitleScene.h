@@ -31,11 +31,11 @@
 #include<Externals/imgui/imgui.h>
 #endif // _DEBUG
 
-class GameScene final :
-	public BaseScene{
+class TitleScene final :
+	public BaseScene {
 public:
-	GameScene();
-	~GameScene() override = default;
+	TitleScene();
+	~TitleScene() override = default;
 
 	void Initialize()override;
 	void Update()override;
@@ -45,14 +45,5 @@ public:
 private:
 	/* objects ======================================================*/
 	BaseGameObject* modelField_ = nullptr;
-	BaseGameObject* modelFieldBack_ = nullptr;
-	Player* player_ = nullptr;
-	BulletContainer* playerBulletContainer_ = nullptr;
-	EnemyCollection* enemyCollection_ = nullptr;
-
-	// カメラ
-	std::unique_ptr<RailCamera> railCamera_ = nullptr;
-
-
 };
 

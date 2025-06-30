@@ -10,6 +10,7 @@
 Enemy::Enemy(const std::string& modelName, const std::string objName) :
 	Actor::Actor(modelName, objName) {
 
+	worldTransform_.Initialize();
 	worldTransform_.scale = { 2.0f, 2.0f, 2.0f };
 	moveSpeed_ = Random::Generate<float>(1.0f, 3.0f);
 	velocity_ = Random::GenerateVector3(-1.0f, 1.0f);
@@ -36,12 +37,7 @@ void Enemy::Initialize() {}
 /////////////////////////////////////////////////////////////////////////////////////////
 void Enemy::Update() {
 
-	if (isHit_) {
-		Vector3 wPos = worldTransform_.GetWorldPosition();
-		Vector3 offset = { 0.0f, 0.0f, -1.0f };
-		//ParticleEffectCollection::GetInstance()->PlayByName("shootEffect", wPos + offset);
-		isHit_ = false;
-	}
+	worldTransform_.Update();
 
 	BaseGameObject::Update();
 
@@ -58,6 +54,14 @@ const Vector3 Enemy::GetCenterPos() const {
 	const Vector3 offset = { 0.0f, 0.0f, 0.0f };
 	Vector3 worldPos = Vector3::Transform(offset, worldTransform_.matrix.world);
 	return worldPos;
+}
+
+void Enemy::SetParent(WorldTransform* parent) {
+	worldTransform_.parent = parent;
+}
+
+void Enemy::SetParent(SceneObject* newParent) {
+	parent_ = newParent;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

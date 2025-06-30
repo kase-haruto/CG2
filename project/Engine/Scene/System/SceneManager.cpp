@@ -14,11 +14,13 @@
 #include <Engine/Application/Input/Input.h>
 #include <Engine/Graphics/Core/GraphicsSystem.h>
 #include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
+
 SceneManager::SceneManager(DxCore* dxCore, GraphicsSystem* graphicsSystem)
 	: pDxCore_(dxCore), pGraphicsSystem_(graphicsSystem) {
 	// ここでシーンをすべて生成しておく
 	for (int i = 0; i < static_cast<int>(SceneType::count); ++i) {
 		scenes_[i] = SceneFactory::CreateScene(static_cast<SceneType>(i));
+		scenes_[i]->SetTransitionRequestor(this);
 	}
 
 
@@ -116,7 +118,6 @@ void SceneManager::SetEngineUI([[maybe_unused]]EngineUICore* ui) {
 
 void SceneManager::RequestSceneChange(SceneType nextScene) {
 	nextSceneNo_ = static_cast<int>(nextScene);
-
 }
 
 SceneContext* SceneManager::GetCurrentSceneContext() const{

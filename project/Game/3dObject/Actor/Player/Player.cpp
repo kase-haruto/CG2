@@ -74,7 +74,8 @@ void Player::Update() {
 	}
 
 	shootInterval_ -= ClockManager::GetInstance()->GetDeltaTime();
-	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f) {
+	if (Input::GetInstance()->PushKey(DIK_SPACE)
+		||Input::GetInstance()->PushGamepadButton(PAD_BUTTON::RB) && shootInterval_ <= 0.0f) {
 		Shoot();
 		shootInterval_ = kMaxShootInterval_;
 	}
@@ -165,7 +166,7 @@ void Player::Shoot() {
 }
 
 void Player::UpdateReticlePosition() {
-	constexpr float moveSpeed = 7.0f;
+	constexpr float moveSpeed = 12.0f;
 	float dt = ClockManager::GetInstance()->GetDeltaTime();
 
 	Vector3 offset = Vector3::Zero;
@@ -187,7 +188,7 @@ void Player::UpdateReticlePosition() {
 		reticleTransform_.translation += offset;
 
 		// 制限
-		reticleTransform_.translation.x = std::clamp(reticleTransform_.translation.x, -4.0f, 4.0f);
+		reticleTransform_.translation.x = std::clamp(reticleTransform_.translation.x, -6.0f, 6.0f);
 		reticleTransform_.translation.y = std::clamp(reticleTransform_.translation.y, -2.0f, 2.0f);
 		reticleTransform_.translation.z = std::clamp(reticleTransform_.translation.z, 1.0f, 20.0f);
 	}
