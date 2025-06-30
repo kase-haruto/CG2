@@ -8,21 +8,24 @@
 
 class SceneContext;
 
+enum class BulletType {
+	Player,
+	Enemy,
+	Count
+};
+
 /* ========================================================================
 /* bullet コンテナ
 /* ===================================================================== */
-class BulletContainer 
-	: public SceneObject{
+class BulletContainer
+	: public SceneObject {
 public:
-	//===================================================================*/
-	// public function
-	//===================================================================*/
 	BulletContainer(const std::string& name);
 	~BulletContainer() = default;
 
 	void Update();
 
-	void AddBullet(const std::string& modelName,
+	void AddBullet(BulletType type,
 				   const Vector3& position,
 				   const Vector3& velocity);
 	void RemoveBullet(BaseBullet* bullet);
@@ -34,19 +37,13 @@ public:
 	/* config =========================================*/
 
 	/* accessor =========================================*/
-	const std::list<BaseBullet*>& GetBullets() const{ return bullets_; }
-	void SetSceneContext(SceneContext* context){ sceneContext_ = context; }
+	const std::list<BaseBullet*>& GetBullets(BulletType type) const;
+	void SetSceneContext(SceneContext* context) { sceneContext_ = context; }
+
 private:
-	//===================================================================*/
-	// private variables
-	//===================================================================*/
-	std::list<BaseBullet*> bullets_; // 生ポインタのみ保持（所有権はSceneObjectLibrary）
+	std::unordered_map<BulletType, std::list<BaseBullet*>> typedBullets_;
 	SceneContext* sceneContext_ = nullptr;
 
-	//===================================================================*/
-	// adjustment variables
-	//===================================================================*/
 	float bulletSpeed_ = 60.0f; // 弾速
-	Vector3 bulletScale_ {0.3f, 0.3f, 0.3f}; // 弾のスケール
+	Vector3 bulletScale_{ 0.3f, 0.3f, 0.3f }; // 弾のスケール
 };
-

@@ -74,7 +74,7 @@ void Player::Update() {
 	}
 
 	shootInterval_ -= ClockManager::GetInstance()->GetDeltaTime();
-	if (Input::GetInstance()->PushKey(DIK_SPACE)
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f
 		||Input::GetInstance()->PushGamepadButton(PAD_BUTTON::RB) && shootInterval_ <= 0.0f) {
 		Shoot();
 		shootInterval_ = kMaxShootInterval_;
@@ -162,7 +162,7 @@ void Player::Shoot() {
 		dir = Vector3(0.0f, 0.0f, 1.0f); // フォールバック方向
 	}
 
-	bulletContainer_->AddBullet("debugCube.obj", playerPos, dir);
+	bulletContainer_->AddBullet(BulletType::Player, playerPos, dir);
 }
 
 void Player::UpdateReticlePosition() {

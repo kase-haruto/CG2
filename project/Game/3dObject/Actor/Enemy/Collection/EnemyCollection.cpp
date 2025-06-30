@@ -31,6 +31,7 @@ void EnemyCollection::Update() {
 		if (!enemy->GetIsAlive()) {
 			sceneLibrary->RemoveObject(enemy);
 			it = enemies_.erase(it);
+			deadEnemyCount++;
 		} else {
 			++it;
 		}

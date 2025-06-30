@@ -93,7 +93,8 @@ void GameScene::Update(){
 	sceneContext_->Update();
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
 
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+	if (Input::GetInstance()->TriggerKey(DIK_1)
+		||enemyCollection_->GetDeadEnemyCount()>=10) {//10タイ撃破
 		if (transitionRequestor_) {
 			transitionRequestor_->RequestSceneChange(SceneType::TITLE);
 		}

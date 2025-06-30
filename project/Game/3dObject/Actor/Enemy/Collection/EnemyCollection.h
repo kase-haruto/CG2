@@ -28,13 +28,14 @@ public:
 
 	void Clear();
 
+	int GetDeadEnemyCount()const { return deadEnemyCount; }
 private:
 	//===================================================================*/
 	//                      Private variables
 	//===================================================================*/
 	std::list<Enemy*> enemies_;
 	std::vector<class EnemySpawner*> spawners_;
-
+	int deadEnemyCount = 0;
 	SceneContext* sceneContext_ = nullptr;
 	WorldTransform* playerTransform_ = nullptr;
 };
