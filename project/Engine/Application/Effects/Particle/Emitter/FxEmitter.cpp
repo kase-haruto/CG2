@@ -11,6 +11,7 @@
 #include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 #include <Data/Engine/Configs/Scene/Objects/Particle/Module/ModuleConfigFactory.h>
 #include <Engine/Application/Effects/Particle/Module/Factory/ModuleFactory.h>
+#include <Engine/Foundation/Utility/Func/MyFunc.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -109,6 +110,13 @@ void FxEmitter::Update() {
 
 		fx.age += deltaTime;
 		if (fx.age >= fx.lifetime) fx.alive = false;
+
+		//uv
+		Matrix4x4 uvTransformMatrix = MakeScaleMatrix(Vector3(fx.uvTransform.scale.x, fx.uvTransform.scale.y, 1.0f));
+		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeRotateZMatrix(fx.uvTransform.rotate));
+		uvTransformMatrix = Matrix4x4::Multiply(uvTransformMatrix, MakeTranslateMatrix(Vector3(fx.uvTransform.translate.x, fx.uvTransform.translate.y, 0.0f)));
+
+		material_.uvTransform = uvTransformMatrix;
 	}
 
 	materialBuffer_.TransferData(material_);
@@ -158,14 +166,16 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 	fx.initialScale = fx.scale; // 初期スケールを設定
 	fx.color = Vector4(1, 1, 1, 1);
 	fx.alive = true;
+	fx.uvTransform.Initialize();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //			gui表示
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::ShowGui() {
+void FxEmitter::ShowGui(){
 	ImGui::PushID(this);
 	ConfigurableObject::ShowGUi();
+
 
 	// 状態表示
 	ImGui::Text("emitCount: %d", units_.size());
@@ -182,76 +192,36 @@ void FxEmitter::ShowGui() {
 	// 再生制御 GUI
 	ImGui::Spacing();
 	ImGui::SeparatorText("Emitter Controls");
-	if (ImGui::Button("Play")) { Play(); }
+	if (ImGui::Button("Play")){ Play(); }
 	ImGui::SameLine();
-	if (ImGui::Button("Stop")) { Stop(); }
+	if (ImGui::Button("Stop")){ Stop(); }
 	ImGui::SameLine();
-	if (ImGui::Button("Reset")) { Reset(); }
+	if (ImGui::Button("Reset")){ Reset(); }
 
 	// OneShot 関連 GUI
 	ImGui::Spacing();
 	ImGui::SeparatorText("OneShot Settings");
 	GuiCmd::CheckBox("OneShot", isOneShot_);
-	if (isOneShot_) {
+	if (isOneShot_){
 		ImGui::DragInt("Emit Count", &emitCount_, 1, 1, kMaxUnits_);
 		GuiCmd::CheckBox("Auto Destroy", autoDestroy_);
 		GuiCmd::DragFloat("Emit Delay", emitDelay_, 0.01f, 0.0f, 10.0f);
-	} else {
+		material_.texturePath = "Effect.png";
+	} else{
 		GuiCmd::DragFloat("Emit Duration", emitDuration_, 0.01f, -1.0f, 60.0f);
+		material_.texturePath = "particle.png";
 	}
 
 	//=============================
-	// 追加済みモジュールの編集GUI
+	// モジュール関連 GUI はコンテナに一任
 	//=============================
-	for (auto& m : moduleContainer_->GetModules()) {
-		ImGui::PushID(m.get());
-
-		bool enabled = m->IsEnabled();
-		if (ImGui::Checkbox("##enabled", &enabled)) {
-			m->SetEnabled(enabled);
-			UpdateConfigModulesFromContainer();
-		}
-		ImGui::SameLine();
-
-		bool open = ImGui::CollapsingHeader(m->GetName().c_str());
-		if (open && enabled) {
-			ImGui::Indent();
-			m->ShowGuiContent();
-			ImGui::Unindent();
-		}
-
-		ImGui::SameLine();
-		if (ImGui::Button("Remove")) {
-			RemoveModule(m->GetName());
-			ImGui::PopID();
-			break; // remove後なので break
-		}
-		ImGui::PopID();
+	if (moduleContainer_){
+		moduleContainer_->ShowModulesGui();
+		moduleContainer_->ShowAvailableModulesGui();
 	}
-
-	//=============================
-	// 追加されていないモジュールの表示
-	//=============================
-	ImGui::Spacing();
-	ImGui::SeparatorText("Add Modules");
-
-	static const std::vector<std::string> availableModules = {
-		"GravityModule",
-		"SizeOverLifetimeModule",
-	};
-
-	for (const auto& modName : availableModules) {
-		if (!moduleContainer_->HasModule(modName)) {
-			if (ImGui::Button(modName.c_str())) {
-				AddModule(modName);
-			}
-		}
-	}
-	ImGui::NewLine();
 
 	ImGui::PopID();
 }
-
 
 void FxEmitter::TransferParticleDataToGPU(){
 	std::vector<ParticleConstantData> gpuUnits;
@@ -275,7 +245,7 @@ void FxEmitter::ApplyConfig() {
 	scale_.FromConfig(config_.scale);
 	emitRate_ = config_.emitRate;
 	modelPath = config_.modelPath;
-	texturePath = config_.texturePath;
+	material_.texturePath = config_.texturePath;
 	isDrawEnable_ = config_.isDrawEnable;
 	isComplement_ = config_.isComplement;
 	isStatic_ = config_.isStatic;
@@ -295,27 +265,24 @@ void FxEmitter::ApplyConfig() {
 	isPlaying_ = true;
 }
 
-void FxEmitter::ExtractConfig() {
+void FxEmitter::ExtractConfig(){
 	config_.position = position_;
 	config_.color = material_.color;
-	config_.velocity = FxVector3ParamConfig{ velocity_.ToConfig() };
-	config_.lifetime = FxFloatParamConfig{ lifetime_.ToConfig() };
-	config_.scale = FxVector3ParamConfig{ scale_.ToConfig() };
+	config_.velocity = FxVector3ParamConfig {velocity_.ToConfig()};
+	config_.lifetime = FxFloatParamConfig {lifetime_.ToConfig()};
+	config_.scale = FxVector3ParamConfig {scale_.ToConfig()};
 	config_.emitRate = emitRate_;
 	config_.modelPath = modelPath;
-	config_.texturePath = texturePath;
+	config_.texturePath = material_.texturePath;
 	config_.isDrawEnable = isDrawEnable_;
 	config_.isComplement = isComplement_;
 	config_.isStatic = isStatic_;
 
-	config_.modules.clear();
-	if (!moduleContainer_) return;
-
-	for (const auto& mod : moduleContainer_->GetModules()) {
-		auto cfgPtr = FxModuleFactory::CreateConfigFromModule(*mod);
-		if (cfgPtr) {
-			config_.modules.push_back(std::move(cfgPtr));
-		}
+	// モジュール情報を保存
+	if (moduleContainer_){
+		config_.modules = moduleContainer_->ExtractConfigs();
+	} else{
+		config_.modules.clear();
 	}
 
 	config_.isOneShot = isOneShot_;
@@ -324,42 +291,6 @@ void FxEmitter::ExtractConfig() {
 	config_.emitDelay = emitDelay_;
 	config_.emitDuration = emitDuration_;
 }
-
-void FxEmitter::UpdateConfigModulesFromContainer() {
-	config_.modules.clear();
-	if (!moduleContainer_) return;
-
-	for (const auto& m : moduleContainer_->GetModules()) {
-		auto cfg = std::make_unique<SimpleModuleConfig>(m->GetName(), m->IsEnabled());
-		config_.modules.push_back(std::move(cfg));
-	}
-}
-
-void FxEmitter::AddModule(const std::string& moduleName) {
-	if (!moduleContainer_) moduleContainer_ = std::make_unique<FxModuleContainer>();
-	if (!moduleContainer_->HasModule(moduleName)) {
-		moduleContainer_->AddModuleByName(moduleName);
-		UpdateConfigModulesFromContainer();
-	}
-}
-
-void FxEmitter::RemoveModule(const std::string& moduleName) {
-	if (!moduleContainer_) return;
-	moduleContainer_->RemoveModuleByName(moduleName);
-	UpdateConfigModulesFromContainer();
-}
-
-void FxEmitter::SetModuleEnabled(const std::string& moduleName, bool enabled) {
-	if (!moduleContainer_) return;
-	for (auto& m : moduleContainer_->GetModules()) {
-		if (m->GetName() == moduleName) {
-			m->SetEnabled(enabled);
-			break;
-		}
-	}
-	UpdateConfigModulesFromContainer();
-}
-
 
 void FxEmitter::Play() {
 	isPlaying_ = true;

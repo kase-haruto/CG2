@@ -286,6 +286,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Application\UI\EngineUI\PerformanceOverlay.cpp" />
     <ClCompile Include="Engine\Application\Effects\Particle\Module\Factory\ModuleFactory.cpp" />
     <ClCompile Include="Engine\Scene\Transitioner\SceneTransitionRequestor.cpp" />
+    <ClCompile Include="Engine\Application\Effects\Particle\Module\Uv\TextureSheetAnimModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Engine\Configs\Scene\Objects\Particle\EmitterConfig.h" />
@@ -515,6 +516,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Application\UI\EngineUI\PerformanceOverlay.h" />
     <ClInclude Include="Engine\Application\Effects\Particle\Module\Factory\ModuleFactory.h" />
     <ClInclude Include="Engine\Scene\Transitioner\SceneTransitionRequestor.h" />
+    <ClInclude Include="Engine\Application\Effects\Particle\Module\Uv\TextureSheetAnimModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

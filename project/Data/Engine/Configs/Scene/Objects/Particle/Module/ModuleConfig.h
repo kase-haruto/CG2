@@ -20,7 +20,6 @@ struct BaseModuleConfig {
 	virtual void FromJson(const nlohmann::json& j) = 0;
 };
 
-// BaseModuleConfig は抽象クラスのため NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE は使わない
 
 //============================================================
 // シンプルな名前と有効フラグのみ保持する Config
@@ -72,7 +71,8 @@ struct GravityModuleConfig : public BaseModuleConfig {
 /////////////////////////////////////////////////////////////////////////////////////////
 // lifeTimeでサイズ変更
 /////////////////////////////////////////////////////////////////////////////////////////
-struct SizeOverLifetimeConfig : public BaseModuleConfig {
+struct SizeOverLifetimeConfig 
+	: public BaseModuleConfig {
 	bool isGrowing = true;
 	EaseType easeType = EaseType::EaseInOutCubic;
 
@@ -102,3 +102,45 @@ struct SizeOverLifetimeConfig : public BaseModuleConfig {
 		}
 	}
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// uvAnimation
+/////////////////////////////////////////////////////////////////////////////////////////
+struct TextureSheetAnimationConfig 
+	: public BaseModuleConfig{
+	int rows = 4;
+	int cols = 4;
+	bool loop = true;
+	float animationSpeed = 10.0f;
+	bool useCustomFrames = false;
+
+	TextureSheetAnimationConfig(){
+		name = "TextureSheetAnimationModule";
+	}
+
+	TextureSheetAnimationConfig(const std::string& _name, bool _enable)
+		: BaseModuleConfig(_name, _enable){}
+
+	nlohmann::json ToJson() const override{
+		return {
+			{ "name", name },
+			{ "enabled", enabled },
+			{ "rows", rows },
+			{ "cols", cols },
+			{ "loop", loop },
+			{ "animationSpeed", animationSpeed },
+			{ "useCustomFrames", useCustomFrames }
+			// カスタムUVリスト（オプション）があればここに追加可能
+		};
+	}
+
+	void FromJson(const nlohmann::json& j) override{
+		if (j.contains("enabled")) j.at("enabled").get_to(enabled);
+		if (j.contains("rows")) j.at("rows").get_to(rows);
+		if (j.contains("cols")) j.at("cols").get_to(cols);
+		if (j.contains("loop")) j.at("loop").get_to(loop);
+		if (j.contains("animationSpeed")) j.at("animationSpeed").get_to(animationSpeed);
+		if (j.contains("useCustomFrames")) j.at("useCustomFrames").get_to(useCustomFrames);
+	}
+};
+

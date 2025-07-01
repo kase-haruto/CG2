@@ -12,9 +12,37 @@
 
 
 /* ==========================================================================================================
+/*			DragInt
+/* ======================================================================================================== */
+#pragma region DragInt
+
+bool GuiCmd::DragInt(const char* label, int& value, float speed, float min, float max){
+	static GuiCmdInternal::GuiCmdSetValueComputer<int> computer;
+	int temp = value;
+	bool changed = ImGui::DragInt(label, &temp, speed, static_cast< int >(min), static_cast< int >(max));
+	value = temp;
+
+	// マウスが押された 検知開始
+	if (ImGui::IsItemActivated()) computer.Begin(value);
+	// マウスが離れた
+	if (ImGui::IsItemDeactivatedAfterEdit()){
+		std::string labelStr(label);
+		auto cmd = computer.End(value, [&value] (const int& v){ value = v; }, labelStr);
+		//マウスが押された位置から動いていたらコマンドを発行する
+		if (cmd){
+			CommandManager::GetInstance()->Execute(std::move(cmd));
+		}
+	}
+	return changed;
+}
+
+#pragma endregion
+
+/* ==========================================================================================================
 /*			DragFloat
 /* ======================================================================================================== */
 #pragma region DragFloat
+
 bool GuiCmd::DragFloat(const char* label, float& value, float speed, float min, float max){
 	static GuiCmdInternal::GuiCmdSetValueComputer<float> computer;
 	float temp = value;

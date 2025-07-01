@@ -39,6 +39,7 @@ void BaseModel::Update() {
 
 		materialData_.uvTransform = uvTransformMatrix;
 		materialBuffer_.TransferData(materialData_);
+
 		// カメラ行列との掛け合わせ
 		modelData_->vertexBuffer.TransferVectorData(modelData_->meshData.vertices);
 		modelData_->indexBuffer.TransferVectorData(modelData_->meshData.indices);

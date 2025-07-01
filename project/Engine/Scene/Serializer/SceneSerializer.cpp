@@ -68,6 +68,7 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path){
 			case ObjectType::ParticleSystem:
 			{
 				auto* rawPtr = CreateAndAddObject<ParticleSystemObject>(&context, "ParticleSystem");
+				rawPtr->ApplyConfigFromJson(j);
 				context.GetFxSystem()->AddEmitter(rawPtr);
 				break;
 			}
