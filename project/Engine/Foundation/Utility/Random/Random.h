@@ -46,10 +46,19 @@ public:
 	}
 
 	static Vector3 GenerateVector3(const Vector3& min, const Vector3& max){
+		auto safeMinX = ( std::min ) (min.x, max.x);
+		auto safeMaxX = (std::max)(min.x, max.x);
+
+		auto safeMinY = (std::min)(min.y, max.y);
+		auto safeMaxY = (std::max)(min.y, max.y);
+
+		auto safeMinZ = (std::min)(min.z, max.z);
+		auto safeMaxZ = (std::max)(min.z, max.z);
+
 		return Vector3(
-			Generate<float>(min.x, max.x),
-			Generate<float>(min.y, max.y),
-			Generate<float>(min.z, max.z)
+			Generate<float>(safeMinX, safeMaxX),
+			Generate<float>(safeMinY, safeMaxY),
+			Generate<float>(safeMinZ, safeMaxZ)
 		);
 	}
 

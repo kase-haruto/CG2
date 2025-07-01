@@ -57,4 +57,6 @@ public:
 	Icon iconScale_;
 	Icon iconUniversal_;
 	Icon iconWorld_;
+
+	Icon iconDrawGrid_;
 };

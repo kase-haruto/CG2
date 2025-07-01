@@ -9,7 +9,7 @@
 #include <Engine/Graphics/Camera/Base/BaseCamera.h>
 #include <Engine/Objects/Transform/Transform.h>
 #include <Engine/System/Command/Manager/CommandManager.h>
-
+#include <Engine/Renderer/Primitive/PrimitiveDrawer.h>
 #include <cmath>
 
 Manipulator::Manipulator(){
@@ -18,6 +18,7 @@ Manipulator::Manipulator(){
 	iconScale_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/scale.png").ptr);
 	iconUniversal_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/universal.png").ptr);
 	iconWorld_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/world.png").ptr);
+	iconDrawGrid_.texture = reinterpret_cast< ImTextureID >(TextureManager::GetInstance()->LoadTexture("UI/Tool/grid.png").ptr);
 	SetOverlayAlign(OverlayAlign::TopLeft);
 	SetOverlayOffset(overlayOffset_); // Viewport右上から左下に少しずらす
 }
@@ -160,6 +161,32 @@ void Manipulator::RenderOverlay(const ImVec2& basePos){
 
 		if (ImGui::IsItemHovered())
 			ImGui::SetTooltip("%s Mode", isWorld ? "World" : "Local");
+	}
+
+	{
+		static bool showGrid = true;
+		int i = IM_ARRAYSIZE(buttons);
+		spacing += 15.0f;
+		ImVec2 btnPos = ImVec2(basePos.x, basePos.y + i * (iconSize.y + spacing));
+		ImGui::SetCursorScreenPos(btnPos);
+
+		bool pushStyle = false;
+		if (showGrid){
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
+			pushStyle = true;
+		}
+
+		if (ImGui::ImageButton(iconDrawGrid_.texture, iconSize)){
+			showGrid = !showGrid;
+		}
+
+		if (pushStyle){
+			ImGui::PopStyleColor(); // Push したときだけ Pop する
+		}
+
+		if (showGrid){
+			PrimitiveDrawer::GetInstance()->DrawGrid();
+		}
 	}
 }
 
