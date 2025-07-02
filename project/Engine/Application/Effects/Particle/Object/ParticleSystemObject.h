@@ -10,7 +10,9 @@
 
 class ParticleSystemObject
 	: public SceneObject
-	, public FxEmitter{
+	, public FxEmitter
+	, public ConfigurableObject<ParticleSystemObjectConfig>{
+
 public:
 	// コンストラクタ
 	ParticleSystemObject() = default;

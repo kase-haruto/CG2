@@ -24,8 +24,7 @@ struct Vector3;
 /* ========================================================================
 /*	particle emitter
 /* ===================================================================== */
-class FxEmitter :
-	public ConfigurableObject<EmitterConfig>{
+class FxEmitter {
 public:
 	//===================================================================*/
 	//					public func
@@ -43,8 +42,8 @@ public:
 	void Reset();
 
 	//--------- config -------------------------------------------------//
-	void ApplyConfig()override;
-	void ExtractConfig()override;
+	void ApplyConfigFrom(const EmitterConfig& config);
+	void ExtractConfigTo(EmitterConfig& config) const;
 
 	//--------- accessor -------------------------------------------------//
 	const std::vector<FxUnit>& GetUnits()const{ return units_; }

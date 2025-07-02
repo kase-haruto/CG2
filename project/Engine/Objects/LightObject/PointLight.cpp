@@ -80,6 +80,9 @@ void PointLight::ApplyConfig() {
 	lightData_.radius = config_.radius;
 	lightData_.decay = config_.decay;
 	name_ = config_.name;
+	id_ = config_.guid;
+	parentId_ = config_.parentGuid;
+
 	constantBuffer_.TransferData(lightData_);
 }
 
@@ -90,6 +93,8 @@ void PointLight::ExtractConfig(){
 	config_.radius = lightData_.radius;
 	config_.decay = lightData_.decay;
 	config_.name = name_;
+	config_.guid = id_;
+	config_.parentGuid = parentId_;
 }
 
 

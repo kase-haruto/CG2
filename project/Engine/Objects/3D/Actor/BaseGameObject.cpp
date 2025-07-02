@@ -126,11 +126,11 @@ void BaseGameObject::DerivativeGui() {
 	ImGui::SeparatorText("derivative");
 }
 
-
 void BaseGameObject::ApplyConfig() {
 	model_->ApplyConfig(config_.modelConfig);
 	collider_->ApplyConfig(config_.colliderConfig);
 	worldTransform_.ApplyConfig(config_.transform);
+	id_ = config_.guid;
 }
 
 void BaseGameObject::ExtractConfig() {
@@ -139,6 +139,8 @@ void BaseGameObject::ExtractConfig() {
 	config_.transform = worldTransform_.ExtractConfig();
 	config_.objectType = static_cast<int>(objectType_);
 	config_.name = name_;
+	config_.guid = id_;
+	config_.parentGuid = parentId_;
 }
 
 //===================================================================*/

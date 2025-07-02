@@ -19,7 +19,7 @@ BaseBullet::BaseBullet(const std::string& modelName, const std::string& name)
 
 	const std::string path = "Resources/Assets/Configs/Effect/";
 	trailFx_ = std::make_unique<FxEmitter>();
-	trailFx_->LoadConfig(path + "BulletTrail.json");
+	//trailFx_->LoadConfig(path + "BulletTrail.json");
 	FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 
@@ -68,12 +68,12 @@ void BaseBullet::Update() {
 				trailFx_.reset();
 			}
 
-			// 爆発エフェクト初期化・再生
-			if (!explosionFx_) {
-				explosionFx_ = std::make_unique<FxEmitter>();
-				explosionFx_->LoadConfig("Resources/Assets/Configs/Effect/Explosion.json");
-				FxIntermediary::GetInstance()->Attach(explosionFx_.get());
-			}
+			//// 爆発エフェクト初期化・再生
+			//if (!explosionFx_) {
+			//	explosionFx_ = std::make_unique<FxEmitter>();
+			//	explosionFx_->LoadConfig("Resources/Assets/Configs/Effect/Explosion.json");
+			//	FxIntermediary::GetInstance()->Attach(explosionFx_.get());
+			//}
 			explosionFx_->position_ = GetWorldPosition();
 			explosionFx_->Play();
 		}

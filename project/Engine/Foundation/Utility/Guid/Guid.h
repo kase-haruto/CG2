@@ -22,7 +22,7 @@ struct Guid{
 	/* ユーティリティ ------------------------------------------------------*/
 	bool isValid() const noexcept;
 	bool operator==(const Guid&) const noexcept = default;
-	auto operator<=>(const Guid&) const noexcept = default;   // C++20
+	auto operator<=>(const Guid&) const noexcept = default;
 
 	/* JSON 変換 -----------------------------------------------------------*/
 	friend void to_json(nlohmann::json& j, const Guid& g){ j = g.ToString(); }

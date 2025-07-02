@@ -174,9 +174,6 @@ void FxEmitter::ResetFxUnit(FxUnit& fx){
 /////////////////////////////////////////////////////////////////////////////////////////
 void FxEmitter::ShowGui(){
 	ImGui::PushID(this);
-	ConfigurableObject::ShowGUi();
-
-
 	// 状態表示
 	ImGui::Text("emitCount: %d", units_.size());
 	GuiCmd::DragFloat3("position", position_);
@@ -237,26 +234,26 @@ void FxEmitter::TransferParticleDataToGPU(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //			コンフィグの適用
 /////////////////////////////////////////////////////////////////////////////////////////
-void FxEmitter::ApplyConfig() {
-	position_ = config_.position;
-	material_.color = config_.color;
-	velocity_.FromConfig(config_.velocity);
-	lifetime_.FromConfig(config_.lifetime);
-	scale_.FromConfig(config_.scale);
-	emitRate_ = config_.emitRate;
-	modelPath = config_.modelPath;
-	material_.texturePath = config_.texturePath;
-	isDrawEnable_ = config_.isDrawEnable;
-	isComplement_ = config_.isComplement;
-	isStatic_ = config_.isStatic;
+void FxEmitter::ApplyConfigFrom(const EmitterConfig& config){
+	position_ = config.position;
+	material_.color = config.color;
+	velocity_.FromConfig(config.velocity);
+	lifetime_.FromConfig(config.lifetime);
+	scale_.FromConfig(config.scale);
+	emitRate_ = config.emitRate;
+	modelPath = config.modelPath;
+	material_.texturePath = config.texturePath;
+	isDrawEnable_ = config.isDrawEnable;
+	isComplement_ = config.isComplement;
+	isStatic_ = config.isStatic;
 
-	moduleContainer_ = std::make_unique<FxModuleContainer>(config_.modules);
+	moduleContainer_ = std::make_unique<FxModuleContainer>(config.modules);
 
-	isOneShot_ = config_.isOneShot;
-	autoDestroy_ = config_.autoDestroy;
-	emitCount_ = config_.emitCount;
-	emitDelay_ = config_.emitDelay;
-	emitDuration_ = config_.emitDuration;
+	isOneShot_ = config.isOneShot;
+	autoDestroy_ = config.autoDestroy;
+	emitCount_ = config.emitCount;
+	emitDelay_ = config.emitDelay;
+	emitDuration_ = config.emitDuration;
 
 	// 再生状態を初期化
 	isFirstFrame_ = true;
@@ -265,32 +262,33 @@ void FxEmitter::ApplyConfig() {
 	isPlaying_ = true;
 }
 
-void FxEmitter::ExtractConfig(){
-	config_.position = position_;
-	config_.color = material_.color;
-	config_.velocity = FxVector3ParamConfig {velocity_.ToConfig()};
-	config_.lifetime = FxFloatParamConfig {lifetime_.ToConfig()};
-	config_.scale = FxVector3ParamConfig {scale_.ToConfig()};
-	config_.emitRate = emitRate_;
-	config_.modelPath = modelPath;
-	config_.texturePath = material_.texturePath;
-	config_.isDrawEnable = isDrawEnable_;
-	config_.isComplement = isComplement_;
-	config_.isStatic = isStatic_;
+void FxEmitter::ExtractConfigTo(EmitterConfig& config) const{
+	config.position = position_;
+	config.color = material_.color;
+	config.velocity = FxVector3ParamConfig {velocity_.ToConfig()};
+	config.lifetime = FxFloatParamConfig {lifetime_.ToConfig()};
+	config.scale = FxVector3ParamConfig {scale_.ToConfig()};
+	config.emitRate = emitRate_;
+	config.modelPath = modelPath;
+	config.texturePath = material_.texturePath;
+	config.isDrawEnable = isDrawEnable_;
+	config.isComplement = isComplement_;
+	config.isStatic = isStatic_;
 
 	// モジュール情報を保存
 	if (moduleContainer_){
-		config_.modules = moduleContainer_->ExtractConfigs();
+		config.modules = moduleContainer_->ExtractConfigs();
 	} else{
-		config_.modules.clear();
+		config.modules.clear();
 	}
 
-	config_.isOneShot = isOneShot_;
-	config_.autoDestroy = autoDestroy_;
-	config_.emitCount = emitCount_;
-	config_.emitDelay = emitDelay_;
-	config_.emitDuration = emitDuration_;
+	config.isOneShot = isOneShot_;
+	config.autoDestroy = autoDestroy_;
+	config.emitCount = emitCount_;
+	config.emitDelay = emitDelay_;
+	config.emitDuration = emitDuration_;
 }
+
 
 void FxEmitter::Play() {
 	isPlaying_ = true;
@@ -308,3 +306,4 @@ void FxEmitter::Reset() {
 	isFirstFrame_ = true;
 	hasEmitted_ = false;
 }
+

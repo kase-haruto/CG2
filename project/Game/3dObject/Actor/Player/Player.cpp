@@ -270,9 +270,9 @@ float Player::EaseForwardThenReturn(float t) {
 }
 
 void Player::InitializeEffect() {
-	const std::string path = "Resources/Assets/Configs/Effect/";
-	trailFx_ = std::make_unique<FxEmitter>();
-	trailFx_->LoadConfig(path+"PlayerTrail.json");
-	FxIntermediary::GetInstance()->Attach(trailFx_.get());
+	//const std::string path = "Resources/Assets/Configs/Effect/";
+	//trailFx_ = std::make_unique<FxEmitter>();
+	//trailFx_->LoadConfig(path+"PlayerTrail.json");
+	//FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 

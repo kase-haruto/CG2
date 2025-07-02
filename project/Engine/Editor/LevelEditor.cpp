@@ -54,7 +54,7 @@ void LevelEditor::Initialize() {
 			ImGuiFileDialog::Instance()->OpenDialog(
 				"SceneSaveDialog",
 				"load scene file",
-				".json",
+				".scene",
 				config
 			);
 		}, true
@@ -67,7 +67,7 @@ void LevelEditor::Initialize() {
 		ImGuiFileDialog::Instance()->OpenDialog(
 			"SceneOpenDialog",
 			"open scene",
-			".json",
+			".scene",
 			config
 		);
 	}, true
@@ -122,9 +122,6 @@ void LevelEditor::Render() {
 
 	sceneEditor_->Update();
 #endif // _DEBUG
-
-
-
 }
 
 void LevelEditor::SetSelectedEditor(BaseEditor* editor) {
@@ -174,7 +171,7 @@ SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
 }
 
 void LevelEditor::SaveScene() {
-	std::string scenePath = "Resources/Assets/Scenes/" + pSceneContext_->GetSceneName() + ".json";
+	std::string scenePath = "Resources/Assets/Scenes/" + pSceneContext_->GetSceneName() + ".scene";
 	SceneSerializer::Save(*pSceneContext_, scenePath);
 }
 

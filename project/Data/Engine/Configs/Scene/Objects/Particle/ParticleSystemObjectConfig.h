@@ -3,47 +3,29 @@
 #include <Data/Engine/Configs/Scene/Objects/SceneObject/SceneObjectConfig.h>
 #include <Data/Engine/Configs/Scene/Objects/Particle/EmitterConfig.h>
 
-struct ParticleSystemObjectConfig 
-	: public SceneObjectConfig, public EmitterConfig{
-
-};
+struct ParticleSystemObjectConfig
+	: public SceneObjectConfig, public EmitterConfig{};
 
 // JSON変換
 inline void to_json(nlohmann::json& j, const ParticleSystemObjectConfig& c){
-	j = nlohmann::json {
-		// SceneObjectConfig部分
-		{"guid",        c.guid},
-		{"parentGuid",  c.parentGuid},
-		{"objectType",  c.objectType},
+	// ベース構造体をまず個別に展開
+	nlohmann::json emitterJson = c.EmitterConfig::ToJson();  // パーティクル設定
+	j = emitterJson;
 
-		{"name",        c.name},
-		{"transform",   c.transform},
-
-		// EmitterConfig部分
-		{"modelPath",   c.modelPath},
-		{"texturePath", c.texturePath},
-		{"emitRate",    c.emitRate},
-		{"velocity",    c.velocity},
-		{"lifetime",    c.lifetime},
-		{"isComplement", c.isComplement},
-		{"isStatic",    c.isStatic}
-	};
+	j["guid"] = c.guid;
+	j["parentGuid"] = c.parentGuid;
+	j["objectType"] = c.objectType;
+	j["name"] = c.name;
+	j["transform"] = c.transform;
 }
 
 inline void from_json(const nlohmann::json& j, ParticleSystemObjectConfig& c){
-	// SceneObjectConfig
-	j.at("guid").get_to(c.guid);
-	j.at("parentGuid").get_to(c.parentGuid);
-	j.at("objectType").get_to(c.objectType);
-	j.at("name").get_to(c.name);
-	j.at("transform").get_to(c.transform);
+	// 安全にキーを取得、無ければデフォルト値
+	c.guid = j.value("guid", Guid {});
+	c.parentGuid = j.value("parentGuid", Guid {});
+	c.name = j.value("name", std::string {});
 
-	// EmitterConfig
-	j.at("modelPath").get_to(c.modelPath);
-	j.at("texturePath").get_to(c.texturePath);
-	j.at("emitRate").get_to(c.emitRate);
-	j.at("velocity").get_to(c.velocity);
-	j.at("lifetime").get_to(c.lifetime);
-	j.at("isComplement").get_to(c.isComplement);
-	j.at("isStatic").get_to(c.isStatic);
+	if (!j.is_null()){
+		c.EmitterConfig::FromJson(j);
+	}
 }

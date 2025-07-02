@@ -23,9 +23,17 @@ void ParticleSystemObject::SetDrawEnable(bool isDrawEnable){
 }
 
 void ParticleSystemObject::ApplyConfig(){
-	FxEmitter::ApplyConfig();
+	FxEmitter::ApplyConfigFrom(static_cast< const EmitterConfig& >(config_));
+	name_ = config_.name;
+	id_ = config_.guid;
+	parentId_ = config_.parentGuid;
+	worldTransform_.ApplyConfig(config_.transform);
 }
 
 void ParticleSystemObject::ExtractConfig(){
-	FxEmitter::ExtractConfig();
+	FxEmitter::ExtractConfigTo(static_cast< EmitterConfig& >(config_));
+	config_.name = name_;
+	config_.guid = id_;
+	config_.parentGuid = parentId_;
+	worldTransform_.ExtractConfig();
 }
