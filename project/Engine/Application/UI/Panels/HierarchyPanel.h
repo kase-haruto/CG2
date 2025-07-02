@@ -40,6 +40,7 @@ public:
 	//--------- accessor -----------------------------------------------------
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
 	void SetOnObjectSelected(OnObjectSelectedCallback cb) { onObjectSelected_ = std::move(cb); }
+	void SetOnObjectDelete(const std::function<void(SceneObject*)>& callback){onObjectDelete_ = callback;}
 	void SetSelectedObject(SceneObject* obj) { selected_ = obj; }
 	const SceneObjectLibrary* GetSceneObjectLibrary() const { return pSceneObjectLibrary_; }
 	SceneObject* GetSelectedObject() const { return selected_; }
@@ -51,7 +52,7 @@ private:
 	const SceneObjectLibrary* pSceneObjectLibrary_ = nullptr;
 	OnObjectSelectedCallback onObjectSelected_;
 	SceneObject* selected_ = nullptr;
-
+	std::function<void(SceneObject*)> onObjectDelete_;
 private:
 	// アイコン
 	struct Icon{

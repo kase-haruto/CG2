@@ -5,17 +5,20 @@
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Physics/Ray/Raycastor.h>
 #include <Engine/Objects/3D/Actor/Library/SceneObjectLibrary.h>
+#include <Engine/Application/Effects/FxSystem.h>
 #include <Engine/Scene/Context/SceneContext.h>
 #include <Engine/Scene/Serializer/SceneSerializer.h>
+#include <Engine/Application/Effects/Particle/Object/ParticleSystemObject.h>
+
 #ifdef _DEBUG
 #include <externals/imgui/ImGuiFileDialog.h>
 
 #endif // _DEBUG
 
 
-void LevelEditor::Initialize() {
+void LevelEditor::Initialize(){
 #ifdef _DEBUG
-		// 各パネルの初期化
+	// 各パネルの初期化
 	hierarchy_ = std::make_unique<HierarchyPanel>();
 	editor_ = std::make_unique<EditorPanel>();
 	inspector_ = std::make_unique<InspectorPanel>();
@@ -23,12 +26,16 @@ void LevelEditor::Initialize() {
 	placeToolPanel_ = std::make_unique<PlaceToolPanel>();
 
 	// Panel に LevelEditor 自体を渡す（コールバック通知や setter）
-	editor_->SetOnEditorSelected([this](BaseEditor* editor) {
+	editor_->SetOnEditorSelected([this] (BaseEditor* editor){
 		SetSelectedEditor(editor);
-	});
-	hierarchy_->SetOnObjectSelected([this](SceneObject* obj) {
+								 });
+	hierarchy_->SetOnObjectSelected([this] (SceneObject* obj){
 		SetSelectedObject(obj);
-	});
+									});
+	hierarchy_->SetOnObjectDelete([this] (SceneObject* obj){
+		this->DeleteObject(obj);
+								  });
+
 	inspector_->SetSceneObjectEditor(sceneEditor_.get());
 
 	// ビューポートの初期化
@@ -40,7 +47,7 @@ void LevelEditor::Initialize() {
 	performanceOverlay_ = std::make_unique<PerformanceOverlay>();
 
 	// Manipulator をツールとして登録
-	if (auto* manipulator = sceneEditor_->GetManipulator()) {
+	if (auto* manipulator = sceneEditor_->GetManipulator()){
 		debugViewport_->AddTool(manipulator);
 		debugViewport_->AddTool(performanceOverlay_.get());
 	}
@@ -48,7 +55,7 @@ void LevelEditor::Initialize() {
 	// エディターメニューの初期化
 	menu_ = std::make_unique<EditorMenu>();
 	menu_->Add(MenuCategory::File, {
-		"Save Scene", "Ctrl+S", [this]() {
+		"Save Scene", "Ctrl+S", [this] (){
 			IGFD::FileDialogConfig config;
 			config.path = "Resources/Assets/Scenes/";
 			ImGuiFileDialog::Instance()->OpenDialog(
@@ -61,7 +68,7 @@ void LevelEditor::Initialize() {
 			   });
 
 	menu_->Add(MenuCategory::File, {
-	"Open Scene", "Ctrl+O", [] {
+	"Open Scene", "Ctrl+O", []{
 		IGFD::FileDialogConfig config;
 		config.path = "Resources/Assets/Scenes/";
 		ImGuiFileDialog::Instance()->OpenDialog(
@@ -76,16 +83,16 @@ void LevelEditor::Initialize() {
 #endif // _DEBUG
 }
 
-void LevelEditor::Update() {
+void LevelEditor::Update(){
 #ifdef _DEBUG
-		// 入力チェックはここで行う
-	if (Input::GetInstance()->TriggerMouseButton(MouseButton::Left)) {
+	// 入力チェックはここで行う
+	if (Input::GetInstance()->TriggerMouseButton(MouseButton::Left)){
 		TryPickUnderCursor(); // レイキャストして選択処理へ
 	}
 #endif // _DEBUG
 }
 
-void LevelEditor::Render() {
+void LevelEditor::Render(){
 #ifdef _DEBUG
 	hierarchy_->Render();
 	editor_->Render();
@@ -98,8 +105,8 @@ void LevelEditor::Render() {
 	// ----------------------------
 	// Open Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")) {
-		if (ImGuiFileDialog::Instance()->IsOk()) {
+	if (ImGuiFileDialog::Instance()->Display("SceneOpenDialog")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			ClearSelection(); // 既存の選択をクリア
 			SceneSerializer::Load(*pSceneContext_, filePath);
@@ -110,8 +117,8 @@ void LevelEditor::Render() {
 	// ----------------------------
 	// Save Scene ダイアログ処理
 	// ----------------------------
-	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")) {
-		if (ImGuiFileDialog::Instance()->IsOk()) {
+	if (ImGuiFileDialog::Instance()->Display("SceneSaveDialog")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
 			std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
 			SceneSerializer::Save(*pSceneContext_, filePath);
 		}
@@ -124,53 +131,71 @@ void LevelEditor::Render() {
 #endif // _DEBUG
 }
 
-void LevelEditor::SetSelectedEditor(BaseEditor* editor) {
+void LevelEditor::SetSelectedEditor(BaseEditor* editor){
 	selectedEditor_ = editor;
 	selectedObject_ = nullptr;
 	inspector_->SetSelectedEditor(editor);
 }
 
-void LevelEditor::SetSelectedObject(SceneObject* object) {
+void LevelEditor::SetSelectedObject(SceneObject* object){
 	selectedObject_ = object;
 	selectedEditor_ = nullptr;
 	hierarchy_->SetSelectedObject(object);
 	inspector_->SetSelectedObject(object);
 }
 
-void LevelEditor::RenderViewport(ViewportType type, const ImTextureID& tex) {
+void LevelEditor::DeleteObject(SceneObject* object){
+	if (!object) return;
+
+	// 選択中のオブジェクトだったら解除
+	if (selectedObject_ == object){
+		selectedObject_ = nullptr;
+		inspector_->SetSelectedObject(nullptr);
+	}
+
+	// シーンオブジェクトの削除
+	if (object->GetObjectType() == ObjectType::ParticleSystem){
+		auto* obj = dynamic_cast< ParticleSystemObject* >(object);
+		pSceneContext_->GetFxSystem()->RemoveEmitter(obj);
+	}
+	pSceneContext_->RemoveEditorObject(object);
+	pSceneContext_->GetObjectLibrary()->RemoveObject(object);
+}
+
+void LevelEditor::RenderViewport(ViewportType type, const ImTextureID& tex){
 	//タイプに応じて描画
-	if (type == ViewportType::VIEWPORT_MAIN) {
-		if (mainViewport_) {
+	if (type == ViewportType::VIEWPORT_MAIN){
+		if (mainViewport_){
 			mainViewport_->Render(tex);
 		}
-	} else if (type == ViewportType::VIEWPORT_DEBUG) {
-		if (debugViewport_) {
+	} else if (type == ViewportType::VIEWPORT_DEBUG){
+		if (debugViewport_){
 			debugViewport_->Render(tex);
 		}
 	}
 }
 
-void LevelEditor::TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj) {
+void LevelEditor::TryPickObjectFromMouse(const Vector2& mouse, const Vector2& viewportSize, const Matrix4x4& view, const Matrix4x4& proj){
 	Vector2 mouseLocal = mouse - debugViewport_->GetPosition();
 	Ray ray = Raycastor::ConvertMouseToRay(mouseLocal, view, proj, viewportSize);
-	if (SceneObject* obj = PickSceneObjectByRay(ray)) {
+	if (SceneObject* obj = PickSceneObjectByRay(ray)){
 		SetSelectedObject(obj);
 	}
 }
 
-SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray) {
+SceneObject* LevelEditor::PickSceneObjectByRay(const Ray& ray){
 	const auto* lib = hierarchy_->GetSceneObjectLibrary();
 	if (!lib) return nullptr;
 
 	const auto& allObjects = lib->GetAllObjects();
 	auto hit = Raycastor::Raycast(ray, allObjects);
-	if (hit) {
-		return static_cast<SceneObject*>(hit->hitObject);
+	if (hit){
+		return static_cast< SceneObject* >(hit->hitObject);
 	}
 	return nullptr;
 }
 
-void LevelEditor::SaveScene() {
+void LevelEditor::SaveScene(){
 	std::string scenePath = "Resources/Assets/Scenes/" + pSceneContext_->GetSceneName() + ".scene";
 	SceneSerializer::Save(*pSceneContext_, scenePath);
 }
@@ -181,7 +206,6 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 	placeToolPanel_->OnSceneContextChanged(newContext);
 	pSceneContext_ = newContext;
 
-	// 現在の選択オブジェクトをリセット（古いシーンに属している可能性あり）
 	SetSelectedObject(nullptr);
 	ClearSelection();
 
@@ -200,7 +224,7 @@ void LevelEditor::NotifySceneContextChanged(SceneContext* newContext){
 	}
 }
 
-void LevelEditor::TryPickUnderCursor() {
+void LevelEditor::TryPickUnderCursor(){
 	Vector2 origin = debugViewport_->GetPosition();	// ビューポート描画位置（スクリーン座標）
 	Vector2 size = debugViewport_->GetSize();		// ビューポートの実際のサイズ（ピクセル）
 
@@ -222,7 +246,7 @@ void LevelEditor::TryPickUnderCursor() {
 	Matrix4x4 proj = CameraManager::GetDebugCamera()->GetProjectionMatrix();
 
 	Ray ray = Raycastor::ConvertMouseToRay(mousePos, view, proj, size);
-	if (SceneObject* picked = PickSceneObjectByRay(ray)) {
+	if (SceneObject* picked = PickSceneObjectByRay(ray)){
 		SetSelectedObject(picked);
 	}
 }

@@ -32,6 +32,7 @@ void SceneObjectEditor::SetTarget(SceneObject* object) {
 }
 
 void SceneObjectEditor::Update() {
+	if (!sceneObject_) return;
 	manipulator_->Update();
 }
 

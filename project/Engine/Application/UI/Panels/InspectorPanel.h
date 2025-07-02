@@ -23,7 +23,7 @@ public:
 	const std::string& GetPanelName() const override { return panelName_; }
 
 	void SetSelectedEditor(BaseEditor* editor) { selectedEditor_ = editor; }
-	void SetSelectedObject(SceneObject* obj) { selectedObject_ = obj; }
+	void SetSelectedObject(SceneObject* obj);
 	void SetSceneObjectEditor(SceneObjectEditor* editor) { sceneObjectEditor_ = editor; }
 
 private:

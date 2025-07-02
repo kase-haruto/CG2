@@ -166,6 +166,77 @@
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
             "rotation": {
+                "w": 0.9990735054016113,
+                "x": 3.6428873499971814e-06,
+                "y": -0.0430363230407238,
+                "z": -2.0492716430453584e-06
+            },
+            "scale": {
+                "x": 0.9999980330467224,
+                "y": 0.9999994039535522,
+                "z": 0.9999980330467224
+            },
+            "translation": {
+                "x": 1.7872307300567627,
+                "y": 1.3889012336730957,
+                "z": 0.5924882888793945
+            }
+        }
+    },
+    {
+        "autoDestroy": false,
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "emitCount": 10,
+        "emitDelay": 0.0,
+        "emitDuration": -1.0,
+        "emitRate": 0.10000000149011612,
+        "guid": "fc3511e8-806c-410f-ac26-8529e6bb86fc",
+        "isComplement": true,
+        "isDrawEnable": true,
+        "isOneShot": false,
+        "isStatic": false,
+        "lifetime": {
+            "constant": 0.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 1
+        },
+        "modelPath": "plane.obj",
+        "modules": [],
+        "name": "ParticleSystem",
+        "objectType": 3,
+        "parentGuid": "617f8eb7-3404-4a1b-a571-57caee89e873",
+        "position": {
+            "x": -2.5164973735809326,
+            "y": 1.3889203071594238,
+            "z": 0.22102218866348267
+        },
+        "scale": {
+            "constant": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "max": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "min": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "mode": 0
+        },
+        "texturePath": "particle.png",
+        "transform": {
+            "rotation": {
                 "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
@@ -181,6 +252,24 @@
                 "y": 0.0,
                 "z": 0.0
             }
+        },
+        "velocity": {
+            "constant": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "max": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "min": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": -1.0
+            },
+            "mode": 1
         }
     }
 ]

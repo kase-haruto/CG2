@@ -25,6 +25,7 @@ public:
 	// 編集対象
 	void SetSelectedEditor(BaseEditor* editor);
 	void SetSelectedObject(SceneObject* object);
+	void DeleteObject(SceneObject* object);
 	void RenderViewport(ViewportType type, const ImTextureID& tex);
 
 	HierarchyPanel* GetHierarchyPanel() const{ return hierarchy_.get(); }
