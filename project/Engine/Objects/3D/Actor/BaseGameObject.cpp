@@ -131,6 +131,8 @@ void BaseGameObject::ApplyConfig() {
 	collider_->ApplyConfig(config_.colliderConfig);
 	worldTransform_.ApplyConfig(config_.transform);
 	id_ = config_.guid;
+	parentId_ = config_.parentGuid;
+	name_ = config_.name;
 }
 
 void BaseGameObject::ExtractConfig() {

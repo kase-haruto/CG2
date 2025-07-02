@@ -39,9 +39,14 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path){
 	context.Clear();
 	lib->Clear();
 
+	// --- 1st pass: オブジェクトをすべて生成 ---
+	std::unordered_map<Guid, SceneObject*> guidToObjectMap;
+
 	for (const auto& j : jArray){
 		int type = j.value("objectType", -1);
 		std::string name = j.value("name", "UnnamedObject");
+
+		SceneObject* createdObj = nullptr;
 
 		switch (static_cast< ObjectType >(type)){
 			case ObjectType::GameObject:
@@ -49,19 +54,22 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path){
 				std::string modelName = j.value("modelName", "debugCube.obj");
 				auto ptr = std::make_unique<BaseGameObject>(modelName, name);
 				ptr->ConfigurableObject<BaseGameObjectConfig>::ApplyConfigFromJson(j);
-				context.AddEditorObject(std::move(ptr)); // 所有権はここに移動
+				createdObj = ptr.get();
+				context.AddEditorObject(std::move(ptr));
 				break;
 			}
 			case ObjectType::Light:
 			{
 				if (j.contains("direction")){
-					DirectionalLight* dirLight = CreateAndAddObject<DirectionalLight>(&context, "DirectionalLightName");
+					auto* dirLight = CreateAndAddObject<DirectionalLight>(&context, "DirectionalLightName");
 					dirLight->ApplyConfigFromJson(j);
 					context.GetLightLibrary()->SetDirectionalLight(dirLight);
+					createdObj = dirLight;
 				} else{
-					PointLight* pointLight = CreateAndAddObject<PointLight>(&context, "PointLightName");
+					auto* pointLight = CreateAndAddObject<PointLight>(&context, "PointLightName");
 					pointLight->ApplyConfigFromJson(j);
 					context.GetLightLibrary()->SetPointLight(pointLight);
+					createdObj = pointLight;
 				}
 				break;
 			}
@@ -70,11 +78,35 @@ bool SceneSerializer::Load(SceneContext& context, const std::string& path){
 				auto* rawPtr = CreateAndAddObject<ParticleSystemObject>(&context, "ParticleSystem");
 				rawPtr->ApplyConfigFromJson(j);
 				context.GetFxSystem()->AddEmitter(rawPtr);
+				createdObj = rawPtr;
 				break;
 			}
-
 			default:
 				continue;
+		}
+
+		// guid登録
+		if (createdObj){
+			Guid guid = j.value("guid", Guid {});
+			guidToObjectMap[guid] = createdObj;
+		}
+	}
+
+	// --- 2nd pass: 親子関係を復元 ---
+	for (const auto& j : jArray){
+		Guid childGuid = j.value("guid", Guid {});
+		Guid parentGuid = j.value("parentGuid", Guid {});
+
+		if (parentGuid.isValid() && childGuid.isValid()){
+			auto childIt = guidToObjectMap.find(childGuid);
+			auto parentIt = guidToObjectMap.find(parentGuid);
+
+			if (childIt != guidToObjectMap.end() && parentIt != guidToObjectMap.end()){
+				SceneObject* child = childIt->second;
+				SceneObject* parent = parentIt->second;
+
+				child->SetParent(parent);  // ← これが親子関係を設定する関数
+			}
 		}
 	}
 

@@ -1,0 +1,264 @@
+[
+    {
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "direction": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+        },
+        "guid": "83872fbf-7b54-4e06-b91f-ff5f205fb35a",
+        "intensity": 0.25,
+        "name": "DirectionalLight",
+        "objectType": 1,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "decay": 1.0,
+        "guid": "3bc89911-5820-4a93-a0c9-3c491689192f",
+        "intensity": 0.25,
+        "name": "PointLight",
+        "objectType": 1,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "radius": 20.0,
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "autoDestroy": false,
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "emitCount": 1,
+        "emitDelay": 0.0,
+        "emitDuration": -1.0,
+        "emitRate": 0.10000000149011612,
+        "guid": "239a447a-5210-47de-82df-372941ecc9dd",
+        "isComplement": true,
+        "isDrawEnable": true,
+        "isOneShot": true,
+        "isStatic": true,
+        "lifetime": {
+            "constant": 0.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 1
+        },
+        "modelPath": "plane.obj",
+        "modules": [
+            {
+                "animationSpeed": 31.270000457763672,
+                "cols": 4,
+                "enabled": true,
+                "loop": true,
+                "name": "TextureSheetAnimationModule",
+                "rows": 4,
+                "useCustomFrames": false
+            }
+        ],
+        "name": "ParticleSystem",
+        "objectType": 3,
+        "parentGuid": "620a8393-755f-411a-9128-3eff360a6092",
+        "position": {
+            "x": -5.037005424499512,
+            "y": 2.790280818939209,
+            "z": -5.960464477539063e-08
+        },
+        "scale": {
+            "constant": {
+                "x": 3.0,
+                "y": 3.0,
+                "z": 3.0
+            },
+            "max": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "min": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "mode": 0
+        },
+        "texturePath": "Effect.png",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "velocity": {
+            "constant": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "max": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "min": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": -1.0
+            },
+            "mode": 1
+        }
+    },
+    {
+        "autoDestroy": false,
+        "color": {
+            "w": 1.0,
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "emitCount": 10,
+        "emitDelay": 0.0,
+        "emitDuration": -1.0,
+        "emitRate": 0.10000000149011612,
+        "guid": "620a8393-755f-411a-9128-3eff360a6092",
+        "isComplement": true,
+        "isDrawEnable": true,
+        "isOneShot": false,
+        "isStatic": false,
+        "lifetime": {
+            "constant": 0.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 1
+        },
+        "modelPath": "plane.obj",
+        "modules": [],
+        "name": "ParticleSystem",
+        "objectType": 3,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "scale": {
+            "constant": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "max": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "min": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "mode": 0
+        },
+        "texturePath": "particle.png",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "velocity": {
+            "constant": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "max": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "min": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": -1.0
+            },
+            "mode": 1
+        }
+    }
+]

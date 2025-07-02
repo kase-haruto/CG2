@@ -11,7 +11,7 @@
             "y": -1.0,
             "z": 0.0
         },
-        "guid": "83872fbf-7b54-4e06-b91f-ff5f205fb35a",
+        "guid": "7a95c3b1-e092-48ab-837c-75e7191c4758",
         "intensity": 0.25,
         "name": "DirectionalLight",
         "objectType": 1,
@@ -43,7 +43,7 @@
             "z": 1.0
         },
         "decay": 1.0,
-        "guid": "3bc89911-5820-4a93-a0c9-3c491689192f",
+        "guid": "56a93f64-7fd5-4989-af9c-40dc2edfe140",
         "intensity": 0.25,
         "name": "PointLight",
         "objectType": 1,
@@ -54,6 +54,116 @@
             "z": 0.0
         },
         "radius": 20.0,
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": true,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "617f8eb7-3404-4a1b-a571-57caee89e873",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "torus.obj",
+            "textureName": "textures/white1x1.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "torus",
+        "objectType": 2,
+        "parentGuid": "1bb5f766-934b-42a9-88cd-3fa287c932cc",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": -4.319738388061523,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": true,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "1bb5f766-934b-42a9-88cd-3fa287c932cc",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "cone.obj",
+            "textureName": "textures/white1x1.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "cone",
+        "objectType": 2,
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
             "rotation": {
                 "w": 1.0,

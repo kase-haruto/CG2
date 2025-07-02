@@ -16,7 +16,7 @@ class ParticleSystemObject
 public:
 	// コンストラクタ
 	ParticleSystemObject() = default;
-	explicit ParticleSystemObject(const std::string& name);
+	ParticleSystemObject(const std::string& name);
 	~ParticleSystemObject() override = default;
 
 	// 更新
