@@ -420,6 +420,49 @@ Vector2 WorldToScreen(const Vector3& worldPos) {
 	return Vector2(screenPos.x, screenPos.y);
 }
 
+Vector3 ScreenToWorld(const Vector2& screenPos, float depthZ) {
+	// ビューポートサイズ（例として固定値、必要に応じて動的に取得してください）
+	float viewportX = 0.0f;
+	float viewportY = 0.0f;
+	float viewportWidth = CameraManager::GetInstance()->GetViewportSize(ViewportType::VIEWPORT_MAIN).x;
+	float viewportHeight = CameraManager::GetInstance()->GetViewportSize(ViewportType::VIEWPORT_MAIN).y;
+	float minZ = 0.0f; // 通常0～1の範囲
+	float maxZ = 1.0f;
+
+	// ビューポート行列を作成
+	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(viewportX, viewportY, viewportWidth, viewportHeight, minZ, maxZ);
+
+	// ビュー・プロジェクション行列を取得
+	Matrix4x4 matViewProj = CameraManager::GetViewProjectionMatrix();
+
+	// ビューポート行列とビュー投影行列の合成
+	Matrix4x4 matVPV = Matrix4x4::Multiply(matViewProj, matViewport);
+
+	// matVPVの逆行列を計算
+	Matrix4x4 matVPVInv = Matrix4x4::Inverse(matVPV);
+
+	// スクリーン座標をクリップ空間に変換
+	Vector4 screenPosH; // ホモジニアス座標 (x, y, z, w)
+	screenPosH.x = screenPos.x;
+	// DirectX系の場合Y座標反転が必要ならここで反転してください
+	screenPosH.y = screenPos.y;
+	screenPosH.z = depthZ; // 0〜1の深度値
+	screenPosH.w = 1.0f;
+
+	// クリップ空間からワールド空間へ逆変換
+	Vector4 worldPosH = Vector4::TransformVector( matVPVInv, screenPosH);
+
+	// ホモジニアス除算
+	if (worldPosH.w != 0.0f) {
+		worldPosH.x /= worldPosH.w;
+		worldPosH.y /= worldPosH.w;
+		worldPosH.z /= worldPosH.w;
+	}
+
+	return Vector3(worldPosH.x, worldPosH.y, worldPosH.z);
+}
+
+
 Vector4 MultiplyMatrixVector(const Matrix4x4& mat, const Vector4& vec) {
 	return Vector4(
 		mat.m[0][0] * vec.x + mat.m[1][0] * vec.y + mat.m[2][0] * vec.z + mat.m[3][0] * vec.w,

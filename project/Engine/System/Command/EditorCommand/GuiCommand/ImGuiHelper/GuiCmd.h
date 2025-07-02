@@ -25,6 +25,11 @@ struct Vector4;
 namespace GuiCmd{
 
 	//===================================================================*/
+	//		dragInt
+	//===================================================================*/
+	bool DragInt(const char* label, int& value, float speed = 0.01f, float min = 0.0f, float max = 0.0f);
+
+	//===================================================================*/
 	//		dragFloat
 	//===================================================================*/
 	bool DragFloat(const char* label, float& value, float speed = 0.01f, float min = 0.0f, float max = 0.0f);

@@ -1,93 +1,102 @@
 #include "EnemyCollection.h"
 
-#include <Engine/Foundation/Clock/ClockManager.h>
+#include <Engine/Scene/Context/SceneContext.h>
 #include <Engine/Scene/Utirity/SceneUtility.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
+#include <Game/3dObject/Actor/Enemy/Spawner/EnemySpawner.h>
+
 #include <externals/imgui/imgui.h>
 
-EnemyCollection::EnemyCollection(SceneContext* context):
-sceneContext_(context){
-	SetName("EnemyCollection", ObjectType::GameObject);
+EnemyCollection::EnemyCollection(const std::string& name) {
+	SetName(name, ObjectType::GameObject);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		更新
 /////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::Update(){
-
-	for (auto& enemy : enemies_){
-		enemy->Update();
+void EnemyCollection::Update() {
+	// スポナー更新
+	for (auto* spawner : spawners_) {
+		spawner->Update();
 	}
 
-	// エネミーの削除
-	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
-		return !enemy->GetIsAlive();
-	});
+	auto* sceneLibrary = sceneContext_ ? sceneContext_->GetObjectLibrary() : nullptr;
 
-	//　エネミーのスポーン
-	Spawn(ClockManager::GetInstance()->GetDeltaTime());
+	if (!sceneLibrary) return;
+
+	for (auto it = enemies_.begin(); it != enemies_.end(); ) {
+		auto* enemy = *it;
+		enemy->Update();
+
+		if (!enemy->GetIsAlive()) {
+			sceneLibrary->RemoveObject(enemy);
+			it = enemies_.erase(it);
+			deadEnemyCount++;
+		} else {
+			++it;
+		}
+	}
 }
 
-void EnemyCollection::ShowGui(){
-	ImGui::Text("Enemy Count : %d", enemies_.size());
-	ImGui::SeparatorText("Spawn");
-	ImGui::DragFloat3("SpawnPos", &spawnPos_.x, 0.01f);
-	ImGui::InputFloat("SpawnInterval", &spawnInterval_);
-	ImGui::SeparatorText("Enemy");
-	//for (auto& enemy : enemies_){
-	//	enemy->ShowImGui();
-	//}
+void EnemyCollection::ShowGui() {
+	ImGui::Text("Enemy Count : %d", static_cast<int>(enemies_.size()));
+	ImGui::SeparatorText("Spawners");
+	for (auto* spawner : spawners_) {
+		spawner->ShowGui();
+	}
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
-//		生成
-///////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::Spawn([[maybe_unused]]float deltaTime) {
-	//if (spawnTimer_ > spawnInterval_) {
-	//	spawnTimer_ = 0.0f;
+void EnemyCollection::SetSceneContext(SceneContext* context) {
+	sceneContext_ = context;
+	// スポナーにもシーンコンテキストを伝搬
+	for (auto* spawner : spawners_) {
+		spawner->SetSceneContext(context);
+	}
 
-	//	std::unique_ptr<Enemy> enemy;
-	//	if (sceneContext_) {
-	//		CreateAndAddObject<Enemy>(sceneContext_, enemy, "debugCube.obj", "enemy");
-	//	} else {
-	//		enemy = std::make_unique<Enemy>("debugCube.obj", "enemy");
-	//	}
+}
 
-	//	// Y座標は 10±1 でランダム
-	//	float randomY = 10.0f + Random::Generate(-1.0f, 1.0f);
-	//	// X座標は -5.0f ～ +5.0f でランダム
-	//	float randomX = Random::Generate(-5.0f, 5.0f);
-
-	//	// スポーン位置
-	//	Vector3 spawnPos(randomX, randomY, currentSpawnZ_);
-	//	enemy->SetPosition(spawnPos);
-
-	//	// 次のスポーンZを更新
-	//	currentSpawnZ_ += spawnZStep_;
-	//	if (currentSpawnZ_ > spawnZEnd_) {
-	//		currentSpawnZ_ = spawnZStart_; // ループさせる
-	//	}
-
-	//	enemies_.emplace_back(std::move(enemy));
-	//}
-	//spawnTimer_ += deltaTime;
+void EnemyCollection::SetPlayerTransform(WorldTransform* pTransform) {
+		playerTransform_ = pTransform;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //		追加
 ///////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::AddEnemy(Enemy* enemy){
-	if (enemy){
-		enemies_.emplace_back(std::move(enemy));
+void EnemyCollection::AddEnemy(Enemy* enemy) {
+	if (enemy) {
+		enemies_.emplace_back(enemy);
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		削除
-/////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::RemoveEnemy([[maybe_unused]] size_t index){}
+void EnemyCollection::AddSpawner(EnemySpawner* spawner) {
+	if (spawner) {
+		spawner->SetSceneContext(sceneContext_);
+		spawner->SetPlayerTransform(playerTransform_);
+		spawner->SetOwner(this);
+		spawners_.emplace_back(spawner);
+	}
+}
+
+void EnemyCollection::CreateSpawners() {
+	// 左回りスポナー
+	auto* leftSpawner = sceneContext_->AddEditorObject(std::make_unique<EnemySpawner>("leftSpawner"));
+	leftSpawner->SetRotationSpeed(0.4f); // 左回り（正回転）
+	leftSpawner->SetRotationDir({ 0, 1, 0 }); // Y軸回転
+	leftSpawner->SetSpawnArea({ -10, 0, -15 }, { 10, 5, -20 });
+	AddSpawner(leftSpawner);
+
+	// 右回りスポナー
+	auto* rightSpawner = sceneContext_->AddEditorObject(std::make_unique<EnemySpawner>("rightSpawner"));
+	rightSpawner->SetRotationSpeed(-0.6f); // 右回り（負回転）
+	rightSpawner->SetRotationDir({ 0, 1, 0 }); // Y軸回転
+	rightSpawner->SetSpawnArea({ -15, 0, -30 }, { 15, 7, -20 });
+	AddSpawner(rightSpawner);
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //		クリア
 /////////////////////////////////////////////////////////////////////////////////////////
-void EnemyCollection::Clear(){}
+void EnemyCollection::Clear() {
+	enemies_.clear();
+	spawners_.clear();
+}

@@ -19,6 +19,7 @@ static const char* ObjectTypeToString(ObjectType type){
 
 SceneObject::SceneObject(){
 	worldTransform_.Initialize();
+	id_ = Guid::New();
 }
 
 void SceneObject::ShowGui(){}
@@ -56,6 +57,7 @@ void SceneObject::SetParent(SceneObject* newParent){
 	// 新しい親を設定
 	parent_ = newParent;
 	worldTransform_.parent = newParent ? &newParent->worldTransform_ : nullptr;
+	parentId_ = newParent->GetGuid();
 
 	// 新しい親の子リストに追加
 	if (newParent){

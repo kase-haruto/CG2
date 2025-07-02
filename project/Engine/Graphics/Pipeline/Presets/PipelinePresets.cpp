@@ -70,13 +70,19 @@ GraphicsPipelineDesc PipelinePresets::MakeSkinningObject3D(BlendMode mode){
 //		partcicle
 /////////////////////////////////////////////////////////////////////////////////////////
 GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode){
+	D3D12_DEPTH_STENCIL_DESC depthDesc = {};
+	depthDesc.DepthEnable = TRUE;
+	depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO; // 書き込みを無効にする
+	depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	depthDesc.StencilEnable = FALSE;
+
 	GraphicsPipelineDesc desc;
 	desc.VS(L"Particle.VS.hlsl")
 		.PS(L"Particle.PS.hlsl")
 		.Input(VertexInputLayout<VertexPosUvN>::Get())
 		.Blend(mode)
 		.CullNone()
-		.DepthEnable(false)
+		.DepthState(depthDesc)
 		.RTV(DXGI_FORMAT_R8G8B8A8_UNORM)
 		.Samples(1);
 
@@ -90,6 +96,44 @@ GraphicsPipelineDesc PipelinePresets::MakeParticle(BlendMode mode){
 
 	return desc;
 }
+
+GraphicsPipelineDesc PipelinePresets::MakeObject2D() {
+	GraphicsPipelineDesc desc;
+
+	// 頂点シェーダ・ピクセルシェーダ指定
+	desc.VS(L"Object2d.VS.hlsl")
+		.PS(L"Object2d.PS.hlsl")
+
+		// 入力レイアウトは VertexPosUv4 （Vector4 pos + Vector2 uv）用
+		.Input(VertexInputLayout<VertexData>::Get())
+
+		// アルファブレンド
+		.Blend(BlendMode::ALPHA)
+
+		// カリングなし
+		.CullNone()
+
+		// 深度無効
+		.DepthEnable(false)
+		.DepthFunc(D3D12_COMPARISON_FUNC_ALWAYS)
+
+		// レンダーターゲット
+		.RTV(DXGI_FORMAT_R8G8B8A8_UNORM)
+
+		// サンプル数
+		.Samples(1);
+
+	// ルートシグネチャ設定
+	desc.root_
+		.AllowIA()
+		.CBV(0, D3D12_SHADER_VISIBILITY_PIXEL)
+		.CBV(0, D3D12_SHADER_VISIBILITY_VERTEX)
+		.SRVTable(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_SHADER_VISIBILITY_PIXEL)
+		.SamplerWrapLinear(0);
+
+	return desc;
+}
+
 
 /* ================================================================================================
 /*							postProcess

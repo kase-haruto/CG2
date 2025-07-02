@@ -11,6 +11,8 @@
 #include <Engine/Application/System/Enviroment.h>
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
+#include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
+#include <Engine/Application/System/Enviroment.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -22,10 +24,11 @@
 Player::Player(const std::string& modelName,
 			   std::optional<std::string> objectName)
 	:Actor::Actor(modelName, objectName) {
-	worldTransform_.translation = { 0.0f, 0.0f, 20.0f };
+	worldTransform_.translation = { 0.0f, 0.0f, 15.0f };
 
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetType(ColliderType::Type_Player);
+	model_->SetIsDrawEnable(false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +36,24 @@ Player::Player(const std::string& modelName,
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::Initialize() {
 	moveSpeed_ = 15.0f;
+	InitializeEffect();
+	reticleTransform_.Initialize();
+	reticleTransform_.parent = &worldTransform_;
+	reticleTransform_.translation = Vector3(0.0f, 0.0f, 10.0f);
 
+	life_ = 10;
+
+	lifeSprite_.resize(life_);
+	for (size_t i = 0; i < life_; i++) {
+		lifeSprite_[i] = std::make_unique<Sprite>("Textures/life.png");
+		Vector2 pos = { 100.0f * i + 30.0f,50.0f };
+		lifeSprite_[i]->Initialize(pos, {64.0f,64.0f});
+	}
+
+	attackSprite_ = std::make_unique<Sprite>("Textures/attackUI.png");
+	Vector2 attackUiPos = Vector2(1280.0f - 200.0f, 720.0f - 200.0f);
+	Vector2 attackUiSize = Vector2(128.0f,64.0f);
+	attackSprite_->Initialize(attackUiPos, attackUiSize);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -42,9 +62,7 @@ void Player::Initialize() {
 void Player::Update() {
 	//移動
 	Move();
-
-
-
+	UpdateReticlePosition();
 	if (rollSet_.isRolling_) {
 		rollSet_.rollTimer_ += ClockManager::GetInstance()->GetDeltaTime();
 		float t = rollSet_.rollTimer_ / rollSet_.rollDuration_;
@@ -71,13 +89,27 @@ void Player::Update() {
 	}
 
 	shootInterval_ -= ClockManager::GetInstance()->GetDeltaTime();
-	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f) {
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && shootInterval_ <= 0.0f
+		||Input::GetInstance()->PushGamepadButton(PAD_BUTTON::RB) && shootInterval_ <= 0.0f) {
 		Shoot();
 		shootInterval_ = kMaxShootInterval_;
 	}
 
+	for (auto& sprite : lifeSprite_) {
+		sprite->Update();
+	}
+	attackSprite_->Update();
+
+	reticleTransform_.Update();
 	bulletContainer_->Update();
 	BaseGameObject::Update();
+}
+
+void Player::Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList) {
+	for (auto& sprite : lifeSprite_) {
+		sprite->Draw(cmdList);
+	}
+	attackSprite_->Draw(cmdList);
 }
 
 
@@ -86,14 +118,28 @@ void Player::Update() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void Player::DerivativeGui() {
 	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.01f, 0.0f, 10.0f);
+
+	if (ImGui::BeginTabBar("FxEmittersTabBar")) {
+
+		if (trailFx_ && ImGui::BeginTabItem("Trail")) {
+			ImGui::PushID(trailFx_.get());
+			trailFx_->ShowGui();
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //		移動
 ///////////////////////////////////////////////////////////////////////////////////
 void Player::Move() {
-	Vector3 moveVector = { 0.0f, 0.0f, 0.0f };;
-	//キーボード移動
+	Vector3 moveVector = { 0.0f, 0.0f, 0.0f };
+
+	// キーボード移動
 	if (Input::GetInstance()->PushKey(DIK_A)) {
 		moveVector.x -= 1.0f;
 	} else if (Input::GetInstance()->PushKey(DIK_D)) {
@@ -106,28 +152,69 @@ void Player::Move() {
 		moveVector.y -= 1.0f;
 	}
 
-	//移動ベクトルを正規化
+	// ゲームパッド左スティック入力
+	Vector2 leftStick = Input::GetInstance()->GetLeftStick();
+	moveVector.x += leftStick.x;
+	moveVector.y += leftStick.y;
+
 	if (moveVector.Length() > 0.0f) {
 		moveVector.Normalize();
 	}
 
-
-	//移動速度を掛ける
 	moveVector *= moveSpeed_;
 
-	//移動ベクトルを加算
+	// エフェクト座標更新
+	trailFx_->position_ = GetWorldPosition();
+
+	// 移動加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
 
 	if (rollSet_.isRolling_) return;
 	UpdateTilt(moveVector);
 }
 
-void Player::Shoot() {
-	// 弾発射ロジック
-	Vector3 wPos = worldTransform_.GetWorldPosition();
-	Vector3 dir = Vector3{ 0.0f, 0.0f, 1.0f };
-	bulletContainer_->AddBullet("debugCube.obj", wPos, dir);
 
+void Player::Shoot() {
+	Vector3 playerPos = worldTransform_.GetWorldPosition();
+	Vector3 reticlePos = reticleTransform_.GetWorldPosition();
+
+	Vector3 dir = reticlePos - playerPos;
+	if (dir.Length() > 0.001f) {
+		dir = dir.Normalize();
+	} else {
+		dir = Vector3(0.0f, 0.0f, 1.0f); // フォールバック方向
+	}
+
+	bulletContainer_->AddBullet(BulletType::Player, playerPos, dir);
+}
+
+void Player::UpdateReticlePosition() {
+	constexpr float moveSpeed = 12.0f;
+	float dt = ClockManager::GetInstance()->GetDeltaTime();
+
+	Vector3 offset = Vector3::Zero;
+
+	// キーボード入力
+	if (Input::GetInstance()->PushKey(DIK_UP))    offset.y += 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_DOWN))  offset.y -= 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_LEFT))  offset.x -= 1.0f;
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) offset.x += 1.0f;
+
+	// ゲームパッドの右スティック入力を加算
+	Vector2 rightStick = Input::GetInstance()->GetRightStick();
+	offset.x += rightStick.x;  // 右スティック横方向
+	offset.y += rightStick.y;  // 右スティック縦方向
+
+	if (offset.Length() > 0.0f) {
+		offset.Normalize();
+		offset *= moveSpeed * dt;
+		reticleTransform_.translation += offset;
+
+		// 制限
+		reticleTransform_.translation.x = std::clamp(reticleTransform_.translation.x, -6.0f, 6.0f);
+		reticleTransform_.translation.y = std::clamp(reticleTransform_.translation.y, -3.0f, 4.0f);
+		reticleTransform_.translation.z = std::clamp(reticleTransform_.translation.z, 1.0f, 20.0f);
+	}
 }
 
 void Player::UpdateTilt(const Vector3& moveVector) {
@@ -180,5 +267,12 @@ float Player::EaseForwardThenReturn(float t) {
 		float x = (t - 0.5f) / 0.5f;
 		return 1.0f - (x * x); // EaseInQuad (逆補間)
 	}
+}
+
+void Player::InitializeEffect() {
+	//const std::string path = "Resources/Assets/Configs/Effect/";
+	//trailFx_ = std::make_unique<FxEmitter>();
+	//trailFx_->LoadConfig(path+"PlayerTrail.json");
+	//FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 

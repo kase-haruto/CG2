@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Engine/Objects/Transform/Transform.h>
+
+#include <Engine/Foundation/Math/Vector2.h>
 #include <Engine/Foundation/Math/Vector3.h>
 #include <Engine/Foundation/Math/Vector4.h>
 
@@ -14,4 +17,7 @@ struct FxUnit{
 	float age;				//< 経過時間
 	Vector4 color;			//< 色
 	bool alive = true;		//< 生存フラグ
+
+	//UVオフセット・スケール
+	Transform2D uvTransform;
 };

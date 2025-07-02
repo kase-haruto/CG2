@@ -76,6 +76,8 @@ void DirectionalLight::ApplyConfig() {
 	lightData_.direction = config_.direction;
 	lightData_.intensity = config_.intensity;
 	name_ = config_.name;
+	id_ = config_.guid;
+	parentId_ = config_.parentGuid;
 }
 
 void DirectionalLight::ExtractConfig(){
@@ -84,5 +86,7 @@ void DirectionalLight::ExtractConfig(){
 	config_.intensity = lightData_.intensity;
 	config_.objectType = static_cast<int>(objectType_);
 	config_.name = name_;
+	config_.guid = id_;
+	config_.parentGuid = parentId_;
 }
 

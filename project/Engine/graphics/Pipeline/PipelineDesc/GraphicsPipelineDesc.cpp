@@ -26,6 +26,11 @@ GraphicsPipelineDesc& GraphicsPipelineDesc::Input(const std::vector<D3D12_INPUT_
 GraphicsPipelineDesc& GraphicsPipelineDesc::RTV(DXGI_FORMAT format){ rtvFormats_ = {format}; return *this; }
 GraphicsPipelineDesc& GraphicsPipelineDesc::Samples(UINT count){ sampleCount_ = count; return *this; }
 
+GraphicsPipelineDesc& GraphicsPipelineDesc::StaticSamplerWrapLinear(UINT shaderRegister) {
+	root_.SamplerWrapLinear(shaderRegister, D3D12_SHADER_VISIBILITY_PIXEL);
+	return *this;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //		rasterizer
 /////////////////////////////////////////////////////////////////////////////////////////

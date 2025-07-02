@@ -4,7 +4,7 @@
 /* ===================================================================== */
 #include <Engine/Objects/3D/Actor/Actor.h>
 #include <Engine/objects/Collider/SphereCollider.h>
-
+#include <Engine/Application/Effects/Particle/Emitter/FxEmitter.h>
 
 /* ========================================================================
 /* bullet 基底クラス
@@ -17,7 +17,7 @@ public:
 	//===================================================================*/
 	BaseBullet() = default;
 	BaseBullet(const std::string& modelName,const std::string& name);
-	virtual ~BaseBullet() = default;
+	virtual ~BaseBullet();
 
 	virtual void ShootInitialize(const Vector3 initPos, const Vector3 velocity);
 	void Initialize() override {};
@@ -41,6 +41,10 @@ protected:
 	//===================================================================*/
 	float lifeTime_ = 3.0f;      // 弾の寿命（秒）
 	float currentTime_ = 0.0f;   // 経過時間
+
+	std::unique_ptr<FxEmitter> trailFx_;       // 弾の軌跡
+	std::unique_ptr<FxEmitter> explosionFx_;   // 死亡時の爆発
+	bool isExploding_ = false;   // 爆発中フラグ
 
 };
 

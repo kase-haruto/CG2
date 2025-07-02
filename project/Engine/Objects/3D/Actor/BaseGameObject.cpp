@@ -109,13 +109,7 @@ void BaseGameObject::ShowGui() {
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	ImGui::Separator();
 
-	if (ImGui::Button("SaveConfig")) {
-		SaveConfig(configPath_);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("LoadConfig")) {
-		LoadConfig(configPath_);
-	}
+	ConfigurableObject::ShowGUi();
 
 	worldTransform_.ShowImGui("world");
 
@@ -132,11 +126,13 @@ void BaseGameObject::DerivativeGui() {
 	ImGui::SeparatorText("derivative");
 }
 
-
 void BaseGameObject::ApplyConfig() {
 	model_->ApplyConfig(config_.modelConfig);
 	collider_->ApplyConfig(config_.colliderConfig);
 	worldTransform_.ApplyConfig(config_.transform);
+	id_ = config_.guid;
+	parentId_ = config_.parentGuid;
+	name_ = config_.name;
 }
 
 void BaseGameObject::ExtractConfig() {
@@ -145,6 +141,8 @@ void BaseGameObject::ExtractConfig() {
 	config_.transform = worldTransform_.ExtractConfig();
 	config_.objectType = static_cast<int>(objectType_);
 	config_.name = name_;
+	config_.guid = id_;
+	config_.parentGuid = parentId_;
 }
 
 //===================================================================*/

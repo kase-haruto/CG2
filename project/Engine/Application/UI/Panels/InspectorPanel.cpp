@@ -32,3 +32,5 @@ void InspectorPanel::Render() {
 	ImGui::End();
 }
 
+void InspectorPanel::SetSelectedObject(SceneObject* obj){ selectedObject_ = obj; sceneObjectEditor_->SetTarget(obj); }
+

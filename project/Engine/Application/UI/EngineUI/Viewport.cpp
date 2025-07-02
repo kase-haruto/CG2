@@ -5,6 +5,7 @@
 
 // engine
 #include <Engine/Graphics/Camera/Base/BaseCamera.h>
+#include <Engine/Graphics/Camera/Manager/CameraManager.h>
 
 #include <externals/imgui/ImGuizmo.h>
 
@@ -22,8 +23,10 @@ void Viewport::Render(const ImTextureID& tex){
 	// 画像描画
 	ImVec2 imagePos = ImGui::GetCursorScreenPos();
 	viewOrigin_ = Vector2(imagePos.x, imagePos.y);
-	if (size_.y > 0.0f){
+	if (size_.y > 0.0f) {
 		camera_->SetAspectRatio(size_.x / size_.y);
+		// CameraManagerにviewportサイズを通知
+		CameraManager::GetInstance()->SetViewportSize(type_, size_);
 	}
 
 	ImGui::SetCursorScreenPos(imagePos);

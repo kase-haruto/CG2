@@ -16,6 +16,7 @@
 
 // c++
 #include <vector>
+#include <functional>
 
 // forward declaration
 struct Vector3;
@@ -23,33 +24,43 @@ struct Vector3;
 /* ========================================================================
 /*	particle emitter
 /* ===================================================================== */
-class FxEmitter:
-public ConfigurableObject<EmitterConfig>{
+class FxEmitter {
 public:
 	//===================================================================*/
 	//					public func
 	//===================================================================*/
 	FxEmitter();
-	~FxEmitter() = default;
+	~FxEmitter();
 
 	virtual void Update();
 	void ResetFxUnit(FxUnit& fxUnit);
 	void ShowGui();
 	void TransferParticleDataToGPU();
 
+	void Play();
+	void Stop();
+	void Reset();
+
 	//--------- config -------------------------------------------------//
-	void ApplyConfig()override;
-	void ExtractConfig()override;
+	void ApplyConfigFrom(const EmitterConfig& config);
+	void ExtractConfigTo(EmitterConfig& config) const;
 
 	//--------- accessor -------------------------------------------------//
 	const std::vector<FxUnit>& GetUnits()const{ return units_; }
 	const std::string& GetModelPath() const{ return modelPath; }
-	const std::string& GetTexturePath() const{ return texturePath; }
+	const std::string& GetTexturePath() const{ return material_.texturePath; }
 	const ParticleMaterial& GetMaterial() const{ return material_; }
 	const DxConstantBuffer<ParticleMaterial>& GetMaterialBuffer() const{ return materialBuffer_; }
 	const DxStructuredBuffer<ParticleConstantData>& GetInstanceBuffer() const{ return instanceBuffer_; }
 	bool IsDrawEnable(){ return isDrawEnable_; }
 	void SetDrawEnable(bool isEnable){ isDrawEnable_ = isEnable; }
+	bool isPlayng()const{ return isPlaying_; }
+
+	//--------- callback -------------------------------------------------//
+	void SetOnFinishedCallback(std::function<void()> callback){
+		onFinished_ = std::move(callback);
+	}
+
 private:
 	//===================================================================*/
 	//					private func
@@ -74,22 +85,34 @@ private:
 	//===================================================================*/
 	//					private variable
 	//===================================================================*/
-	std::string modelPath = "plane.obj";		//< モデルパス（デフォルトは平面
-	std::string texturePath = "particle.png";	//< テクスチャパス（デフォルトはparticle.png
+	std::string modelPath = "plane.obj";			//< モデルパス（デフォルトは平面
 
-
-	const int kMaxUnits_ = 2048;			//< 最大パーティクル数
+	const int kMaxUnits_ = 2048;				//< 最大パーティクル数
 	std::vector<FxUnit> units_;				//< パーティクルユニットの配列
 
-	std::unique_ptr<FxModuleContainer> moduleContainer_; // モジュールコンテナ
+	std::unique_ptr<FxModuleContainer> moduleContainer_;	// モジュールコンテナ
 
-	float emitTimer_ = 0.0f;				//< パーティクル生成タイマー
+	float emitTimer_ = 0.0f; // パーティクル生成タイマー
 
-	bool isFirstFrame_ = true;	//< 最初のフレームかどうか
-	bool isComplement_ = true;	//< 補完を行うかどうか
-	bool isStatic_ = false;		//< エミッタが静的かどうか（trueならパーティクルは動かない
-	bool isDrawEnable_ = true;	//< particleを描画するか
+	bool isPlaying_ = true;
+	bool isFirstFrame_ = true;
+	bool isComplement_ = true;
+	bool isStatic_ = false;
+	bool isDrawEnable_ = true;
 
+private:
+	bool isOneShot_ = false;
+	bool hasEmitted_ = false;
+	bool autoDestroy_ = false;
+	int emitCount_ = 10;
+	float emitDelay_ = 0.0f;
+	float emitDuration_ = -1.0f;
+	float elapsedTime_ = 0.0f;
+
+	std::function<void()> onFinished_;   // 終了時コールバック
+	bool isFinishedNotified_ = false;   // すでに通知したかどうか
+
+private:
 	//resources
 	ParticleMaterial material_;							//< パーティクルのマテリアル
 	DxStructuredBuffer<ParticleConstantData> instanceBuffer_;

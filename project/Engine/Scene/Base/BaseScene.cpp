@@ -92,4 +92,13 @@ void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoSer
 	//                    particle描画
 	//===================================================================*/
 	sceneContext_->GetFxSystem()->Render(psoService, cmdList);
+
+	//===================================================================*/
+	//                    sprite描画
+	//===================================================================*/
+	auto desc = PipelinePresets::MakeObject2D();
+	psoService->SetCommand(desc, cmdList);
+	for (auto* entry : sceneContext_->GetObjectLibrary()->GetAllObjects()) {
+		entry->Draw(cmdList);
+	}
 }

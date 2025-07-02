@@ -5,23 +5,17 @@
 #include <Engine/Foundation/Utility/Func/MathFunc.h>
 #include <Engine/Application/Input/Input.h>
 
-//c++
+// C++
 #include <cmath>
 #include <algorithm>
 
-RailCamera::RailCamera(){
+RailCamera::RailCamera() {}
 
-}
+void RailCamera::Initialize() {
+	transform_.translate = { 0.0f, 10.0f, 0.0f };
+	transform_.scale = { 1.0f, 1.0f, 1.0f };
+	transform_.rotate = { 0.0f, 0.0f, 0.0f };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		初期化
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::Initialize(){
-	transform_.translate = {0.0f, 10.0f, 0.0f};
-	transform_.scale = {1.0f, 1.0f, 1.0f};
-	transform_.rotate = {0.5f, 0.0f, 0.0f};
-
-	//ワールドトランスフォームに設定
 	worldTransform_.Initialize();
 	worldTransform_.scale = transform_.scale;
 	worldTransform_.eulerRotation = transform_.rotate;
@@ -29,90 +23,45 @@ void RailCamera::Initialize(){
 
 	BaseCamera::SetName("RailCamera");
 
-	railPoints_ = {
-		{0,10,-100},
-		{0,10,-50},
-		{0,10,0},
-		{0,10,50},
-		{0,10,100},
-		{0,10,150},
-		{0,10,200},
-		{0,10,250},
-	};
+	t_ = 0.0f;
+	speed_ = 20.0f;
+	tiltAngle_ = 0.3f;
+	tiltLerpSpeed_ = 10.0f;
+	targetTilt_ = 0.0f;
+	zTiltOffset_ = 0.0f;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//		更新
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::Update(){
-
-	Input* input = Input::GetInstance();
-
-	// 目標角度の決定
-	if (input->PushKey(DIK_D)) {
-		targetTilt_ = -tiltAngle_; // 右傾き
-	} else if (input->PushKey(DIK_A)) {
-		targetTilt_ = tiltAngle_;  // 左傾き
-	} else {
-		targetTilt_ = 0.0f;        // 戻す
-	}
-
-	// 滑らかに補間 (Lerp)
+void RailCamera::Update() {
 	float deltaTime = ClockManager::GetInstance()->GetDeltaTime();
+
+	// ロール角を滑らかに補間
 	zTiltOffset_ = std::lerp(zTiltOffset_, targetTilt_, tiltLerpSpeed_ * deltaTime);
 
-	// 時間経過に応じて t を更新（時間依存）
-	float speed = 0.05f; // 1秒で20%進む
-	t_ += speed * ClockManager::GetInstance()->GetDeltaTime();
-	t_ = std::clamp(t_, 0.0f, 1.0f);
+	// Z軸方向に前進
+	t_ += speed_ * deltaTime;
 
-	// スプライン上の現在のカメラ位置を計算
-	Vector3 eye = CatmullRomPosition(railPoints_, t_);
+	Vector3 eye = Vector3(0.0f, 10.0f, t_);
+	Vector3 forward = Vector3(0.0f, 0.0f, 1.0f);
+	Vector3 target = eye + forward * 10.0f; // 10ユニット先を見る
 
-	// 注視点計算用の t を少し先に設定（終端で forward = 0 にならないよう）
-	float t_2 = std::min(t_ + 0.001f, 0.999f);
-	Vector3 target = CatmullRomPosition(railPoints_, t_2);
-
-	// forward ベクトルの計算と正規化
-	Vector3 forward = target - eye;
-	if (forward.LengthSquared() < 1e-6f){
-		forward = {0.0f, 0.0f, 1.0f}; // デフォルト方向
-	}
-	Vector3 normalizedForward = forward.Normalize();
-
-	// トランスフォームの更新
-	transform_.translate = eye;
-
-	// 回転を算出
-	float horizontalDistance = sqrtf(normalizedForward.x * normalizedForward.x + normalizedForward.z * normalizedForward.z);
-	transform_.rotate.x = std::atan2(-normalizedForward.y, horizontalDistance);
-	transform_.rotate.y = std::atan2(normalizedForward.x, normalizedForward.z);
-	// Z軸の傾きオフセットを適用
+	// カメラ回転（ピッチ・ヨー・ロール）
+	Vector3 dir = (target - eye).Normalize();
+	float horizontalDist = std::sqrt(dir.x * dir.x + dir.z * dir.z);
+	transform_.rotate.x = std::atan2(-dir.y, horizontalDist);
+	transform_.rotate.y = std::atan2(dir.x, dir.z);
 	transform_.rotate.z = zTiltOffset_;
-	// Shake用に originalPosition_ を更新
-	originalPosition_ = transform_.translate;
+
+	// 位置更新
+	transform_.translate = eye;
 
 	worldTransform_.scale = transform_.scale;
 	worldTransform_.eulerRotation = transform_.rotate;
 	worldTransform_.translation = transform_.translate;
-	// 共通カメラ処理呼び出し（Shakeや行列更新）
+
 	BaseCamera::Update();
 	worldTransform_.Update(viewProjectionMatrix_);
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//		レールの描画
-/////////////////////////////////////////////////////////////////////////////////////////
-void RailCamera::DrawRail(){
-
-}
-
 Vector3 RailCamera::GetPosition() {
-	Vector3 worldPos {};
-	worldPos.x = worldMatrix_.m[3][0];
-	worldPos.y = worldMatrix_.m[3][1];
-	worldPos.z = worldMatrix_.m[3][2];
-
-	return worldPos;
+	return transform_.translate;
 }

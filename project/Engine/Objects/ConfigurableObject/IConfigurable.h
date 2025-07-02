@@ -1,5 +1,5 @@
 #pragma once
-#include <nlohmann/json.hpp>
+#include <externals/nlohmann/json.hpp>
 
 class IConfigurable {
 public:

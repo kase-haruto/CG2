@@ -34,7 +34,9 @@ void TestScene::LoadAssets() {
 /////////////////////////////////////////////////////////////////////////////////////////
 void TestScene::Initialize() {
 
+	sceneContext_->Initialize();
 	sceneContext_->SetSceneName("TestScene");
+
 
 	LoadAssets();
 

@@ -3,44 +3,40 @@
 /*	include space
 /* ===================================================================== */
 #include <Game/3dObject/Actor/Enemy/Enemy.h>
-#include <Engine/Scene/Context/SceneContext.h>
+
+class SceneContext;
 
 class EnemyCollection :
-	SceneObject{
+	public SceneObject{
 public:
 	//===================================================================*/
 	//                      Public Methods
 	//===================================================================*/
-	EnemyCollection(SceneContext* context);
+	EnemyCollection(const std::string& name = "EnemyCollection");
 	~EnemyCollection() = default;
-	void Update();
-	void ShowGui()override;
-private:
-	//===================================================================*/
-	//                      Protected Methods
-	//===================================================================*/
-	void Spawn(float deltaTime);
+
+	void Update() override;
+	void ShowGui() override;
+
+	void SetSceneContext(SceneContext* context);
+	void SetPlayerTransform(WorldTransform* pTransform);
+
 	void AddEnemy(Enemy* enemy);
-	void RemoveEnemy(size_t index);
+	void AddSpawner(class EnemySpawner* spawner);
+
+	void CreateSpawners();
+
 	void Clear();
 
-	// config ============================================================*/
-
+	int GetDeadEnemyCount()const { return deadEnemyCount; }
 private:
 	//===================================================================*/
 	//                      Private variables
 	//===================================================================*/
-	std::list<std::unique_ptr<Enemy>> enemies_; // 登録された全エネミー
-
-	SceneContext* sceneContext_ = nullptr; // シーンコンテキスト
-
-	float spawnInterval_ = 1.0f; // スポーン間隔
-	float spawnTimer_ = 0.0f;   // スポーンタイマー
-	Vector3 spawnPos_ = {0.0f, 0.0f, 0.0f}; // スポーン位置
-
-	float spawnZStart_ = 0.0f; // 開始位置
-	float spawnZEnd_ = 799.0f;    // 終了位置
-	float spawnZStep_ = 20.0f;    // スポーン間隔
-	float currentSpawnZ_;
+	std::list<Enemy*> enemies_;
+	std::vector<class EnemySpawner*> spawners_;
+	int deadEnemyCount = 0;
+	SceneContext* sceneContext_ = nullptr;
+	WorldTransform* playerTransform_ = nullptr;
 };
 

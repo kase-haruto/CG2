@@ -10,6 +10,9 @@ namespace PipelinePresets {
 	GraphicsPipelineDesc MakeSkinningObject3D(BlendMode mode);
 	GraphicsPipelineDesc MakeParticle(BlendMode mode);
 
+	// 2dObjects
+	GraphicsPipelineDesc MakeObject2D();
+
 	// postprocess
 	GraphicsPipelineDesc MakeCopyImage();
 	GraphicsPipelineDesc MakeGrayScale();

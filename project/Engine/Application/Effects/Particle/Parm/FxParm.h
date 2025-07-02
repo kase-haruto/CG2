@@ -6,6 +6,7 @@
 // engine
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Data/Engine/Configs/Scene/Objects/Particle/FxParmConfig.h>
+#include <Engine/System/Command/EditorCommand/GuiCommand/ImGuiHelper/GuiCmd.h>
 
 #include <type_traits>
 
@@ -114,11 +115,22 @@ inline T FxParam<T>::Get() const{
 //		値の取得（Vector3 専用特殊化）
 /////////////////////////////////////////////////////////////////////////////////////////
 template<>
-inline Vector3 FxParam<Vector3>::Get() const{
-	if (mode_ == FxValueMode::Constant){
-		return constant_;
-	} else{
-		return Random::GenerateVector3(min_, max_);
+inline Vector3 FxParam<Vector3>::Get() const {
+	switch (mode_) {
+		case FxValueMode::Constant:
+			return constant_;
+		case FxValueMode::Random: // 立方体ランダム
+			return Random::GenerateVector3(min_, max_);
+		case FxValueMode::RandomSphere:
+			{ // 球状ランダム
+				Vector3 center = (min_ + max_) * 0.5f;
+				float radius = ((max_ - min_).Length()) * 0.5f;
+				Vector3 dir = Random::GenerateUnitVector3();
+				float dist = Random::Generate<float>(0.0f, radius);
+				return center + dir * dist;
+			}
+		default:
+			return constant_;
 	}
 }
 
@@ -143,22 +155,19 @@ inline FxParamConfig<T> FxParam<T>::ToConfig() const{
 
 namespace ImGuiHelpers{
 
-	inline bool DrawFxParamGui(const char* label, FxParam<float>& param){
+	inline bool DrawFxParamGui(const char* label, FxParam<float>& param) {
 		bool changed = false;
 
-		// 現在のモード確認
 		bool isRandom = (param.GetMode() == FxValueMode::Random);
 		bool useRandom = isRandom;
 
-		// PushIDでラベルの衝突を防ぐ
 		ImGui::PushID(label);
 
-		// チェックボックスと折りたたみヘッダの並列表示
-		if (ImGui::Checkbox("##UseRandom", &useRandom)){
-			if (useRandom != isRandom){
-				if (useRandom){
+		if (ImGui::Checkbox("##UseRandom", &useRandom)) {
+			if (useRandom != isRandom) {
+				if (useRandom) {
 					param.SetRandom(param.GetMin(), param.GetMax());
-				} else{
+				} else {
 					param.SetConstant(param.GetConstant());
 				}
 				changed = true;
@@ -166,26 +175,27 @@ namespace ImGuiHelpers{
 		}
 		ImGui::SameLine();
 
-		// 折りたたみヘッダ
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool open = ImGui::CollapsingHeader(label, flags);
 
-		if (open){
+		if (open) {
 			ImGui::Indent();
-			if (!useRandom){
+			if (!useRandom) {
 				float value = param.GetConstant();
-				if (ImGui::InputFloat("Constant", &value)){
+				if (GuiCmd::DragFloat("Constant", value)) {
 					param.SetConstant(value);
 					changed = true;
 				}
-			} else{
+			} else {
 				float minVal = param.GetMin();
 				float maxVal = param.GetMax();
-				if (ImGui::InputFloat("Min", &minVal)){
-					param.SetRandom(minVal, maxVal);
-					changed = true;
-				}
-				if (ImGui::InputFloat("Max", &maxVal)){
+
+				bool edited = false;
+				if (GuiCmd::DragFloat("Min", minVal)) edited = true;
+				if (GuiCmd::DragFloat("Max", maxVal)) edited = true;
+
+				if (edited) {
+					if (minVal > maxVal) std::swap(minVal, maxVal);
 					param.SetRandom(minVal, maxVal);
 					changed = true;
 				}
@@ -197,18 +207,19 @@ namespace ImGuiHelpers{
 		return changed;
 	}
 
-	inline bool DrawFxParamGui(const char* label, FxParam<Vector3>& param){
+	inline bool DrawFxParamGui(const char* label, FxParam<Vector3>& param) {
 		bool changed = false;
+
 		bool isRandom = (param.GetMode() == FxValueMode::Random);
 		bool useRandom = isRandom;
 
 		ImGui::PushID(label);
 
-		if (ImGui::Checkbox("##UseRandom", &useRandom)){
-			if (useRandom != isRandom){
-				if (useRandom){
+		if (ImGui::Checkbox("##UseRandom", &useRandom)) {
+			if (useRandom != isRandom) {
+				if (useRandom) {
 					param.SetRandom(param.GetMin(), param.GetMax());
-				} else{
+				} else {
 					param.SetConstant(param.GetConstant());
 				}
 				changed = true;
@@ -219,22 +230,28 @@ namespace ImGuiHelpers{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool open = ImGui::CollapsingHeader(label, flags);
 
-		if (open){
+		if (open) {
 			ImGui::Indent();
-			if (!useRandom){
+			if (!useRandom) {
 				Vector3 value = param.GetConstant();
-				if (ImGui::InputFloat3("Constant", &value.x)){
+				if (GuiCmd::DragFloat3("Constant", value)) {
 					param.SetConstant(value);
 					changed = true;
 				}
-			} else{
+			} else {
 				Vector3 minVal = param.GetMin();
 				Vector3 maxVal = param.GetMax();
-				if (ImGui::InputFloat3("Min", &minVal.x)){
-					param.SetRandom(minVal, maxVal);
-					changed = true;
-				}
-				if (ImGui::InputFloat3("Max", &maxVal.x)){
+
+				bool edited = false;
+				if (GuiCmd::DragFloat3("Min", minVal)) edited = true;
+				if (GuiCmd::DragFloat3("Max", maxVal)) edited = true;
+
+				if (edited) {
+					// 各成分で min > max をチェックして入れ替え
+					if (minVal.x > maxVal.x) std::swap(minVal.x, maxVal.x);
+					if (minVal.y > maxVal.y) std::swap(minVal.y, maxVal.y);
+					if (minVal.z > maxVal.z) std::swap(minVal.z, maxVal.z);
+
 					param.SetRandom(minVal, maxVal);
 					changed = true;
 				}
@@ -245,5 +262,6 @@ namespace ImGuiHelpers{
 		ImGui::PopID();
 		return changed;
 	}
+
 
 } // namespace ImGuiHelpers

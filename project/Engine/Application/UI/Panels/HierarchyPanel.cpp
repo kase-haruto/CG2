@@ -87,6 +87,21 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 		if (onObjectSelected_) onObjectSelected_(obj);
 	}
 
+	if (ImGui::BeginPopupContextItem("SceneObjectContextMenu")){
+		if (ImGui::MenuItem("Rename")){
+			// 仮: リネーム処理
+			// 例: インライン編集用のフラグなどを使って後で実装する
+			// obj->StartRenaming(); など
+		}
+
+		if (ImGui::MenuItem("Delete")){
+			if (onObjectDelete_){
+				onObjectDelete_(obj); // コールバック関数を使って削除処理を外部に委譲
+			}
+		}
+		ImGui::EndPopup();
+	}
+
 	// ドラッグ開始（送信側）
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)){
 		SceneObject* draggedObj = obj; // SceneObject* を直接渡す

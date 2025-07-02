@@ -1,14 +1,15 @@
 #pragma once
 
 #include <Engine/Foundation/Math/Vector3.h>
-#include <nlohmann/json.hpp> // 必須
+#include <externals/nlohmann/json.hpp> // 必須
 
 // -------------------------
 // FxValueMode enum
 // -------------------------
 enum class FxValueMode{
 	Constant,
-	Random
+	Random,
+	RandomSphere
 };
 
 // JSON enum対応

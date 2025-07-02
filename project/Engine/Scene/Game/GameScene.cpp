@@ -35,6 +35,7 @@ void GameScene::LoadAssets() {
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
 void GameScene::Initialize(){
+	sceneContext_->Initialize();
 	LoadAssets();
 
 	CameraManager::GetInstance()->SetType(CameraType::Type_Default);
@@ -47,6 +48,11 @@ void GameScene::Initialize(){
 
 	modelField_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field");
 	modelField_->SetScale({300.0f,300.0f,300.0f});
+	modelField_->SetTranslate({ 0.0f, -50.0f, 0.0f });
+
+	modelFieldBack_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("terrain.obj", "field_back");
+	modelFieldBack_->SetScale({ 300.0f, 300.0f, 300.0f });
+	modelFieldBack_->SetTranslate({ 0.0f, -50.0f, 1000.0f });
 
 	//player
 	player_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<Player>("player.obj", "player");
@@ -56,6 +62,14 @@ void GameScene::Initialize(){
 	playerBulletContainer_ = sceneContext_->AddEditorObject(std::make_unique<BulletContainer>("playerBulletContainer"));
 	playerBulletContainer_->SetSceneContext(sceneContext_.get());
 	player_->SetBulletContainer(playerBulletContainer_);
+
+	enemyCollection_ = sceneContext_->AddEditorObject(std::make_unique<EnemyCollection>("enemyContainer"));
+	enemyCollection_->SetSceneContext(sceneContext_.get());
+
+	enemyCollection_->SetPlayerTransform(&player_->GetWorldTransform());
+
+	enemyCollection_->CreateSpawners();
+
 
 	//===================================================================*/
 	//                    editor
@@ -77,9 +91,15 @@ void GameScene::Update(){
 	player_->Update();
 
 	/* その他 ============================*/
-
 	sceneContext_->Update();
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
+
+	if (Input::GetInstance()->TriggerKey(DIK_1)
+		||enemyCollection_->GetDeadEnemyCount()>=10) {//10タイ撃破
+		if (transitionRequestor_) {
+			transitionRequestor_->RequestSceneChange(SceneType::TITLE);
+		}
+	}
 }
 
 

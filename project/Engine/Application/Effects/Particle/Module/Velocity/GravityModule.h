@@ -17,6 +17,9 @@ public:
 	void OnUpdate(struct FxUnit& unit, float dt) override;
 	void ShowGuiContent() override;
 
+	const Vector3 GetGravity()const { return gravity_; }
+	void SetGravity(const Vector3& grav) { gravity_ = grav; }
+
 private:
 	//===================================================================*/
 	//					private methods
