@@ -46,6 +46,8 @@ BaseGameObject::BaseGameObject(const std::string& modelName,
 	//SceneObject::SetConfigPath(ConfigPathResolver::ResolvePath(GetObjectTypeName(), GetName()));
 	////コンフィグの適用
 	//LoadConfig(configPath_);
+
+	worldTransform_.Update();
 }
 
 BaseGameObject::~BaseGameObject() {}

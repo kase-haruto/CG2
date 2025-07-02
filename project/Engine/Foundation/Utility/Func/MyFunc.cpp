@@ -408,16 +408,26 @@ Vector3 ExtractEulerAnglesFromMatrix(const Matrix4x4& worldMatrix) {
 }
 
 Vector2 WorldToScreen(const Vector3& worldPos) {
-	// ビューポート行列を作成
-	Matrix4x4 matViewport = Matrix4x4::MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+	const Matrix4x4& viewProj = CameraManager::GetCamera3d()->GetViewProjectionMatrix();
 
-	// ビュー・プロジェクションの合成行列を計算
-	Matrix4x4 matVPV = Matrix4x4::Multiply(CameraManager::GetViewProjectionMatrix(), matViewport);
+	// ワールド座標を Vector4 にして変換
+	Vector4 clipPos = Vector4::TransformVector( viewProj, Vector4(worldPos, 1.0f));
 
-	// ワールド空間の座標をビュー・プロジェクション行列で変換（クリップ座標）
-	Vector3 screenPos = Vector3::Transform(worldPos, matVPV);
-	// スクリーン座標を返す
-	return Vector2(screenPos.x, screenPos.y);
+	// w除算（透視除算）
+	if (clipPos.w == 0.0f) {
+		return Vector2(0.0f, 0.0f); // または無効値として扱う
+	}
+	clipPos.x /= clipPos.w;
+	clipPos.y /= clipPos.w;
+	clipPos.z /= clipPos.w;
+
+	// NDC → スクリーン座標
+	float screenWidth = 1280.0f;
+	float screenHeight = 720.0f;
+	float screenX = (clipPos.x * 0.5f + 0.5f) * screenWidth;
+	float screenY = (1.0f - (clipPos.y * 0.5f + 0.5f)) * screenHeight;
+
+	return Vector2(screenX, screenY);
 }
 
 Vector3 ScreenToWorld(const Vector2& screenPos, float depthZ) {

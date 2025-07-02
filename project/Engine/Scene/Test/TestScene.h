@@ -5,7 +5,8 @@
 /* engine */
 #include <Engine/Extensions/Fog/FogEffect.h>
 #include <Engine/scene/Base/BaseScene.h>
-
+#include <Engine/Renderer/Sprite/Sprite.h>
+#include <Engine/Objects/3D/Actor/BaseGameObject.h>
 /* c++ */
 #include <memory>
 #include <vector>
@@ -30,6 +31,7 @@ public:
 
 	void Initialize()override;
 	void Update()override;
+	void Draw(ID3D12GraphicsCommandList* cmdLst, class PipelineService* psoService)override;
 	void CleanUp()override;
 	void LoadAssets()override;
 private:
@@ -37,7 +39,8 @@ private:
 	std::unique_ptr<FogEffect>fog_ = nullptr;
 
 	/* objects ====================================================*/
-
+	std::unique_ptr<BaseGameObject> testObject;
+	std::unique_ptr<Sprite> testSprite_;
 
 };
 
