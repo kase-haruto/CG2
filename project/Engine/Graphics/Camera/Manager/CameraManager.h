@@ -79,7 +79,7 @@ public:
 
 	static BaseCamera* GetActiveCamera(){ return instance_->cameras_[instance_->type_]; }
 
-	static Matrix4x4 GetViewProjectionMatrix(){ return instance_->cameras_[instance_->type_]->GetViewProjectionMatrix(); }
+	static Matrix4x4 GetViewProjectionMatrix(){ return instance_->cameras_[instance_->type_]->GetViewProjection(); }
 
 	static Matrix4x4 GetViewMatrix(){ return instance_->cameras_[instance_->type_]->GetViewMatrix(); }
 

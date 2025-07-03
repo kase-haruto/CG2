@@ -22,8 +22,6 @@ BaseCamera::BaseCamera()
 
 	/* バッファの生成とマッピング =======================*/
 	cameraBuffer_.Initialize(GraphicsGroup::GetInstance()->GetDevice().Get());
-
-	UpdateMatrix();
 }
 
 /////////////////////////////////////////////////////////////////////////

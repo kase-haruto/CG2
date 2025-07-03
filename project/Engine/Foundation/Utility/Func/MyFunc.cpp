@@ -5,7 +5,6 @@
 #include <Engine/Foundation/Utility/ConvertString/ConvertString.h>
 #include <Engine/Graphics/Camera/Manager/CameraManager.h>
 #include <Engine/Graphics/Descriptor/SrvLocator.h>
-#include <Engine/Application/System/Enviroment.h>
 
 // c++
 #include<cassert>

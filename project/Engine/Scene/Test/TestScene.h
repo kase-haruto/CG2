@@ -39,7 +39,7 @@ private:
 	std::unique_ptr<FogEffect>fog_ = nullptr;
 
 	/* objects ====================================================*/
-	BaseGameObject* testObject;
+	std::unique_ptr<BaseGameObject> testObject;
 	std::unique_ptr<Sprite> testSprite_;
 
 };
