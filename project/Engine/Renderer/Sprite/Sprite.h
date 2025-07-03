@@ -7,6 +7,7 @@
 #include <Engine/Foundation/Math/Vector4.h>
 #include <Engine/Graphics/Material.h>
 #include <Engine/Renderer/Mesh/VertexData.h>
+#include <Engine/Graphics/RenderTarget/RenderTargetDetails.h>
 
 /* c++ */
 #include <d3d12.h>
@@ -117,6 +118,8 @@ public:
 		return path;
 	}
 
+	RenderTargetType GetRenderTargetType()const{ return renderTarget_; }
+
 
 	// テクスチャハンドルを設定する関数
 	const void SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE newHandle);
@@ -140,6 +143,7 @@ private:
 	Vector2 textureSize = {100.0f,100.0f};
 
 	std::string path;
+	RenderTargetType renderTarget_ = RenderTargetType::Main;
 
 #pragma region
 

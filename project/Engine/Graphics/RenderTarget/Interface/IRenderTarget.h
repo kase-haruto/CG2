@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Engine/Graphics/GpuResource/DxGpuResource.h>
-
 #include <d3d12.h>
 
 class IRenderTarget{

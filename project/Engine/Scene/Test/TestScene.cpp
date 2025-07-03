@@ -52,12 +52,12 @@ void TestScene::Initialize() {
 	//=========================
 	// オブジェクト生成
 	//=========================
-	testObject = std::make_unique<BaseGameObject>("debugCube.obj");
-	testObject->Update();
+	testObject = sceneContext_->GetObjectLibrary()->CreateAndAddObject<BaseGameObject>("debugCube.obj");
 	testSprite_ = std::make_unique<Sprite>("Textures/uvChecker.png");
 	Vector3 wPos = testObject->GetWorldPosition();
 	Vector2 pos = WorldToScreen(wPos);
 	testSprite_->Initialize(pos, Vector2(32.0f, 32.0f));
+	testSprite_->SetAnchorPoint(Vector2(0.5f, 0.5f));
 
 }
 
@@ -71,6 +71,10 @@ void TestScene::Update() {
 	skyBox_->Update();
 
 	testObject->Update();
+
+	Vector3 wPos = testObject->GetWorldPosition();
+	Vector2 pos = WorldToScreen(wPos);
+	testSprite_->SetPosition(pos);
 	testSprite_->Update();
 
 	//衝突判定
