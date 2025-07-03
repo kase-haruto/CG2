@@ -12,6 +12,7 @@
 #include <Data/Engine/Prefab/Serializer/PrefabSerializer.h>
 // lib
 #include <externals/imgui/imgui.h>
+#include <externals/imgui/ImGuiFileDialog.h>
 #include <map>
 
 HierarchyPanel::HierarchyPanel() : IEngineUI("Hierarchy"){
@@ -34,10 +35,84 @@ void HierarchyPanel::Render(){
 	}
 
 	const auto& allObjects = pSceneObjectLibrary_->GetAllObjects();
-
 	for (SceneObject* obj : allObjects){
-		if (!obj || obj->GetParent()) continue; // 親がいないオブジェクトのみ描画
+		if (!obj || obj->GetParent()) continue;
 		ShowObjectRecursive(obj);
+	}
+
+	// 空白クリックで選択解除
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered()){
+		selected_ = nullptr;
+		if (onObjectSelected_) onObjectSelected_(nullptr);
+	}
+
+	// 右クリックされた瞬間にポップアップを開く
+	if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right)){
+		ImGui::OpenPopup("BlankContextMenu");
+	}
+
+	// ポップアップの表示処理
+	if (ImGui::BeginPopup("BlankContextMenu")){
+		if (ImGui::MenuItem("Load Prefab")){
+			showLoadPrefabDialog_ = true;
+		}
+		ImGui::EndPopup();
+	}
+
+
+	// ----------- ダイアログ表示の処理（ここから下は End の直前に配置） -----------
+		// Prefabロードダイアログオープン
+	if (showLoadPrefabDialog_){
+		IGFD::FileDialogConfig config;
+		config.path = "Resources/Assets/Prefabs/";
+		ImGuiFileDialog::Instance()->OpenDialog(
+			"LoadPrefabDlg",
+			"Load Prefab File",
+			".prefab",
+			config
+		);
+		showLoadPrefabDialog_ = false;
+	}
+
+	// Prefab保存ダイアログオープン
+	if (showSavePrefabDialog_){
+		IGFD::FileDialogConfig config;
+		config.path = "Resources/Assets/Prefabs/";
+		ImGuiFileDialog::Instance()->OpenDialog(
+			"SavePrefabDlg",
+			"Save Prefab As",
+			".prefab",
+			config
+		);
+		showSavePrefabDialog_ = false;
+	}
+
+	// 保存ダイアログ処理
+	if (ImGuiFileDialog::Instance()->Display("SavePrefabDlg")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
+			std::string savePath = ImGuiFileDialog::Instance()->GetFilePathName();
+			if (prefabSaveTarget_){
+				std::vector<SceneObject*> roots = {prefabSaveTarget_};
+				PrefabSerializer::Save(roots, savePath);
+			}
+		}
+		ImGuiFileDialog::Instance()->Close();
+		prefabSaveTarget_ = nullptr;
+	}
+
+
+	// ロードダイアログ処理
+	if (ImGuiFileDialog::Instance()->Display("LoadPrefabDlg")){
+		if (ImGuiFileDialog::Instance()->IsOk()){
+			std::string loadPath = ImGuiFileDialog::Instance()->GetFilePathName();
+			auto loadedObjects = PrefabSerializer::Load(loadPath);
+			for (auto& obj : loadedObjects){
+				if (pSceneObjectLibrary_ && onObjectCreate_){
+					onObjectCreate_(std::move(obj));
+				}
+			}
+		}
+		ImGuiFileDialog::Instance()->Close();
 	}
 
 	ImGui::End();
@@ -47,7 +122,6 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 	bool isSelected = (selected_ == obj);
 	ImGui::PushID(obj);
 
-	// 1. Draw有効/無効アイコンを表示
 	const bool isDrawEnabled = obj->IsDrawEnable();
 	ImTextureID drawIcon = isDrawEnabled ? iconEye_.tex : iconEyeOff_.tex;
 
@@ -59,14 +133,13 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 
 	ImGui::SameLine();
 
-	// オブジェクトタイプに応じたアイコンを取得・表示
 	ImTextureID typeIcon = nullptr;
 	switch (obj->GetObjectType()){
-		case ObjectType::Camera:		typeIcon = iconCamera_.tex; break;
-		case ObjectType::Light:			typeIcon = iconLight_.tex; break;
-		case ObjectType::GameObject:	typeIcon = iconGameObject_.tex; break;
-		case ObjectType::ParticleSystem:typeIcon = iconParticleSystem_.tex; break;
-		default:						typeIcon = nullptr; break;
+		case ObjectType::Camera:         typeIcon = iconCamera_.tex; break;
+		case ObjectType::Light:          typeIcon = iconLight_.tex; break;
+		case ObjectType::GameObject:     typeIcon = iconGameObject_.tex; break;
+		case ObjectType::ParticleSystem: typeIcon = iconParticleSystem_.tex; break;
+		default:                         typeIcon = nullptr; break;
 	}
 
 	if (typeIcon){
@@ -74,7 +147,6 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 		ImGui::SameLine();
 	}
 
-	// ツリーノードラベル（自動インデント付き）
 	ImGuiTreeNodeFlags flags =
 		ImGuiTreeNodeFlags_OpenOnArrow |
 		(obj->GetChildren().empty() ? ImGuiTreeNodeFlags_Leaf : 0) |
@@ -87,43 +159,31 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 		if (onObjectSelected_) onObjectSelected_(obj);
 	}
 
+	// オブジェクト上の右クリックメニュー
 	if (ImGui::BeginPopupContextItem("SceneObjectContextMenu")){
 		if (ImGui::MenuItem("Rename")){
-			// 仮: リネーム処理
-			// 例: インライン編集用のフラグなどを使って後で実装する
-			// obj->StartRenaming(); など
+			// TODO: Rename logic
 		}
-
 		if (ImGui::MenuItem("Delete")){
 			if (onObjectDelete_){
-				onObjectDelete_(obj); // コールバック関数を使って削除処理を外部に委譲
+				onObjectDelete_(obj);
 			}
 		}
-
 		if (ImGui::MenuItem("Create Prefab")){
-			if (obj){
-				std::string prefabPath = "Resources/Assets/Prefabs/" + obj->GetName() + ".prefab";
-				std::vector<SceneObject*> roots = {obj};
-				bool success = PrefabSerializer::Save(roots, prefabPath);
-				if (success){
-					ImGui::Text("Prefab saved: %s", prefabPath.c_str());
-				} else{
-					ImGui::Text("Failed to save prefab.");
-				}
-			}
+			prefabSaveTarget_ = obj;
+			showSavePrefabDialog_ = true;
 		}
 		ImGui::EndPopup();
 	}
 
-	// ドラッグ開始（送信側）
+	// ドラッグアンドドロップ
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)){
-		SceneObject* draggedObj = obj; // SceneObject* を直接渡す
+		SceneObject* draggedObj = obj;
 		ImGui::SetDragDropPayload("SceneObjectPtr", &draggedObj, sizeof(SceneObject*));
 		ImGui::Text("%s", obj->GetName().c_str());
 		ImGui::EndDragDropSource();
 	}
 
-	// ドロップ受信側
 	if (ImGui::BeginDragDropTarget()){
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SceneObjectPtr")){
 			IM_ASSERT(payload->DataSize == sizeof(SceneObject*));
@@ -135,8 +195,6 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 		ImGui::EndDragDropTarget();
 	}
 
-
-	// 子ノードの再帰表示
 	if (nodeOpen){
 		for (SceneObject* child : obj->GetChildren()){
 			ShowObjectRecursive(child);
@@ -146,6 +204,7 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 
 	ImGui::PopID();
 }
+
 
 bool HierarchyPanel::IsDescendantOf(SceneObject* parent, SceneObject* child){
 	if (!child) return false;

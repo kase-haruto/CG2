@@ -6,7 +6,7 @@
             "isDraw": true,
             "targetType": 0
         },
-        "guid": "bd906569-04bd-47cd-822b-f3f68b51c69d",
+        "guid": "6b087187-df8d-4eb0-b025-69957b586842",
         "modelConfig": {
             "blendMode": 5,
             "materialConfig": {
@@ -22,7 +22,7 @@
                 "isReflect": false,
                 "shininess": 20.0
             },
-            "modelName": "cone.obj",
+            "modelName": "debugSphere.obj",
             "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
@@ -32,7 +32,7 @@
                 }
             }
         },
-        "name": "cone",
+        "name": "sphere",
         "objectType": 2,
         "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
@@ -48,9 +48,9 @@
                 "z": 1.0
             },
             "translation": {
-                "x": 0.0,
-                "y": 1.9761159420013428,
-                "z": 0.0
+                "x": 0.0031890831887722015,
+                "y": 0.03156661242246628,
+                "z": 0.01200866512954235
             }
         }
     },
@@ -61,7 +61,7 @@
             "isDraw": true,
             "targetType": 0
         },
-        "guid": "33ae74b8-3c42-4a79-bdda-7dcb5eda4554",
+        "guid": "8d6112d5-9cc7-427e-a8c3-d6d13c032097",
         "modelConfig": {
             "blendMode": 5,
             "materialConfig": {
@@ -77,7 +77,7 @@
                 "isReflect": false,
                 "shininess": 20.0
             },
-            "modelName": "torus.obj",
+            "modelName": "debugCube.obj",
             "textureName": "textures/white1x1.png",
             "uvTransConfig": {
                 "rotation": 0.0,
@@ -87,9 +87,9 @@
                 }
             }
         },
-        "name": "torus",
+        "name": "cube",
         "objectType": 2,
-        "parentGuid": "bd906569-04bd-47cd-822b-f3f68b51c69d",
+        "parentGuid": "6b087187-df8d-4eb0-b025-69957b586842",
         "transform": {
             "rotation": {
                 "w": 1.0,
@@ -104,7 +104,7 @@
             },
             "translation": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 4.0617499351501465,
                 "z": 0.0
             }
         }

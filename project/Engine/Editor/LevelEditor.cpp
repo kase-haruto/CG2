@@ -35,6 +35,9 @@ void LevelEditor::Initialize(){
 	hierarchy_->SetOnObjectDelete([this] (SceneObject* obj){
 		this->DeleteObject(obj);
 								  });
+	hierarchy_->SetOnObjectCreate([this] (std::unique_ptr<SceneObject> obj){
+		this->CreateObject(std::move(obj));
+								  });
 
 	inspector_->SetSceneObjectEditor(sceneEditor_.get());
 
@@ -142,6 +145,10 @@ void LevelEditor::SetSelectedObject(SceneObject* object){
 	selectedEditor_ = nullptr;
 	hierarchy_->SetSelectedObject(object);
 	inspector_->SetSelectedObject(object);
+}
+
+void LevelEditor::CreateObject(std::unique_ptr<SceneObject> obj){
+	pSceneContext_->AddEditorObject(std::move(obj));
 }
 
 void LevelEditor::DeleteObject(SceneObject* object){
