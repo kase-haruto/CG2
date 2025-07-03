@@ -17,6 +17,8 @@ BaseScene::BaseScene(){
 
 	skyBox_ = std::make_unique<SkyBox>("sky.dds", "skyBox");
 	skyBox_->Initialize();
+
+	spriteRenderer_ = std::make_unique<SpriteRenderer>();
 }
 
 void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoService){
@@ -82,6 +84,11 @@ void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoSer
 	}
 
 	//===================================================================*/
+	//						sprite
+	//===================================================================*/
+	spriteRenderer_->Draw(cmdList, psoService);
+
+	//===================================================================*/
 	//                    プリミティブ描画
 	//===================================================================*/
 	GraphicsGroup::GetInstance()->SetCommand(cmdList, PipelineType::Line, BlendMode::NORMAL);
@@ -93,12 +100,4 @@ void BaseScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoSer
 	//===================================================================*/
 	sceneContext_->GetFxSystem()->Render(psoService, cmdList);
 
-	//===================================================================*/
-	//                    sprite描画
-	//===================================================================*/
-	auto desc = PipelinePresets::MakeObject2D();
-	psoService->SetCommand(desc, cmdList);
-	for (auto* entry : sceneContext_->GetObjectLibrary()->GetAllObjects()) {
-		entry->Draw(cmdList);
-	}
 }

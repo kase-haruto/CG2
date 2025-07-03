@@ -41,7 +41,7 @@ struct EmitterConfig {
 
 inline void EmitterConfig::FromJson(const nlohmann::json& j) {
 	position = j.value("position", Vector3{ 0, 0, 0 });
-	scale = velocity = j.value("scale", FxVector3ParamConfig{});
+	scale = j.value("scale", FxVector3ParamConfig{});
 	color = j.value("color", Vector4{ 1, 1, 1, 1 });
 	velocity = j.value("velocity", FxVector3ParamConfig{});
 	lifetime = j.value("lifetime", FxFloatParamConfig{});

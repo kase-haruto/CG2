@@ -11,9 +11,12 @@
 #include <compare>
 
 struct Guid{
+	Guid() = default;
+	
 	std::array<std::uint8_t, 16> bytes {};
 
 	static Guid New();
+	static Guid Empty();
 
 	/* string ←→ binary ----------------------------------------------------*/
 	static Guid FromString(std::string_view s);

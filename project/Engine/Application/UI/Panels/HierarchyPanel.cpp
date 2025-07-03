@@ -9,7 +9,7 @@
 #include <Engine/objects/3D/Actor/Library/SceneObjectLibrary.h>
 #include <Engine/Objects/3D/Actor/SceneObject.h>
 #include <Engine/Assets/Texture/TextureManager.h>
-
+#include <Data/Engine/Prefab/Serializer/PrefabSerializer.h>
 // lib
 #include <externals/imgui/imgui.h>
 #include <map>
@@ -97,6 +97,19 @@ void HierarchyPanel::ShowObjectRecursive(SceneObject* obj){
 		if (ImGui::MenuItem("Delete")){
 			if (onObjectDelete_){
 				onObjectDelete_(obj); // コールバック関数を使って削除処理を外部に委譲
+			}
+		}
+
+		if (ImGui::MenuItem("Create Prefab")){
+			if (obj){
+				std::string prefabPath = "Resources/Assets/Prefabs/" + obj->GetName() + ".prefab";
+				std::vector<SceneObject*> roots = {obj};
+				bool success = PrefabSerializer::Save(roots, prefabPath);
+				if (success){
+					ImGui::Text("Prefab saved: %s", prefabPath.c_str());
+				} else{
+					ImGui::Text("Failed to save prefab.");
+				}
 			}
 		}
 		ImGui::EndPopup();

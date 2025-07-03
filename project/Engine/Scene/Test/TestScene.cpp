@@ -27,13 +27,12 @@ TestScene::TestScene(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //	アセットのロード
 /////////////////////////////////////////////////////////////////////////////////////////
-void TestScene::LoadAssets() {
-}
+void TestScene::LoadAssets(){}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	初期化処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void TestScene::Initialize() {
+void TestScene::Initialize(){
 
 	sceneContext_->Initialize();
 	sceneContext_->SetSceneName("TestScene");
@@ -52,26 +51,16 @@ void TestScene::Initialize() {
 	//=========================
 	// オブジェクト生成
 	//=========================
-	testObject = std::make_unique<BaseGameObject>("debugCube.obj");
-	testObject->Update();
-	testSprite_ = std::make_unique<Sprite>("Textures/uvChecker.png");
-	Vector3 wPos = testObject->GetWorldPosition();
-	Vector2 pos = WorldToScreen(wPos);
-	testSprite_->Initialize(pos, Vector2(32.0f, 32.0f));
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	更新処理
 /////////////////////////////////////////////////////////////////////////////////////////
-void TestScene::Update() {
+void TestScene::Update(){
 
 	CameraManager::Update();
 
 	skyBox_->Update();
-
-	testObject->Update();
-	testSprite_->Update();
 
 	//衝突判定
 	CollisionManager::GetInstance()->UpdateCollisionAllCollider();
@@ -79,12 +68,19 @@ void TestScene::Update() {
 	sceneContext_->Update();
 }
 
-void TestScene::Draw(ID3D12GraphicsCommandList* cmdList,  PipelineService* psoService) {
-	BaseScene::Draw(cmdList,psoService);
-	testSprite_->Draw(cmdList);
+void TestScene::Draw(ID3D12GraphicsCommandList* cmdList, PipelineService* psoService){
+
+	//========================================================//
+	//	spriteの登録
+	//========================================================//
+	// 
+	// 
+	//シーン上のオブジェクトの描画
+	BaseScene::Draw(cmdList, psoService);
+
 }
 
-void TestScene::CleanUp() {
+void TestScene::CleanUp(){
 	// 3Dオブジェクトの描画を終了
 	sceneContext_->GetObjectLibrary()->Clear();
 	CollisionManager::GetInstance()->ClearColliders();

@@ -11,6 +11,10 @@ Guid Guid::New(){
 	return g;
 }
 
+Guid Guid::Empty(){
+	return Guid();
+}
+
 Guid Guid::FromString(std::string_view s){
 	Guid g; std::size_t i = 0;
 	for (char c : s){
