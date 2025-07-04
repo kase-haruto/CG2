@@ -86,3 +86,4 @@ void SceneObject::UpdateWorldTransformRecursive(){
 		child->UpdateWorldTransformRecursive();
 	}
 }
+

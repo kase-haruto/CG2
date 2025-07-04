@@ -41,6 +41,7 @@ public:
 	void SetSceneObjectLibrary(const SceneObjectLibrary* library);
 	void SetOnObjectSelected(OnObjectSelectedCallback cb) { onObjectSelected_ = std::move(cb); }
 	void SetOnObjectDelete(const std::function<void(SceneObject*)>& callback){onObjectDelete_ = callback;}
+	void SetOnObjectCreate(const std::function<void(std::unique_ptr<SceneObject>)>& callback){ onObjectCreate_ = callback; }
 	void SetSelectedObject(SceneObject* obj) { selected_ = obj; }
 	const SceneObjectLibrary* GetSceneObjectLibrary() const { return pSceneObjectLibrary_; }
 	SceneObject* GetSelectedObject() const { return selected_; }
@@ -53,6 +54,14 @@ private:
 	OnObjectSelectedCallback onObjectSelected_;
 	SceneObject* selected_ = nullptr;
 	std::function<void(SceneObject*)> onObjectDelete_;
+
+private:
+	std::function<void(std::unique_ptr<SceneObject>)> onObjectCreate_;
+	bool showSavePrefabDialog_ = false;
+	bool showLoadPrefabDialog_ = false;
+
+	SceneObject* prefabSaveTarget_ = nullptr;
+
 private:
 	// アイコン
 	struct Icon{
