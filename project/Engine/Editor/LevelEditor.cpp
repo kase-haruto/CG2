@@ -148,6 +148,12 @@ void LevelEditor::SetSelectedObject(SceneObject* object){
 }
 
 void LevelEditor::CreateObject(std::unique_ptr<SceneObject> obj){
+
+	if (obj->GetObjectType() == ObjectType::ParticleSystem){
+		auto* particleSystem = dynamic_cast< ParticleSystemObject* >(obj.get());
+		pSceneContext_->GetFxSystem()->AddEmitter(particleSystem);
+	}
+
 	pSceneContext_->AddEditorObject(std::move(obj));
 }
 

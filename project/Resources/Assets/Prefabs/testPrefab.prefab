@@ -6,62 +6,7 @@
             "isDraw": true,
             "targetType": 0
         },
-        "guid": "3b07e58b-f568-4ee3-8f6a-c2502b568508",
-        "modelConfig": {
-            "blendMode": 5,
-            "materialConfig": {
-                "color": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "currentLightingMode_": 0,
-                "enableLighting": 0,
-                "enviromentCoefficient": 0.5,
-                "isReflect": false,
-                "shininess": 20.0
-            },
-            "modelName": "cylinder.obj",
-            "textureName": "textures/white1x1.png",
-            "uvTransConfig": {
-                "rotation": 0.0,
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0
-                }
-            }
-        },
-        "name": "cylinder",
-        "objectType": 2,
-        "parentGuid": "00000000-0000-0000-0000-000000000000",
-        "transform": {
-            "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "translation": {
-                "x": 4.8404388427734375,
-                "y": -0.008374273777008057,
-                "z": 4.126752853393555
-            }
-        }
-    },
-    {
-        "colliderConfig": {
-            "colliderType": 0,
-            "isCollisionEnabled": true,
-            "isDraw": true,
-            "targetType": 0
-        },
-        "guid": "884d685d-06c5-4372-a4a6-ba50a94fd171",
+        "guid": "cc427f50-44b7-4e38-b569-ba9a6a1a9543",
         "modelConfig": {
             "blendMode": 5,
             "materialConfig": {
@@ -89,7 +34,7 @@
         },
         "name": "cone",
         "objectType": 2,
-        "parentGuid": "3b07e58b-f568-4ee3-8f6a-c2502b568508",
+        "parentGuid": "00000000-0000-0000-0000-000000000000",
         "transform": {
             "rotation": {
                 "w": 1.0,
@@ -98,13 +43,68 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.9999986886978149,
-                "y": 0.9999971985816956,
-                "z": 0.9999971985816956
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "translation": {
                 "x": 0.0,
-                "y": 1.6153758764266968,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    {
+        "colliderConfig": {
+            "colliderType": 0,
+            "isCollisionEnabled": true,
+            "isDraw": true,
+            "targetType": 0
+        },
+        "guid": "2a757d76-beed-4091-87dd-ac89af459735",
+        "modelConfig": {
+            "blendMode": 5,
+            "materialConfig": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "currentLightingMode_": 0,
+                "enableLighting": 0,
+                "enviromentCoefficient": 0.5,
+                "isReflect": false,
+                "shininess": 20.0
+            },
+            "modelName": "torus.obj",
+            "textureName": "textures/white1x1.png",
+            "uvTransConfig": {
+                "rotation": 0.0,
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                }
+            }
+        },
+        "name": "torus",
+        "objectType": 2,
+        "parentGuid": "cc427f50-44b7-4e38-b569-ba9a6a1a9543",
+        "transform": {
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             }
         }
@@ -120,17 +120,17 @@
         "emitCount": 10,
         "emitDelay": 0.0,
         "emitDuration": -1.0,
-        "emitRate": 0.05999999865889549,
-        "guid": "4c0cbd88-d98f-4f8e-a43f-fb40e05c40bf",
+        "emitRate": 0.10000000149011612,
+        "guid": "bfcbdeca-3b85-4499-b989-edeed1537b5f",
         "isComplement": true,
         "isDrawEnable": true,
         "isOneShot": false,
         "isStatic": false,
         "lifetime": {
-            "constant": 2.140000104904175,
-            "max": 4.760000228881836,
-            "min": 3.2799999713897705,
-            "mode": 0
+            "constant": 0.0,
+            "max": 3.0,
+            "min": 1.0,
+            "mode": 1
         },
         "modelPath": "plane.obj",
         "modules": [
@@ -138,13 +138,13 @@
                 "enabled": true,
                 "gravity": {
                     "x": 0.0,
-                    "y": -15.9399995803833,
+                    "y": -10.050000190734863,
                     "z": 0.0
                 },
                 "name": "GravityModule"
             },
             {
-                "easeType": 12,
+                "easeType": 6,
                 "enabled": true,
                 "isGrowing": false,
                 "name": "SizeOverLifetimeModule"
@@ -152,11 +152,11 @@
         ],
         "name": "ParticleSystem",
         "objectType": 3,
-        "parentGuid": "884d685d-06c5-4372-a4a6-ba50a94fd171",
+        "parentGuid": "cc427f50-44b7-4e38-b569-ba9a6a1a9543",
         "position": {
-            "x": 4.8404388427734375,
-            "y": 1.607001543045044,
-            "z": 4.126752853393555
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
         },
         "scale": {
             "constant": {
@@ -202,14 +202,14 @@
                 "z": 0.0
             },
             "max": {
-                "x": 3.940000057220459,
-                "y": 5.760000228881836,
-                "z": 3.2799999713897705
+                "x": 2.6600000858306885,
+                "y": 8.579999923706055,
+                "z": 2.609999895095825
             },
             "min": {
-                "x": -3.6600000858306885,
-                "y": 5.289999961853027,
-                "z": -3.180000066757202
+                "x": -2.690000057220459,
+                "y": 8.569999694824219,
+                "z": -2.380000114440918
             },
             "mode": 1
         }
