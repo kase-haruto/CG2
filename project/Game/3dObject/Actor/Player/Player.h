@@ -74,5 +74,4 @@ private:
 	std::vector < std::unique_ptr<Sprite>> lifeSprite_;
 	std::unique_ptr<Sprite> attackSprite_;
 
-	std::unique_ptr<FxEmitter> trailFx_;	// トレイルエフェクト
 };

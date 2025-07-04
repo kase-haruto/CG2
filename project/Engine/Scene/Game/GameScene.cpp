@@ -55,7 +55,7 @@ void GameScene::Initialize(){
 	modelFieldBack_->SetTranslate({ 0.0f, -50.0f, 1000.0f });
 
 	//player
-	player_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<Player>("player.obj", "player");
+	player_ = sceneContext_->GetObjectLibrary()->CreateAndAddObject<Player>("player.gltf", "player");
 	player_->Initialize();
 	player_->SetParent(&railCamera_->GetWorldTransform());
 

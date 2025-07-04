@@ -12,7 +12,6 @@
 #include <Engine/Foundation/Utility/Ease/Ease.h>
 #include <Engine/Foundation/Utility/Random/Random.h>
 #include <Engine/Application/Effects/Intermediary/FxIntermediary.h>
-#include <Engine/Application/System/Enviroment.h>
 
 // externals
 #include <externals/imgui/imgui.h>
@@ -28,7 +27,6 @@ Player::Player(const std::string& modelName,
 
 	collider_->SetTargetType(ColliderType::Type_Enemy);
 	collider_->SetType(ColliderType::Type_Player);
-	model_->SetIsDrawEnable(false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -119,17 +117,6 @@ void Player::Draw([[maybe_unused]]ID3D12GraphicsCommandList* cmdList) {
 void Player::DerivativeGui() {
 	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.01f, 0.0f, 10.0f);
 
-	if (ImGui::BeginTabBar("FxEmittersTabBar")) {
-
-		if (trailFx_ && ImGui::BeginTabItem("Trail")) {
-			ImGui::PushID(trailFx_.get());
-			trailFx_->ShowGui();
-			ImGui::PopID();
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-	}
 }
 
 
@@ -162,9 +149,6 @@ void Player::Move() {
 	}
 
 	moveVector *= moveSpeed_;
-
-	// エフェクト座標更新
-	trailFx_->position_ = GetWorldPosition();
 
 	// 移動加算
 	worldTransform_.translation += moveVector * ClockManager::GetInstance()->GetDeltaTime();
@@ -270,9 +254,5 @@ float Player::EaseForwardThenReturn(float t) {
 }
 
 void Player::InitializeEffect() {
-	//const std::string path = "Resources/Assets/Configs/Effect/";
-	//trailFx_ = std::make_unique<FxEmitter>();
-	//trailFx_->LoadConfig(path+"PlayerTrail.json");
-	//FxIntermediary::GetInstance()->Attach(trailFx_.get());
 }
 
